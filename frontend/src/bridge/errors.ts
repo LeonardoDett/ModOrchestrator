@@ -40,6 +40,18 @@ export function toUIError(error: unknown): UIError {
 
 /** Translated, human message for an error code. */
 export function errorMessage(i18n: Translator, error: UIError): string {
+  // A `reason` parameter refines the message: error.<code>.<reason> wins over
+  // error.<code> when the catalog has it (e.g. root_invalid + marker_missing).
+  const reason = error.params.reason;
+  const specific = reason ? `error.${error.code}.${reason}` : "";
+  if (specific && i18n.has(specific)) return i18n.t(specific, error.params);
   const key = `error.${error.code}`;
   return i18n.has(key) ? i18n.t(key, error.params) : i18n.t("error.unknown", { code: error.code });
+}
+
+/** A backend problem (code + params) as text: errors use error.*, advisories warning.*. */
+export function problemMessage(i18n: Translator, problem: { code: string; params?: Record<string, string> }, severity: "error" | "warning"): string {
+  if (severity === "error") return errorMessage(i18n, { code: problem.code, params: problem.params ?? {} });
+  const key = `warning.${problem.code}`;
+  return i18n.has(key) ? i18n.t(key, problem.params) : i18n.t("error.unknown", { code: problem.code });
 }

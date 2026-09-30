@@ -1,10 +1,10 @@
 import { useState, type ReactNode } from "react";
 import { Sidebar, Typography, type SidebarSection } from "dettmann-ui";
-import { useAppInfo } from "../bridge/queries";
+import { useAppInfo, useWorkspace } from "../bridge/queries";
 import { useI18n } from "../i18n/i18n";
 import { AboutDialog, ShortcutsDialog } from "./HelpDialogs";
 import { CommandPalette } from "./CommandPalette";
-import { NAV_SECTIONS, VIEWS, useNavigation } from "./navigation";
+import { VIEWS, buildSections, useNavigation } from "./navigation";
 import { useGlobalShortcuts } from "./shortcuts";
 import { TitleBar } from "./TitleBar";
 import { TopBar, type ShellDialog } from "./TopBar";
@@ -36,14 +36,17 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { route, navigate } = useNavigation();
   const { refresh } = useRefresh();
   const info = useAppInfo();
+  const workspace = useWorkspace();
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const [operationsOpen, setOperationsOpen] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog | null>(null);
 
   useGlobalShortcuts({ onCommandPalette: () => setDialog("palette"), onRefresh: refresh });
 
-  const sections: SidebarSection[] = NAV_SECTIONS.map((section) => ({
+  const offered = workspace.status === "ready" ? workspace.data : null;
+  const sections: SidebarSection[] = buildSections(offered?.items).map((section) => ({
     id: section.id,
+    label: section.id === "workspace" ? offered?.active?.name : undefined,
     placement: section.placement,
     items: section.items.map((entry) => ({
       id: entry.id,

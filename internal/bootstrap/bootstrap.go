@@ -7,16 +7,22 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"os"
 	"strconv"
 
+	"modorchestrator/internal/adapters/generic"
+	"modorchestrator/internal/adapters/skyrimse"
+	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/operations"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/settings"
 	"modorchestrator/internal/infrastructure/appdata"
 	"modorchestrator/internal/infrastructure/eventbus"
+	"modorchestrator/internal/infrastructure/filesystem"
 	"modorchestrator/internal/infrastructure/logging"
 	"modorchestrator/internal/infrastructure/persistence/sqlite"
+	"modorchestrator/internal/infrastructure/stores"
 	"modorchestrator/internal/infrastructure/system"
 )
 
@@ -26,6 +32,7 @@ type Container struct {
 	Events     *eventbus.Bus
 	Operations *operations.Service
 	Settings   *appsettings.Service
+	Games      *games.Service
 	Logger     *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
 	Interrupted   []*operation.Operation
@@ -83,6 +90,30 @@ func New(ctx context.Context) (c *Container, err error) {
 	unsub := bus.Subscribe(logging.OperationEvents(logger))
 	ops := operations.NewService(sqlite.NewOperationRepository(db), bus, system.IDs{}, system.Clock{})
 
+	// Adapters are compiled in and registered here (D031); the core learns
+	// about games only through this registry.
+	registry, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{})
+	if err != nil {
+		unsub()
+		return nil, fmt.Errorf("bootstrap: adapters: %w", err)
+	}
+	fsys := filesystem.New()
+	ids, clock := system.IDs{}, system.Clock{}
+	gamesSvc := games.NewService(games.Deps{
+		Registry:    registry,
+		Instances:   sqlite.NewGameInstanceRepository(db),
+		Profiles:    sqlite.NewProfileRepository(db),
+		State:       sqlite.NewAppState(db),
+		Deployments: sqlite.NewDeploymentState(db),
+		FS:          fsys,
+		Drives:      fsys,
+		Versions:    system.FileVersions{},
+		Stores:      &stores.Scanner{FS: fsys, Reg: stores.NewRegistry(), Env: os.Getenv},
+		Ops:         ops,
+		IDs:         ids,
+		Clock:       clock,
+	})
+
 	interrupted, err := ops.RecoverInterrupted(ctx)
 	if err != nil {
 		unsub()
@@ -95,6 +126,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Events:         bus,
 		Operations:     ops,
 		Settings:       settingsSvc,
+		Games:          gamesSvc,
 		Logger:         logger,
 		Interrupted:    interrupted,
 		SchemaVersion:  version,
@@ -118,3 +150,7 @@ func (c *Container) Close() error {
 	}
 	return err
 }
+
+// OpenFolder shows a folder in the file manager. Callers pass only paths
+// the application resolved itself (an instance's own folders).
+func (c *Container) OpenFolder(path string) error { return system.OpenFolder(path) }

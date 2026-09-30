@@ -32,7 +32,8 @@ Ações (hover e menu ⋯):
 - **Gerenciar jogo** (assistente, core/11 §4): Instalação → Pastas (staging, arquivos; aviso de volume para hardlink) → Verificação (métodos disponíveis, implantação estrangeira) → Concluir.
 - **Jogo genérico**: nome, pasta raiz, targets (lista editável: id, pasta relativa), executável (opcional), depois o mesmo assistente.
 - **Parar de gerenciar**: confirmação destrutiva: "Fazer purge agora" (obrigatório se implantado) + opções "Manter staging e arquivos" (padrão) / "Apagar staging e arquivos" (requer digitar o nome do jogo).
-- **Alterar localização**: seletor + validação; se a antiga ainda é acessível e implantada, oferece purge nela antes.
+- **Alterar localização** (DLG-29): seletor + validação; se a antiga ainda é acessível e implantada, oferece purge nela antes.
+- **Renomear instância** (DLG-28): nome único por jogo.
 
 ## 5. Estados
 
@@ -41,8 +42,10 @@ Ações (hover e menu ⋯):
 
 ## 6. Bridge
 
-Consultas: `GamesView()` (gerenciados, descobertos, suportados), `GameInstanceDetails(id)`.
-Comandos: `ScanGames(mode)`, `ManageGame(wizardData)`, `ValidateGameRoot(path)`, `SetActiveInstance`, `UpdateInstanceLocation`, `RenameInstance`, `HideGame`, `UnmanageGame(options)`.
+Consultas: `GamesView(showHidden)` (gerenciados, descobertos, suportados), `GameInstanceDetails(id)`, `Workspace()` (instância ativa, troca e telas por capability), `ValidateGameRoot(gameId, path)`, `SuggestGameFolders(gameId, root, name)`, `VerifyGameSetup(setup)`.
+Comandos: `ScanGames(mode)` (rápida síncrona; completa devolve o id da operação `games.scan`), `CancelOperation(id)`, `ManageGame(setup)`, `SetActiveInstance`, `UpdateInstanceLocation`, `RenameInstance`, `HideInstance`, `HideGame`, `UnmanageGame(id, options)`, `OpenInstanceFolder(id, folder)` (o caminho nunca vem da UI), `PickFolder(title)` (seletor nativo).
+
+**Na F3**: o contador de mods dos cards espera a F4; o status de deploy do card espera a F7 (o card mostra só "Ativo", "Outro gerenciador", "Pasta ausente", "Oculto"). "Parar de gerenciar" e "Alterar localização" recusam instância implantada até o purge existir. Preferência de grade/lista fica no navegador (estado de apresentação).
 
 ## 7. Critérios de aceite
 

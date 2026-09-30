@@ -31,8 +31,19 @@ Catálogo único. Todo modal do produto está aqui; modal novo exige entrada. Pa
 | DLG-25 | Prévia de sort | Load Order | revisão | — | 08 §5 |
 | DLG-26 | Pré-lançamento | Play | decisão | preStartDeployHook | 04 §9 |
 | DLG-27 | Restaurar backup | Settings › Workarounds | confirmação destrutiva | Restore | 14 §4 |
+| DLG-28 | Renomear instância | Games | formulário | — (rename do perfil do jogo) | 11 §4 |
+| DLG-29 | Alterar localização | Games | formulário com validação | PathSelection | 11 §4 |
 
 ## Detalhes dos principais
+
+### DLG-01 Gerenciar jogo (F3)
+Modal largo com `Stepper` horizontal (Instalação → Pastas → Verificação → Concluir). **Instalação**: pasta do jogo (campo + "Procurar…" pelo seletor nativo), validada pelo backend ao sair do campo ou escolher a pasta (recusa com o motivo, botão Avançar desabilitado), e nome da instância. **Pastas**: staging, arquivos e backups sugeridos no volume do jogo, cada um com "Alterar…". **Verificação**: problemas bloqueantes (vermelho), avisos (amarelo, ex.: hardlink indisponível), implantação de outro gerenciador (aviso, não bloqueia) e a escolha do método; hardlink vem marcado só se disponível, cópia nunca vem marcada, e "Gerenciar jogo" fica desabilitado até haver método. **Concluir**: progresso, sucesso e "Abrir workspace". Esc/fechar ficam bloqueados enquanto a instância está sendo criada.
+
+### DLG-02 Jogo genérico (F3)
+Nome, pasta do jogo, lista editável de targets (id em minúsculas + pasta relativa à raiz; o primeiro é o padrão) e executável opcional. "Avançar" chama a verificação do backend e, sem problemas, abre o DLG-01 já em "Pastas".
+
+### DLG-03 Parar de gerenciar (F3)
+Duas opções exclusivas: manter staging e arquivos (padrão) ou apagá-los; apagar exige digitar o nome da instância. Instância com algo implantado mostra o aviso e o botão fica desabilitado (o backend também recusa) até o purge existir (F7).
 
 ### DLG-06 Assistente FOMOD
 - Cabeçalho: imagem e nome do módulo; passo N de M (só visíveis).

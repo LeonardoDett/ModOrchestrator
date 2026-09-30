@@ -26,6 +26,7 @@ function fakeBackend(initial: Operation[]) {
     { time: "2026-01-01T00:00:01Z", level: "error", message: "copy failed", operation: "a", error: "access denied" },
   ];
   const backend: Backend = {
+    ...createOfflineBackend(),
     connected: true,
     window: null,
     getAppInfo: async () => ({
@@ -101,7 +102,7 @@ describe("App shell", () => {
     expect(within(nav).getByRole("button", { name: "Settings" }).closest(".mt-auto")).not.toBeNull();
     await user.click(within(nav).getByRole("button", { name: "Games" }));
     expect(screen.getByRole("heading", { level: 1, name: "Games" })).toBeInTheDocument();
-    expect(screen.getByText("No games yet")).toBeInTheDocument();
+    expect(screen.getByText("Live data is available only inside the desktop app.")).toBeInTheDocument();
   });
 
   it("reports an offline backend instead of inventing data", async () => {

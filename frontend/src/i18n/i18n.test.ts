@@ -54,7 +54,13 @@ describe("i18n catalogs (D044)", () => {
   });
 
   it("every error code the bridge can send has a message", () => {
-    const bridgeErrors = readFileSync(join(SRC, "..", "..", "internal", "bridge", "errors.go"), "utf8");
+    const internal = join(SRC, "..", "..", "internal");
+    const bridgeErrors = [
+      join(internal, "bridge", "errors.go"),
+      join(internal, "core", "application", "games", "errors.go"),
+    ]
+      .map((file) => readFileSync(file, "utf8"))
+      .join("\n");
     const codes = [...bridgeErrors.matchAll(/Code\w+\s*=\s*"(\w+)"/g)].map((m) => m[1]);
     expect(codes.length).toBeGreaterThan(0);
     for (const code of codes) expect(keys, code).toContain(`error.${code}`);

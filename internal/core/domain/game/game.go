@@ -85,6 +85,10 @@ type ModType struct {
 	Target TargetID
 	// Methods restricts deployment methods; empty means every method.
 	Methods []DeploymentMethod
+	// Priority orders detection when several types match a footprint: the
+	// highest wins. Detect is empty for types chosen only by the user.
+	Priority int
+	Detect   []DetectRule
 }
 
 // Allows reports whether files of this type may be deployed with m.
@@ -101,6 +105,10 @@ type Definition struct {
 	Targets []TargetID
 	// ModTypes always contains DefaultModType.
 	ModTypes []ModType
+	// CustomTargets means the user declares the targets of each instance
+	// (generic adapter); Targets and ModTypes are then only a template and
+	// the adapter builds the effective definition per instance.
+	CustomTargets bool
 }
 
 // Validate checks mod types against targets. NewDefinition only builds the
@@ -201,11 +209,22 @@ type Instance struct {
 	Hidden          bool
 	Targets         []Target
 	PreferredMethod DeploymentMethod
+	// Store is where the installation was found (steam, gog, epic,
+	// registry) or "manual"; informative only.
+	Store string
+	// AdapterVersion is the adapter version that created the instance, kept
+	// for migrations (core/11 §1).
+	AdapterVersion string
+	// Executable is the optional game executable relative to Root (generic
+	// games; adapters that know their executable declare it themselves).
+	Executable string
 }
 
 // Validate checks the structural invariants of an instance. Filesystem checks
-// (existence, volumes) belong to discovery (F3); only the textual placement
-// of the staging is checked here (INV-LIB-03).
+// (existence, volumes, markers) belong to the games service; here only the
+// textual placement of the folders is checked (INV-LIB-03): the staging is
+// never the game folder nor inside/around a target, and the three folders the
+// manager owns neither overlap each other nor the game.
 func (i Instance) Validate() error {
 	if i.ID == "" || i.Game == "" || i.Adapter == "" {
 		return fmt.Errorf("%w: instance needs id, game and adapter", ErrInvalid)
@@ -213,7 +232,7 @@ func (i Instance) Validate() error {
 	if i.Root == "" || i.Staging == "" || i.ArchiveStore == "" || i.BackupStore == "" {
 		return fmt.Errorf("%w: instance needs root, staging, archive store and backup store", ErrInvalid)
 	}
-	if samePath(i.Staging, i.Root) {
+	if SamePath(i.Staging, i.Root) {
 		return fmt.Errorf("%w: staging cannot be the game folder (INV-LIB-03)", ErrInvalid)
 	}
 	if !i.PreferredMethod.Valid() {
@@ -230,10 +249,26 @@ func (i Instance) Validate() error {
 		if _, dup := seen[t.ID]; dup {
 			return fmt.Errorf("%w: duplicated target %q", ErrInvalid, t.ID)
 		}
-		if samePath(i.Staging, t.Path) || within(i.Staging, t.Path) {
-			return fmt.Errorf("%w: staging cannot be inside target %q (INV-LIB-03)", ErrInvalid, t.ID)
+		if Overlaps(i.Staging, t.Path) {
+			return fmt.Errorf("%w: staging cannot contain or be inside target %q (INV-LIB-03)", ErrInvalid, t.ID)
 		}
 		seen[t.ID] = struct{}{}
+	}
+	owned := []struct{ name, path string }{{"staging", i.Staging}, {"archive store", i.ArchiveStore}, {"backup store", i.BackupStore}}
+	for a := range owned {
+		if Overlaps(owned[a].path, i.Root) {
+			return fmt.Errorf("%w: %s cannot contain or be inside the game folder", ErrInvalid, owned[a].name)
+		}
+		for _, t := range i.Targets {
+			if Overlaps(owned[a].path, t.Path) {
+				return fmt.Errorf("%w: %s cannot contain or be inside target %q", ErrInvalid, owned[a].name, t.ID)
+			}
+		}
+		for b := a + 1; b < len(owned); b++ {
+			if Overlaps(owned[a].path, owned[b].path) {
+				return fmt.Errorf("%w: %s and %s cannot overlap", ErrInvalid, owned[a].name, owned[b].name)
+			}
+		}
 	}
 	return nil
 }
@@ -263,17 +298,3 @@ func (l Location) Key() string { return string(l.Target) + "|" + l.Path.Key() }
 
 // String renders the location for evidence and logs.
 func (l Location) String() string { return string(l.Target) + ":" + l.Path.String() }
-
-// samePath and within compare absolute Windows paths textually: separators
-// and letter case are ignored (D039). Resolving links or volumes is
-// infrastructure work.
-func samePath(a, b string) bool { return cleanAbs(a) == cleanAbs(b) }
-
-func within(child, parent string) bool {
-	c, p := cleanAbs(child), cleanAbs(parent)
-	return p != "" && strings.HasPrefix(c, p+"/")
-}
-
-func cleanAbs(p string) string {
-	return strings.TrimRight(strings.ToLower(strings.ReplaceAll(p, `\`, "/")), "/")
-}

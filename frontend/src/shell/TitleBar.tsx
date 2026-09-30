@@ -1,8 +1,9 @@
 import type { CSSProperties } from "react";
-import { Gamepad2, Minus, Square, X } from "lucide-react";
-import { Button, Typography } from "dettmann-ui";
+import { Minus, Square, X } from "lucide-react";
+import { Button } from "dettmann-ui";
 import logo from "../assets/logo.png";
 import { useBackend } from "../bridge/backend-context";
+import { GameSwitcher } from "../features/games/GameSwitcher";
 import { useI18n } from "../i18n/i18n";
 
 /** Wails frameless windows move by dragging elements with this CSS property. */
@@ -26,10 +27,9 @@ export function TitleBar({ windowControls }: { windowControls: boolean }) {
         <img src={logo} alt={t("app.name")} className="h-6 w-auto" draggable={false} />
       </div>
       <div role="group" aria-label={t("titlebar.launcher")} data-slot="launcher" className="flex h-full items-center gap-2 border-l border-border px-3">
-        <Gamepad2 aria-hidden="true" className="h-4 w-4 text-fg-subtle" />
-        <Typography variant="body-sm" color="muted-fg">
-          {t("titlebar.noGame")}
-        </Typography>
+        <span style={noDrag}>
+          <GameSwitcher />
+        </span>
       </div>
       {/* Reserved: tools hotbar (V1.x). */}
       <div data-slot="tools" className="h-full flex-1" />

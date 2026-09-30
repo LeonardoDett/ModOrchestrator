@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
 	appsettings "modorchestrator/internal/core/application/settings"
@@ -42,6 +43,17 @@ func uiError(err error, params map[string]string) error {
 	var coded *Error
 	if errors.As(err, &coded) {
 		return coded
+	}
+	// Errors of the games module already carry their own code and params.
+	if code, own, ok := games.CodeOf(err); ok {
+		merged := map[string]string{}
+		for k, v := range params {
+			merged[k] = v
+		}
+		for k, v := range own {
+			merged[k] = v
+		}
+		return &Error{Code: code, Params: merged, Detail: err.Error()}
 	}
 	code := CodeInternal
 	switch {

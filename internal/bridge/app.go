@@ -41,6 +41,16 @@ func (a *App) Startup(ctx context.Context) {
 			a.emit(a.ctx, EventOperation, toEventDTO(e))
 		}
 	})
+	// The quick search reads launchers and the registry only; it runs off
+	// the UI path so the window never waits for it (core/11 §3). Nothing is
+	// managed by it.
+	go func() {
+		if n, err := a.c.Games.ScanQuick(context.Background()); err != nil {
+			a.c.Logger.Warn("quick game search failed", logging.KeyError, err.Error())
+		} else {
+			a.c.Logger.Info("quick game search", "found", n)
+		}
+	}()
 }
 
 // Shutdown is called by Wails before the process exits.

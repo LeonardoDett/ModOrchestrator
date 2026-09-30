@@ -102,6 +102,20 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `setting_unknown` | chave fora do catálogo disponível ou de escopo errado | `key` |
 | `setting_invalid` | valor rejeitado pela validação do catálogo | `key`, `value` |
 | `backend_offline` | só na UI: app fora do shell Wails (D021) | — |
+| `game_unknown` | jogo sem adapter neste build | `game` |
+| `instance_busy` | outra operação mutante na instância (D038) | `instance` |
+| `instance_deployed` | parar de gerenciar / mudar de pasta com algo implantado (até o purge existir, F7) | `instance` |
+| `name_empty`, `name_taken` | nome da instância vazio / já usado no mesmo jogo | `name` |
+| `root_invalid` | pasta não é instalação do jogo | `reason` (`not_found`, `not_directory`, `marker_missing`, `unreadable`, `not_absolute`), `marker` |
+| `root_in_use` | pasta já gerenciada por outra instância | `instance` |
+| `targets_invalid`, `folders_invalid` | targets do jogo genérico / colocação das pastas inválidos (INV-LIB-03) | `detail` |
+| `staging_foreign`, `folder_foreign` | pasta existente não é nossa (core/04 §10) | `reason` (`not_empty`, `other_instance`, `unreadable`), `folder` |
+| `method_unavailable` | método de deploy indisponível para esta configuração | `method`, `reason` |
+| `executable_invalid` | executável do jogo genérico inválido | `reason` (`invalid_path`, `not_found`) |
+| `confirm_name_mismatch` | nome digitado para apagar staging/arquivos não confere | — |
+| `folder_unknown`, `folder_missing` | "abrir pasta" com nome de pasta desconhecido / pasta inexistente | `folder` |
+
+A UI refina a mensagem quando existe `error.<code>.<reason>` no catálogo (ex.: `error.root_invalid.marker_missing`); sem ele usa `error.<code>`. Avisos do assistente (não bloqueiam) usam `warning.<code>`: `hardlink_unavailable`, `backup_other_volume`.
 
 ## 7. Recalcular vs persistir
 

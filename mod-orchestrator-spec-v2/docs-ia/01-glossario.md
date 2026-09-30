@@ -16,6 +16,9 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 | `Staging` | Pasta de staging | Pasta da instância onde cada mod instalado vive isolado. Nunca é a pasta do jogo. |
 | `ArchiveStore` | Pasta de arquivos | Pasta da instância onde os archives importados são retidos (D032). |
 | `BackupStore` | — | Pasta da instância (mesmo volume do target) onde arquivos originais substituídos pelo deploy ficam guardados (D034). |
+| `Candidate` | Descoberto | Instalação de um jogo suportado encontrada pela busca (loja, registro ou unidades) e ainda não gerenciada. Calculada, nunca persistida; gerenciar é sempre ação do usuário (D057). |
+| `Marker` | — | Arquivo `.modorchestrator-*` com o `instanceId` dono, que prova a posse de uma pasta do gerenciador (staging, arquivos, backups, deploy). O banco é primário; o marcador é evidência (D058). |
+| `ForeignDeployment` | Outro gerenciador | Sinal de que outro gerenciador (Vortex, MO2) ou outra instância deste app implantou no jogo. Calculado a cada leitura (D059). |
 
 ## Biblioteca
 

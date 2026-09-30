@@ -9,6 +9,10 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | GameDefinitions | adapters | código do adapter | não | — | versão do app |
 | GameInstance | games | `state.db` | sim | — | usuário edita/descobre |
 | Capabilities efetivas | games | adapter + instância | não | adapter | adapter/instância mudam |
+| Instância ativa, jogos ocultos (descobertos/suportados) | games | `state.db` (`app_state`) | sim | — | usuário (D060) |
+| Candidatos descobertos | games | **cálculo** (busca nas lojas/unidades, em memória da sessão) | não | lojas, registro, unidades | nova busca |
+| Implantação estrangeira (achados) | games | **cálculo** (topo dos targets e da raiz) | não | filesystem | qualquer leitura (D059) |
+| Marcadores de staging/arquivos/backups | games | filesystem (evidência); banco é primário | no disco | instância | criar/apagar instância (D058) |
 | Archive | library | ArchiveStore + `state.db` (hash, nome) | sim | — | import/remoção |
 | Mod + atributos | library | `state.db` | sim | — | import, edição, remoção |
 | Installation | library | `state.db` (lista de arquivos) + staging (conteúdo) | sim | — | install/reinstall |

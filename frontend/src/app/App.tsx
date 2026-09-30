@@ -1,40 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
-import { Gamepad2, Puzzle } from "lucide-react";
 import { ThemeProvider, ToastProvider } from "dettmann-ui";
 import { BackendProvider } from "../bridge/backend-context";
 import { RefreshContext } from "../bridge/use-backend-query";
 import type { Backend } from "../bridge/types";
 import { useI18n } from "../i18n/i18n";
-import { DashboardPage } from "../pages/DashboardPage";
-import { DiagnosticsPage } from "../pages/DiagnosticsPage";
-import { HonestEmpty, PageBody } from "../pages/PageBody";
-import { SettingsPage } from "../pages/SettingsPage";
 import { AppShell } from "../shell/AppShell";
 import { DEFAULT_ROUTE, NavigationContext, type Route } from "../shell/navigation";
+import { Routes } from "../shell/Routes";
 import { SettingsProvider } from "./settings-context";
-
-function renderRoute(route: Route) {
-  switch (route.view) {
-    case "dashboard":
-      return <DashboardPage />;
-    case "games":
-      return (
-        <PageBody>
-          <HonestEmpty icon={Gamepad2} title="games.emptyTitle" description="games.emptyDescription" />
-        </PageBody>
-      );
-    case "extensions":
-      return (
-        <PageBody>
-          <HonestEmpty icon={Puzzle} title="extensions.emptyTitle" description="extensions.emptyDescription" />
-        </PageBody>
-      );
-    case "settings":
-      return <SettingsPage />;
-    case "diagnostics":
-      return <DiagnosticsPage />;
-  }
-}
 
 /** Toasts need the translator for their close label, so they sit inside i18n. */
 function LocalizedToasts({ children }: { children: React.ReactNode }) {
@@ -56,7 +29,9 @@ export function App({ backend }: { backend: Backend }) {
           <SettingsProvider>
             <LocalizedToasts>
               <NavigationContext.Provider value={navigation}>
-                <AppShell>{renderRoute(route)}</AppShell>
+                <AppShell>
+                  <Routes />
+                </AppShell>
               </NavigationContext.Provider>
             </LocalizedToasts>
           </SettingsProvider>

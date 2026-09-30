@@ -4,6 +4,7 @@
 package internal_test
 
 import (
+	"go/ast"
 	"go/parser"
 	"go/token"
 	"io/fs"
@@ -142,6 +143,48 @@ func checkImports(t *testing.T, rules map[string][]string) {
 				}
 			}
 		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+// Game identity belongs to the adapters (D011, anti-pattern 3, core/11 §8):
+// no string literal outside internal/adapters may name a specific game or
+// one of its tools. Tests and the composition root are exempt.
+var gameNames = []string{
+	"skyrim", "skse", "fallout", "oblivion", "morrowind", "starfield", "witcher", "cyberpunk", "enbseries",
+}
+
+func TestNoGameSpecificLiteralsOutsideAdapters(t *testing.T) {
+	fset := token.NewFileSet()
+	err := filepath.WalkDir(".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+			return err
+		}
+		rel := filepath.ToSlash(path)
+		if strings.HasPrefix(rel, "adapters/") || strings.HasPrefix(rel, "bootstrap/") || strings.HasPrefix(rel, "testutil/") {
+			return nil
+		}
+		f, err := parser.ParseFile(fset, path, nil, 0)
+		if err != nil {
+			return err
+		}
+		ast.Inspect(f, func(n ast.Node) bool {
+			lit, ok := n.(*ast.BasicLit)
+			if !ok || lit.Kind != token.STRING {
+				return true
+			}
+			low := strings.ToLower(lit.Value)
+			for _, name := range gameNames {
+				if strings.Contains(low, name) {
+					t.Errorf("%s:%d names a specific game (%q) outside internal/adapters: %s",
+						rel, fset.Position(lit.Pos()).Line, name, lit.Value)
+				}
+			}
+			return true
+		})
 		return nil
 	})
 	if err != nil {

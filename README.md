@@ -4,7 +4,7 @@ Gerenciador de mods desktop (Go + Wails v2 + React). A especificação vive em
 `mod-orchestrator-spec-v2/` e o design
 system em `dettmann-ui-vnext/`, ambas versionadas neste repositório (o build da lib, `node_modules/` e `dist/`, não é versionado; ver D052).
 
-Fase atual: **F2 — fundação de UI concluída** (shell definitivo, tema `orchestrator`, i18n en/pt-BR, DataTable na lib, drawer de operações, Diagnostics › Operações/Log, paleta de comandos). Próxima: F3 (jogos e adapters).
+Fase atual: **F3 — jogos, adapters e descoberta concluída** (port `GameAdapter`, adapters `generic` e `skyrimse`, busca nas lojas/registro/unidades, assistente Gerenciar jogo, marcadores das pastas, detecção de implantação de outro gerenciador, navegação do workspace por capability). Próxima: F4 (biblioteca e importação). F2 (fundação de UI) concluída antes.
 
 ## Estrutura
 
@@ -26,7 +26,7 @@ frontend/
   wailsjs/                   bindings gerados pelo Wails (não editar)
 ```
 
-Decisões estruturais: `mod-orchestrator-spec-v2/docs-ia/decisoes.md` (D017–D023; F2: D053–D056).
+Decisões estruturais: `mod-orchestrator-spec-v2/docs-ia/decisoes.md` (D017–D023; F2: D053–D056; F3: D057–D061).
 
 ## Desenvolvimento
 

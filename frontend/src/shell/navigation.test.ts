@@ -1,4 +1,4 @@
-import { DEFAULT_ROUTE, NAV_SECTIONS, VIEWS } from "./navigation";
+import { DEFAULT_ROUTE, NAV_SECTIONS, VIEWS, buildSections } from "./navigation";
 import { en } from "../i18n/catalog/en";
 
 describe("navigation", () => {
@@ -20,5 +20,23 @@ describe("navigation", () => {
       expect(labels).not.toContain(reserved);
     }
     expect(items).not.toContain(VIEWS.diagnostics);
+    expect(buildSections(undefined)).toBe(NAV_SECTIONS);
+    expect(buildSections([])).toBe(NAV_SECTIONS);
+  });
+
+  it("shows exactly the workspace screens the backend sent, in its order (core/11 §5)", () => {
+    const generic = buildSections(["overview", "mods", "conflicts", "profiles", "diagnostics"]);
+    expect(generic.map((s) => s.id)).toEqual(["global", "workspace", "app"]);
+    const ids = generic[1]!.items.map((e) => e.id);
+    expect(ids).toEqual(["overview", "mods", "conflicts", "profiles", "diagnostics"]);
+    expect(ids).not.toContain("plugins");
+
+    const withPlugins = buildSections(["overview", "mods", "plugins", "load_order", "diagnostics"]);
+    expect(withPlugins[1]!.items.map((e) => e.id)).toEqual(["overview", "mods", "plugins", "load_order", "diagnostics"]);
+  });
+
+  it("ignores ids it does not know instead of inventing screens", () => {
+    const sections = buildSections(["overview", "saves", "downloads"]);
+    expect(sections[1]!.items.map((e) => e.id)).toEqual(["overview"]);
   });
 });

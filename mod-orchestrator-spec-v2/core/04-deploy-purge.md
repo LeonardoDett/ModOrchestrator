@@ -121,14 +121,15 @@ Ao clicar Play: se `pending`, roda deploy (com o diálogo normal se houver decis
 
 ## 10. Staging
 
-- Marcador `.modorchestrator-staging` com instanceId. Staging sem marcador, ou com marcador de outra instância, é recusada.
+- Marcador `.modorchestrator-staging` com instanceId. Staging sem marcador, ou com marcador de outra instância, é recusada. Na prática (D058): uma pasta que **não existe** é criada e marcada; uma pasta **vazia** é adotada e marcada; uma pasta com conteúdo e sem marcador (`not_empty`) ou com marcador de outra instância (`other_instance`) é recusada com `staging_foreign`. Como o staging nunca é o jogo nem está dentro/ao redor de um target, o assistente recusa qualquer sobreposição (INV-LIB-03).
+- ArchiveStore e BackupStore recebem o mesmo tratamento, com marcadores `.modorchestrator-archives` e `.modorchestrator-backups` e o erro `folder_foreign`. As três pastas não se sobrepõem entre si, nem com o jogo, nem com pastas de outra instância. "Parar de gerenciar" só apaga uma delas (opção explícita, com o nome digitado) se o marcador prova que é da instância.
 - Mover staging (Settings › Mods): operação `move_staging`: calcula espaço, purge (se implantado) → copia/move pasta a pasta com verificação → atualiza instância → deploy. Interrompida: permanece válida na origem até o commit; a cópia parcial no destino é descartada na retomada.
 - Staging e ArchiveStore podem ficar em volumes diferentes; staging e targets no mesmo volume para hardlink.
 
 ## 11. Marcadores e outros gerenciadores (D035)
 
 - Marcador de deploy: `<target>/.modorchestrator-deployment.json` com instanceId, profileId, appliedAt e hash do manifesto. Gravado no commit; removido no purge.
-- Detecção: `vortex.deployment.json`, `*.vortex_backup`, pasta `overwrite`/`mods` de instância portátil do MO2 apontando para o jogo, e marcador de outra instância nossa. Resultado: diagnóstico bloqueante `foreign_deployment` com ações: abrir pasta, "Eu já removi a implantação do outro gerenciador, verificar de novo", e (instância nossa) "Adotar" quando o banco foi perdido e o marcador + observado permitem reconstruir o manifesto.
+- Detecção (implementada na F3, D059; calculada a cada leitura, nunca persistida): no topo de cada target, `vortex.deployment*.json` e `*.vortex_backup`, e o marcador `.modorchestrator-deployment.json` cujo dono não é esta instância (marcador ilegível ou sem dono conta como estrangeiro); no topo da raiz do jogo, uma instância portátil do MO2 (`ModOrganizer.ini`, ou as três pastas `mods` + `profiles` + `overwrite`). Uma pasta `Mods` sozinha não indica MO2, porque um jogo genérico pode ter um target com esse nome. O assistente **não** bloqueia por isso: a instância nasce e a detecção aparece como aviso com as ações abaixo; o bloqueio do deploy e o diagnóstico persistente chegam com F7/F9. Varre-se só o topo, não a árvore inteira. Resultado: diagnóstico bloqueante `foreign_deployment` com ações: abrir pasta, "Eu já removi a implantação do outro gerenciador, verificar de novo", e (instância nossa) "Adotar" quando o banco foi perdido e o marcador + observado permitem reconstruir o manifesto.
 
 ## 12. Erros
 

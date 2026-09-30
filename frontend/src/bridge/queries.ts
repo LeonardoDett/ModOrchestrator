@@ -17,3 +17,17 @@ export function useLogTail(filter: LogFilter) {
     { onOperationEvents: true },
   );
 }
+
+/** Games screen content; rereads on operation events (manage, search). */
+export function useGamesView(showHidden: boolean) {
+  return useBackendQuery((b) => b.gamesView(showHidden), [showHidden], { onOperationEvents: true });
+}
+
+/** Shell navigation derived by the backend from the active game's capabilities. */
+export function useWorkspace() {
+  return useBackendQuery((b) => b.workspace(), [], { onOperationEvents: true });
+}
+
+export function useInstanceDetails(id: string) {
+  return useBackendQuery((b) => b.gameInstanceDetails(id), [id], { onOperationEvents: true });
+}
