@@ -1,0 +1,15 @@
+/* Single CSS entry: dettmann-ui tokens + Tailwind (the library owns the theme). */
+@import "dettmann-ui/theme.css";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ui-canvas);
+  color: var(--ui-fg);
+  font-family: var(--font-sans);
+}

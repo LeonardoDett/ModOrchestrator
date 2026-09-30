@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  core:
+    # The frontend depends on the local dettmann-ui package
+    # (dettmann-ui-vnext/), which is not versioned in this repository, so
+    # CI covers the Go core only. See README.md (Desenvolvimento).
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: gofmt
+        shell: bash
+        run: test -z "$(gofmt -l internal main.go)"
+      - run: go vet ./...
+      - run: go test ./...
