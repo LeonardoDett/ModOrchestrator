@@ -1,10 +1,10 @@
 import { Gamepad2, LayoutDashboard, Puzzle, Settings, type LucideIcon } from "lucide-react";
 
 /**
- * Global navigation (ui/00-plano-interface-v2.md › Shell global).
+ * Global navigation (ui/00-principios-e-shell.md › Sidebar).
  *
  * The per-game workspace section (Overview, Mods, Conflicts, ...) is added
- * once a game is active and is driven by adapter capabilities (F2/F11).
+ * once a game is active and is driven by adapter capabilities (F3; shell in F2).
  * Reserved areas (Downloads, Tools, Collections) are intentionally absent:
  * they must not appear as navigable entries until they exist.
  */

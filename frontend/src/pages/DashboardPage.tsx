@@ -13,7 +13,7 @@ const statusBadge: Record<OperationStatus, "default" | "info" | "success" | "dan
   interrupted: "warning",
 };
 
-/** Triage center (ui/00-plano-interface-v2.md › Tela Dashboard). */
+/** Triage center (ui/telas/dashboard.md). */
 export function DashboardPage() {
   const info = useAppInfo();
 

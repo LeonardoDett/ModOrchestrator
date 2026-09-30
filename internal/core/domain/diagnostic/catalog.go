@@ -1,0 +1,38 @@
+package diagnostic
+
+// Catalog of health check codes (core/10 §1.1). A new check needs a line in
+// the spec catalog and here; codes never change once released.
+const (
+	CodeStagingMissing          Code = "staging_missing"
+	CodeStagingForeign          Code = "staging_foreign"
+	CodeForeignDeployment       Code = "foreign_deployment"
+	CodeDeployInterrupted       Code = "deploy_interrupted"
+	CodeDeployPending           Code = "deploy_pending"
+	CodeDeployNeedsDecision     Code = "deploy_needs_decision"
+	CodeDeployFailed            Code = "deploy_failed"
+	CodeMethodUnavailable       Code = "method_unavailable"
+	CodeExternalChangesPending  Code = "external_changes_pending"
+	CodeLoadOrderExternalChange Code = "load_order_external_change"
+	CodeRuleCycle               Code = "rule_cycle"
+	CodeModsIncompatible        Code = "mods_incompatible"
+	CodeModRequirementMissing   Code = "mod_requirement_missing"
+	CodeModRecommendation       Code = "mod_recommendation_missing"
+	CodeRuleOrphan              Code = "rule_orphan"
+	CodeOverrideStale           Code = "override_stale"
+	CodeConflictsUnreviewed     Code = "conflicts_unreviewed"
+	CodeModFullyOverwritten     Code = "mod_fully_overwritten"
+	CodeStagingFileMissing      Code = "staging_file_missing"
+	CodeStagingFileModified     Code = "staging_file_modified"
+	CodeModArchiveMissing       Code = "mod_archive_missing"
+	CodeInstallerRequired       Code = "installer_required"
+	CodePluginMissingMaster     Code = "plugin_missing_master"
+	CodePluginLimitExceeded     Code = "plugin_limit_exceeded"
+	CodePluginDisabledMaster    Code = "plugin_disabled_master"
+	CodePluginHeaderUnreadable  Code = "plugin_header_unreadable"
+	CodeGameNotFound            Code = "game_not_found"
+	CodeGameVersionChanged      Code = "game_version_changed"
+	CodeGameRunning             Code = "game_running"
+	CodeFrameworkMissing        Code = "framework_missing"
+	CodeDiskSpaceLow            Code = "disk_space_low"
+	CodeBackupFailed            Code = "backup_failed"
+)
