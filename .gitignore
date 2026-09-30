@@ -1,7 +1,3 @@
-# Sibling packages versioned outside this repository
-dettmann-ui-vnext
-mod-orchestrator-spec-v2
-
 # Go / Wails build output
 build/bin/
 
@@ -11,6 +7,13 @@ frontend/dist/*
 !frontend/dist/.gitkeep
 frontend/package.json.md5
 frontend/node_modules/.tmp/
+
+# dettmann-ui (local copy): sources are versioned, build output is not.
+# Rebuild with `npm install && npm run build` inside dettmann-ui-vnext (see README).
+dettmann-ui-vnext/node_modules/
+dettmann-ui-vnext/dist/
+dettmann-ui-vnext/coverage/
+dettmann-ui-vnext/*.tsbuildinfo
 
 # Local tooling
 .claude/

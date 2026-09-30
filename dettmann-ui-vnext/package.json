@@ -1,0 +1,72 @@
+{
+  "name": "dettmann-ui",
+  "version": "1.0.0-next.1",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./theme-script": {
+      "types": "./dist/theme/get-theme-script.d.ts",
+      "import": "./dist/theme/get-theme-script.mjs"
+    },
+    "./theme.css": "./src/theme/tokens.css",
+    "./styles.css": "./dist/index.css"
+  },
+  "files": [
+    "dist",
+    "src/theme/tokens.css",
+    "src/styles/theme"
+  ],
+  "scripts": {
+    "theme:build": "node scripts/theme/generate.mjs src/styles/theme",
+    "theme:check": "node scripts/theme/check.mjs src/styles/theme",
+    "theme:lint": "node scripts/theme/lint.mjs src",
+    "theme:seed": "node scripts/theme/seed.mjs",
+    "theme": "npm run theme:build && npm run theme:check && npm run theme:lint",
+    "prebuild": "npm run theme",
+    "build": "tsup && npm run build:css",
+    "build:css": "tailwindcss -i ./src/theme/tokens.css -o ./dist/index.css --minify",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "audit:contrast": "npm run theme:check",
+    "verify": "npm run typecheck && npm run test -- --run"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.27.4",
+    "@tanstack/react-virtual": "^3.13.0",
+    "date-fns": "^4.1.0",
+    "lucide-react": "^0.468.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^6.0.5",
+    "axe-core": "^4.13.0",
+    "culori": "^4.0.2",
+    "jsdom": "^30.0.1",
+    "tailwindcss": "^4.0.0",
+    "tsup": "^8.3.5",
+    "tsx": "^4.23.12",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.10"
+  },
+  "description": "Theme-first, composition-first React UI system with domain-ready primitives and patterns."
+}

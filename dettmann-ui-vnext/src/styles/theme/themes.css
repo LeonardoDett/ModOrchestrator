@@ -1,0 +1,77 @@
+/*
+ * Visual source of truth.
+ *
+ * 60/30/10 is enforced semantically, not by arbitrary component colors:
+ *   60% -> canvas/surface/sunken
+ *   30% -> structure/structure-raised/navigation/panels
+ *   10% -> brand/actions/focus
+ *
+ * Add a theme by defining the same semantic variables in a light root and a
+ * matching dark root. Components never consume raw theme colors.
+ */
+
+:root,
+[data-theme="default"],
+[data-theme="forest"] {
+  --ui-canvas: #F7F9F8; --ui-surface: #FFFFFF; --ui-raised: #FFFFFF; --ui-sunken: #EEF2F0;
+  --ui-structure: #E8EEEB; --ui-structure-raised: #DDE6E1;
+  --ui-fg: #17201B; --ui-fg-secondary: #4E5B53; --ui-fg-tertiary: #6A766F; --ui-fg-disabled: #9AA49E; --ui-fg-inverse: #FFFFFF;
+  --ui-border-subtle: #DCE4DF; --ui-border: #C9D4CD; --ui-border-strong: #87958C; --ui-focus: #167A4B;
+  --ui-brand: #16824F; --ui-brand-hover: #126D42; --ui-brand-pressed: #0E5B37; --ui-on-brand: #FFFFFF; --ui-brand-subtle: #E5F5EB; --ui-brand-subtle-hover: #D5EDDF; --ui-brand-border: #9DC9AF; --ui-brand-text: #0F6A40;
+  --ui-secondary: #28453A; --ui-secondary-hover: #203A30; --ui-secondary-pressed: #182F26; --ui-on-secondary: #FFFFFF; --ui-secondary-subtle: #E8EFEB; --ui-secondary-subtle-hover: #DCE6E1; --ui-secondary-border: #A8B9B1; --ui-secondary-text: #2C4E41;
+  --ui-accent: #B85C2A; --ui-accent-hover: #9E4C20; --ui-accent-pressed: #873F19; --ui-on-accent: #FFFFFF; --ui-accent-subtle: #FFF0E8; --ui-accent-subtle-hover: #FFE4D7; --ui-accent-border: #E9BAA2; --ui-accent-text: #9E4C20;
+  --ui-info: #2C70A8; --ui-info-hover: #245F91; --ui-info-pressed: #1D4E78; --ui-on-info: #FFFFFF; --ui-info-subtle: #E8F2FA; --ui-info-subtle-hover: #DCECF7; --ui-info-border: #A8C7DD; --ui-info-text: #245F91;
+  --ui-success: #16824F; --ui-success-hover: #126D42; --ui-success-pressed: #0E5B37; --ui-on-success: #FFFFFF; --ui-success-subtle: #E5F5EB; --ui-success-subtle-hover: #D5EDDF; --ui-success-border: #9DC9AF; --ui-success-text: #0F6A40;
+  --ui-warning: #9A6B00; --ui-warning-hover: #805800; --ui-warning-pressed: #684700; --ui-on-warning: #FFFFFF; --ui-warning-subtle: #FFF5D9; --ui-warning-subtle-hover: #FFEDB9; --ui-warning-border: #E4CC84; --ui-warning-text: #805800;
+  --ui-danger: #C13B3B; --ui-danger-hover: #A62F2F; --ui-danger-pressed: #8E2929; --ui-on-danger: #FFFFFF; --ui-danger-subtle: #FDEAEA; --ui-danger-subtle-hover: #F9D9D9; --ui-danger-border: #E4AAAA; --ui-danger-text: #A62F2F;
+  --ui-overlay: rgb(8 14 10 / 0.48);
+}
+
+.dark,
+.dark [data-theme="default"],
+.dark [data-theme="forest"] {
+  --ui-canvas: #0E1310; --ui-surface: #141A16; --ui-raised: #1B231E; --ui-sunken: #090D0B;
+  --ui-structure: #18211C; --ui-structure-raised: #223029;
+  --ui-fg: #F2F6F3; --ui-fg-secondary: #B8C4BC; --ui-fg-tertiary: #8F9D94; --ui-fg-disabled: #68766D; --ui-fg-inverse: #0B100D;
+  --ui-border-subtle: #2A372F; --ui-border: #37473C; --ui-border-strong: #5F7265; --ui-focus: #55D891;
+  --ui-brand: #39C77D; --ui-brand-hover: #54D891; --ui-brand-pressed: #2CAF6E; --ui-on-brand: #08110C; --ui-brand-subtle: #143624; --ui-brand-subtle-hover: #1A442D; --ui-brand-border: #2D7651; --ui-brand-text: #61E19B;
+  --ui-secondary: #78A796; --ui-secondary-hover: #8BB8A5; --ui-secondary-pressed: #639181; --ui-on-secondary: #0A120E; --ui-secondary-subtle: #1A2C23; --ui-secondary-subtle-hover: #20352B; --ui-secondary-border: #375247; --ui-secondary-text: #A6CBB9;
+  --ui-accent: #E28B55; --ui-accent-hover: #EDA171; --ui-accent-pressed: #CA7745; --ui-on-accent: #1B0D06; --ui-accent-subtle: #3A2417; --ui-accent-subtle-hover: #482C1D; --ui-accent-border: #704630; --ui-accent-text: #F0A77A;
+  --ui-info: #63A7D8; --ui-info-hover: #7BB7E1; --ui-info-pressed: #4B8FBF; --ui-on-info: #081018; --ui-info-subtle: #162B3B; --ui-info-subtle-hover: #1C374B; --ui-info-border: #375C77; --ui-info-text: #8FC5E9;
+  --ui-success: #55D891; --ui-success-hover: #74E4A7; --ui-success-pressed: #40C97F; --ui-on-success: #07110C; --ui-success-subtle: #153A27; --ui-success-subtle-hover: #1A472F; --ui-success-border: #2C7650; --ui-success-text: #72E7A4;
+  --ui-warning: #E2B74B; --ui-warning-hover: #F0C964; --ui-warning-pressed: #C89F34; --ui-on-warning: #161005; --ui-warning-subtle: #3A3017; --ui-warning-subtle-hover: #473B1C; --ui-warning-border: #766630; --ui-warning-text: #EBC35F;
+  --ui-danger: #E06A6A; --ui-danger-hover: #EC8080; --ui-danger-pressed: #C75555; --ui-on-danger: #190909; --ui-danger-subtle: #3E1E1E; --ui-danger-subtle-hover: #4A2323; --ui-danger-border: #7A3C3C; --ui-danger-text: #F08E8E;
+  --ui-overlay: rgb(0 0 0 / 0.62);
+}
+
+/* A cooler, product-neutral preset. */
+[data-theme="graphite"] {
+  --ui-canvas: #F5F6F6; --ui-surface: #FFFFFF; --ui-raised: #FFFFFF; --ui-sunken: #ECEEEE;
+  --ui-structure: #E3E6E7; --ui-structure-raised: #D7DBDC;
+  --ui-fg: #1B1F21; --ui-fg-secondary: #566067; --ui-fg-tertiary: #6A7479; --ui-fg-disabled: #A0A7AB; --ui-fg-inverse: #FFFFFF;
+  --ui-border-subtle: #E0E3E4; --ui-border: #CCD1D3; --ui-border-strong: #838B90; --ui-focus: #34434B;
+  --ui-brand: #34434B; --ui-brand-hover: #27343B; --ui-brand-pressed: #1D282D; --ui-on-brand: #FFFFFF; --ui-brand-subtle: #E8ECEE; --ui-brand-subtle-hover: #DEE3E5; --ui-brand-border: #ADB7BC; --ui-brand-text: #27343B;
+  --ui-secondary: #5F6E75; --ui-secondary-hover: #4F5E64; --ui-secondary-pressed: #435057; --ui-on-secondary: #FFFFFF; --ui-secondary-subtle: #ECEFF0; --ui-secondary-subtle-hover: #E3E7E8; --ui-secondary-border: #B8C0C4; --ui-secondary-text: #4F5E64;
+  --ui-accent: #7B5D2C; --ui-accent-hover: #684E25; --ui-accent-pressed: #58411F; --ui-on-accent: #FFFFFF; --ui-accent-subtle: #F4EEE4; --ui-accent-subtle-hover: #ECE1CF; --ui-accent-border: #D3C09E; --ui-accent-text: #684E25;
+  --ui-info: #2F6F8F; --ui-info-hover: #275E79; --ui-info-pressed: #214E64; --ui-on-info: #FFFFFF; --ui-info-subtle: #E8F1F5; --ui-info-subtle-hover: #DCEBF1; --ui-info-border: #A8C6D3; --ui-info-text: #275E79;
+  --ui-success: #2E7655; --ui-success-hover: #256548; --ui-success-pressed: #1E553C; --ui-on-success: #FFFFFF; --ui-success-subtle: #E8F3EE; --ui-success-subtle-hover: #DAECE2; --ui-success-border: #A8CBB8; --ui-success-text: #256548;
+  --ui-warning: #8B6500; --ui-warning-hover: #765500; --ui-warning-pressed: #634700; --ui-on-warning: #FFFFFF; --ui-warning-subtle: #FBF4DD; --ui-warning-subtle-hover: #F5EAC0; --ui-warning-border: #D8C884; --ui-warning-text: #765500;
+  --ui-danger: #B64A4A; --ui-danger-hover: #9E3E3E; --ui-danger-pressed: #893535; --ui-on-danger: #FFFFFF; --ui-danger-subtle: #F9EAEA; --ui-danger-subtle-hover: #F2DADA; --ui-danger-border: #DDAAAA; --ui-danger-text: #9E3E3E;
+  --ui-overlay: rgb(8 10 11 / 0.48);
+}
+
+[data-theme="graphite"].dark,
+.dark [data-theme="graphite"] {
+  --ui-canvas: #111415; --ui-surface: #171B1D; --ui-raised: #202528; --ui-sunken: #0B0E0F;
+  --ui-structure: #1B2123; --ui-structure-raised: #262D30;
+  --ui-fg: #F1F4F5; --ui-fg-secondary: #BBC3C7; --ui-fg-tertiary: #939DA1; --ui-fg-disabled: #697277; --ui-fg-inverse: #111415;
+  --ui-border-subtle: #2A3033; --ui-border: #3A4246; --ui-border-strong: #667177; --ui-focus: #AAB8BE;
+  --ui-brand: #AAB8BE; --ui-brand-hover: #C0CBD0; --ui-brand-pressed: #8F9DA3; --ui-on-brand: #111415; --ui-brand-subtle: #283135; --ui-brand-subtle-hover: #303A3E; --ui-brand-border: #4D5A60; --ui-brand-text: #C8D1D5;
+  --ui-secondary: #8EA0A8; --ui-secondary-hover: #A2B1B8; --ui-secondary-pressed: #788C95; --ui-on-secondary: #111415; --ui-secondary-subtle: #263034; --ui-secondary-subtle-hover: #2E393E; --ui-secondary-border: #4B5A60; --ui-secondary-text: #B7C4C9;
+  --ui-accent: #D2AA72; --ui-accent-hover: #DDB984; --ui-accent-pressed: #B9915E; --ui-on-accent: #18140D; --ui-accent-subtle: #352B1D; --ui-accent-subtle-hover: #423520; --ui-accent-border: #6A5739; --ui-accent-text: #E2C18D;
+  --ui-info: #6CA7C4; --ui-info-hover: #83B7D0; --ui-info-pressed: #5691AF; --ui-on-info: #0D151A; --ui-info-subtle: #192C36; --ui-info-subtle-hover: #213943; --ui-info-border: #385868; --ui-info-text: #91C4DB;
+  --ui-success: #65B48D; --ui-success-hover: #7CC39F; --ui-success-pressed: #50A77D; --ui-on-success: #0B1510; --ui-success-subtle: #183528; --ui-success-subtle-hover: #1E4232; --ui-success-border: #35664F; --ui-success-text: #86C8A7;
+  --ui-warning: #DDBB5A; --ui-warning-hover: #E7C76B; --ui-warning-pressed: #C4A447; --ui-on-warning: #171208; --ui-warning-subtle: #382F18; --ui-warning-subtle-hover: #463B1D; --ui-warning-border: #70602D; --ui-warning-text: #E8CD79;
+  --ui-danger: #DC7070; --ui-danger-hover: #E98787; --ui-danger-pressed: #C75C5C; --ui-on-danger: #1A0B0B; --ui-danger-subtle: #3A1F1F; --ui-danger-subtle-hover: #472525; --ui-danger-border: #704040; --ui-danger-text: #EE9595;
+  --ui-overlay: rgb(0 0 0 / 0.64);
+}

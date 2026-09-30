@@ -1,0 +1,26 @@
+/* Example product theme: dark green, deliberately using the library's semantic contract. */
+[data-theme="orchestrator"] {
+  --ui-canvas: #0B100D;
+  --ui-surface: #101713;
+  --ui-raised: #17211A;
+  --ui-sunken: #070B09;
+  --ui-structure: #132019;
+  --ui-structure-raised: #1C2A22;
+  --ui-fg: #F2F7F3;
+  --ui-fg-secondary: #B9C8BF;
+  --ui-fg-tertiary: #8E9E95;
+  --ui-fg-disabled: #64736A;
+  --ui-fg-inverse: #08100B;
+  --ui-border-subtle: #233029;
+  --ui-border: #314138;
+  --ui-border-strong: #5D7164;
+  --ui-focus: #59E69A;
+  --ui-brand: #39D486;
+  --ui-brand-hover: #55E19A;
+  --ui-brand-pressed: #2EBB73;
+  --ui-on-brand: #06100A;
+  --ui-brand-subtle: #123423;
+  --ui-brand-subtle-hover: #19442E;
+  --ui-brand-border: #2C7651;
+  --ui-brand-text: #69EEA7;
+}

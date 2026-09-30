@@ -2,7 +2,7 @@
 
 Gerenciador de mods desktop (Go + Wails v2 + React). A especificação vive em
 `mod-orchestrator-spec-v2/` e o design
-system em `dettmann-ui-vnext/` — ambas pastas locais, ignoradas por este repositório.
+system em `dettmann-ui-vnext/`, ambas versionadas neste repositório (o build da lib, `node_modules/` e `dist/`, não é versionado; ver D052).
 
 Fase atual: **F0 — bootstrap** (estrutura, persistência, Operation/Event, shell vazio).
 

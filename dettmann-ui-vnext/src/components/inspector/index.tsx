@@ -1,0 +1,4 @@
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
+import { cn } from "../../utils/cn";
+export interface InspectorProps extends ComponentPropsWithoutRef<"aside"> { title?:ReactNode; description?:ReactNode; actions?:ReactNode; children:ReactNode; sticky?:boolean; }
+export function Inspector({title,description,actions,children,sticky=true,className,...props}:InspectorProps){return <aside className={cn("min-w-0 border-l border-border bg-raised",sticky&&"sticky top-0 h-fit",className)} {...props}><div className="border-b border-border px-4 py-3"><div className="flex items-start gap-3"><div className="min-w-0 flex-1">{title?<h2 className="truncate text-sm font-semibold text-fg">{title}</h2>:null}{description?<p className="mt-0.5 text-xs text-fg-muted">{description}</p>:null}</div>{actions}</div></div><div className="p-4">{children}</div></aside>}
