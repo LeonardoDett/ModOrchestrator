@@ -52,7 +52,7 @@ const checkboxVariants = defineRecipe({
   },
 });
 
-type CheckboxVariants = VariantProps<typeof checkboxVariants>;
+type CheckboxVariants = Omit<VariantProps<typeof checkboxVariants>, "disabled">;
 
 interface CheckboxProps
   extends Omit<ComponentPropsWithoutRef<"button">, "type" | "role">,

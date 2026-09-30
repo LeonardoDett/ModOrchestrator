@@ -51,11 +51,12 @@ Entregas:
 - Tema: registrar `orchestrator` na dettmann-ui ou manter `forest` com plano registrado (ui/04). Nenhum hex no app.
 - i18n (en, pt-BR) com catálogo e testes que falham para chave ausente (D044).
 - Lacuna L1 (DataTable) criada **na lib**.
-- Drawer de operações e aba Log de Diagnostics (log técnico já existe).
+- Drawer de operações e aba Log de Diagnostics (o log técnico é criado nesta fase, D055).
 - Paleta de comandos (`Command`) com as ações globais existentes.
 
 Invariantes: INV-OPS-04/05.
 Demonstração: app abre com shell completo, troca de idioma, drawer mostra operações reais, log visível.
+Estado: concluída (D053–D056).
 
 ## F3: Jogos, adapters e descoberta
 

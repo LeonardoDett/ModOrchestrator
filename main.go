@@ -31,12 +31,15 @@ func main() {
 		Height:    800,
 		MinWidth:  960,
 		MinHeight: 600,
+		// ui.customTitleBar (core/13, restart required): the UI draws the
+		// title bar with the launcher area and window controls (ui/00 §2.1).
+		Frameless: container.CustomTitleBar,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		// Matches the dark canvas of the dettmann-ui "forest" theme so the
-		// window does not flash before the frontend paints.
-		BackgroundColour: &options.RGBA{R: 14, G: 19, B: 16, A: 255},
+		// Matches the dark canvas of the dettmann-ui "orchestrator" theme so
+		// the window does not flash before the frontend paints.
+		BackgroundColour: &options.RGBA{R: 13, G: 19, B: 17, A: 255},
 		OnStartup:        app.Startup,
 		OnShutdown:       app.Shutdown,
 		Bind:             []any{app},

@@ -90,7 +90,7 @@ export function InputRoot({
     name,
     disabled,
     error,
-    fullWidth,
+    fullWidth: fullWidth ?? false,
     value,
     onChange: setValue,
     hasValue,

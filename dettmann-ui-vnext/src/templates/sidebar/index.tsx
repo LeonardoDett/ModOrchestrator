@@ -30,6 +30,24 @@ export interface SidebarItem {
   badge?: ReactNode;
 }
 
+/** A titled group of items. `end` sections are pinned to the bottom of the column. */
+export interface SidebarSection {
+  id: string;
+  /** Section heading; hidden (replaced by a divider) while collapsed. */
+  label?: string;
+  icon?: LucideIconComponent;
+  items: SidebarItem[];
+  placement?: "start" | "end";
+}
+
+/** Built-in texts, overridable for localization. */
+export interface SidebarLabels {
+  navigation?: string;
+  openSidebar?: string;
+  collapseSidebar?: string;
+  expandSidebar?: string;
+}
+
 /** Solid (`strong`) or soft (`subtle`) fill of the 30% role (`secondary`). */
 export type SidebarEmphasis = "strong" | "subtle";
 
@@ -109,7 +127,11 @@ const drawerSurfaceClass: Record<SidebarEmphasis, string> = {
 };
 
 interface SidebarRootProps extends Omit<ComponentPropsWithoutRef<"div">, "children"> {
-  items: SidebarItem[];
+  /** Flat navigation. Use `sections` instead for titled groups. */
+  items?: SidebarItem[];
+  /** Titled groups; takes precedence over `items`. */
+  sections?: SidebarSection[];
+  labels?: SidebarLabels;
   /** Marks the matching item with aria-current="page" */
   currentId?: string;
   collapsed?: boolean;
@@ -194,7 +216,51 @@ function SidebarLeaf({
   );
 }
 
-function SidebarTree({
+function SidebarSections({
+  sections,
+  collapsed,
+  currentId,
+  emphasis,
+  label,
+}: {
+  sections: SidebarSection[];
+  collapsed: boolean;
+  currentId?: string;
+  emphasis: SidebarEmphasis;
+  label: string;
+}) {
+  const start = sections.filter((section) => section.placement !== "end");
+  const end = sections.filter((section) => section.placement === "end");
+  const renderSection = (section: SidebarSection, index: number) => (
+    <div key={section.id} role="group" aria-label={section.label} className="flex flex-col gap-1">
+      {section.label && !collapsed ? (
+        <div
+          className={cn(
+            "flex items-center gap-2 px-2 pb-1 text-xs font-semibold uppercase tracking-wide",
+            index > 0 && "pt-3",
+            emphasis === "strong" ? "text-on-secondary opacity-70" : "text-fg-subtle"
+          )}
+        >
+          {section.icon ? <Icon icon={section.icon} size="xs" color="current" /> : null}
+          <span className="min-w-0 truncate">{section.label}</span>
+        </div>
+      ) : index > 0 ? (
+        <div role="none" className="mx-2 my-1 h-px bg-border" />
+      ) : null}
+      <SidebarItems items={section.items} collapsed={collapsed} currentId={currentId} emphasis={emphasis} />
+    </div>
+  );
+  return (
+    <nav aria-label={label} className="flex min-h-0 flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto p-2">
+      {start.map(renderSection)}
+      {end.length > 0 ? (
+        <div className="mt-auto flex flex-col gap-1 pt-2">{end.map((section, i) => renderSection(section, i + 1))}</div>
+      ) : null}
+    </nav>
+  );
+}
+
+function SidebarItems({
   items,
   collapsed,
   currentId,
@@ -224,7 +290,7 @@ function SidebarTree({
   const groupNodes = items.filter((item) => item.children?.length);
 
   return (
-    <nav aria-label="Sidebar" className="flex flex-1 flex-col gap-1 overflow-x-hidden overflow-y-auto p-2">
+    <>
       {renderLeaves(items)}
       {groupNodes.length > 0 ? (
         <Accordion.Root multiple defaultValue={defaultOpen} className="space-y-1">
@@ -263,23 +329,25 @@ function SidebarTree({
           ))}
         </Accordion.Root>
       ) : null}
-    </nav>
+    </>
   );
 }
 
 function SidebarNavList({
-  items,
+  sections,
   collapsed,
   currentId,
   emphasis,
+  label,
 }: {
-  items: SidebarItem[];
+  sections: SidebarSection[];
   collapsed: boolean;
   currentId?: string;
   emphasis: SidebarEmphasis;
+  label: string;
 }) {
   const [focusedIndex, setFocusedIndex] = useState(0);
-  const flat = flattenItems(items);
+  const flat = flattenItems(sections.flatMap((section) => section.items));
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (!isRovingKey(event.key, "vertical")) return;
@@ -294,11 +362,12 @@ function SidebarNavList({
 
   return (
     <div onKeyDown={onKeyDown} className="flex min-h-0 flex-1 flex-col">
-      <SidebarTree
-        items={items}
+      <SidebarSections
+        sections={sections}
         collapsed={collapsed}
         currentId={currentId}
         emphasis={emphasis}
+        label={label}
       />
     </div>
   );
@@ -312,6 +381,8 @@ function flattenItems(items: SidebarItem[]): SidebarItem[] {
 
 function SidebarRoot({
   items,
+  sections: sectionsProp,
+  labels,
   currentId,
   collapsed: collapsedProp,
   defaultCollapsed = false,
@@ -329,6 +400,8 @@ function SidebarRoot({
     onChange: onCollapsedChange,
   });
   const [mobileOpen, setMobileOpen] = useState(false);
+  const sections: SidebarSection[] = sectionsProp ?? [{ id: "main", items: items ?? [] }];
+  const navigationLabel = labels?.navigation ?? "Sidebar";
 
   const toggleCollapsed = useCallback(() => {
     setCollapsed(!collapsed);
@@ -341,7 +414,7 @@ function SidebarRoot({
         variant="ghost"
         size="icon"
         className="md:hidden"
-        aria-label="Open sidebar"
+        aria-label={labels?.openSidebar ?? "Open sidebar"}
         onClick={() => setMobileOpen(true)}
       >
         <Icon icon={Menu} size="sm" />
@@ -363,7 +436,11 @@ function SidebarRoot({
             type="button"
             variant="ghost"
             size="icon-sm"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            aria-label={
+              collapsed
+                ? (labels?.expandSidebar ?? "Expand sidebar")
+                : (labels?.collapseSidebar ?? "Collapse sidebar")
+            }
             className={emphasis === "strong" ? strongChromeClass : undefined}
             onClick={toggleCollapsed}
           >
@@ -371,10 +448,11 @@ function SidebarRoot({
           </Button>
         </div>
         <SidebarNavList
-          items={items}
+          sections={sections}
           collapsed={collapsed}
           currentId={currentId}
           emphasis={emphasis}
+          label={navigationLabel}
         />
         {footer}
       </aside>
@@ -387,16 +465,17 @@ function SidebarRoot({
           <Drawer.Header className="!border-secondary-border">
             {header ? <div className="min-w-0 flex-1">{header}</div> : null}
             <Drawer.Title className={header ? "sr-only" : emphasis === "strong" ? "!text-on-secondary" : undefined}>
-              Navigation
+              {navigationLabel}
             </Drawer.Title>
             <Drawer.CloseButton className={emphasis === "strong" ? strongChromeClass : undefined} />
           </Drawer.Header>
           <Drawer.Body className={cn("p-0", emphasis === "strong" && "!text-on-secondary")}>
-            <SidebarTree
-              items={items}
+            <SidebarSections
+              sections={sections}
               collapsed={false}
               currentId={currentId}
               emphasis={emphasis}
+              label={navigationLabel}
             />
           </Drawer.Body>
         </Drawer.Content>

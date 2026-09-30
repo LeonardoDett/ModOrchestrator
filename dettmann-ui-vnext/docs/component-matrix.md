@@ -14,7 +14,7 @@
 
 ## Data and status
 
-`Table`, `List`, `Badge`, `Tag`, `Alert`, `Progress`, `Rating`, `Breadcrumbs`, `ActionBar`, `Toolbar`, `FilterBar`, `Inspector`, `LogViewer`, `DiffViewer`
+`Table`, `DataTable`, `DataTableColumnPicker`, `List`, `Badge`, `Tag`, `Alert`, `Progress`, `Rating`, `Breadcrumbs`, `ActionBar`, `Toolbar`, `FilterBar`, `Inspector`, `LogViewer`, `DiffViewer`
 
 ## Files and media
 

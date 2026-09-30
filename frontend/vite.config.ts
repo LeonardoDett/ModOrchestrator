@@ -15,5 +15,9 @@ export default defineConfig({
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
     css: false,
+    // Hook libraries installed under the linked dettmann-ui must go through
+    // Vite (and its dedupe) instead of being externalized with their own
+    // copy of React.
+    server: { deps: { inline: [/dettmann-ui/, /@floating-ui/, /@tanstack/] } },
   },
 });

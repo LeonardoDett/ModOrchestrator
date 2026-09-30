@@ -50,6 +50,8 @@ const themeBlocks = [
   ["forest dark", /\.dark,\n\.dark \[data-theme="default"\],\n\.dark \[data-theme="forest"\] \{(.*?)\n\}/s],
   ["graphite light", /\[data-theme="graphite"\] \{(.*?)\n\}/s],
   ["graphite dark", /\[data-theme="graphite"\]\.dark,\n\.dark \[data-theme="graphite"\] \{(.*?)\n\}/s],
+  ["orchestrator light", /\n\[data-theme="orchestrator"\] \{(.*?)\n\}/s],
+  ["orchestrator dark", /\[data-theme="orchestrator"\]\.dark,\n\.dark \[data-theme="orchestrator"\] \{(.*?)\n\}/s],
 ];
 
 for (const [name, selector] of themeBlocks) {
@@ -62,6 +64,7 @@ for (const [name, selector] of themeBlocks) {
     ["on-brand on brand", "on-brand", "brand"],
     ["brand-text on brand-subtle", "brand-text", "brand-subtle"],
     ["on-danger on danger", "on-danger", "danger"],
+    ["success-text on success-subtle", "success-text", "success-subtle"],
   ];
   for (const [label, foreground, background] of checks) {
     const ratio = contrastRatio(block[foreground], block[background]);
@@ -69,6 +72,17 @@ for (const [name, selector] of themeBlocks) {
       throw new Error(`${name}: ${label} contrast is ${ratio.toFixed(2)} (< 4.5)`);
     }
   }
+}
+
+// Every tone of theme/tone.ts must map to semantic roles in tokens.css, or
+// every toned Badge/Alert/Button renders without color.
+const toneSource = fs.readFileSync(path.resolve("src/theme/tone.ts"), "utf8");
+const tokens = fs.readFileSync(files[2], "utf8");
+const tones = [...(toneSource.match(/TONES = \[([\s\S]*?)\]/)?.[1] ?? "").matchAll(/"(\w+)"/g)].map((m) => m[1]);
+if (tones.length === 0) throw new Error("Could not read TONES from src/theme/tone.ts");
+if (!tokens.includes("--color-tone-subtle: var(--tone-subtle)")) throw new Error("tokens.css is missing the tone utilities");
+for (const tone of tones) {
+  if (!tokens.includes(`[data-tone="${tone}"]`)) throw new Error(`tokens.css has no [data-tone="${tone}"] mapping`);
 }
 
 console.log("Theme contract and contrast checks OK.");

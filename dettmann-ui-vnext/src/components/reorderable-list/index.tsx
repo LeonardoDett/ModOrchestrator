@@ -110,6 +110,7 @@ export function ReorderableList<T>({
                   index === 0 && "invisible pointer-events-none",
                 )}
                 aria-label="Move item up"
+                aria-hidden={index === 0 || undefined}
                 onClick={() => moveBy(item.id, -1)}
                 disabled={index === 0}
               >
@@ -123,6 +124,7 @@ export function ReorderableList<T>({
                   index === source.length - 1 && "invisible pointer-events-none",
                 )}
                 aria-label="Move item down"
+                aria-hidden={index === source.length - 1 || undefined}
                 onClick={() => moveBy(item.id, 1)}
                 disabled={index === source.length - 1}
               >

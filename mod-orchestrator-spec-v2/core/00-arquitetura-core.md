@@ -93,6 +93,15 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 - **Consultas** retornam DTOs de leitura prontos para a tela (ex.: `ModListView` já com prioridade, status de conflito e contagem de diagnósticos por mod). A montagem dessas visões é caso de uso de aplicação, não lógica da UI.
 - **Eventos** para a UI (`operation:event` e canais por agregado se necessário) são sinais de invalidação: a UI relê a consulta afetada.
 - Paginação/virtualização: consultas de listas grandes (arquivos de um mod, conflitos, plugins) aceitam janela e filtro no backend.
+- **Erros** (D053, INV-OPS-05): toda chamada que falha rejeita com o JSON `{code, params, detail}` (`internal/bridge/errors.go`). `code` é estável e traduzido pela UI (`error.<code>` no catálogo i18n), `params` alimenta a mensagem e `detail` é técnico (só em "Detalhes técnicos"). Erros de operação continuam no `OperationError` do DTO, com o código do módulo dono. Toda falha é registrada no log técnico.
+
+| Código | Quando | Parâmetros |
+|---|---|---|
+| `internal` | erro sem mapeamento (bug ou falha de infraestrutura) | — |
+| `not_found` | entidade pedida não existe | depende da chamada (`operation`, ...) |
+| `setting_unknown` | chave fora do catálogo disponível ou de escopo errado | `key` |
+| `setting_invalid` | valor rejeitado pela validação do catálogo | `key`, `value` |
+| `backend_offline` | só na UI: app fora do shell Wails (D021) | — |
 
 ## 7. Recalcular vs persistir
 

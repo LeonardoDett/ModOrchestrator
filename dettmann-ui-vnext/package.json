@@ -30,7 +30,7 @@
     "theme:seed": "node scripts/theme/seed.mjs",
     "theme": "npm run theme:build && npm run theme:check && npm run theme:lint",
     "prebuild": "npm run theme",
-    "build": "tsup && npm run build:css",
+    "build": "node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js && npm run build:css",
     "build:css": "tailwindcss -i ./src/theme/tokens.css -o ./dist/index.css --minify",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",

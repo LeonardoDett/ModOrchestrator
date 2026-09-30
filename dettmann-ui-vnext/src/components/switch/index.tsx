@@ -59,7 +59,7 @@ const switchVariants = defineRecipe({
   },
 });
 
-type SwitchVariants = VariantProps<typeof switchVariants>;
+type SwitchVariants = Omit<VariantProps<typeof switchVariants>, "disabled">;
 
 interface SwitchProps
   extends Omit<ComponentPropsWithoutRef<"button">, "type" | "role">,

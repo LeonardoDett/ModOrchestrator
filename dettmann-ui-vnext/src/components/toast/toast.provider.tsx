@@ -21,6 +21,8 @@ function toastReducer(state: Toast[], action: ToastAction): Toast[] {
 
 interface ToastProviderProps {
   children: ReactNode;
+  /** Accessible name of the toast close buttons (localize it). */
+  closeLabel?: string;
 }
 
 let toastCount = 0;
@@ -36,7 +38,7 @@ let toastCount = 0;
  * </ToastProvider>
  * ```
  */
-export function ToastProvider({ children }: ToastProviderProps) {
+export function ToastProvider({ children, closeLabel }: ToastProviderProps) {
   const [toasts, dispatch] = useReducer(toastReducer, []);
 
   const addToast = useCallback((toast: Omit<Toast, "id">) => {
@@ -63,7 +65,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
   return (
     <ToastContext.Provider value={{ toasts, addToast, removeToast }}>
       {children}
-      <ToastViewport toasts={toasts} onRemove={removeToast} />
+      <ToastViewport toasts={toasts} onRemove={removeToast} closeLabel={closeLabel} />
     </ToastContext.Provider>
   );
 }

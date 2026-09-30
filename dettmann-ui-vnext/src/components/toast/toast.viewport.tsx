@@ -42,9 +42,10 @@ type ToastVariants = VariantProps<typeof toastVariants>;
 interface ToastItemProps extends ComponentPropsWithoutRef<"div">, ToastVariants {
   toast: Toast;
   onRemove: (id: string) => void;
+  closeLabel: string;
 }
 
-function ToastItem({ toast, onRemove, className, ...props }: ToastItemProps) {
+function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastItemProps) {
   return (
     <div
       role="alert"
@@ -70,7 +71,7 @@ function ToastItem({ toast, onRemove, className, ...props }: ToastItemProps) {
         type="button"
         onClick={() => onRemove(toast.id)}
         className="shrink-0 rounded-md text-fg-muted hover:bg-hover hover:text-fg transition-opacity"
-        aria-label="Close"
+        aria-label={closeLabel}
       >
         <svg
           className="h-4 w-4"
@@ -92,16 +93,18 @@ function ToastItem({ toast, onRemove, className, ...props }: ToastItemProps) {
 interface ToastViewportProps {
   toasts: Toast[];
   onRemove: (id: string) => void;
+  /** Accessible name of each toast's close button (localize it). */
+  closeLabel?: string;
 }
 
-export function ToastViewport({ toasts, onRemove }: ToastViewportProps) {
+export function ToastViewport({ toasts, onRemove, closeLabel = "Close" }: ToastViewportProps) {
   if (toasts.length === 0) return null;
 
   return (
     <Portal>
       <div className="fixed top-0 right-0 z-toast flex max-h-screen w-full flex-col-reverse p-4 sm:flex-col md:max-w-sm pointer-events-none gap-2">
         {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onRemove={onRemove} />
+          <ToastItem key={toast.id} toast={toast} onRemove={onRemove} closeLabel={closeLabel} />
         ))}
       </div>
     </Portal>

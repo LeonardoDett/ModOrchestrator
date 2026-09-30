@@ -6,4 +6,14 @@ export function GetAppInfo():Promise<bridge.AppInfo>;
 
 export function GetOperationEvents(arg1:string):Promise<Array<bridge.EventDTO>>;
 
+export function ListAppSettings():Promise<Array<bridge.SettingDTO>>;
+
 export function ListRecentOperations(arg1:number):Promise<Array<bridge.OperationDTO>>;
+
+export function LogTail(arg1:bridge.LogFilterDTO):Promise<Array<bridge.LogEntryDTO>>;
+
+export function OpenLogFolder():Promise<void>;
+
+export function ResetAppSetting(arg1:string):Promise<void>;
+
+export function SetAppSetting(arg1:string,arg2:string):Promise<void>;

@@ -6,6 +6,8 @@ export namespace bridge {
 	    dataDir: string;
 	    schemaVersion: number;
 	    interruptedOperations: number;
+	    logsDir: string;
+	    customTitleBar: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new AppInfo(source);
@@ -18,6 +20,8 @@ export namespace bridge {
 	        this.dataDir = source["dataDir"];
 	        this.schemaVersion = source["schemaVersion"];
 	        this.interruptedOperations = source["interruptedOperations"];
+	        this.logsDir = source["logsDir"];
+	        this.customTitleBar = source["customTitleBar"];
 	    }
 	}
 	export class EntityRefDTO {
@@ -116,6 +120,48 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class LogEntryDTO {
+	    time: string;
+	    level: string;
+	    message: string;
+	    operation?: string;
+	    step?: string;
+	    error?: string;
+	    fields?: Record<string, any>;
+	
+	    static createFrom(source: any = {}) {
+	        return new LogEntryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.time = source["time"];
+	        this.level = source["level"];
+	        this.message = source["message"];
+	        this.operation = source["operation"];
+	        this.step = source["step"];
+	        this.error = source["error"];
+	        this.fields = source["fields"];
+	    }
+	}
+	export class LogFilterDTO {
+	    levels: string[];
+	    operation: string;
+	    text: string;
+	    limit: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new LogFilterDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.levels = source["levels"];
+	        this.operation = source["operation"];
+	        this.text = source["text"];
+	        this.limit = source["limit"];
+	    }
+	}
 	export class StepDTO {
 	    name: string;
 	    status: string;
@@ -187,6 +233,38 @@ export namespace bridge {
 		}
 	}
 	
+	export class SettingDTO {
+	    key: string;
+	    tab: string;
+	    type: string;
+	    value: string;
+	    default: string;
+	    isDefault: boolean;
+	    options?: string[];
+	    min?: number;
+	    max?: number;
+	    advanced: boolean;
+	    restartRequired: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new SettingDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.key = source["key"];
+	        this.tab = source["tab"];
+	        this.type = source["type"];
+	        this.value = source["value"];
+	        this.default = source["default"];
+	        this.isDefault = source["isDefault"];
+	        this.options = source["options"];
+	        this.min = source["min"];
+	        this.max = source["max"];
+	        this.advanced = source["advanced"];
+	        this.restartRequired = source["restartRequired"];
+	    }
+	}
 
 }
 

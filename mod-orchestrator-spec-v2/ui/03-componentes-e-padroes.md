@@ -34,7 +34,7 @@ Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (component-
 
 | ID | Lacuna | Uso | Fase |
 |---|---|---|---|
-| L1 | **DataTable** genérica sobre `Table`/`VirtualList`: colunas declarativas, ordenação, redimensionar/ocultar colunas (seletor de colunas), filtro por coluna no cabeçalho, seleção múltipla (clique, Shift, Ctrl, teclado), linha focada, agrupamento com cabeçalhos recolhíveis, dezenas de milhares de linhas. A lógica de dados (filtrar/ordenar) pode ser do consumidor. | Mods, Plugins, Conflicts, Diagnostics | F2 |
+| L1 | ✅ **resolvida na F2**: `DataTable` + `DataTableColumnPicker` na lib (`src/components/data-table`). **DataTable** genérica sobre `Table`/`VirtualList`: colunas declarativas, ordenação, redimensionar/ocultar colunas (seletor de colunas), filtro por coluna no cabeçalho, seleção múltipla (clique, Shift, Ctrl, teclado), linha focada, agrupamento com cabeçalhos recolhíveis, dezenas de milhares de linhas. A lógica de dados (filtrar/ordenar) pode ser do consumidor. | Mods, Plugins, Conflicts, Diagnostics | F2 |
 | L2 | **Arrastar para reordenar em DataTable virtualizada** (múltiplas linhas, autoscroll, indicador de destino, callback de validação assíncrona antes de soltar). `ReorderableList` pode ser a base. | Mods, Load Order | F5 |
 | L3 | **Toggle de status em célula** com estados (ligado, desligado, indisponível, em progresso), acessível. Pode ser variante de `Switch`. | Mods, Plugins | F4 |
 | L4 | **Badge/indicador com ícone e contagem** compacto para células (conflito, dependências, problemas). Verificar se `Badge` cobre. | Mods, Plugins | F4 |

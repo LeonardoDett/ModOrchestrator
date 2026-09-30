@@ -17,6 +17,8 @@ const appDirName = "ModOrchestrator"
 type Paths struct {
 	Root     string
 	Database string
+	// Logs holds the rotating technical log (core/10 §4).
+	Logs string
 }
 
 // Resolve returns the data paths, creating the root directory if needed.
@@ -36,5 +38,9 @@ func Resolve() (Paths, error) {
 	if err := os.MkdirAll(root, 0o755); err != nil {
 		return Paths{}, fmt.Errorf("appdata: create %s: %w", root, err)
 	}
-	return Paths{Root: root, Database: filepath.Join(root, "state.db")}, nil
+	return Paths{
+		Root:     root,
+		Database: filepath.Join(root, "state.db"),
+		Logs:     filepath.Join(root, "logs"),
+	}, nil
 }

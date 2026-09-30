@@ -44,6 +44,8 @@ interface TagProps
   value?: string;
   /** Called with `value` when the dismiss control is pressed */
   onRemove?: (value: string) => void;
+  /** Accessible name of the dismiss control (localize it). */
+  removeLabel?: string;
   tone?: Tone;
 }
 
@@ -61,6 +63,7 @@ export function Tag({
   size,
   value = "",
   onRemove,
+  removeLabel = "Remove",
   tone,
   ...props
 }: TagProps) {
@@ -78,7 +81,7 @@ export function Tag({
       {onRemove ? (
         <button
           type="button"
-          aria-label="Remove"
+          aria-label={removeLabel}
           className="inline-flex h-4 w-4 items-center justify-center rounded-full text-fg-muted hover:bg-hover hover:text-fg"
           onClick={() => onRemove(value)}
         >

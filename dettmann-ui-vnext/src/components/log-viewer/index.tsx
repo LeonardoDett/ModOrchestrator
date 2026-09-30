@@ -26,6 +26,12 @@ export interface LogViewerProps extends Omit<ComponentPropsWithoutRef<"div">, "o
   empty?: ReactNode;
   showSearch?: boolean;
   dense?: boolean;
+  /** Accessible label and placeholder of the search field (localize it). */
+  searchLabel?: string;
+  /** Visible label per level; defaults to the level id (localize it). */
+  levelLabels?: Partial<Record<LogLevel, string>>;
+  /** Extra controls rendered next to the search field (level filter, actions). */
+  toolbar?: ReactNode;
 }
 
 const levelTone: Record<LogLevel, "secondary" | "info" | "success" | "warning" | "danger"> = {
@@ -55,6 +61,9 @@ export function LogViewer({
   empty = "No log entries",
   showSearch = true,
   dense = false,
+  searchLabel = "Search logs",
+  levelLabels,
+  toolbar,
   className,
   ...props
 }: LogViewerProps) {
@@ -87,19 +96,19 @@ export function LogViewer({
       )}
       {...props}
     >
-      {showSearch ? (
-        <div className="border-b border-border bg-surface p-2">
-          <Input.Root>
-            <Input.Box padding="sm">
-              <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />
-              <Input.Field
-                aria-label="Search logs"
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search logs"
-              />
-            </Input.Box>
-          </Input.Root>
+      {showSearch || toolbar ? (
+        <div className="flex flex-wrap items-center gap-2 border-b border-border bg-surface p-2">
+          {showSearch ? (
+            <div className="min-w-[12rem] flex-1">
+              <Input.Root value={query} onChange={(value: string) => setQuery(value)} fullWidth>
+                <Input.Box padding="sm">
+                  <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />
+                  <Input.Field aria-label={searchLabel} placeholder={searchLabel} />
+                </Input.Box>
+              </Input.Root>
+            </div>
+          ) : null}
+          {toolbar}
         </div>
       ) : null}
 
@@ -112,9 +121,9 @@ export function LogViewer({
               <>
                 <span className="w-20 shrink-0 truncate text-fg-subtle">{entry.timestamp}</span>
                 <span className="w-20 shrink-0">
-                  <Badge size="sm" variant="soft" tone={levelTone[level]}>
+                  <Badge size="sm" tone={levelTone[level]}>
                     <span className="mr-1 inline-flex align-middle">{levelIcon[level]}</span>
-                    {level}
+                    {levelLabels?.[level] ?? level}
                   </Badge>
                 </span>
                 {entry.source ? (

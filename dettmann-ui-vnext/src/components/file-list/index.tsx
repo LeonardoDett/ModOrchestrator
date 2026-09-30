@@ -169,7 +169,7 @@ export function FileList({
 
                 {renderStatus?.(item) ??
                   (item.status ? (
-                    <Badge size="sm" variant="soft">
+                    <Badge size="sm">
                       {item.status}
                     </Badge>
                   ) : null)}

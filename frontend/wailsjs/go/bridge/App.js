@@ -10,6 +10,26 @@ export function GetOperationEvents(arg1) {
   return window['go']['bridge']['App']['GetOperationEvents'](arg1);
 }
 
+export function ListAppSettings() {
+  return window['go']['bridge']['App']['ListAppSettings']();
+}
+
 export function ListRecentOperations(arg1) {
   return window['go']['bridge']['App']['ListRecentOperations'](arg1);
+}
+
+export function LogTail(arg1) {
+  return window['go']['bridge']['App']['LogTail'](arg1);
+}
+
+export function OpenLogFolder() {
+  return window['go']['bridge']['App']['OpenLogFolder']();
+}
+
+export function ResetAppSetting(arg1) {
+  return window['go']['bridge']['App']['ResetAppSetting'](arg1);
+}
+
+export function SetAppSetting(arg1, arg2) {
+  return window['go']['bridge']['App']['SetAppSetting'](arg1, arg2);
 }

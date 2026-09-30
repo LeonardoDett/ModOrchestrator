@@ -90,3 +90,54 @@
   --color-danger-text: var(--ui-danger-text);
   --color-overlay: var(--ui-overlay);
 }
+
+/*
+ * Tone contract: components set data-tone="<tone>" (theme/tone.ts) and paint
+ * with bg-tone, text-on-tone, bg-tone-subtle, border-tone-border and
+ * text-tone-text. Each tone maps to one semantic role of themes.css.
+ */
+@theme inline {
+  --color-tone: var(--tone);
+  --color-tone-hover: var(--tone-hover);
+  --color-tone-pressed: var(--tone-pressed);
+  --color-on-tone: var(--on-tone);
+  --color-tone-subtle: var(--tone-subtle);
+  --color-tone-subtle-hover: var(--tone-subtle-hover);
+  --color-tone-border: var(--tone-border);
+  --color-tone-text: var(--tone-text);
+}
+
+[data-tone="primary"] {
+  --tone: var(--ui-brand); --tone-hover: var(--ui-brand-hover); --tone-pressed: var(--ui-brand-pressed); --on-tone: var(--ui-on-brand);
+  --tone-subtle: var(--ui-brand-subtle); --tone-subtle-hover: var(--ui-brand-subtle-hover); --tone-border: var(--ui-brand-border); --tone-text: var(--ui-brand-text);
+}
+
+[data-tone="secondary"] {
+  --tone: var(--ui-secondary); --tone-hover: var(--ui-secondary-hover); --tone-pressed: var(--ui-secondary-pressed); --on-tone: var(--ui-on-secondary);
+  --tone-subtle: var(--ui-secondary-subtle); --tone-subtle-hover: var(--ui-secondary-subtle-hover); --tone-border: var(--ui-secondary-border); --tone-text: var(--ui-secondary-text);
+}
+
+[data-tone="accent"] {
+  --tone: var(--ui-accent); --tone-hover: var(--ui-accent-hover); --tone-pressed: var(--ui-accent-pressed); --on-tone: var(--ui-on-accent);
+  --tone-subtle: var(--ui-accent-subtle); --tone-subtle-hover: var(--ui-accent-subtle-hover); --tone-border: var(--ui-accent-border); --tone-text: var(--ui-accent-text);
+}
+
+[data-tone="info"] {
+  --tone: var(--ui-info); --tone-hover: var(--ui-info-hover); --tone-pressed: var(--ui-info-pressed); --on-tone: var(--ui-on-info);
+  --tone-subtle: var(--ui-info-subtle); --tone-subtle-hover: var(--ui-info-subtle-hover); --tone-border: var(--ui-info-border); --tone-text: var(--ui-info-text);
+}
+
+[data-tone="success"] {
+  --tone: var(--ui-success); --tone-hover: var(--ui-success-hover); --tone-pressed: var(--ui-success-pressed); --on-tone: var(--ui-on-success);
+  --tone-subtle: var(--ui-success-subtle); --tone-subtle-hover: var(--ui-success-subtle-hover); --tone-border: var(--ui-success-border); --tone-text: var(--ui-success-text);
+}
+
+[data-tone="warning"] {
+  --tone: var(--ui-warning); --tone-hover: var(--ui-warning-hover); --tone-pressed: var(--ui-warning-pressed); --on-tone: var(--ui-on-warning);
+  --tone-subtle: var(--ui-warning-subtle); --tone-subtle-hover: var(--ui-warning-subtle-hover); --tone-border: var(--ui-warning-border); --tone-text: var(--ui-warning-text);
+}
+
+[data-tone="danger"] {
+  --tone: var(--ui-danger); --tone-hover: var(--ui-danger-hover); --tone-pressed: var(--ui-danger-pressed); --on-tone: var(--ui-on-danger);
+  --tone-subtle: var(--ui-danger-subtle); --tone-subtle-hover: var(--ui-danger-subtle-hover); --tone-border: var(--ui-danger-border); --tone-text: var(--ui-danger-text);
+}

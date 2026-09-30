@@ -58,6 +58,16 @@ Dark themes must be designed independently. Do not invert the light theme or sim
 
 Do not create a theme by globally replacing one color. Theme quality comes from the relationships between surfaces, structure, content, borders, focus and emphasis.
 
+## Registered themes
+
+- `forest`: default of the library (dark + green).
+- `graphite`: cooler, product-neutral preset.
+- `orchestrator`: Mod Orchestrator product theme, derived from forest; brand leans teal and success leans lime so they stay distinguishable.
+
+## Tones
+
+Components choose a tone with `data-tone` and paint with the `tone-*` utilities; `src/theme/tokens.css` maps each tone to its semantic role (see D-008).
+
 ## Runtime overrides
 
 `ThemeInputs` is intentionally semantic. It can override high-level visual roles for embedded products without reintroducing a hue/chroma generator.

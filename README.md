@@ -4,27 +4,29 @@ Gerenciador de mods desktop (Go + Wails v2 + React). A especificação vive em
 `mod-orchestrator-spec-v2/` e o design
 system em `dettmann-ui-vnext/`, ambas versionadas neste repositório (o build da lib, `node_modules/` e `dist/`, não é versionado; ver D052).
 
-Fase atual: **F0 — bootstrap** (estrutura, persistência, Operation/Event, shell vazio).
+Fase atual: **F2 — fundação de UI concluída** (shell definitivo, tema `orchestrator`, i18n en/pt-BR, DataTable na lib, drawer de operações, Diagnostics › Operações/Log, paleta de comandos). Próxima: F3 (jogos e adapters).
 
 ## Estrutura
 
 ```
 main.go                      entrypoint Wails
 internal/
-  core/domain/               entidades e invariantes puras (operation, event)
-  core/application/          casos de uso + ports (operations)
-  infrastructure/            sqlite, eventbus, system (clock/ids), appdata
+  core/domain/               entidades e invariantes puras
+  core/application/          casos de uso + ports (operations, settings)
+  infrastructure/            sqlite, eventbus, logging (log técnico), system, appdata
   bridge/                    transporte UI <-> core (DTOs, bindings, eventos)
   bootstrap/                 composition root
   architecture_test.go       garante a regra de dependência entre camadas
 frontend/
-  src/bridge/                cliente tipado do backend (Wails ou offline)
-  src/shell/                 sidebar, topbar, navegação
+  src/bridge/                cliente tipado do backend (Wails ou offline), erros codificados
+  src/i18n/                  catálogos en/pt-BR (todo texto de UI vem daqui)
+  src/shell/                 barra de título, sidebar, topbar, paleta, atalhos
+  src/features/              composições de domínio feitas com peças da lib
   src/pages/                 telas
   wailsjs/                   bindings gerados pelo Wails (não editar)
 ```
 
-Decisões estruturais: `mod-orchestrator-spec-v2/docs-ia/decisoes.md` (D017–D023).
+Decisões estruturais: `mod-orchestrator-spec-v2/docs-ia/decisoes.md` (D017–D023; F2: D053–D056).
 
 ## Desenvolvimento
 
@@ -36,14 +38,8 @@ Pré-requisitos: Go 1.27+, Node 24+, Wails CLI v2, WebView2 (Windows).
    cd dettmann-ui-vnext && npm install && npm run build
    ```
 
-   Enquanto o typecheck da biblioteca estiver quebrado, `npm run build` gera JS/CSS
-   mas falha na etapa de `.d.ts`. Gere os tipos à parte:
-
-   ```bash
-   cd dettmann-ui-vnext && npx tsc -p . --noEmit false --declaration --emitDeclarationOnly --declarationMap false --outDir dist
-   ```
-
-   (o comando reporta os erros de tipo da lib, mas emite os `.d.ts`).
+   O build gera JS, CSS e `.d.ts` (a etapa de tipos roda com 8 GB de heap). `npm run theme`
+   verifica contraste e o contrato de tons dos temas.
 
 2. Rodar o app em modo dev:
 
@@ -65,5 +61,5 @@ Pré-requisitos: Go 1.27+, Node 24+, Wails CLI v2, WebView2 (Windows).
    wails build
    ```
 
-Dados da aplicação: `%APPDATA%\ModOrchestrator\state.db`. Para isolar (dev/testes),
+Dados da aplicação: `%APPDATA%\ModOrchestrator\state.db`; log técnico em `%APPDATA%\ModOrchestrator\logs`. Para isolar (dev/testes),
 defina `MODORCHESTRATOR_DATA_DIR`.

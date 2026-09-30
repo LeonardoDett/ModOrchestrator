@@ -11,9 +11,11 @@ export type VariantValue = string | number | boolean | null | undefined;
 type VariantMap = Record<string, Record<string, RecipeValue | Record<string, RecipeValue>>>;
 type SlotMap = Record<string, RecipeValue>;
 
-type VariantInput<V extends VariantMap> = Partial<{
-  [K in keyof V]: keyof V[K] | boolean | string | number | null;
-}> & { className?: string; class?: string };
+type StringToBoolean<T> = T extends "true" | "false" ? boolean : T;
+
+type VariantInput<V extends VariantMap> = {
+  [K in keyof V]?: StringToBoolean<keyof V[K]> | null;
+} & { className?: string; class?: string };
 
 type RecipeCondition<V extends VariantMap> = Partial<{
   [K in keyof V]: VariantValue | readonly VariantValue[];
@@ -21,7 +23,7 @@ type RecipeCondition<V extends VariantMap> = Partial<{
 
 type RecipeConfig<V extends VariantMap> = {
   variants?: V;
-  defaultVariants?: Partial<{ [K in keyof V]: keyof V[K] | boolean | string | number | null }>;
+  defaultVariants?: { [K in keyof V]?: StringToBoolean<keyof V[K]> | null };
   compoundVariants?: readonly RecipeCondition<V>[];
 };
 
@@ -78,16 +80,16 @@ function resolveVariants(config: RecipeConfig<any>, props: Record<string, Varian
   return { classes: classes.filter(Boolean).join(" "), slotPatches };
 }
 
-export function tv<V extends VariantMap>(config: RecipeConfig<V> & { base?: RecipeValue; slots?: never }) {
+export function tv<V extends VariantMap = {}>(config: RecipeConfig<V> & { base?: RecipeValue; slots?: never }) {
   type Props = VariantInput<V>;
   const recipe = ((props: Props = {}) => {
-    const resolved = resolveVariants(config, props as Record<string, VariantValue>);
+    const resolved = resolveVariants(config as RecipeConfig<any>, props as Record<string, VariantValue>);
     return [normalize(config.base), resolved.classes, props.class, props.className].filter(Boolean).join(" ");
   }) as ((props?: Props) => string) & { __variantProps?: Props };
   return recipe;
 }
 
-export function tvSlots<V extends VariantMap, S extends SlotMap>(config: RecipeConfig<V> & { slots: S; base?: never }) {
+export function tvSlots<V extends VariantMap = {}, S extends SlotMap = SlotMap>(config: RecipeConfig<V> & { slots: S; base?: never }) {
   type Props = VariantInput<V>;
   type Result = { [K in keyof S]: (extra?: string | { className?: string; class?: string }) => string } & { __variantProps?: Props };
 
@@ -95,7 +97,7 @@ export function tvSlots<V extends VariantMap, S extends SlotMap>(config: RecipeC
   for (const slot of Object.keys(config.slots)) {
     result[slot] = (extra) => {
       const props = (result as { __props?: Props }).__props ?? ({} as Props);
-      const resolved = resolveVariants(config, props as Record<string, VariantValue>);
+      const resolved = resolveVariants(config as RecipeConfig<any>, props as Record<string, VariantValue>);
       const extras = typeof extra === "string" ? extra : extra?.class ?? extra?.className;
       return [normalize(config.slots[slot]), ...(resolved.slotPatches[slot] ?? []), extras].filter(Boolean).join(" ");
     };
@@ -114,8 +116,8 @@ export function tvSlots<V extends VariantMap, S extends SlotMap>(config: RecipeC
   return callable;
 }
 
-export function defineRecipe<V extends VariantMap>(config: RecipeConfig<V> & { base?: RecipeValue; slots?: never }): ReturnType<typeof tv<V>>;
-export function defineRecipe<V extends VariantMap, S extends SlotMap>(config: RecipeConfig<V> & { slots: S; base?: never }): ReturnType<typeof tvSlots<V, S>>;
+export function defineRecipe<V extends VariantMap = {}>(config: RecipeConfig<V> & { base?: RecipeValue; slots?: never }): ReturnType<typeof tv<V>>;
+export function defineRecipe<V extends VariantMap = {}, S extends SlotMap = SlotMap>(config: RecipeConfig<V> & { slots: S; base?: never }): ReturnType<typeof tvSlots<V, S>>;
 export function defineRecipe(config: any): any {
   return config.slots ? tvSlots(config) : tv(config);
 }

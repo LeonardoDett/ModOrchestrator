@@ -75,3 +75,39 @@
   --ui-danger: #DC7070; --ui-danger-hover: #E98787; --ui-danger-pressed: #C75C5C; --ui-on-danger: #1A0B0B; --ui-danger-subtle: #3A1F1F; --ui-danger-subtle-hover: #472525; --ui-danger-border: #704040; --ui-danger-text: #EE9595;
   --ui-overlay: rgb(0 0 0 / 0.64);
 }
+
+/*
+ * Mod Orchestrator product theme, derived from forest (dark first).
+ * Brand leans teal and success leans lime so the two greens stay
+ * distinguishable side by side; status still never relies on color alone.
+ */
+[data-theme="orchestrator"] {
+  --ui-canvas: #F6F9F8; --ui-surface: #FFFFFF; --ui-raised: #FFFFFF; --ui-sunken: #EDF2F0;
+  --ui-structure: #E6EEEB; --ui-structure-raised: #DAE5E0;
+  --ui-fg: #16201C; --ui-fg-secondary: #4B5A54; --ui-fg-tertiary: #67756F; --ui-fg-disabled: #98A39E; --ui-fg-inverse: #FFFFFF;
+  --ui-border-subtle: #DAE3DF; --ui-border: #C6D2CD; --ui-border-strong: #84948D; --ui-focus: #0E7C66;
+  --ui-brand: #0E7C66; --ui-brand-hover: #0B6755; --ui-brand-pressed: #085444; --ui-on-brand: #FFFFFF; --ui-brand-subtle: #E2F4EF; --ui-brand-subtle-hover: #D0ECE4; --ui-brand-border: #93CDBE; --ui-brand-text: #0B6655;
+  --ui-secondary: #27443A; --ui-secondary-hover: #1F392F; --ui-secondary-pressed: #182E26; --ui-on-secondary: #FFFFFF; --ui-secondary-subtle: #E7EFEC; --ui-secondary-subtle-hover: #DBE6E2; --ui-secondary-border: #A6B8B1; --ui-secondary-text: #2B4D41;
+  --ui-accent: #B85C2A; --ui-accent-hover: #9E4C20; --ui-accent-pressed: #873F19; --ui-on-accent: #FFFFFF; --ui-accent-subtle: #FFF0E8; --ui-accent-subtle-hover: #FFE4D7; --ui-accent-border: #E9BAA2; --ui-accent-text: #9E4C20;
+  --ui-info: #2C70A8; --ui-info-hover: #245F91; --ui-info-pressed: #1D4E78; --ui-on-info: #FFFFFF; --ui-info-subtle: #E8F2FA; --ui-info-subtle-hover: #DCECF7; --ui-info-border: #A8C7DD; --ui-info-text: #245F91;
+  --ui-success: #3F7D1C; --ui-success-hover: #346918; --ui-success-pressed: #2A5513; --ui-on-success: #FFFFFF; --ui-success-subtle: #EDF6E4; --ui-success-subtle-hover: #E0EFD2; --ui-success-border: #B3D59A; --ui-success-text: #34691A;
+  --ui-warning: #9A6B00; --ui-warning-hover: #805800; --ui-warning-pressed: #684700; --ui-on-warning: #FFFFFF; --ui-warning-subtle: #FFF5D9; --ui-warning-subtle-hover: #FFEDB9; --ui-warning-border: #E4CC84; --ui-warning-text: #805800;
+  --ui-danger: #C13B3B; --ui-danger-hover: #A62F2F; --ui-danger-pressed: #8E2929; --ui-on-danger: #FFFFFF; --ui-danger-subtle: #FDEAEA; --ui-danger-subtle-hover: #F9D9D9; --ui-danger-border: #E4AAAA; --ui-danger-text: #A62F2F;
+  --ui-overlay: rgb(8 14 12 / 0.48);
+}
+
+[data-theme="orchestrator"].dark,
+.dark [data-theme="orchestrator"] {
+  --ui-canvas: #0D1311; --ui-surface: #131A17; --ui-raised: #1A231F; --ui-sunken: #080D0B;
+  --ui-structure: #17201C; --ui-structure-raised: #212E29;
+  --ui-fg: #F1F6F4; --ui-fg-secondary: #B6C4BE; --ui-fg-tertiary: #8E9D96; --ui-fg-disabled: #66756E; --ui-fg-inverse: #0B100E;
+  --ui-border-subtle: #29362F; --ui-border: #36463F; --ui-border-strong: #5E7169; --ui-focus: #5FE0C0;
+  --ui-brand: #2FC4A0; --ui-brand-hover: #4AD4B1; --ui-brand-pressed: #22A887; --ui-on-brand: #04110D; --ui-brand-subtle: #0F3329; --ui-brand-subtle-hover: #134034; --ui-brand-border: #23705C; --ui-brand-text: #5FE0C0;
+  --ui-secondary: #77A695; --ui-secondary-hover: #8AB7A5; --ui-secondary-pressed: #629080; --ui-on-secondary: #0A120F; --ui-secondary-subtle: #192B24; --ui-secondary-subtle-hover: #1F342C; --ui-secondary-border: #365147; --ui-secondary-text: #A5CABA;
+  --ui-accent: #E28B55; --ui-accent-hover: #EDA171; --ui-accent-pressed: #CA7745; --ui-on-accent: #1B0D06; --ui-accent-subtle: #3A2417; --ui-accent-subtle-hover: #482C1D; --ui-accent-border: #704630; --ui-accent-text: #F0A77A;
+  --ui-info: #63A7D8; --ui-info-hover: #7BB7E1; --ui-info-pressed: #4B8FBF; --ui-on-info: #081018; --ui-info-subtle: #162B3B; --ui-info-subtle-hover: #1C374B; --ui-info-border: #375C77; --ui-info-text: #8FC5E9;
+  --ui-success: #8BD45A; --ui-success-hover: #9FE072; --ui-success-pressed: #75BD46; --ui-on-success: #0B1206; --ui-success-subtle: #22341A; --ui-success-subtle-hover: #2A4020; --ui-success-border: #4B7033; --ui-success-text: #A6E27E;
+  --ui-warning: #E2B74B; --ui-warning-hover: #F0C964; --ui-warning-pressed: #C89F34; --ui-on-warning: #161005; --ui-warning-subtle: #3A3017; --ui-warning-subtle-hover: #473B1C; --ui-warning-border: #766630; --ui-warning-text: #EBC35F;
+  --ui-danger: #E06A6A; --ui-danger-hover: #EC8080; --ui-danger-pressed: #C75555; --ui-on-danger: #190909; --ui-danger-subtle: #3E1E1E; --ui-danger-subtle-hover: #4A2323; --ui-danger-border: #7A3C3C; --ui-danger-text: #F08E8E;
+  --ui-overlay: rgb(0 0 0 / 0.62);
+}

@@ -3,8 +3,10 @@ package bridge
 import (
 	"time"
 
+	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/event"
 	"modorchestrator/internal/core/domain/operation"
+	"modorchestrator/internal/infrastructure/logging"
 )
 
 // DTOs are the transport contract with the frontend. They carry data only;
@@ -16,6 +18,58 @@ type AppInfo struct {
 	DataDir               string `json:"dataDir"`
 	SchemaVersion         int    `json:"schemaVersion"`
 	InterruptedOperations int    `json:"interruptedOperations"`
+	LogsDir               string `json:"logsDir"`
+	// CustomTitleBar tells the UI whether it draws the window controls.
+	CustomTitleBar bool `json:"customTitleBar"`
+}
+
+// SettingDTO is one catalog setting with its effective value.
+type SettingDTO struct {
+	Key             string   `json:"key"`
+	Tab             string   `json:"tab"`
+	Type            string   `json:"type"`
+	Value           string   `json:"value"`
+	Default         string   `json:"default"`
+	IsDefault       bool     `json:"isDefault"`
+	Options         []string `json:"options,omitempty"`
+	Min             int      `json:"min,omitempty"`
+	Max             int      `json:"max,omitempty"`
+	Advanced        bool     `json:"advanced"`
+	RestartRequired bool     `json:"restartRequired"`
+}
+
+type LogFilterDTO struct {
+	Levels    []string `json:"levels"`
+	Operation string   `json:"operation"`
+	Text      string   `json:"text"`
+	Limit     int      `json:"limit"`
+}
+
+type LogEntryDTO struct {
+	Time      string         `json:"time"`
+	Level     string         `json:"level"`
+	Message   string         `json:"message"`
+	Operation string         `json:"operation,omitempty"`
+	Step      string         `json:"step,omitempty"`
+	Error     string         `json:"error,omitempty"`
+	Fields    map[string]any `json:"fields,omitempty"`
+}
+
+func toSettingDTO(e appsettings.Effective) SettingDTO {
+	return SettingDTO{
+		Key: e.Def.Key, Tab: string(e.Def.Tab), Type: string(e.Def.Type),
+		Value: e.Value, Default: e.Default, IsDefault: e.IsDefault,
+		Options: e.Def.Options, Min: e.Def.Min, Max: e.Def.Max,
+		Advanced: e.Def.Advanced, RestartRequired: e.Def.RestartRequired,
+	}
+}
+
+func toLogEntryDTO(e logging.Entry) LogEntryDTO {
+	dto := LogEntryDTO{Level: e.Level, Message: e.Message, Operation: e.Operation, Step: e.Step, Error: e.Error, Fields: e.Fields}
+	if !e.Time.IsZero() {
+		dto.Time = formatTime(e.Time)
+	}
+	return dto
 }
 
 type EntityRefDTO struct {

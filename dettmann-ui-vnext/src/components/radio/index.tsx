@@ -156,7 +156,7 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGro
   );
 });
 
-type RadioItemVariants = VariantProps<typeof radioVariants>;
+type RadioItemVariants = Omit<VariantProps<typeof radioVariants>, "disabled">;
 
 interface RadioItemProps
   extends Omit<ComponentPropsWithoutRef<"button">, "type" | "role" | "value">,

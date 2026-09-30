@@ -117,3 +117,11 @@ type GameAdapter interface {
 	RootHints(id game.ID) RootHints
 	ContentFlags(id game.ID, footprint []game.Location) []mod.ContentFlag
 }
+
+// SystemLocale reports the operating system preference that derived setting
+// defaults depend on (core/13: "idioma do SO se suportado").
+type SystemLocale interface {
+	// Language returns the user's UI language as a BCP 47 tag ("pt-BR"),
+	// or "" when unknown.
+	Language() string
+}

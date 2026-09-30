@@ -45,7 +45,7 @@ const dividerVariants = defineRecipe({
 
 type DividerVariants = VariantProps<typeof dividerVariants>;
 
-type DividerProps = ComponentPropsWithoutRef<"div"> &
+type DividerProps = Omit<ComponentPropsWithoutRef<"div">, "color"> &
   DividerVariants & {
     /** Decorative dividers should be hidden from screen readers */
     decorative?: boolean;
@@ -84,7 +84,7 @@ export function Divider({
 }: DividerProps) {
   const semanticProps = decorative
     ? { role: "none" as const }
-    : { role: "separator" as const, "aria-orientation": orientation };
+    : { role: "separator" as const, "aria-orientation": orientation ?? undefined };
 
   return (
     <div

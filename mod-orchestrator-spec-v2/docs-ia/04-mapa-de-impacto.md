@@ -25,7 +25,9 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Persistência / schema | core/14, migrations | — | — |
 | Integração dettmann-ui / tema | ui/03, ui/04, todos ui/telas | — | todas |
 | Distribuição de tela (vs Vortex) | ui/00 (divergências), ui/telas/*, references/vortex | — | a tela |
-| Texto de UI / idioma | catálogo i18n | INV-OPS-05 | todas |
+| Texto de UI / idioma | catálogo i18n (`frontend/src/i18n/catalog/`) | INV-OPS-05 | todas |
+| Código de erro do bridge | core/00 §6, `internal/bridge/errors.go`, catálogo i18n (`error.<code>`) | INV-OPS-05 | todas |
+| Log técnico (formato, rotação, filtros) | core/10 §4, core/13 (`app.logLevel`), ui/telas/diagnostics | — | Diagnostics › Log |
 | Escopo de release | 00-visao-e-escopo, plano, core/15 | — | — |
 
 ## Perguntas obrigatórias antes da mudança
