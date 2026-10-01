@@ -3,6 +3,7 @@ import { Badge, Button, Kbd, Menu, Typography } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useOperations } from "../bridge/queries";
 import { useI18n } from "../i18n/i18n";
+import { ProfileSelect } from "../features/profiles/ProfileSelect";
 import { PALETTE_KEYS } from "./shortcuts";
 
 export type ShellDialog = "palette" | "shortcuts" | "about";
@@ -15,10 +16,10 @@ interface TopBarProps {
 }
 
 /**
- * Page top bar (ui/00 §2.3). Slots that depend on later phases (profile
- * select F5, deploy status F7, problems and notifications F9, provider
- * account V2) keep their place but render nothing until they exist
- * (anti-pattern 18).
+ * Page top bar (ui/00 §2.3), with the profile select of the active game
+ * (F5). Slots that depend on later phases (deploy status F7, problems and
+ * notifications F9, provider account V2) keep their place but render
+ * nothing until they exist (anti-pattern 18).
  */
 export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: TopBarProps) {
   const { t, tp } = useI18n();
@@ -31,7 +32,9 @@ export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: Top
       <Typography as="h1" variant="heading-6" className="min-w-0 truncate">
         {title}
       </Typography>
-      <div data-slot="profile" />
+      <div data-slot="profile">
+        <ProfileSelect />
+      </div>
       <div data-slot="deploy-status" />
       <div className="flex-1" />
       {!backend.connected ? (

@@ -5,6 +5,7 @@ import (
 
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/operation"
 )
 
 // Games bridge (ui/telas/games.md §6). Every method only translates between
@@ -82,8 +83,14 @@ func (a *App) ScanGames(mode string) (string, error) {
 	return "", nil
 }
 
-// CancelOperation cancels a running cancellable operation (the full search).
-func (a *App) CancelOperation(id string) bool { return a.c.Games.CancelOperation(id) }
+// CancelOperation cancels a cancellable operation: the full game search or
+// an item of the install queue (D065).
+func (a *App) CancelOperation(id string) bool {
+	if a.c.Games.CancelOperation(id) {
+		return true
+	}
+	return a.c.Library.CancelQueued(a.context(), operation.ID(id)) == nil
+}
 
 // ValidateGameRoot checks a folder as an installation of the game.
 func (a *App) ValidateGameRoot(gameID, root string) (RootCheckDTO, error) {

@@ -394,6 +394,12 @@ func moves(current, next []Item, g *graph) []Move {
 
 func movedCount(current, next []Item) int { return len(next) - len(stayers(current, next)) }
 
+// Displacement is how many items changed place between two orders of the
+// same items: the complement of their longest common subsequence (the
+// measure the engine minimises). It decides when a reorder is "large"
+// (core/05 §4: automatic snapshot above a threshold).
+func Displacement(current, next []Item) int { return movedCount(current, next) }
+
 // stayers is the longest increasing subsequence of current positions along
 // next: the largest set of items whose relative order did not change.
 func stayers(current, next []Item) map[Item]bool {

@@ -98,11 +98,11 @@ Só podem existir por regras de metadados (D028). Quando existem:
 
 ## 7. Erros
 
-`order_violates_rules`, `rule_would_create_cycle`, `rule_duplicate`, `rule_self_reference`, `override_not_provider`, `mod_not_found`.
+`order_violates_rules`, `rule_would_create_cycle` (param `cycle`), `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `separator_not_found`, `order_history_stale`, `order_nothing_to_undo`, `override_not_provider`, `mod_not_found` (D069, D070).
 
 ## 8. Eventos
 
-`order.changed` (com movimentos e motivo), `rule.created`, `rule.removed`, `rule.disabled`, `override.set`, `override.cleared`, `exclusion.set`, `exclusion.cleared`, `conflict.reviewed`, `separator.changed`.
+`order.changed` (ordem antes/depois, motivo e itens movidos, D070), `rule.created`, `rule.removed`, `rule.disabled`, `rule.enabled`, `override.set`, `override.cleared`, `exclusion.set`, `exclusion.cleared`, `conflict.reviewed`, `separator.changed`.
 
 ## 9. Critérios de aceite
 

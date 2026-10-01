@@ -65,6 +65,15 @@ func CodeOf(err error) (code string, params map[string]string, ok bool) {
 	if errors.As(err, &e) {
 		return e.code, e.params, true
 	}
+	// Errors of shared application packages (e.g. the instance lock) carry
+	// their code the same way.
+	var coded interface {
+		Code() string
+		Params() map[string]string
+	}
+	if errors.As(err, &coded) {
+		return coded.Code(), coded.Params(), true
+	}
 	var re *game.RootError
 	if errors.As(err, &re) {
 		p := map[string]string{"reason": string(re.Reason)}

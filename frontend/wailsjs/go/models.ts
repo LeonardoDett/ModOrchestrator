@@ -1,5 +1,71 @@
 export namespace bridge {
 	
+	export class EntryRefDTO {
+	    mod?: string;
+	    separator?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new EntryRefDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.mod = source["mod"];
+	        this.separator = source["separator"];
+	    }
+	}
+	export class AnchorDTO {
+	    kind: string;
+	    entry: EntryRefDTO;
+	    priority?: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new AnchorDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.entry = this.convertValues(source["entry"], EntryRefDTO);
+	        this.priority = source["priority"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class AnswerDTO {
+	    choice: string;
+	    mod?: string;
+	    label?: string;
+	    root?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new AnswerDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.choice = source["choice"];
+	        this.mod = source["mod"];
+	        this.label = source["label"];
+	        this.root = source["root"];
+	    }
+	}
 	export class AppInfo {
 	    name: string;
 	    version: string;
@@ -24,6 +90,102 @@ export namespace bridge {
 	        this.customTitleBar = source["customTitleBar"];
 	    }
 	}
+	export class ArchiveInfoDTO {
+	    name: string;
+	    kind: string;
+	    size: number;
+	    hash: string;
+	    retained: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ArchiveInfoDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.kind = source["kind"];
+	        this.size = source["size"];
+	        this.hash = source["hash"];
+	        this.retained = source["retained"];
+	    }
+	}
+	export class CategoryDTO {
+	    id: string;
+	    name: string;
+	    parent?: string;
+	    order: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new CategoryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.parent = source["parent"];
+	        this.order = source["order"];
+	    }
+	}
+	export class DuplicateModDTO {
+	    id: string;
+	    name: string;
+	    version: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DuplicateModDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.version = source["version"];
+	    }
+	}
+	export class DecisionDTO {
+	    kind: string;
+	    choices: string[];
+	    duplicates: DuplicateModDTO[];
+	    suggestedLabel?: string;
+	    candidates: string[];
+	    folders: string[];
+	    ratio?: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new DecisionDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.choices = source["choices"];
+	        this.duplicates = this.convertValues(source["duplicates"], DuplicateModDTO);
+	        this.suggestedLabel = source["suggestedLabel"];
+	        this.candidates = source["candidates"];
+	        this.folders = source["folders"];
+	        this.ratio = source["ratio"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class DiscoveredGameDTO {
 	    gameId: string;
 	    gameName: string;
@@ -46,6 +208,7 @@ export namespace bridge {
 	        this.hidden = source["hidden"];
 	    }
 	}
+	
 	export class EntityRefDTO {
 	    kind: string;
 	    id: string;
@@ -60,12 +223,14 @@ export namespace bridge {
 	        this.id = source["id"];
 	    }
 	}
+	
 	export class ErrorDTO {
 	    code: string;
 	    message: string;
 	    step?: string;
 	    detail?: string;
 	    retryable: boolean;
+	    params?: Record<string, string>;
 	
 	    static createFrom(source: any = {}) {
 	        return new ErrorDTO(source);
@@ -78,6 +243,7 @@ export namespace bridge {
 	        this.step = source["step"];
 	        this.detail = source["detail"];
 	        this.retryable = source["retryable"];
+	        this.params = source["params"];
 	    }
 	}
 	export class ProgressDTO {
@@ -336,6 +502,28 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class InstallationInfoDTO {
+	    id: string;
+	    installer: string;
+	    options: Record<string, string>;
+	    files: number;
+	    size: number;
+	    createdAt: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new InstallationInfoDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.installer = source["installer"];
+	        this.options = source["options"];
+	        this.files = source["files"];
+	        this.size = source["size"];
+	        this.createdAt = source["createdAt"];
+	    }
+	}
 	export class InstanceRefDTO {
 	    id: string;
 	    name: string;
@@ -425,6 +613,481 @@ export namespace bridge {
 	        this.reason = source["reason"];
 	    }
 	}
+	export class ModAttributesDTO {
+	    name: string;
+	    version: string;
+	    author: string;
+	    notes: string;
+	    highlight: string;
+	    tags: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ModAttributesDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.version = source["version"];
+	        this.author = source["author"];
+	        this.notes = source["notes"];
+	        this.highlight = source["highlight"];
+	        this.tags = source["tags"];
+	    }
+	}
+	export class ModDetailsDTO {
+	    id: string;
+	    name: string;
+	    detectedName: string;
+	    version: string;
+	    author: string;
+	    category: string;
+	    categoryPath: string[];
+	    state: string;
+	    enabled: boolean;
+	    enabledAt?: string;
+	    size: number;
+	    files: number;
+	    type: string;
+	    typeName: string;
+	    content: string[];
+	    installer: string;
+	    source: string;
+	    installedAt?: string;
+	    variantOf?: string;
+	    variantLabel?: string;
+	    highlight?: string;
+	    hasNotes: boolean;
+	    queued: boolean;
+	    description: string;
+	    notes: string;
+	    tags: string[];
+	    variantOfName?: string;
+	    archive?: ArchiveInfoDTO;
+	    installation?: InstallationInfoDTO;
+	    modTypes: ModTypeDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ModDetailsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.detectedName = source["detectedName"];
+	        this.version = source["version"];
+	        this.author = source["author"];
+	        this.category = source["category"];
+	        this.categoryPath = source["categoryPath"];
+	        this.state = source["state"];
+	        this.enabled = source["enabled"];
+	        this.enabledAt = source["enabledAt"];
+	        this.size = source["size"];
+	        this.files = source["files"];
+	        this.type = source["type"];
+	        this.typeName = source["typeName"];
+	        this.content = source["content"];
+	        this.installer = source["installer"];
+	        this.source = source["source"];
+	        this.installedAt = source["installedAt"];
+	        this.variantOf = source["variantOf"];
+	        this.variantLabel = source["variantLabel"];
+	        this.highlight = source["highlight"];
+	        this.hasNotes = source["hasNotes"];
+	        this.queued = source["queued"];
+	        this.description = source["description"];
+	        this.notes = source["notes"];
+	        this.tags = source["tags"];
+	        this.variantOfName = source["variantOfName"];
+	        this.archive = this.convertValues(source["archive"], ArchiveInfoDTO);
+	        this.installation = this.convertValues(source["installation"], InstallationInfoDTO);
+	        this.modTypes = this.convertValues(source["modTypes"], ModTypeDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ModFileDTO {
+	    path: string;
+	    target: string;
+	    size: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModFileDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.target = source["target"];
+	        this.size = source["size"];
+	    }
+	}
+	export class ModFilesDTO {
+	    total: number;
+	    files: ModFileDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ModFilesDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.total = source["total"];
+	        this.files = this.convertValues(source["files"], ModFileDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ModHistoryDTO {
+	    id: string;
+	    type: string;
+	    occurredAt: string;
+	    operationId?: string;
+	    params: Record<string, string>;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModHistoryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.type = source["type"];
+	        this.occurredAt = source["occurredAt"];
+	        this.operationId = source["operationId"];
+	        this.params = source["params"];
+	    }
+	}
+	export class ModMoveDTO {
+	    id: string;
+	    name: string;
+	    from: number;
+	    to: number;
+	    because: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ModMoveDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.from = source["from"];
+	        this.to = source["to"];
+	        this.because = source["because"];
+	    }
+	}
+	export class SeparatorDTO {
+	    id: string;
+	    label: string;
+	    color?: string;
+	    collapsed: boolean;
+	    enabled: number;
+	    total: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SeparatorDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.label = source["label"];
+	        this.color = source["color"];
+	        this.collapsed = source["collapsed"];
+	        this.enabled = source["enabled"];
+	        this.total = source["total"];
+	    }
+	}
+	export class OrderEntryDTO {
+	    kind: string;
+	    modId?: string;
+	    priority?: number;
+	    separator?: SeparatorDTO;
+	
+	    static createFrom(source: any = {}) {
+	        return new OrderEntryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.modId = source["modId"];
+	        this.priority = source["priority"];
+	        this.separator = this.convertValues(source["separator"], SeparatorDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ModOrderDTO {
+	    profileId: string;
+	    profileName: string;
+	    entries: OrderEntryDTO[];
+	    undo?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModOrderDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.profileId = source["profileId"];
+	        this.profileName = source["profileName"];
+	        this.entries = this.convertValues(source["entries"], OrderEntryDTO);
+	        this.undo = source["undo"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ModRowDTO {
+	    id: string;
+	    name: string;
+	    detectedName: string;
+	    version: string;
+	    author: string;
+	    category: string;
+	    categoryPath: string[];
+	    state: string;
+	    enabled: boolean;
+	    enabledAt?: string;
+	    size: number;
+	    files: number;
+	    type: string;
+	    typeName: string;
+	    content: string[];
+	    installer: string;
+	    source: string;
+	    installedAt?: string;
+	    variantOf?: string;
+	    variantLabel?: string;
+	    highlight?: string;
+	    hasNotes: boolean;
+	    queued: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModRowDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.detectedName = source["detectedName"];
+	        this.version = source["version"];
+	        this.author = source["author"];
+	        this.category = source["category"];
+	        this.categoryPath = source["categoryPath"];
+	        this.state = source["state"];
+	        this.enabled = source["enabled"];
+	        this.enabledAt = source["enabledAt"];
+	        this.size = source["size"];
+	        this.files = source["files"];
+	        this.type = source["type"];
+	        this.typeName = source["typeName"];
+	        this.content = source["content"];
+	        this.installer = source["installer"];
+	        this.source = source["source"];
+	        this.installedAt = source["installedAt"];
+	        this.variantOf = source["variantOf"];
+	        this.variantLabel = source["variantLabel"];
+	        this.highlight = source["highlight"];
+	        this.hasNotes = source["hasNotes"];
+	        this.queued = source["queued"];
+	    }
+	}
+	
+	export class MoveRequestDTO {
+	    entries: EntryRefDTO[];
+	    anchor: AnchorDTO;
+	    mode: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new MoveRequestDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.entries = this.convertValues(source["entries"], EntryRefDTO);
+	        this.anchor = this.convertValues(source["anchor"], AnchorDTO);
+	        this.mode = source["mode"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class NamedModDTO {
+	    id: string;
+	    name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new NamedModDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	    }
+	}
+	export class RuleDTO {
+	    id: string;
+	    kind: string;
+	    a: NamedModDTO;
+	    b: NamedModDTO;
+	    source: string;
+	    disabled: boolean;
+	    orphan: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new RuleDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.kind = source["kind"];
+	        this.a = this.convertValues(source["a"], NamedModDTO);
+	        this.b = this.convertValues(source["b"], NamedModDTO);
+	        this.source = source["source"];
+	        this.disabled = source["disabled"];
+	        this.orphan = source["orphan"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class MoveResultDTO {
+	    applied: boolean;
+	    violated: RuleDTO[];
+	    hasNearest: boolean;
+	    nearestPriority?: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new MoveResultDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.applied = source["applied"];
+	        this.violated = this.convertValues(source["violated"], RuleDTO);
+	        this.hasNearest = source["hasNearest"];
+	        this.nearestPriority = source["nearestPriority"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	
 	export class StepDTO {
 	    name: string;
@@ -496,6 +1159,65 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class OrderChangeDTO {
+	    id: string;
+	    at: string;
+	    reason: string;
+	    moved: number;
+	    revertOf?: string;
+	    reverted: boolean;
+	    revertible: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new OrderChangeDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.at = source["at"];
+	        this.reason = source["reason"];
+	        this.moved = source["moved"];
+	        this.revertOf = source["revertOf"];
+	        this.reverted = source["reverted"];
+	        this.revertible = source["revertible"];
+	    }
+	}
+	
+	export class PluginDiffDTO {
+	    plugin: string;
+	    a: number;
+	    b: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new PluginDiffDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.plugin = source["plugin"];
+	        this.a = source["a"];
+	        this.b = source["b"];
+	    }
+	}
+	export class PriorityDiffDTO {
+	    id: string;
+	    name: string;
+	    a: number;
+	    b: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new PriorityDiffDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.a = source["a"];
+	        this.b = source["b"];
+	    }
+	}
 	export class ProblemDTO {
 	    code: string;
 	    params?: Record<string, string>;
@@ -510,7 +1232,224 @@ export namespace bridge {
 	        this.params = source["params"];
 	    }
 	}
+	export class ProfileSummaryDTO {
+	    id: string;
+	    name: string;
+	    notes: string;
+	    active: boolean;
+	    enabled: number;
+	    mods: number;
+	    snapshots: number;
+	    createdAt: string;
+	    updatedAt: string;
+	    lastActivatedAt?: string;
 	
+	    static createFrom(source: any = {}) {
+	        return new ProfileSummaryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.notes = source["notes"];
+	        this.active = source["active"];
+	        this.enabled = source["enabled"];
+	        this.mods = source["mods"];
+	        this.snapshots = source["snapshots"];
+	        this.createdAt = source["createdAt"];
+	        this.updatedAt = source["updatedAt"];
+	        this.lastActivatedAt = source["lastActivatedAt"];
+	    }
+	}
+	export class ProfileComparisonDTO {
+	    a: ProfileSummaryDTO;
+	    b: ProfileSummaryDTO;
+	    onlyA: NamedModDTO[];
+	    onlyB: NamedModDTO[];
+	    priorityChanged: PriorityDiffDTO[];
+	    pluginsOnlyA: string[];
+	    pluginsOnlyB: string[];
+	    loadOrderChanged: PluginDiffDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ProfileComparisonDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.a = this.convertValues(source["a"], ProfileSummaryDTO);
+	        this.b = this.convertValues(source["b"], ProfileSummaryDTO);
+	        this.onlyA = this.convertValues(source["onlyA"], NamedModDTO);
+	        this.onlyB = this.convertValues(source["onlyB"], NamedModDTO);
+	        this.priorityChanged = this.convertValues(source["priorityChanged"], PriorityDiffDTO);
+	        this.pluginsOnlyA = source["pluginsOnlyA"];
+	        this.pluginsOnlyB = source["pluginsOnlyB"];
+	        this.loadOrderChanged = this.convertValues(source["loadOrderChanged"], PluginDiffDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ProfileMovesDTO {
+	    profileId: string;
+	    name: string;
+	    moves: ModMoveDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ProfileMovesDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.profileId = source["profileId"];
+	        this.name = source["name"];
+	        this.moves = this.convertValues(source["moves"], ModMoveDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	
+	export class QueueItemDTO {
+	    operationId: string;
+	    kind: string;
+	    label: string;
+	    status: string;
+	    step?: string;
+	    decision?: DecisionDTO;
+	    cancellable: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new QueueItemDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.operationId = source["operationId"];
+	        this.kind = source["kind"];
+	        this.label = source["label"];
+	        this.status = source["status"];
+	        this.step = source["step"];
+	        this.decision = this.convertValues(source["decision"], DecisionDTO);
+	        this.cancellable = source["cancellable"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class RemovalPreviewDTO {
+	    mods: DuplicateModDTO[];
+	    orphanRules: number;
+	    sharedArchives: string[];
+	    deployed: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new RemovalPreviewDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.mods = this.convertValues(source["mods"], DuplicateModDTO);
+	        this.orphanRules = source["orphanRules"];
+	        this.sharedArchives = source["sharedArchives"];
+	        this.deployed = source["deployed"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class RestoreResultDTO {
+	    ignored: NamedModDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new RestoreResultDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ignored = this.convertValues(source["ignored"], NamedModDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class RootCheckDTO {
 	    root: string;
 	    version?: string;
@@ -545,6 +1484,40 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	
+	export class RulePreviewDTO {
+	    cycle: NamedModDTO[];
+	    profiles: ProfileMovesDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new RulePreviewDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.cycle = this.convertValues(source["cycle"], NamedModDTO);
+	        this.profiles = this.convertValues(source["profiles"], ProfileMovesDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
 	export class SettingDTO {
 	    key: string;
 	    tab: string;
@@ -639,10 +1612,44 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class SnapshotDTO {
+	    id: string;
+	    reason: string;
+	    createdAt: string;
+	    enabled: number;
+	    mods: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new SnapshotDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.reason = source["reason"];
+	        this.createdAt = source["createdAt"];
+	        this.enabled = source["enabled"];
+	        this.mods = source["mods"];
+	    }
+	}
 	
 	
 	
 	
+	export class TransferOptionsDTO {
+	    order: boolean;
+	    plugins: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new TransferOptionsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.order = source["order"];
+	        this.plugins = source["plugins"];
+	    }
+	}
 	export class UnmanageOptionsDTO {
 	    deleteFiles: boolean;
 	    confirmName: string;

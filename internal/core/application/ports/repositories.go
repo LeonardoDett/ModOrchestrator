@@ -14,6 +14,7 @@ import (
 
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/diagnostic"
+	"modorchestrator/internal/core/domain/event"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/notification"
@@ -54,6 +55,9 @@ type Mods interface {
 // saved; a reinstall saves a new one.
 type Installations interface {
 	Get(ctx context.Context, id mod.InstallationID) (*mod.Installation, error)
+	// Summaries returns file count and size per installation of an
+	// instance without loading file lists.
+	Summaries(ctx context.Context, instance game.InstanceID) (map[mod.InstallationID]InstallationSummary, error)
 	Save(ctx context.Context, inst *mod.Installation) error
 	Delete(ctx context.Context, id mod.InstallationID) error
 }
@@ -141,4 +145,39 @@ type Settings interface {
 	List(ctx context.Context, scope settings.Scope, scopeID string) ([]settings.Value, error)
 	Save(ctx context.Context, v settings.Value) error
 	Reset(ctx context.Context, scope settings.Scope, scopeID, key string) error
+}
+
+// Tx is the set of repositories bound to one transaction, plus the events
+// recorded with it (INV-OPS-01, D064).
+type Tx interface {
+	Mods() Mods
+	Archives() Archives
+	Installations() Installations
+	Categories() Categories
+	Profiles() Profiles
+	Rules() Rules
+	Overrides() Overrides
+	// Emit records events stored in the same transaction. Their IDs must be
+	// set; the store assigns sequences.
+	Emit(events ...event.Event)
+}
+
+// UnitOfWork runs fn in one transaction: the state it saves and the events
+// it emits are committed together or not at all. It returns the stored
+// events (with sequence) for the caller to publish after the commit.
+type UnitOfWork interface {
+	Do(ctx context.Context, fn func(ctx context.Context, tx Tx) error) ([]event.Event, error)
+}
+
+// EventLog reads stored events by subject, newest first (history of an
+// entity, core/02 §12; the full history projection is F9).
+type EventLog interface {
+	BySubject(ctx context.Context, ref event.EntityRef, limit int) ([]event.Event, error)
+}
+
+// InstallationSummary is the cheap view of an installation.
+type InstallationSummary struct {
+	Installer string
+	Files     int
+	Size      int64
 }

@@ -35,9 +35,9 @@ Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (component-
 | ID | Lacuna | Uso | Fase |
 |---|---|---|---|
 | L1 | ✅ **resolvida na F2**: `DataTable` + `DataTableColumnPicker` na lib (`src/components/data-table`). **DataTable** genérica sobre `Table`/`VirtualList`: colunas declarativas, ordenação, redimensionar/ocultar colunas (seletor de colunas), filtro por coluna no cabeçalho, seleção múltipla (clique, Shift, Ctrl, teclado), linha focada, agrupamento com cabeçalhos recolhíveis, dezenas de milhares de linhas. A lógica de dados (filtrar/ordenar) pode ser do consumidor. | Mods, Plugins, Conflicts, Diagnostics | F2 |
-| L2 | **Arrastar para reordenar em DataTable virtualizada** (múltiplas linhas, autoscroll, indicador de destino, callback de validação assíncrona antes de soltar). `ReorderableList` pode ser a base. | Mods, Load Order | F5 |
-| L3 | **Toggle de status em célula** com estados (ligado, desligado, indisponível, em progresso), acessível. Pode ser variante de `Switch`. | Mods, Plugins | F4 |
-| L4 | **Badge/indicador com ícone e contagem** compacto para células (conflito, dependências, problemas). Verificar se `Badge` cobre. | Mods, Plugins | F4 |
+| L2 | ✅ **resolvida na F5** (D071): `DataTable` com `reorderable` + `onRowsMove`: alça por linha, arraste por pointer events (várias linhas, autoscroll, indicador de destino, Esc cancela), `Alt+↑/↓` pelo teclado, tabela ocupada enquanto o consumidor valida e aplica. | Mods, Load Order | F5 |
+| L3 | ✅ **resolvida na F4**: `StatusToggle` (`src/components/status-toggle`): switch compacto com estados `on`/`off`/`unavailable`/`busy`, ícone no polegar (nunca só cor), descrição do estado acessível, `aria-busy` e `aria-disabled`. | Mods, Plugins | F4 |
+| L4 | ✅ **resolvida na F4**: `Indicator` (`src/components/indicator`): ícone + contagem opcional, `role="img"` com nome acessível e tom semântico. `Badge` não cobria (texto, sem nome acessível para contagem). | Mods, Plugins | F4 |
 | L5 | **Tree com seleção em lote e coluna extra** (select de vencedor por nó). Verificar se `Tree`/`FileBrowser` cobrem. | Conflicts, Inspector de Mod | F6 |
 | L6 | **Visualização em grafo** (nós/arestas) para ciclos e grupos. | V1.x | — |
 

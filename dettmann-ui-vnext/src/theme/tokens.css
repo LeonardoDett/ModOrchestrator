@@ -92,6 +92,21 @@
 }
 
 /*
+ * Layering: Tailwind v4 builds z-* utilities from the --z-index-* namespace.
+ * The generated foundations expose the scale as --z-*, which no utility
+ * reads, so z-modal, z-dropdown... produced no CSS and overlays stacked
+ * under sticky table headers. These aliases give the utilities their values.
+ */
+@theme inline {
+  --z-index-dropdown: var(--ui-z-dropdown);
+  --z-index-sticky: var(--ui-z-sticky);
+  --z-index-overlay: var(--ui-z-overlay);
+  --z-index-modal: var(--ui-z-modal);
+  --z-index-popover: var(--ui-z-popover);
+  --z-index-toast: var(--ui-z-toast);
+}
+
+/*
  * Tone contract: components set data-tone="<tone>" (theme/tone.ts) and paint
  * with bg-tone, text-on-tone, bg-tone-subtle, border-tone-border and
  * text-tone-text. Each tone maps to one semantic role of themes.css.

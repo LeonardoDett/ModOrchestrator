@@ -16,7 +16,7 @@ import (
 // ProfileRepository implements ports.Profiles. A profile is stored as the
 // JSON of profile.Data; the aggregate is restored through profile.Restore so
 // its invariants hold for whatever was read.
-type ProfileRepository struct{ db *sql.DB }
+type ProfileRepository struct{ db querier }
 
 var _ ports.Profiles = (*ProfileRepository)(nil)
 

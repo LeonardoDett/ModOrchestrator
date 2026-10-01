@@ -139,3 +139,47 @@ export function nextSort(current: DataTableSort | null, columnId: string): DataT
 export function clampWidth(width: number, min = 48, max = 2000): number {
   return Math.min(max, Math.max(min, Math.round(width)));
 }
+
+/** A request to move rows next to another row (drag and drop or Alt+Arrow). */
+export interface DataTableRowMove {
+  /** Moved row ids, in display order. */
+  ids: string[];
+  targetId: string;
+  position: "before" | "after";
+}
+
+/**
+ * Rows a drag carries: the whole selection when the dragged row is part of
+ * it, otherwise only that row. Kept in display order.
+ */
+export function movingRows(order: readonly string[], selected: ReadonlySet<string>, dragged: string): string[] {
+  if (!selected.has(dragged)) return [dragged];
+  return order.filter((id) => selected.has(id));
+}
+
+/** Whether dropping `moving` next to `targetId` is a real move (not onto itself). */
+export function isDropTarget(moving: readonly string[], targetId: string): boolean {
+  return moving.length > 0 && !moving.includes(targetId);
+}
+
+/**
+ * Keyboard move by one step: up places the rows before the row preceding
+ * the first moved row; down places them after the row following the last
+ * one. Null at the edges.
+ */
+export function keyboardMove(order: readonly string[], moving: readonly string[], direction: -1 | 1): DataTableRowMove | null {
+  const set = new Set(moving);
+  const indexes = order.flatMap((id, i) => (set.has(id) ? [i] : []));
+  if (indexes.length === 0) return null;
+  const ids = indexes.map((i) => order[i]!);
+  if (direction < 0) {
+    for (let i = indexes[0]! - 1; i >= 0; i--) {
+      if (!set.has(order[i]!)) return { ids, targetId: order[i]!, position: "before" };
+    }
+    return null;
+  }
+  for (let i = indexes[indexes.length - 1]! + 1; i < order.length; i++) {
+    if (!set.has(order[i]!)) return { ids, targetId: order[i]!, position: "after" };
+  }
+  return null;
+}

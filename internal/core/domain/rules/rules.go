@@ -41,6 +41,9 @@ var (
 	// ErrCycle wraps *ordering.CycleError: the rule would close a cycle and
 	// is refused (D028, INV-ORD-04).
 	ErrCycle = errors.New("rules: would create a cycle")
+	// ErrNotRemovable refuses deleting a rule that did not come from the
+	// user: it can only be disabled, so its origin stays visible (core/05 §2).
+	ErrNotRemovable = errors.New("rules: rule can only be disabled")
 )
 
 // OrderRule requires Before to have lower priority than After: After wins
@@ -203,7 +206,7 @@ func (s *Set) SetOrderRuleDisabled(id ID, disabled bool) error {
 func (s *Set) Remove(id ID) error {
 	check := func(src Source) error {
 		if src != SourceUser {
-			return fmt.Errorf("%w: rule %q comes from %s and can only be disabled", ErrInvalid, id, src)
+			return fmt.Errorf("%w: rule %q comes from %s", ErrNotRemovable, id, src)
 		}
 		return nil
 	}
@@ -386,4 +389,30 @@ func validateIncompatibility(r IncompatibilityRule) error {
 		return fmt.Errorf("%w: incompatibility needs id, two different mods and a known source", ErrInvalid)
 	}
 	return nil
+}
+
+// SetDisabled disables or re-enables a rule of any kind. Re-enabling an
+// order rule is refused if it would close a cycle (D028).
+func (s *Set) SetDisabled(id ID, disabled bool) error {
+	if slices.ContainsFunc(s.order, func(o OrderRule) bool { return o.ID == id }) {
+		return s.SetOrderRuleDisabled(id, disabled)
+	}
+	if i := slices.IndexFunc(s.deps, func(o DependencyRule) bool { return o.ID == id }); i >= 0 {
+		s.deps[i].Disabled = disabled
+		return nil
+	}
+	if i := slices.IndexFunc(s.incompat, func(o IncompatibilityRule) bool { return o.ID == id }); i >= 0 {
+		s.incompat[i].Disabled = disabled
+		return nil
+	}
+	return fmt.Errorf("%w: rule %q", ErrNotFound, id)
+}
+
+// OrderRule returns one order rule.
+func (s *Set) OrderRule(id ID) (OrderRule, bool) {
+	i := slices.IndexFunc(s.order, func(o OrderRule) bool { return o.ID == id })
+	if i < 0 {
+		return OrderRule{}, false
+	}
+	return s.order[i], true
 }

@@ -16,6 +16,8 @@ export const SHORTCUTS: readonly { keys: string; description: MessageKey }[] = [
   { keys: "Ctrl Space", description: "shortcuts.tableToggle" },
   { keys: "Ctrl A", description: "shortcuts.tableSelectAll" },
   { keys: "Enter", description: "shortcuts.tableActivate" },
+  { keys: "Alt ↑ ↓", description: "shortcuts.moveRows" },
+  { keys: "Ctrl Z", description: "shortcuts.undoOrder" },
 ];
 
 export const PALETTE_KEYS = "Ctrl K";

@@ -12,6 +12,7 @@ import (
 	"strings"
 	"sync"
 
+	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/game"
@@ -35,25 +36,30 @@ type Deps struct {
 	Versions    ports.VersionReader
 	Stores      ports.StoreScanner
 	Ops         *operations.Service
-	IDs         operations.IDGenerator
-	Clock       operations.Clock
+	// Locks is the per-instance lock shared with every mutating service
+	// (D065); a nil value gets a private table (tests).
+	Locks *instancelock.Locks
+	IDs   operations.IDGenerator
+	Clock operations.Clock
 }
 
 // Service implements the games use cases.
 type Service struct {
 	Deps
 
-	mu       sync.Mutex // guards found, scanned, busy, cancels
+	mu       sync.Mutex // guards found, scanned, cancels
 	found    []ports.Candidate
 	scanned  bool
-	busy     map[game.InstanceID]bool
 	cancels  map[string]context.CancelFunc
 	manageMu sync.Mutex // serializes instance creation
 }
 
 // NewService wires the service.
 func NewService(d Deps) *Service {
-	return &Service{Deps: d, busy: map[game.InstanceID]bool{}, cancels: map[string]context.CancelFunc{}}
+	if d.Locks == nil {
+		d.Locks = instancelock.New()
+	}
+	return &Service{Deps: d, cancels: map[string]context.CancelFunc{}}
 }
 
 // Managed is a managed instance with everything the UI shows about it.
@@ -342,17 +348,7 @@ func (s *Service) FolderPath(ctx context.Context, id game.InstanceID, which stri
 // lock marks an instance busy; a second mutating operation is refused, not
 // queued (D038, anti-pattern 39).
 func (s *Service) lock(id game.InstanceID) (func(), error) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if s.busy[id] {
-		return nil, fail(CodeInstanceBusy, nil, "instance", string(id))
-	}
-	s.busy[id] = true
-	return func() {
-		s.mu.Lock()
-		delete(s.busy, id)
-		s.mu.Unlock()
-	}, nil
+	return s.Locks.Acquire(id, "games")
 }
 
 func (s *Service) checkNameFree(ctx context.Context, g game.ID, name string, self game.InstanceID) error {

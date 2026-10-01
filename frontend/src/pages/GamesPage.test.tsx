@@ -180,8 +180,8 @@ describe("Games screen and assistant (F3)", () => {
     for (const reserved of ["Downloads", "Tools", "Collections", "Saves"]) {
       expect(within(nav).queryByRole("button", { name: reserved })).not.toBeInTheDocument();
     }
-    await user.click(within(nav).getByRole("button", { name: "Mods" }));
-    expect(screen.getByText("Mods is not available yet")).toBeInTheDocument();
+    await user.click(within(nav).getByRole("button", { name: "Conflicts" }));
+    expect(screen.getByText("Conflicts is not available yet")).toBeInTheDocument();
   });
 
   it("refuses a wrong folder with the reason and keeps Next disabled", async () => {

@@ -6,6 +6,7 @@ import {
   type ChangeEvent,
   type DragEvent,
   type ComponentPropsWithoutRef,
+  type ReactNode,
 } from "react";
 import { Upload } from "lucide-react";
 import { defineRecipe } from "../../core/recipe";
@@ -75,6 +76,20 @@ interface FileDropzoneProps extends Omit<ComponentPropsWithoutRef<"div">, "onCha
   browseLabel?: string;
   /** `compact` is a horizontal row (avatar/logo pickers) */
   size?: "default" | "compact";
+  /**
+   * Replaces the hidden file input: the host opens its own picker (e.g. a
+   * desktop shell dialog that returns absolute paths).
+   */
+  onBrowse?: () => void;
+  /** Extra actions rendered next to the browse button. */
+  actions?: ReactNode;
+  /**
+   * Whether the zone lists accepted files and rejections itself (default
+   * true). Hosts that receive drops elsewhere (native shells) turn it off.
+   */
+  showSelection?: boolean;
+  /** Controlled highlight, for drags the host detects itself. */
+  dragging?: boolean;
 }
 
 /**
@@ -91,6 +106,10 @@ export function FileDropzone({
   title = "Drop files here",
   browseLabel = "Browse files",
   size = "default",
+  onBrowse,
+  actions,
+  showSelection = true,
+  dragging: draggingProp,
   className,
   ...props
 }: FileDropzoneProps) {
@@ -157,7 +176,7 @@ export function FileDropzone({
         }}
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
-        className={dropzoneVariants({ dragging, disabled, size })}
+        className={dropzoneVariants({ dragging: dragging || Boolean(draggingProp), disabled, size })}
       >
         <FeaturedIcon icon={Upload} color="neutral" size={size === "compact" ? "md" : "lg"} />
         <div className="space-y-1">
@@ -173,10 +192,11 @@ export function FileDropzone({
           variant="secondary"
           size="sm"
           disabled={disabled}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => (onBrowse ? onBrowse() : inputRef.current?.click())}
         >
           {browseLabel}
         </Button>
+        {actions}
         <input
           ref={inputRef}
           type="file"
@@ -188,14 +208,14 @@ export function FileDropzone({
         />
       </div>
 
-      {errors.length > 0 ? (
+      {showSelection && errors.length > 0 ? (
         <Alert.Root variant="danger">
           <Alert.Title>Some files were rejected</Alert.Title>
           <Alert.Description>{errors.join(" ")}</Alert.Description>
         </Alert.Root>
       ) : null}
 
-      {previewItems.length > 0 ? (
+      {showSelection && previewItems.length > 0 ? (
         <List.Root
           items={previewItems}
           selectionMode="none"

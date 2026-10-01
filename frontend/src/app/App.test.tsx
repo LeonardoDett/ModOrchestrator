@@ -161,14 +161,14 @@ describe("App shell", () => {
     const user = userEvent.setup();
     const failed = op("f", "failed", {
       steps: [{ name: "extract", status: "failed" }],
-      error: { code: "archive_corrupt", message: "bad header", step: "extract", retryable: true },
+      error: { code: "brand_new_failure", message: "bad header", step: "extract", retryable: true },
     });
     render(<App backend={fakeBackend([op("r", "running", { progress: { current: 2, total: 5 } }), failed]).backend} />);
     await user.click(await screen.findByRole("button", { name: /Operations: 1 operation running/ }));
     const drawer = await screen.findByRole("dialog", { name: "Operations" });
     expect(within(drawer).getByRole("region", { name: "In progress" })).toHaveTextContent("kind-r");
     expect(within(drawer).getByText("2 of 5")).toBeInTheDocument();
-    expect(within(drawer).getByText("Unexpected error (archive_corrupt).")).toBeInTheDocument();
+    expect(within(drawer).getByText("Unexpected error (brand_new_failure).")).toBeInTheDocument();
     expect(within(drawer).getByRole("img", { name: "Failed" })).toBeInTheDocument();
   });
 

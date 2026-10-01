@@ -112,11 +112,11 @@ Editáveis: nome, versão, autor, categoria, notas (texto longo), destaque (cor 
 
 ## 11. Erros (códigos estáveis)
 
-`import_unsupported_format`, `archive_corrupt`, `archive_unsafe_path`, `archive_too_large`, `archive_suspicious_ratio`, `disk_full`, `staging_unavailable`, `instance_busy`, `installer_unsupported`, `installer_failed`, `no_installable_files`, `reinstall_archive_missing`, `mod_busy`.
+`import_unsupported_format`, `archive_corrupt`, `archive_unsafe_path`, `archive_too_large`, `archive_suspicious_ratio`, `disk_full`, `staging_unavailable`, `instance_busy`, `installer_unsupported`, `installer_failed`, `no_installable_files`, `reinstall_archive_missing`, `mod_busy`, `operation_not_cancellable`, `decision_not_pending`, `category_invalid`, `mod_type_unknown`, `import_source_missing` (F4). `archive_corrupt` usa `reason`: `damaged`, `empty`, `encrypted` (D062). `archive_suspicious_ratio` não é erro: é a decisão `suspicious_ratio` (continuar/cancelar).
 
 ## 12. Eventos
 
-`mod.imported`, `mod.installed`, `mod.reinstalled`, `mod.install_aborted`, `mod.removed`, `mod.attributes_changed`, `mod.category_changed`, `mod.type_changed`, `archive.retained`, `archive.removed`, `category.changed`.
+`mod.imported`, `mod.installed`, `mod.reinstalled`, `mod.install_aborted`, `mod.removed`, `mod.attributes_changed`, `mod.category_changed`, `mod.type_changed`, `archive.retained`, `archive.removed`, `category.changed`. Na F4 também: `import.decision_required` (sinal para a UI reler a fila; fato "o import espera decisão") e `profile.mods_enabled_changed` (toggle de status no profile ativo, D066). Payloads são mapas de texto (código + parâmetros, D044).
 
 ## 13. Critérios de aceite
 

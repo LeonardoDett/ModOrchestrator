@@ -6,6 +6,8 @@ import { DiagnosticsPage } from "../pages/DiagnosticsPage";
 import { GamesPage } from "../pages/GamesPage";
 import { HonestEmpty, PageBody } from "../pages/PageBody";
 import { SettingsPage } from "../pages/SettingsPage";
+import { ModsPage } from "../pages/ModsPage";
+import { ProfilesPage } from "../pages/ProfilesPage";
 import { OverviewPage, WorkspacePlaceholder } from "../pages/WorkspacePages";
 import { VIEWS, isWorkspaceView, useNavigation } from "./navigation";
 
@@ -45,10 +47,12 @@ export function Routes() {
     case "overview":
       return <OverviewPage />;
     case "mods":
+      return <ModsPage />;
+    case "profiles":
+      return <ProfilesPage />;
     case "plugins":
     case "load_order":
     case "conflicts":
-    case "profiles":
       return <WorkspacePlaceholder view={route.view} icon={VIEWS[route.view].icon} />;
   }
 }

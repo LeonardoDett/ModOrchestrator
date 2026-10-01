@@ -174,8 +174,71 @@ func (f *FS) WriteFile(_ context.Context, path string, data []byte) error {
 
 func (f *FS) Hardlink(context.Context, string, string) error { return errors.New("memfs: unsupported") }
 func (f *FS) Symlink(context.Context, string, string) error  { return errors.New("memfs: unsupported") }
-func (f *FS) Copy(context.Context, string, string) error     { return errors.New("memfs: unsupported") }
-func (f *FS) Rename(context.Context, string, string) error   { return errors.New("memfs: unsupported") }
+
+// Copy copies a file; the destination folder must exist.
+func (f *FS) Copy(_ context.Context, src, dst string) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	n, ok := f.nodes[key(src)]
+	if !ok || n.dir {
+		return errors.New("memfs: no such file")
+	}
+	if p, ok := f.nodes[key(parent(dst))]; !ok || !p.dir {
+		return errors.New("memfs: parent folder missing")
+	}
+	f.Writes = append(f.Writes, "copy "+src+" "+dst)
+	f.nodes[key(dst)] = &node{name: base(dst), data: bytes.Clone(n.data)}
+	return nil
+}
+
+// Rename moves a file or a whole folder; the destination must not exist
+// (like a directory rename on Windows) unless both are files.
+func (f *FS) Rename(_ context.Context, src, dst string) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	n, ok := f.nodes[key(src)]
+	if !ok {
+		return errors.New("memfs: no such file")
+	}
+	if d, exists := f.nodes[key(dst)]; exists && (d.dir || n.dir) {
+		return errors.New("memfs: destination exists")
+	}
+	if p, ok := f.nodes[key(parent(dst))]; !ok || !p.dir {
+		return errors.New("memfs: parent folder missing")
+	}
+	f.Writes = append(f.Writes, "rename "+src+" "+dst)
+	prefix := key(src) + "/"
+	moved := map[string]*node{}
+	for k, c := range f.nodes {
+		if strings.HasPrefix(k, prefix) {
+			moved[key(dst)+"/"+k[len(prefix):]] = c
+			delete(f.nodes, k)
+		}
+	}
+	delete(f.nodes, key(src))
+	n.name = base(dst)
+	f.nodes[key(dst)] = n
+	for k, c := range moved {
+		f.nodes[k] = c
+	}
+	return nil
+}
+
+// Paths lists every path below root (files and folders), sorted, relative
+// with "/" separators; handy to assert that nothing was left behind.
+func (f *FS) Paths(root string) []string {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	prefix := key(root) + "/"
+	var out []string
+	for k := range f.nodes {
+		if strings.HasPrefix(k, prefix) {
+			out = append(out, k[len(prefix):])
+		}
+	}
+	sort.Strings(out)
+	return out
+}
 
 func (f *FS) Remove(_ context.Context, path string) error {
 	f.mu.Lock()

@@ -185,3 +185,7 @@ func nearestExisting(path string) string {
 		p = parent
 	}
 }
+
+// LongPath returns path in the form the OS accepts beyond MAX_PATH (D039),
+// for other infrastructure packages that open files directly.
+func LongPath(path string) string { return longPath(path) }

@@ -87,7 +87,7 @@ func TestMetadataCyclesAreKeptAndReported(t *testing.T) {
 	if _, found := s.Cycle(); !found {
 		t.Fatal("cycle from metadata must be reported")
 	}
-	if err := s.Remove("m1"); !errors.Is(err, ErrInvalid) {
+	if err := s.Remove("m1"); !errors.Is(err, ErrNotRemovable) {
 		t.Fatal("metadata rules can only be disabled")
 	}
 	if err := s.SetOrderRuleDisabled("m1", true); err != nil {

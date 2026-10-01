@@ -58,6 +58,9 @@ describe("i18n catalogs (D044)", () => {
     const bridgeErrors = [
       join(internal, "bridge", "errors.go"),
       join(internal, "core", "application", "games", "errors.go"),
+      join(internal, "core", "application", "library", "errors.go"),
+      join(internal, "core", "application", "instancelock", "instancelock.go"),
+      join(internal, "core", "application", "profiles", "errors.go"),
     ]
       .map((file) => readFileSync(file, "utf8"))
       .join("\n");

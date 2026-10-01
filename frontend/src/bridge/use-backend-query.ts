@@ -16,6 +16,9 @@ export function useRefresh() {
   return useContext(RefreshContext);
 }
 
+/** Window in which operation events are coalesced into one reread. */
+const EVENT_COALESCE_MS = 120;
+
 interface QueryOptions {
   /** Reread when the backend signals an operation event (D021). */
   onOperationEvents?: boolean;
@@ -52,7 +55,17 @@ export function useBackendQuery<T>(
 
   useEffect(() => {
     if (!backend.connected || !options.onOperationEvents) return;
-    return backend.onOperationEvent(load);
+    // Progress events arrive several times a second during an import; a
+    // burst of them causes one reread, not one per event.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const off = backend.onOperationEvent(() => {
+      clearTimeout(timer);
+      timer = setTimeout(load, EVENT_COALESCE_MS);
+    });
+    return () => {
+      clearTimeout(timer);
+      off();
+    };
   }, [backend, load, options.onOperationEvents]);
 
   return { ...state, reload: load };

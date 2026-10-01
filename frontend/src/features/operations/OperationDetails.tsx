@@ -74,7 +74,7 @@ export function OperationDetails({ operation: op, compact = false, onViewLog }: 
           <Alert.Title>{t("operations.error")}</Alert.Title>
           <Alert.Description>
             <Stack gap="xs">
-              <span>{errorMessage(i18n, { code: op.error.code, params: {} })}</span>
+              <span>{errorMessage(i18n, { code: op.error.code, params: op.error.params ?? {} })}</span>
               {op.error.retryable ? <span>{t("operations.retryable")}</span> : null}
               <TechnicalDetails
                 text={[op.error.code, op.error.step, op.error.message, op.error.detail].filter(Boolean).join("\n")}

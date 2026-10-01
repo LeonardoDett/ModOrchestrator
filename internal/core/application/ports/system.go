@@ -2,10 +2,12 @@ package ports
 
 import (
 	"context"
+	"errors"
 	"io"
 	"time"
 
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 )
 
@@ -76,7 +78,7 @@ type VersionReader interface {
 	FileVersion(ctx context.Context, path string) (string, error)
 }
 
-// Hasher computes content hashes (algorithm decided in F4, pendência P2).
+// Hasher computes content hashes (SHA-256, lowercase hex; D063).
 type Hasher interface {
 	Hash(ctx context.Context, r io.Reader) (string, error)
 }
@@ -91,11 +93,46 @@ type ArchiveEntry struct {
 	IsLink bool
 }
 
-// Extractor lists and extracts archives (implementation decided in F4,
-// pendência P1). Extract writes only under destDir.
+// Archive formats the extractor reports (mod.ArchiveKind values).
+const (
+	FormatZip    = "zip"
+	Format7z     = "7z"
+	FormatRar    = "rar"
+	FormatFolder = "folder"
+)
+
+// Extractor errors. Implementations wrap them so callers map them to the
+// stable codes of core/02 §11.
+var (
+	ErrArchiveUnsupported = errors.New("ports: unsupported archive format")
+	ErrArchiveCorrupt     = errors.New("ports: corrupt archive")
+	ErrArchiveEncrypted   = errors.New("ports: encrypted archive")
+	// ErrArchiveUnsafe means an entry would be written outside the
+	// destination or is a link (INV-ID-04). The domain refuses these before
+	// extracting; the extractor refuses them again (defence in depth).
+	ErrArchiveUnsafe = errors.New("ports: unsafe archive entry")
+	// ErrArchiveTooLarge means more bytes were produced than allowed.
+	ErrArchiveTooLarge = errors.New("ports: archive larger than allowed")
+)
+
+// ExtractOptions bound an extraction.
+type ExtractOptions struct {
+	// MaxBytes stops the extraction as soon as more bytes are written (0 =
+	// no limit); bytes are counted as written, never taken from headers.
+	MaxBytes int64
+	// Progress receives the bytes written so far.
+	Progress func(written int64)
+}
+
+// Extractor lists and extracts archives and imported folders (D048, D062).
+// Nothing is ever executed. Extract writes only under destDir, which must
+// exist; every entry path is checked again before it is joined.
 type Extractor interface {
-	List(ctx context.Context, archivePath string) ([]ArchiveEntry, error)
-	Extract(ctx context.Context, archivePath, destDir string) error
+	// Detect returns the format of path (by content, not by extension) or
+	// ErrArchiveUnsupported.
+	Detect(ctx context.Context, path string) (string, error)
+	List(ctx context.Context, path string) ([]ArchiveEntry, error)
+	Extract(ctx context.Context, path, destDir string, opts ExtractOptions) error
 }
 
 // StoreInstall is a game installation found by a store scanner. AppID is the
@@ -194,4 +231,25 @@ type SystemLocale interface {
 	// Language returns the user's UI language as a BCP 47 tag ("pt-BR"),
 	// or "" when unknown.
 	Language() string
+}
+
+// InstallerProvider is implemented by adapters that register installers of
+// their own (core/03 §6, e.g. a script extender runtime). They produce only
+// plans (anti-pattern 24).
+type InstallerProvider interface {
+	Installers(id game.ID) []installer.Installer
+}
+
+// DefaultCategory is a category an adapter proposes for new instances.
+// Parent refers to another Key of the same list.
+type DefaultCategory struct {
+	Key    string
+	Name   string
+	Parent string
+}
+
+// CategoryProvider is implemented by adapters that seed the category tree
+// of a new instance (core/02 §10). No network call is involved.
+type CategoryProvider interface {
+	DefaultCategories(id game.ID) []DefaultCategory
 }

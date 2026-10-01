@@ -130,7 +130,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ? "success"
           : variant === "secondary" || compactSolid
             ? "secondary"
-            : undefined);
+            : variant == null || variant === "primary" || variant === "solid"
+              ? // A solid button paints with bg-tone, which needs a tone:
+                // without it the primary action rendered transparent.
+                "primary"
+              : undefined);
     const neutral = variant === "outline" || variant === "ghost";
     const surfaceTone = neutral ? tone : impliedTone;
     const outlineClass =

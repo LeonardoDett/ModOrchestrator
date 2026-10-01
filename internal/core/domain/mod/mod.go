@@ -202,3 +202,39 @@ func (m *Mod) Remove(now time.Time) error {
 func (m *Mod) invalid(action string) error {
 	return fmt.Errorf("%w: cannot %s while %s", ErrInvalidTransition, action, m.State)
 }
+
+// SetCategory assigns a category ("" = none). The caller checks it exists
+// in the instance tree.
+func (m *Mod) SetCategory(c CategoryID, now time.Time) error {
+	if m.State == StateRemoved {
+		return m.invalid("categorize")
+	}
+	m.Category = c
+	m.UpdatedAt = now
+	return nil
+}
+
+// SetSource points the mod at another archive, as "replace" does for an
+// update (core/02 §6); the next install uses it.
+func (m *Mod) SetSource(a *Archive, now time.Time) error {
+	if m.State == StateRemoved {
+		return m.invalid("change source of")
+	}
+	if a == nil || a.Instance != m.Instance {
+		return fmt.Errorf("%w: archive of another instance", ErrInvalid)
+	}
+	m.Archive = a.ID
+	m.Source = Source{Kind: m.Source.Kind, Ref: a.OriginalName}
+	m.UpdatedAt = now
+	return nil
+}
+
+// MarkVariant links m to the mod it is a variant of, with its label.
+func (m *Mod) MarkVariant(of ID, label string, now time.Time) error {
+	if of == "" || of == m.ID || strings.TrimSpace(label) == "" {
+		return fmt.Errorf("%w: variant needs another mod and a label", ErrInvalid)
+	}
+	m.VariantOf, m.VariantLabel = of, strings.TrimSpace(label)
+	m.UpdatedAt = now
+	return nil
+}

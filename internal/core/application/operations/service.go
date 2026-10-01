@@ -46,6 +46,19 @@ func (s *Service) Start(ctx context.Context, spec Spec) (*Tracker, error) {
 	return &Tracker{svc: s, op: op}, nil
 }
 
+// Enqueue creates a pending operation: an item of a visible queue (D065)
+// that starts later with Execute or is cancelled before starting.
+func (s *Service) Enqueue(ctx context.Context, spec Spec) (*Tracker, error) {
+	op, err := operation.New(operation.ID(s.ids.NewID()), spec.Kind, spec.Subject, spec.Steps, s.clock.Now())
+	if err != nil {
+		return nil, err
+	}
+	if err := s.commit(ctx, op); err != nil {
+		return nil, err
+	}
+	return &Tracker{svc: s, op: op}, nil
+}
+
 // Run starts an operation and executes fn. A nil return succeeds the
 // operation; an error fails it with a structured error (an *operation.Error
 // is kept as is). Context cancellation cancels the operation.
@@ -54,26 +67,38 @@ func (s *Service) Run(ctx context.Context, spec Spec, fn func(ctx context.Contex
 	if err != nil {
 		return "", err
 	}
-	runErr := fn(ctx, t)
+	return t.ID(), s.finish(ctx, t, fn(ctx, t))
+}
+
+// Execute starts a pending operation created by Enqueue and runs fn with the
+// same semantics as Run.
+func (s *Service) Execute(ctx context.Context, t *Tracker, fn func(ctx context.Context, t *Tracker) error) error {
+	if err := t.apply(ctx, func(op *operation.Operation) error { return op.Start(s.clock.Now()) }); err != nil {
+		return err
+	}
+	return s.finish(ctx, t, fn(ctx, t))
+}
+
+func (s *Service) finish(ctx context.Context, t *Tracker, runErr error) error {
 	// Finalization must be persisted even if the caller's context is done.
 	finalCtx := context.WithoutCancel(ctx)
 	switch {
 	case runErr == nil:
-		return t.ID(), t.Succeed(finalCtx)
+		return t.Succeed(finalCtx)
 	case errors.Is(runErr, context.Canceled):
 		if err := t.Cancel(finalCtx); err != nil {
-			return t.ID(), errors.Join(runErr, err)
+			return errors.Join(runErr, err)
 		}
-		return t.ID(), runErr
+		return runErr
 	default:
 		var opErr *operation.Error
 		if !errors.As(runErr, &opErr) {
 			opErr = &operation.Error{Code: "internal", Message: runErr.Error()}
 		}
 		if err := t.Fail(finalCtx, *opErr); err != nil {
-			return t.ID(), errors.Join(runErr, err)
+			return errors.Join(runErr, err)
 		}
-		return t.ID(), runErr
+		return runErr
 	}
 }
 
@@ -183,3 +208,20 @@ func (t *Tracker) apply(ctx context.Context, mutate func(*operation.Operation) e
 	}
 	return t.svc.commit(ctx, t.op)
 }
+
+// Status returns the current status of the operation.
+func (t *Tracker) Status() operation.Status {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.op.Status
+}
+
+// CurrentStep returns the running step, if any.
+func (t *Tracker) CurrentStep() string {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.op.CurrentStep
+}
+
+// Kind returns the operation kind.
+func (t *Tracker) Kind() operation.Kind { return t.op.Kind }

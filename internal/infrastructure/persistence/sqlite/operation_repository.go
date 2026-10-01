@@ -38,11 +38,12 @@ type stepRecord struct {
 }
 
 type errorRecord struct {
-	Code      string `json:"code"`
-	Message   string `json:"message"`
-	Step      string `json:"step,omitempty"`
-	Detail    string `json:"detail,omitempty"`
-	Retryable bool   `json:"retryable,omitempty"`
+	Code      string            `json:"code"`
+	Message   string            `json:"message"`
+	Step      string            `json:"step,omitempty"`
+	Detail    string            `json:"detail,omitempty"`
+	Retryable bool              `json:"retryable,omitempty"`
+	Params    map[string]string `json:"params,omitempty"`
 }
 
 type progressRecord struct {
@@ -185,28 +186,9 @@ func (r *OperationRepository) Events(ctx context.Context, id operation.ID) ([]ev
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
-	var out []event.Event
-	for rows.Next() {
-		var (
-			e                   event.Event
-			typ, occurred, body string
-		)
-		if err := rows.Scan(&e.Sequence, &e.ID, &typ, &occurred, &e.OperationID, &e.Subject.Kind, &e.Subject.ID, &body); err != nil {
-			return nil, err
-		}
-		e.Type = event.Type(typ)
-		if e.OccurredAt, err = parseTime(occurred); err != nil {
-			return nil, err
-		}
-		var rec operationPayloadRecord
-		if err := json.Unmarshal([]byte(body), &rec); err != nil {
-			return nil, fmt.Errorf("decode event %s payload: %w", e.ID, err)
-		}
-		e.Payload = fromPayloadRecord(rec)
-		out = append(out, e)
-	}
-	return out, rows.Err()
+	// Domain events of the operation (mod.*, archive.*) are included with
+	// their own payloads (D064).
+	return scanEvents(rows)
 }
 
 func scanOperations(rows *sql.Rows) ([]*operation.Operation, error) {
@@ -267,6 +249,9 @@ func encodePayload(p any) (string, error) {
 		}
 		b, err := json.Marshal(rec)
 		return string(b), err
+	case map[string]string:
+		b, err := json.Marshal(v)
+		return string(b), err
 	case nil:
 		return "{}", nil
 	default:
@@ -286,14 +271,14 @@ func toErrorRecord(e *operation.Error) *errorRecord {
 	if e == nil {
 		return nil
 	}
-	return &errorRecord{Code: e.Code, Message: e.Message, Step: e.Step, Detail: e.Detail, Retryable: e.Retryable}
+	return &errorRecord{Code: e.Code, Message: e.Message, Step: e.Step, Detail: e.Detail, Retryable: e.Retryable, Params: e.Params}
 }
 
 func fromErrorRecord(r *errorRecord) *operation.Error {
 	if r == nil {
 		return nil
 	}
-	return &operation.Error{Code: r.Code, Message: r.Message, Step: r.Step, Detail: r.Detail, Retryable: r.Retryable}
+	return &operation.Error{Code: r.Code, Message: r.Message, Step: r.Step, Detail: r.Detail, Retryable: r.Retryable, Params: r.Params}
 }
 
 func formatTime(t time.Time) string { return t.UTC().Format(timeLayout) }

@@ -64,11 +64,11 @@ Consulta que retorna: mods só habilitados em A, só em B, em ambos com priorida
 
 ## 8. Erros
 
-`profile_name_taken`, `profile_is_active`, `profile_last`, `profile_not_found`, `instance_busy`.
+`profile_name_taken`, `profile_is_active`, `profile_last`, `profile_not_found`, `snapshot_not_found`, `name_empty`, `instance_busy` (D069).
 
 ## 9. Eventos
 
-`profile.created`, `profile.renamed`, `profile.cloned`, `profile.deleted`, `profile.activated`, `profile.transferred`, `snapshot.created`, `snapshot.restored`, `mod.enabled`, `mod.disabled` (com profile).
+`profile.created`, `profile.renamed`, `profile.cloned`, `profile.deleted`, `profile.activated`, `profile.transferred`, `profile.notes_changed`, `snapshot.created`, `snapshot.restored`, `mod.enabled`, `mod.disabled` (com profile).
 
 ## 10. Critérios de aceite
 

@@ -14,7 +14,7 @@ Catálogo único. Todo modal do produto está aqui; modal novo exige entrada. Pa
 | DLG-08 | Editor de conflitos do mod | Mods (ícone de conflito) | edição | editor de conflitos (select por mod) | 05 |
 | DLG-09 | Escolher vencedor de arquivos | Mods (Inspector) / Conflicts | edição | file overrides (select por arquivo) | 05 §5.3 |
 | DLG-10 | Gerenciar regras | Mods toolbar | edição | Manage Rules | 05 §2 |
-| DLG-11 | Movimento recusado | arrastar/mover | popover de decisão | — | 05 §4 |
+| DLG-11 | Movimento recusado | arrastar/mover | popover de decisão (modal compacto, D072 item 2) | — | 05 §4 |
 | DLG-12 | Resolver ciclo | diagnóstico | edição | cycle dialog | 05 §6 |
 | DLG-13 | Categorias | Mods toolbar | edição (árvore) | CategoryDialog | 02 §10 |
 | DLG-14 | Plano de deploy | deploy com decisões / popover | revisão | — (divergência 8) | 04 §4 |

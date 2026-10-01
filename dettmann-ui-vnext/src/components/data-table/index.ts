@@ -3,6 +3,9 @@ export type { DataTableColumn, DataTableProps, DataTableGroupHeaderProps, DataTa
 export { DataTableColumnPicker } from "./column-picker";
 export type { DataTableColumnPickerProps, DataTableColumnPickerColumn } from "./column-picker";
 export {
+  isDropTarget,
+  keyboardMove,
+  movingRows,
   applySelection,
   buildDisplayItems,
   nextSort,
@@ -11,6 +14,7 @@ export {
 } from "./data-table.model";
 export type {
   DataTableDisplayItem,
+  DataTableRowMove,
   DataTableSelectionMode,
   DataTableSort,
   SelectionIntent,

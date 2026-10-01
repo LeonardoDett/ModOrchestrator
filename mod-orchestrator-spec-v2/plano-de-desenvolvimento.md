@@ -85,6 +85,7 @@ Entregas:
 
 Invariantes: INV-ID-03/04, INV-LIB-04/05, INV-OPS-02.
 Demonstração: arrastar 10 archives reais de Skyrim (wrapper, múltiplas opções, SKSE); matar o processo no meio de um import e reabrir sem lixo.
+Estado: concluída (D062–D068; D066 aguarda confirmação). Os cenários da demonstração têm testes automatizados em `internal/integration` (wrapper, opções com decisão e reinstall, SKSE, duplicado/variante, zip-slip, recuperação após interrupção).
 
 ## F5: Profiles e ordem de mods
 
@@ -97,6 +98,7 @@ Entregas:
 
 Invariantes: INV-ORD-01..04, INV-ORD-06.
 Demonstração: dois profiles com seleções diferentes; regra que move o mínimo e explica; tentativa de ciclo recusada.
+Estado: concluída (D069–D072; D072 aguarda confirmação). Os cenários da demonstração têm testes em `internal/integration/profiles_test.go` (regra que move um só mod, ciclo recusado com o ciclo, movimento recusado com alternativas, desfazer, snapshots e transferência, propriedade INV-ORD-01..03).
 
 ## F6: Conflitos
 

@@ -90,11 +90,12 @@ type ProgressDTO struct {
 }
 
 type ErrorDTO struct {
-	Code      string `json:"code"`
-	Message   string `json:"message"`
-	Step      string `json:"step,omitempty"`
-	Detail    string `json:"detail,omitempty"`
-	Retryable bool   `json:"retryable"`
+	Code      string            `json:"code"`
+	Message   string            `json:"message"`
+	Step      string            `json:"step,omitempty"`
+	Detail    string            `json:"detail,omitempty"`
+	Retryable bool              `json:"retryable"`
+	Params    map[string]string `json:"params,omitempty"`
 }
 
 type OperationDTO struct {
@@ -177,7 +178,7 @@ func errorDTO(e *operation.Error) *ErrorDTO {
 	if e == nil {
 		return nil
 	}
-	return &ErrorDTO{Code: e.Code, Message: e.Message, Step: e.Step, Detail: e.Detail, Retryable: e.Retryable}
+	return &ErrorDTO{Code: e.Code, Message: e.Message, Step: e.Step, Detail: e.Detail, Retryable: e.Retryable, Params: e.Params}
 }
 
 func formatTime(t time.Time) string { return t.UTC().Format(time.RFC3339Nano) }

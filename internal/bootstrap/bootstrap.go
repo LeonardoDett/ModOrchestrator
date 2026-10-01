@@ -13,13 +13,18 @@ import (
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
 	"modorchestrator/internal/core/application/games"
+	"modorchestrator/internal/core/application/instancelock"
+	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
+	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/settings"
 	"modorchestrator/internal/infrastructure/appdata"
+	"modorchestrator/internal/infrastructure/archive"
 	"modorchestrator/internal/infrastructure/eventbus"
 	"modorchestrator/internal/infrastructure/filesystem"
+	"modorchestrator/internal/infrastructure/hashing"
 	"modorchestrator/internal/infrastructure/logging"
 	"modorchestrator/internal/infrastructure/persistence/sqlite"
 	"modorchestrator/internal/infrastructure/stores"
@@ -33,6 +38,8 @@ type Container struct {
 	Operations *operations.Service
 	Settings   *appsettings.Service
 	Games      *games.Service
+	Library    *library.Service
+	Profiles   *profilesvc.Service
 	Logger     *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
 	Interrupted   []*operation.Operation
@@ -99,11 +106,16 @@ func New(ctx context.Context) (c *Container, err error) {
 	}
 	fsys := filesystem.New()
 	ids, clock := system.IDs{}, system.Clock{}
+	// One lock table for every mutating service (D065, INV-OPS-02).
+	locks := instancelock.New()
+	instances := sqlite.NewGameInstanceRepository(db)
+	profiles := sqlite.NewProfileRepository(db)
+	appState := sqlite.NewAppState(db)
 	gamesSvc := games.NewService(games.Deps{
 		Registry:    registry,
-		Instances:   sqlite.NewGameInstanceRepository(db),
-		Profiles:    sqlite.NewProfileRepository(db),
-		State:       sqlite.NewAppState(db),
+		Instances:   instances,
+		Profiles:    profiles,
+		State:       appState,
 		Deployments: sqlite.NewDeploymentState(db),
 		FS:          fsys,
 		Drives:      fsys,
@@ -112,12 +124,55 @@ func New(ctx context.Context) (c *Container, err error) {
 		Ops:         ops,
 		IDs:         ids,
 		Clock:       clock,
+		Locks:       locks,
+	})
+	librarySvc := library.NewService(library.Deps{
+		Registry:      registry,
+		Instances:     instances,
+		Mods:          sqlite.NewModRepository(db),
+		Archives:      sqlite.NewArchiveRepository(db),
+		Installations: sqlite.NewInstallationRepository(db),
+		Categories:    sqlite.NewCategoryRepository(db),
+		Profiles:      profiles,
+		Rules:         sqlite.NewRuleRepository(db),
+		State:         appState,
+		Events:        sqlite.NewEventLog(db),
+		UoW:           sqlite.NewUnitOfWork(db),
+		Publisher:     bus,
+		FS:            fsys,
+		Extractor:     archive.New(),
+		Hasher:        hashing.SHA256{},
+		Settings:      settingsSvc,
+		Ops:           ops,
+		Locks:         locks,
+		IDs:           ids,
+		Clock:         clock,
+	})
+
+	profilesSvc := profilesvc.NewService(profilesvc.Deps{
+		Instances: instances,
+		Profiles:  profiles,
+		Rules:     sqlite.NewRuleRepository(db),
+		Mods:      sqlite.NewModRepository(db),
+		Events:    sqlite.NewEventLog(db),
+		UoW:       sqlite.NewUnitOfWork(db),
+		Publisher: bus,
+		Settings:  settingsSvc,
+		Locks:     locks,
+		IDs:       ids,
+		Clock:     clock,
 	})
 
 	interrupted, err := ops.RecoverInterrupted(ctx)
 	if err != nil {
 		unsub()
 		return nil, fmt.Errorf("bootstrap: recover interrupted operations: %w", err)
+	}
+	// The library is brought back to committed state before any command
+	// (core/02 §3 "Retomada", D064). A failure is logged, not fatal: the
+	// leftovers stay where they are and nothing is lost.
+	if err := librarySvc.Recover(ctx); err != nil {
+		logger.Error("library recovery", logging.KeyError, err.Error())
 	}
 	logger.Info("startup", "dataDir", paths.Root, "schemaVersion", version, "interruptedOperations", len(interrupted))
 
@@ -127,6 +182,8 @@ func New(ctx context.Context) (c *Container, err error) {
 		Operations:     ops,
 		Settings:       settingsSvc,
 		Games:          gamesSvc,
+		Library:        librarySvc,
+		Profiles:       profilesSvc,
 		Logger:         logger,
 		Interrupted:    interrupted,
 		SchemaVersion:  version,

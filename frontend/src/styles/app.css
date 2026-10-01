@@ -13,3 +13,11 @@ body {
   color: var(--ui-fg);
   font-family: var(--font-sans);
 }
+
+/* Native file drop (Wails adds this class to the drop target under the
+   pointer): the whole Mods area lights up, as ui/telas/mods.md §8 asks. */
+.wails-drop-target-active {
+  outline: 2px dashed var(--ui-brand);
+  outline-offset: 4px;
+  border-radius: 0.75rem;
+}

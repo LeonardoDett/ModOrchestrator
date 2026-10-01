@@ -43,7 +43,7 @@ Categoria de estado de cada pacote (D049) entre parênteses; verificada por `int
 | `dependency` (calculado) | avaliação de requisitos | core/06 | F1 ✅ (avaliador na F9) |
 | `diagnostic` (calculado) | Diagnostic, catálogo de códigos, Suppression | core/10 | F1 ✅ |
 | `notification` | entrega (lida/dispensada, agregação) | core/10 | F1 ✅ |
-| `installer` | plano de instalação, FOMOD | core/03 | F4/F10 |
+| `installer` (calculado) | entradas seguras, limites, resolução de root, plano de instalação, instalador `basic`, metadados (`info.xml`, nome Nexus); FOMOD na F10 | core/03 | F4 ✅ / F10 |
 | `history` | HistoryEntry (projeção), ações reversíveis | core/10 | F9 |
 | `operation`, `event` | já implementados | D019/D020 | F0 ✅ |
 
@@ -76,7 +76,7 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 - **Cancelamento**: cada operação declara em quais steps pode ser cancelada e o que significa cancelar (ex.: deploy só entre operações de arquivo; o estado resultante é reconciliável).
 - **Retomada**: o que acontece se a operação é encontrada `interrupted` na inicialização.
 - **Eventos** emitidos além das transições genéricas.
-- **Decisão pendente**: operações podem parar em `await_decision` (ex.: plano com escolhas). Isso não é falha; a operação fica `running` com step `await_decision` e a UI mostra o diálogo correspondente. Se o app fechar nesse ponto, ela vira `interrupted` e nada foi escrito.
+- **Decisão pendente**: operações podem parar em `await_decision` (ex.: plano com escolhas). Isso não é falha; a operação fica `running` com step `await_decision` e a UI mostra o diálogo correspondente. Se o app fechar nesse ponto, ela vira `interrupted` e nada foi escrito. O import tem dois pontos de decisão e para no próprio step (`dedupe`, `plan_install`), com a decisão exposta pela fila (D064).
 
 ## 5. Concorrência (D038)
 
@@ -114,6 +114,18 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `executable_invalid` | executável do jogo genérico inválido | `reason` (`invalid_path`, `not_found`) |
 | `confirm_name_mismatch` | nome digitado para apagar staging/arquivos não confere | — |
 | `folder_unknown`, `folder_missing` | "abrir pasta" com nome de pasta desconhecido / pasta inexistente | `folder` |
+| `instance_busy` (também do lock compartilhado, D065) | | `instance`, `holder` |
+| códigos da biblioteca (core/02 §11) | import, instalação, remoção, categorias | `name`, `reason`, `folder`, `mod`, `limit`, `entries`... |
+| `operation_not_cancellable` | cancelar item da fila depois de `stage` (D065) | `operation` |
+| `decision_not_pending` | responder decisão que não está mais pendente | `operation`, `choice` |
+| `category_invalid` | categoria inexistente ou árvore inválida | `category` |
+| `mod_type_unknown` | tipo de mod que a definição não declara | `type` |
+| `import_source_missing` | arquivo/pasta a importar sumiu | `name` |
+| `profile_name_taken`, `profile_is_active`, `profile_last`, `profile_not_found`, `snapshot_not_found` | ciclo de vida de profiles (core/07 §8) | `name`, `profile`, `snapshot` |
+| `order_violates_rules`, `rule_would_create_cycle`, `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `mod_not_found`, `separator_not_found` | ordem e regras (core/05 §7, D069) | `cycle` (nomes, "A → B → A"), `count` |
+| `order_history_stale`, `order_nothing_to_undo` | reverter/desfazer mudança de ordem (D070) | — |
+
+Erros de operação (`OperationError`) também carregam `params` desde a F4 (D067), para a UI traduzir a mensagem com os mesmos parâmetros.
 
 A UI refina a mensagem quando existe `error.<code>.<reason>` no catálogo (ex.: `error.root_invalid.marker_missing`); sem ele usa `error.<code>`. Avisos do assistente (não bloqueiam) usam `warning.<code>`: `hardlink_unavailable`, `backup_other_volume`.
 

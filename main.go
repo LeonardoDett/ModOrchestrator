@@ -40,9 +40,13 @@ func main() {
 		// Matches the dark canvas of the dettmann-ui "orchestrator" theme so
 		// the window does not flash before the frontend paints.
 		BackgroundColour: &options.RGBA{R: 13, G: 19, B: 17, A: 255},
-		OnStartup:        app.Startup,
-		OnShutdown:       app.Shutdown,
-		Bind:             []any{app},
+		// Files and folders dropped on elements marked as drop targets reach
+		// the import queue with their absolute paths (ui/telas/mods.md §8);
+		// the webview never opens a dropped file itself.
+		DragAndDrop: &options.DragAndDrop{EnableFileDrop: true, DisableWebViewDrop: true},
+		OnStartup:   app.Startup,
+		OnShutdown:  app.Shutdown,
+		Bind:        []any{app},
 	})
 	if err != nil {
 		log.Fatalf("wails: %v", err)

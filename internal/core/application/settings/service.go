@@ -150,3 +150,27 @@ func MatchLanguage(tag string, options []string) string {
 	}
 	return options[0]
 }
+
+// InstanceValue returns the effective value of an instance-scoped setting.
+// Editing instance settings arrives with the Settings screen (F12); until
+// then the catalog default applies unless a value was stored.
+func (s *Service) InstanceValue(ctx context.Context, instance, key string) (Effective, error) {
+	var d domain.Def
+	found := false
+	for _, c := range domain.Available(s.release) {
+		if c.Key == key && c.Scope == domain.ScopeInstance {
+			d, found = c, true
+		}
+	}
+	if !found {
+		return Effective{}, fmt.Errorf("%w: %q", ErrUnknown, key)
+	}
+	explicit := map[string]string{}
+	switch v, err := s.repo.Get(ctx, domain.ScopeInstance, instance, key); {
+	case err == nil:
+		explicit[key] = v.Value
+	case !errors.Is(err, ports.ErrNotFound):
+		return Effective{}, err
+	}
+	return s.effective(d, explicit), nil
+}

@@ -74,6 +74,8 @@ type Error struct {
 	Step      string
 	Detail    string
 	Retryable bool
+	// Params feed the translated message of Code (D044, INV-OPS-05).
+	Params map[string]string
 }
 
 func (e *Error) Error() string {

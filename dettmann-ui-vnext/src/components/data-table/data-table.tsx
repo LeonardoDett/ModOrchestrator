@@ -15,7 +15,7 @@ import {
   type ReactNode,
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight, GripVertical } from "lucide-react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useControllableState } from "../../hooks/use-controllable-state";
@@ -27,6 +27,10 @@ import {
   nextSort,
   selectAll,
   selectionIntent,
+  isDropTarget,
+  keyboardMove,
+  movingRows,
+  type DataTableRowMove,
   type DataTableDisplayItem,
   type DataTableSelectionMode,
   type DataTableSort,
@@ -67,6 +71,10 @@ export interface DataTableGroupHeaderProps {
 export interface DataTableLabels {
   /** Prefix of the resize handle name: "<resizeColumn> <column label>". */
   resizeColumn?: string;
+  /** Accessible name of the drag handle of a row. */
+  dragHandle?: string;
+  /** Accessible name of the busy state while a move is being applied. */
+  moving?: string;
   /** Accessible name of the loading state. */
   loading?: string;
 }
@@ -121,11 +129,30 @@ export interface DataTableProps<T>
   /** Shown when there are no rows and the table is not loading. */
   empty?: ReactNode;
   labels?: DataTableLabels;
+
+  /**
+   * Rows can be reordered: a drag handle column appears, rows are dragged by
+   * it (the whole selection when the dragged row is selected) and Alt+Up /
+   * Alt+Down move the selection by one row. A function decides per row
+   * (false hides that row's handle). Nothing is reordered by the table:
+   * `onRowsMove` receives the request.
+   */
+  reorderable?: boolean | ((row: T) => boolean);
+  /**
+   * Called on drop or keyboard move. While the returned promise is pending
+   * the table is busy and accepts no other move, so the consumer can
+   * validate the request (asynchronously) and refuse it with its own UI.
+   */
+  onRowsMove?: (move: DataTableRowMove) => void | Promise<unknown>;
 }
 
 const ROW_HEIGHT = { comfortable: 40, compact: 30 } as const;
 const DEFAULT_WIDTH = 160;
 const RESIZE_STEP = 16;
+const HANDLE_WIDTH = 28;
+/** Distance from the viewport edge (px) where a drag scrolls the grid. */
+const AUTOSCROLL_EDGE = 32;
+const AUTOSCROLL_STEP = 12;
 const EMPTY_SET: ReadonlySet<string> = new Set();
 
 const rootVariants = defineRecipe({
@@ -206,6 +233,8 @@ export function DataTable<T>({
   loading = false,
   empty,
   labels,
+  reorderable = false,
+  onRowsMove,
   className,
   onKeyDown,
   onFocus,
@@ -251,10 +280,13 @@ export function DataTable<T>({
     [widths],
   );
 
-  const template = visibleColumns
-    .map((column) => (column.grow ? `minmax(${widthOf(column)}px, 1fr)` : `${widthOf(column)}px`))
-    .join(" ");
-  const minWidth = visibleColumns.reduce((sum, column) => sum + widthOf(column), 0);
+  const hasHandle = reorderable !== false && onRowsMove != null;
+  const canDrag = (row: T) => hasHandle && (typeof reorderable === "function" ? reorderable(row) : true);
+  const template = [
+    ...(hasHandle ? [`${HANDLE_WIDTH}px`] : []),
+    ...visibleColumns.map((column) => (column.grow ? `minmax(${widthOf(column)}px, 1fr)` : `${widthOf(column)}px`)),
+  ].join(" ");
+  const minWidth = visibleColumns.reduce((sum, column) => sum + widthOf(column), hasHandle ? HANDLE_WIDTH : 0);
   const gridStyle: CSSProperties = { gridTemplateColumns: template, minWidth };
 
   const collapsed = useMemo(() => new Set(collapsedList), [collapsedList]);
@@ -263,6 +295,98 @@ export function DataTable<T>({
     [rows, getRowId, getGroup, collapsed],
   );
   const rowOrder = useMemo(() => items.flatMap((item) => (item.kind === "row" ? [item.key] : [])), [items]);
+
+  // --- Reordering (pointer drag by the handle, Alt+Arrow). The table only
+  // reports the request; the consumer applies or refuses it. ---
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [drag, setDrag] = useState<{ ids: string[]; target: string | null; position: "before" | "after" } | null>(null);
+  const dragRef = useRef(drag);
+  dragRef.current = drag;
+  const [movePending, setMovePending] = useState(false);
+
+  const commitMove = (move: DataTableRowMove) => {
+    if (!onRowsMove || movePending) return;
+    setMovePending(true);
+    Promise.resolve()
+      .then(() => onRowsMove(move))
+      .catch(() => undefined)
+      .finally(() => setMovePending(false));
+  };
+
+  const dropTargetAt = (clientY: number): { target: string | null; position: "before" | "after" } => {
+    const scroller = scrollRef.current;
+    if (!scroller || items.length === 0) return { target: null, position: "before" };
+    const rect = scroller.getBoundingClientRect();
+    const header = headerRef.current?.offsetHeight ?? 0;
+    const y = clientY - rect.top + scroller.scrollTop - header;
+    const index = Math.floor(y / rowHeight);
+    if (index >= items.length) {
+      const last = rowOrder[rowOrder.length - 1] ?? null;
+      return { target: last, position: "after" };
+    }
+    const item = items[Math.max(0, index)];
+    if (!item || item.kind !== "row") return { target: null, position: "before" };
+    const position = y - Math.max(0, index) * rowHeight < rowHeight / 2 ? "before" : "after";
+    return { target: item.key, position };
+  };
+
+  const startDrag = (event: PointerEvent<HTMLElement>, key: string) => {
+    if (event.button !== 0 || movePending) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const ids = movingRows(rowOrder, selected, key);
+    setDrag({ ids, target: null, position: "before" });
+    const handle = event.currentTarget;
+    handle.setPointerCapture?.(event.pointerId);
+    let lastY = event.clientY;
+    let frame = 0;
+    const scroll = () => {
+      const scroller = scrollRef.current;
+      if (scroller) {
+        const rect = scroller.getBoundingClientRect();
+        const top = rect.top + (headerRef.current?.offsetHeight ?? 0);
+        if (lastY < top + AUTOSCROLL_EDGE) scroller.scrollTop -= AUTOSCROLL_STEP;
+        else if (lastY > rect.bottom - AUTOSCROLL_EDGE) scroller.scrollTop += AUTOSCROLL_STEP;
+      }
+      frame = requestAnimationFrame(scroll);
+    };
+    frame = requestAnimationFrame(scroll);
+    const onMove = (move: globalThis.PointerEvent) => {
+      lastY = move.clientY;
+      const next = dropTargetAt(move.clientY);
+      setDrag((prev) => (prev ? { ...prev, ...next } : prev));
+    };
+    const finish = (apply: boolean) => {
+      cancelAnimationFrame(frame);
+      handle.removeEventListener("pointermove", onMove);
+      handle.removeEventListener("pointerup", onUp);
+      handle.removeEventListener("pointercancel", onCancel);
+      window.removeEventListener("keydown", onKey, true);
+      const current = dragRef.current;
+      setDrag(null);
+      if (apply && current?.target && isDropTarget(current.ids, current.target)) {
+        commitMove({ ids: current.ids, targetId: current.target, position: current.position });
+      }
+    };
+    const onUp = () => finish(true);
+    const onCancel = () => finish(false);
+    const onKey = (key: globalThis.KeyboardEvent) => {
+      if (key.key === "Escape") {
+        key.preventDefault();
+        finish(false);
+      }
+    };
+    handle.addEventListener("pointermove", onMove);
+    handle.addEventListener("pointerup", onUp);
+    handle.addEventListener("pointercancel", onCancel);
+    window.addEventListener("keydown", onKey, true);
+  };
+
+  const rowById = useMemo(() => {
+    const map = new Map<string, T>();
+    for (const item of items) if (item.kind === "row") map.set(item.key, item.row);
+    return map;
+  }, [items]);
 
   const focusedIndex = focusedKey == null ? -1 : items.findIndex((item) => item.key === focusedKey);
   const virtualize = items.length > virtualizeThreshold;
@@ -323,6 +447,18 @@ export function DataTable<T>({
     const current = focusedIndex;
     const item = current >= 0 ? items[current] : undefined;
     const mod = event.ctrlKey || event.metaKey;
+
+    if (hasHandle && event.altKey && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+      event.preventDefault();
+      if (item?.kind !== "row") return;
+      const ids = movingRows(rowOrder, selected, item.key).filter((id) => {
+        const row = rowById.get(id);
+        return row !== undefined && canDrag(row);
+      });
+      const move = keyboardMove(rowOrder, ids, event.key === "ArrowUp" ? -1 : 1);
+      if (move) commitMove(move);
+      return;
+    }
 
     let target: number | null = null;
     switch (event.key) {
@@ -471,17 +607,48 @@ export function DataTable<T>({
     }
 
     const isSelected = selected.has(item.key);
+    const dropAt = drag && drag.target === item.key && isDropTarget(drag.ids, item.key) ? drag.position : undefined;
+    const dragged = drag?.ids.includes(item.key) ?? false;
     return (
       <div
         key={item.key}
         {...common}
         aria-selected={selectionMode === "none" ? undefined : isSelected}
         data-selected={isSelected || undefined}
-        className={cn(rowVariants({ selected: isSelected, focused }), "cursor-default", rowClassName?.(item.row))}
+        data-drop={dropAt}
+        className={cn(
+          rowVariants({ selected: isSelected, focused }),
+          "cursor-default",
+          dragged && "opacity-60",
+          dropAt && "after:pointer-events-none after:absolute after:inset-x-0 after:z-10 after:h-0.5 after:bg-brand",
+          dropAt === "before" && "after:top-0",
+          dropAt === "after" && "after:bottom-0",
+          rowClassName?.(item.row),
+        )}
         style={{ ...gridStyle, height: rowHeight, ...style }}
         onClick={(event) => handleRowClick(event, item.key)}
         onDoubleClick={() => onRowActivate?.(item.row)}
       >
+        {hasHandle ? (
+          <div role="gridcell" className="flex h-full items-center justify-center">
+            {canDrag(item.row) ? (
+              <span
+                role="button"
+                tabIndex={-1}
+                aria-label={labels?.dragHandle ?? "Drag to reorder"}
+                aria-disabled={movePending || undefined}
+                className={cn(
+                  "flex h-6 w-5 touch-none items-center justify-center rounded text-fg-subtle hover:bg-hover hover:text-fg",
+                  movePending ? "cursor-progress" : "cursor-grab active:cursor-grabbing",
+                )}
+                onPointerDown={(event) => startDrag(event, item.key)}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <GripVertical aria-hidden="true" className="h-4 w-4" />
+              </span>
+            ) : null}
+          </div>
+        ) : null}
         {visibleColumns.map((column) => (
           <div
             key={column.id}
@@ -541,10 +708,10 @@ export function DataTable<T>({
         role="grid"
         tabIndex={0}
         aria-rowcount={items.length + headerRowCount}
-        aria-colcount={visibleColumns.length}
+        aria-colcount={visibleColumns.length + (hasHandle ? 1 : 0)}
         aria-multiselectable={selectionMode === "multiple" || undefined}
         aria-activedescendant={hasFocus ? activeDescendant : undefined}
-        aria-busy={loading || undefined}
+        aria-busy={loading || movePending || undefined}
         className="min-h-0 flex-1 overflow-auto focus-visible:outline-none"
         onKeyDown={handleKeyDown}
         onFocus={(event) => {
@@ -559,8 +726,9 @@ export function DataTable<T>({
         }}
         {...props}
       >
-        <div role="rowgroup" className="sticky top-0 z-10 border-b border-border bg-structure">
+        <div ref={headerRef} role="rowgroup" className="sticky top-0 z-10 border-b border-border bg-structure">
           <div role="row" aria-rowindex={1} className="grid" style={gridStyle}>
+            {hasHandle ? <div role="columnheader" aria-label={labels?.dragHandle ?? "Drag to reorder"} /> : null}
             {visibleColumns.map((column) => {
               const sorted = sort?.columnId === column.id ? sort.direction : null;
               const ariaSort = column.sortable
@@ -629,6 +797,7 @@ export function DataTable<T>({
           </div>
           {hasFilters ? (
             <div role="row" aria-rowindex={2} className="grid border-t border-border-subtle" style={gridStyle}>
+              {hasHandle ? <div role="gridcell" /> : null}
               {visibleColumns.map((column) => (
                 <div key={column.id} role="gridcell" className="min-w-0 px-1.5 py-1">
                   {column.filter}
