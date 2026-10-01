@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
-import { ChevronDown, FolderOpen, FolderPlus, FolderTree, History, Info, MoreHorizontal, PackagePlus, RotateCcw, Scale, Trash2 } from "lucide-react";
+import { ChevronDown, Eraser, FolderOpen, FolderPlus, FolderTree, History, Info, MoreHorizontal, PackagePlus, Rocket, RotateCcw, Scale, Trash2 } from "lucide-react";
 import {
   Alert,
   Button,
@@ -33,6 +33,7 @@ import { DEFAULT_HIDDEN, ModsTable, PRIORITY_SORT, sortRows, useModColumns } fro
 import { MoveToDialog, OrderHistoryDialog, RulesDialog, SeparatorDialog, useMoveMods } from "../features/mods/OrderDialogs";
 import { categoryOptions, matchesStatus, type StatusFilter } from "../features/mods/mod-labels";
 import { entryOf, modRows, moveRequestFor, orderedRows, type ListRow } from "../features/mods/mod-order";
+import { useDeploy } from "../features/deploy/DeployContext";
 import { useI18n } from "../i18n/i18n";
 import { PageBody } from "./PageBody";
 
@@ -252,6 +253,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   </Menu.Content>
                 </Menu.Root>
               </ButtonGroup>
+              <DeployButtons />
               <Button variant="outline" startIcon={<Scale aria-hidden="true" />} onClick={() => setRulesFor({ mod: null })}>
                 {t("mods.toolbar.rules")}
               </Button>
@@ -496,5 +498,43 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       <CycleDialog instance={instance} open={cycleOpen} onClose={() => setCycleOpen(false)} />
       {refusalDialog}
     </PageBody>
+  );
+}
+
+/** Toolbar Deploy / Purge (ui/telas/mods.md §3): availability as the backend reports it. */
+function DeployButtons() {
+  const { t } = useI18n();
+  const { status, deploy, openPurge, openPreview } = useDeploy();
+  if (!status) return null;
+  const busy = Boolean(status.busy);
+  const deployReason = busy
+    ? t("deploy.disabled.busy")
+    : status.kind === "in_sync"
+      ? t("deploy.disabled.inSync")
+      : status.kind === "unknown"
+        ? t("deploy.disabled.unknown")
+        : status.foreign.length > 0
+          ? t("deploy.disabled.foreign")
+          : "";
+  return (
+    <ButtonGroup>
+      <Button variant="outline" startIcon={<Rocket aria-hidden="true" />} disabled={deployReason !== ""} title={deployReason || undefined} onClick={() => void deploy()}>
+        {t("deploy.action.deploy")}
+      </Button>
+      <Menu.Root>
+        <Menu.Trigger>
+          <Button variant="outline" size="icon" aria-label={t("deploy.action.more")}>
+            <ChevronDown aria-hidden="true" className="h-4 w-4" />
+          </Button>
+        </Menu.Trigger>
+        <Menu.Content>
+          <Menu.Item onSelect={openPreview}>{t("deploy.action.preview")}</Menu.Item>
+          <Menu.Item disabled={busy || status.entries === 0} onSelect={openPurge}>
+            <Eraser aria-hidden="true" className="h-4 w-4" />
+            {t("deploy.action.purge")}
+          </Menu.Item>
+        </Menu.Content>
+      </Menu.Root>
+    </ButtonGroup>
   );
 }

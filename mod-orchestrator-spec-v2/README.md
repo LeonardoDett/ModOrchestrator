@@ -25,6 +25,7 @@ Gerenciador de mods para PC (Windows, Go + Wails + React/dettmann-ui) que entreg
 | `ui/` | princípios e shell, mapa de telas, fluxos, componentes, tema, e `telas/` (uma por tela + diálogos) |
 | `references/vortex/`, `references/mo2/` | comportamento observado, com ADOPT/ADAPT/DEFER/REJECT |
 | `plano-de-desenvolvimento.md` | fases F0–F15 em fatias verticais |
+| `plano-de-publicacao.md` | licença, contribuição, empacotamento, assinatura, canais e atualização (D076, D077) |
 | `prompts/` | protocolo universal e prompt por fase |
 | `skills/` | `consult-ai-docs` (ler/considerar) e `maintain-ai-docs` (criar/manter) |
 | `_historico/` | cópia da v2.0; somente consulta, **não é autoridade** |

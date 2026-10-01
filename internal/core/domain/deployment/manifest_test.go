@@ -82,7 +82,7 @@ func TestEvidenceMatchesPerMethod(t *testing.T) {
 func TestJournalOrdersActionsSafely(t *testing.T) {
 	d := link("new")
 	cur := link("old")
-	j, err := NewJournal("i1", "op1", []Action{
+	j, err := NewJournal("i1", "op1", JournalDeploy, "p1", "fp", []Action{
 		{Kind: ActionCreate, Location: loc("new"), Desired: &d},
 		{Kind: ActionKeep, Location: loc("same")},
 		{Kind: ActionRemoveDir, Location: loc("dir")},
@@ -95,11 +95,11 @@ func TestJournalOrdersActionsSafely(t *testing.T) {
 	if len(j.Actions) != 3 || kinds[0] != ActionRemoveManaged || kinds[1] != ActionCreate || kinds[2] != ActionRemoveDir {
 		t.Fatalf("apply order = %v", kinds)
 	}
-	_ = j.MarkDone(0)
+	_ = j.Mark(0, StateDone)
 	if p := j.Pending(); len(p) != 2 || p[0] != 1 {
 		t.Fatalf("pending = %v", p)
 	}
-	if _, err := RestoreJournal(*j, []bool{true}); !errors.Is(err, ErrInvalid) {
+	if _, err := RestoreJournal(*j, []ActionState{StateDone}); !errors.Is(err, ErrInvalid) {
 		t.Fatal("progress must match actions")
 	}
 }

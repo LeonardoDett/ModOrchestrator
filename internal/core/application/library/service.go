@@ -88,18 +88,20 @@ type Deps struct {
 	Categories    ports.Categories
 	Profiles      ports.Profiles
 	Rules         ports.Rules
-	State         ports.AppState
-	Events        ports.EventLog
-	UoW           ports.UnitOfWork
-	Publisher     operations.Publisher
-	FS            ports.FileSystem
-	Extractor     ports.Extractor
-	Hasher        ports.Hasher
-	Settings      Settings
-	Ops           *operations.Service
-	Locks         *instancelock.Locks
-	IDs           operations.IDGenerator
-	Clock         operations.Clock
+	// Manifests answers whether mods being removed are deployed (optional).
+	Manifests ports.Manifests
+	State     ports.AppState
+	Events    ports.EventLog
+	UoW       ports.UnitOfWork
+	Publisher operations.Publisher
+	FS        ports.FileSystem
+	Extractor ports.Extractor
+	Hasher    ports.Hasher
+	Settings  Settings
+	Ops       *operations.Service
+	Locks     *instancelock.Locks
+	IDs       operations.IDGenerator
+	Clock     operations.Clock
 }
 
 // Service implements the library use cases. There is deliberately no

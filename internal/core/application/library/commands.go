@@ -8,6 +8,7 @@ import (
 
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
+	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/event"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
@@ -35,7 +36,8 @@ type RemovalPreview struct {
 	// SharedArchives are archives kept even with "remove archive" because
 	// another mod (a variant) still uses them (D066).
 	SharedArchives []string
-	// Deployed is always false until the deploy engine exists (F7).
+	// Deployed: files of these mods are in the game; they are removed by
+	// the next deploy (automatic when auto-deploy is on).
 	Deployed bool
 }
 
@@ -70,6 +72,11 @@ func (s *Service) PreviewRemoval(ctx context.Context, instance game.InstanceID, 
 			if !before[string(r)] {
 				out.OrphanRules++
 			}
+		}
+	}
+	if s.Manifests != nil {
+		if man, err := s.Manifests.Current(ctx, instance); err == nil {
+			out.Deployed = slices.ContainsFunc(man.Links(), func(e deployment.Entry) bool { return removing[e.Mod] })
 		}
 	}
 	for _, id := range ids {
@@ -383,4 +390,3 @@ func (s *Service) SetModType(ctx context.Context, id mod.ID, typ game.ModTypeID)
 		return tx.Mods().Save(ctx, m)
 	})
 }
-

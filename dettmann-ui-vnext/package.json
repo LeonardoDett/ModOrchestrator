@@ -2,6 +2,7 @@
   "name": "dettmann-ui",
   "version": "1.0.0-next.1",
   "private": true,
+  "license": "GPL-3.0-or-later",
   "type": "module",
   "sideEffects": [
     "**/*.css"

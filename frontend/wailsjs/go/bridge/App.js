@@ -14,6 +14,14 @@ export function AddIncompatibilityRule(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['AddIncompatibilityRule'](arg1, arg2, arg3);
 }
 
+export function CancelDeploy(arg1) {
+  return window['go']['bridge']['App']['CancelDeploy'](arg1);
+}
+
+export function CancelDeployDecision(arg1, arg2) {
+  return window['go']['bridge']['App']['CancelDeployDecision'](arg1, arg2);
+}
+
 export function CancelImport(arg1) {
   return window['go']['bridge']['App']['CancelImport'](arg1);
 }
@@ -24,6 +32,10 @@ export function CancelOperation(arg1) {
 
 export function Categories(arg1) {
   return window['go']['bridge']['App']['Categories'](arg1);
+}
+
+export function ChangeDeployMethod(arg1, arg2) {
+  return window['go']['bridge']['App']['ChangeDeployMethod'](arg1, arg2);
 }
 
 export function ClearFileOverrides(arg1, arg2) {
@@ -78,6 +90,18 @@ export function DeleteSeparator(arg1, arg2) {
   return window['go']['bridge']['App']['DeleteSeparator'](arg1, arg2);
 }
 
+export function Deploy(arg1) {
+  return window['go']['bridge']['App']['Deploy'](arg1);
+}
+
+export function DeployMethods(arg1) {
+  return window['go']['bridge']['App']['DeployMethods'](arg1);
+}
+
+export function DeployStatus(arg1) {
+  return window['go']['bridge']['App']['DeployStatus'](arg1);
+}
+
 export function GameInstanceDetails(arg1) {
   return window['go']['bridge']['App']['GameInstanceDetails'](arg1);
 }
@@ -116,6 +140,10 @@ export function InstallMods(arg1, arg2) {
 
 export function ListAppSettings() {
   return window['go']['bridge']['App']['ListAppSettings']();
+}
+
+export function ListInstanceSettings(arg1) {
+  return window['go']['bridge']['App']['ListInstanceSettings'](arg1);
 }
 
 export function ListRecentOperations(arg1) {
@@ -170,6 +198,10 @@ export function MoveMods(arg1, arg2) {
   return window['go']['bridge']['App']['MoveMods'](arg1, arg2);
 }
 
+export function MoveStaging(arg1, arg2) {
+  return window['go']['bridge']['App']['MoveStaging'](arg1, arg2);
+}
+
 export function OpenInstanceFolder(arg1, arg2) {
   return window['go']['bridge']['App']['OpenInstanceFolder'](arg1, arg2);
 }
@@ -190,6 +222,10 @@ export function OrderHistory(arg1) {
   return window['go']['bridge']['App']['OrderHistory'](arg1);
 }
 
+export function PendingDeployDecision(arg1) {
+  return window['go']['bridge']['App']['PendingDeployDecision'](arg1);
+}
+
 export function PickFolder(arg1) {
   return window['go']['bridge']['App']['PickFolder'](arg1);
 }
@@ -202,8 +238,16 @@ export function PickImportFolder(arg1, arg2) {
   return window['go']['bridge']['App']['PickImportFolder'](arg1, arg2);
 }
 
+export function PreviewDeploy(arg1, arg2) {
+  return window['go']['bridge']['App']['PreviewDeploy'](arg1, arg2);
+}
+
 export function PreviewModRemoval(arg1, arg2) {
   return window['go']['bridge']['App']['PreviewModRemoval'](arg1, arg2);
+}
+
+export function PreviewMoveStaging(arg1, arg2) {
+  return window['go']['bridge']['App']['PreviewMoveStaging'](arg1, arg2);
 }
 
 export function PreviewOrderRule(arg1, arg2, arg3) {
@@ -220,6 +264,14 @@ export function ProfileList(arg1) {
 
 export function ProfileSnapshots(arg1) {
   return window['go']['bridge']['App']['ProfileSnapshots'](arg1);
+}
+
+export function Purge(arg1) {
+  return window['go']['bridge']['App']['Purge'](arg1);
+}
+
+export function ReconcileDeploy(arg1) {
+  return window['go']['bridge']['App']['ReconcileDeploy'](arg1);
 }
 
 export function ReinstallMods(arg1, arg2) {
@@ -244,6 +296,10 @@ export function RenameProfile(arg1, arg2) {
 
 export function ResetAppSetting(arg1) {
   return window['go']['bridge']['App']['ResetAppSetting'](arg1);
+}
+
+export function ResolveDeployDecision(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['ResolveDeployDecision'](arg1, arg2, arg3);
 }
 
 export function ResolveImport(arg1, arg2) {
@@ -284,6 +340,10 @@ export function SetFileExclusions(arg1, arg2, arg3, arg4) {
 
 export function SetFileOverrides(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetFileOverrides'](arg1, arg2, arg3);
+}
+
+export function SetInstanceSetting(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetInstanceSetting'](arg1, arg2, arg3);
 }
 
 export function SetModAttributes(arg1, arg2) {
@@ -340,6 +400,10 @@ export function UpdateSeparator(arg1, arg2) {
 
 export function ValidateGameRoot(arg1, arg2) {
   return window['go']['bridge']['App']['ValidateGameRoot'](arg1, arg2);
+}
+
+export function VerifyDeployment(arg1) {
+  return window['go']['bridge']['App']['VerifyDeployment'](arg1);
 }
 
 export function VerifyGameSetup(arg1) {

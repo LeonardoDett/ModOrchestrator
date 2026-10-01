@@ -8,11 +8,17 @@ export function AddDependencyRule(arg1:string,arg2:string,arg3:string,arg4:strin
 
 export function AddIncompatibilityRule(arg1:string,arg2:string,arg3:string):Promise<string>;
 
+export function CancelDeploy(arg1:string):Promise<boolean>;
+
+export function CancelDeployDecision(arg1:string,arg2:string):Promise<void>;
+
 export function CancelImport(arg1:string):Promise<void>;
 
 export function CancelOperation(arg1:string):Promise<boolean>;
 
 export function Categories(arg1:string):Promise<Array<bridge.CategoryDTO>>;
+
+export function ChangeDeployMethod(arg1:string,arg2:string):Promise<string>;
 
 export function ClearFileOverrides(arg1:string,arg2:Array<bridge.LocationDTO>):Promise<void>;
 
@@ -40,6 +46,12 @@ export function DeleteProfile(arg1:string):Promise<void>;
 
 export function DeleteSeparator(arg1:string,arg2:string):Promise<void>;
 
+export function Deploy(arg1:string):Promise<string>;
+
+export function DeployMethods(arg1:string):Promise<Array<bridge.DeployMethodDTO>>;
+
+export function DeployStatus(arg1:string):Promise<bridge.DeployStatusDTO>;
+
 export function GameInstanceDetails(arg1:string):Promise<bridge.ManagedGameDTO>;
 
 export function GamesView(arg1:boolean):Promise<bridge.GamesViewDTO>;
@@ -59,6 +71,8 @@ export function ImportQueue(arg1:string):Promise<Array<bridge.QueueItemDTO>>;
 export function InstallMods(arg1:string,arg2:Array<string>):Promise<Array<string>>;
 
 export function ListAppSettings():Promise<Array<bridge.SettingDTO>>;
+
+export function ListInstanceSettings(arg1:string):Promise<Array<bridge.SettingDTO>>;
 
 export function ListRecentOperations(arg1:number):Promise<Array<bridge.OperationDTO>>;
 
@@ -86,6 +100,8 @@ export function ModRules(arg1:string):Promise<Array<bridge.RuleDTO>>;
 
 export function MoveMods(arg1:string,arg2:bridge.MoveRequestDTO):Promise<bridge.MoveResultDTO>;
 
+export function MoveStaging(arg1:string,arg2:string):Promise<string>;
+
 export function OpenInstanceFolder(arg1:string,arg2:string):Promise<void>;
 
 export function OpenLogFolder():Promise<void>;
@@ -96,13 +112,19 @@ export function OpenModFolder(arg1:string):Promise<void>;
 
 export function OrderHistory(arg1:string):Promise<Array<bridge.OrderChangeDTO>>;
 
+export function PendingDeployDecision(arg1:string):Promise<bridge.DeployPlanDTO>;
+
 export function PickFolder(arg1:string):Promise<string>;
 
 export function PickImportFiles(arg1:string,arg2:string):Promise<Array<string>>;
 
 export function PickImportFolder(arg1:string,arg2:string):Promise<Array<string>>;
 
+export function PreviewDeploy(arg1:string,arg2:boolean):Promise<bridge.DeployPlanDTO>;
+
 export function PreviewModRemoval(arg1:string,arg2:Array<string>):Promise<bridge.RemovalPreviewDTO>;
+
+export function PreviewMoveStaging(arg1:string,arg2:string):Promise<bridge.StagingPreviewDTO>;
 
 export function PreviewOrderRule(arg1:string,arg2:string,arg3:string):Promise<bridge.RulePreviewDTO>;
 
@@ -111,6 +133,10 @@ export function PreviewPairDecisions(arg1:string,arg2:Array<bridge.PairDecisionD
 export function ProfileList(arg1:string):Promise<Array<bridge.ProfileSummaryDTO>>;
 
 export function ProfileSnapshots(arg1:string):Promise<Array<bridge.SnapshotDTO>>;
+
+export function Purge(arg1:string):Promise<string>;
+
+export function ReconcileDeploy(arg1:string):Promise<string>;
 
 export function ReinstallMods(arg1:string,arg2:Array<string>):Promise<Array<string>>;
 
@@ -123,6 +149,8 @@ export function RenameInstance(arg1:string,arg2:string):Promise<void>;
 export function RenameProfile(arg1:string,arg2:string):Promise<void>;
 
 export function ResetAppSetting(arg1:string):Promise<void>;
+
+export function ResolveDeployDecision(arg1:string,arg2:string,arg3:Array<string>):Promise<void>;
 
 export function ResolveImport(arg1:string,arg2:bridge.AnswerDTO):Promise<void>;
 
@@ -143,6 +171,8 @@ export function SetAppSetting(arg1:string,arg2:string):Promise<void>;
 export function SetFileExclusions(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>,arg4:boolean):Promise<void>;
 
 export function SetFileOverrides(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>):Promise<void>;
+
+export function SetInstanceSetting(arg1:string,arg2:string,arg3:string):Promise<void>;
 
 export function SetModAttributes(arg1:string,arg2:bridge.ModAttributesDTO):Promise<void>;
 
@@ -171,6 +201,8 @@ export function UpdateInstanceLocation(arg1:string,arg2:string):Promise<void>;
 export function UpdateSeparator(arg1:string,arg2:bridge.SeparatorDTO):Promise<void>;
 
 export function ValidateGameRoot(arg1:string,arg2:string):Promise<bridge.RootCheckDTO>;
+
+export function VerifyDeployment(arg1:string):Promise<bridge.DeployVerifyDTO>;
 
 export function VerifyGameSetup(arg1:bridge.SetupDTO):Promise<bridge.VerificationDTO>;
 

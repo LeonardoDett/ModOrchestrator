@@ -4,11 +4,13 @@ on:
   push:
   pull_request:
 
+# PR code from forks runs here without secrets. Signing never happens in this
+# workflow (D077): never switch it to pull_request_target.
+permissions:
+  contents: read
+
 jobs:
   core:
-    # The frontend depends on the local dettmann-ui package
-    # (dettmann-ui-vnext/), which is not versioned in this repository, so
-    # CI covers the Go core only. See README.md (Desenvolvimento).
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,3 +22,21 @@ jobs:
         run: test -z "$(gofmt -l internal main.go)"
       - run: go vet ./...
       - run: go test ./...
+
+  frontend:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # The frontend consumes the local dettmann-ui build (file: dependency).
+      - name: dettmann-ui build
+        working-directory: dettmann-ui-vnext
+        run: |
+          npm ci
+          npm run build
+      - name: frontend install
+        run: npm --prefix frontend ci
+      - run: npm --prefix frontend run typecheck
+      - run: npm --prefix frontend test

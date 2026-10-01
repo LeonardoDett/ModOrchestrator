@@ -123,6 +123,7 @@ Entregas:
 
 Invariantes: INV-DEP-01..09, INV-EXT-01.
 Demonstração: deploy de 50 mods reais, jogar; purge; deploy de novo; kill em 20 pontos com reconciliação limpa (automatizado).
+Estado: concluída (D078; D079 aguarda confirmação). Testes: domínio (`deployment/settle_test.go`, `deployplan_test.go`, `deploystate_test.go`), repositórios (`sqlite/deployment_repository_test.go`), integração com filesystem NTFS real (`internal/integration/deploy_test.go`: deploy → deploy vazio → diff → purge → deploy, external change em deploy/purge/auto-deploy, implantação estrangeira, coalescência, arquivo travado, mover staging e trocar método) e o teste de interrupção em processo filho (`deploy_kill_test.go`, 20 pontos aleatórios). Pendente para a demonstração manual: deploy de 50 mods reais e jogar.
 
 ## F8: Alterações externas e arquivos gerados
 
@@ -177,6 +178,8 @@ Entregas: testes de interrupção (kill em pontos aleatórios de import/deploy/p
 Demonstração: relatório de benchmarks e da bateria de interrupções.
 
 ## F15: Release V1.0
+
+Docs: `plano-de-publicacao.md` (etapas 2–6), D076, D077.
 
 Entregas: instalador Windows, assinatura, atualização do app (opt-in), notas de versão, documentação do usuário mínima (primeiros passos), revisão dos itens **(verificar)** do core/12, checklist de paridade com VORTEX-12 (todo ADOPT/ADAPT V1 presente).
 

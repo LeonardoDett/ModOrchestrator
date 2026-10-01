@@ -103,6 +103,7 @@ export function RelocateDialog({ game, onClose }: DialogProps) {
             {game.deployed ? (
               <Alert.Root variant="warning">
                 <Alert.Description>{t("relocate.deployed")}</Alert.Description>
+                <PurgeFirst instance={game.id} />
               </Alert.Root>
             ) : null}
             <Input.Root fullWidth value={root} onChange={setRoot}>
@@ -147,8 +148,8 @@ export function RelocateDialog({ game, onClose }: DialogProps) {
 /**
  * DLG-03: stop managing. Destructive confirmation: keeping staging and
  * archives is the default; deleting them needs the instance name typed. A
- * deployed instance cannot be dropped yet (purge arrives with F7) and the
- * backend says so.
+ * deployed instance is purged first (core/04 §6): the dialog offers it and
+ * the backend refuses to drop an instance with files in the game.
  */
 export function UnmanageDialog({ game, onClose }: DialogProps) {
   const i18n = useI18n();
@@ -188,6 +189,7 @@ export function UnmanageDialog({ game, onClose }: DialogProps) {
             {game.deployed ? (
               <Alert.Root variant="warning">
                 <Alert.Description>{t("unmanage.deployed")}</Alert.Description>
+                <PurgeFirst instance={game.id} />
               </Alert.Root>
             ) : null}
             <Stack gap="sm">
@@ -229,5 +231,28 @@ export function UnmanageDialog({ game, onClose }: DialogProps) {
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>
+  );
+}
+
+/** Purge offered where a deployed instance blocks the action (core/04 §6). */
+function PurgeFirst({ instance }: { instance: string }) {
+  const { t } = useI18n();
+  const backend = useBackend();
+  const run = useAction();
+  const [started, setStarted] = useState(false);
+  return (
+    <div className="pt-2">
+      <Button
+        size="sm"
+        variant="outline"
+        disabled={started}
+        onClick={() => {
+          setStarted(true);
+          void run(() => backend.purge(instance)).then((r) => !r.ok && setStarted(false));
+        }}
+      >
+        {t("deploy.action.purge")}
+      </Button>
+    </div>
   );
 }

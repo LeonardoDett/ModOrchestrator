@@ -7,18 +7,21 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
+	"database/sql"
 	"errors"
 	"os"
 	"path/filepath"
 	"reflect"
 	"slices"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
 	conflictsvc "modorchestrator/internal/core/application/conflicts"
+	deploysvc "modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
@@ -56,32 +59,68 @@ type env struct {
 	profiles *sqlite.ProfileRepository
 	inst     game.Instance
 	events   []event.Event
+	dep      *deploysvc.Service
+	auto     *deploysvc.AutoDeployer
+	db       *sql.DB
+	bus      *eventbus.Bus
+	eventsMu sync.Mutex
 }
 
-func newEnv(t *testing.T) *env {
+// envOptions vary the wiring: the deploy method of the managed game, a
+// database file shared with another process, and a filesystem wrapper.
+type envOptions struct {
+	method game.DeploymentMethod
+	dir    string
+	dbPath string
+	fs     func(ports.FileSystem) ports.FileSystem
+	// existing skips managing the game: the database already has it.
+	existing bool
+}
+
+func newEnv(t *testing.T) *env { return newEnvWith(t, envOptions{}) }
+
+func newEnvWith(t *testing.T, o envOptions) *env {
 	t.Helper()
-	dir := t.TempDir()
-	db, err := sqlite.Open(ctx, ":memory:")
+	dir := o.dir
+	if dir == "" {
+		dir = t.TempDir()
+	}
+	dbPath := o.dbPath
+	if dbPath == "" {
+		dbPath = ":memory:"
+	}
+	if o.method == "" {
+		o.method = game.MethodCopy
+	}
+	db, err := sqlite.Open(ctx, dbPath)
 	if err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() { db.Close() })
-	e := &env{t: t, dir: dir}
+	e := &env{t: t, dir: dir, db: db}
 	bus := eventbus.New()
-	bus.Subscribe(func(ev event.Event) { e.events = append(e.events, ev) })
+	e.bus = bus
+	bus.Subscribe(func(ev event.Event) {
+		e.eventsMu.Lock()
+		e.events = append(e.events, ev)
+		e.eventsMu.Unlock()
+	})
 	ids, clock := system.IDs{}, system.Clock{}
 	e.ops = operations.NewService(sqlite.NewOperationRepository(db), bus, ids, clock)
 	registry, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{})
 	if err != nil {
 		t.Fatal(err)
 	}
-	fsys := filesystem.New()
+	var fsys ports.FileSystem = filesystem.New()
+	if o.fs != nil {
+		fsys = o.fs(fsys)
+	}
 	locks := instancelock.New()
 	profiles := sqlite.NewProfileRepository(db)
 	e.profiles = profiles
 	e.games = games.NewService(games.Deps{
 		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles,
-		State: sqlite.NewAppState(db), Deployments: sqlite.NewDeploymentState(db), FS: fsys, Drives: fsys,
+		State: sqlite.NewAppState(db), Deployments: sqlite.NewDeploymentState(db), FS: fsys, Drives: filesystem.New(),
 		Versions: system.FileVersions{}, Ops: e.ops, IDs: ids, Clock: clock, Locks: locks,
 	})
 	e.mods = sqlite.NewModRepository(db)
@@ -113,12 +152,31 @@ func newEnv(t *testing.T) *env {
 	}
 	e.conf = e.newConf()
 	t.Cleanup(func() { e.conf.Wait() })
+	e.dep = deploysvc.NewService(deploysvc.Deps{
+		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods,
+		Installations: sqlite.NewInstallationRepository(db), Profiles: profiles, Rules: e.rules,
+		Overrides: sqlite.NewOverrideRepository(db), Manifests: sqlite.NewManifestRepository(db),
+		Journals: sqlite.NewJournalRepository(db), State: sqlite.NewAppState(db), UoW: sqlite.NewUnitOfWork(db),
+		Publisher: bus, FS: fsys, Foreign: e.games,
+		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
+		Ops:      e.ops, Locks: locks, IDs: ids, Clock: clock,
+	})
+	e.auto = deploysvc.NewAutoDeployer(e.dep)
+	t.Cleanup(func() { e.auto.Close(); e.dep.Wait() })
 
+	if o.existing {
+		list, err := sqlite.NewGameInstanceRepository(db).List(ctx)
+		if err != nil || len(list) != 1 {
+			t.Fatalf("existing instance: %v %v", list, err)
+		}
+		e.inst = list[0]
+		return e
+	}
 	root := filepath.Join(dir, "Skyrim")
 	e.write(filepath.Join(root, "SkyrimSE.exe"), "exe")
 	e.write(filepath.Join(root, "Data", "Skyrim.esm"), "esm")
 	res, err := e.games.Manage(ctx, games.Setup{
-		Game: skyrimse.GameID, Root: root, Method: game.MethodCopy,
+		Game: skyrimse.GameID, Root: root, Method: o.method,
 		Folders: games.Folders{
 			Staging: filepath.Join(dir, "mo", "staging"), ArchiveStore: filepath.Join(dir, "mo", "archives"),
 			BackupStore: filepath.Join(dir, "mo", "backups"),

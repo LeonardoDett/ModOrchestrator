@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 
 	"modorchestrator/internal/core/application/ports"
@@ -152,18 +153,10 @@ func MatchLanguage(tag string, options []string) string {
 }
 
 // InstanceValue returns the effective value of an instance-scoped setting.
-// Editing instance settings arrives with the Settings screen (F12); until
-// then the catalog default applies unless a value was stored.
 func (s *Service) InstanceValue(ctx context.Context, instance, key string) (Effective, error) {
-	var d domain.Def
-	found := false
-	for _, c := range domain.Available(s.release) {
-		if c.Key == key && c.Scope == domain.ScopeInstance {
-			d, found = c, true
-		}
-	}
-	if !found {
-		return Effective{}, fmt.Errorf("%w: %q", ErrUnknown, key)
+	d, err := s.instanceDef(key)
+	if err != nil {
+		return Effective{}, err
 	}
 	explicit := map[string]string{}
 	switch v, err := s.repo.Get(ctx, domain.ScopeInstance, instance, key); {
@@ -173,4 +166,54 @@ func (s *Service) InstanceValue(ctx context.Context, instance, key string) (Effe
 		return Effective{}, err
 	}
 	return s.effective(d, explicit), nil
+}
+
+// Instance returns the instance-scoped settings among keys (catalog order),
+// for the parts of Settings that exist so far (F7: Mods › Deploy and
+// Interface › Automation). The full screen is F12.
+func (s *Service) Instance(ctx context.Context, instance string, keys []string) ([]Effective, error) {
+	stored, err := s.repo.List(ctx, domain.ScopeInstance, instance)
+	if err != nil {
+		return nil, err
+	}
+	explicit := make(map[string]string, len(stored))
+	for _, v := range stored {
+		explicit[v.Key] = v.Value
+	}
+	var out []Effective
+	for _, d := range domain.Available(s.release) {
+		if d.Scope == domain.ScopeInstance && slices.Contains(keys, d.Key) {
+			out = append(out, s.effective(d, explicit))
+		}
+	}
+	return out, nil
+}
+
+// SetInstance validates and stores an explicit instance-scoped value.
+func (s *Service) SetInstance(ctx context.Context, instance, key, value string) error {
+	if _, err := s.instanceDef(key); err != nil {
+		return err
+	}
+	v, err := domain.NewValue(domain.ScopeInstance, instance, key, value)
+	if err != nil {
+		return err
+	}
+	return s.repo.Save(ctx, v)
+}
+
+// ResetInstance removes the explicit instance value.
+func (s *Service) ResetInstance(ctx context.Context, instance, key string) error {
+	if _, err := s.instanceDef(key); err != nil {
+		return err
+	}
+	return s.repo.Reset(ctx, domain.ScopeInstance, instance, key)
+}
+
+func (s *Service) instanceDef(key string) (domain.Def, error) {
+	for _, d := range domain.Available(s.release) {
+		if d.Key == key && d.Scope == domain.ScopeInstance {
+			return d, nil
+		}
+	}
+	return domain.Def{}, fmt.Errorf("%w: %q", ErrUnknown, key)
 }

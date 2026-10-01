@@ -13,12 +13,14 @@ import (
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
 	"modorchestrator/internal/core/application/conflicts"
+	"modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
+	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/settings"
 	"modorchestrator/internal/infrastructure/appdata"
@@ -42,10 +44,14 @@ type Container struct {
 	Library    *library.Service
 	Profiles   *profilesvc.Service
 	Conflicts  *conflicts.Service
+	Deployment *deployment.Service
+	AutoDeploy *deployment.AutoDeployer
 	Logger     *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
-	Interrupted   []*operation.Operation
-	SchemaVersion int
+	Interrupted []*operation.Operation
+	// InterruptedDeploys lists instances with a deploy journal to reconcile.
+	InterruptedDeploys []game.InstanceID
+	SchemaVersion      int
 	// CustomTitleBar is ui.customTitleBar as read at startup: the setting
 	// requires a restart, so this is what the running window uses.
 	CustomTitleBar bool
@@ -137,6 +143,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Categories:    sqlite.NewCategoryRepository(db),
 		Profiles:      profiles,
 		Rules:         sqlite.NewRuleRepository(db),
+		Manifests:     sqlite.NewManifestRepository(db),
 		State:         appState,
 		Events:        sqlite.NewEventLog(db),
 		UoW:           sqlite.NewUnitOfWork(db),
@@ -182,6 +189,33 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:         clock,
 	})
 
+	deploySvc := deployment.NewService(deployment.Deps{
+		Registry:      registry,
+		Instances:     instances,
+		Mods:          sqlite.NewModRepository(db),
+		Installations: sqlite.NewInstallationRepository(db),
+		Profiles:      profiles,
+		Rules:         sqlite.NewRuleRepository(db),
+		Overrides:     sqlite.NewOverrideRepository(db),
+		Manifests:     sqlite.NewManifestRepository(db),
+		Journals:      sqlite.NewJournalRepository(db),
+		State:         appState,
+		UoW:           sqlite.NewUnitOfWork(db),
+		Publisher:     bus,
+		FS:            fsys,
+		Settings:      settingsSvc,
+		Foreign:       gamesSvc,
+		Ops:           ops,
+		Locks:         locks,
+		IDs:           ids,
+		Clock:         clock,
+	})
+	// Auto-deploy follows committed changes of the desired state (D036).
+	autoDeploy := deployment.NewAutoDeployer(deploySvc)
+	unsubAuto := bus.Subscribe(autoDeploy.Handle)
+	prevUnsub := unsub
+	unsub = func() { unsubAuto(); prevUnsub() }
+
 	interrupted, err := ops.RecoverInterrupted(ctx)
 	if err != nil {
 		unsub()
@@ -193,24 +227,36 @@ func New(ctx context.Context) (c *Container, err error) {
 	if err := librarySvc.Recover(ctx); err != nil {
 		logger.Error("library recovery", logging.KeyError, err.Error())
 	}
-	logger.Info("startup", "dataDir", paths.Root, "schemaVersion", version, "interruptedOperations", len(interrupted))
+	// Staging moves are finished or discarded; deploy journals stay for the
+	// user's "Reconcile now" (deploy_interrupted, core/14 §5).
+	if err := deploySvc.Recover(ctx); err != nil {
+		logger.Error("deployment recovery", logging.KeyError, err.Error())
+	}
+	interruptedDeploys, err := deploySvc.Interrupted(ctx)
+	if err != nil {
+		logger.Error("deploy journals", logging.KeyError, err.Error())
+	}
+	logger.Info("startup", "dataDir", paths.Root, "schemaVersion", version, "interruptedOperations", len(interrupted), "interruptedDeploys", len(interruptedDeploys))
 
 	return &Container{
-		Paths:          paths,
-		Events:         bus,
-		Operations:     ops,
-		Settings:       settingsSvc,
-		Games:          gamesSvc,
-		Library:        librarySvc,
-		Profiles:       profilesSvc,
-		Conflicts:      conflictsSvc,
-		Logger:         logger,
-		Interrupted:    interrupted,
-		SchemaVersion:  version,
-		CustomTitleBar: customTitleBar,
-		db:             db,
-		logFile:        logFile,
-		unsub:          unsub,
+		Paths:              paths,
+		Events:             bus,
+		Operations:         ops,
+		Settings:           settingsSvc,
+		Games:              gamesSvc,
+		Library:            librarySvc,
+		Profiles:           profilesSvc,
+		Conflicts:          conflictsSvc,
+		Deployment:         deploySvc,
+		AutoDeploy:         autoDeploy,
+		Logger:             logger,
+		Interrupted:        interrupted,
+		InterruptedDeploys: interruptedDeploys,
+		SchemaVersion:      version,
+		CustomTitleBar:     customTitleBar,
+		db:                 db,
+		logFile:            logFile,
+		unsub:              unsub,
 	}, nil
 }
 
@@ -220,6 +266,7 @@ func (c *Container) OpenLogFolder() error { return system.OpenFolder(c.Paths.Log
 // Close releases resources.
 func (c *Container) Close() error {
 	c.unsub()
+	c.AutoDeploy.Close()
 	c.Logger.Info("shutdown")
 	err := c.db.Close()
 	if lerr := c.logFile.Close(); err == nil {

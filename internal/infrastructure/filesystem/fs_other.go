@@ -16,6 +16,8 @@ func fileID(string) string { return "" }
 
 func volumeOf(path string) (string, error) { return filepath.VolumeName(path), nil }
 
+func volumeFormat(string) (string, error) { return "", nil }
+
 func freeSpace(path string) (int64, error) {
 	var st syscall.Statfs_t
 	if err := syscall.Statfs(path, &st); err != nil {
@@ -25,3 +27,5 @@ func freeSpace(path string) (int64, error) {
 }
 
 func fixedDrives() ([]string, error) { return []string{"/"}, nil }
+
+func failureKind(error) error { return nil }

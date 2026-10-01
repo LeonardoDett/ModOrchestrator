@@ -110,3 +110,22 @@ export function useConflictIndicators(instance: string) {
 export function useRuleCycle(instance: string) {
   return useBackendQuery((b) => b.ruleCycle(instance), [instance], { onOperationEvents: true });
 }
+
+// --- Deploy (F7). The status, plans and methods are calculated by the
+// backend; every reread follows operation events (D021). ---
+
+export function useDeployStatus(instance: string) {
+  return useBackendQuery((b) => (instance ? b.deployStatus(instance) : Promise.resolve(null)), [instance], { onOperationEvents: true });
+}
+
+export function usePendingDeployDecision(instance: string) {
+  return useBackendQuery((b) => (instance ? b.pendingDeployDecision(instance) : Promise.resolve(null)), [instance], { onOperationEvents: true });
+}
+
+export function useDeployMethods(instance: string) {
+  return useBackendQuery(async (b) => (instance ? await b.deployMethods(instance) : []), [instance], { onOperationEvents: true });
+}
+
+export function useInstanceSettings(instance: string) {
+  return useBackendQuery(async (b) => (instance ? await b.listInstanceSettings(instance) : []), [instance]);
+}

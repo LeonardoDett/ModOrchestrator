@@ -25,6 +25,7 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | DesiredState | deployment | **cálculo** | não | profile ativo + conflitos + mod types | qualquer insumo |
 | DeploymentManifest | deployment | `state.db` + marcador no target | sim | — | deploy/purge verificados |
 | DeploymentJournal | deployment | `state.db` | sim (temporário) | — | início/fim de deploy |
+| Movimento de staging em curso | deployment | `state.db` (`app_state`, D078) | sim (temporário) | — | início/fim de `move_staging` |
 | Estado observado | deployment | filesystem | não | — | a qualquer momento |
 | DeploymentStatus | deployment | **cálculo** | não | desejado × aplicado × observado + journal | qualquer insumo |
 | ExternalChange | deployment | **cálculo** + decisões pendentes | decisões sim; divergência não | aplicado × observado | scan |

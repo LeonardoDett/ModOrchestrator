@@ -7,18 +7,22 @@ import (
 	"modorchestrator/internal/core/domain/deployment"
 )
 
-func manifest(t *testing.T, prof deployment.ProfileID, fp deployment.Fingerprint) *deployment.Manifest {
+func manifest(t *testing.T, prof deployment.ProfileID, fp deployment.Fingerprint) *deployment.Header {
 	t.Helper()
 	m, err := deployment.NewManifest("i1", prof, fp, "op", time.Time{}, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
-	return m
+	h := m.Header()
+	return &h
 }
 
 func TestCompute(t *testing.T) {
-	purged, _ := deployment.NewPurged("i1", "op", time.Time{})
+	pm, _ := deployment.NewPurged("i1", "op", time.Time{})
+	ph := pm.Header()
+	purged := &ph
 	applied := manifest(t, "p1", "fp1")
+	partial := manifest(t, "p1", deployment.Partial("fp1"))
 	cases := []struct {
 		name string
 		in   Input
@@ -30,9 +34,10 @@ func TestCompute(t *testing.T) {
 		{"in sync", Input{ActiveProfile: "p1", Desired: "fp1", Applied: applied, Verified: true}, InSync, ReasonUpToDate},
 		{"desired changed", Input{ActiveProfile: "p1", Desired: "fp2", Applied: applied, Verified: true}, Pending, ReasonDesiredChanged},
 		{"profile switched", Input{ActiveProfile: "p2", Desired: "fp1", Applied: applied, Verified: true}, Pending, ReasonProfileChanged},
-		{"interrupted wins over all", Input{ActiveProfile: "p1", Desired: "fp1", Applied: applied, Verified: true, JournalPending: true, BlockedByDiagnostic: true}, Unknown, ReasonJournalPending},
+		{"interrupted wins over all", Input{ActiveProfile: "p1", Desired: "fp1", Applied: applied, Verified: true, JournalPending: true, Blocked: ReasonForeignDeployment}, Unknown, ReasonJournalPending},
 		{"restored backup", Input{ActiveProfile: "p1", Desired: "fp1", Applied: applied}, Unknown, ReasonNotVerified},
-		{"blocked", Input{ActiveProfile: "p1", Desired: "fp2", Applied: applied, Verified: true, BlockedByDiagnostic: true}, Blocked, ReasonBlockingDiagnostic},
+		{"blocked", Input{ActiveProfile: "p1", Desired: "fp2", Applied: applied, Verified: true, Blocked: ReasonNeedsDecision}, Blocked, ReasonNeedsDecision},
+		{"partial", Input{ActiveProfile: "p1", Desired: "fp1", Applied: partial, Verified: true}, Pending, ReasonPartial},
 		{"failed", Input{ActiveProfile: "p1", Desired: "fp1", Applied: applied, Verified: true, LastDeployFailed: true}, Failed, ReasonLastDeployFailed},
 	}
 	for _, c := range cases {

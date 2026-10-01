@@ -187,11 +187,11 @@ func TestDeploymentStateAndAppState(t *testing.T) {
 	if ok, err := dep.Deployed(ctx, "i1"); err != nil || ok {
 		t.Fatalf("never deployed: %v %v", ok, err)
 	}
-	db.Exec(`INSERT INTO deployment_manifests (instance_id, fingerprint, body_json, applied_at) VALUES ('i1', 'abc', '{}', 'now')`)
+	db.Exec(`INSERT INTO deployment_manifests (instance_id, profile_id, fingerprint, operation_id, applied_at, entry_count) VALUES ('i1', 'p1', 'abc', 'op', 'now', 1)`)
 	if ok, _ := dep.Deployed(ctx, "i1"); !ok {
 		t.Fatal("manifest with fingerprint means deployed")
 	}
-	db.Exec(`UPDATE deployment_manifests SET fingerprint = ''`)
+	db.Exec(`UPDATE deployment_manifests SET fingerprint = '', entry_count = 0`)
 	if ok, _ := dep.Deployed(ctx, "i1"); ok {
 		t.Fatal("a purge manifest means not deployed")
 	}

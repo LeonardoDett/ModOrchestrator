@@ -68,7 +68,22 @@ func (OS) Open(_ context.Context, path string) (io.ReadCloser, error) {
 }
 
 func (OS) MkdirAll(_ context.Context, path string) error {
-	return os.MkdirAll(longPath(path), 0o755)
+	return classify(os.MkdirAll(longPath(path), 0o755))
+}
+
+// classify wraps a platform error with the port's failure kind, keeping the
+// original for the technical detail.
+func classify(err error) error {
+	if err == nil {
+		return nil
+	}
+	if kind := failureKind(err); kind != nil {
+		return fmt.Errorf("%w: %w", kind, err)
+	}
+	if errors.Is(err, fs.ErrPermission) {
+		return fmt.Errorf("%w: %w", ports.ErrPermission, err)
+	}
+	return err
 }
 
 // WriteFile writes to a temporary file in the same folder and renames it
@@ -91,14 +106,18 @@ func (OS) WriteFile(_ context.Context, path string, data []byte) error {
 }
 
 func (OS) Hardlink(_ context.Context, src, dst string) error {
-	return os.Link(longPath(src), longPath(dst))
+	return classify(os.Link(longPath(src), longPath(dst)))
 }
 
 func (OS) Symlink(_ context.Context, target, link string) error {
-	return os.Symlink(target, longPath(link))
+	return classify(os.Symlink(target, longPath(link)))
 }
 
-func (OS) Copy(_ context.Context, src, dst string) error {
+func (o OS) Copy(ctx context.Context, src, dst string) error {
+	return classify(o.copyFile(ctx, src, dst))
+}
+
+func (OS) copyFile(_ context.Context, src, dst string) error {
 	in, err := os.Open(longPath(src))
 	if err != nil {
 		return err
@@ -124,10 +143,10 @@ func (OS) Copy(_ context.Context, src, dst string) error {
 }
 
 func (OS) Rename(_ context.Context, src, dst string) error {
-	return os.Rename(longPath(src), longPath(dst))
+	return classify(os.Rename(longPath(src), longPath(dst)))
 }
 
-func (OS) Remove(_ context.Context, path string) error { return os.Remove(longPath(path)) }
+func (OS) Remove(_ context.Context, path string) error { return classify(os.Remove(longPath(path))) }
 
 func (OS) RemoveEmptyDir(_ context.Context, path string) error {
 	p := longPath(path)
@@ -162,6 +181,10 @@ func (OS) SameVolume(_ context.Context, a, b string) (bool, error) {
 		return false, err
 	}
 	return strings.EqualFold(va, vb), nil
+}
+
+func (OS) VolumeFormat(_ context.Context, path string) (string, error) {
+	return volumeFormat(nearestExisting(path))
 }
 
 func (OS) FreeSpace(_ context.Context, path string) (int64, error) {

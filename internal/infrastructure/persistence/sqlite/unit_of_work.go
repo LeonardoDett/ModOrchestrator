@@ -33,6 +33,8 @@ func (t *txRepos) Categories() ports.Categories       { return &CategoryReposito
 func (t *txRepos) Profiles() ports.Profiles           { return &ProfileRepository{db: t.q} }
 func (t *txRepos) Rules() ports.Rules                 { return &RuleRepository{db: t.q} }
 func (t *txRepos) Overrides() ports.Overrides         { return &OverrideRepository{db: t.q} }
+func (t *txRepos) Manifests() ports.Manifests         { return &ManifestRepository{db: t.q} }
+func (t *txRepos) Journals() ports.Journals           { return &JournalRepository{db: t.q} }
 func (t *txRepos) Emit(events ...event.Event)         { t.events = append(t.events, events...) }
 
 // Do runs fn in a transaction and appends the emitted events to it.

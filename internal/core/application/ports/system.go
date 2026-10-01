@@ -23,6 +23,16 @@ type FileInfo struct {
 	FileID     string
 }
 
+// Failure kinds of filesystem writes. Implementations wrap the platform
+// error with one of these so the deploy engine reports a stable code per
+// location (core/04 §12) without knowing the platform.
+var (
+	ErrFileLocked  = errors.New("ports: file in use by another program")
+	ErrDiskFull    = errors.New("ports: disk full")
+	ErrPathTooLong = errors.New("ports: path too long")
+	ErrPermission  = errors.New("ports: permission denied")
+)
+
 // DirEntry is one child of a directory.
 type DirEntry struct {
 	Name  string
@@ -64,6 +74,9 @@ type FileSystem interface {
 	// SameVolume works for paths that do not exist yet by using their
 	// closest existing ancestor.
 	SameVolume(ctx context.Context, a, b string) (bool, error)
+	// VolumeFormat names the filesystem of the volume holding path ("NTFS",
+	// "FAT32"...), using its closest existing ancestor.
+	VolumeFormat(ctx context.Context, path string) (string, error)
 	FreeSpace(ctx context.Context, path string) (int64, error)
 }
 

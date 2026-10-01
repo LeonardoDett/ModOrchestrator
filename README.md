@@ -63,3 +63,9 @@ Pré-requisitos: Go 1.27+, Node 24+, Wails CLI v2, WebView2 (Windows).
 
 Dados da aplicação: `%APPDATA%\ModOrchestrator\state.db`; log técnico em `%APPDATA%\ModOrchestrator\logs`. Para isolar (dev/testes),
 defina `MODORCHESTRATOR_DATA_DIR`.
+
+## Contribuir e licença
+
+Contribuições por PR são bem-vindas: veja [CONTRIBUTING.md](CONTRIBUTING.md). Publicação e assinatura dos executáveis: `mod-orchestrator-spec-v2/plano-de-publicacao.md`.
+
+Licença: [GPL-3.0-or-later](LICENSE), incluindo a `dettmann-ui` (D076).

@@ -4,6 +4,7 @@ import { useBackend } from "../bridge/backend-context";
 import { useInstanceDetails, useWorkspace } from "../bridge/queries";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { ForeignAlert } from "../features/games/ForeignAlert";
+import { DeployOverview } from "../features/deploy/DeployOverview";
 import { useStoreLabel } from "../features/games/GameDetails";
 import { useAction } from "../features/games/use-action";
 import { useI18n, type MessageKey } from "../i18n/i18n";
@@ -11,9 +12,9 @@ import { VIEWS, type ViewId } from "../shell/navigation";
 import { PageBody } from "./PageBody";
 
 /**
- * Overview of the active game (ui/telas/overview.md), skeleton for F3: what
- * the backend knows about the instance and the blocking state of foreign
- * deployments. Mods, conflicts and deploy figures arrive with their phases.
+ * Overview of the active game (ui/telas/overview.md): what the backend
+ * knows about the instance, the blocking state of foreign deployments and
+ * the deploy status (F7). Mods and conflicts figures arrive later.
  */
 export function OverviewPage() {
   const { t } = useI18n();
@@ -77,6 +78,7 @@ function OverviewBody({ id }: { id: string }) {
           onOpenFolder={() => void run(() => backend.openInstanceFolder(g.id, "game"))}
           onRecheck={() => details.reload()}
         />
+        <DeployOverview />
 
         <section aria-labelledby="overview-location" className="rounded-xl border border-border bg-surface p-4">
           <Typography id="overview-location" variant="heading-6" color="fg" className="mb-3">

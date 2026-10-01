@@ -67,12 +67,12 @@ Steps: `preflight` → `scan` → `plan` → `await_decision`? → `journal` →
 4. `await_decision`: se houver decisões, a operação para e a UI abre o diálogo correspondente (plano / external changes). **Auto-deploy nunca chega aqui: ele termina antes com status `blocked` e diagnóstico (INV-DEP-06).** Decisões tomadas viram ações concretas no plano.
 5. `journal`: grava o plano no DeploymentJournal (INV-DEP-03).
 6. `apply`: executa ações em ordem segura:
-   1. `remove_managed` e `replace_managed` (parte de remoção);
+   1. `remove_managed`;
    2. `restore_backup`;
-   3. `mkdir`;
+   3. `mkdir` (de fora para dentro);
    4. `backup_and_create` (move original para BackupStore, depois cria);
-   5. `create` e `replace_managed` (parte de criação);
-   6. `rmdir_managed`.
+   5. `create` e `replace_managed` (a substituição cria em nome temporário e renomeia por cima, sem parte de remoção separada, D078);
+   6. `rmdir_managed` (de dentro para fora).
    Cada ação: revalida a evidência imediatamente antes de agir (corrida com ferramenta externa → a ação vira `external_change` e é pulada, registrada); marca como concluída no journal em lotes.
    Substituição de arquivo gerenciado usa criação em nome temporário + rename quando o método permite, para nunca deixar a Location vazia se possível.
 7. `verify`: confere cada Location criada/substituída (existe, é link para a origem certa / cópia com size+hash).
@@ -83,7 +83,7 @@ Falhas parciais: uma ação que falha (arquivo bloqueado por antivírus, permiss
 
 Cancelamento: permitido em `plan`/`await_decision` (nada foi escrito) e entre lotes do `apply` (o journal registra o ponto; o próximo deploy reconcilia).
 
-Retomada após crash: na inicialização, journal presente ⇒ diagnóstico bloqueante `deploy_interrupted` com ação "Reconciliar agora". Reconciliar = novo deploy normal: como o scan usa o **observado**, ações já feitas aparecem como `keep`/`create` para Locations que o manifesto ainda não conhece. Para isso, durante a recuperação, Locations cuja evidência observada corresponde exatamente à origem desejada (mesmo file index / alvo / hash) são adotadas como gerenciadas; qualquer outra divergência é external change. Nunca "desfazer" às cegas.
+Retomada após crash: na inicialização, journal presente ⇒ diagnóstico bloqueante `deploy_interrupted` com ação "Reconciliar agora". Reconciliar = registrar o efeito observado de cada ação do journal (mecânica em D078) e rodar um novo deploy normal: como o scan usa o **observado**, ações já feitas aparecem como `keep`/`create` para Locations que o manifesto ainda não conhece. Para isso, durante a recuperação, Locations cuja evidência observada corresponde exatamente à origem desejada (mesmo file index / alvo / hash) são adotadas como gerenciadas; qualquer outra divergência é external change. Nunca "desfazer" às cegas.
 
 ## 6. Purge
 
@@ -133,11 +133,11 @@ Ao clicar Play: se `pending`, roda deploy (com o diálogo normal se houver decis
 
 ## 12. Erros
 
-`instance_busy`, `staging_missing`, `staging_foreign`, `target_unavailable`, `foreign_deployment`, `deploy_interrupted`, `deploy_needs_decision`, `method_unavailable`, `disk_full`, `path_too_long`, `file_locked`, `permission_denied`, `verify_failed`, `game_running`.
+`instance_busy`, `staging_missing`, `staging_foreign`, `target_unavailable`, `foreign_deployment`, `deploy_interrupted`, `deploy_needs_decision`, `method_unavailable`, `disk_full`, `path_too_long`, `file_locked`, `permission_denied`, `verify_failed`, `game_running`. Desde a F7 (D078): `deploy_failed` (operação com Locations que falharam), `io_error`, `external_change_raced`, `rule_cycle`, `nothing_to_purge`, `purge_incomplete`, `nothing_to_reconcile`, `method_unchanged`, `staging_unchanged`.
 
 ## 13. Eventos
 
-`deployment.planned`, `deployment.applied`, `deployment.failed`, `deployment.purged`, `deployment.status_changed`, `deployment.external_changes_detected`, `staging.moved`.
+`deployment.planned`, `deployment.applied`, `deployment.failed`, `deployment.purged`, `deployment.status_changed`, `deployment.external_changes_detected`, `staging.moved`, `deployment.method_changed` (D078).
 
 ## 14. Critérios de aceite
 

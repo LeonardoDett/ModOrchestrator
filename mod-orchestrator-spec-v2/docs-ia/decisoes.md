@@ -546,3 +546,65 @@ Status: proposta (aguarda confirmação do usuário)
 4. **"Pela ordem (sem regra)"** no DLG-08 remove a regra do usuário entre os dois e desativa (não apaga) a de outra origem, como D072 item 3. Salvar o DLG-08 aplica todas as escolhas numa transação; se uma fecharia ciclo, nada é salvo e o ciclo é mostrado.
 5. **Busca** da tela Conflicts (nome de mod ou caminho) roda no backend; "Agrupar por Mod" agrupa os pares pelo vencedor.
 6. **Indicador "totalmente sobrescrito"** conta arquivos ocultados como não fornecidos: um mod que perde o que sobra e ocultou o resto é totalmente sobrescrito.
+
+## D076 — Licença GPL-3.0-or-later e modelo de contribuição
+Status: vigente
+
+Escolhido pelo usuário em 2026-10-01. O projeto é open source sob **GPL-3.0-or-later** (`LICENSE` na raiz), incluindo a `dettmann-ui` (`dettmann-ui-vnext/`), que continua versionada no mesmo repositório (D052). Contribuições entram por PR sob a mesma licença (inbound = outbound, termos do GitHub); não há CLA. O app é gratuito; não existe sistema de chave/ativação.
+
+Consequências:
+- Toda dependência nova precisa ser compatível com GPL-3.0 (permissivas e MPL-2.0 são; ver D062). Código copiado de terceiros só com licença compatível e atribuição.
+- Os textos de licença das dependências acompanham o pacote (`THIRD_PARTY_NOTICES`, gerado no pipeline de release; `plano-de-publicacao.md`).
+- Sendo gratuito e não comercial, a restrição NC da masterlist do LOOT (pendência P4) deixa de bloquear, mas a licença ainda precisa ser confirmada antes da V1.x.
+- Qualquer pessoa precisa conseguir compilar e testar um PR só com o repositório: o CI cobre core e frontend (com o build da `dettmann-ui`), e `CONTRIBUTING.md` descreve o passo a passo.
+
+Alternativas rejeitadas: MIT (permite fork fechado; a comunidade de gerenciadores de mods, Vortex e MO2, usa GPL-3.0); app fechado gratuito ou pago (contraria o objetivo de aceitar PRs; ativação paga exigiria rede, contrariando a privacidade da V1).
+
+## D077 — Distribuição e confiança do executável (SmartScreen e antivírus)
+Status: vigente (os requisitos da SignPath Foundation precisam ser confirmados antes da inscrição)
+
+Objetivo: o usuário não pode achar que está instalando um vírus, e o projeto não gasta dinheiro com isso. Regras:
+
+1. **Assinatura gratuita para open source**: binário e instalador assinados pela SignPath Foundation, a partir de build no GitHub Actions. Nunca se assina na máquina de alguém. Certificado autoassinado é proibido (não ajuda no SmartScreen e parece suspeito). Até a aprovação, as releases saem sem assinatura e o README explica o aviso.
+2. **Isolamento da assinatura**: só um workflow de release, disparado por tag `v*` na `master`, com ambiente protegido (aprovação manual) acessa o que assina. O CI de PR usa `pull_request` com `permissions: contents: read`; `pull_request_target` com checkout do código do PR é proibido.
+3. **Sem elevação**: instalador por usuário (`%LOCALAPPDATA%`), sem UAC; o app nunca pede administrador. O método de deploy padrão continua hardlink (sem privilégio); symlink só quando disponível (core/13 `deploy.method`).
+4. **Binário limpo**: sem packer/compressor de executável (UPX e similares); build com `-trimpath` e versão via `-ldflags`; metadados de versão e empresa preenchidos no executável.
+5. **Verificável**: cada release publica `SHA256SUMS` e notas de versão; o executável é conferido no VirusTotal antes de publicar, e falsos positivos são reportados ao Microsoft Defender e ao fornecedor.
+6. **Canais**: GitHub Releases (fonte da verdade), winget e Scoop (em geral sem o aviso do SmartScreen); a página no Nexus aponta para a release.
+7. **Atualização do app** (opt-in, única chamada de rede da V1, 00-visao-e-escopo) só aceita pacote cujo hash confere com o `SHA256SUMS` da release e, quando houver, com assinatura válida.
+
+Motivo: o aviso do SmartScreen vem de executável sem assinatura ou sem reputação, e os falsos positivos de antivírus vêm de heurísticas (binário Go empacotado, pedido de elevação, injeção de DLL). A arquitetura já evita injeção (links reais, não VFS) e execução de scripts (INV-LIB-04). Custo aceito: as primeiras releases mostram o aviso até a reputação se formar, mesmo assinadas. Alternativas rejeitadas: certificado OV/EV ou Azure Trusted Signing (pagos); distribuir só o código-fonte (exclui o usuário comum).
+
+Detalhamento e etapas: `plano-de-publicacao.md`.
+
+## D078 — Mecânica do deploy, do journal e da recuperação (F7)
+Status: vigente (detalha D033–D036, core/04 §4–§11, core/14 §5)
+
+- **Assentamento por observação** (`deployment.Settle`, domínio puro): o commit de um deploy e a recuperação de um deploy interrompido fazem a mesma pergunta para cada ação do journal: "o efeito pretendido está no disco?". Um link só é registrado se a Location tem exatamente o arquivo planejado (hardlink: mesmo file id da staging; symlink: alvo = caminho absoluto da staging; cópia: tamanho + data da staging); um backup só se o original está no BackupStore com a mesma identidade (o rename no volume preserva o file id); uma remoção quando o nosso arquivo não está mais lá. Ações que não se confirmam não entram no manifesto (INV-DEP-05). Assim "reconciliar" (core/04 §5) = assentar o journal, apagar o journal na mesma transação do manifesto e rodar o mesmo deploy (ou purge, se o journal era de purge) a partir do observado. Nada é desfeito às cegas.
+- **Journal**: tabela por ação com estado `pending`/`done`/`skipped`, marcado em lotes de 256. `skipped` = nada foi escrito (corrida com ferramenta externa detectada na revalidação, ou pasta que apareceu antes do `mkdir`); a recuperação ignora. Falha de escrita conta como `done` (tentada): o verify observa o efeito parcial em vez de presumir.
+- **Ordem do apply**: remoções, restaurações, `mkdir` (de fora para dentro), `backup_and_create`, criações e substituições, `rmdir_managed` (de dentro para fora). A substituição de arquivo gerenciado cria o novo em `<caminho>.modorchestrator-tmp` e renomeia por cima (MoveFileEx com substituição), por isso não tem "parte de remoção" separada e roda junto com as criações: a Location nunca fica vazia. A recuperação remove o temporário só se ele é provadamente o arquivo planejado.
+- **Backup de original**: `<BackupStore>/<target>/<caminho>` (sufixo `.backupN` se já existir algo lá; backup existente nunca é sobrescrito). Se o link falha depois de mover o original, o original volta para a Location.
+- **Fingerprint do desejado** calculado dos **insumos** (`deployplan.InputFingerprint`: profile, método, staging, targets, mods habilitados na ordem com Installation e tipo, overrides e exclusões), não dos arquivos: o status compara fingerprints sem carregar Installations. Mesmos insumos ⇒ mesmo desejado; insumos diferentes com o mesmo resultado só custam um deploy que não escreve nada. Execução incompleta grava `partial:<fp>` (status `pending`/`partial`).
+- **Persistência** (migration 0005): manifesto como cabeçalho + uma linha por entrada (salvar após o deploy de 1 mod reescreve só as entradas que mudaram; o status lê só o cabeçalho); journal como cabeçalho + linhas de ação. `Deployed` = manifesto com entradas. SQLite passa a `synchronous=FULL` em todo o banco (core/14 §2 pede FULL para manifesto/journal; com uma conexão só, por transação não compensa). O caminho do banco é escapado na URI (`#`, `?` e `%` em nomes de pasta cortavam o nome — encontrado pelo teste de interrupção).
+- **Operações**: `deploy`/`purge` com steps `reconcile`, `preflight`, `scan`, `plan`, `await_decision`, `journal`, `apply`, `verify`, `commit`, `post` (`post` não escreve `plugins.txt` antes da F11). `move_staging` (`validate`, `purge`, `copy`, `save`, `cleanup`) e `change_method` (`validate`, `purge`, `save`) fazem o purge dentro da própria operação e, se havia implantação, disparam um `deploy` separado ao terminar (para que uma decisão use o diálogo normal). O movimento da staging fica registrado em `app_state` (`deployment.stagingMoves`) até o fim; a recuperação descarta o lado que perdeu, só com marcador da instância. Mesmo volume: os arquivos são hardlinks verificados por file id; outro volume: cópia verificada por tamanho.
+- **Marcador de deploy** gravado antes da transação do manifesto em todo target com entradas e removido (só se for nosso) dos que não têm.
+- **Disponibilidade de método**: hardlink exige staging e target no mesmo volume NTFS; symlink é provado por uma tentativa real dentro da staging (pasta da instância, nunca o jogo), feita no deploy só quando symlink é o método preferido (symlink nunca é proposto como fallback), e em Settings › Mods ao listar os métodos; cópia sempre funciona.
+- **Auto-deploy**: assinante do barramento de eventos (`AutoDeployer`), coalescência por `automation.deployDelayMs`, instância resolvida só quando o timer dispara; instância ocupada é tentada de novo após o atraso.
+- **Teste de interrupção** (`internal/integration/deploy_kill_test.go`): um processo filho real roda o deploy/purge sobre o banco em arquivo e morre (`os.Exit`) logo após a k-ésima escrita em disco; 20 pontos aleatórios por execução (14 deploy, 6 purge; semente registrada, `MO_KILL_SEED` repete). O pai reabre, confere `deploy_interrupted`, reconcilia e verifica observado = desejado e que o purge final devolve o jogo original byte a byte.
+- Códigos novos (core/00 §6): `deploy_failed` (params `count`, `first`, `reason`, `locations`, `codes`), `io_error`, `external_change_raced`, `nothing_to_purge`, `purge_incomplete`, `nothing_to_reconcile`, `method_unchanged`, `staging_unchanged`, `rule_cycle` como erro de operação, e os motivos de `folders_invalid` (`not_absolute`, `overlap`, `other_instance`, `not_directory`). Evento novo: `deployment.method_changed`; `deployment.applied` traz `reconciled=true` quando vem de uma recuperação. Portas novas: `FileSystem.VolumeFormat` (NTFS para hardlink) e os tipos de falha `ErrFileLocked`/`ErrDiskFull`/`ErrPathTooLong`/`ErrPermission`.
+
+Alternativas rejeitadas: desfazer o journal na recuperação (precisa saber o estado anterior de cada Location e contraria D035); adotar qualquer arquivo que coincida com a origem sem consultar o journal (não recupera backups nem restaurações em andamento); fingerprint dos arquivos (o status teria de recalcular todos os vencedores a cada leitura).
+
+## D079 — Comportamentos da F7 não fixados pela spec
+Status: proposta (aguarda confirmação do usuário)
+
+1. **Decisões da F7**: external changes e Locations bloqueadas só têm "deixar intocado nesta execução" (o "Ignorar agora" de core/09 §4); as demais ações da triagem chegam com a F8 (DLG-15). Grupos de `method_fallback` são aceitos ou deixados de fora. Fechar o diálogo cancela a operação sem escrever nada.
+2. **Status depois de deixar algo intocado**: o manifesto grava `partial:<fp>` e as external changes vistas ficam contadas em memória ⇒ `blocked`/`external_changes` até o próximo scan. Reiniciar o app esquece a contagem (o observado nunca é persistido); "Verificar implantação" recalcula.
+3. **Auto-deploy** age em `pending`, `never_deployed` e `blocked` por decisão/external change; nunca em `unknown` nem com outra precondição falhando. Quando encontra decisão, a operação termina `failed` com `deploy_needs_decision` (visível no drawer) e o status fica `blocked`/`needs_decision` (o diagnóstico persistente é da F9).
+4. **Purge que deixou arquivos** (external changes): o manifesto fica com `partial:purge` e o marcador continua. Purge completo esquece pastas criadas pelo gerenciador que ainda guardam arquivos de terceiros (nunca as remove).
+5. **Cancelar durante o apply** para entre lotes, registra o que foi feito (não sobra journal) e termina `cancelled`.
+6. **Corrida de pasta**: uma pasta que aparece entre o plano e o `mkdir` não é adotada; na recuperação, um `mkdir` pendente cuja pasta existe é adotado (quase sempre foi o próprio deploy).
+7. **Status `failed` após reiniciar** é lido do erro da última operação de deploy/purge da instância.
+8. **Settings › Mods** mostra também `automation.deployOnChange` (aba Interface no catálogo) até a F12 montar a aba Interface completa; o método é trocado por DLG-18, nunca editado no lugar.
+9. **Toolbar de Mods**: `[Deploy ▾]` com "Ver o que o deploy vai fazer" e "Purge" no menu, em vez de dois botões soltos.
+10. **DLG-03 / alterar localização** com algo implantado oferecem "Purge" no próprio aviso; o backend continua recusando enquanto houver entradas.

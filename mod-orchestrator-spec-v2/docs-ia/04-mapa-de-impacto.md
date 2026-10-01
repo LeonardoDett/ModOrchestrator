@@ -18,7 +18,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | OrderRule / Dependency / Incompatibility | core/05, core/06, core/10 | INV-ORD-03/04, INV-CON-02 | Mods, Conflicts, Diagnostics |
 | FileOverride / FileExclusion | core/05, core/04 | INV-CON-01/03 | Conflicts, Mods (arquivos) |
 | Profile (conteúdo, clone, troca) | core/07, core/04, core/08, ui/telas/profiles | INV-ORD-01/02 | Profiles, topbar |
-| Deploy (plano, métodos, journal, manifesto) | core/04, core/09, core/10, core/14 | INV-DEP-* | topbar, Mods, diálogos de deploy |
+| Deploy (plano, métodos, journal, manifesto) | core/04, core/09, core/10, core/14, D078/D079 | INV-DEP-*, INV-EXT-01 | topbar, Mods, Overview, Settings › Mods, DLG-14/16/17/18 |
 | External changes / arquivos gerados | core/09, core/04, core/10 | INV-EXT-* | diálogo External Changes, Diagnostics |
 | Plugins / LoadOrder / sorter | core/08, core/12, core/09 (load_order change) | INV-PLG-*, INV-ORD-05/06 | Plugins, Load Order |
 | HealthCheck / Diagnostic | core/10 e o core do módulo que emite | INV-OPS-06 | Diagnostics, Dashboard, Overview, badges |
@@ -32,6 +32,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Código de erro do bridge | core/00 §6, `internal/bridge/errors.go`, catálogo i18n (`error.<code>`) | INV-OPS-05 | todas |
 | Log técnico (formato, rotação, filtros) | core/10 §4, core/13 (`app.logLevel`), ui/telas/diagnostics | — | Diagnostics › Log |
 | Escopo de release | 00-visao-e-escopo, plano, core/15 | — | — |
+| Licença, dependência nova, empacotamento, assinatura, atualização do app | D076, D077, `plano-de-publicacao.md`, `LICENSE`, `CONTRIBUTING.md`, workflows em `.github/` | INV-LIB-04 | Settings (atualização) |
 
 ## Perguntas obrigatórias antes da mudança
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { Alert, Badge, Button, Input, Spinner, Stack, Tabs } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
+import { useWorkspace } from "../bridge/queries";
+import { DeploySettings } from "../features/deploy/DeploySettings";
 import type { UIError } from "../bridge/errors";
 import type { Setting } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
@@ -10,9 +12,9 @@ import { PageBody } from "./PageBody";
 
 /**
  * Settings (ui/telas/settings-extensions.md, core/13) in the Vortex tab
- * order. F2 exposes the presentation settings (language and theme); the
- * rest of the catalog arrives in F12 with the features it controls, and
- * tabs appear only when they have content.
+ * order. F2 exposes the presentation settings (language and theme), F7 the
+ * Mods tab of the active game (folders and deploy); the rest of the
+ * catalog arrives in F12, and tabs appear only when they have content.
  */
 const TABS: { id: string; label: MessageKey; keys: string[] }[] = [
   { id: "interface", label: "settings.tab.interface", keys: ["ui.language"] },
@@ -22,6 +24,8 @@ const TABS: { id: string; label: MessageKey; keys: string[] }[] = [
 export function SettingsPage() {
   const { t } = useI18n();
   const settings = useSettings();
+  const workspace = useWorkspace();
+  const active = workspace.status === "ready" ? (workspace.data.active?.id ?? "") : "";
 
   if (settings.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
   if (settings.status === "unavailable") {
@@ -50,6 +54,7 @@ export function SettingsPage() {
               {t(tab.label)}
             </Tabs.Trigger>
           ))}
+          {active ? <Tabs.Trigger value="mods">{t("settings.tab.mods")}</Tabs.Trigger> : null}
         </Tabs.List>
         {TABS.map((tab) => (
           <Tabs.Panel key={tab.id} value={tab.id} className="pt-4">
@@ -61,6 +66,11 @@ export function SettingsPage() {
             </Stack>
           </Tabs.Panel>
         ))}
+        {active ? (
+          <Tabs.Panel value="mods" className="pt-4">
+            <DeploySettings instance={active} />
+          </Tabs.Panel>
+        ) : null}
       </Tabs.Root>
     </PageBody>
   );

@@ -103,11 +103,15 @@ type PluginRules interface {
 	Save(ctx context.Context, r *plugin.Rules) error
 }
 
-// Manifests persists applied state. Current returns ErrNotFound when the
-// instance was never deployed.
+// Manifests persists applied state. Current and Header return ErrNotFound
+// when the instance was never deployed.
 type Manifests interface {
 	Current(ctx context.Context, instance game.InstanceID) (*deployment.Manifest, error)
-	Save(ctx context.Context, m *deployment.Manifest) error
+	// Header reads the manifest without its entries (status queries).
+	Header(ctx context.Context, instance game.InstanceID) (deployment.Header, error)
+	// Save stores m. prev is the manifest it replaces (nil when none): the
+	// store may write only the entries that differ.
+	Save(ctx context.Context, m, prev *deployment.Manifest) error
 	CurrentLoadOrder(ctx context.Context, instance game.InstanceID) (*deployment.AppliedLoadOrder, error)
 	SaveLoadOrder(ctx context.Context, lo *deployment.AppliedLoadOrder) error
 }
@@ -119,8 +123,12 @@ type Journals interface {
 	// Pending returns ErrNotFound when no deploy is in flight.
 	Pending(ctx context.Context, instance game.InstanceID) (*deployment.Journal, error)
 	Save(ctx context.Context, j *deployment.Journal) error
-	MarkDone(ctx context.Context, instance game.InstanceID, indexes []int) error
+	// Mark records the progress of several actions at once (in batches,
+	// core/04 §5).
+	Mark(ctx context.Context, instance game.InstanceID, states map[int]deployment.ActionState) error
 	Delete(ctx context.Context, instance game.InstanceID) error
+	// Instances lists the instances with a journal (startup detection).
+	Instances(ctx context.Context) ([]game.InstanceID, error)
 }
 
 // Notifications persists delivery state, keyed so it survives recomputation
@@ -157,6 +165,8 @@ type Tx interface {
 	Profiles() Profiles
 	Rules() Rules
 	Overrides() Overrides
+	Manifests() Manifests
+	Journals() Journals
 	// Emit records events stored in the same transaction. Their IDs must be
 	// set; the store assigns sequences.
 	Emit(events ...event.Event)

@@ -71,6 +71,16 @@ func (e Evidence) Matches(observed Evidence, method game.DeploymentMethod) bool 
 	return false
 }
 
+// SameOriginal reports whether observed is the unmanaged original recorded
+// as e: a move inside a volume keeps the file identity, so the file id
+// decides when both sides have one; otherwise size and time must match.
+func (e Evidence) SameOriginal(observed Evidence) bool {
+	if e.FileID != "" && observed.FileID != "" {
+		return e.FileID == observed.FileID
+	}
+	return e.Size == observed.Size && e.ModTime.Equal(observed.ModTime)
+}
+
 // Entry is one thing the manager put in a target.
 type Entry struct {
 	Location game.Location
@@ -154,8 +164,58 @@ func build(instance game.InstanceID, prof ProfileID, fp Fingerprint, op operatio
 	return &Manifest{Instance: instance, Profile: prof, Fingerprint: fp, Operation: op, AppliedAt: at, entries: sorted}, nil
 }
 
-// Purged reports whether this manifest records a purge.
+// Purged reports whether this manifest records a complete purge.
 func (m *Manifest) Purged() bool { return m.Fingerprint == "" }
+
+// PartialPrefix marks the fingerprint of a manifest whose operation left
+// locations untouched (external changes kept for triage, failures, skipped
+// decisions): it never equals a desired fingerprint, so the status stays
+// pending until a complete deploy (core/04 §5 "Falhas parciais").
+const PartialPrefix = "partial:"
+
+// Partial returns the fingerprint recorded after an incomplete operation.
+func Partial(fp Fingerprint) Fingerprint { return PartialPrefix + fp }
+
+// Header is the applied state without its entries, cheap enough for status
+// queries.
+type Header struct {
+	Instance    game.InstanceID
+	Profile     ProfileID
+	Fingerprint Fingerprint
+	Operation   operation.ID
+	AppliedAt   time.Time
+	Entries     int
+}
+
+// Purged reports whether the header records a complete purge.
+func (h Header) Purged() bool { return h.Fingerprint == "" }
+
+// Header returns the summary of the manifest.
+func (m *Manifest) Header() Header {
+	return Header{Instance: m.Instance, Profile: m.Profile, Fingerprint: m.Fingerprint, Operation: m.Operation, AppliedAt: m.AppliedAt, Entries: len(m.entries)}
+}
+
+// Links returns the link entries.
+func (m *Manifest) Links() []Entry {
+	return slices.DeleteFunc(m.Entries(), func(e Entry) bool { return e.Kind != KindLink })
+}
+
+// Backups returns the backup entries.
+func (m *Manifest) Backups() []Entry {
+	return slices.DeleteFunc(m.Entries(), func(e Entry) bool { return e.Kind != KindBackup })
+}
+
+// Targets returns the targets that hold at least one entry.
+func (m *Manifest) Targets() []game.TargetID {
+	var out []game.TargetID
+	for _, e := range m.entries {
+		if !slices.Contains(out, e.Location.Target) {
+			out = append(out, e.Location.Target)
+		}
+	}
+	slices.Sort(out)
+	return out
+}
 
 // Entries returns every entry ordered by location.
 func (m *Manifest) Entries() []Entry { return slices.Clone(m.entries) }
@@ -195,6 +255,8 @@ type AppliedLoadOrder struct {
 // Observation is what a scan found at a location (observed state, D033).
 type Observation struct {
 	Exists bool
+	// IsDir is set when the location is a folder.
+	IsDir bool
 	// Unreadable means the location could not be inspected (permission,
 	// lock); it is never treated as absent.
 	Unreadable bool

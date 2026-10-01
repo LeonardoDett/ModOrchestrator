@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/url"
+	"strings"
 
 	_ "modernc.org/sqlite" // registers the "sqlite" driver
 )
@@ -19,9 +20,13 @@ func Open(ctx context.Context, path string) (*sql.DB, error) {
 	pragmas.Add("_pragma", "busy_timeout(5000)")
 	if path != ":memory:" {
 		pragmas.Add("_pragma", "journal_mode(WAL)")
-		pragmas.Add("_pragma", "synchronous(NORMAL)")
+		// FULL: a committed manifest or journal survives a power cut (core/14 §2).
+		pragmas.Add("_pragma", "synchronous(FULL)")
 	}
-	db, err := sql.Open("sqlite", "file:"+path+"?"+pragmas.Encode())
+	// The name is part of a URI: "#", "?" and "%" in a folder name would cut
+	// or change it.
+	name := strings.NewReplacer("%", "%25", "?", "%3F", "#", "%23").Replace(path)
+	db, err := sql.Open("sqlite", "file:"+name+"?"+pragmas.Encode())
 	if err != nil {
 		return nil, fmt.Errorf("sqlite: open %s: %w", path, err)
 	}

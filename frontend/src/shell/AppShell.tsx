@@ -9,6 +9,7 @@ import { useGlobalShortcuts } from "./shortcuts";
 import { TitleBar } from "./TitleBar";
 import { TopBar, type ShellDialog } from "./TopBar";
 import { OperationsDrawer } from "../features/operations/OperationsDrawer";
+import { DeployProvider, useDeploy } from "../features/deploy/DeployContext";
 import { useRefresh } from "../bridge/use-backend-query";
 
 const SIDEBAR_KEY = "mo.sidebar.collapsed";
@@ -32,6 +33,14 @@ function writeCollapsed(value: boolean) {
 
 /** Shell of ui/00 §2: title bar, sectioned sidebar, top bar, content. */
 export function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <DeployProvider>
+      <Shell>{children}</Shell>
+    </DeployProvider>
+  );
+}
+
+function Shell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
   const { route, navigate } = useNavigation();
   const { refresh } = useRefresh();
@@ -41,7 +50,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [operationsOpen, setOperationsOpen] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog | null>(null);
 
-  useGlobalShortcuts({ onCommandPalette: () => setDialog("palette"), onRefresh: refresh });
+  const deploy = useDeploy();
+  useGlobalShortcuts({ onCommandPalette: () => setDialog("palette"), onRefresh: refresh, onDeploy: () => void deploy.deploy() });
 
   const offered = workspace.status === "ready" ? workspace.data : null;
   const sections: SidebarSection[] = buildSections(offered?.items).map((section) => ({

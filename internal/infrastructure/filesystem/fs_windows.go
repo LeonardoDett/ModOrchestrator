@@ -3,12 +3,34 @@
 package filesystem
 
 import (
+	"errors"
 	"path/filepath"
 	"strconv"
 	"strings"
 
 	"golang.org/x/sys/windows"
+
+	"modorchestrator/internal/core/application/ports"
 )
+
+// failureKind maps Windows error numbers to the port's failure kinds.
+func failureKind(err error) error {
+	var errno windows.Errno
+	if !errors.As(err, &errno) {
+		return nil
+	}
+	switch errno {
+	case windows.ERROR_SHARING_VIOLATION, windows.ERROR_LOCK_VIOLATION, windows.ERROR_USER_MAPPED_FILE:
+		return ports.ErrFileLocked
+	case windows.ERROR_DISK_FULL, windows.ERROR_HANDLE_DISK_FULL:
+		return ports.ErrDiskFull
+	case windows.ERROR_FILENAME_EXCED_RANGE, windows.ERROR_BUFFER_OVERFLOW:
+		return ports.ErrPathTooLong
+	case windows.ERROR_ACCESS_DENIED, windows.ERROR_PRIVILEGE_NOT_HELD:
+		return ports.ErrPermission
+	}
+	return nil
+}
 
 // longThreshold is where the classic MAX_PATH limit starts to bite.
 const longThreshold = 240
@@ -55,6 +77,23 @@ func volumeOf(path string) (string, error) {
 		return "", err
 	}
 	return windows.UTF16ToString(buf), nil
+}
+
+// volumeFormat names the filesystem of the volume ("NTFS").
+func volumeFormat(path string) (string, error) {
+	root, err := volumeOf(path)
+	if err != nil {
+		return "", err
+	}
+	p, err := windows.UTF16PtrFromString(root)
+	if err != nil {
+		return "", err
+	}
+	name := make([]uint16, windows.MAX_PATH+1)
+	if err := windows.GetVolumeInformation(p, nil, 0, nil, nil, nil, &name[0], uint32(len(name))); err != nil {
+		return "", err
+	}
+	return windows.UTF16ToString(name), nil
 }
 
 func freeSpace(path string) (int64, error) {

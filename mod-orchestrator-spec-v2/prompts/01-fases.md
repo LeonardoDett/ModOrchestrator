@@ -143,6 +143,6 @@ Testes de interrupção, corrupção, permissões, arquivos travados, volumes, c
 
 ```text
 Aplique prompts/00-protocolo.md. Fase: F15.
-Leia: plano-de-desenvolvimento.md › F15, references/vortex/VORTEX-12 (checklist de paridade), core/12 (itens "(verificar)").
+Leia: plano-de-desenvolvimento.md › F15, plano-de-publicacao.md, references/vortex/VORTEX-12 (checklist de paridade), core/12 (itens "(verificar)").
 Empacotamento, assinatura, atualização opt-in, notas de versão, checklist de paridade marcado item a item.
 ```

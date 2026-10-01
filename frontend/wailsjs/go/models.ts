@@ -596,6 +596,363 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class DeployBlockedDTO {
+	    location: LocationDTO;
+	    reason: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployBlockedDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.location = this.convertValues(source["location"], LocationDTO);
+	        this.reason = source["reason"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class DeployChangeDTO {
+	    location: LocationDTO;
+	    kind: string;
+	    mod?: string;
+	    modName?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployChangeDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.location = this.convertValues(source["location"], LocationDTO);
+	        this.kind = source["kind"];
+	        this.mod = source["mod"];
+	        this.modName = source["modName"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class DeployFailureDTO {
+	    location: LocationDTO;
+	    action?: string;
+	    code: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployFailureDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.location = this.convertValues(source["location"], LocationDTO);
+	        this.action = source["action"];
+	        this.code = source["code"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class DeployFallbackDTO {
+	    key: string;
+	    target: string;
+	    from: string;
+	    to: string;
+	    count: number;
+	    sample: LocationDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployFallbackDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.key = source["key"];
+	        this.target = source["target"];
+	        this.from = source["from"];
+	        this.to = source["to"];
+	        this.count = source["count"];
+	        this.sample = this.convertValues(source["sample"], LocationDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class DeployMethodDTO {
+	    method: string;
+	    available: boolean;
+	    reason?: string;
+	    preferred: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployMethodDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.method = source["method"];
+	        this.available = source["available"];
+	        this.reason = source["reason"];
+	        this.preferred = source["preferred"];
+	    }
+	}
+	export class DeploySummaryDTO {
+	    create: number;
+	    keep: number;
+	    replace: number;
+	    remove: number;
+	    backupAndCreate: number;
+	    restoreBackup: number;
+	    mkdir: number;
+	    removeDir: number;
+	    extraBytes: number;
+	    decisions: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeploySummaryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.create = source["create"];
+	        this.keep = source["keep"];
+	        this.replace = source["replace"];
+	        this.remove = source["remove"];
+	        this.backupAndCreate = source["backupAndCreate"];
+	        this.restoreBackup = source["restoreBackup"];
+	        this.mkdir = source["mkdir"];
+	        this.removeDir = source["removeDir"];
+	        this.extraBytes = source["extraBytes"];
+	        this.decisions = source["decisions"];
+	    }
+	}
+	export class DeployPlanDTO {
+	    instance: string;
+	    operation?: string;
+	    kind: string;
+	    summary: DeploySummaryDTO;
+	    changes: DeployChangeDTO[];
+	    blocked: DeployBlockedDTO[];
+	    fallbacks: DeployFallbackDTO[];
+	    changeCount: number;
+	    blockedCount: number;
+	    empty: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployPlanDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.instance = source["instance"];
+	        this.operation = source["operation"];
+	        this.kind = source["kind"];
+	        this.summary = this.convertValues(source["summary"], DeploySummaryDTO);
+	        this.changes = this.convertValues(source["changes"], DeployChangeDTO);
+	        this.blocked = this.convertValues(source["blocked"], DeployBlockedDTO);
+	        this.fallbacks = this.convertValues(source["fallbacks"], DeployFallbackDTO);
+	        this.changeCount = source["changeCount"];
+	        this.blockedCount = source["blockedCount"];
+	        this.empty = source["empty"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ForeignFindingDTO {
+	    kind: string;
+	    target?: string;
+	    name: string;
+	    instance?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ForeignFindingDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.kind = source["kind"];
+	        this.target = source["target"];
+	        this.name = source["name"];
+	        this.instance = source["instance"];
+	    }
+	}
+	export class ProfileRefDTO {
+	    id: string;
+	    name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ProfileRefDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	    }
+	}
+	export class DeployStatusDTO {
+	    instance: string;
+	    kind: string;
+	    reason: string;
+	    activeProfile: ProfileRefDTO;
+	    appliedProfile?: ProfileRefDTO;
+	    appliedAt?: string;
+	    method: string;
+	    entries: number;
+	    busy?: string;
+	    pendingDecision?: string;
+	    externalChanges: number;
+	    foreign: ForeignFindingDTO[];
+	    failures: DeployFailureDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployStatusDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.instance = source["instance"];
+	        this.kind = source["kind"];
+	        this.reason = source["reason"];
+	        this.activeProfile = this.convertValues(source["activeProfile"], ProfileRefDTO);
+	        this.appliedProfile = this.convertValues(source["appliedProfile"], ProfileRefDTO);
+	        this.appliedAt = source["appliedAt"];
+	        this.method = source["method"];
+	        this.entries = source["entries"];
+	        this.busy = source["busy"];
+	        this.pendingDecision = source["pendingDecision"];
+	        this.externalChanges = source["externalChanges"];
+	        this.foreign = this.convertValues(source["foreign"], ForeignFindingDTO);
+	        this.failures = this.convertValues(source["failures"], DeployFailureDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	export class DeployVerifyDTO {
+	    count: number;
+	    changes: DeployChangeDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new DeployVerifyDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.count = source["count"];
+	        this.changes = this.convertValues(source["changes"], DeployChangeDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class DiscoveredGameDTO {
 	    gameId: string;
 	    gameName: string;
@@ -752,6 +1109,7 @@ export namespace bridge {
 	        this.backupStore = source["backupStore"];
 	    }
 	}
+	
 	export class SupportedGameDTO {
 	    gameId: string;
 	    gameName: string;
@@ -1876,6 +2234,7 @@ export namespace bridge {
 	}
 	
 	
+	
 	export class QueueItemDTO {
 	    operationId: string;
 	    kind: string;
@@ -2196,6 +2555,34 @@ export namespace bridge {
 	        this.createdAt = source["createdAt"];
 	        this.enabled = source["enabled"];
 	        this.mods = source["mods"];
+	    }
+	}
+	export class StagingPreviewDTO {
+	    from: string;
+	    to: string;
+	    bytes: number;
+	    free: number;
+	    deployed: boolean;
+	    sameVolume: boolean;
+	    hardlinkAfter: boolean;
+	    problem?: string;
+	    reason?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new StagingPreviewDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.from = source["from"];
+	        this.to = source["to"];
+	        this.bytes = source["bytes"];
+	        this.free = source["free"];
+	        this.deployed = source["deployed"];
+	        this.sameVolume = source["sameVolume"];
+	        this.hardlinkAfter = source["hardlinkAfter"];
+	        this.problem = source["problem"];
+	        this.reason = source["reason"];
 	    }
 	}
 	

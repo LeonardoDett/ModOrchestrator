@@ -213,6 +213,128 @@ export interface Backend {
   markConflictsReviewed(instance: string, pairs: { a: string; b: string }[]): Promise<void>;
   previewPairDecisions(instance: string, decisions: PairDecision[]): Promise<RulePreview>;
   decidePairs(instance: string, decisions: PairDecision[]): Promise<void>;
+  // Deploy and purge (F7, core/04)
+  deployStatus(instance: string): Promise<DeployStatus>;
+  previewDeploy(instance: string, purge: boolean): Promise<DeployPlan>;
+  deploy(instance: string): Promise<string>;
+  purge(instance: string): Promise<string>;
+  reconcileDeploy(instance: string): Promise<string>;
+  cancelDeploy(instance: string): Promise<boolean>;
+  pendingDeployDecision(instance: string): Promise<DeployPlan | null>;
+  resolveDeployDecision(instance: string, operation: string, acceptFallbacks: string[]): Promise<void>;
+  cancelDeployDecision(instance: string, operation: string): Promise<void>;
+  verifyDeployment(instance: string): Promise<DeployVerify>;
+  deployMethods(instance: string): Promise<DeployMethod[]>;
+  changeDeployMethod(instance: string, method: string): Promise<string>;
+  previewMoveStaging(instance: string, path: string): Promise<StagingPreview>;
+  moveStaging(instance: string, path: string): Promise<string>;
+  listInstanceSettings(instance: string): Promise<Setting[]>;
+  setInstanceSetting(instance: string, key: string, value: string): Promise<void>;
+}
+
+// --- Deploy (internal/bridge/deployment.go). Status and plans are
+// calculated by the backend; the UI shows them (D021). ---
+
+export type DeployStatusKind = "never_deployed" | "in_sync" | "pending" | "blocked" | "failed" | "unknown";
+
+export interface DeployFailure {
+  location: FileLocation;
+  action?: string;
+  code: string;
+}
+
+export interface ProfileRef {
+  id: string;
+  name: string;
+}
+
+export interface DeployStatus {
+  instance: string;
+  kind: DeployStatusKind;
+  reason: string;
+  activeProfile: ProfileRef;
+  appliedProfile?: ProfileRef;
+  appliedAt?: string;
+  method: string;
+  entries: number;
+  /** Work holding the instance ("deploy", "import"...). */
+  busy?: string;
+  /** Deploy waiting at await_decision. */
+  pendingDecision?: string;
+  externalChanges: number;
+  foreign: ForeignFinding[];
+  failures: DeployFailure[];
+}
+
+export interface DeploySummary {
+  create: number;
+  keep: number;
+  replace: number;
+  remove: number;
+  backupAndCreate: number;
+  restoreBackup: number;
+  mkdir: number;
+  removeDir: number;
+  extraBytes: number;
+  decisions: number;
+}
+
+export interface DeployChange {
+  location: FileLocation;
+  kind: string;
+  mod?: string;
+  modName?: string;
+}
+
+export interface DeployBlocked {
+  location: FileLocation;
+  reason: string;
+}
+
+export interface DeployFallback {
+  key: string;
+  target: string;
+  from: string;
+  to: string;
+  count: number;
+  sample: FileLocation[];
+}
+
+export interface DeployPlan {
+  instance: string;
+  operation?: string;
+  kind: "deploy" | "purge";
+  summary: DeploySummary;
+  changes: DeployChange[];
+  blocked: DeployBlocked[];
+  fallbacks: DeployFallback[];
+  changeCount: number;
+  blockedCount: number;
+  empty: boolean;
+}
+
+export interface DeployVerify {
+  count: number;
+  changes: DeployChange[];
+}
+
+export interface DeployMethod {
+  method: "hardlink" | "symlink" | "copy";
+  available: boolean;
+  reason?: string;
+  preferred: boolean;
+}
+
+export interface StagingPreview {
+  from: string;
+  to: string;
+  bytes: number;
+  free: number;
+  deployed: boolean;
+  sameVolume: boolean;
+  hardlinkAfter: boolean;
+  problem?: string;
+  reason?: string;
 }
 
 // --- Games (internal/bridge/dto_games.go) ---

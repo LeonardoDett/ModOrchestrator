@@ -165,12 +165,12 @@ var _ ports.DeploymentState = DeploymentState{}
 // NewDeploymentState returns the reader.
 func NewDeploymentState(db *sql.DB) DeploymentState { return DeploymentState{db: db} }
 
-// Deployed reports whether a manifest with entries applied exists. A purge
-// records an empty fingerprint and counts as not deployed.
+// Deployed reports whether the manager has anything in the game: a manifest
+// with entries. A complete purge leaves none.
 func (d DeploymentState) Deployed(ctx context.Context, id game.InstanceID) (bool, error) {
 	var n int
 	err := d.db.QueryRowContext(ctx,
-		`SELECT COUNT(*) FROM deployment_manifests WHERE instance_id = ? AND fingerprint <> ''`, string(id)).Scan(&n)
+		`SELECT COUNT(*) FROM deployment_manifests WHERE instance_id = ? AND entry_count > 0`, string(id)).Scan(&n)
 	return n > 0, err
 }
 

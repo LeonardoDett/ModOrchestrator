@@ -125,6 +125,11 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `order_violates_rules`, `rule_would_create_cycle`, `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `mod_not_found`, `separator_not_found` | ordem e regras (core/05 §7, D069) | `cycle` (nomes, "A → B → A"), `count` |
 | `order_history_stale`, `order_nothing_to_undo` | reverter/desfazer mudança de ordem (D070) | — |
 | `override_not_provider`, `override_nothing_selected`, `location_invalid` | escolha de vencedor / ocultar arquivo (core/05 §7, D073) | `mod`, `path` |
+| `staging_missing`, `target_unavailable`, `foreign_deployment`, `deploy_interrupted`, `deploy_needs_decision`, `rule_cycle`, `disk_full` | precondições e decisões do deploy/purge (core/04 §4–5, D078) | `kind`, `target`, `name`, `instance`, `needed`, `free`, `folder` |
+| `deploy_failed` | deploy/purge terminou com Locations não aplicadas | `count`, `first`, `reason`, `locations`, `codes` |
+| `file_locked`, `permission_denied`, `path_too_long`, `io_error`, `verify_failed`, `external_change_raced` | falha de uma Location (motivo em `deploy_failed`) | — |
+| `nothing_to_purge`, `purge_incomplete`, `nothing_to_reconcile`, `method_unchanged`, `staging_unchanged` | purge, reconciliação, troca de método e mover staging (D078) | `instance`, `method`, `count` |
+| `folders_invalid` (motivos `not_absolute`, `overlap`, `other_instance`, `not_directory`) | nova pasta de staging inválida (core/04 §10) | `folder`, `reason` |
 
 Erros de operação (`OperationError`) também carregam `params` desde a F4 (D067), para a UI traduzir a mensagem com os mesmos parâmetros.
 

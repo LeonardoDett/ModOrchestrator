@@ -4,6 +4,7 @@ import { useBackend } from "../bridge/backend-context";
 import { useOperations } from "../bridge/queries";
 import { useI18n } from "../i18n/i18n";
 import { ProfileSelect } from "../features/profiles/ProfileSelect";
+import { DeployStatusButton } from "../features/deploy/DeployStatusButton";
 import { PALETTE_KEYS } from "./shortcuts";
 
 export type ShellDialog = "palette" | "shortcuts" | "about";
@@ -16,8 +17,8 @@ interface TopBarProps {
 }
 
 /**
- * Page top bar (ui/00 §2.3), with the profile select of the active game
- * (F5). Slots that depend on later phases (deploy status F7, problems and
+ * Page top bar (ui/00 §2.3), with the profile select and the deploy status
+ * of the active game. Slots that depend on later phases (problems and
  * notifications F9, provider account V2) keep their place but render
  * nothing until they exist (anti-pattern 18).
  */
@@ -35,7 +36,9 @@ export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: Top
       <div data-slot="profile">
         <ProfileSelect />
       </div>
-      <div data-slot="deploy-status" />
+      <div data-slot="deploy-status">
+        <DeployStatusButton />
+      </div>
       <div className="flex-1" />
       {!backend.connected ? (
         <Badge tone="warning" className="gap-1" title={t("app.offlineHint")}>
