@@ -420,6 +420,10 @@ func (a *App) PreviewOrderRule(instance, winner, loser string) (RulePreviewDTO, 
 	if err != nil {
 		return RulePreviewDTO{}, a.fail("preview rule", err, nil)
 	}
+	return toRulePreviewDTO(p), nil
+}
+
+func toRulePreviewDTO(p profiles.RulePreview) RulePreviewDTO {
 	out := RulePreviewDTO{Cycle: toNamed(p.Cycle), Profiles: []ProfileMovesDTO{}}
 	for _, pm := range p.Profiles {
 		dto := ProfileMovesDTO{ProfileID: string(pm.Profile), Name: pm.Name, Moves: make([]ModMoveDTO, len(pm.Moves))}
@@ -432,7 +436,7 @@ func (a *App) PreviewOrderRule(instance, winner, loser string) (RulePreviewDTO, 
 		}
 		out.Profiles = append(out.Profiles, dto)
 	}
-	return out, nil
+	return out
 }
 
 // CreateOrderRule stores "winner wins loser" and applies it to every profile.

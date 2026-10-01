@@ -82,3 +82,31 @@ export function useModRules(instance: string) {
 export function useOrderHistory(instance: string) {
   return useBackendQuery(async (b) => (await b.orderHistory(instance)) ?? [], [instance]);
 }
+
+// --- Conflicts (F6). Calculated by the backend from profile + instance
+// (INV-CON-04); commands reread through useAction's refresh, imports and
+// removals through operation events (D021). ---
+
+export function useConflictPairs(instance: string, includeDisabled: boolean, search: string) {
+  return useBackendQuery((b) => b.conflictPairs(instance, includeDisabled, search), [instance, includeDisabled, search], { onOperationEvents: true });
+}
+
+export function useConflictPairDetail(instance: string, a: string, b: string, includeDisabled: boolean) {
+  return useBackendQuery((be) => be.conflictPairDetail(instance, a, b, includeDisabled), [instance, a, b, includeDisabled], { onOperationEvents: true });
+}
+
+export function useModConflicts(instance: string, mod: string) {
+  return useBackendQuery((b) => b.modConflicts(instance, mod), [instance, mod], { onOperationEvents: true });
+}
+
+export function useModConflictFiles(instance: string, mod: string, filter: string) {
+  return useBackendQuery((b) => b.modConflictFiles(instance, mod, filter, 0, 2000), [instance, mod, filter], { onOperationEvents: true });
+}
+
+export function useConflictIndicators(instance: string) {
+  return useBackendQuery(async (b) => (await b.conflictIndicators(instance)) ?? [], [instance], { onOperationEvents: true });
+}
+
+export function useRuleCycle(instance: string) {
+  return useBackendQuery((b) => b.ruleCycle(instance), [instance], { onOperationEvents: true });
+}

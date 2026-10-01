@@ -344,15 +344,86 @@ func (r *OverrideRepository) Get(ctx context.Context, instance game.InstanceID) 
 	if err != nil {
 		return nil, err
 	}
-	var d override.Data
-	if err := json.Unmarshal([]byte(data), &d); err != nil {
+	var doc overrideDoc
+	if err := json.Unmarshal([]byte(data), &doc); err != nil {
 		return nil, fmt.Errorf("sqlite: decode overrides: %w", err)
+	}
+	d := override.Data{Instance: instance}
+	for _, o := range doc.Overrides {
+		loc, err := locationOf(o.Target, o.Path)
+		if err != nil {
+			return nil, err
+		}
+		at, err := parseTime(o.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		d.Overrides = append(d.Overrides, override.FileOverride{Location: loc, Winner: mod.ID(o.Mod), CreatedAt: at})
+	}
+	for _, e := range doc.Exclusions {
+		loc, err := locationOf(e.Target, e.Path)
+		if err != nil {
+			return nil, err
+		}
+		at, err := parseTime(e.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		d.Exclusions = append(d.Exclusions, override.FileExclusion{Mod: mod.ID(e.Mod), Location: loc, CreatedAt: at})
+	}
+	for _, r := range doc.Reviews {
+		at, err := parseTime(r.ReviewedAt)
+		if err != nil {
+			return nil, err
+		}
+		d.Reviews = append(d.Reviews, override.ConflictReview{Pair: override.NewPair(mod.ID(r.A), mod.ID(r.B)), Contested: r.Contested, ReviewedAt: at})
 	}
 	return override.Restore(d)
 }
 
+// overrideDoc is the stored shape of an override set: locations are kept
+// as target + normalised path text (INV-ID-02), like installation files.
+type overrideDoc struct {
+	Overrides  []locRecord    `json:"overrides"`
+	Exclusions []locRecord    `json:"exclusions"`
+	Reviews    []reviewRecord `json:"reviews"`
+}
+
+type locRecord struct {
+	Mod       string `json:"mod"`
+	Target    string `json:"target"`
+	Path      string `json:"path"`
+	CreatedAt string `json:"createdAt"`
+}
+
+type reviewRecord struct {
+	A          string `json:"a"`
+	B          string `json:"b"`
+	Contested  string `json:"contested"`
+	ReviewedAt string `json:"reviewedAt"`
+}
+
+func locationOf(target, path string) (game.Location, error) {
+	p, err := relpath.Parse(path)
+	if err != nil {
+		return game.Location{}, fmt.Errorf("sqlite: stored location %q: %w", path, err)
+	}
+	return game.Location{Target: game.TargetID(target), Path: p}, nil
+}
+
 func (r *OverrideRepository) Save(ctx context.Context, s *override.Set) error {
-	b, err := json.Marshal(s.Data())
+	d := s.Data()
+	doc := overrideDoc{Overrides: []locRecord{}, Exclusions: []locRecord{}, Reviews: []reviewRecord{}}
+	for _, o := range d.Overrides {
+		doc.Overrides = append(doc.Overrides, locRecord{Mod: string(o.Winner), Target: string(o.Location.Target), Path: o.Location.Path.String(), CreatedAt: formatTime(o.CreatedAt)})
+	}
+	for _, e := range d.Exclusions {
+		doc.Exclusions = append(doc.Exclusions, locRecord{Mod: string(e.Mod), Target: string(e.Location.Target), Path: e.Location.Path.String(), CreatedAt: formatTime(e.CreatedAt)})
+	}
+	for _, rv := range d.Reviews {
+		doc.Reviews = append(doc.Reviews, reviewRecord{A: string(rv.Pair.A), B: string(rv.Pair.B), Contested: rv.Contested, ReviewedAt: formatTime(rv.ReviewedAt)})
+	}
+	b, err := json.Marshal(doc)
 	if err != nil {
 		return err
 	}

@@ -181,7 +181,8 @@ describe("Games screen and assistant (F3)", () => {
       expect(within(nav).queryByRole("button", { name: reserved })).not.toBeInTheDocument();
     }
     await user.click(within(nav).getByRole("button", { name: "Conflicts" }));
-    expect(screen.getByText("Conflicts is not available yet")).toBeInTheDocument();
+    // Conflicts is a real screen since F6 (no placeholder).
+    expect(screen.queryByText("Conflicts is not available yet")).not.toBeInTheDocument();
   });
 
   it("refuses a wrong folder with the reason and keeps Next disabled", async () => {

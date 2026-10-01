@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { ChevronDown, FolderOpen, FolderPlus, FolderTree, History, Info, MoreHorizontal, PackagePlus, RotateCcw, Scale, Trash2 } from "lucide-react";
 import {
+  Alert,
   Button,
   ButtonGroup,
   ContextMenu,
@@ -19,8 +20,9 @@ import {
   type DataTableSort,
 } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useCategories, useImportQueue, useModList, useModOrder } from "../bridge/queries";
-import type { EntryRef, InstanceFolder, ModRow, QueueItem, Separator } from "../bridge/types";
+import { useCategories, useConflictIndicators, useImportQueue, useModList, useModOrder, useRuleCycle } from "../bridge/queries";
+import type { ConflictIndicator, EntryRef, FileLocation, InstanceFolder, ModRow, QueueItem, Separator } from "../bridge/types";
+import { ConflictEditorDialog, CycleDialog, FileWinnersDialog } from "../features/conflicts/ConflictDialogs";
 import { useSettings } from "../app/settings-context";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
@@ -33,6 +35,23 @@ import { categoryOptions, matchesStatus, type StatusFilter } from "../features/m
 import { entryOf, modRows, moveRequestFor, orderedRows, type ListRow } from "../features/mods/mod-order";
 import { useI18n } from "../i18n/i18n";
 import { PageBody } from "./PageBody";
+
+type ConflictFilter = "all" | "any" | "unreviewed" | "fully_overwritten";
+const CONFLICT_FILTERS = ["all", "any", "unreviewed", "fully_overwritten"] as const;
+
+/** "Conflitos ▾" filter (ui/telas/mods.md §5.1) over the backend indicators. */
+function matchesConflict(c: ConflictIndicator | undefined, filter: ConflictFilter) {
+  switch (filter) {
+    case "all":
+      return true;
+    case "any":
+      return Boolean(c && c.indicator !== "none");
+    case "unreviewed":
+      return Boolean(c && c.unreviewed > 0);
+    case "fully_overwritten":
+      return c?.indicator === "fully_overwritten";
+  }
+}
 
 /** Elements with this property receive native file drops (main.go DragAndDrop). */
 export const DROP_TARGET = { "--wails-drop-target": "drop" } as CSSProperties;
@@ -54,6 +73,8 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const queue = useImportQueue(instance);
   const categories = useCategories(instance);
   const { move, dialog: refusalDialog } = useMoveMods(instance);
+  const indicators = useConflictIndicators(instance);
+  const cycle = useRuleCycle(instance);
 
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
@@ -72,6 +93,10 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const [separatorEdit, setSeparatorEdit] = useState<{ separator?: Separator; before?: EntryRef } | null>(null);
   const [rulesFor, setRulesFor] = useState<{ mod: string | null } | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [conflictFilter, setConflictFilter] = useState<ConflictFilter>("all");
+  const [editingConflicts, setEditingConflicts] = useState<string | null>(null);
+  const [filesPair, setFilesPair] = useState<{ a: string; b: string; focus?: FileLocation } | null>(null);
+  const [cycleOpen, setCycleOpen] = useState(false);
 
   // Native drops (files and folders) go to the import queue (§8).
   useEffect(() => backend.onFileDrop((paths) => void run(() => backend.importFiles(instance, paths))), [backend, run, instance]);
@@ -80,10 +105,14 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const modOrder = order.status === "ready" ? order.data : null;
   const items = queue.status === "ready" ? queue.data : [];
   const lastOnly = get("ui.hideTopLevelCategory")?.value === "true";
+  const conflicts = useMemo<ReadonlyMap<string, ConflictIndicator>>(
+    () => new Map(indicators.status === "ready" ? indicators.data.map((c) => [c.modId, c]) : []),
+    [indicators],
+  );
 
   // Separators and dragging exist only in plain priority order with nothing
   // hidden between rows (ui/telas/mods.md §5.2).
-  const filtered = query.trim() !== "" || status !== "all" || category !== "";
+  const filtered = query.trim() !== "" || status !== "all" || category !== "" || conflictFilter !== "all";
   const byPriority = sort?.columnId === PRIORITY_SORT.columnId && sort.direction === "asc" && group === "none";
   const reorderable = byPriority && !filtered && modOrder !== null;
 
@@ -94,11 +123,12 @@ export function ModsWorkspace({ instance }: { instance: string }) {
     const matching = rows.filter(
       (r) =>
         matchesStatus(r, status) &&
+        matchesConflict(conflicts.get(r.id), conflictFilter) &&
         (category === "" || (category === "\u0000none" ? r.category === "" : r.category === category)) &&
         (!text || r.name.toLowerCase().includes(text) || r.author.toLowerCase().includes(text) || r.source.toLowerCase().includes(text)),
     );
-    return sortRows(modRows(matching, modOrder), sort);
-  }, [rows, modOrder, reorderable, query, status, category, sort]);
+    return sortRows(modRows(matching, modOrder), sort, conflicts);
+  }, [rows, modOrder, reorderable, query, status, category, sort, conflicts, conflictFilter]);
 
   const selectedRows = rows.filter((r) => selected.has(r.id));
   const ids = selectedRows.map((r) => r.id);
@@ -132,7 +162,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
     (sep: Separator) => void run(() => backend.updateSeparator(instance, { ...sep, collapsed: !sep.collapsed })),
     [run, backend, instance],
   );
-  const columns = useModColumns(onToggle, onToggleSeparator, lastOnly);
+  const columns = useModColumns(onToggle, onToggleSeparator, lastOnly, conflicts, setEditingConflicts);
   const importFiles = () => void run(() => backend.pickImportFiles(instance, t("mods.import.pickFiles")));
   const importFolder = () => void run(() => backend.pickImportFolder(instance, t("mods.import.pickFolder")));
   const openFolder = (folder: InstanceFolder) => void run(() => backend.openInstanceFolder(instance, folder));
@@ -172,6 +202,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       { id: "top", label: t("mods.action.moveTop"), disabled: !entry, onSelect: () => entry && moveTo([entry], "top") },
       { id: "bottom", label: t("mods.action.moveBottom"), disabled: !entry, onSelect: () => entry && moveTo([entry], "bottom") },
       { id: "moveTo", label: t("mods.action.moveTo"), disabled: !entry, onSelect: () => entry && setMovingTo([entry]) },
+      { id: "conflicts", label: t("mods.action.editConflicts"), disabled: row.state !== "installed", onSelect: () => setEditingConflicts(row.id) },
       { id: "rules", label: t("mods.action.rules"), disabled: row.state !== "installed", onSelect: () => setRulesFor({ mod: row.id }) },
       { id: "separator", label: t("mods.action.separatorAbove"), disabled: !entry, onSelect: () => entry && setSeparatorEdit({ before: entry }) },
       { id: "open", label: t("mods.action.openFolder"), disabled: row.state !== "installed", onSelect: () => void run(() => backend.openModFolder(row.id)) },
@@ -265,6 +296,18 @@ export function ModsWorkspace({ instance }: { instance: string }) {
 
         <ImportQueuePanel items={items} onDecide={setDeciding} />
 
+        {cycle.status === "ready" && cycle.data ? (
+          <Alert.Root variant="danger">
+            <Alert.Title>{t("conflicts.cycle.bannerTitle")}</Alert.Title>
+            <Alert.Description>
+              {t("conflicts.cycle.banner", { cycle: [...cycle.data.mods, cycle.data.mods[0]!].map((m) => m.name).join(" → ") })}
+            </Alert.Description>
+            <Button size="sm" variant="outline" onClick={() => setCycleOpen(true)}>
+              {t("conflicts.cycle.open")}
+            </Button>
+          </Alert.Root>
+        ) : null}
+
         {mods.status === "error" ? <ErrorAlert title="mods.loadError" error={mods.error} onRetry={mods.reload} /> : null}
         {order.status === "error" ? <ErrorAlert title="mods.loadError" error={order.error} onRetry={order.reload} /> : null}
         {mods.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
@@ -305,6 +348,12 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                       ]}
                     />
                   </Input.Root>
+                  <Input.Root value={conflictFilter} onChange={(v: string) => setConflictFilter(v as ConflictFilter)}>
+                    <Input.Select
+                      aria-label={t("mods.filter.conflicts")}
+                      options={CONFLICT_FILTERS.map((c) => ({ value: c, label: t(`mods.filter.conflicts.${c}`) }))}
+                    />
+                  </Input.Root>
                   <Input.Root value={group} onChange={setGroup}>
                     <Input.Select
                       aria-label={t("mods.filter.group")}
@@ -332,6 +381,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                     setQuery("");
                     setStatus("all");
                     setCategory("");
+                    setConflictFilter("all");
                   }}
                 >
                   {t("mods.reorder.reset")}
@@ -389,6 +439,8 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   reorderable={reorderable}
                   onRowsMove={onRowsMove}
                   categoryLastOnly={lastOnly}
+                  conflicts={conflicts}
+                  onOpenConflicts={setEditingConflicts}
                   density={density}
                   groupByCategory={group === "category"}
                   empty={
@@ -401,6 +453,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                           setQuery("");
                           setStatus("all");
                           setCategory("");
+                          setConflictFilter("all");
                         }}
                       >
                         {t("mods.filter.clear")}
@@ -409,7 +462,14 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   }
                 />
               </ContextMenu>
-              {inspectedRow ? <ModInspector instance={instance} id={inspectedRow.id} onClose={() => setInspected(null)} onRemove={setRemoving} /> : null}
+              {inspectedRow ? <ModInspector
+                  instance={instance}
+                  id={inspectedRow.id}
+                  onClose={() => setInspected(null)}
+                  onRemove={setRemoving}
+                  onEditConflicts={setEditingConflicts}
+                  onChooseWinner={setFilesPair}
+                /> : null}
             </div>
             {dropzone(false)}
           </>
@@ -431,6 +491,9 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       <SeparatorDialog instance={instance} editing={separatorEdit} onClose={() => setSeparatorEdit(null)} />
       <RulesDialog instance={instance} open={rulesFor !== null} mods={rows} focusMod={rulesFor?.mod ?? null} onClose={() => setRulesFor(null)} />
       <OrderHistoryDialog instance={instance} open={historyOpen} onClose={() => setHistoryOpen(false)} />
+      <ConflictEditorDialog instance={instance} mod={editingConflicts} onClose={() => setEditingConflicts(null)} onFiles={(a, b) => setFilesPair({ a, b })} />
+      <FileWinnersDialog instance={instance} pair={filesPair} onClose={() => setFilesPair(null)} />
+      <CycleDialog instance={instance} open={cycleOpen} onClose={() => setCycleOpen(false)} />
       {refusalDialog}
     </PageBody>
   );

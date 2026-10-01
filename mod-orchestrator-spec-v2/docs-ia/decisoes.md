@@ -521,3 +521,28 @@ Status: proposta (aguarda confirmação do usuário)
 8. **Transferir** na F5 oferece mods habilitados (sempre) e ordem; plugins aparecem com a F11. Comparar mostra os grupos de plugins e load order só quando há diferença (antes da F11 não há estado de plugin para comparar).
 9. **Profile "vazio"** copia também os separadores do profile ativo, junto com a ordem (core/07 §2 manda copiar a ordem para preservar posições).
 10. **Ciclo na UI** é exibido na direção das restrições ("A → B → A": cada um vem antes do seguinte), como o motor o encontra.
+
+## D073 — Mecânica do cálculo de conflitos (F6)
+Status: vigente (detalha core/05 §5, INV-CON-01..04)
+
+- **Índice incremental**: o serviço `application/conflicts` mantém em memória, por instância, o footprint de cada Installation atual indexado por Location (`conflict.Index`). A cada consulta compara o `InstallationID` de cada mod com o indexado e só relê as Installations que mudaram; a avaliação de um profile visita só as Locations com 2+ fornecedores. É cache descartável (docs-ia/03 regra 2): um serviço novo recalcula o mesmo resultado (teste `TestConflictsAreRecalculable`). Medido: ~150 ms para 1.000 mods / 200.000 Locations após habilitar um mod (meta: 500 ms). `conflict.Calculate` continua como cálculo completo de vencedores para o estado desejado (F7) e o teste de propriedade garante que as duas formas concordam.
+- **Redundância**: hash SHA-256 (D063) do arquivo da staging só quando todos os fornecedores têm o mesmo tamanho, calculado em segundo plano e guardado em memória por `InstallationID` + caminho de origem. Até terminar, o conflito conta como não redundante e as consultas devolvem `pendingHashes`; a UI relê a cada 1,5 s enquanto houver pendentes (D021: o backend continua a fonte). Arquivo ilegível nunca é redundante.
+- **Obsoletos** (INV-CON-03): override é ignorado quando o vencedor está desabilitado (`disabled`), não fornece mais a Location ou a ocultou (`not_provider`) ou foi removido (`missing`); exclusão é obsoleta quando o mod foi removido ou não fornece mais a Location. Nada é apagado: a tela mostra a lista com "Remover"/"Reescolher" e o serviço deriva `override_stale` (warning), `conflicts_unreviewed` (info, desligável por `diagnostics.showUnreviewedConflicts`) e `mod_fully_overwritten` (info); a agregação com os demais checks é da F9.
+- **Escolher vencedor** exige mod habilitado que forneça a Location (`override_not_provider`); um lote cria um override por Location.
+- **Persistência** das intenções da instância: `instance_overrides.data_json` guarda Locations como `target` + caminho normalizado em texto (como os arquivos de Installation); a serialização direta de `game.Location` perdia o caminho (defeito da F1, sem dados reais afetados).
+- Códigos novos: `override_nothing_selected`, `location_invalid`. Eventos: `override.set`/`override.cleared`/`exclusion.set`/`exclusion.cleared` com `count` e o primeiro caminho; `conflict.reviewed` com `pairs` e `reason` (`user`, `rule`, `override`).
+
+## D074 — dettmann-ui na F6: lacuna L5 (Tree com seleção em lote e coluna extra)
+Status: vigente (executa D016; ui/03 L5)
+
+`Tree` ganhou `checkedIds`/`onCheckedIdsChange`, `renderEnd` e `labels`, todos opcionais (o uso existente não muda). A seleção guarda só folhas: pasta marcada = todas as folhas; parcial = `aria-checked="mixed"`; folhas desabilitadas nunca mudam por marcação de pasta. Lógica em `tree.model.ts` (`toggleTreeCheck`, `treeCheckState`, `treeLeafIds`), com testes. `FileBrowser` não foi usado: lista de arquivos separada da árvore não permite o select por nó. Consequência (D052): levar à cópia da lib do projeto Cayshin.
+
+## D075 — Comportamentos da F6 não fixados pela spec
+Status: proposta (aguarda confirmação do usuário)
+
+1. **Lista de pares é par a par**: uma Location com 3+ fornecedores aparece em cada par envolvido; "vencedor" do par é quem implanta mais Locations dele. A forma em grupo "B vence A, C" (ui/telas/conflicts.md §3) fica para quando houver demanda; o detalhe de cada arquivo já lista todos os fornecedores.
+2. **"Decidido por" do par** junta as resoluções por arquivo ignorando as redundantes: uma só → ela; várias → "misto"; só redundantes → "redundante".
+3. **Revisão automática** (core/05 §5.4) acontece ao salvar decisões de par (DLG-08 e ações da tela Conflicts) e ao escolher vencedor por arquivo (pares do vencedor com os outros fornecedores). Criar regra pelo diálogo "Gerenciar regras" (DLG-10) não revisa, por não partir de um conflito.
+4. **"Pela ordem (sem regra)"** no DLG-08 remove a regra do usuário entre os dois e desativa (não apaga) a de outra origem, como D072 item 3. Salvar o DLG-08 aplica todas as escolhas numa transação; se uma fecharia ciclo, nada é salvo e o ciclo é mostrado.
+5. **Busca** da tela Conflicts (nome de mod ou caminho) roda no backend; "Agrupar por Mod" agrupa os pares pelo vencedor.
+6. **Indicador "totalmente sobrescrito"** conta arquivos ocultados como não fornecidos: um mod que perde o que sobra e ocultou o resto é totalmente sobrescrito.

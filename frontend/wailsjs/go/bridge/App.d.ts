@@ -14,7 +14,15 @@ export function CancelOperation(arg1:string):Promise<boolean>;
 
 export function Categories(arg1:string):Promise<Array<bridge.CategoryDTO>>;
 
+export function ClearFileOverrides(arg1:string,arg2:Array<bridge.LocationDTO>):Promise<void>;
+
 export function CompareProfiles(arg1:string,arg2:string):Promise<bridge.ProfileComparisonDTO>;
+
+export function ConflictIndicators(arg1:string):Promise<Array<bridge.ConflictIndicatorDTO>>;
+
+export function ConflictPairDetail(arg1:string,arg2:string,arg3:string,arg4:boolean):Promise<bridge.ConflictPairDetailDTO>;
+
+export function ConflictPairs(arg1:string,arg2:boolean,arg3:string):Promise<bridge.ConflictPairsDTO>;
 
 export function CreateOrderRule(arg1:string,arg2:string,arg3:string):Promise<string>;
 
@@ -23,6 +31,8 @@ export function CreateProfile(arg1:string,arg2:string,arg3:string):Promise<strin
 export function CreateSeparator(arg1:string,arg2:string,arg3:string,arg4:bridge.AnchorDTO):Promise<string>;
 
 export function CreateSnapshot(arg1:string):Promise<string>;
+
+export function DecidePairs(arg1:string,arg2:Array<bridge.PairDecisionDTO>):Promise<void>;
 
 export function DeleteCategory(arg1:string,arg2:string):Promise<void>;
 
@@ -55,6 +65,12 @@ export function ListRecentOperations(arg1:number):Promise<Array<bridge.Operation
 export function LogTail(arg1:bridge.LogFilterDTO):Promise<Array<bridge.LogEntryDTO>>;
 
 export function ManageGame(arg1:bridge.SetupDTO):Promise<bridge.ManageResultDTO>;
+
+export function MarkConflictsReviewed(arg1:string,arg2:Array<bridge.PairRefDTO>):Promise<void>;
+
+export function ModConflictFiles(arg1:string,arg2:string,arg3:string,arg4:number,arg5:number):Promise<bridge.ModConflictFilesDTO>;
+
+export function ModConflicts(arg1:string,arg2:string):Promise<bridge.ModConflictsDTO>;
 
 export function ModDetails(arg1:string):Promise<bridge.ModDetailsDTO>;
 
@@ -90,6 +106,8 @@ export function PreviewModRemoval(arg1:string,arg2:Array<string>):Promise<bridge
 
 export function PreviewOrderRule(arg1:string,arg2:string,arg3:string):Promise<bridge.RulePreviewDTO>;
 
+export function PreviewPairDecisions(arg1:string,arg2:Array<bridge.PairDecisionDTO>):Promise<bridge.RulePreviewDTO>;
+
 export function ProfileList(arg1:string):Promise<Array<bridge.ProfileSummaryDTO>>;
 
 export function ProfileSnapshots(arg1:string):Promise<Array<bridge.SnapshotDTO>>;
@@ -112,6 +130,8 @@ export function RestoreSnapshot(arg1:string,arg2:string):Promise<bridge.RestoreR
 
 export function RevertOrderChange(arg1:string,arg2:string):Promise<void>;
 
+export function RuleCycle(arg1:string):Promise<bridge.RuleCycleDTO>;
+
 export function SaveCategory(arg1:string,arg2:bridge.CategoryDTO):Promise<string>;
 
 export function ScanGames(arg1:string):Promise<string>;
@@ -119,6 +139,10 @@ export function ScanGames(arg1:string):Promise<string>;
 export function SetActiveInstance(arg1:string):Promise<void>;
 
 export function SetAppSetting(arg1:string,arg2:string):Promise<void>;
+
+export function SetFileExclusions(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>,arg4:boolean):Promise<void>;
+
+export function SetFileOverrides(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>):Promise<void>;
 
 export function SetModAttributes(arg1:string,arg2:bridge.ModAttributesDTO):Promise<void>;
 

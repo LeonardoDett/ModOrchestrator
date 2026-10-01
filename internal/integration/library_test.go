@@ -18,6 +18,7 @@ import (
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
+	conflictsvc "modorchestrator/internal/core/application/conflicts"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
@@ -46,6 +47,8 @@ type env struct {
 	dir      string
 	lib      *library.Service
 	prof     *profilesvc.Service
+	conf     *conflictsvc.Service
+	newConf  func() *conflictsvc.Service
 	games    *games.Service
 	ops      *operations.Service
 	mods     *sqlite.ModRepository
@@ -99,6 +102,17 @@ func newEnv(t *testing.T) *env {
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
 		Locks:    locks, IDs: ids, Clock: clock,
 	})
+	e.newConf = func() *conflictsvc.Service {
+		return conflictsvc.NewService(conflictsvc.Deps{
+			Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods, Installations: sqlite.NewInstallationRepository(db),
+			Profiles: profiles, Rules: e.rules, Overrides: sqlite.NewOverrideRepository(db), UoW: sqlite.NewUnitOfWork(db),
+			Publisher: bus, FS: fsys, Hasher: hashing.SHA256{},
+			Settings:   appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
+			OrderRules: e.prof, IDs: ids, Clock: clock,
+		})
+	}
+	e.conf = e.newConf()
+	t.Cleanup(func() { e.conf.Wait() })
 
 	root := filepath.Join(dir, "Skyrim")
 	e.write(filepath.Join(root, "SkyrimSE.exe"), "exe")

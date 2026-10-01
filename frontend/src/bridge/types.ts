@@ -200,6 +200,19 @@ export interface Backend {
   orderHistory(instance: string): Promise<OrderChange[]>;
   revertOrderChange(instance: string, id: string): Promise<void>;
   undoOrderChange(instance: string): Promise<void>;
+  // Conflicts (F6, ui/telas/conflicts.md §6)
+  conflictPairs(instance: string, includeDisabled: boolean, search: string): Promise<ConflictPairs>;
+  conflictPairDetail(instance: string, a: string, b: string, includeDisabled: boolean): Promise<ConflictPairDetail>;
+  modConflicts(instance: string, mod: string): Promise<ModConflicts>;
+  modConflictFiles(instance: string, mod: string, filter: string, offset: number, limit: number): Promise<ModConflictFiles>;
+  conflictIndicators(instance: string): Promise<ConflictIndicator[]>;
+  ruleCycle(instance: string): Promise<RuleCycle | null>;
+  setFileOverrides(instance: string, winner: string, locations: FileLocation[]): Promise<void>;
+  clearFileOverrides(instance: string, locations: FileLocation[]): Promise<void>;
+  setFileExclusions(instance: string, mod: string, locations: FileLocation[], hidden: boolean): Promise<void>;
+  markConflictsReviewed(instance: string, pairs: { a: string; b: string }[]): Promise<void>;
+  previewPairDecisions(instance: string, decisions: PairDecision[]): Promise<RulePreview>;
+  decidePairs(instance: string, decisions: PairDecision[]): Promise<void>;
 }
 
 // --- Games (internal/bridge/dto_games.go) ---
@@ -601,4 +614,148 @@ export interface OrderChange {
   revertOf?: string;
   reverted: boolean;
   revertible: boolean;
+}
+
+// --- Conflicts (internal/bridge/conflicts.go, core/05 §5) ---
+
+export interface FileLocation {
+  target: string;
+  path: string;
+}
+
+export interface ConflictMod {
+  id: string;
+  name: string;
+  priority: number;
+  enabled: boolean;
+}
+
+export interface PairRule {
+  id: string;
+  winner: string;
+  source: string;
+  disabled: boolean;
+}
+
+/** How a pair is decided as a whole (ui/telas/conflicts.md §3). */
+export type ConflictDecision = "order" | "rule" | "override" | "mixed" | "redundant";
+/** How the winner of one location was decided (core/05 §5.1). */
+export type ConflictResolution = "order" | "rule" | "override" | "redundant";
+
+export interface ConflictPair {
+  a: ConflictMod;
+  b: ConflictMod;
+  /** The mod deploying most of the pair's files. */
+  winner: string;
+  files: number;
+  winsA: number;
+  winsB: number;
+  redundant: number;
+  decision: ConflictDecision;
+  reviewed: boolean;
+  needsReview: boolean;
+  potential: boolean;
+  rule?: PairRule;
+}
+
+export interface ConflictTotals {
+  pairs: number;
+  unreviewed: number;
+  override: number;
+  redundant: number;
+  rule: number;
+  order: number;
+  mixed: number;
+}
+
+export interface StaleIntent {
+  kind: "override" | "exclusion";
+  location: FileLocation;
+  mod: ConflictMod;
+  reason: "disabled" | "not_provider" | "missing";
+  /** Enabled providers of the location now (ascending priority), for "Reescolher". */
+  rivals: ConflictMod[];
+}
+
+export interface ConflictPairs {
+  pairs: ConflictPair[];
+  totals: ConflictTotals;
+  stale: StaleIntent[];
+  pendingHashes: number;
+}
+
+export interface ConflictProvider extends ConflictMod {
+  size: number;
+  hash?: string;
+}
+
+export interface ConflictFile {
+  location: FileLocation;
+  /** Ascending priority. */
+  providers: ConflictProvider[];
+  winner: string;
+  resolution: ConflictResolution;
+  override?: string;
+}
+
+export interface ConflictPairDetail {
+  pair: ConflictPair;
+  files: ConflictFile[];
+  pendingHashes: number;
+}
+
+export interface ConflictOpponent {
+  opponent: ConflictMod;
+  files: number;
+  wins: number;
+  loses: number;
+  redundant: number;
+  decision: ConflictDecision;
+  reviewed: boolean;
+  needsReview: boolean;
+  rule?: PairRule;
+}
+
+export type ConflictIndicatorKind = "none" | "wins_all" | "loses_all" | "mixed" | "fully_overwritten" | "redundant_only";
+
+export interface ModConflicts {
+  mod: ConflictMod;
+  indicator: ConflictIndicatorKind;
+  opponents: ConflictOpponent[];
+}
+
+export type ConflictFileState = "none" | "wins" | "loses" | "redundant" | "hidden";
+
+export interface ModConflictFile {
+  location: FileLocation;
+  size: number;
+  state: ConflictFileState;
+  winner?: ConflictMod;
+  opponents: ConflictMod[];
+  overridden: boolean;
+}
+
+export interface ModConflictFiles {
+  total: number;
+  files: ModConflictFile[];
+}
+
+export interface ConflictIndicator {
+  modId: string;
+  indicator: ConflictIndicatorKind;
+  files: number;
+  unreviewed: number;
+}
+
+export type PairChoice = "wins" | "loses" | "order";
+
+export interface PairDecision {
+  mod: string;
+  opponent: string;
+  choice: PairChoice;
+}
+
+export interface RuleCycle {
+  mods: ConflictMod[];
+  rules: { id: string; winner: NamedMod; loser: NamedMod; source: string }[];
 }

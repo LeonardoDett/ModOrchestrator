@@ -12,6 +12,7 @@ import (
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
+	"modorchestrator/internal/core/application/conflicts"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
@@ -40,6 +41,7 @@ type Container struct {
 	Games      *games.Service
 	Library    *library.Service
 	Profiles   *profilesvc.Service
+	Conflicts  *conflicts.Service
 	Logger     *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
 	Interrupted   []*operation.Operation
@@ -163,6 +165,23 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:     clock,
 	})
 
+	conflictsSvc := conflicts.NewService(conflicts.Deps{
+		Instances:     instances,
+		Mods:          sqlite.NewModRepository(db),
+		Installations: sqlite.NewInstallationRepository(db),
+		Profiles:      profiles,
+		Rules:         sqlite.NewRuleRepository(db),
+		Overrides:     sqlite.NewOverrideRepository(db),
+		UoW:           sqlite.NewUnitOfWork(db),
+		Publisher:     bus,
+		FS:            fsys,
+		Hasher:        hashing.SHA256{},
+		Settings:      settingsSvc,
+		OrderRules:    profilesSvc,
+		IDs:           ids,
+		Clock:         clock,
+	})
+
 	interrupted, err := ops.RecoverInterrupted(ctx)
 	if err != nil {
 		unsub()
@@ -184,6 +203,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Games:          gamesSvc,
 		Library:        librarySvc,
 		Profiles:       profilesSvc,
+		Conflicts:      conflictsSvc,
 		Logger:         logger,
 		Interrupted:    interrupted,
 		SchemaVersion:  version,

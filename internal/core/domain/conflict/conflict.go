@@ -66,6 +66,9 @@ type FileConflict struct {
 	Providers  []mod.ID
 	Winner     mod.ID
 	Resolution Resolution
+	// Potential is set when a disabled mod is among the providers (only
+	// with EvalInput.IncludeDisabled).
+	Potential bool
 }
 
 // Losers returns the providers that do not win the location.
@@ -248,6 +251,8 @@ type PairSummary struct {
 	// Contested fingerprints Locations; a ConflictReview is valid only for
 	// the same fingerprint (D027).
 	Contested string
+	// Potential is set when a disabled mod takes part in the dispute.
+	Potential bool
 }
 
 // Pairs aggregates conflicts by pair of providers, ordered by pair.
@@ -264,6 +269,7 @@ func Pairs(conflicts []FileConflict) []PairSummary {
 				}
 				s.Locations = append(s.Locations, c.Location)
 				s.Resolutions[c.Resolution]++
+				s.Potential = s.Potential || c.Potential
 				switch c.Winner {
 				case pair.A:
 					s.WinsA++

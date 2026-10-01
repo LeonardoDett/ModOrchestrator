@@ -1,4 +1,16 @@
 import {
+  ClearFileOverrides,
+  ConflictIndicators,
+  ConflictPairDetail,
+  ConflictPairs,
+  DecidePairs,
+  MarkConflictsReviewed,
+  ModConflictFiles,
+  ModConflicts,
+  PreviewPairDecisions,
+  RuleCycle,
+  SetFileExclusions,
+  SetFileOverrides,
   ActivateProfile,
   AddDependencyRule,
   AddIncompatibilityRule,
@@ -107,6 +119,12 @@ import type {
   Rule,
   RulePreview,
   Snapshot,
+  ConflictIndicator,
+  ConflictPairDetail as ConflictPairDetailT,
+  ConflictPairs as ConflictPairsT,
+  ModConflictFiles as ModConflictFilesT,
+  ModConflicts as ModConflictsT,
+  RuleCycle as RuleCycleT,
 } from "./types";
 
 /** Channel name emitted by internal/bridge (EventOperation). */
@@ -198,6 +216,18 @@ export function createWailsBackend(): Backend {
     orderHistory: (instance) => OrderHistory(instance) as unknown as Promise<OrderChange[]>,
     revertOrderChange: (instance, id) => RevertOrderChange(instance, id),
     undoOrderChange: (instance) => UndoOrderChange(instance),
+    conflictPairs: (instance, includeDisabled, search) => ConflictPairs(instance, includeDisabled, search) as unknown as Promise<ConflictPairsT>,
+    conflictPairDetail: (instance, a, b, includeDisabled) => ConflictPairDetail(instance, a, b, includeDisabled) as unknown as Promise<ConflictPairDetailT>,
+    modConflicts: (instance, mod) => ModConflicts(instance, mod) as unknown as Promise<ModConflictsT>,
+    modConflictFiles: (instance, mod, filter, offset, limit) => ModConflictFiles(instance, mod, filter, offset, limit) as unknown as Promise<ModConflictFilesT>,
+    conflictIndicators: (instance) => ConflictIndicators(instance) as unknown as Promise<ConflictIndicator[]>,
+    ruleCycle: (instance) => RuleCycle(instance) as unknown as Promise<RuleCycleT | null>,
+    setFileOverrides: (instance, winner, locations) => SetFileOverrides(instance, winner, locations),
+    clearFileOverrides: (instance, locations) => ClearFileOverrides(instance, locations),
+    setFileExclusions: (instance, mod, locations, hidden) => SetFileExclusions(instance, mod, locations, hidden),
+    markConflictsReviewed: (instance, pairs) => MarkConflictsReviewed(instance, pairs),
+    previewPairDecisions: (instance, decisions) => PreviewPairDecisions(instance, decisions) as unknown as Promise<RulePreview>,
+    decidePairs: (instance, decisions) => DecidePairs(instance, decisions),
     onFileDrop: (listener) => {
       // Only elements marked with --wails-drop-target receive drops
       // (main.go enables native file drop).

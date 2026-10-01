@@ -11,13 +11,14 @@ import {
   type DataTableSort,
   type Tone,
 } from "dettmann-ui";
-import type { ModRow, Separator } from "../../bridge/types";
+import type { ConflictIndicator, ModRow, Separator } from "../../bridge/types";
+import { ConflictIndicatorCell } from "../conflicts/conflict-labels";
 import type { Density } from "../../app/settings-context";
 import { useI18n } from "../../i18n/i18n";
 import { categoryText, contentLabel, formatSize, toggleLabels, toggleState } from "./mod-labels";
 import type { ListRow } from "./mod-order";
 
-/** Columns shown by default (ui/telas/mods.md §5.1, without the F6/F9 ones). */
+/** Columns shown by default (ui/telas/mods.md §5.1, without the F9 ones). */
 export const DEFAULT_HIDDEN = ["type", "content", "author", "installedAt", "enabledAt", "source", "variant"];
 
 /** The default and only reorderable ordering: priority, lowest first (§5.2). */
@@ -39,9 +40,12 @@ const SORT_KEYS: Record<string, (row: Extract<ListRow, { kind: "mod" }>) => stri
 };
 
 /** Presentation-only ordering of mod rows the backend already returned. */
-export function sortRows(rows: readonly ListRow[], sort: DataTableSort | null): readonly ListRow[] {
+export function sortRows(rows: readonly ListRow[], sort: DataTableSort | null, conflicts: ReadonlyMap<string, ConflictIndicator> = new Map()): readonly ListRow[] {
   if (!sort) return rows;
-  const key = SORT_KEYS[sort.columnId];
+  const key =
+    sort.columnId === "conflicts"
+      ? (r: Extract<ListRow, { kind: "mod" }>) => INDICATOR_RANK[conflicts.get(r.mod.id)?.indicator ?? "none"]
+      : SORT_KEYS[sort.columnId];
   if (!key) return rows;
   const mods = rows.filter((r): r is Extract<ListRow, { kind: "mod" }> => r.kind === "mod");
   const sorted = [...mods].sort((a, b) => {
@@ -68,15 +72,22 @@ interface ModsTableProps {
   reorderable: boolean;
   onRowsMove: (move: DataTableRowMove) => Promise<unknown>;
   categoryLastOnly: boolean;
+  conflicts: ReadonlyMap<string, ConflictIndicator>;
+  onOpenConflicts: (mod: string) => void;
   density: Density;
   groupByCategory: boolean;
   empty?: React.ReactNode;
 }
 
+/** Sort order of the conflict indicator: most worrying first. */
+const INDICATOR_RANK = { fully_overwritten: 0, loses_all: 1, mixed: 2, wins_all: 3, redundant_only: 4, none: 5 } as const;
+
 export function useModColumns(
   onToggle: (row: ModRow, enabled: boolean) => void,
   onToggleSeparator: (separator: Separator) => void,
   categoryLastOnly: boolean,
+  conflicts: ReadonlyMap<string, ConflictIndicator> = new Map(),
+  onOpenConflicts: (mod: string) => void = () => {},
 ) {
   const i18n = useI18n();
   const { t, tp } = i18n;
@@ -159,6 +170,13 @@ export function useModColumns(
         cell: mod((row) => categoryText(row, categoryLastOnly) || <span className="text-fg-subtle">{t("mods.noCategory")}</span>),
       },
       {
+        id: "conflicts",
+        label: t("mods.column.conflicts"),
+        width: 110,
+        sortable: true,
+        cell: mod((row) => <ConflictIndicatorCell value={conflicts.get(row.id)} onOpen={() => onOpenConflicts(row.id)} />),
+      },
+      {
         id: "size",
         label: t("mods.column.size"),
         width: 120,
@@ -204,13 +222,13 @@ export function useModColumns(
         ),
       },
     ];
-  }, [i18n, t, tp, onToggle, onToggleSeparator, categoryLastOnly]);
+  }, [i18n, t, tp, onToggle, onToggleSeparator, categoryLastOnly, conflicts, onOpenConflicts]);
 }
 
 /** The Mods table (ui/telas/mods.md §5) over the lib DataTable (L1, L2). */
 export function ModsTable(props: ModsTableProps) {
   const { t } = useI18n();
-  const columns = useModColumns(props.onToggle, props.onToggleSeparator, props.categoryLastOnly);
+  const columns = useModColumns(props.onToggle, props.onToggleSeparator, props.categoryLastOnly, props.conflicts, props.onOpenConflicts);
   return (
     <DataTable
       aria-label={t("mods.tableLabel")}

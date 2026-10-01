@@ -26,8 +26,24 @@ export function Categories(arg1) {
   return window['go']['bridge']['App']['Categories'](arg1);
 }
 
+export function ClearFileOverrides(arg1, arg2) {
+  return window['go']['bridge']['App']['ClearFileOverrides'](arg1, arg2);
+}
+
 export function CompareProfiles(arg1, arg2) {
   return window['go']['bridge']['App']['CompareProfiles'](arg1, arg2);
+}
+
+export function ConflictIndicators(arg1) {
+  return window['go']['bridge']['App']['ConflictIndicators'](arg1);
+}
+
+export function ConflictPairDetail(arg1, arg2, arg3, arg4) {
+  return window['go']['bridge']['App']['ConflictPairDetail'](arg1, arg2, arg3, arg4);
+}
+
+export function ConflictPairs(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['ConflictPairs'](arg1, arg2, arg3);
 }
 
 export function CreateOrderRule(arg1, arg2, arg3) {
@@ -44,6 +60,10 @@ export function CreateSeparator(arg1, arg2, arg3, arg4) {
 
 export function CreateSnapshot(arg1) {
   return window['go']['bridge']['App']['CreateSnapshot'](arg1);
+}
+
+export function DecidePairs(arg1, arg2) {
+  return window['go']['bridge']['App']['DecidePairs'](arg1, arg2);
 }
 
 export function DeleteCategory(arg1, arg2) {
@@ -108,6 +128,18 @@ export function LogTail(arg1) {
 
 export function ManageGame(arg1) {
   return window['go']['bridge']['App']['ManageGame'](arg1);
+}
+
+export function MarkConflictsReviewed(arg1, arg2) {
+  return window['go']['bridge']['App']['MarkConflictsReviewed'](arg1, arg2);
+}
+
+export function ModConflictFiles(arg1, arg2, arg3, arg4, arg5) {
+  return window['go']['bridge']['App']['ModConflictFiles'](arg1, arg2, arg3, arg4, arg5);
+}
+
+export function ModConflicts(arg1, arg2) {
+  return window['go']['bridge']['App']['ModConflicts'](arg1, arg2);
 }
 
 export function ModDetails(arg1) {
@@ -178,6 +210,10 @@ export function PreviewOrderRule(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['PreviewOrderRule'](arg1, arg2, arg3);
 }
 
+export function PreviewPairDecisions(arg1, arg2) {
+  return window['go']['bridge']['App']['PreviewPairDecisions'](arg1, arg2);
+}
+
 export function ProfileList(arg1) {
   return window['go']['bridge']['App']['ProfileList'](arg1);
 }
@@ -222,6 +258,10 @@ export function RevertOrderChange(arg1, arg2) {
   return window['go']['bridge']['App']['RevertOrderChange'](arg1, arg2);
 }
 
+export function RuleCycle(arg1) {
+  return window['go']['bridge']['App']['RuleCycle'](arg1);
+}
+
 export function SaveCategory(arg1, arg2) {
   return window['go']['bridge']['App']['SaveCategory'](arg1, arg2);
 }
@@ -236,6 +276,14 @@ export function SetActiveInstance(arg1) {
 
 export function SetAppSetting(arg1, arg2) {
   return window['go']['bridge']['App']['SetAppSetting'](arg1, arg2);
+}
+
+export function SetFileExclusions(arg1, arg2, arg3, arg4) {
+  return window['go']['bridge']['App']['SetFileExclusions'](arg1, arg2, arg3, arg4);
+}
+
+export function SetFileOverrides(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetFileOverrides'](arg1, arg2, arg3);
 }
 
 export function SetModAttributes(arg1, arg2) {

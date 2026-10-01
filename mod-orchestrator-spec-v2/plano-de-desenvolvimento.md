@@ -111,6 +111,7 @@ Entregas:
 
 Invariantes: INV-CON-01..04.
 Demonstração: dois mods de texturas sobrepostos: escolher vencedor por par e depois um arquivo específico pelo outro.
+Estado: concluída (D073–D075; D075 aguarda confirmação). A demonstração é `TestConflictDemonstration` em `internal/integration/conflicts_test.go`; INV-CON-01..04 têm testes no domínio (`conflict/index_test.go`: equivalência com o cálculo completo, overrides/exclusões obsoletos, redundância, meta de 500 ms com 200.000 Locations) e na integração (ciclo recusado por inteiro, redundante, obsoleto + diagnóstico, recálculo sem cache).
 
 ## F7: Deploy e purge
 

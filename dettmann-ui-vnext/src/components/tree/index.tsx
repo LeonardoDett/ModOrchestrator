@@ -10,6 +10,11 @@ import {
 } from "react";
 import { ChevronRight, File, Folder, FolderOpen } from "lucide-react";
 import { cn } from "../../utils/cn";
+import { Checkbox } from "../checkbox";
+import { toggleTreeCheck, treeCheckState } from "./tree.model";
+
+export { toggleTreeCheck, treeCheckState, treeLeafIds } from "./tree.model";
+export type { CheckableNode, TreeCheckState } from "./tree.model";
 
 export interface TreeNode<T = unknown> {
   id: string;
@@ -38,6 +43,23 @@ export interface TreeProps<T = unknown>
   onSelect?: (node: TreeNode<T>) => void;
   indent?: number;
   renderIcon?: (node: TreeNode<T>, expanded: boolean) => ReactNode;
+  /**
+   * Batch selection: leaf ids that are checked. When set, every node shows
+   * a checkbox; a branch checks or clears all of its leaves (Space toggles
+   * the focused node).
+   */
+  checkedIds?: ReadonlySet<string>;
+  onCheckedIdsChange?: (next: Set<string>) => void;
+  /** Extra column at the end of each row (e.g. a select per node). */
+  renderEnd?: (node: TreeNode<T>) => ReactNode;
+  labels?: TreeLabels;
+}
+
+export interface TreeLabels {
+  expand?: string;
+  collapse?: string;
+  /** Accessible name of a node's checkbox. */
+  check?: (node: TreeNode<unknown>) => string;
 }
 
 export function Tree<T>({
@@ -49,9 +71,18 @@ export function Tree<T>({
   onSelect,
   indent = 16,
   renderIcon,
+  checkedIds,
+  onCheckedIdsChange,
+  renderEnd,
+  labels,
   className,
   ...props
 }: TreeProps<T>) {
+  const checkable = checkedIds !== undefined;
+  const toggleCheck = (node: TreeNode<T>) => {
+    if (!checkedIds || node.disabled) return;
+    onCheckedIdsChange?.(toggleTreeCheck(node, checkedIds));
+  };
   const [internal, setInternal] = useState<Set<string>>(
     new Set(defaultExpanded),
   );
@@ -106,6 +137,12 @@ export function Tree<T>({
     const hasChildren = Boolean(current.node.children?.length);
     const isExpanded = expanded.has(current.node.id);
 
+    if (event.key === " " && checkable) {
+      event.preventDefault();
+      toggleCheck(current.node);
+      return;
+    }
+
     if (event.key === "ArrowDown") {
       event.preventDefault();
       for (let next = index + 1; next < visibleNodes.length; next += 1) {
@@ -156,7 +193,7 @@ export function Tree<T>({
   return (
     <div
       role="tree"
-      aria-multiselectable={false}
+      aria-multiselectable={checkable}
       className={cn("select-none py-1", className)}
       {...props}
     >
@@ -165,6 +202,7 @@ export function Tree<T>({
         const hasChildren = Boolean(node.children?.length);
         const open = expanded.has(node.id);
         const selected = node.id === selectedId;
+        const check = checkedIds ? treeCheckState(node, checkedIds) : undefined;
         const icon =
           node.icon ??
           renderIcon?.(node, open) ??
@@ -179,6 +217,7 @@ export function Tree<T>({
             aria-level={depth + 1}
             aria-posinset={position}
             aria-setsize={setSize}
+            aria-checked={check === undefined ? undefined : check === "indeterminate" ? "mixed" : check === "checked"}
           >
             <div
               className={cn(
@@ -193,7 +232,7 @@ export function Tree<T>({
               {hasChildren ? (
                 <button
                   type="button"
-                  aria-label={open ? "Collapse" : "Expand"}
+                  aria-label={open ? (labels?.collapse ?? "Collapse") : (labels?.expand ?? "Expand")}
                   aria-expanded={open}
                   disabled={node.disabled}
                   onClick={() => toggle(node.id)}
@@ -210,6 +249,18 @@ export function Tree<T>({
               ) : (
                 <span aria-hidden="true" className="h-7 w-7 shrink-0" />
               )}
+              {checkable ? (
+                <Checkbox
+                  size="sm"
+                  tabIndex={-1}
+                  className="mr-1"
+                  aria-label={labels?.check?.(node as TreeNode<unknown>) ?? (typeof node.label === "string" ? node.label : node.id)}
+                  disabled={node.disabled}
+                  checked={check === "checked"}
+                  indeterminate={check === "indeterminate"}
+                  onCheckedChange={() => toggleCheck(node)}
+                />
+              ) : null}
               <button
                 ref={(element) => {
                   itemRefs.current[node.id] = element;
@@ -225,6 +276,7 @@ export function Tree<T>({
                 </span>
                 <span className="truncate">{node.label}</span>
               </button>
+              {renderEnd ? <div className="flex shrink-0 items-center gap-2">{renderEnd(node)}</div> : null}
             </div>
           </div>
         );

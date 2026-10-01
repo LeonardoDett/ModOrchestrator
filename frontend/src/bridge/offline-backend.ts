@@ -86,6 +86,18 @@ export function createOfflineBackend(): Backend {
     orderHistory: unavailable,
     revertOrderChange: unavailable,
     undoOrderChange: unavailable,
+    conflictPairs: unavailable,
+    conflictPairDetail: unavailable,
+    modConflicts: unavailable,
+    modConflictFiles: unavailable,
+    conflictIndicators: unavailable,
+    ruleCycle: unavailable,
+    setFileOverrides: unavailable,
+    clearFileOverrides: unavailable,
+    setFileExclusions: unavailable,
+    markConflictsReviewed: unavailable,
+    previewPairDecisions: unavailable,
+    decidePairs: unavailable,
     onFileDrop: () => () => {},
   };
 }

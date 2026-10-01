@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { FolderOpen, Package, RotateCcw, Trash2, X } from "lucide-react";
 import { Alert, Button, Inline, Input, Inspector, Spinner, Stack, Tabs, Tag, Typography, TONES } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
-import { useCategories, useModDetails, useModFiles, useModHistory } from "../../bridge/queries";
-import type { ModDetails, ModHistoryEntry } from "../../bridge/types";
+import { useCategories, useModDetails, useModHistory } from "../../bridge/queries";
+import type { FileLocation, ModDetails, ModHistoryEntry } from "../../bridge/types";
+import { InspectorConflicts, InspectorFiles } from "../conflicts/InspectorConflicts";
 import { useSettings } from "../../app/settings-context";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
@@ -15,10 +16,12 @@ interface ModInspectorProps {
   id: string;
   onClose: () => void;
   onRemove: (ids: string[]) => void;
+  onEditConflicts: (mod: string) => void;
+  onChooseWinner: (pair: { a: string; b: string; focus: FileLocation }) => void;
 }
 
-/** Inspector of one mod (ui/telas/mods.md §6): overview, files, installation, history. */
-export function ModInspector({ instance, id, onClose, onRemove }: ModInspectorProps) {
+/** Inspector of one mod (ui/telas/mods.md §6): overview, files, conflicts, installation, history. */
+export function ModInspector({ instance, id, onClose, onRemove, onEditConflicts, onChooseWinner }: ModInspectorProps) {
   const { t } = useI18n();
   const details = useModDetails(id);
   const [tab, setTab] = useState("overview");
@@ -43,6 +46,7 @@ export function ModInspector({ instance, id, onClose, onRemove }: ModInspectorPr
           <Tabs.List>
             <Tabs.Trigger value="overview">{t("mods.tab.overview")}</Tabs.Trigger>
             <Tabs.Trigger value="files">{t("mods.tab.files")}</Tabs.Trigger>
+            <Tabs.Trigger value="conflicts">{t("mods.tab.conflicts")}</Tabs.Trigger>
             <Tabs.Trigger value="installation">{t("mods.tab.installation")}</Tabs.Trigger>
             <Tabs.Trigger value="history">{t("mods.tab.history")}</Tabs.Trigger>
           </Tabs.List>
@@ -50,7 +54,16 @@ export function ModInspector({ instance, id, onClose, onRemove }: ModInspectorPr
             <Overview instance={instance} mod={details.data} onRemove={onRemove} />
           </Tabs.Panel>
           <Tabs.Panel value="files" className="pt-4">
-            <Files id={id} />
+            {details.data.state === "installed" ? (
+              <InspectorFiles instance={instance} mod={id} onChooseWinner={onChooseWinner} />
+            ) : (
+              <Typography variant="body-sm" color="muted-fg">
+                {t("mods.installation.none")}
+              </Typography>
+            )}
+          </Tabs.Panel>
+          <Tabs.Panel value="conflicts" className="pt-4">
+            <InspectorConflicts instance={instance} mod={id} onEdit={() => onEditConflicts(id)} />
           </Tabs.Panel>
           <Tabs.Panel value="installation" className="pt-4">
             <Installation instance={instance} mod={details.data} />
@@ -198,42 +211,6 @@ function Overview({ instance, mod, onRemove }: { instance: string; mod: ModDetai
           )}
         </Field>
       </dl>
-    </Stack>
-  );
-}
-
-function Files({ id }: { id: string }) {
-  const i18n = useI18n();
-  const { t, tp } = i18n;
-  const [filter, setFilter] = useState("");
-  const files = useModFiles(id, filter);
-  return (
-    <Stack gap="sm">
-      <Input.Root fullWidth value={filter} onChange={setFilter}>
-        <Input.Box>
-          <Input.Field aria-label={t("mods.files.filter")} placeholder={t("mods.files.filter")} />
-        </Input.Box>
-      </Input.Root>
-      {files.status === "ready" ? (
-        <>
-          <Typography variant="caption" color="muted-fg">
-            {tp("mods.files.count", files.data.total)}
-          </Typography>
-          <ul className="max-h-[50vh] overflow-auto rounded-lg border border-border font-mono text-xs">
-            {files.data.files.map((f) => (
-              <li key={`${f.target}:${f.path}`} className="flex gap-2 border-b border-border-subtle px-2 py-1 last:border-b-0">
-                <span className="text-fg-subtle">{f.target}</span>
-                <span className="min-w-0 flex-1 break-all text-fg">{f.path}</span>
-                <span className="shrink-0 text-fg-muted">{formatSize(i18n.language, f.size)}</span>
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : files.status === "error" ? (
-        <ErrorAlert title="mods.loadError" error={files.error} onRetry={files.reload} />
-      ) : (
-        <Spinner label={t("common.loading")} />
-      )}
     </Stack>
   );
 }

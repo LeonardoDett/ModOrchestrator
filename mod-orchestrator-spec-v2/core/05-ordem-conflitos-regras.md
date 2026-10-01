@@ -98,7 +98,7 @@ Só podem existir por regras de metadados (D028). Quando existem:
 
 ## 7. Erros
 
-`order_violates_rules`, `rule_would_create_cycle` (param `cycle`), `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `separator_not_found`, `order_history_stale`, `order_nothing_to_undo`, `override_not_provider`, `mod_not_found` (D069, D070).
+`order_violates_rules`, `rule_would_create_cycle` (param `cycle`), `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `separator_not_found`, `order_history_stale`, `order_nothing_to_undo`, `override_not_provider` (o mod não fornece a Location ou está desabilitado; params `mod`, `path`), `override_nothing_selected`, `location_invalid`, `mod_not_found` (D069, D070, D073).
 
 ## 8. Eventos
 

@@ -8,13 +8,39 @@ import type { EntryRef, ModOrder, ModRow, MoveRequest, MoveResult, Rule, RuleKin
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
 
-function DialogError({ error }: { error: UIError | null }) {
+export function DialogError({ error }: { error: UIError | null }) {
   const i18n = useI18n();
   if (!error) return null;
   return (
     <Alert.Root variant="danger">
       <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
     </Alert.Root>
+  );
+}
+
+/** Per-profile moves a rule change causes (core/05 §4 "mostra a prévia"). */
+export function RuleMoves({ preview }: { preview: RulePreview }) {
+  const { t } = useI18n();
+  if (preview.profiles.length === 0) {
+    return (
+      <Typography variant="body-sm" color="muted-fg">
+        {t("mods.rules.noMoves")}
+      </Typography>
+    );
+  }
+  return (
+    <div className="flex flex-col gap-2" aria-label={t("mods.rules.previewLabel")}>
+      {preview.profiles.map((p) => (
+        <div key={p.profileId} className="text-sm">
+          <span className="font-medium text-fg">{t("mods.rules.inProfile", { name: p.name })}</span>
+          <ul className="list-disc pl-5 text-fg">
+            {p.moves.map((m) => (
+              <li key={m.id}>{t("mods.rules.move", { name: m.name, from: m.from, to: m.to })}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -369,24 +395,7 @@ export function RulesDialog({
                     <Alert.Description>{t("mods.rules.cycle", { cycle })}</Alert.Description>
                   </Alert.Root>
                 ) : preview ? (
-                  preview.profiles.length === 0 ? (
-                    <Typography variant="body-sm" color="muted-fg">
-                      {t("mods.rules.noMoves")}
-                    </Typography>
-                  ) : (
-                    <div className="flex flex-col gap-2" aria-label={t("mods.rules.previewLabel")}>
-                      {preview.profiles.map((p) => (
-                        <div key={p.profileId} className="text-sm">
-                          <span className="font-medium text-fg">{t("mods.rules.inProfile", { name: p.name })}</span>
-                          <ul className="list-disc pl-5 text-fg">
-                            {p.moves.map((m) => (
-                              <li key={m.id}>{t("mods.rules.move", { name: m.name, from: m.from, to: m.to })}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )
+                  <RuleMoves preview={preview} />
                 ) : (
                   <Spinner label={t("common.loading")} />
                 )

@@ -6,7 +6,7 @@ import { ModsWorkspace } from "./ModsWorkspace";
 import { PageBody } from "./PageBody";
 
 /**
- * Mods (ui/telas/mods.md) of the active game. Deploy (F7), conflict (F6)
+ * Mods (ui/telas/mods.md) of the active game. Deploy (F7)
  * and problem (F9) columns and actions arrive with their phases and are not
  * shown before that (anti-pattern 18).
  */

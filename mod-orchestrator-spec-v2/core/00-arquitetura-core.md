@@ -124,6 +124,7 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `profile_name_taken`, `profile_is_active`, `profile_last`, `profile_not_found`, `snapshot_not_found` | ciclo de vida de profiles (core/07 §8) | `name`, `profile`, `snapshot` |
 | `order_violates_rules`, `rule_would_create_cycle`, `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `mod_not_found`, `separator_not_found` | ordem e regras (core/05 §7, D069) | `cycle` (nomes, "A → B → A"), `count` |
 | `order_history_stale`, `order_nothing_to_undo` | reverter/desfazer mudança de ordem (D070) | — |
+| `override_not_provider`, `override_nothing_selected`, `location_invalid` | escolha de vencedor / ocultar arquivo (core/05 §7, D073) | `mod`, `path` |
 
 Erros de operação (`OperationError`) também carregam `params` desde a F4 (D067), para a UI traduzir a mensagem com os mesmos parâmetros.
 

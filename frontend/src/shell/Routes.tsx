@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Puzzle } from "lucide-react";
 import { useWorkspace } from "../bridge/queries";
+import { ConflictsPage } from "../pages/ConflictsPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { DiagnosticsPage } from "../pages/DiagnosticsPage";
 import { GamesPage } from "../pages/GamesPage";
@@ -50,9 +51,10 @@ export function Routes() {
       return <ModsPage />;
     case "profiles":
       return <ProfilesPage />;
+    case "conflicts":
+      return <ConflictsPage />;
     case "plugins":
     case "load_order":
-    case "conflicts":
       return <WorkspacePlaceholder view={route.view} icon={VIEWS[route.view].icon} />;
   }
 }

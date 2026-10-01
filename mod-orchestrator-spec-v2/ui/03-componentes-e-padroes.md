@@ -38,7 +38,7 @@ Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (component-
 | L2 | ✅ **resolvida na F5** (D071): `DataTable` com `reorderable` + `onRowsMove`: alça por linha, arraste por pointer events (várias linhas, autoscroll, indicador de destino, Esc cancela), `Alt+↑/↓` pelo teclado, tabela ocupada enquanto o consumidor valida e aplica. | Mods, Load Order | F5 |
 | L3 | ✅ **resolvida na F4**: `StatusToggle` (`src/components/status-toggle`): switch compacto com estados `on`/`off`/`unavailable`/`busy`, ícone no polegar (nunca só cor), descrição do estado acessível, `aria-busy` e `aria-disabled`. | Mods, Plugins | F4 |
 | L4 | ✅ **resolvida na F4**: `Indicator` (`src/components/indicator`): ícone + contagem opcional, `role="img"` com nome acessível e tom semântico. `Badge` não cobria (texto, sem nome acessível para contagem). | Mods, Plugins | F4 |
-| L5 | **Tree com seleção em lote e coluna extra** (select de vencedor por nó). Verificar se `Tree`/`FileBrowser` cobrem. | Conflicts, Inspector de Mod | F6 |
+| L5 | ✅ **resolvida na F6** (D074): `Tree` com `checkedIds`/`onCheckedIdsChange` (caixa por nó; pasta marca/desmarca todas as folhas, estado misto, `Space` no nó em foco), `renderEnd` (coluna no fim da linha, ex.: select de vencedor) e `labels` (expandir/recolher/caixa traduzíveis). Lógica pura em `tree.model.ts`. | Conflicts, Inspector de Mod | F6 |
 | L6 | **Visualização em grafo** (nós/arestas) para ciclos e grupos. | V1.x | — |
 
 Antes de cada fase, conferir a lib: a lacuna pode ter sido resolvida.
