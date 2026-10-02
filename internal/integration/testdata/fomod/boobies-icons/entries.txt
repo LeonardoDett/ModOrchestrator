@@ -1,0 +1,300 @@
+# source: B.O.O.B.I.E.S (Immsersive Icons) 2.1.3-89241-2-1-3-1730442940.zip
+FOMOD/
+FOMOD/images/
+FOMOD/images/AddItemMenu.jpg	17833
+FOMOD/images/AKSkyrimUnderground.jpeg	115674
+FOMOD/images/AKWarblade_Kazuhide.png	426238
+FOMOD/images/AncientDraugr.png	263788
+FOMOD/images/Animated Armoury.jpg	90022
+FOMOD/images/Apocalypse.jpg	50473
+FOMOD/images/Arclight.jpg	381833
+FOMOD/images/Armor of Intrigue.jpg	84262
+FOMOD/images/Armor of Intrigue.png	1023301
+FOMOD/images/Armors of the Velothi Pt II.jpg	45802
+FOMOD/images/Artifacts - The Breton Paladin.jpg	598495
+FOMOD/images/Astral Magic 2.jpg	117859
+FOMOD/images/Asuras Guard [Armor].jpg	1310730
+FOMOD/images/Austio Weapons.png	284738
+FOMOD/images/Billyro's Weapons.jpg	21939
+FOMOD/images/Black Widow Outfit.png	204494
+FOMOD/images/BladeStaff.jpg	1210358
+FOMOD/images/Book Of Shadows.png	5922181
+FOMOD/images/Bruma.jpg	30073
+FOMOD/images/Cassandra Apocrypha UNP.png	243764
+FOMOD/images/Cassandra Frost Witch.jpeg	181086
+FOMOD/images/Celes Nightingale Armor.png	2371320
+FOMOD/images/Celes Rogue Armor UNP.png	116476
+FOMOD/images/Celes Tarot Outfit Cloth UNP.png	225754
+FOMOD/images/CL's Rapier.jpeg	97492
+FOMOD/images/Complete Crafting Overhaul Remastered.jpg	85512
+FOMOD/images/Creation Club.jpg	27659
+FOMOD/images/Crimson Blood Armor.png	329112
+FOMOD/images/Crystalwind Estate.jpg	117207
+FOMOD/images/Curator's Companion.jpg	56872
+FOMOD/images/Cutting Room Floor.jpg	80703
+FOMOD/images/Daedric Reaper Armor.jpg	661804
+FOMOD/images/Dawnguard Arsenal.jpg	24213
+FOMOD/images/Demon Armor.png	213990
+FOMOD/images/Detailed NPCs - Blanket Scarves for NPCs.png	167211
+FOMOD/images/Detailed NPCs - Scarves for NPCs.png	175064
+FOMOD/images/Dragon Plate Brazen Renewal.jpg	79308
+FOMOD/images/Dragonscale Bikini Armor.jpg	84170
+FOMOD/images/Draugr Bikini Armor.jpg	34102
+FOMOD/images/Dr_Bandolier.jpg	297016
+FOMOD/images/DX Ancient Draugr.jpg	65153
+FOMOD/images/DX Dark Knight Armor.jpeg	1106382
+FOMOD/images/DX Daughter of the Sea.jpeg	763968
+FOMOD/images/DX Druid Armor.png	291986
+FOMOD/images/DX Morenn Outfit.png	238910
+FOMOD/images/DX Necromancer Robes.jpeg	1732576
+FOMOD/images/DX Witch Hunter Armor.png	84794
+FOMOD/images/Ebony Damascus Blades.jpeg	133004
+FOMOD/images/EGIL Shadow of Akavir.jpeg	532232
+FOMOD/images/Elemental Destruction Magic Redux.jpg	42078
+FOMOD/images/Face Masks of Skyrim.png	121481
+FOMOD/images/FGCAegeanSentinelHalberd.png	702729
+FOMOD/images/Fire Emblem Killer Weapons.jpg	19487
+FOMOD/images/Firebrand Scarf.png	155819
+FOMOD/images/GR Inari Ears Tails SMP.jpg	65374
+FOMOD/images/Gwelda Dawnguard Armor.png	139010
+FOMOD/images/Gwelda Red Riding Hood.png	218970
+FOMOD/images/Gwelda Vampire.png	252626
+FOMOD/images/Gwelda Witch.png	201718
+FOMOD/images/Hammerfell Armory.jpg	26338
+FOMOD/images/Heart of the Reach.jpg	63291
+FOMOD/images/Heavy Armory.jpg	33764
+FOMOD/images/Helps To Have A Compass.jpg	322166
+FOMOD/images/Helps To Have A Map.jpg	147768
+FOMOD/images/Hunterborn.jpg	68380
+FOMOD/images/IconPage.jpg	112603
+FOMOD/images/Inigo.jpg	52385
+FOMOD/images/Inquisition.jpg	232992
+FOMOD/images/Insanity's Sorrow.jpg	69304
+FOMOD/images/Instincts.jpg	120735
+FOMOD/images/Interesting NPCs.jpg	116924
+FOMOD/images/JaySuS Swords.jpg	59082
+FOMOD/images/Katana Crafting.jpg	30275
+FOMOD/images/KSA_vdk.png	660554
+FOMOD/images/League of Assassins Armor.jpg	203501
+FOMOD/images/Legends of Aetherium.jpg	92608
+FOMOD/images/Merta Assassin Armor.png	177264
+FOMOD/images/Merta Black Rose Armor.png	156336
+FOMOD/images/Mihail.jpg	46986
+FOMOD/images/Miracles of Skyrim.jpg	74558
+FOMOD/images/Nether's Follower Framework.jpg	49760
+FOMOD/images/Nicos Twinblades.jpg	87216
+FOMOD/images/OBIS SE.png	23970
+FOMOD/images/OCF.jpg	105065
+FOMOD/images/Odin.jpg	46207
+FOMOD/images/Pierced Ears - Earrings SE.jpg	214460
+FOMOD/images/Project AHO.jpg	60345
+FOMOD/images/Quarterstaff.jpg	47322
+FOMOD/images/Rapier_and_Dirk_by_Flarescale.jpeg	17776
+FOMOD/images/RegaliaOfTheScorned.jpeg	2005272
+FOMOD/images/Relationship Dialogue Overhaul.jpg	66193
+FOMOD/images/Rosa Round-Bottom.jpg	61035
+FOMOD/images/Royal Armory.jpg	146624
+FOMOD/images/ScytheOfTheCrow.png	2695425
+FOMOD/images/Silverthorn Weaponry.jpg	59007
+FOMOD/images/Simple Wearable Lantern.png	132424
+FOMOD/images/Skyrim Underground.jpg	43057
+FOMOD/images/SkyrimsUniqueTreasures.png	3529720
+FOMOD/images/Sonic Magic.jpg	93928
+FOMOD/images/Sotteta Huntress Armor.png	1676917
+FOMOD/images/Sotteta Necromancer Outfit.png	201878
+FOMOD/images/Spartan Bard Outfit.png	2597742
+FOMOD/images/Spear Fantasy.png	6521637
+FOMOD/images/SpearOfLeonidas.png	459186
+FOMOD/images/Stalhrim Bikini.jpg	99037
+FOMOD/images/Stella Mithril Armor.png	291274
+FOMOD/images/Storm Calling Magic.jpg	73220
+FOMOD/images/TAWOBA.jpg	69376
+FOMOD/images/Tembtra Thief Armor.png	254714
+FOMOD/images/TEWOBA.jpg	103868
+FOMOD/images/The Legends-Breton Knight.png	13885582
+FOMOD/images/Toccata.jpg	872236
+FOMOD/images/Triumvirate.jpg	114369
+FOMOD/images/Twilight Princess Armor.jpg	51819
+FOMOD/images/Twinblades Of Skyrim.jpg	143459
+FOMOD/images/Undeath Remastered.jpg	61393
+FOMOD/images/Unslaad.jpg	572873
+FOMOD/images/Ursine Armor Pack.png	296284
+FOMOD/images/Vigilant.jpg	65625
+FOMOD/images/Viridian Armor - Color Variations.jpeg	448912
+FOMOD/images/war scythe.jpeg	448118
+FOMOD/images/WetandCold.png	142166
+FOMOD/images/WildHuntress.png	1300164
+FOMOD/images/Wintersun.jpg	38095
+FOMOD/images/Wyrmstooth.jpg	32785
+FOMOD/images/Yol Kreh Scythes.png	161018
+FOMOD/images/[Christine] Dragon Fighter.jpg	237603
+FOMOD/images/[Christine] Dragon Gladiator.jpg	181267
+FOMOD/images/[Christine] Queen Blade.jpg	121507
+FOMOD/images/[COCO] Shadow Assassin.jpeg	1916492
+FOMOD/images/[COCO] Shadow Assassin.jpg	84267
+FOMOD/images/[dint999] MysteriousKnightSet.png	805112
+FOMOD/images/[Ryan Reos] Dark Elf Blader.png	330078
+FOMOD/info.xml	778
+FOMOD/ModuleConfig.xml	125481
+Interface/
+Interface/BOOBIES Immersive Icons/
+Interface/BOOBIES Immersive Icons/aedric artefacts.swf	7538
+Interface/BOOBIES Immersive Icons/bodyparts.swf	28754
+Interface/BOOBIES Immersive Icons/books.swf	52060
+Interface/BOOBIES Immersive Icons/daedric artefacts.swf	43961
+Interface/BOOBIES Immersive Icons/dwemer artefacts.swf	5295
+Interface/BOOBIES Immersive Icons/food.swf	1739
+Interface/BOOBIES Immersive Icons/icons.swf	24727
+Interface/BOOBIES Immersive Icons/Ingredients.swf	874
+Interface/BOOBIES Immersive Icons/legendary artefacts.swf	7942
+Interface/BOOBIES Immersive Icons/weapons.swf	9604
+Interface/Translations/
+Interface/Translations/BOOBIES_ImmersiveIcons_ENGLISH.txt	5902
+Interface/Translations/BOOBIES_ImmersiveIcons_FRENCH.txt	2726
+Interface/Translations/BOOBIES_ImmersiveIcons_JAPANESE.txt	268
+Interface/Translations/BOOBIES_ImmersiveIcons_SPANISH.txt	362
+KIDs/
+KIDs/BOOBIES_3DNPC_KID.ini	1613
+KIDs/BOOBIES_AddItemMenuSE_KID.ini	812
+KIDs/BOOBIES_AKSkyrimUnderground_KID.ini	884
+KIDs/BOOBIES_AKWarblade_Kazuhide_KID.ini	987
+KIDs/BOOBIES_AncientDraugr_KID.ini	941
+KIDs/BOOBIES_Apocalypse_KID.ini	14836
+KIDs/BOOBIES_Arclight_KID.ini	1129
+KIDs/BOOBIES_Armor of Intrigue_KID.ini	2979
+KIDs/BOOBIES_Armors_of_the_Velothi_Pt2_KID.ini	742
+KIDs/BOOBIES_Armor_of_Intrigue_KID.ini	2758
+KIDs/BOOBIES_Astral_KID.ini	2468
+KIDs/BOOBIES_Asuras Guard [Armor]_Heavy_KID.ini	1516
+KIDs/BOOBIES_Asuras Guard [Armor]_Light_KID.ini	1521
+KIDs/BOOBIES_Austio Weapons_KID.ini	912
+KIDs/BOOBIES_Austio_Weapons_KID.ini	929
+KIDs/BOOBIES_Billyro's_Weapons_KID.ini	773
+KIDs/BOOBIES_Black Widow Outfit_KID.ini	1045
+KIDs/BOOBIES_BladeStaff_KID.ini	1364
+KIDs/BOOBIES_Book Of Shadows_KID.ini	1052
+KIDs/BOOBIES_Bruma_KID.ini	3974
+KIDs/BOOBIES_Cassandra Apocrypha UNP_KID.ini	1360
+KIDs/BOOBIES_Cassandra Frost Witch_KID.ini	979
+KIDs/BOOBIES_CCOR_KID.ini	863
+KIDs/BOOBIES_CC_Content_KID.ini	5063
+KIDs/BOOBIES_Celes Nightingale Armor_KID.ini	1017
+KIDs/BOOBIES_Celes Rogue Armor UNP_KID.ini	1046
+KIDs/BOOBIES_Celes Tarot Outfit Cloth UNP_KID.ini	834
+KIDs/BOOBIES_Christine Dragon Fighter_KID.ini	998
+KIDs/BOOBIES_Christine Dragon Gladiator_KID.ini	761
+KIDs/BOOBIES_Christine Queen Blade_KID.ini	972
+KIDs/BOOBIES_CL's Rapier_KID.ini	727
+KIDs/BOOBIES_COCO_Shadow_Assassin_KID.ini	1220
+KIDs/BOOBIES_Crimson Blood Armor_KID.ini	1294
+KIDs/BOOBIES_Crystalwind_Estate_KID.ini	860
+KIDs/BOOBIES_Cutting_Room_Floor_KID.ini	833
+KIDs/BOOBIES_Daedric Reaper Armor_KID.ini	1062
+KIDs/BOOBIES_DawnguardArsenal_KID.ini	978
+KIDs/BOOBIES_DBM_RelicNotifications_KID.ini	861
+KIDs/BOOBIES_Demon Armor_KID.ini	882
+KIDs/BOOBIES_DM BDOR Pack by Team TAL_KID.ini	775
+KIDs/BOOBIES_DNPCsBlanketScarf_KID.ini	760
+KIDs/BOOBIES_DNPCsScarvesAIO_KID.ini	751
+KIDs/BOOBIES_DragonPlateBrazen_KID.ini	1482
+KIDs/BOOBIES_DragonscaleBikini_KID.ini	2708
+KIDs/BOOBIES_DraugrBikini_KID.ini	2074
+KIDs/BOOBIES_Dr_Bandolier_KID.ini	2770
+KIDs/BOOBIES_DS2Miracles_KID.ini	1452
+KIDs/BOOBIES_DX Christmas Bunny Outfit_KID.ini	1945
+KIDs/BOOBIES_DX Dark Knight Armor_KID.ini	917
+KIDs/BOOBIES_DX Daughter of the Sea_KID.ini	828
+KIDs/BOOBIES_DX Druid Armor_KID.ini	1422
+KIDs/BOOBIES_DX Morenn Outfit_KID.ini	826
+KIDs/BOOBIES_DX Necromancer Robes_KID.ini	1099
+KIDs/BOOBIES_DX Witch Hunter Armor_KID.ini	831
+KIDs/BOOBIES_Ebony Damascus Blades_KID.ini	824
+KIDs/BOOBIES_EGIL Shadow of Akavir_KID.ini	1938
+KIDs/BOOBIES_Elemental_Destruction_Magic_Redux_KID.ini	2732
+KIDs/BOOBIES_FaceMasksOfSkyrim_KID.ini	747
+KIDs/BOOBIES_FGCAegeanSentinelHalberd_KID.ini	1186
+KIDs/BOOBIES_Firebrand Scarf_KID.ini	749
+KIDs/BOOBIES_GR Inari EarsTails SMP_KID.ini	938
+KIDs/BOOBIES_Gwelda Dawnguard Armor_KID.ini	1177
+KIDs/BOOBIES_Gwelda Red Riding Hood_KID.ini	1189
+KIDs/BOOBIES_Gwelda Vampire_KID.ini	915
+KIDs/BOOBIES_Gwelda Witch_KID.ini	828
+KIDs/BOOBIES_HammerfellArmorySE_KID.ini	951
+KIDs/BOOBIES_HeartOfTheReach_KID.ini	774
+KIDs/BOOBIES_Helps To Have A Compass_KID.ini	759
+KIDs/BOOBIES_Helps To Have A Map_KID.ini	1417
+KIDs/BOOBIES_Hunterborn_KID.ini	762
+KIDs/BOOBIES_Inigo_KID.ini	747
+KIDs/BOOBIES_Inquisition_KID.ini	785
+KIDs/BOOBIES_Insanity's Sorrow_KID.ini	1392
+KIDs/BOOBIES_InsanitySorrow Weapons Pack_KID.ini	1447
+KIDs/BOOBIES_Instincts_KID.ini	881
+KIDs/BOOBIES_JSwords_KID.ini	1322
+KIDs/BOOBIES_KatanaCrafting_KID.ini	5026
+KIDs/BOOBIES_KillerWeapons_KID.ini	1328
+KIDs/BOOBIES_KSA_vdk_KID.ini	910
+KIDs/BOOBIES_League of Assassins Armor_KID.ini	1391
+KIDs/BOOBIES_LegacyoftheDragonborn_KID.ini	2246
+KIDs/BOOBIES_LegendsOfAetherium_KID.ini	854
+KIDs/BOOBIES_Merta Assassin Armor_KID.ini	1493
+KIDs/BOOBIES_Merta Black Rose Armor_KID.ini	1106
+KIDs/BOOBIES_Mihail_Mods_KID.ini	2880
+KIDs/BOOBIES_NewArmoury_KID.ini	11231
+KIDs/BOOBIES_Nicos_Twinblades_KID.ini	872
+KIDs/BOOBIES_NosPiercedEarsAll_KID.ini	748
+KIDs/BOOBIES_nwsFollowerFramework_KID.ini	767
+KIDs/BOOBIES_OBIS SE_KID.ini	1759
+KIDs/BOOBIES_OCF_KID.ini	1812
+KIDs/BOOBIES_Odin_KID.ini	11282
+KIDs/BOOBIES_Project_AHO_KID.ini	1048
+KIDs/BOOBIES_PrvtI_HeavyArmory_KID.ini	160809
+KIDs/BOOBIES_PrvtI_RoyalArmory_KID.ini	805
+KIDs/BOOBIES_Quarterstaff_KID.ini	1192
+KIDs/BOOBIES_QwibLantern_KID.ini	916
+KIDs/BOOBIES_Rapier_and_Dirk_by_Flarescale_KID.ini	907
+KIDs/BOOBIES_RDO_KID.ini	765
+KIDs/BOOBIES_RegaliaOfTheScorned_KID.ini	822
+KIDs/BOOBIES_RosaFollower_KID.ini	1561
+KIDs/BOOBIES_ScytheOfTheCrow_KID.ini	821
+KIDs/BOOBIES_Shockwave_KID.ini	1107
+KIDs/BOOBIES_SkyrimsUniqueTreasures_KID.ini	817
+KIDs/BOOBIES_Skyrim_KID.ini	9148
+KIDs/BOOBIES_Sotteta Huntress Armor_KID.ini	1447
+KIDs/BOOBIES_Sotteta Necromancer Outfit_KID.ini	1094
+KIDs/BOOBIES_Spartan Bard Outfit_KID.ini	901
+KIDs/BOOBIES_Spear Fantasy_KID.ini	813
+KIDs/BOOBIES_SpearOfLeonidas_KID.ini	818
+KIDs/BOOBIES_StalhrimBikini_KID.ini	3365
+KIDs/BOOBIES_Stella Mithril Armor_KID.ini	824
+KIDs/BOOBIES_StormCalling_KID.ini	1223
+KIDs/BOOBIES_TAWOBA_KID.ini	30902
+KIDs/BOOBIES_Tembtra Thief Armor_KID.ini	996
+KIDs/BOOBIES_TEWOBA_KID.ini	7256
+KIDs/BOOBIES_The Legends-Breton Knight_KID.ini	929
+KIDs/BOOBIES_Toccata_KID.ini	818
+KIDs/BOOBIES_Triumvirate_KID.ini	6900
+KIDs/BOOBIES_Twilight_Princess_Armor_KID.ini	6854
+KIDs/BOOBIES_TwinbladesOfSkyrim_KID.ini	1777
+KIDs/BOOBIES_Undeath_KID.ini	1307
+KIDs/BOOBIES_Unslaad_KID.ini	2821
+KIDs/BOOBIES_Ursine Armor Pack_KID.ini	1494
+KIDs/BOOBIES_Vigilant_KID.ini	5164
+KIDs/BOOBIES_Viridian Armor - Color Variations_KID.ini	2518
+KIDs/BOOBIES_war scythe_KID.ini	869
+KIDs/BOOBIES_WetandCold_KID.ini	1545
+KIDs/BOOBIES_WildHuntress_KID.ini	803
+KIDs/BOOBIES_Wintersun_KID.ini	853
+KIDs/BOOBIES_Wyrmstooth_KID.ini	1696
+KIDs/BOOBIES_Yol'Kreh Scythes_KID.ini	979
+KIDs/BOOBIES_[COCO] Shadow Assassin_KID.ini	1159
+KIDs/BOOBIES_[dint999] MysteriousKnightSet_KID.ini	1659
+KIDs/BOOBIES_[Ryan Reos] Dark Elf Blader_KID.ini	6000
+SKSE/
+SKSE/Plugins/
+SKSE/Plugins/InventoryInjector/
+SKSE/Plugins/InventoryInjector/BOOBIES_ImmersiveIcons.json	148044
+BOOBIES_GENERAL_ARMOR_KID.ini	2589
+BOOBIES_GENERAL_KID.ini	1081
+BOOBIES_GENERAL_WEAPONS.ini	1890
+BOOBIES_ImmersiveIcons.esp	144
+BOOBIES_ImmersiveIcons_KID.ini	1170

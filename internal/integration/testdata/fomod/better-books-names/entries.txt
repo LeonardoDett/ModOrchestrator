@@ -1,0 +1,15 @@
+# source: Better Skill and Quest Books Names SE v2-1-5260-2-1-1641827773.rar
+AE free upgrade/Better Skill and Quest Books Names SE.esp	723307
+AE with all CC/Better Skill and Quest Books Names SE.esp	818260
+fomod/info.xml	507
+fomod/ModuleConfig.xml	3631
+images/AE+CC.png	3707338
+images/banner.jpg	242534
+images/SE-legacy.png	3708318
+images/Thanks.png	3250881
+SE-legacy/Better Skill and Quest Books Names SE.esp	716013
+AE free upgrade/
+AE with all CC/
+fomod/
+images/
+SE-legacy/

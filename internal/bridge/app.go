@@ -5,6 +5,7 @@ package bridge
 
 import (
 	"context"
+	"strings"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
@@ -30,6 +31,8 @@ type App struct {
 
 // NewApp creates the binding over a wired container.
 func NewApp(c *bootstrap.Container) *App {
+	// FOMOD conditions compare the manager version (core/03 §4).
+	c.Library.AppVersion = Version
 	return &App{c: c, emit: runtime.EventsEmit}
 }
 
@@ -37,7 +40,10 @@ func NewApp(c *bootstrap.Container) *App {
 func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
 	a.unsubscribe = a.c.Events.Subscribe(func(e event.Event) {
-		if e.OperationID != "" {
+		// Operation events and the delivery signals of diagnostics and
+		// notifications tell the UI to read again (D021); the UI never
+		// merges their content as state.
+		if e.OperationID != "" || isSignal(e.Type) {
 			a.emit(a.ctx, EventOperation, toEventDTO(e))
 		}
 	})
@@ -51,6 +57,18 @@ func (a *App) Startup(ctx context.Context) {
 			a.c.Logger.Info("quick game search", "found", n)
 		}
 	}()
+}
+
+// isSignal reports the events of core/10 delivery (diagnostics changed,
+// notification created...) and of the plugins module (background sync,
+// load order file monitor) that happen outside operations.
+func isSignal(t event.Type) bool {
+	for _, p := range []string{"diagnostics.", "notification.", "plugins.", "plugin.", "loadorder.", "plugin_rule.", "plugin_group."} {
+		if strings.HasPrefix(string(t), p) {
+			return true
+		}
+	}
+	return false
 }
 
 // Shutdown is called by Wails before the process exits.

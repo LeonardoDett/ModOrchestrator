@@ -11,6 +11,8 @@ package ports
 import (
 	"context"
 	"errors"
+	"modorchestrator/internal/core/domain/externalchange"
+	"time"
 
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/diagnostic"
@@ -131,11 +133,22 @@ type Journals interface {
 	Instances(ctx context.Context) ([]game.InstanceID, error)
 }
 
+// ExternalDecisions persists the decisions about external changes that
+// outlive a scan: "leave unmanaged" (core/09 §4, D046).
+type ExternalDecisions interface {
+	Unmanaged(ctx context.Context, instance game.InstanceID) ([]externalchange.Unmanaged, error)
+	SaveUnmanaged(ctx context.Context, ds ...externalchange.Unmanaged) error
+}
+
 // Notifications persists delivery state, keyed so it survives recomputation
 // of the diagnostic it refers to.
 type Notifications interface {
 	Save(ctx context.Context, n *notification.Notification) error
-	List(ctx context.Context) ([]*notification.Notification, error)
+	Get(ctx context.Context, id notification.ID) (*notification.Notification, error)
+	// List returns the notifications that were not dismissed, newest first.
+	List(ctx context.Context, limit int) ([]*notification.Notification, error)
+	// ByRef returns the newest notification about ref (diagnostic key or
+	// aggregation key), ErrNotFound when none.
 	ByRef(ctx context.Context, ref string) (*notification.Notification, error)
 }
 
@@ -144,7 +157,17 @@ type Suppressions interface {
 	List(ctx context.Context) ([]diagnostic.Suppression, error)
 	Save(ctx context.Context, s diagnostic.Suppression) error
 	Delete(ctx context.Context, s diagnostic.Suppression) error
-	DeleteAll(ctx context.Context) error
+	DeleteAll(ctx context.Context) (int, error)
+}
+
+// Presence records which diagnostics of an instance existed at the last
+// evaluation and since when. It is delivery state, not the diagnostics
+// themselves (those are always recalculated): it lets a warning notify only
+// when it appears (core/10 §2) and the Diagnostics screen mark what is new
+// since the last visit.
+type Presence interface {
+	List(ctx context.Context, instance game.InstanceID) ([]diagnostic.Presence, error)
+	Replace(ctx context.Context, instance game.InstanceID, present []diagnostic.Presence) error
 }
 
 // Settings persists setting values; absent values mean the catalog default.
@@ -165,8 +188,12 @@ type Tx interface {
 	Profiles() Profiles
 	Rules() Rules
 	Overrides() Overrides
+	PluginRules() PluginRules
 	Manifests() Manifests
 	Journals() Journals
+	ExternalDecisions() ExternalDecisions
+	Notifications() Notifications
+	Presence() Presence
 	// Emit records events stored in the same transaction. Their IDs must be
 	// set; the store assigns sequences.
 	Emit(events ...event.Event)
@@ -180,9 +207,71 @@ type UnitOfWork interface {
 }
 
 // EventLog reads stored events by subject, newest first (history of an
-// entity, core/02 §12; the full history projection is F9).
+// entity, core/02 §12).
 type EventLog interface {
 	BySubject(ctx context.Context, ref event.EntityRef, limit int) ([]event.Event, error)
+}
+
+// HistoryQuery filters the history projection (core/10 §3). Zero values do
+// not filter. Mod matches the events about the mod and the events that name
+// it (rules, overrides).
+type HistoryQuery struct {
+	Instance game.InstanceID
+	Profile  string
+	Mod      string
+	// TypePrefixes keeps events whose type starts with one of them.
+	TypePrefixes []string
+	// Exclude drops events whose type starts with one of them.
+	Exclude []string
+	// Origin keeps "user", "auto" or "system" events.
+	Origin   string
+	From, To time.Time
+	// Before pages backwards: only events with a smaller sequence.
+	Before int64
+	Limit  int
+}
+
+// History reads events as history (core/10 §3) and applies the retention.
+type History interface {
+	Query(ctx context.Context, q HistoryQuery) ([]event.Event, error)
+	// ByID returns ErrNotFound for an unknown event.
+	ByID(ctx context.Context, id string) (event.Event, error)
+	// Reverted returns, among ids, the ones a later event reverted
+	// (payload revertOf), mapped to the reverting event id.
+	Reverted(ctx context.Context, ids []string) (map[string]string, error)
+	// Prune deletes events older than before (history.retentionDays).
+	Prune(ctx context.Context, before time.Time) (int, error)
+}
+
+// Event tags (core/10 §3): facts about who caused a change, merged into the
+// payload of every event committed under the context. The history shows the
+// origin and links a reversal to the entry it reverts.
+const (
+	TagOrigin    = "origin"
+	TagRevertOf  = "revertOf"
+	OriginAuto   = "auto"
+	OriginSystem = "system"
+	OriginUser   = "user"
+)
+
+type eventTagsKey struct{}
+
+// WithEventTags returns a context whose committed events carry tags.
+func WithEventTags(ctx context.Context, tags map[string]string) context.Context {
+	merged := map[string]string{}
+	for k, v := range EventTags(ctx) {
+		merged[k] = v
+	}
+	for k, v := range tags {
+		merged[k] = v
+	}
+	return context.WithValue(ctx, eventTagsKey{}, merged)
+}
+
+// EventTags returns the tags of ctx (nil when none).
+func EventTags(ctx context.Context) map[string]string {
+	tags, _ := ctx.Value(eventTagsKey{}).(map[string]string)
+	return tags
 }
 
 // InstallationSummary is the cheap view of an installation.

@@ -101,6 +101,7 @@ type DecisionDTO struct {
 	Candidates     []string          `json:"candidates"`
 	Folders        []string          `json:"folders"`
 	Ratio          int64             `json:"ratio,omitempty"`
+	Fomod          *FomodDecisionDTO `json:"fomod,omitempty"`
 }
 
 type QueueItemDTO struct {
@@ -118,6 +119,10 @@ type AnswerDTO struct {
 	Mod    string `json:"mod,omitempty"`
 	Label  string `json:"label,omitempty"`
 	Root   string `json:"root,omitempty"`
+	// Fomod is the wizard selection (visited groups) and Requirements the
+	// requirement files confirmed in its summary.
+	Fomod        []FomodSelectionDTO `json:"fomod,omitempty"`
+	Requirements []string            `json:"requirements,omitempty"`
 }
 
 type RemovalPreviewDTO struct {
@@ -173,6 +178,7 @@ func toDecisionDTO(d *library.Decision) *DecisionDTO {
 	out := &DecisionDTO{
 		Kind: d.Kind, Choices: d.Choices(), Duplicates: []DuplicateModDTO{}, SuggestedLabel: d.SuggestedLabel,
 		Candidates: append([]string{}, d.Candidates...), Folders: append([]string{}, d.Folders...), Ratio: d.Ratio,
+		Fomod: toFomodDecisionDTO(d.Fomod),
 	}
 	for _, m := range d.Duplicates {
 		out.Duplicates = append(out.Duplicates, DuplicateModDTO{ID: string(m.ID), Name: m.Name, Version: m.Version})
@@ -323,6 +329,7 @@ func (a *App) PickImportFolder(instance, title string) ([]string, error) {
 func (a *App) ResolveImport(operationID string, answer AnswerDTO) error {
 	err := a.c.Library.Resolve(operation.ID(operationID), library.Answer{
 		Choice: answer.Choice, Mod: mod.ID(answer.Mod), Label: answer.Label, Root: answer.Root,
+		Fomod: fromFomodSelection(answer.Fomod), Requirements: answer.Requirements,
 	})
 	if err != nil {
 		return a.fail("resolve import", err, map[string]string{"operation": operationID})

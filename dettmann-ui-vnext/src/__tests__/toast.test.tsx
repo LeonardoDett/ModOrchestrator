@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { ToastProvider, useToast } from "../components/toast";
@@ -33,5 +33,27 @@ describe("Toast", () => {
     expect(alert).toHaveAttribute("data-tone", "success");
     expect(alert).toHaveClass("shadow-xl");
     expect(alert).toHaveClass("rounded-xl");
+  });
+
+  it("runs its action once and closes", async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
+    function WithAction() {
+      const { addToast } = useToast();
+      return (
+        <button type="button" onClick={() => addToast({ title: "Enabled", duration: 0, action: { label: "Also enable B", onClick } })}>
+          Notify
+        </button>
+      );
+    }
+    render(
+      <ToastProvider>
+        <WithAction />
+      </ToastProvider>
+    );
+    await user.click(screen.getByRole("button", { name: "Notify" }));
+    await user.click(screen.getByRole("button", { name: "Also enable B" }));
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("alert")).toBeNull();
   });
 });

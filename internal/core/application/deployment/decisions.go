@@ -2,12 +2,11 @@ package deployment
 
 import (
 	"context"
+	"slices"
 	"strconv"
 
 	"modorchestrator/internal/core/domain/deployplan"
-	"modorchestrator/internal/core/domain/externalchange"
 	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
 )
 
@@ -16,27 +15,23 @@ import (
 const viewLimit = 500
 
 // PlanView is the plan as the deploy dialog shows it (DLG-14): counts per
-// action and what needs a decision.
+// action and what needs a decision (DLG-15 rows).
 type PlanView struct {
 	Instance  game.InstanceID
 	Operation operation.ID
 	Kind      operation.Kind
 	Summary   deployplan.Summary
+	// Changes lists external changes to managed files first, then the
+	// generated files found around them.
 	Changes   []ChangeView
 	Blocked   []BlockedView
 	Fallbacks []FallbackView
-	// Totals before truncation.
-	ChangeCount, BlockedCount int
+	// Totals before truncation. ChangeCount counts managed changes (they
+	// need a decision); NewFileCount the generated files (they never stop
+	// the run, D080).
+	ChangeCount, BlockedCount, NewFileCount int
 	// Empty: nothing to do (INV-DEP-04).
 	Empty bool
-}
-
-// ChangeView is an external change that keeps its location untouched.
-type ChangeView struct {
-	Location game.Location
-	Kind     externalchange.Kind
-	Mod      mod.ID
-	ModName  string
 }
 
 // BlockedView is a location that cannot be written now.
@@ -56,29 +51,13 @@ type FallbackView struct {
 
 func (s *Service) planView(r *run) PlanView {
 	v := PlanView{Instance: r.inst.ID, Operation: r.t.ID(), Kind: r.kind, Summary: r.plan.Summary, Empty: r.plan.Empty(),
-		ChangeCount: len(r.plan.Changes), BlockedCount: len(r.plan.Blocked)}
-	return fillView(v, r.plan, r.in)
+		ChangeCount: len(r.plan.Changes), BlockedCount: len(r.plan.Blocked), NewFileCount: len(r.unexpected)}
+	return s.fillView(v, r)
 }
 
-func fillView(v PlanView, p deployplan.Plan, in *inputs) PlanView {
-	name := func(id mod.ID) string {
-		if in != nil {
-			if m, ok := in.mods[id]; ok {
-				return m.DisplayName()
-			}
-		}
-		return ""
-	}
-	for i, c := range p.Changes {
-		if i == viewLimit {
-			break
-		}
-		cv := ChangeView{Location: c.Location, Kind: c.Kind}
-		if c.Expected != nil {
-			cv.Mod, cv.ModName = c.Expected.Mod, name(c.Expected.Mod)
-		}
-		v.Changes = append(v.Changes, cv)
-	}
+func (s *Service) fillView(v PlanView, r *run) PlanView {
+	p := r.plan
+	v.Changes = s.views(p.Changes, r.unexpected, r.in)
 	for i, b := range p.Blocked {
 		if i == viewLimit {
 			break
@@ -105,20 +84,42 @@ type waiting struct {
 }
 
 type reply struct {
-	accepted map[string]bool
-	cancel   bool
+	accepted  map[string]bool
+	decisions []DecisionInput
+	cancel    bool
 }
 
 // awaitDecision stops the run when the plan needs a decision (core/04 §5).
-// Auto-deploy ends here as blocked without writing anything (INV-DEP-06).
-// The decisions of F7: external changes and blocked locations are left
-// untouched in this run; fallback groups are accepted or left untouched.
+// Decisions given in advance (review outside a deploy, automatic restore
+// of missing files) are applied first. Auto-deploy ends here as blocked
+// without writing anything (INV-DEP-06). The user's answer carries one
+// action per external change (DLG-15) and the accepted fallback groups;
+// whatever stays undecided is left untouched in this run.
 func (s *Service) awaitDecision(ctx context.Context, r *run) error {
+	if r.plan.NeedsDecision() || len(r.pre) > 0 {
+		if pre := slices.Concat(r.pre, s.autoRestore(ctx, r)); len(pre) > 0 {
+			source := "review"
+			if len(r.pre) == 0 {
+				source = "auto"
+			}
+			if err := s.applyDecisions(ctx, r, pre, false, source); err != nil {
+				e := opError(err)
+				e.Step = StepAwaitDecision
+				return e
+			}
+		}
+	}
 	if !r.plan.NeedsDecision() {
 		s.mu.Lock()
 		delete(s.needsDecision, r.inst.ID)
 		s.mu.Unlock()
-		return r.skipStep(ctx, StepAwaitDecision)
+		if r.inline || len(r.pre) == 0 {
+			return r.skipStep(ctx, StepAwaitDecision)
+		}
+		if err := r.t.BeginStep(ctx, StepAwaitDecision); err != nil {
+			return err
+		}
+		return r.t.CompleteStep(ctx, StepAwaitDecision)
 	}
 	if r.inline {
 		return fail(CodePurgeIncomplete, nil, "changes", strconv.Itoa(len(r.plan.Changes)), "blocked", strconv.Itoa(len(r.plan.Blocked)))
@@ -157,22 +158,11 @@ func (s *Service) awaitDecision(ctx context.Context, r *run) error {
 		return context.Canceled
 	}
 	r.accepted = got.accepted
-	r.untouched = len(r.plan.Changes)
-	r.skip = map[string]bool{}
-	for _, c := range r.plan.Changes {
-		r.skip[c.Location.Key()] = true
+	if err := s.applyDecisions(ctx, r, got.decisions, true, "user"); err != nil {
+		e := opError(err)
+		e.Step = StepAwaitDecision
+		return e
 	}
-	for _, b := range r.plan.Blocked {
-		r.skip[b.Location.Key()] = true
-	}
-	for _, f := range r.plan.Fallbacks {
-		if !got.accepted[f.Key()] {
-			for _, l := range f.Locations {
-				r.skip[l.Key()] = true
-			}
-		}
-	}
-	r.plan = deployplan.Build(s.planInput(ctx, r))
 	s.mu.Lock()
 	delete(s.needsDecision, r.inst.ID)
 	s.mu.Unlock()
@@ -191,14 +181,15 @@ func (s *Service) PendingDecision(instance game.InstanceID) (PlanView, bool) {
 }
 
 // ResolveDecision continues a waiting deploy: the listed fallback groups use
-// the proposed method; everything else that needed a decision is left
-// untouched in this run.
-func (s *Service) ResolveDecision(instance game.InstanceID, op operation.ID, acceptFallbacks []string) error {
+// the proposed method and each external change gets the chosen action
+// (DLG-15); everything else that needed a decision is left untouched in
+// this run.
+func (s *Service) ResolveDecision(instance game.InstanceID, op operation.ID, acceptFallbacks []string, decisions []DecisionInput) error {
 	accepted := map[string]bool{}
 	for _, k := range acceptFallbacks {
 		accepted[k] = true
 	}
-	return s.answer(instance, op, reply{accepted: accepted})
+	return s.answer(instance, op, reply{accepted: accepted, decisions: decisions})
 }
 
 // CancelDecision cancels a waiting deploy; nothing was written.
@@ -257,9 +248,12 @@ func (s *Service) Preview(ctx context.Context, instance game.InstanceID, purge b
 		return PlanView{}, err
 	}
 	r.plan = deployplan.Build(s.planInput(ctx, r))
+	s.enrich(ctx, r.inst, r.in, r.applied, r.plan.Changes)
 	s.mu.Lock()
 	s.changes[instance] = len(r.plan.Changes)
+	s.newFiles[instance] = len(r.unexpected)
 	s.mu.Unlock()
-	v := PlanView{Instance: instance, Kind: r.kind, Summary: r.plan.Summary, Empty: r.plan.Empty(), ChangeCount: len(r.plan.Changes), BlockedCount: len(r.plan.Blocked)}
-	return fillView(v, r.plan, r.in), nil
+	v := PlanView{Instance: instance, Kind: r.kind, Summary: r.plan.Summary, Empty: r.plan.Empty(),
+		ChangeCount: len(r.plan.Changes), BlockedCount: len(r.plan.Blocked), NewFileCount: len(r.unexpected)}
+	return s.fillView(v, r), nil
 }

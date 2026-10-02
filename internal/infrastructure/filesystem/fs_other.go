@@ -3,8 +3,10 @@
 package filesystem
 
 import (
+	"io/fs"
 	"path/filepath"
 	"syscall"
+	"time"
 )
 
 // The application targets Windows (D039); these keep the package buildable
@@ -29,3 +31,5 @@ func freeSpace(path string) (int64, error) {
 func fixedDrives() ([]string, error) { return []string{"/"}, nil }
 
 func failureKind(error) error { return nil }
+
+func createdAt(fs.FileInfo) time.Time { return time.Time{} }

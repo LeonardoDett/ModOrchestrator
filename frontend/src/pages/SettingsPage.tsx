@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { RotateCcw } from "lucide-react";
-import { Alert, Badge, Button, Input, Spinner, Stack, Tabs } from "dettmann-ui";
+import { Alert, Badge, Button, Input, Spinner, Stack, Switch, Tabs, Typography, useToast } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
-import { useWorkspace } from "../bridge/queries";
+import { useBackend } from "../bridge/backend-context";
+import { useSuppressions, useWorkspace } from "../bridge/queries";
+import { useAction } from "../features/games/use-action";
+import { useNavigation } from "../shell/navigation";
 import { DeploySettings } from "../features/deploy/DeploySettings";
 import type { UIError } from "../bridge/errors";
 import type { Setting } from "../bridge/types";
@@ -17,12 +20,13 @@ import { PageBody } from "./PageBody";
  * catalog arrives in F12, and tabs appear only when they have content.
  */
 const TABS: { id: string; label: MessageKey; keys: string[] }[] = [
-  { id: "interface", label: "settings.tab.interface", keys: ["ui.language"] },
+  { id: "interface", label: "settings.tab.interface", keys: ["ui.language", "ui.desktopNotifications"] },
   { id: "theme", label: "settings.tab.theme", keys: ["theme.mode", "theme.id", "theme.density"] },
 ];
 
 export function SettingsPage() {
   const { t } = useI18n();
+  const { route } = useNavigation();
   const settings = useSettings();
   const workspace = useWorkspace();
   const active = workspace.status === "ready" ? (workspace.data.active?.id ?? "") : "";
@@ -47,7 +51,7 @@ export function SettingsPage() {
 
   return (
     <PageBody>
-      <Tabs.Root defaultValue="interface">
+      <Tabs.Root defaultValue={route.settingsTab === "mods" && active ? "mods" : "interface"}>
         <Tabs.List>
           {TABS.map((tab) => (
             <Tabs.Trigger key={tab.id} value={tab.id}>
@@ -63,6 +67,7 @@ export function SettingsPage() {
                 const setting = settings.get(key);
                 return setting ? <SettingRow key={key} setting={setting} /> : null;
               })}
+              {tab.id === "interface" ? <SuppressedRow /> : null}
             </Stack>
           </Tabs.Panel>
         ))}
@@ -81,6 +86,36 @@ function optionLabel(i18n: ReturnType<typeof useI18n>, setting: Setting, option:
   return i18n.has(key) ? i18n.t(key) : option;
 }
 
+/** Settings › Interface "Redefinir notificações suprimidas" (core/10 §1.2, Vortex parity). */
+function SuppressedRow() {
+  const { t, tp } = useI18n();
+  const backend = useBackend();
+  const run = useAction();
+  const { addToast } = useToast();
+  const suppressions = useSuppressions();
+  const count = suppressions.status === "ready" ? suppressions.data.length : 0;
+  const reset = async () => {
+    const result = await run(() => backend.resetSuppressedDiagnostics());
+    if (result.ok) addToast({ title: tp("settings.suppressed.done", result.value), variant: "success", duration: 3000 });
+  };
+  if (suppressions.status !== "ready") return null;
+  return (
+    <div className="rounded-xl border border-border bg-surface p-4">
+      <Stack gap="sm">
+        <Typography variant="label">{t("settings.suppressed.title")}</Typography>
+        <Typography variant="body-sm" color="muted-fg">
+          {tp("settings.suppressed.description", count)}
+        </Typography>
+        <div>
+          <Button size="sm" variant="outline" disabled={count === 0} startIcon={<RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void reset()}>
+            {t("settings.suppressed.reset")}
+          </Button>
+        </div>
+      </Stack>
+    </div>
+  );
+}
+
 function SettingRow({ setting }: { setting: Setting }) {
   const i18n = useI18n();
   const { t } = i18n;
@@ -95,6 +130,23 @@ function SettingRow({ setting }: { setting: Setting }) {
     setError(await call());
     setPending(false);
   };
+
+  if (setting.type === "bool") {
+    return (
+      <div className="rounded-xl border border-border bg-surface p-4">
+        <Stack gap="sm">
+          <Switch
+            checked={setting.value === "true"}
+            disabled={pending}
+            label={i18n.has(label) ? t(label) : setting.key}
+            description={i18n.has(description) ? t(description) : undefined}
+            onCheckedChange={(on) => void apply(() => set(setting.key, String(on)))}
+          />
+          {error ? <ErrorAlert title="settings.saveError" error={error} /> : null}
+        </Stack>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-xl border border-border bg-surface p-4">

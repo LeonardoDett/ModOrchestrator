@@ -44,6 +44,10 @@ const (
 	ReasonStagingMissing    Reason = "staging_missing"
 	ReasonStagingForeign    Reason = "staging_foreign"
 	ReasonRuleCycle         Reason = "rule_cycle"
+	// ReasonModsIncompatible: incompatible mods are enabled together
+	// (core/06 §4); ReasonGameRunning: the game is running (game_running).
+	ReasonModsIncompatible Reason = "mods_incompatible"
+	ReasonGameRunning      Reason = "game_running"
 	ReasonNeedsDecision     Reason = "needs_decision"
 	ReasonExternalChanges   Reason = "external_changes"
 )

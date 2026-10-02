@@ -2,12 +2,20 @@
 
 import { createContext, useContext } from "react";
 
+/** A follow-up the user can take from the toast ("Undo", "Also enable…"). */
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
 export interface Toast {
   id: string;
   title?: string;
   description?: string;
   variant?: "default" | "success" | "warning" | "danger" | "info";
   duration?: number;
+  /** Optional action button; running it closes the toast. */
+  action?: ToastAction;
 }
 
 export interface ToastContextValue {

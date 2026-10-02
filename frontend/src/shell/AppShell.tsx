@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
-import { Sidebar, Typography, type SidebarSection } from "dettmann-ui";
-import { useAppInfo, useWorkspace } from "../bridge/queries";
+import { Badge, Sidebar, Typography, type SidebarSection } from "dettmann-ui";
+import { useAppInfo, useProblems, useWorkspace } from "../bridge/queries";
 import { useI18n } from "../i18n/i18n";
 import { AboutDialog, ShortcutsDialog } from "./HelpDialogs";
 import { CommandPalette } from "./CommandPalette";
@@ -41,7 +41,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function Shell({ children }: { children: ReactNode }) {
-  const { t } = useI18n();
+  const { t, tp } = useI18n();
   const { route, navigate } = useNavigation();
   const { refresh } = useRefresh();
   const info = useAppInfo();
@@ -54,6 +54,9 @@ function Shell({ children }: { children: ReactNode }) {
   useGlobalShortcuts({ onCommandPalette: () => setDialog("palette"), onRefresh: refresh, onDeploy: () => void deploy.deploy() });
 
   const offered = workspace.status === "ready" ? workspace.data : null;
+  // Diagnostics badge: blocking + errors of the active game (ui/00 §2.2).
+  const problems = useProblems(offered?.active?.id ?? "");
+  const errorCount = problems.status === "ready" && problems.data ? problems.data.counts.blocking + problems.data.counts.errors : 0;
   const sections: SidebarSection[] = buildSections(offered?.items).map((section) => ({
     id: section.id,
     label: section.id === "workspace" ? offered?.active?.name : undefined,
@@ -62,6 +65,12 @@ function Shell({ children }: { children: ReactNode }) {
       id: entry.id,
       label: t(entry.label),
       icon: entry.icon,
+      badge:
+        entry.id === "diagnostics" && errorCount > 0 ? (
+          <Badge tone="danger" size="sm" aria-label={tp("topbar.problemsCount", errorCount)}>
+            {errorCount}
+          </Badge>
+        ) : undefined,
       onClick: () => navigate({ view: entry.id }),
     })),
   }));

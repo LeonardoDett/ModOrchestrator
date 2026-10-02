@@ -34,6 +34,8 @@ const (
 	CodeStagingForeign   = "staging_foreign"
 	CodeTargetUnavail    = "target_unavailable"
 	CodeForeign          = "foreign_deployment"
+	CodeModsIncompatible = "mods_incompatible"
+	CodeGameRunning      = "game_running"
 	CodeInterrupted      = "deploy_interrupted"
 	CodeNeedsDecision    = "deploy_needs_decision"
 	CodeMethodUnavail    = "method_unavailable"
@@ -55,6 +57,12 @@ const (
 	CodeMethodSame       = "method_unchanged"
 	CodeStagingSame      = "staging_unchanged"
 	CodeInstanceNotFound = "not_found"
+	// CodeDecisionInvalid: an action not offered for the change (core/09
+	// §4), or a capture without destination.
+	CodeDecisionInvalid = "external_decision_invalid"
+	// CodeCaptureTarget: the chosen mod does not deploy to the target of
+	// the generated file.
+	CodeCaptureTarget = "capture_target_mismatch"
 )
 
 func fail(code string, cause error, kv ...string) *Error {

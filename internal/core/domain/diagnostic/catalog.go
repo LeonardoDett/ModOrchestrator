@@ -1,5 +1,7 @@
 package diagnostic
 
+import "slices"
+
 // Catalog of health check codes (core/10 §1.1). A new check needs a line in
 // the spec catalog and here; codes never change once released.
 const (
@@ -29,6 +31,12 @@ const (
 	CodePluginLimitExceeded     Code = "plugin_limit_exceeded"
 	CodePluginDisabledMaster    Code = "plugin_disabled_master"
 	CodePluginHeaderUnreadable  Code = "plugin_header_unreadable"
+	CodePluginMasterOrder       Code = "plugin_master_order"
+	CodePluginRuleOrphan        Code = "plugin_rule_orphan"
+	CodePluginRuleCycle         Code = "plugin_rule_cycle"
+	CodePluginLockConflict      Code = "plugin_lock_conflict"
+	CodePluginFromLosingFile    Code = "plugin_from_losing_file"
+	CodeBSAWithoutPlugin        Code = "bsa_without_plugin"
 	CodeGameNotFound            Code = "game_not_found"
 	CodeGameVersionChanged      Code = "game_version_changed"
 	CodeGameRunning             Code = "game_running"
@@ -36,3 +44,49 @@ const (
 	CodeDiskSpaceLow            Code = "disk_space_low"
 	CodeBackupFailed            Code = "backup_failed"
 )
+
+// Module groups codes for the filters of the Diagnostics screen and the
+// problem bands of each screen (ui/telas/diagnostics.md §2).
+type Module string
+
+const (
+	ModuleDeploy    Module = "deploy"
+	ModuleConflicts Module = "conflicts"
+	ModuleRules     Module = "rules"
+	ModulePlugins   Module = "plugins"
+	ModuleLibrary   Module = "library"
+	ModuleGame      Module = "game"
+	ModuleApp       Module = "app"
+)
+
+var modules = map[Code]Module{
+	CodeStagingMissing: ModuleDeploy, CodeStagingForeign: ModuleDeploy, CodeForeignDeployment: ModuleDeploy,
+	CodeDeployInterrupted: ModuleDeploy, CodeDeployPending: ModuleDeploy, CodeDeployNeedsDecision: ModuleDeploy,
+	CodeDeployFailed: ModuleDeploy, CodeMethodUnavailable: ModuleDeploy, CodeExternalChangesPending: ModuleDeploy,
+	CodeLoadOrderExternalChange: ModulePlugins,
+	CodeRuleCycle:               ModuleRules, CodeModsIncompatible: ModuleRules, CodeModRequirementMissing: ModuleRules,
+	CodeModRecommendation: ModuleRules, CodeRuleOrphan: ModuleRules,
+	CodeOverrideStale: ModuleConflicts, CodeConflictsUnreviewed: ModuleConflicts, CodeModFullyOverwritten: ModuleConflicts,
+	CodeStagingFileMissing: ModuleLibrary, CodeStagingFileModified: ModuleLibrary, CodeModArchiveMissing: ModuleLibrary,
+	CodeInstallerRequired:   ModuleLibrary,
+	CodePluginMissingMaster: ModulePlugins, CodePluginLimitExceeded: ModulePlugins, CodePluginDisabledMaster: ModulePlugins,
+	CodePluginHeaderUnreadable: ModulePlugins, CodePluginMasterOrder: ModulePlugins, CodePluginRuleOrphan: ModulePlugins,
+	CodePluginRuleCycle: ModulePlugins, CodePluginLockConflict: ModulePlugins, CodePluginFromLosingFile: ModulePlugins,
+	CodeBSAWithoutPlugin: ModulePlugins,
+	CodeGameNotFound:     ModuleGame, CodeGameVersionChanged: ModuleGame, CodeGameRunning: ModuleGame,
+	CodeFrameworkMissing: ModuleGame,
+	CodeDiskSpaceLow:     ModuleApp, CodeBackupFailed: ModuleApp,
+}
+
+// ModuleOf returns the module of a catalog code ("" for unknown codes).
+func ModuleOf(c Code) Module { return modules[c] }
+
+// Catalog lists every code of core/10 §1.1.
+func Catalog() []Code {
+	out := make([]Code, 0, len(modules))
+	for c := range modules {
+		out = append(out, c)
+	}
+	slices.Sort(out)
+	return out
+}

@@ -6,9 +6,12 @@ import (
 	"io"
 	"time"
 
+	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
+	"modorchestrator/internal/core/domain/ordering"
+	"modorchestrator/internal/core/domain/plugin"
 )
 
 // FileInfo is what the filesystem reports about a path. FileID (volume
@@ -20,7 +23,11 @@ type FileInfo struct {
 	LinkTarget string
 	Size       int64
 	ModTime    time.Time
-	FileID     string
+	// Created is the creation time when the platform reports one (zero
+	// otherwise). A file moved into a folder keeps its modification time
+	// but gets a new creation time there (core/09 §2 `unexpected`).
+	Created time.Time
+	FileID  string
 }
 
 // Failure kinds of filesystem writes. Implementations wrap the platform
@@ -195,8 +202,8 @@ type RootHints struct {
 
 // GameAdapter is the contract every adapter implements (core/11 §1). It
 // declares and answers; it never deploys and never writes (anti-pattern 24):
-// it only receives a FileReader. Plugin and load order support are added as
-// separate optional interfaces in F11.
+// it only receives a FileReader. Plugin and load order support are the
+// optional interfaces PluginSupport and LoadOrderSupport (F11).
 type GameAdapter interface {
 	Name() string
 	Version() string
@@ -265,4 +272,106 @@ type DefaultCategory struct {
 // of a new instance (core/02 §10). No network call is involved.
 type CategoryProvider interface {
 	DefaultCategories(id game.ID) []DefaultCategory
+}
+
+// ProcessProbe tells which of the given executable names are running
+// (core/11 §6, `game_running`). Names compare without case.
+type ProcessProbe interface {
+	Running(ctx context.Context, names []string) ([]string, error)
+}
+
+// ProcessDeclarer is implemented by adapters that know the processes of a
+// running game (core/11 §1 `launch()`: "como detectar jogo em execução").
+type ProcessDeclarer interface {
+	Processes(id game.ID) []string
+}
+
+// ModContent is what an adapter health check knows about a mod of the
+// active profile.
+type ModContent struct {
+	ID      mod.ID
+	Name    string
+	Type    game.ModTypeID
+	Content []mod.ContentFlag
+	Enabled bool
+}
+
+// HealthCheckProvider is implemented by adapters with checks of their own
+// (core/11 §1 `healthChecks()`, core/12 §7). The adapter reads, never
+// writes (anti-pattern 24), and returns diagnostics as codes and
+// parameters; the core validates them (INV-OPS-06).
+type HealthCheckProvider interface {
+	HealthChecks(ctx context.Context, fs FileReader, inst game.Instance, mods []ModContent) ([]diagnostic.Spec, error)
+}
+
+// PluginSupport is implemented by adapters with the `plugins` capability
+// (core/11 §1, core/08 §1). The adapter recognises plugins, reads their
+// headers and declares the hard constraints, the indexes and the limits;
+// the core owns the model, the ordering engine (D029) and the flow. No
+// Bethesda rule lives outside the adapter (anti-pattern 3).
+type PluginSupport interface {
+	// PluginTarget is the target whose top-level files are plugins.
+	PluginTarget(id game.ID) game.TargetID
+	// IsPlugin reports whether a file name (no folder) is a plugin.
+	IsPlugin(id game.ID, name string) bool
+	// ReadHeader reads the header of a plugin file. It reads only what it
+	// needs from r.
+	ReadHeader(id game.ID, name string, r io.Reader) (plugin.Header, error)
+	// Implicit lists the plugins the game always loads, in their fixed
+	// order at the top, among those that exist (names is the inventory).
+	Implicit(ctx context.Context, fs FileReader, inst game.Instance, names []plugin.Name) ([]plugin.Name, error)
+	// Constraints returns the hard constraints between the plugins (items
+	// are plugin keys, refs start with plugin.RefAdapterPrefix).
+	Constraints(id game.ID, plugins []plugin.Plugin) []ordering.Edge
+	// Indexes gives the displayed load index of every active plugin (by
+	// key), in load order, and the usage of each limit.
+	Indexes(id game.ID, active []plugin.Plugin) (map[string]string, []plugin.LimitUsage)
+}
+
+// PluginArchives is implemented by adapters whose archives load only with
+// an active plugin of the same base name (core/12 §5–7, Skyrim BSA). Given
+// every file name at the top of the plugin target and the active plugins,
+// it returns the archives no active plugin loads (bsa_without_plugin).
+type PluginArchives interface {
+	OrphanArchives(id game.ID, files []string, active []plugin.Name) []string
+}
+
+// Known folders an adapter can place files in, resolved by the platform.
+const FolderLocalAppData = "local_app_data"
+
+// FileLocation is a file below a known folder of the user.
+type FileLocation struct {
+	Folder string
+	Path   string
+}
+
+// KnownFolders resolves the folders of FileLocation.
+type KnownFolders interface {
+	Folder(name string) (string, error)
+}
+
+// LoadOrderSupport is implemented by adapters with the `load_order`
+// capability (core/11 §1, D040): where the game reads its load order and
+// how it is written. The adapter only serializes; the core writes the file
+// with evidence (anti-pattern 24).
+type LoadOrderSupport interface {
+	LoadOrderFile(inst game.Instance) FileLocation
+	// ManualOrder reports whether the user may reorder by hand.
+	ManualOrder(id game.ID) bool
+	// Serialize turns the full load order (implicit plugins included) into
+	// the file content.
+	Serialize(id game.ID, entries []plugin.Entry) ([]byte, error)
+	// Parse reads the file content back.
+	Parse(id game.ID, data []byte) ([]plugin.Entry, error)
+}
+
+// HeaderCache keeps plugin headers by a content key (core/14 §1: a
+// discardable cache below <dataDir>/cache/).
+type HeaderCache interface {
+	Get(key string) (plugin.Header, bool)
+	Put(key string, h plugin.Header)
+	// Flush persists what changed; Clear empties the cache ("Reconstruir
+	// cache de cabeçalhos de plugins", core/13).
+	Flush() error
+	Clear() error
 }

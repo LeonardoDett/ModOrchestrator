@@ -1,6 +1,6 @@
 # Alterações externas e arquivos gerados
 
-Referências: D008, D035, D040, D046; INV-EXT-*, INV-DEP-01/02. Vortex: `ExternalChangeDialog`, `externalChanges.ts`, `new-file-monitor`, `FixDeploymentDialog`. MO2: pasta `overwrite`.
+Referências: D008, D035, D040, D046, D080, D081; INV-EXT-*, INV-DEP-01/02. Vortex: `ExternalChangeDialog`, `externalChanges.ts`, `new-file-monitor`, `FixDeploymentDialog`. MO2: pasta `overwrite`.
 
 ## 1. Problema
 

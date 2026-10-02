@@ -104,6 +104,22 @@ func (s *Service) loadInputs(ctx context.Context, instance game.InstanceID) (*in
 	return in, nil
 }
 
+// incompatible returns the first pair of enabled mods an enabled
+// incompatibility rule forbids together (core/06 §4: deploy blocked until
+// one is disabled or the rule is disabled).
+func (in *inputs) incompatible() (a, b mod.ID, found bool) {
+	enabled := map[mod.ID]bool{}
+	for _, id := range in.enabled {
+		enabled[id] = true
+	}
+	for _, r := range in.rules.IncompatibilityRules() {
+		if !r.Disabled && enabled[r.A] && enabled[r.B] {
+			return r.A, r.B, true
+		}
+	}
+	return "", "", false
+}
+
 // installation reads an installation through the cache (installations are
 // immutable once saved).
 func (s *Service) installation(ctx context.Context, id mod.InstallationID) (*mod.Installation, error) {

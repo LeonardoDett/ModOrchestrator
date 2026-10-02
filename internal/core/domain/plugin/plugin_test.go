@@ -24,33 +24,33 @@ func after(id RuleID, p, q Name) Rule {
 func TestRuleCycleIsRefused(t *testing.T) {
 	r, _ := NewRules("i1")
 	known := []Name{"a.esp", "b.esp"}
-	if err := r.AddRule(after("r1", "b.esp", "a.esp"), known); err != nil {
+	if err := r.AddRule(after("r1", "b.esp", "a.esp"), Check{Known: known}); err != nil {
 		t.Fatal(err)
 	}
-	err := r.AddRule(after("r2", "A.esp", "B.esp"), known)
+	err := r.AddRule(after("r2", "A.esp", "B.esp"), Check{Known: known})
 	var ce *ordering.CycleError
 	if !errors.Is(err, ErrCycle) || !errors.As(err, &ce) {
 		t.Fatalf("cycle must be refused, got %v", err)
 	}
-	if err := r.AddRule(after("r3", "B.ESP", "a.esp"), known); !errors.Is(err, ErrDuplicate) {
+	if err := r.AddRule(after("r3", "B.ESP", "a.esp"), Check{Known: known}); !errors.Is(err, ErrDuplicate) {
 		t.Fatal("same rule with other case is a duplicate")
 	}
 }
 
 func TestGroupsBecomeEdgesAndRefuseCycles(t *testing.T) {
 	r, _ := NewRules("i1")
-	if err := r.SetGroup(Group{Name: "late", After: []string{DefaultGroup}}); err != nil {
+	if err := r.SetGroup(Group{Name: "late", After: []string{DefaultGroup}}, Check{}); err != nil {
 		t.Fatal(err)
 	}
-	_ = r.Assign("patch.esp", "late")
+	_ = r.Assign("patch.esp", "late", Check{})
 	edges := r.Edges([]Name{"a.esp", "patch.esp"})
 	if len(edges) != 1 || edges[0].Before != "a.esp" || edges[0].After != "patch.esp" {
 		t.Fatalf("default plugins must load before late ones: %v", edges)
 	}
-	if err := r.SetGroup(Group{Name: DefaultGroup, After: []string{"late"}}); !errors.Is(err, ErrCycle) {
+	if err := r.SetGroup(Group{Name: DefaultGroup, After: []string{"late"}}, Check{}); !errors.Is(err, ErrCycle) {
 		t.Fatalf("group cycle must be refused, got %v", err)
 	}
-	if err := r.Assign("x.esp", "unknown"); !errors.Is(err, ErrInvalid) {
+	if err := r.Assign("x.esp", "unknown", Check{}); !errors.Is(err, ErrInvalid) {
 		t.Fatal("unknown group must be rejected")
 	}
 	restored, err := RestoreRules(r.Data())
@@ -63,7 +63,7 @@ func TestProviderRulesCanOnlyBeDisabled(t *testing.T) {
 	r, _ := NewRules("i1")
 	rule := after("r1", "b.esp", "a.esp")
 	rule.Source = rules.SourceMetadata
-	_ = r.AddRule(rule, nil)
+	_ = r.AddRule(rule, Check{})
 	if err := r.RemoveRule("r1"); !errors.Is(err, ErrInvalid) {
 		t.Fatal("metadata rule cannot be removed")
 	}

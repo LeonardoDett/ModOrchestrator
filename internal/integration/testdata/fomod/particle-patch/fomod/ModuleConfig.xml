@@ -1,0 +1,304 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
+	<moduleName>Particle Patch</moduleName>
+	<installSteps order="Explicit">
+		<installStep name="Installation">
+			<optionalFileGroups order="Explicit">
+				<group name="Installation Format" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="BSA">
+							<description>
+								Core assets are provided as a BSA. The main benefit apart from data hygiene is that loose files from other mods will always take priority, making sure that those mods can function correctly without managing load order manually. Note that optional install options such as custom textures and any meshes required by them will be still provided as loose files so that you can manage their priority appropriately.&#13;&#10;&#13;&#10;Additionally, the Particle Patch plugin containing fixes to Fire FX shaders is installed.
+							</description>
+								<image path="img/01.jpg"/>
+							<conditionFlags>
+								<flag name="bsa">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Recommended"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Loose Files">
+							<description>
+								Core assets are provided as loose files instead of a BSA in case you want to manage their priority manually. Additionally, the Particle Patch plugin containing fixes to Fire FX shaders is installed.
+							</description>
+								<image path="img/01.jpg"/>
+							<conditionFlags>
+								<flag name="bsa">inactive</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Plugin Name" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Particle Patch">
+							<description>
+								Both the plugin and the accompanying BSA (when applicable) are named "Particle Patch" to match the current name of the project. Recommended for new installs.
+							</description>
+								<image path="img/01.jpg"/>
+							<conditionFlags>
+								<flag name="pp">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Recommended"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Particle Patch for ENB">
+							<description>
+								Both the plugin and the accompanying BSA (when applicable) are named "Particle Patch for ENB" to ensure compatibility with existing mods and patches expecting the legacy name.
+							</description>
+								<image path="img/01.jpg"/>
+							<conditionFlags>
+								<flag name="pp">inactive</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Light Shafts" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Yes">
+							<description>
+								Light shafts can be controlled by the [PARTICLE] settings of ENBSeries but they will appear slightly different, hence you can opt-out.&#13;&#10;&#13;&#10;Example image with custom textures active.
+							</description>
+								<image path="img/02b.jpg"/>
+							<conditionFlags>
+								<flag name="ambient">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Recommended"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="No">
+							<description>
+								Light shafts are not modified in any way but cannot be controlled with the [PARTICLE] settings of ENBSeries so they may appear too bright depending on your preset and weather mod.&#13;&#10;&#13;&#10;Example image with custom textures active.
+							</description>
+								<image path="img/02a.jpg"/>
+							<conditionFlags>
+								<flag name="ambient">inactive</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Fake Light Glow" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Particle Light">
+							<description>
+								Render the glow as particle light.&#13;&#10;&#13;&#10;In the preview image, before (vanilla) is on top and after is at bottom.
+							</description>
+								<image path="img/03a.jpg"/>
+							<conditionFlags>
+								<flag name="noglow">inactive</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Removed">
+							<description>
+								Remove glow completely.&#13;&#10;&#13;&#10;In the preview image, before (vanilla) is on top and after is at bottom. Always loose.
+							</description>
+								<image path="img/03b.jpg"/>
+							<conditionFlags>
+								<flag name="noglow">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Remove Fake Glow" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Remove Candle Glow">
+							<description>
+								Remove the fake yellow glow halo around candle flames. Always loose.
+							</description>
+								<image path="img/03b.jpg"/>
+							<conditionFlags>
+								<flag name="nocandleglow">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Remove Yellow Glow">
+							<description>
+								Remove the fake yellow glow halo around fire sources such as braziers and other fires. Always loose.
+							</description>
+								<image path="img/03b.jpg"/>
+							<conditionFlags>
+								<flag name="noyellowglow">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Custom Textures" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Yes">
+							<description>
+								Choose this if you want to install custom textures. Mostly these are improved (somewhat subjective, obviously), higher resolution textures for a number particle effects such as ambient fog, mist and light shafts but also custom 4K cobwebs and some other minor things. Custom textures always come as loose files.
+							</description>
+								<image path="img/01.jpg"/>
+							<conditionFlags>
+								<flag name="tex">active</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="No">
+							<description>
+								Choose this if you do not want to install custom textures.
+							</description>
+								<image path="img/01.jpg"/>
+							<conditionFlags>
+								<flag name="tex">inactive</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+	</installSteps>
+	<conditionalFileInstalls>
+        <patterns>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="active"/>
+					<flagDependency flag="pp" value="active"/>
+					<flagDependency flag="ambient" value="inactive"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/bsa" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="active"/>
+					<flagDependency flag="pp" value="inactive"/>
+					<flagDependency flag="ambient" value="inactive"/>
+                </dependencies>
+                <files>
+                    <file source="assets/bsa/Particle Patch.bsa" destination="Particle Patch for ENB.bsa" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="active"/>
+					<flagDependency flag="pp" value="active"/>
+					<flagDependency flag="ambient" value="active"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/bsa-beams" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="active"/>
+					<flagDependency flag="pp" value="inactive"/>
+					<flagDependency flag="ambient" value="active"/>
+                </dependencies>
+                <files>
+                    <file source="assets/bsa-beams/Particle Patch.bsa" destination="Particle Patch for ENB.bsa" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="inactive"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/loose" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="ambient" value="active"/>
+					<flagDependency flag="bsa" value="inactive"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/ambient" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="noglow" value="active"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/noglow" destination="" priority="2"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="tex" value="active"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/tex" destination="" priority="3"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="nocandleglow" value="active"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/remove_candle_glow" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="noyellowglow" value="active"/>
+                </dependencies>
+                <files>
+                    <folder source="assets/remove_yellow_glow" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="pp" value="active"/>
+                </dependencies>
+                <files>
+                    <folder source="plugin" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="pp" value="inactive"/>
+                </dependencies>
+                <files>
+                    <file source="plugin/Particle Patch.esp" destination="Particle Patch for ENB.esp" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="inactive"/>
+					<fileDependency file="ccQDRSSE002-Firewood.esl" state="Active"/>
+				</dependencies>
+                <files>
+                    <folder source="assets/campfire" destination="" priority="1"/>
+                </files>
+            </pattern>
+			<pattern>
+                <dependencies operator="And">
+					<flagDependency flag="bsa" value="inactive"/>
+					<fileDependency file="ccbgssse069-contest.esl" state="Active"/>
+				</dependencies>
+                <files>
+                    <folder source="assets/webmother" destination="" priority="1"/>
+                </files>
+            </pattern>
+		</patterns>
+    </conditionalFileInstalls>
+</config>

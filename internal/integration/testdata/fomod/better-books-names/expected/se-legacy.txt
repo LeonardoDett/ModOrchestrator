@@ -1,0 +1,6 @@
+# visible steps: 0,1
+# flags: NoticeCheck=On
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Choose One","group":0,"groupName":"Choose One","options":[2],"names":["Skyrim SE (Legacy)"]},{"step":1,"stepName":"Thanks","group":0,"groupName":"Thanks","options":[0],"names":["Readme"]}]
+Better Skill and Quest Books Names SE.esp <- SE-legacy/Better Skill and Quest Books Names SE.esp (716013)

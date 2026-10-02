@@ -1,0 +1,10 @@
+# visible steps: 0
+# flags: 
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Main","group":0,"groupName":"DLL","options":[0],"names":["SSE v1.6.1170 (\"Anniversary Edition\")"]}]
+SKSE/Plugins/EngineFixes.dll <- EngineFixes FOMOD Installer/AE/SKSE/Plugins/EngineFixes.dll (2456064)
+SKSE/Plugins/EngineFixes.pdb <- EngineFixes FOMOD Installer/AE/SKSE/Plugins/EngineFixes.pdb (30085120)
+SKSE/Plugins/EngineFixes.toml <- EngineFixes FOMOD Installer/Required/SKSE/Plugins/EngineFixes.toml (9119)
+SKSE/Plugins/EngineFixes_preload.txt <- EngineFixes FOMOD Installer/Required/SKSE/Plugins/EngineFixes_preload.txt (0)
+SKSE/Plugins/EngineFixes_SNCT.ini <- EngineFixes FOMOD Installer/Required/SKSE/Plugins/EngineFixes_SNCT.ini (0)

@@ -1,7 +1,12 @@
 package system
 
 import (
+	"context"
+	"os"
+	"path/filepath"
 	"regexp"
+	"runtime"
+	"strings"
 	"testing"
 )
 
@@ -18,5 +23,20 @@ func TestIDsAreUniqueUUIDv7(t *testing.T) {
 			t.Fatalf("duplicate id %s", id)
 		}
 		seen[id] = true
+	}
+}
+
+func TestProcessesFindsTheTestBinary(t *testing.T) {
+	exe, err := os.Executable()
+	if err != nil {
+		t.Skip(err)
+	}
+	name := filepath.Base(exe)
+	got, err := Processes{}.Running(context.Background(), []string{strings.ToUpper(name), "certainly-not-running.exe"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if runtime.GOOS == "windows" && (len(got) != 1 || got[0] != strings.ToUpper(name)) {
+		t.Fatalf("running = %v", got)
 	}
 }

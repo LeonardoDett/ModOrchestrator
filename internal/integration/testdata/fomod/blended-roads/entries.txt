@@ -1,0 +1,257 @@
+# source: Blended Roads-8834-1-7-1586448385.7z
+00 Blended Roads/
+00 Blended Roads/meshes/
+00 Blended Roads/meshes/architecture/
+00 Blended Roads/meshes/architecture/solitude/
+00 Blended Roads/meshes/dungeons/
+00 Blended Roads/meshes/dungeons/dwemer/
+00 Blended Roads/meshes/dungeons/dwemer/roads/
+00 Blended Roads/meshes/dungeons/nordic/
+00 Blended Roads/meshes/dungeons/nordic/exterior/
+00 Blended Roads/meshes/landscape/
+00 Blended Roads/meshes/landscape/bridges/
+00 Blended Roads/meshes/landscape/roads/
+00 Blended Roads/meshes/landscape/roads/snow/
+00 Blended Roads/textures/
+00 Blended Roads/textures/clutter/
+00 Blended Roads/textures/dlc02/
+00 Blended Roads/textures/dlc02/landscape/
+00 Blended Roads/textures/landscape/
+00 Blended Roads/textures/landscape/roads/
+01 Blended Roads SMIM Compatibility patch/
+01 Blended Roads SMIM Compatibility patch/meshes/
+01 Blended Roads SMIM Compatibility patch/meshes/architecture/
+01 Blended Roads SMIM Compatibility patch/meshes/architecture/solitude/
+01 Blended Roads SMIM Compatibility patch/meshes/landscape/
+01 Blended Roads SMIM Compatibility patch/meshes/landscape/bridges/
+02 REALly Blended ROADS/
+02 REALly Blended ROADS/meshes/
+02 REALly Blended ROADS/meshes/architecture/
+02 REALly Blended ROADS/meshes/architecture/solitude/
+02 REALly Blended ROADS/meshes/dungeons/
+02 REALly Blended ROADS/meshes/dungeons/dwemer/
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/
+02 REALly Blended ROADS/meshes/dungeons/nordic/
+02 REALly Blended ROADS/meshes/dungeons/nordic/exterior/
+02 REALly Blended ROADS/meshes/landscape/
+02 REALly Blended ROADS/meshes/landscape/bridges/
+02 REALly Blended ROADS/meshes/landscape/roads/
+02 REALly Blended ROADS/textures/
+02 REALly Blended ROADS/textures/clutter/
+02 REALly Blended ROADS/textures/dlc02/
+02 REALly Blended ROADS/textures/dlc02/landscape/
+02 REALly Blended ROADS/textures/landscape/
+02 REALly Blended ROADS/textures/landscape/roads/
+03 REALly Blended ROADS SMIM Compatibility Patch/
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/architecture/
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/architecture/solitude/
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/landscape/
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/landscape/bridges/
+fomod/
+images/
+00 Blended Roads/BlendedRoads.esp	8989
+00 Blended Roads/meshes/architecture/solitude/sbridge01.nif	895952
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroad3way01.nif	38103
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkl01.nif	16176
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkl02.nif	11886
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkl03.nif	9491
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkm01.nif	16493
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkm02.nif	8750
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkm03.nif	6805
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunkm04.nif	7427
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunks01.nif	4367
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunks02.nif	4135
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunks03.nif	3655
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadchunks04.nif	4593
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadcurve90r01.nif	37004
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadcurvelong45lramp01.nif	59009
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadcurvelong45lramp02.nif	58926
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadcurvelong45r01.nif	57111
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadcurvelong45rramp01.nif	58979
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadcurvelong45rramp02.nif	59026
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadscurver01.nif	66312
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadscurveramp01.nif	64907
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraight01.nif	30967
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraight01end.nif	29992
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraight02.nif	55187
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraight02down01.nif	42407
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraightlong01.nif	60510
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraightlong02.nif	124554
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraightlongramp01.nif	80075
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstraightlongramp02.nif	58792
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstrtocurverampl01.nif	52843
+00 Blended Roads/meshes/dungeons/dwemer/roads/dweroadstrtocurverampr01.nif	52500
+00 Blended Roads/meshes/dungeons/nordic/exterior/dragonbridge01.nif	388559
+00 Blended Roads/meshes/landscape/bridges/bridge01.nif	186217
+00 Blended Roads/meshes/landscape/bridges/bridgelong01.nif	236260
+00 Blended Roads/meshes/landscape/bridges/bridgenarrow01.nif	104302
+00 Blended Roads/meshes/landscape/bridges/bridgeshort01.nif	104658
+00 Blended Roads/meshes/landscape/roads/road3way01.nif	36491
+00 Blended Roads/meshes/landscape/roads/roadchunkl01.nif	16176
+00 Blended Roads/meshes/landscape/roads/roadchunkl02.nif	11886
+00 Blended Roads/meshes/landscape/roads/roadchunkl03.nif	9491
+00 Blended Roads/meshes/landscape/roads/roadchunkm01.nif	16493
+00 Blended Roads/meshes/landscape/roads/roadchunkm02.nif	8750
+00 Blended Roads/meshes/landscape/roads/roadchunkm03.nif	6805
+00 Blended Roads/meshes/landscape/roads/roadchunkm04.nif	7427
+00 Blended Roads/meshes/landscape/roads/roadchunks01.nif	4315
+00 Blended Roads/meshes/landscape/roads/roadchunks02.nif	4135
+00 Blended Roads/meshes/landscape/roads/roadchunks03.nif	3623
+00 Blended Roads/meshes/landscape/roads/roadchunks04.nif	4593
+00 Blended Roads/meshes/landscape/roads/roadcurve90r01.nif	37004
+00 Blended Roads/meshes/landscape/roads/roadcurvelong45lramp01.nif	59009
+00 Blended Roads/meshes/landscape/roads/roadcurvelong45lramp02.nif	58926
+00 Blended Roads/meshes/landscape/roads/roadcurvelong45r01.nif	57111
+00 Blended Roads/meshes/landscape/roads/roadcurvelong45rramp01.nif	59003
+00 Blended Roads/meshes/landscape/roads/roadcurvelong45rramp02.nif	59026
+00 Blended Roads/meshes/landscape/roads/roadscurver01.nif	66312
+00 Blended Roads/meshes/landscape/roads/roadscurveramp01.nif	64907
+00 Blended Roads/meshes/landscape/roads/roadstraight01.nif	30967
+00 Blended Roads/meshes/landscape/roads/roadstraight01end.nif	29992
+00 Blended Roads/meshes/landscape/roads/roadstraight02.nif	55187
+00 Blended Roads/meshes/landscape/roads/roadstraight02down01.nif	42407
+00 Blended Roads/meshes/landscape/roads/roadstraightlong01.nif	60510
+00 Blended Roads/meshes/landscape/roads/roadstraightlong02.nif	124554
+00 Blended Roads/meshes/landscape/roads/roadstraightlongramp01.nif	80075
+00 Blended Roads/meshes/landscape/roads/roadstraightlongramp02.nif	58792
+00 Blended Roads/meshes/landscape/roads/roadstrtocurverampl01.nif	52843
+00 Blended Roads/meshes/landscape/roads/roadstrtocurverampr01.nif	52500
+00 Blended Roads/meshes/landscape/roads/snow/road3way01.nif	36491
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkl01.nif	16176
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkl02.nif	11886
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkl03.nif	9491
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkm01.nif	16493
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkm02.nif	8750
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkm03.nif	6805
+00 Blended Roads/meshes/landscape/roads/snow/roadchunkm04.nif	7427
+00 Blended Roads/meshes/landscape/roads/snow/roadchunks01.nif	4315
+00 Blended Roads/meshes/landscape/roads/snow/roadchunks02.nif	4135
+00 Blended Roads/meshes/landscape/roads/snow/roadchunks03.nif	3623
+00 Blended Roads/meshes/landscape/roads/snow/roadchunks04.nif	4593
+00 Blended Roads/meshes/landscape/roads/snow/roadcurve90r01.nif	37004
+00 Blended Roads/meshes/landscape/roads/snow/roadcurvelong45lramp01.nif	59009
+00 Blended Roads/meshes/landscape/roads/snow/roadcurvelong45lramp02.nif	58926
+00 Blended Roads/meshes/landscape/roads/snow/roadcurvelong45r01.nif	57111
+00 Blended Roads/meshes/landscape/roads/snow/roadcurvelong45rramp01.nif	59003
+00 Blended Roads/meshes/landscape/roads/snow/roadcurvelong45rramp02.nif	59026
+00 Blended Roads/meshes/landscape/roads/snow/roadscurver01.nif	66312
+00 Blended Roads/meshes/landscape/roads/snow/roadscurveramp01.nif	64907
+00 Blended Roads/meshes/landscape/roads/snow/roadstraight01.nif	30967
+00 Blended Roads/meshes/landscape/roads/snow/roadstraight01end.nif	29992
+00 Blended Roads/meshes/landscape/roads/snow/roadstraight02.nif	55187
+00 Blended Roads/meshes/landscape/roads/snow/roadstraight02down01.nif	42407
+00 Blended Roads/meshes/landscape/roads/snow/roadstraightlong01.nif	60510
+00 Blended Roads/meshes/landscape/roads/snow/roadstraightlong02.nif	65013
+00 Blended Roads/meshes/landscape/roads/snow/roadstraightlongramp01.nif	80075
+00 Blended Roads/meshes/landscape/roads/snow/roadstraightlongramp02.nif	58792
+00 Blended Roads/meshes/landscape/roads/snow/roadstrtocurverampl01.nif	52843
+00 Blended Roads/meshes/landscape/roads/snow/roadstrtocurverampr01.nif	52500
+00 Blended Roads/textures/clutter/blackreachroad01.dds	5592560
+00 Blended Roads/textures/clutter/blackreachroad01_n.dds	5592580
+00 Blended Roads/textures/dlc02/landscape/dlc2road01ash01.dds	5592560
+00 Blended Roads/textures/dlc02/landscape/dlc2road01ash01_n.dds	5592580
+00 Blended Roads/textures/landscape/roads/road01.dds	5592560
+00 Blended Roads/textures/landscape/roads/road01fallforest01.dds	5592560
+00 Blended Roads/textures/landscape/roads/road01fallforest01_n.dds	5592580
+00 Blended Roads/textures/landscape/roads/road01reach01.dds	5592560
+00 Blended Roads/textures/landscape/roads/road01reach01_n.dds	5592580
+00 Blended Roads/textures/landscape/roads/road01snow01.dds	5592560
+00 Blended Roads/textures/landscape/roads/road01snow01_n.dds	5592580
+00 Blended Roads/textures/landscape/roads/road01_n.dds	5592580
+01 Blended Roads SMIM Compatibility patch/meshes/architecture/solitude/sbridge01.nif	899586
+01 Blended Roads SMIM Compatibility patch/meshes/landscape/bridges/bridge01.nif	448845
+01 Blended Roads SMIM Compatibility patch/meshes/landscape/bridges/bridgelong01.nif	358064
+01 Blended Roads SMIM Compatibility patch/meshes/landscape/bridges/bridgenarrow01.nif	241290
+01 Blended Roads SMIM Compatibility patch/meshes/landscape/bridges/bridgeshort01.nif	159182
+02 REALly Blended ROADS/BlendedRoads.esp	8872
+02 REALly Blended ROADS/meshes/architecture/solitude/sbridge01.nif	738765
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroad3way01.nif	245398
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkl01.nif	63874
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkl02.nif	53670
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkl03.nif	27195
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkm01.nif	31091
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkm02.nif	27452
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkm03.nif	10853
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunkm04.nif	20539
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunks01.nif	8986
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunks02.nif	8962
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunks03.nif	4936
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadchunks04.nif	8152
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadcurve90r01.nif	106582
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadcurvelong45lramp01.nif	376283
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadcurvelong45lramp02.nif	320570
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadcurvelong45r01.nif	398957
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadcurvelong45rramp01.nif	554543
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadcurvelong45rramp02.nif	429832
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadscurver01.nif	515124
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadscurveramp01.nif	628805
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraight01.nif	235955
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraight01end.nif	126804
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraight02.nif	461279
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraight02down01.nif	315145
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraightlong01.nif	379776
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraightlong02.nif	499048
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraightlongramp01.nif	491423
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstraightlongramp02.nif	489442
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstrtocurverampl01.nif	487213
+02 REALly Blended ROADS/meshes/dungeons/dwemer/roads/dweroadstrtocurverampr01.nif	513154
+02 REALly Blended ROADS/meshes/dungeons/nordic/exterior/dragonbridge01.nif	388559
+02 REALly Blended ROADS/meshes/landscape/bridges/bridge01.nif	737957
+02 REALly Blended ROADS/meshes/landscape/bridges/bridgelong01.nif	799063
+02 REALly Blended ROADS/meshes/landscape/bridges/bridgenarrow01.nif	256185
+02 REALly Blended ROADS/meshes/landscape/bridges/bridgeshort01.nif	311645
+02 REALly Blended ROADS/meshes/landscape/roads/road3way01.nif	245360
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkl01.nif	63836
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkl02.nif	53632
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkl03.nif	27157
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkm01.nif	31053
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkm02.nif	27524
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkm03.nif	10815
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunkm04.nif	20501
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunks01.nif	8948
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunks02.nif	8924
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunks03.nif	4898
+02 REALly Blended ROADS/meshes/landscape/roads/roadchunks04.nif	8114
+02 REALly Blended ROADS/meshes/landscape/roads/roadcurve90r01.nif	106544
+02 REALly Blended ROADS/meshes/landscape/roads/roadcurvelong45lramp01.nif	376245
+02 REALly Blended ROADS/meshes/landscape/roads/roadcurvelong45lramp02.nif	320450
+02 REALly Blended ROADS/meshes/landscape/roads/roadcurvelong45r01.nif	398919
+02 REALly Blended ROADS/meshes/landscape/roads/roadcurvelong45rramp01.nif	554505
+02 REALly Blended ROADS/meshes/landscape/roads/roadcurvelong45rramp02.nif	429794
+02 REALly Blended ROADS/meshes/landscape/roads/roadscurver01.nif	515086
+02 REALly Blended ROADS/meshes/landscape/roads/roadscurveramp01.nif	619949
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraight01.nif	235739
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraight01end.nif	126766
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraight02.nif	460910
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraight02down01.nif	315107
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraightlong01.nif	379152
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraightlong02.nif	499010
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraightlongramp01.nif	491305
+02 REALly Blended ROADS/meshes/landscape/roads/roadstraightlongramp02.nif	489330
+02 REALly Blended ROADS/meshes/landscape/roads/roadstrtocurverampl01.nif	483137
+02 REALly Blended ROADS/meshes/landscape/roads/roadstrtocurverampr01.nif	513116
+02 REALly Blended ROADS/textures/clutter/blackreachroad01.dds	5592560
+02 REALly Blended ROADS/textures/clutter/blackreachroad01_n.dds	5592580
+02 REALly Blended ROADS/textures/dlc02/landscape/dlc2road01ash01.dds	5592560
+02 REALly Blended ROADS/textures/dlc02/landscape/dlc2road01ash01_n.dds	5592580
+02 REALly Blended ROADS/textures/landscape/roads/bridge01.dds	5592560
+02 REALly Blended ROADS/textures/landscape/roads/bridge01_n.dds	5592580
+02 REALly Blended ROADS/textures/landscape/roads/road01.dds	5592560
+02 REALly Blended ROADS/textures/landscape/roads/road01fallforest01.dds	5592560
+02 REALly Blended ROADS/textures/landscape/roads/road01fallforest01_n.dds	5592580
+02 REALly Blended ROADS/textures/landscape/roads/road01reach01.dds	5592560
+02 REALly Blended ROADS/textures/landscape/roads/road01reach01_n.dds	5592580
+02 REALly Blended ROADS/textures/landscape/roads/road01snow01.dds	5592560
+02 REALly Blended ROADS/textures/landscape/roads/road01snow01_n.dds	5592580
+02 REALly Blended ROADS/textures/landscape/roads/road01_n.dds	5592580
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/architecture/solitude/sbridge01.nif	742398
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/landscape/bridges/bridge01.nif	1001804
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/landscape/bridges/bridgelong01.nif	921923
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/landscape/bridges/bridgenarrow01.nif	394444
+03 REALly Blended ROADS SMIM Compatibility Patch/meshes/landscape/bridges/bridgeshort01.nif	367726
+fomod/Info.xml	197
+fomod/ModuleConfig.xml	3304
+images/flat_blend.jpg	667886
+images/real_blend.jpg	649562
+Wizard.txt	3589

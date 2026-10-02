@@ -61,4 +61,39 @@ describe("Stepper", () => {
       "current"
     );
   });
+
+  it("is operable by keyboard and refuses disabled steps", async () => {
+    const user = userEvent.setup();
+    const changes: number[] = [];
+    render(
+      <Stepper.Root defaultValue={0} interactive orientation="vertical" onValueChange={(v) => changes.push(v)}>
+        <Stepper.Step index={0}>
+          <Stepper.StepIndicator />
+          <Stepper.StepLabel>One</Stepper.StepLabel>
+        </Stepper.Step>
+        <Stepper.Step index={1}>
+          <Stepper.StepIndicator />
+          <Stepper.StepLabel>Two</Stepper.StepLabel>
+        </Stepper.Step>
+        <Stepper.Step index={2} disabled>
+          <Stepper.StepIndicator />
+          <Stepper.StepLabel>Three</Stepper.StepLabel>
+        </Stepper.Step>
+      </Stepper.Root>
+    );
+    const steps = screen.getAllByRole("button");
+    expect(steps[0]).toHaveAttribute("aria-current", "step");
+    expect(steps[2]).toHaveAttribute("aria-disabled", "true");
+    expect(steps[2]).toHaveAttribute("tabindex", "-1");
+
+    await user.tab();
+    await user.tab();
+    expect(steps[1]).toHaveFocus();
+    await user.keyboard("{Enter}");
+    expect(changes).toEqual([1]);
+    expect(steps[1]).toHaveAttribute("aria-current", "step");
+
+    await user.click(screen.getByText("Three"));
+    expect(changes).toEqual([1]);
+  });
 });

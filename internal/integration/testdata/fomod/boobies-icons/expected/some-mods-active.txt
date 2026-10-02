@@ -1,0 +1,29 @@
+# visible steps: 0,1,2,3,4,5
+# flags: FullInstall=On
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Beautifully Overhauled and Objectively Better Icons Enhanced for SkyUI","group":0,"groupName":"Main Module","options":[0],"names":["Core Files"]},{"step":1,"stepName":"Keyword Item Distribution Modules - DX Armors","group":0,"groupName":"Select Mods To Support","options":[],"names":[]},{"step":2,"stepName":"Keyword Item Distribution Modules - Pure Magic","group":0,"groupName":"Select Mods To Support","options":[],"names":[]},{"step":3,"stepName":"Keyword Item Distribution Modules - Pure Weapons","group":0,"groupName":"Select Mods To Support","options":[],"names":[]},{"step":4,"stepName":"Keyword Item Distribution Modules - Skimpîes and Bikinies","group":0,"groupName":"Select Mods To Support","options":[],"names":[]},{"step":5,"stepName":"Keyword Item Distribution Modules - All the rest","group":0,"groupName":"Asura Guard Armor Support","options":[],"names":[]},{"step":5,"stepName":"Keyword Item Distribution Modules - All the rest","group":1,"groupName":"Select Mods To Support","options":[14,33,66],"names":["Cutting Room Floor","Inigo","Wyrmstooth"]}]
+BOOBIES_Cutting_Room_Floor_KID.ini <- KIDs/BOOBIES_Cutting_Room_Floor_KID.ini (833)
+BOOBIES_GENERAL_ARMOR_KID.ini <- BOOBIES_GENERAL_ARMOR_KID.ini (2589)
+BOOBIES_GENERAL_KID.ini <- BOOBIES_GENERAL_KID.ini (1081)
+BOOBIES_GENERAL_WEAPONS.ini <- BOOBIES_GENERAL_WEAPONS.ini (1890)
+BOOBIES_ImmersiveIcons.esp <- BOOBIES_ImmersiveIcons.esp (144)
+BOOBIES_ImmersiveIcons_KID.ini <- BOOBIES_ImmersiveIcons_KID.ini (1170)
+BOOBIES_Inigo_KID.ini <- KIDs/BOOBIES_Inigo_KID.ini (747)
+BOOBIES_Skyrim_KID.ini <- KIDs/BOOBIES_Skyrim_KID.ini (9148)
+BOOBIES_Wyrmstooth_KID.ini <- KIDs/BOOBIES_Wyrmstooth_KID.ini (1696)
+Interface/BOOBIES Immersive Icons/aedric artefacts.swf <- Interface/BOOBIES Immersive Icons/aedric artefacts.swf (7538)
+Interface/BOOBIES Immersive Icons/bodyparts.swf <- Interface/BOOBIES Immersive Icons/bodyparts.swf (28754)
+Interface/BOOBIES Immersive Icons/books.swf <- Interface/BOOBIES Immersive Icons/books.swf (52060)
+Interface/BOOBIES Immersive Icons/daedric artefacts.swf <- Interface/BOOBIES Immersive Icons/daedric artefacts.swf (43961)
+Interface/BOOBIES Immersive Icons/dwemer artefacts.swf <- Interface/BOOBIES Immersive Icons/dwemer artefacts.swf (5295)
+Interface/BOOBIES Immersive Icons/food.swf <- Interface/BOOBIES Immersive Icons/food.swf (1739)
+Interface/BOOBIES Immersive Icons/icons.swf <- Interface/BOOBIES Immersive Icons/icons.swf (24727)
+Interface/BOOBIES Immersive Icons/Ingredients.swf <- Interface/BOOBIES Immersive Icons/Ingredients.swf (874)
+Interface/BOOBIES Immersive Icons/legendary artefacts.swf <- Interface/BOOBIES Immersive Icons/legendary artefacts.swf (7942)
+Interface/BOOBIES Immersive Icons/weapons.swf <- Interface/BOOBIES Immersive Icons/weapons.swf (9604)
+Interface/Translations/BOOBIES_ImmersiveIcons_ENGLISH.txt <- Interface/Translations/BOOBIES_ImmersiveIcons_ENGLISH.txt (5902)
+Interface/Translations/BOOBIES_ImmersiveIcons_FRENCH.txt <- Interface/Translations/BOOBIES_ImmersiveIcons_FRENCH.txt (2726)
+Interface/Translations/BOOBIES_ImmersiveIcons_JAPANESE.txt <- Interface/Translations/BOOBIES_ImmersiveIcons_JAPANESE.txt (268)
+Interface/Translations/BOOBIES_ImmersiveIcons_SPANISH.txt <- Interface/Translations/BOOBIES_ImmersiveIcons_SPANISH.txt (362)
+SKSE/Plugins/InventoryInjector/BOOBIES_ImmersiveIcons.json <- SKSE/Plugins/InventoryInjector/BOOBIES_ImmersiveIcons.json (148044)

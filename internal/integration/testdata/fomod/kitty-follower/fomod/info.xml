@@ -1,0 +1,10 @@
+<!-- Created with FOMOD Creation Kit by Cutleast: https://www.nexusmods.com/site/mods/1366 -->
+<fomod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Cutleast/FOMOD-Creation-Kit/master/res/schemas/info.xsd">
+	<Name>Kitty Follower</Name>
+	<Author>AugustNNEC</Author>
+	<Version>1.1</Version>
+	<Website>https://www.nexusmods.com/profile/AugustNNEC</Website>
+	<Description>Standalone custom race follower. Everything is bundled - only Skyrim, Dawnguard, Hearthfires and Dragonborn are required.
+
+Also includes optional appearance replacers for M'rissi and Sa'chil, and an optional OBody patch with BodySlide preset and PDA auto-assignment.</Description>
+</fomod>

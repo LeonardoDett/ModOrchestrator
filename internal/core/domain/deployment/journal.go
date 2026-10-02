@@ -22,6 +22,11 @@ const (
 	ActionRestoreBackup   ActionKind = "restore_backup"
 	ActionMkdir           ActionKind = "mkdir"
 	ActionRemoveDir       ActionKind = "rmdir_managed"
+	// ActionSetAside moves a file that is not the manager's out of a
+	// location into the BackupStore without recording it as the original
+	// (core/09 §4 "Reverter" of a replaced file whose original is already
+	// kept). It is never deleted; Current is the stale link it replaces.
+	ActionSetAside ActionKind = "set_aside"
 )
 
 // applyRank is the safe execution order of core/04 §5 (apply). A managed
@@ -30,6 +35,7 @@ const (
 // creations: the location is never left empty.
 var applyRank = map[ActionKind]int{
 	ActionRemoveManaged:   0,
+	ActionSetAside:        0,
 	ActionRestoreBackup:   1,
 	ActionMkdir:           2,
 	ActionBackupAndCreate: 3,
@@ -51,7 +57,8 @@ type Action struct {
 	Current *Entry
 	// Backup is the backup entry a backup_and_create records: where the
 	// original goes and, as evidence, what the original looked like when
-	// it was planned (the move keeps its file identity).
+	// it was planned (the move keeps its file identity). For set_aside it
+	// describes where the found file goes; it is not recorded.
 	Backup *Entry
 }
 

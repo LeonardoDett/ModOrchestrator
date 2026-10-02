@@ -29,15 +29,21 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | Estado observado | deployment | filesystem | não | — | a qualquer momento |
 | DeploymentStatus | deployment | **cálculo** | não | desejado × aplicado × observado + journal | qualquer insumo |
 | ExternalChange | deployment | **cálculo** + decisões pendentes | decisões sim; divergência não | aplicado × observado | scan |
-| Plugins (inventário) | plugins | **cálculo** | não (cache de cabeçalho por hash, descartável) | arquivos implantados + base + não gerenciados | deploy, scan |
+| Decisão "não gerenciado" | deployment | `state.db` (`external_unmanaged`) | sim | — | usuário (D080) |
+| Início da implantação (base de `unexpected`) | deployment | `state.db` (`app_state`) | sim | — | primeiro deploy / purge completo (D080) |
+| Captura em curso | deployment | `state.db` (`app_state`, `deployment.captures`) | sim (temporário) | — | início/fim da captura (D080) |
+| Plugins (inventário) | plugins | **cálculo** | não (cache de cabeçalho em `<dataDir>/cache/`, chave caminho + tamanho + data, descartável, D088) | vencedores do desejado + base + não gerenciados | mudança de mods/profile, deploy, scan |
 | PluginState, LoadOrder desejada | plugins | `state.db` | sim | — | usuário, sort |
 | PluginRule, PluginGroup | plugins | `state.db` | sim | — | usuário, provedores |
-| LoadOrder aplicada | plugins | arquivo do jogo (`plugins.txt`) | no jogo | — | deploy, ferramentas externas |
+| LoadOrder aplicada | plugins | arquivo do jogo (`plugins.txt`); evidência (hash, hash pendente, ordem anterior) em `applied_load_orders` | no jogo | — | deploy, `apply_load_order`, ferramentas externas (D088) |
 | Diagnostic | diagnostics | **cálculo** (health checks) | não; supressões sim | fatos atuais | qualquer fato |
-| Supressão de diagnóstico | diagnostics | `state.db` | sim | — | usuário |
-| Notification (lida/dispensada) | diagnostics | `state.db` | sim | — | usuário |
+| Supressão de diagnóstico | diagnostics | `state.db` (`diagnostic_suppressions`) | sim | — | usuário |
+| Presença de diagnóstico (desde quando existe) | diagnostics | `state.db` (`diagnostic_presence`) | sim (estado de entrega, não o diagnóstico) | diagnósticos da última avaliação | cada avaliação (D082) |
+| Última visita a Problemas, versão do jogo reconhecida | diagnostics, games | `state.db` (`app_state`) | sim | — | usuário (D082) |
+| Notification (lida/dispensada) | diagnostics | `state.db` (`notifications`) | sim | — | usuário |
+| Verificação arquivo a arquivo da staging | diagnostics | **cálculo** (cache em memória por Installation) | não | Installation vs staging | "Verificar agora", nova Installation (D082) |
 | Operation, Event | operations | `state.db` | sim | — | execução |
-| HistoryEntry | history | **projeção** de Events | não (pode ter índice) | Events | novos eventos |
+| HistoryEntry | history | **projeção** de Events (`events.instance_id` é índice resolvido ao gravar) | não | Events | novos eventos; retenção `history.retentionDays` (D082) |
 | Snapshot | profiles | `state.db` | sim | — | antes de operações em massa, manual |
 | Settings | settings | `state.db` (escopo app/instância/profile) | sim | — | usuário |
 | Tema/idioma da UI | settings | `state.db` | sim | — | usuário |

@@ -76,7 +76,11 @@ Violação de restrição rígida do adapter na LoadOrder desejada é impossíve
 Erros: `plugin_not_found`, `rule_would_create_cycle`, `order_violates_constraints`, `index_lock_conflict`, `load_order_file_locked`.
 Eventos: `plugins.inventory_changed`, `plugin.enabled`, `plugin.disabled`, `loadorder.changed`, `loadorder.sorted`, `loadorder.applied`, `plugin_rule.*`, `plugin_group.*`.
 
-## 11. Critérios de aceite
+## 11. Como ficou (F11)
+
+Mecânica em D088; comportamentos não fixados aqui em D089 (proposta). Resumo: o adapter declara por `ports.PluginSupport`/`LoadOrderSupport`/`PluginArchives`; o motor é `domain/plugin` (`Sort`, `Settle`, `Place`, `Merge`) sobre `domain/ordering`; o serviço `application/plugins` mantém o arranjo persistido no profile, escreve o arquivo com hash pendente + evidência, guarda o substituído no BackupStore, faz a triagem (importar/restaurar) e vigia o arquivo a cada 2 s. Os diagnósticos de §8 ganharam `plugin_rule_cycle`, `plugin_lock_conflict` e `bsa_without_plugin` (core/10 §1.1). `load_order_external_change` não bloqueia o deploy, só a escrita (D089 item 1).
+
+## 12. Critérios de aceite
 
 - Habilitar mod com plugin: plugin aparece, entra ativo (setting padrão) e na posição correta pelas restrições.
 - Plugin com master inexistente: erro no plugin e no Diagnostics.

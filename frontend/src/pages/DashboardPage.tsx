@@ -2,12 +2,13 @@ import { Activity, Gamepad2 } from "lucide-react";
 import { Alert, Button, Spinner, Stack, Typography } from "dettmann-ui";
 import { useAppInfo, useOperations } from "../bridge/queries";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
+import { AttentionDashlet } from "../features/diagnostics/AttentionDashlet";
 import { OperationsTable } from "../features/operations/OperationsTable";
 import { useI18n } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
 import { HonestEmpty, PageBody } from "./PageBody";
 
-/** Triage center (ui/telas/dashboard.md); dashlets arrive with their features (F12). */
+/** Triage center (ui/telas/dashboard.md): "Precisa de atenção" first (F9); the other dashlets arrive in F12. */
 export function DashboardPage() {
   const { t, tp } = useI18n();
   const info = useAppInfo();
@@ -22,6 +23,8 @@ export function DashboardPage() {
             <Alert.Description>{tp("operations.interruptedDescription", interrupted)}</Alert.Description>
           </Alert.Root>
         ) : null}
+
+        <AttentionDashlet />
 
         <Stack as="section" gap="sm" aria-labelledby="setup-status">
           <Typography id="setup-status" variant="heading-6" color="fg">

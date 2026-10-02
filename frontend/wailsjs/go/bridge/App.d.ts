@@ -8,6 +8,10 @@ export function AddDependencyRule(arg1:string,arg2:string,arg3:string,arg4:strin
 
 export function AddIncompatibilityRule(arg1:string,arg2:string,arg3:string):Promise<string>;
 
+export function ApplyLoadOrder(arg1:string):Promise<string>;
+
+export function AttentionDiagnostics():Promise<Array<bridge.ProblemsDTO>>;
+
 export function CancelDeploy(arg1:string):Promise<boolean>;
 
 export function CancelDeployDecision(arg1:string,arg2:string):Promise<void>;
@@ -32,6 +36,10 @@ export function ConflictPairs(arg1:string,arg2:boolean,arg3:string):Promise<brid
 
 export function CreateOrderRule(arg1:string,arg2:string,arg3:string):Promise<string>;
 
+export function CreatePluginGroup(arg1:string,arg2:string,arg3:Array<string>):Promise<void>;
+
+export function CreatePluginRule(arg1:string,arg2:string,arg3:string):Promise<void>;
+
 export function CreateProfile(arg1:string,arg2:string,arg3:string):Promise<string>;
 
 export function CreateSeparator(arg1:string,arg2:string,arg3:string,arg4:bridge.AnchorDTO):Promise<string>;
@@ -42,6 +50,8 @@ export function DecidePairs(arg1:string,arg2:Array<bridge.PairDecisionDTO>):Prom
 
 export function DeleteCategory(arg1:string,arg2:string):Promise<void>;
 
+export function DeletePluginGroup(arg1:string,arg2:string):Promise<void>;
+
 export function DeleteProfile(arg1:string):Promise<void>;
 
 export function DeleteSeparator(arg1:string,arg2:string):Promise<void>;
@@ -51,6 +61,22 @@ export function Deploy(arg1:string):Promise<string>;
 export function DeployMethods(arg1:string):Promise<Array<bridge.DeployMethodDTO>>;
 
 export function DeployStatus(arg1:string):Promise<bridge.DeployStatusDTO>;
+
+export function Diagnostics(arg1:string):Promise<bridge.ProblemsDTO>;
+
+export function DismissNotifications(arg1:Array<string>):Promise<void>;
+
+export function EnableImpact(arg1:string,arg2:Array<string>,arg3:boolean):Promise<bridge.EnableImpactDTO>;
+
+export function ExecuteDiagnosticAction(arg1:string,arg2:string,arg3:string,arg4:number):Promise<bridge.DiagnosticActionResultDTO>;
+
+export function ExportLoadOrder(arg1:string):Promise<string>;
+
+export function ExportSupportBundle(arg1:string,arg2:string):Promise<string>;
+
+export function FomodImage(arg1:string,arg2:string):Promise<string>;
+
+export function FomodState(arg1:string,arg2:Array<bridge.FomodSelectionDTO>):Promise<bridge.FomodViewDTO>;
 
 export function GameInstanceDetails(arg1:string):Promise<bridge.ManagedGameDTO>;
 
@@ -64,7 +90,11 @@ export function HideGame(arg1:string,arg2:boolean):Promise<void>;
 
 export function HideInstance(arg1:string,arg2:boolean):Promise<void>;
 
+export function History(arg1:bridge.HistoryFilterDTO):Promise<Array<bridge.HistoryEntryDTO>>;
+
 export function ImportFiles(arg1:string,arg2:Array<string>):Promise<Array<string>>;
+
+export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResultDTO>;
 
 export function ImportQueue(arg1:string):Promise<Array<bridge.QueueItemDTO>>;
 
@@ -76,11 +106,21 @@ export function ListInstanceSettings(arg1:string):Promise<Array<bridge.SettingDT
 
 export function ListRecentOperations(arg1:number):Promise<Array<bridge.OperationDTO>>;
 
+export function LoadOrderDiffApplied(arg1:string):Promise<bridge.LoadOrderDiffDTO>;
+
+export function LoadOrderExplain(arg1:string,arg2:string):Promise<bridge.PluginExplainDTO>;
+
+export function LoadOrderView(arg1:string):Promise<bridge.LoadOrderViewDTO>;
+
 export function LogTail(arg1:bridge.LogFilterDTO):Promise<Array<bridge.LogEntryDTO>>;
 
 export function ManageGame(arg1:bridge.SetupDTO):Promise<bridge.ManageResultDTO>;
 
 export function MarkConflictsReviewed(arg1:string,arg2:Array<bridge.PairRefDTO>):Promise<void>;
+
+export function MarkDiagnosticsVisited(arg1:string):Promise<void>;
+
+export function MarkNotificationsRead(arg1:Array<string>):Promise<void>;
 
 export function ModConflictFiles(arg1:string,arg2:string,arg3:string,arg4:number,arg5:number):Promise<bridge.ModConflictFilesDTO>;
 
@@ -100,9 +140,15 @@ export function ModRules(arg1:string):Promise<Array<bridge.RuleDTO>>;
 
 export function MoveMods(arg1:string,arg2:bridge.MoveRequestDTO):Promise<bridge.MoveResultDTO>;
 
+export function MovePlugins(arg1:string,arg2:Array<string>,arg3:number):Promise<bridge.PluginMoveResultDTO>;
+
 export function MoveStaging(arg1:string,arg2:string):Promise<string>;
 
+export function Notifications(arg1:number):Promise<Array<bridge.NotificationDTO>>;
+
 export function OpenInstanceFolder(arg1:string,arg2:string):Promise<void>;
+
+export function OpenLocationFolder(arg1:string,arg2:bridge.LocationDTO):Promise<void>;
 
 export function OpenLogFolder():Promise<void>;
 
@@ -120,6 +166,12 @@ export function PickImportFiles(arg1:string,arg2:string):Promise<Array<string>>;
 
 export function PickImportFolder(arg1:string,arg2:string):Promise<Array<string>>;
 
+export function PluginDetails(arg1:string,arg2:string):Promise<bridge.PluginDetailsDTO>;
+
+export function PluginList(arg1:string):Promise<bridge.PluginListDTO>;
+
+export function PluginRules(arg1:string):Promise<bridge.PluginRulesDTO>;
+
 export function PreviewDeploy(arg1:string,arg2:boolean):Promise<bridge.DeployPlanDTO>;
 
 export function PreviewModRemoval(arg1:string,arg2:Array<string>):Promise<bridge.RemovalPreviewDTO>;
@@ -136,11 +188,15 @@ export function ProfileSnapshots(arg1:string):Promise<Array<bridge.SnapshotDTO>>
 
 export function Purge(arg1:string):Promise<string>;
 
+export function RebuildPluginHeaderCache():Promise<void>;
+
 export function ReconcileDeploy(arg1:string):Promise<string>;
 
 export function ReinstallMods(arg1:string,arg2:Array<string>):Promise<Array<string>>;
 
 export function RemoveMods(arg1:string,arg2:Array<string>,arg3:boolean):Promise<string>;
+
+export function RemovePluginRule(arg1:string,arg2:string):Promise<void>;
 
 export function RemoveRule(arg1:string,arg2:string):Promise<void>;
 
@@ -150,27 +206,47 @@ export function RenameProfile(arg1:string,arg2:string):Promise<void>;
 
 export function ResetAppSetting(arg1:string):Promise<void>;
 
-export function ResolveDeployDecision(arg1:string,arg2:string,arg3:Array<string>):Promise<void>;
+export function ResetSuppressedDiagnostics():Promise<number>;
+
+export function ResolveDeployDecision(arg1:string,arg2:string,arg3:Array<string>,arg4:Array<bridge.ExternalDecisionDTO>):Promise<void>;
+
+export function ResolveExternalChanges(arg1:string,arg2:Array<bridge.ExternalDecisionDTO>):Promise<string>;
 
 export function ResolveImport(arg1:string,arg2:bridge.AnswerDTO):Promise<void>;
 
+export function ResolveLoadOrderChange(arg1:string,arg2:string):Promise<string>;
+
+export function RestorePreviousLoadOrder(arg1:string):Promise<string>;
+
 export function RestoreSnapshot(arg1:string,arg2:string):Promise<bridge.RestoreResultDTO>;
+
+export function RevertHistoryEntry(arg1:string):Promise<void>;
 
 export function RevertOrderChange(arg1:string,arg2:string):Promise<void>;
 
 export function RuleCycle(arg1:string):Promise<bridge.RuleCycleDTO>;
 
+export function RunHealthChecks(arg1:string):Promise<void>;
+
 export function SaveCategory(arg1:string,arg2:bridge.CategoryDTO):Promise<string>;
 
+export function ScanExternalChanges(arg1:string):Promise<void>;
+
 export function ScanGames(arg1:string):Promise<string>;
+
+export function SendDesktopNotification(arg1:string,arg2:string,arg3:string):Promise<void>;
 
 export function SetActiveInstance(arg1:string):Promise<void>;
 
 export function SetAppSetting(arg1:string,arg2:string):Promise<void>;
 
+export function SetAutoSort(arg1:string,arg2:boolean):Promise<void>;
+
 export function SetFileExclusions(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>,arg4:boolean):Promise<void>;
 
 export function SetFileOverrides(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>):Promise<void>;
+
+export function SetIndexLock(arg1:string,arg2:Array<string>,arg3:boolean):Promise<void>;
 
 export function SetInstanceSetting(arg1:string,arg2:string,arg3:string):Promise<void>;
 
@@ -182,27 +258,45 @@ export function SetModsCategory(arg1:string,arg2:Array<string>,arg3:string):Prom
 
 export function SetModsEnabled(arg1:string,arg2:Array<string>,arg3:boolean):Promise<void>;
 
+export function SetPluginGroup(arg1:string,arg2:Array<string>,arg3:string):Promise<void>;
+
+export function SetPluginsEnabled(arg1:string,arg2:Array<string>,arg3:boolean):Promise<void>;
+
 export function SetProfileNotes(arg1:string,arg2:string):Promise<void>;
 
 export function SetRuleDisabled(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
 export function SetSeparatorBlockEnabled(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
+export function SortPlugins(arg1:string):Promise<bridge.SortResultDTO>;
+
+export function SortPreview(arg1:string):Promise<bridge.SortPreviewDTO>;
+
 export function SuggestGameFolders(arg1:string,arg2:string,arg3:string):Promise<bridge.FoldersDTO>;
 
+export function SuppressDiagnostic(arg1:string,arg2:string,arg3:boolean):Promise<void>;
+
+export function Suppressions():Promise<Array<bridge.SuppressionDTO>>;
+
 export function TransferSelection(arg1:string,arg2:string,arg3:bridge.TransferOptionsDTO):Promise<void>;
+
+export function UndoLastSort(arg1:string):Promise<void>;
 
 export function UndoOrderChange(arg1:string):Promise<void>;
 
 export function UnmanageGame(arg1:string,arg2:bridge.UnmanageOptionsDTO):Promise<string>;
 
+export function UnsuppressDiagnostic(arg1:string,arg2:string):Promise<void>;
+
 export function UpdateInstanceLocation(arg1:string,arg2:string):Promise<void>;
+
+export function UpdatePluginGroup(arg1:string,arg2:string,arg3:Array<string>):Promise<void>;
 
 export function UpdateSeparator(arg1:string,arg2:bridge.SeparatorDTO):Promise<void>;
 
 export function ValidateGameRoot(arg1:string,arg2:string):Promise<bridge.RootCheckDTO>;
 
-export function VerifyDeployment(arg1:string):Promise<bridge.DeployVerifyDTO>;
+export function VerifyDeployment(arg1:string):Promise<bridge.ExternalChangesDTO>;
 
 export function VerifyGameSetup(arg1:bridge.SetupDTO):Promise<bridge.VerificationDTO>;
 

@@ -10,13 +10,16 @@ import (
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/event"
+	"modorchestrator/internal/core/domain/fomod"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
 )
 
-// Decision kinds of the import queue. Root decisions use the installer's
-// kinds (root_ambiguous, root_unrecognized, fomod_pending).
+// Decision kinds of the import queue. Root and FOMOD decisions use the
+// installer's kinds (root_ambiguous, root_unrecognized, fomod_script,
+// fomod).
 const (
 	DecisionDuplicateArchive = "duplicate_archive"
 	DecisionDuplicateName    = "duplicate_name"
@@ -30,6 +33,7 @@ const (
 	ChoiceReplace   = "replace"
 	ChoiceContinue  = "continue"
 	ChoiceRoot      = "root"
+	ChoiceInstall   = "install"
 	ChoiceCancel    = "cancel"
 )
 
@@ -53,6 +57,9 @@ type Decision struct {
 	Folders    []string
 	// Ratio is the extracted/compressed ratio of a suspicious archive.
 	Ratio int64
+	// Fomod describes the wizard of a fomod decision (DLG-06); its state is
+	// read with FomodState.
+	Fomod *FomodDecision
 }
 
 // Choices returns the answers the decision accepts.
@@ -64,6 +71,8 @@ func (d Decision) Choices() []string {
 		return []string{ChoiceReplace, ChoiceVariant, ChoiceCancel}
 	case DecisionSuspiciousRatio:
 		return []string{ChoiceContinue, ChoiceCancel}
+	case string(installer.DecisionFomod):
+		return []string{ChoiceInstall, ChoiceCancel}
 	}
 	return []string{ChoiceRoot, ChoiceCancel}
 }
@@ -77,6 +86,10 @@ type Answer struct {
 	Label string
 	// Root is the chosen root folder.
 	Root string
+	// Fomod is the wizard selection (visited groups) and Requirements the
+	// detected requirements the user confirmed (files), for "install".
+	Fomod        fomod.Selection
+	Requirements []string
 }
 
 // QueueItem is one entry of the visible install queue (core/00 §5).
@@ -104,6 +117,8 @@ type job struct {
 	cancellable bool
 	decision    *Decision
 	answer      chan Answer
+	// fomod is the wizard session while a fomod decision is pending.
+	fomod *fomodSession
 }
 
 type queue struct {

@@ -7,6 +7,7 @@ import type { ImportAnswer, QueueItem } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
 import { OperationStatusBadge, operationStepLabel } from "../operations/operation-labels";
+import { FomodWizard } from "./FomodWizard";
 
 /** The visible install queue (core/00 §5, D065): one item at a time, cancellable per item. */
 export function ImportQueuePanel({ items, onDecide }: { items: readonly QueueItem[]; onDecide: (item: QueueItem) => void }) {
@@ -65,8 +66,9 @@ function folderTree(folders: readonly string[]): TreeNode<string>[] {
 
 /**
  * Decision dialog of an import: duplicate/variant (DLG-04), root choice
- * (DLG-05) and the zip-bomb confirmation. It only collects the answer; the
- * backend validates it.
+ * (DLG-05, also for scripted FOMODs), the zip-bomb confirmation and the
+ * FOMOD wizard (DLG-06). It only collects the answer; the backend validates
+ * it.
  */
 export function ImportDecisionDialog({ item, onClose }: { item: QueueItem | null; onClose: () => void }) {
   const i18n = useI18n();
@@ -80,7 +82,7 @@ export function ImportDecisionDialog({ item, onClose }: { item: QueueItem | null
   const [root, setRoot] = useState("");
   const [error, setError] = useState<UIError | null>(null);
   const [busy, setBusy] = useState(false);
-  const isRoot = decision ? ["root_ambiguous", "root_unrecognized", "fomod_pending"].includes(decision.kind) : false;
+  const isRoot = decision ? ["root_ambiguous", "root_unrecognized", "fomod_script"].includes(decision.kind) : false;
   useEffect(() => {
     if (!decision) return;
     setChoice(decision.choices.find((c) => c !== "cancel") ?? "cancel");
@@ -91,6 +93,7 @@ export function ImportDecisionDialog({ item, onClose }: { item: QueueItem | null
   }, [decision]);
   const nodes = useMemo(() => folderTree(decision?.folders ?? []), [decision]);
   if (!item || !decision) return null;
+  if (decision.kind === "fomod" && decision.fomod) return <FomodWizard key={item.operationId} item={item} onClose={onClose} />;
 
   const answer = async (a: ImportAnswer) => {
     setBusy(true);

@@ -2,6 +2,7 @@ package library
 
 import (
 	"context"
+	"encoding/json"
 	"slices"
 	"strconv"
 	"strings"
@@ -273,6 +274,15 @@ type AttributesInput struct {
 func (s *Service) SetAttributes(ctx context.Context, id mod.ID, in AttributesInput) error {
 	return s.editMod(ctx, id, func(m *mod.Mod) (map[string]string, error) {
 		a := m.Attributes
+		// The previous attributes go with the event so the history can
+		// revert the change (core/10 §3).
+		before, err := json.Marshal(AttributesInput{
+			Name: m.Attributes.Name, Version: m.Attributes.Version, Author: m.Attributes.Author, Notes: m.Attributes.Notes,
+			HighlightColor: m.Attributes.Highlight.Color, HighlightIcon: m.Attributes.Highlight.Icon, Tags: m.Attributes.Tags,
+		})
+		if err != nil {
+			return nil, err
+		}
 		// A name equal to the detected one is not a custom name: clearing it
 		// lets a later reinstall update the detected name (core/02 §9).
 		name := strings.TrimSpace(in.Name)
@@ -282,7 +292,7 @@ func (s *Service) SetAttributes(ctx context.Context, id mod.ID, in AttributesInp
 		a.Name, a.Version, a.Author, a.Notes = name, strings.TrimSpace(in.Version), strings.TrimSpace(in.Author), in.Notes
 		a.Highlight = mod.Highlight{Color: in.HighlightColor, Icon: in.HighlightIcon}
 		a.Tags = in.Tags
-		return map[string]string{"name": m.DisplayName()}, m.SetAttributes(a, s.Clock.Now())
+		return map[string]string{"name": m.DisplayName(), "before": string(before)}, m.SetAttributes(a, s.Clock.Now())
 	}, EventModAttributes)
 }
 

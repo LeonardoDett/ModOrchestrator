@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Rocket, ScanSearch, Wrench } from "lucide-react";
+import { FileSearch, Rocket, ScanSearch, Wrench } from "lucide-react";
 import { Alert, Badge, Button, Stack, Typography, useToast } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
@@ -18,7 +18,7 @@ export function DeployOverview() {
   const backend = useBackend();
   const run = useAction();
   const { addToast } = useToast();
-  const { instance, status, deploy, reconcile, openFailures } = useDeploy();
+  const { instance, status, deploy, reconcile, openFailures, openReview } = useDeploy();
   const [verifying, setVerifying] = useState(false);
   if (!status) return null;
   const look = statusLook(status);
@@ -30,8 +30,9 @@ export function DeployOverview() {
     const result = await run(() => backend.verifyDeployment(instance), { quiet: true });
     setVerifying(false);
     if (result.ok) {
-      const n = result.value.count;
-      addToast({ title: n === 0 ? t("deploy.verify.clean") : tp("deploy.verify.changes", n), variant: n === 0 ? "success" : "warning", duration: 4000 });
+      const { changeCount, newFileCount } = result.value;
+      if (changeCount + newFileCount === 0) addToast({ title: t("deploy.verify.clean"), variant: "success", duration: 4000 });
+      else openReview();
     }
   };
 
@@ -48,9 +49,15 @@ export function DeployOverview() {
           </div>
         </Alert.Root>
       ) : null}
-      {status.externalChanges > 0 ? (
+      {status.externalChanges > 0 || status.newFiles > 0 ? (
         <Alert.Root variant="warning">
-          <Alert.Description>{tp("deploy.externalChanges", status.externalChanges)}</Alert.Description>
+          {status.externalChanges > 0 ? <Alert.Description>{tp("deploy.externalChanges", status.externalChanges)}</Alert.Description> : null}
+          {status.newFiles > 0 ? <Alert.Description>{tp("deploy.newFiles", status.newFiles)}</Alert.Description> : null}
+          <div className="pt-2">
+            <Button size="sm" variant="outline" startIcon={<FileSearch aria-hidden="true" />} disabled={busy} onClick={openReview}>
+              {t("deploy.action.review")}
+            </Button>
+          </div>
         </Alert.Root>
       ) : null}
       <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3">

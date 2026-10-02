@@ -66,6 +66,18 @@ function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastIt
             {toast.description}
           </div>
         )}
+        {toast.action && (
+          <button
+            type="button"
+            onClick={() => {
+              toast.action?.onClick();
+              onRemove(toast.id);
+            }}
+            className="mt-2 rounded-md border border-current/30 px-2 py-1 text-sm font-medium hover:bg-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {toast.action.label}
+          </button>
+        )}
       </div>
       <button
         type="button"

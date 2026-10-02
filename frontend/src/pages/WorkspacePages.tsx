@@ -1,5 +1,5 @@
-import type { LucideIcon } from "lucide-react";
-import { Alert, Badge, EmptyState, FeaturedIcon, Spinner, Stack, Typography } from "dettmann-ui";
+import { ProblemBand } from "../features/diagnostics/ProblemBand";
+import { Alert, Badge, EmptyState, Spinner, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useInstanceDetails, useWorkspace } from "../bridge/queries";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
@@ -8,7 +8,6 @@ import { DeployOverview } from "../features/deploy/DeployOverview";
 import { useStoreLabel } from "../features/games/GameDetails";
 import { useAction } from "../features/games/use-action";
 import { useI18n, type MessageKey } from "../i18n/i18n";
-import { VIEWS, type ViewId } from "../shell/navigation";
 import { PageBody } from "./PageBody";
 
 /**
@@ -68,6 +67,8 @@ function OverviewBody({ id }: { id: string }) {
           </Typography>
         </Stack>
 
+        <ProblemBand exclude={["game_not_found"]} />
+
         {g.rootMissing ? (
           <Alert.Root variant="danger">
             <Alert.Description>{t("overview.rootMissing")}</Alert.Description>
@@ -119,22 +120,5 @@ function Row({ label, value }: { label: MessageKey; value: string }) {
       <dt className="text-fg-muted">{t(label)}</dt>
       <dd className="break-all font-mono text-xs text-fg">{value}</dd>
     </>
-  );
-}
-
-/** Workspace screens whose feature arrives in a later phase: honest, no actions. */
-export function WorkspacePlaceholder({ view, icon }: { view: ViewId; icon: LucideIcon }) {
-  const { t } = useI18n();
-  const page = t(VIEWS[view].label);
-  return (
-    <PageBody>
-      <EmptyState.Root className="rounded-xl border border-border bg-surface">
-        <EmptyState.Icon>
-          <FeaturedIcon icon={icon} color="neutral" />
-        </EmptyState.Icon>
-        <EmptyState.Title>{t("workspace.soonTitle", { page })}</EmptyState.Title>
-        <EmptyState.Description>{t("workspace.soonDescription", { page })}</EmptyState.Description>
-      </EmptyState.Root>
-    </PageBody>
   );
 }

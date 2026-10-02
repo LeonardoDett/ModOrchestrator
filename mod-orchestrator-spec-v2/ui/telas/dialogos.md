@@ -8,7 +8,7 @@ Catálogo único. Todo modal do produto está aqui; modal novo exige entrada. Pa
 | DLG-02 | Jogo genérico | Games | formulário | — | 11 §4 |
 | DLG-03 | Parar de gerenciar | Games | confirmação destrutiva | "Stop managing" | 11 §4 |
 | DLG-04 | Duplicado | import | decisão | DuplicatesDialog | 02 §6 |
-| DLG-05 | Preparar instalação | import | decisão (árvore) | aviso "mod não parece ser para este jogo" | 02 §4 |
+| DLG-05 | Preparar instalação | import | decisão (árvore) | aviso "mod não parece ser para este jogo"; também FOMOD com script (`fomod_script`, D086) | 02 §4, 03 §7 |
 | DLG-06 | Assistente FOMOD | import/reinstall | assistente | installer_fomod | 03 §5 |
 | DLG-07 | Remover mod(s) | Mods | confirmação destrutiva | remove mod (+ archive) | 02 §7 |
 | DLG-08 | Editor de conflitos do mod | Mods (ícone de conflito) | edição | editor de conflitos (select por mod) | 05 |
@@ -54,6 +54,7 @@ Duas opções exclusivas: manter staging e arquivos (padrão) ou apagá-los; apa
 - Reinstall: faixa "Escolhas anteriores carregadas" + botão "Instalar com as escolhas anteriores".
 - Último passo → tela de resumo (arquivos por destino, avisos, requisitos detectados com checkbox "criar regra de requisito") → Instalar.
 - Cada clique consulta o backend para reavaliar condições (a UI não avalia, anti-pattern 1); resposta deve ser < 50 ms percebidos.
+- Implementação (F10): a UI envia só os grupos visitados (`FomodState`); visibilidade, tipos, padrões, travas, problemas e resumo vêm do backend. Requisitos detectados vêm desmarcados (INV-CON-02). Passos ainda não visitados ficam desabilitados no Stepper (D087).
 
 ### DLG-08 Editor de conflitos do mod
 Tabela: mod oponente · arquivos em conflito · quem vence hoje e por quê · **select** "Este vence" / "O outro vence" / "Pela ordem (sem regra)" · link "arquivos…" (abre DLG-09 filtrado). Salvar cria/remove OrderRules e marca pares como revisados; prévia de movimentos na ordem se houver.

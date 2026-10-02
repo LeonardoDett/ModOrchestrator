@@ -1,0 +1,14 @@
+# visible steps: 0,1
+# flags: InstallData=On SkyrimVR=On
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Game Version","group":0,"groupName":"Game Version","options":[1],"names":["Skyrim VR"]},{"step":1,"stepName":"Extras","group":0,"groupName":"Select Addons","options":[0],"names":["Vanilla Masks"]}]
+BeardMaskFix.esp <- SkyrimVR/BeardMaskFix.esp (3853)
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_0.nif <- Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_0.nif (29344)
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_1.nif <- Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_1.nif (29344)
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Arg_0.nif <- Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Arg_0.nif (29317)
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Arg_1.nif <- Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Arg_1.nif (29317)
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Kha_0.nif <- Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Kha_0.nif (29317)
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Kha_1.nif <- Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Kha_1.nif (29317)
+SKSE/Plugins/BeardMaskFix.dll <- SkyrimVR/SKSE/Plugins/BeardMaskFix.dll (596992)
+SKSE/Plugins/BeardMaskFix.pdb <- SkyrimVR/SKSE/Plugins/BeardMaskFix.pdb (18378752)

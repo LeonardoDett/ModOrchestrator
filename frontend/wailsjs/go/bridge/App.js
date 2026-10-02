@@ -14,6 +14,14 @@ export function AddIncompatibilityRule(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['AddIncompatibilityRule'](arg1, arg2, arg3);
 }
 
+export function ApplyLoadOrder(arg1) {
+  return window['go']['bridge']['App']['ApplyLoadOrder'](arg1);
+}
+
+export function AttentionDiagnostics() {
+  return window['go']['bridge']['App']['AttentionDiagnostics']();
+}
+
 export function CancelDeploy(arg1) {
   return window['go']['bridge']['App']['CancelDeploy'](arg1);
 }
@@ -62,6 +70,14 @@ export function CreateOrderRule(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['CreateOrderRule'](arg1, arg2, arg3);
 }
 
+export function CreatePluginGroup(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['CreatePluginGroup'](arg1, arg2, arg3);
+}
+
+export function CreatePluginRule(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['CreatePluginRule'](arg1, arg2, arg3);
+}
+
 export function CreateProfile(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['CreateProfile'](arg1, arg2, arg3);
 }
@@ -82,6 +98,10 @@ export function DeleteCategory(arg1, arg2) {
   return window['go']['bridge']['App']['DeleteCategory'](arg1, arg2);
 }
 
+export function DeletePluginGroup(arg1, arg2) {
+  return window['go']['bridge']['App']['DeletePluginGroup'](arg1, arg2);
+}
+
 export function DeleteProfile(arg1) {
   return window['go']['bridge']['App']['DeleteProfile'](arg1);
 }
@@ -100,6 +120,38 @@ export function DeployMethods(arg1) {
 
 export function DeployStatus(arg1) {
   return window['go']['bridge']['App']['DeployStatus'](arg1);
+}
+
+export function Diagnostics(arg1) {
+  return window['go']['bridge']['App']['Diagnostics'](arg1);
+}
+
+export function DismissNotifications(arg1) {
+  return window['go']['bridge']['App']['DismissNotifications'](arg1);
+}
+
+export function EnableImpact(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['EnableImpact'](arg1, arg2, arg3);
+}
+
+export function ExecuteDiagnosticAction(arg1, arg2, arg3, arg4) {
+  return window['go']['bridge']['App']['ExecuteDiagnosticAction'](arg1, arg2, arg3, arg4);
+}
+
+export function ExportLoadOrder(arg1) {
+  return window['go']['bridge']['App']['ExportLoadOrder'](arg1);
+}
+
+export function ExportSupportBundle(arg1, arg2) {
+  return window['go']['bridge']['App']['ExportSupportBundle'](arg1, arg2);
+}
+
+export function FomodImage(arg1, arg2) {
+  return window['go']['bridge']['App']['FomodImage'](arg1, arg2);
+}
+
+export function FomodState(arg1, arg2) {
+  return window['go']['bridge']['App']['FomodState'](arg1, arg2);
 }
 
 export function GameInstanceDetails(arg1) {
@@ -126,8 +178,16 @@ export function HideInstance(arg1, arg2) {
   return window['go']['bridge']['App']['HideInstance'](arg1, arg2);
 }
 
+export function History(arg1) {
+  return window['go']['bridge']['App']['History'](arg1);
+}
+
 export function ImportFiles(arg1, arg2) {
   return window['go']['bridge']['App']['ImportFiles'](arg1, arg2);
+}
+
+export function ImportLoadOrder(arg1, arg2) {
+  return window['go']['bridge']['App']['ImportLoadOrder'](arg1, arg2);
 }
 
 export function ImportQueue(arg1) {
@@ -150,6 +210,18 @@ export function ListRecentOperations(arg1) {
   return window['go']['bridge']['App']['ListRecentOperations'](arg1);
 }
 
+export function LoadOrderDiffApplied(arg1) {
+  return window['go']['bridge']['App']['LoadOrderDiffApplied'](arg1);
+}
+
+export function LoadOrderExplain(arg1, arg2) {
+  return window['go']['bridge']['App']['LoadOrderExplain'](arg1, arg2);
+}
+
+export function LoadOrderView(arg1) {
+  return window['go']['bridge']['App']['LoadOrderView'](arg1);
+}
+
 export function LogTail(arg1) {
   return window['go']['bridge']['App']['LogTail'](arg1);
 }
@@ -160,6 +232,14 @@ export function ManageGame(arg1) {
 
 export function MarkConflictsReviewed(arg1, arg2) {
   return window['go']['bridge']['App']['MarkConflictsReviewed'](arg1, arg2);
+}
+
+export function MarkDiagnosticsVisited(arg1) {
+  return window['go']['bridge']['App']['MarkDiagnosticsVisited'](arg1);
+}
+
+export function MarkNotificationsRead(arg1) {
+  return window['go']['bridge']['App']['MarkNotificationsRead'](arg1);
 }
 
 export function ModConflictFiles(arg1, arg2, arg3, arg4, arg5) {
@@ -198,12 +278,24 @@ export function MoveMods(arg1, arg2) {
   return window['go']['bridge']['App']['MoveMods'](arg1, arg2);
 }
 
+export function MovePlugins(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['MovePlugins'](arg1, arg2, arg3);
+}
+
 export function MoveStaging(arg1, arg2) {
   return window['go']['bridge']['App']['MoveStaging'](arg1, arg2);
 }
 
+export function Notifications(arg1) {
+  return window['go']['bridge']['App']['Notifications'](arg1);
+}
+
 export function OpenInstanceFolder(arg1, arg2) {
   return window['go']['bridge']['App']['OpenInstanceFolder'](arg1, arg2);
+}
+
+export function OpenLocationFolder(arg1, arg2) {
+  return window['go']['bridge']['App']['OpenLocationFolder'](arg1, arg2);
 }
 
 export function OpenLogFolder() {
@@ -238,6 +330,18 @@ export function PickImportFolder(arg1, arg2) {
   return window['go']['bridge']['App']['PickImportFolder'](arg1, arg2);
 }
 
+export function PluginDetails(arg1, arg2) {
+  return window['go']['bridge']['App']['PluginDetails'](arg1, arg2);
+}
+
+export function PluginList(arg1) {
+  return window['go']['bridge']['App']['PluginList'](arg1);
+}
+
+export function PluginRules(arg1) {
+  return window['go']['bridge']['App']['PluginRules'](arg1);
+}
+
 export function PreviewDeploy(arg1, arg2) {
   return window['go']['bridge']['App']['PreviewDeploy'](arg1, arg2);
 }
@@ -270,6 +374,10 @@ export function Purge(arg1) {
   return window['go']['bridge']['App']['Purge'](arg1);
 }
 
+export function RebuildPluginHeaderCache() {
+  return window['go']['bridge']['App']['RebuildPluginHeaderCache']();
+}
+
 export function ReconcileDeploy(arg1) {
   return window['go']['bridge']['App']['ReconcileDeploy'](arg1);
 }
@@ -280,6 +388,10 @@ export function ReinstallMods(arg1, arg2) {
 
 export function RemoveMods(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['RemoveMods'](arg1, arg2, arg3);
+}
+
+export function RemovePluginRule(arg1, arg2) {
+  return window['go']['bridge']['App']['RemovePluginRule'](arg1, arg2);
 }
 
 export function RemoveRule(arg1, arg2) {
@@ -298,16 +410,36 @@ export function ResetAppSetting(arg1) {
   return window['go']['bridge']['App']['ResetAppSetting'](arg1);
 }
 
-export function ResolveDeployDecision(arg1, arg2, arg3) {
-  return window['go']['bridge']['App']['ResolveDeployDecision'](arg1, arg2, arg3);
+export function ResetSuppressedDiagnostics() {
+  return window['go']['bridge']['App']['ResetSuppressedDiagnostics']();
+}
+
+export function ResolveDeployDecision(arg1, arg2, arg3, arg4) {
+  return window['go']['bridge']['App']['ResolveDeployDecision'](arg1, arg2, arg3, arg4);
+}
+
+export function ResolveExternalChanges(arg1, arg2) {
+  return window['go']['bridge']['App']['ResolveExternalChanges'](arg1, arg2);
 }
 
 export function ResolveImport(arg1, arg2) {
   return window['go']['bridge']['App']['ResolveImport'](arg1, arg2);
 }
 
+export function ResolveLoadOrderChange(arg1, arg2) {
+  return window['go']['bridge']['App']['ResolveLoadOrderChange'](arg1, arg2);
+}
+
+export function RestorePreviousLoadOrder(arg1) {
+  return window['go']['bridge']['App']['RestorePreviousLoadOrder'](arg1);
+}
+
 export function RestoreSnapshot(arg1, arg2) {
   return window['go']['bridge']['App']['RestoreSnapshot'](arg1, arg2);
+}
+
+export function RevertHistoryEntry(arg1) {
+  return window['go']['bridge']['App']['RevertHistoryEntry'](arg1);
 }
 
 export function RevertOrderChange(arg1, arg2) {
@@ -318,12 +450,24 @@ export function RuleCycle(arg1) {
   return window['go']['bridge']['App']['RuleCycle'](arg1);
 }
 
+export function RunHealthChecks(arg1) {
+  return window['go']['bridge']['App']['RunHealthChecks'](arg1);
+}
+
 export function SaveCategory(arg1, arg2) {
   return window['go']['bridge']['App']['SaveCategory'](arg1, arg2);
 }
 
+export function ScanExternalChanges(arg1) {
+  return window['go']['bridge']['App']['ScanExternalChanges'](arg1);
+}
+
 export function ScanGames(arg1) {
   return window['go']['bridge']['App']['ScanGames'](arg1);
+}
+
+export function SendDesktopNotification(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SendDesktopNotification'](arg1, arg2, arg3);
 }
 
 export function SetActiveInstance(arg1) {
@@ -334,12 +478,20 @@ export function SetAppSetting(arg1, arg2) {
   return window['go']['bridge']['App']['SetAppSetting'](arg1, arg2);
 }
 
+export function SetAutoSort(arg1, arg2) {
+  return window['go']['bridge']['App']['SetAutoSort'](arg1, arg2);
+}
+
 export function SetFileExclusions(arg1, arg2, arg3, arg4) {
   return window['go']['bridge']['App']['SetFileExclusions'](arg1, arg2, arg3, arg4);
 }
 
 export function SetFileOverrides(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetFileOverrides'](arg1, arg2, arg3);
+}
+
+export function SetIndexLock(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetIndexLock'](arg1, arg2, arg3);
 }
 
 export function SetInstanceSetting(arg1, arg2, arg3) {
@@ -362,6 +514,14 @@ export function SetModsEnabled(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetModsEnabled'](arg1, arg2, arg3);
 }
 
+export function SetPluginGroup(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetPluginGroup'](arg1, arg2, arg3);
+}
+
+export function SetPluginsEnabled(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetPluginsEnabled'](arg1, arg2, arg3);
+}
+
 export function SetProfileNotes(arg1, arg2) {
   return window['go']['bridge']['App']['SetProfileNotes'](arg1, arg2);
 }
@@ -374,12 +534,32 @@ export function SetSeparatorBlockEnabled(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetSeparatorBlockEnabled'](arg1, arg2, arg3);
 }
 
+export function SortPlugins(arg1) {
+  return window['go']['bridge']['App']['SortPlugins'](arg1);
+}
+
+export function SortPreview(arg1) {
+  return window['go']['bridge']['App']['SortPreview'](arg1);
+}
+
 export function SuggestGameFolders(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SuggestGameFolders'](arg1, arg2, arg3);
 }
 
+export function SuppressDiagnostic(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SuppressDiagnostic'](arg1, arg2, arg3);
+}
+
+export function Suppressions() {
+  return window['go']['bridge']['App']['Suppressions']();
+}
+
 export function TransferSelection(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['TransferSelection'](arg1, arg2, arg3);
+}
+
+export function UndoLastSort(arg1) {
+  return window['go']['bridge']['App']['UndoLastSort'](arg1);
 }
 
 export function UndoOrderChange(arg1) {
@@ -390,8 +570,16 @@ export function UnmanageGame(arg1, arg2) {
   return window['go']['bridge']['App']['UnmanageGame'](arg1, arg2);
 }
 
+export function UnsuppressDiagnostic(arg1, arg2) {
+  return window['go']['bridge']['App']['UnsuppressDiagnostic'](arg1, arg2);
+}
+
 export function UpdateInstanceLocation(arg1, arg2) {
   return window['go']['bridge']['App']['UpdateInstanceLocation'](arg1, arg2);
+}
+
+export function UpdatePluginGroup(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['UpdatePluginGroup'](arg1, arg2, arg3);
 }
 
 export function UpdateSeparator(arg1, arg2) {

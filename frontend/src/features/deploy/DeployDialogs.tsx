@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Alert, Badge, Button, Input, Modal, Spinner, Stack, Table, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
-import type { DeployPlan, DeployStatus } from "../../bridge/types";
+import type { DeployPlan, DeployStatus, ExternalDecision } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
 import { formatBytes, locationText } from "./deploy-labels";
+import { ExternalChangesDialog } from "./ExternalChangesDialog";
 
 /** Counts of a plan as the user reads them (DLG-14 "Resumo por ação"). */
 function PlanSummary({ plan }: { plan: DeployPlan }) {
@@ -38,10 +39,34 @@ function PlanSummary({ plan }: { plan: DeployPlan }) {
   );
 }
 
-/** Locations that will be left untouched in this run (F7: detection only). */
+/**
+ * "Precisa de decisão" of DLG-14: external changes are decided in DLG-15;
+ * without a decision they stay as they are in this run.
+ */
+function ChangesSection({ plan, decided, onReview }: { plan: DeployPlan; decided: number | null; onReview: () => void }) {
+  const { t, tp } = useI18n();
+  if (plan.changeCount === 0 && plan.newFileCount === 0) return null;
+  return (
+    <Stack gap="xs">
+      <Typography variant="heading-6">{t("deploy.decision.reviewTitle")}</Typography>
+      {plan.changeCount > 0 ? <Typography variant="body-sm">{tp("deploy.decision.review", plan.changeCount)}</Typography> : null}
+      {plan.newFileCount > 0 ? <Typography variant="body-sm">{tp("deploy.decision.reviewNew", plan.newFileCount)}</Typography> : null}
+      <Typography variant="caption" color="muted-fg">
+        {decided !== null ? tp("deploy.decision.reviewDecided", decided) : t("deploy.decision.reviewUndecided")}
+      </Typography>
+      <div>
+        <Button size="sm" variant="outline" onClick={onReview}>
+          {t("deploy.decision.reviewOpen")}
+        </Button>
+      </div>
+    </Stack>
+  );
+}
+
+/** Locations that cannot be written now; they stay untouched in this run. */
 function UntouchedList({ plan }: { plan: DeployPlan }) {
   const { t, tp } = useI18n();
-  if (plan.changeCount === 0 && plan.blockedCount === 0) return null;
+  if (plan.blockedCount === 0) return null;
   return (
     <Stack gap="sm">
       <Typography variant="heading-6">{t("deploy.decision.untouchedTitle")}</Typography>
@@ -56,15 +81,6 @@ function UntouchedList({ plan }: { plan: DeployPlan }) {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {plan.changes.map((c) => (
-              <Table.Row key={`c:${locationText(c.location)}`}>
-                <Table.Cell className="font-mono text-xs">{locationText(c.location)}</Table.Cell>
-                <Table.Cell>
-                  <Badge tone="warning">{t(`deploy.change.${c.kind}` as MessageKey)}</Badge>
-                </Table.Cell>
-                <Table.Cell className="text-sm">{c.modName ?? ""}</Table.Cell>
-              </Table.Row>
-            ))}
             {plan.blocked.map((b) => (
               <Table.Row key={`b:${locationText(b.location)}`}>
                 <Table.Cell className="font-mono text-xs">{locationText(b.location)}</Table.Cell>
@@ -77,9 +93,9 @@ function UntouchedList({ plan }: { plan: DeployPlan }) {
           </Table.Body>
         </Table.Root>
       </div>
-      {plan.changeCount + plan.blockedCount > plan.changes.length + plan.blocked.length ? (
+      {plan.blockedCount > plan.blocked.length ? (
         <Typography variant="caption" color="muted-fg">
-          {tp("deploy.decision.more", plan.changeCount + plan.blockedCount - plan.changes.length - plan.blocked.length)}
+          {tp("deploy.decision.more", plan.blockedCount - plan.blocked.length)}
         </Typography>
       ) : null}
     </Stack>
@@ -100,6 +116,10 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
   const [error, setError] = useState<UIError | null>(null);
   const [busy, setBusy] = useState(false);
   const [accepted, setAccepted] = useState<Record<string, boolean>>({});
+  const [decisions, setDecisions] = useState<ExternalDecision[] | null>(null);
+  // A deploy waiting with external changes opens DLG-15 at once: that is
+  // the decision it waits for.
+  const [reviewing, setReviewing] = useState(Boolean(waiting?.operation && waiting.changeCount > 0));
   const plan = waiting ?? preview;
 
   useEffect(() => {
@@ -117,14 +137,23 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
     }
     onClose();
   };
-  const apply = async () => {
+  const apply = async (chosen: ExternalDecision[] | null = decisions) => {
     setBusy(true);
-    const result = deciding
-      ? await run(() => backend.resolveDeployDecision(instance, waiting!.operation!, Object.keys(accepted).filter((k) => accepted[k])), { quiet: true })
-      : await run(() => backend.deploy(instance), { quiet: true });
+    const fallbacks = Object.keys(accepted).filter((k) => accepted[k]);
+    let result;
+    if (deciding) result = await run(() => backend.resolveDeployDecision(instance, waiting!.operation!, fallbacks, chosen ?? []), { quiet: true });
+    else if (chosen && chosen.length > 0) result = await run(() => backend.resolveExternalChanges(instance, chosen), { quiet: true });
+    else result = await run(() => backend.deploy(instance), { quiet: true });
     setBusy(false);
     if (result.ok) onClose();
     else setError(result.error);
+  };
+  // DLG-15 "Aplicar decisões" continues the waiting operation; a plan with
+  // method fallbacks still waits for them here.
+  const applyReview = (chosen: ExternalDecision[]) => {
+    setDecisions(chosen);
+    setReviewing(false);
+    if (!plan || plan.fallbacks.length === 0) void apply(chosen);
   };
 
   return (
@@ -173,6 +202,7 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
                   ))}
                 </Stack>
               ) : null}
+              <ChangesSection plan={plan} decided={decisions ? decisions.length : null} onReview={() => setReviewing(true)} />
               <UntouchedList plan={plan} />
               {error ? (
                 <Alert.Root variant="danger">
@@ -193,6 +223,19 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
           ) : null}
         </Modal.Footer>
       </Modal.Content>
+      {reviewing && plan ? (
+        <ExternalChangesDialog
+          instance={instance}
+          changes={plan.changes}
+          changeCount={plan.changeCount}
+          newFileCount={plan.newFileCount}
+          mode={deciding ? "deploy" : "review"}
+          busy={busy}
+          error={error}
+          onApply={applyReview}
+          onCancel={() => (deciding ? void close() : setReviewing(false))}
+        />
+      ) : null}
     </Modal.Root>
   );
 }
@@ -232,9 +275,9 @@ export function PurgeDialog({ instance, onClose }: { instance: string; onClose: 
             ) : error ? null : (
               <Spinner label={t("common.loading")} />
             )}
-            {plan && plan.changeCount > 0 ? (
+            {plan && plan.changeCount + plan.newFileCount > 0 ? (
               <Alert.Root variant="warning">
-                <Alert.Description>{tp("deploy.purge.untouched", plan.changeCount)}</Alert.Description>
+                <Alert.Description>{tp("deploy.purge.untouched", plan.changeCount + plan.newFileCount)}</Alert.Description>
               </Alert.Root>
             ) : null}
             {error ? (

@@ -13,6 +13,7 @@ import (
 
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
+	"modorchestrator/internal/core/domain/fomod"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
@@ -50,6 +51,8 @@ type pipeline struct {
 	entries []installer.Entry
 	sel     installer.Selection
 	plan    *installer.Plan
+	// requirements are the FOMOD requirements the user confirmed.
+	requirements []FomodRequirement
 
 	began, placed, swapped, committed bool
 	tmp, staged                       string
@@ -497,20 +500,44 @@ func (p *pipeline) extract(ctx context.Context) error {
 
 func (p *pipeline) planInstall(ctx context.Context) error {
 	ictx, _ := p.env.installContext()
-	var opts installer.Options
-	if p.prev != nil {
-		opts = installer.Options(p.prev.Options)
+	ictx.Content = p.content(ctx)
+	fomodInst := p.sel.Installer.ID() == installer.FomodID
+	if fomodInst {
+		pkg, err := installer.LoadFomod(p.entries, ictx)
+		if err != nil {
+			return fail(CodeFomodInvalidXML, err, "name", p.originalName)
+		}
+		if pkg != nil {
+			ictx.Fomod = p.s.fomodEnv(ctx, p.env, pkg.Module, p.m.ID)
+		}
 	}
+	opts := p.previousOptions(fomodInst)
 	for {
 		res, err := p.sel.Installer.Plan(p.entries, ictx, opts)
+		var deps *installer.ModuleDependenciesError
 		switch {
 		case errors.Is(err, installer.ErrInvalidOption):
-			opts = nil // the recorded root no longer exists: ask again
+			opts = nil // the recorded root or choices no longer apply: ask again
 			continue
 		case errors.Is(err, installer.ErrNoInstallableFiles):
 			return fail(CodeNoInstallable, err, "name", p.originalName)
+		case errors.As(err, &deps):
+			return fail(CodeFomodModuleDeps, err, "name", p.originalName, "unmet", unmetNames(deps.Unmet))
+		case errors.Is(err, installer.ErrInvalidFomod):
+			return fail(CodeFomodInvalidXML, err, "name", p.originalName)
+		case errors.Is(err, installer.ErrInvalidSelection):
+			return fail(CodeFomodInvalidSelection, err, "name", p.originalName)
 		case err != nil:
 			return fail(CodeInstallerFailed, err, "name", p.originalName)
+		}
+		if res.Decision != nil && res.Decision.Kind == installer.DecisionFomod {
+			a, sess, err := p.askFomod(ctx, ictx, res.Decision.Fomod)
+			if err != nil {
+				return err
+			}
+			opts = installer.Options{installer.OptionFomod: fomod.Encode(sess.pkg.Module, a.Fomod)}
+			p.requirements = p.confirmedRequirements(ctx, sess, a.Requirements)
+			continue
 		}
 		if res.Decision != nil {
 			a, err := p.s.ask(ctx, p.j, Decision{Kind: string(res.Decision.Kind), Candidates: res.Decision.Candidates, Folders: res.Decision.Folders})
@@ -533,6 +560,96 @@ func (p *pipeline) planInstall(ctx context.Context) error {
 		}
 	}
 	return nil
+}
+
+// unmetNames turns the failing terms ("file:SkyUI_SE.esp:Active",
+// "game:1.6.640") into the names the message shows.
+func unmetNames(unmet []string) string {
+	out := make([]string, 0, len(unmet))
+	for _, u := range unmet {
+		parts := strings.SplitN(u, ":", 3)
+		if len(parts) >= 2 {
+			u = parts[1]
+		}
+		out = append(out, u)
+	}
+	return strings.Join(out, ", ")
+}
+
+// content reads extracted files for installers (FOMOD XML), bounded by the
+// XML size limit (core/03 §7).
+func (p *pipeline) content(ctx context.Context) func(relpath.Path) ([]byte, error) {
+	return func(rp relpath.Path) ([]byte, error) {
+		r, err := p.s.FS.Open(ctx, game.JoinPath(p.tmp, rp.String()))
+		if err != nil {
+			return nil, err
+		}
+		defer r.Close()
+		return io.ReadAll(io.LimitReader(r, fomod.MaxXMLSize+1))
+	}
+}
+
+// previousOptions are the recorded options of a reinstall. FOMOD choices
+// are not applied silently: they preselect the wizard (D030). An
+// installation made before the FOMOD installer existed (a folder chosen by
+// hand) also goes through the wizard.
+func (p *pipeline) previousOptions(fomodInst bool) installer.Options {
+	if p.prev == nil {
+		return nil
+	}
+	if v, ok := p.prev.Options[installer.OptionFomod]; ok && fomodInst {
+		return installer.Options{installer.OptionFomodPrevious: v}
+	}
+	if fomodInst && p.prev.Installer != installer.FomodID && installer.HasModuleConfig(p.entries) {
+		return nil
+	}
+	return installer.Options(p.prev.Options)
+}
+
+// askFomod opens the wizard (DLG-06) and waits for the selection. The
+// session lives while the decision is pending.
+func (p *pipeline) askFomod(ctx context.Context, ictx installer.Context, req *installer.FomodRequest) (Answer, *fomodSession, error) {
+	sess := &fomodSession{
+		pkg: req.Package, entries: p.entries, ictx: ictx, tmp: p.tmp,
+		instance: p.env.inst.ID, self: p.m.ID, target: p.env.pluginTarget(),
+	}
+	_, hasImage := req.Package.ImagePath(p.entries, req.Package.Module.Image)
+	d := &FomodDecision{Module: req.Package.Module.Name, HasImage: hasImage, Previous: []fomod.Choice{}, Warnings: req.Warnings}
+	if req.Previous != nil {
+		d.Previous = fomod.Choices(req.Package.Module, req.Previous)
+	}
+	if d.Warnings == nil {
+		d.Warnings = []installer.Warning{}
+	}
+	p.s.mu.Lock()
+	p.j.fomod = sess
+	p.s.mu.Unlock()
+	defer func() {
+		p.s.mu.Lock()
+		p.j.fomod = nil
+		p.s.mu.Unlock()
+	}()
+	a, err := p.s.ask(ctx, p.j, Decision{Kind: string(installer.DecisionFomod), Fomod: d})
+	return a, sess, err
+}
+
+// confirmedRequirements keeps the requirements the user ticked that an
+// installed mod provides.
+func (p *pipeline) confirmedRequirements(ctx context.Context, sess *fomodSession, files []string) []FomodRequirement {
+	if len(files) == 0 {
+		return nil
+	}
+	if sess.providers == nil {
+		sess.providers = p.s.fileProviders(ctx, sess.instance, sess.self, sess.target)
+	}
+	var out []FomodRequirement
+	for _, f := range files {
+		if r, ok := sess.providers[fomod.FileKey(f)]; ok {
+			r.File = f
+			out = append(out, r)
+		}
+	}
+	return out
 }
 
 // --- stage, commit, post ---
@@ -644,6 +761,9 @@ func (p *pipeline) commit(ctx context.Context) error {
 			return err
 		}
 		if err := addToProfiles(ctx, tx, m, active, enable, edges, now); err != nil {
+			return err
+		}
+		if err := p.s.addRequirements(ctx, tx, m, p.requirements, opID); err != nil {
 			return err
 		}
 		evType := EventModInstalled

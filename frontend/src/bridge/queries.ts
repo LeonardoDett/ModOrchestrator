@@ -1,5 +1,5 @@
 import { useBackendQuery } from "./use-backend-query";
-import type { LogFilter } from "./types";
+import type { HistoryFilter, LogFilter } from "./types";
 
 export function useAppInfo() {
   return useBackendQuery((b) => b.getAppInfo(), []);
@@ -128,4 +128,58 @@ export function useDeployMethods(instance: string) {
 
 export function useInstanceSettings(instance: string) {
   return useBackendQuery(async (b) => (instance ? await b.listInstanceSettings(instance) : []), [instance]);
+}
+
+// --- Diagnostics, notifications and history (F9, core/10). Diagnostics are
+// recalculated by the backend on every read; "diagnostics.changed" and
+// "notification.*" signals arrive with the operation events (D021). ---
+
+export function useProblems(instance: string) {
+  return useBackendQuery((b) => (instance ? b.diagnostics(instance) : Promise.resolve(null)), [instance], { onOperationEvents: true });
+}
+
+export function useAttention() {
+  return useBackendQuery(async (b) => (await b.attentionDiagnostics()) ?? [], [], { onOperationEvents: true });
+}
+
+export function useNotifications(limit = 50) {
+  return useBackendQuery(async (b) => (await b.notifications(limit)) ?? [], [limit], { onOperationEvents: true });
+}
+
+export function useSuppressions() {
+  return useBackendQuery(async (b) => (await b.suppressions()) ?? [], [], { onOperationEvents: true });
+}
+
+export function useHistory(filter: HistoryFilter) {
+  const { instance, profile, mod, types, origin, from, to, before, limit } = filter;
+  return useBackendQuery(
+    async (b) => (await b.history({ instance, profile, mod, types, origin, from, to, before, limit })) ?? [],
+    [instance, profile, mod, types.join(","), origin, from, to, before, limit],
+    { onOperationEvents: true },
+  );
+}
+
+// --- Plugins and load order (F11, core/08). Inventory, indexes and
+// problems are calculated by the backend; the background sync and the
+// load order file monitor arrive as signals with the operation events
+// (D021). ---
+
+export function usePluginList(instance: string) {
+  return useBackendQuery((b) => b.pluginList(instance), [instance], { onOperationEvents: true });
+}
+
+export function usePluginDetails(instance: string, name: string) {
+  return useBackendQuery((b) => (name ? b.pluginDetails(instance, name) : Promise.resolve(null)), [instance, name], { onOperationEvents: true });
+}
+
+export function usePluginRules(instance: string) {
+  return useBackendQuery((b) => b.pluginRules(instance), [instance], { onOperationEvents: true });
+}
+
+export function useLoadOrderView(instance: string) {
+  return useBackendQuery((b) => b.loadOrderView(instance), [instance], { onOperationEvents: true });
+}
+
+export function useLoadOrderExplain(instance: string, name: string) {
+  return useBackendQuery((b) => (name ? b.loadOrderExplain(instance, name) : Promise.resolve(null)), [instance, name], { onOperationEvents: true });
 }

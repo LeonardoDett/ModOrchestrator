@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Activity, Copy, FolderOpen, RefreshCw, Search, X } from "lucide-react";
+import { Activity, Copy, FolderOpen, Gamepad2, RefreshCw, Search, X } from "lucide-react";
 import {
   Alert,
   Button,
@@ -24,28 +24,40 @@ import { ErrorAlert, useCopy } from "../features/feedback/ErrorAlert";
 import { OperationDetails } from "../features/operations/OperationDetails";
 import { OperationsTable } from "../features/operations/OperationsTable";
 import { operationKindLabel } from "../features/operations/operation-labels";
+import { useDeploy } from "../features/deploy/DeployContext";
+import { HistoryPanel } from "../features/diagnostics/HistoryPanel";
+import { ProblemsPanel } from "../features/diagnostics/ProblemsPanel";
 import { useI18n } from "../i18n/i18n";
 import { useNavigation, type DiagnosticsTab } from "../shell/navigation";
 import { HonestEmpty, PageBody } from "./PageBody";
 
 /**
- * Diagnostics (ui/telas/diagnostics.md). F2 delivers the Operations and Log
- * tabs; Problems and History arrive with diagnostics and history (F9) and
- * are not shown before that (anti-pattern 18).
+ * Diagnostics (ui/telas/diagnostics.md): Problems and History of the active
+ * game (F9), Operations and Log (global, F2). Without an active game the
+ * Problems and History tabs explain that they are per game (D023, D054).
  */
 export function DiagnosticsPage() {
   const { t } = useI18n();
   const { route, navigate } = useNavigation();
-  const tab: DiagnosticsTab = route.tab ?? "operations";
+  const { instance } = useDeploy();
+  const tab: DiagnosticsTab = route.tab ?? (instance ? "problems" : "operations");
 
   return (
     <PageBody fill>
       <Tabs.Root value={tab} onValueChange={(value) => navigate({ view: "diagnostics", tab: value as DiagnosticsTab })}>
         <div className="flex min-h-0 flex-1 flex-col">
         <Tabs.List>
+          <Tabs.Trigger value="problems">{t("diagnostics.tab.problems")}</Tabs.Trigger>
+          <Tabs.Trigger value="history">{t("diagnostics.tab.history")}</Tabs.Trigger>
           <Tabs.Trigger value="operations">{t("diagnostics.tab.operations")}</Tabs.Trigger>
           <Tabs.Trigger value="log">{t("diagnostics.tab.log")}</Tabs.Trigger>
         </Tabs.List>
+        <Tabs.Panel value="problems" className="flex min-h-0 flex-1 flex-col pt-4">
+          {instance ? <ProblemsPanel instance={instance} /> : <HonestEmpty icon={Gamepad2} title="diag.noGameTitle" description="diag.noGameDescription" />}
+        </Tabs.Panel>
+        <Tabs.Panel value="history" className="flex min-h-0 flex-1 flex-col pt-4">
+          {instance ? <HistoryPanel instance={instance} /> : <HonestEmpty icon={Gamepad2} title="diag.noGameTitle" description="history.noGame" />}
+        </Tabs.Panel>
         <Tabs.Panel value="operations" className="flex min-h-0 flex-1 flex-col pt-4">
           <OperationsPanel />
         </Tabs.Panel>

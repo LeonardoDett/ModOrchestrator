@@ -205,13 +205,60 @@ func TestPurgeRemovesAndRestores(t *testing.T) {
 	if p.Summary.Remove != 1 || p.Summary.RestoreBackup != 1 {
 		t.Fatalf("purge must remove the link and restore the original: %+v", p.Summary)
 	}
-	// The link vanished outside the app: the original still comes back,
-	// unless something else now sits there.
+	// The link vanished outside the app: the manager wanted it gone anyway,
+	// so nothing needs a decision and the original comes back (D080).
 	obs[loc("a").Key()] = deployment.Observation{}
 	gone := Build(PurgeInput(Input{Desired: d, Applied: m, Observed: obs}))
-	if len(gone.Changes) != 1 || gone.Summary.RestoreBackup != 0 {
-		t.Fatalf("a missing managed file is an external change first: %+v", gone)
+	if len(gone.Changes) != 0 || gone.Summary.Remove != 1 || gone.Summary.RestoreBackup != 1 {
+		t.Fatalf("a missing file nobody wants is dropped: %+v", gone)
 	}
+}
+
+// core/09 §4: each decision enters the plan as a resolution; nothing is
+// done to a divergent location without one (INV-EXT-02).
+func TestResolutions(t *testing.T) {
+	d := desired("fp1", winner("a", "m1"))
+	orig := deployment.Observation{Exists: true, Evidence: deployment.Evidence{FileID: "v:orig"}}
+	m, obs, dirs := apply(t, d, Build(Input{Desired: d, Observed: map[string]deployment.Observation{loc("a").Key(): orig}}))
+	k := loc("a").Key()
+	in := func(o deployment.Observation, r Resolution) Input {
+		obs := map[string]deployment.Observation{k: o}
+		return Input{Desired: d, Applied: m, Observed: obs, Dirs: dirs, Resolve: map[string]Resolution{k: r}}
+	}
+	link, _ := m.Owns(loc("a"))
+
+	// Missing + restore: created again.
+	if p := Build(in(deployment.Observation{}, Resolution{Kind: ResolveForget})); p.NeedsDecision() || !slices.Equal(kinds(p), []deployment.ActionKind{deployment.ActionCreate}) {
+		t.Fatalf("restore: %v %+v", kinds(p), p.Changes)
+	}
+	// Hardlink edit kept: the new evidence is the manager's, nothing moves.
+	edited := deployment.Observation{Exists: true, Evidence: deployment.Evidence{FileID: link.Evidence.FileID, Size: 9}}
+	if p := Build(in(edited, Resolution{Kind: ResolveAdopt})); p.NeedsDecision() || p.Summary.Keep != 1 || len(p.Actions) != 1 {
+		t.Fatalf("keep change: %+v", p)
+	}
+	// Edited copy reverted: the staged file goes back over the edit.
+	p := Build(in(edited, Resolution{Kind: ResolveAdopt, Relink: true}))
+	if !slices.Equal(kinds(p), []deployment.ActionKind{deployment.ActionReplaceManaged}) || p.Actions[0].Current.Evidence.Size != 9 {
+		t.Fatalf("revert edit: %+v", p.Actions)
+	}
+	// Replaced by the store putting the original back: the found file is
+	// set aside (the original is already kept) and the link comes back.
+	steam := deployment.Observation{Exists: true, Evidence: deployment.Evidence{FileID: "v:steam"}}
+	p = Build(in(steam, Resolution{Kind: ResolveSetAside}))
+	if !slices.Equal(kinds(p), []deployment.ActionKind{deployment.ActionSetAside, deployment.ActionCreate}) || p.Actions[0].Backup.Evidence.FileID != "v:steam" {
+		t.Fatalf("revert replaced: %+v", p.Actions)
+	}
+	// In a purge the found file is set aside and the original restored.
+	purge := in(steam, Resolution{Kind: ResolveSetAside})
+	p = Build(PurgeInput(purge))
+	if !slices.Equal(kinds(p), []deployment.ActionKind{deployment.ActionSetAside, deployment.ActionRestoreBackup}) {
+		t.Fatalf("revert in purge: %v", kinds(p))
+	}
+	// Without a decision the location still waits.
+	if p := Build(Input{Desired: d, Applied: m, Observed: map[string]deployment.Observation{k: steam}, Dirs: dirs}); len(p.Changes) != 1 || !p.Changes[0].Wanted {
+		t.Fatalf("undecided: %+v", p)
+	}
+	_ = obs
 }
 
 func TestBackupWithoutLinkIsRestoredOnlyIfFree(t *testing.T) {

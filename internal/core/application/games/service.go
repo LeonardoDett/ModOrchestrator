@@ -35,6 +35,8 @@ type Deps struct {
 	Drives      ports.DriveLister
 	Versions    ports.VersionReader
 	Stores      ports.StoreScanner
+	// Processes tells whether the game runs (nil: never running).
+	Processes ports.ProcessProbe
 	Ops         *operations.Service
 	// Locks is the per-instance lock shared with every mutating service
 	// (D065); a nil value gets a private table (tests).

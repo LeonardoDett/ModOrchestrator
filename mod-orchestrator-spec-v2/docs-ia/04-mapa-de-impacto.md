@@ -12,17 +12,19 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Descoberta (StoreScanner, busca completa) | core/11 §3, D057, adapters (`Markers`, `RegistryHints`) | — | Games |
 | ModType | core/11, core/12, core/03, core/04 | INV-CON-01 | Mods (coluna/inspector) |
 | Modelo de Mod / atributos | core/01, core/02, ui/telas/mods | INV-LIB-01, INV-LIB-05 | Mods |
-| Installation / installers | core/02, core/03, core/15 (downloads) | INV-LIB-02, INV-LIB-04 | Mods, diálogo FOMOD |
+| Installation / installers | core/02, core/03, core/15 (downloads) | INV-LIB-02, INV-LIB-04 | Mods, diálogo FOMOD (DLG-06), fixtures `integration/testdata/fomod` |
 | Archive store / retenção | core/02, core/13, core/14 | — | Settings › Mods, Mods |
 | ModOrder / motor de ordenação | core/05, core/07, core/08 (motor compartilhado), core/04 | INV-ORD-* | Mods, Conflicts, Profiles |
 | OrderRule / Dependency / Incompatibility | core/05, core/06, core/10 | INV-ORD-03/04, INV-CON-02 | Mods, Conflicts, Diagnostics |
 | FileOverride / FileExclusion | core/05, core/04 | INV-CON-01/03 | Conflicts, Mods (arquivos) |
 | Profile (conteúdo, clone, troca) | core/07, core/04, core/08, ui/telas/profiles | INV-ORD-01/02 | Profiles, topbar |
 | Deploy (plano, métodos, journal, manifesto) | core/04, core/09, core/10, core/14, D078/D079 | INV-DEP-*, INV-EXT-01 | topbar, Mods, Overview, Settings › Mods, DLG-14/16/17/18 |
-| External changes / arquivos gerados | core/09, core/04, core/10 | INV-EXT-* | diálogo External Changes, Diagnostics |
+| External changes / arquivos gerados | core/09, core/04, core/10, core/12 §9 (saídas conhecidas), D080/D081 | INV-EXT-*, INV-DEP-01 | DLG-14/15, topbar, Overview, Diagnostics |
 | Plugins / LoadOrder / sorter | core/08, core/12, core/09 (load_order change) | INV-PLG-*, INV-ORD-05/06 | Plugins, Load Order |
-| HealthCheck / Diagnostic | core/10 e o core do módulo que emite | INV-OPS-06 | Diagnostics, Dashboard, Overview, badges |
-| Operation / Event | core/00, core/10, bridge | INV-OPS-01/03 | operation center, histórico |
+| HealthCheck / Diagnostic | core/10 e o core do módulo que emite; ação nova = comando em `diagnostics.Commands()` ou lugar em `diagnostics.Places()` + `PLACES` da UI; texto `diag.*` no catálogo i18n; D082/D083 | INV-OPS-06 | Diagnostics, Dashboard, Overview, Mods (faixas), topbar, sidebar, sino |
+| Notification (geração, agregação, desktop) | core/10 §2, `ui.desktopNotifications`, D082/D083 | INV-OPS-01 | sino, desktop do Windows |
+| Operation / Event | core/00, core/10, bridge; evento reversível precisa carregar o inverso no payload (D082) | INV-OPS-01/03 | operation center, histórico |
+| Histórico (projeção, filtros, reversão) | core/10 §3, `history.retentionDays`, D070/D082 | — | Diagnostics › Histórico, Mods (toolbar) |
 | Lock de instância / concorrência | core/00, todas as operações | INV-OPS-02 | todas as ações mutantes |
 | Settings (novo setting ou default) | core/13 e o core do módulo dono | — | Settings |
 | Persistência / schema | core/14, migrations | — | — |

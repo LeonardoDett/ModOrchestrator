@@ -1,0 +1,1067 @@
+# source: Enhanced Lights and FX-2424-3-06.7z
+EnhancedLightsandFX 3.06/
+EnhancedLightsandFX 3.06/00 Core Files/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/ELFX/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/basement/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/markarth/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomfirst/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomsingle/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/skyhaventemple/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/tents/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrbuildings/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrtemple/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/castle/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/candles/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/carts/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/chauruseggs/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/eyeofmagnus/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/effects/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/effects/ambient/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/telvannitower/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/thirsk/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/thirsk/meadhall/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/clutter/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/apocrypha/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/apocrypha/clutter/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/dwemer/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/dwemer/clutter/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/landscape/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/landscape/glaciers/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/cliffs/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epic/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epicbalcony/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epicwall/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/largeroom/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/largewall/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/pillars/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/ice/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/ice/cliffs/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/ice/shaftrock/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/bghalls/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/facades/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lghalls/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/platforms/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/largeroom/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepic/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/cavelargeroom/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/cliffs/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bridges/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/bghalls/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/chambers/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/exterior/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/smrooms/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/temple/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/temple/bghalls/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/ratwaybarrel/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/ratwayroom/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/thievesguild/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/ship/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ambient/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/mountains/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/furniture/
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/plants/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/cubemaps/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/cubemaps/ELFX/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/cubemaps/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/dungeons/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/dungeons/nordic/
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/dungeons/nordic/temple/
+EnhancedLightsandFX 3.06/01 ELFXEnhancer/
+EnhancedLightsandFX 3.06/01 ELFXHardcore/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/markarth/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrterrain/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/landscape/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/landscape/unique/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/architecture/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/architecture/solitude/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/cubemaps/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/riften/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/winterhold/
+EnhancedLightsandFX 3.06/02 ELFXWeathers/
+EnhancedLightsandFX 3.06/02 ELFXWeathers/Textures/
+EnhancedLightsandFX 3.06/02 ELFXWeathers/Textures/Effects/
+EnhancedLightsandFX 3.06/02 ELFXWeathers/Textures/Effects/ELFX/
+EnhancedLightsandFX 3.06/02 EnhancedIce/
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/effects/
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/effects/ELFX/
+EnhancedLightsandFX 3.06/03 NoBreezehome/
+EnhancedLightsandFX 3.06/03 NoHjerim/
+EnhancedLightsandFX 3.06/03 NoHoneyside/
+EnhancedLightsandFX 3.06/03 NoPlayerHomes/
+EnhancedLightsandFX 3.06/03 NoProudspire/
+EnhancedLightsandFX 3.06/03 NoSeverinManor/
+EnhancedLightsandFX 3.06/03 NoVlindrelHall/
+EnhancedLightsandFX 3.06/03 SMIM Lantern/
+EnhancedLightsandFX 3.06/03 SMIM Lantern/Meshes/
+EnhancedLightsandFX 3.06/03 SMIM Lantern/Meshes/clutter/
+EnhancedLightsandFX 3.06/03 SMIM Lantern/Meshes/clutter/common/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/basement/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/whiterun/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/whiterun/wrinteriors/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/cliffs/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/epicbalcony/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/pillars/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/mines/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/mines/cliffs/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/bghalls/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/temple/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/temple/bghalls/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Textures/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Textures/smim/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Textures/smim/dungeons/
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Textures/smim/dungeons/green/
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/effects/
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/effects/ELFX/
+EnhancedLightsandFX 3.06/04 Torches/
+EnhancedLightsandFX 3.06/04 Torches/meshes/
+EnhancedLightsandFX 3.06/04 Torches/meshes/clutter/
+EnhancedLightsandFX 3.06/04 Torches/meshes/clutter/common/
+EnhancedLightsandFX 3.06/04 Torches/meshes/weapons/
+EnhancedLightsandFX 3.06/04 Torches/meshes/weapons/torch/
+EnhancedLightsandFX 3.06/Documentation/
+EnhancedLightsandFX 3.06/fomod/
+EnhancedLightsandFX 3.06/00 Core Files/EnhancedLightsandFX.esp	7579984
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/ELFX/ELFXrifrmsmsecondfloor01.nif	66503
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/ELFX/ELFXwhintwoodfloormid01.nif	7931
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/ELFX/ELFXwrintfloormid01.nif	67349
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/ELFX/ELFXwrintfloormid02.nif	67645
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/ELFX/ELFXwrintloftmid01.nif	105075
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/basement/farmbmiddle02.nif	37400
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2basementent01.nif	176474
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2doorway02nodoor.nif	203228
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2doorway03.nif	208059
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2doorway04.nif	147566
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2end01.nif	255678
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2end02.nif	252279
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmint2hearth02.nif	133790
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnend01.nif	332250
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnend02.nif	300140
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnend03.nif	365202
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnend04.nif	337238
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnend05.nif	372655
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnend06.nif	344815
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnwall01.nif	142987
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintinnwallentrance01.nif	167252
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhback01.nif	443122
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhend01.nif	224271
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhend02.nif	251481
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhfront01.nif	440595
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhloft01.nif	141699
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhloft02.nif	142074
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhlofttop01.nif	24508
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintlhmid01.nif	103094
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwall01.nif	80831
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwallhearth01.nif	141696
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwallhearth02.nif	158972
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwooddoorway01.nif	90546
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwoodend01.nif	83829
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwoodend02.nif	90692
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/farmhouse/interior/farmintwoodwall01.nif	29260
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhfirepit.nif	30588
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbayend.nif	106112
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbayl01.nif	135460
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaylangle.nif	176788
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaylendl.nif	106106
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaylendlb.nif	89058
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaylendr.nif	100156
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaylentrance01a.nif	63500
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbayr01.nif	158428
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbayr02.nif	151377
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbayrangle.nif	155138
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbayrendr.nif	95819
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaysecondr01.nif	7226
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhlgbaysecondr02.nif	4235
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhall01.nif	117290
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhall02.nif	117661
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhallcon01.nif	155197
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhallcon02.nif	148648
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhallfe01.nif	211577
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhallfe02.nif	126257
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhalllgbaycon01.nif	212189
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/hhmainhalllgbaycon02.nif	211926
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/highhrothgar/highhrothgartowerfloor.nif	565044
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/markarth/mrkmarketstallroof01.nif	27752
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomfirst/rifrmsmfirstwallwin02.nif	36689
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomfirst/rifrmsmpartitionfirst01.nif	48552
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomsingle/rifrmsmpartitionbeamtall01.nif	20782
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomsingle/rifrmsmpartitiontall01.nif	65204
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomsingle/rifrmsmsinglecorinlwin01.nif	138773
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomsingle/rifrmsmsinglewall01.nif	67199
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/interior/smallroomsingle/rifrmsmsinglewallwin01.nif	98597
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/riften/rtmarketstall01.nif	75740
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/skyhaventemple/skyhavenremanpuzzlewall01.nif	555146
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/skyhaventemple/skyhaventempletemplayout01.nif	5377067
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgccolsol02.nif	91294
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgccolsol04.nif	32483
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgcstaspiral01.nif	519689
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgctracon01.nif	42388
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgcwalwin01.nif	74653
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgdarchcon01.nif	64613
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgdwallsol01.nif	30524
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgdwallsol02.nif	35207
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgdwallsol03.nif	35183
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgfstasol02.nif	127426
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgfstasol03.nif	126184
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slgfstasol04.nif	181123
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slggcolend01.nif	45819
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/slggwalsec01.nif	20537
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaarchcon01.nif	101649
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaarchcon02.nif	77222
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflocon01.nif	4572
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflocon02.nif	3902
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflosol01.nif	44017
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflosol02.nif	9833
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflosol03.nif	40754
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflosol05.nif	9172
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdaflosol06.nif	17301
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdastasol04.nif	418433
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdatomdb03.nif	58262
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdbcolcor01.nif	49501
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdbcolcor03.nif	18881
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdbcolend01.nif	25734
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdbtracon01.nif	25661
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdcbarsrt01.nif	24188
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdcfireplace01.nif	36794
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdcwallint02.nif	40909
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdcwinsol03.nif	30939
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdcwinsol04.nif	12580
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdcwinsol05.nif	24831
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smddarchcon01.nif	68698
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdefireplace01.nif	69179
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdeflosol01.nif	19834
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdeflosol02.nif	100887
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdeflosol03.nif	6467
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdeflosol04.nif	13870
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdeflosol05.nif	23906
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdestasol02.nif	52717
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdfarchcell01.nif	176815
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdfarchcell02.nif	180669
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdfarchcellout02.nif	333194
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdfarchcor01.nif	80218
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/smdfceljail01.nif	115323
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/sshrinefloor.nif	12478
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/sshrinelfir01.nif	89953
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/sshrinelfir02.nif	89343
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmabalsol01.nif	25354
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmacorsol03.nif	75897
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmacorsol04.nif	91422
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmacorsol05.nif	80254
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmawalsol01.nif	9686
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmawincor01.nif	22403
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/solitude/interiors/ssmawinsol01.nif	14855
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintcolumn03.nif	104143
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintcor01.nif	88071
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintstairsfree02.nif	37543
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintstrdoorl01.nif	60278
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintstrdoorr01.nif	59236
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintwingwinl.nif	67258
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/sovengarde/sovngardeinterior/sovintwingwinr.nif	67068
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/tents/largeimperialtent01.nif	116217
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/tents/smallimperialtent.nif	55401
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrbuildings/wrmarketstand01.nif	155688
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrbuildings/wrmarketstand02.nif	91682
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrbuildings/wrmarketstand03.nif	101839
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/wrcastlerugbendl.nif	11306
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/wrcastlerugbendr.nif	9846
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/wrcastlerugbmid01.nif	7061
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/wrjorrvaskrrugstr01.nif	8068
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/wrruglarge03.nif	23618
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrclutter/wrruglarge04.nif	28922
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorcapcor02.nif	14652
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorcapcor03.nif	14652
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorcapcor04.nif	8899
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorcapcor05.nif	9090
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorfirepit01.nif	21983
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorwoodmid01.nif	3938
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefloorwoodmid01quad.nif	9825
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlefreepillar01.nif	36498
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastleplatstairs01.nif	28360
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlestairs02.nif	58832
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlewalldoublehighcorin01.nif	5494
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlewalldoublehighstr02.nif	18505
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlewallstrdoorsm01.nif	18857
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlewallstrwin01.nif	14040
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrcastle/wrintcastlewallstrwin01double.nif	24060
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintarch768.nif	74585
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintarch768capl.nif	25279
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintarch768capr.nif	23674
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintarch768walldoor01.nif	32404
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintarchdoorwaytrans01.nif	37160
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintcor01.nif	16132
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintcordoublehigh01.nif	32600
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintcordoublehighl.nif	57726
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintcordoublehighr.nif	54405
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintcustomdoor01.nif	53577
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintstr01doublehighdoortran01.nif	32590
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintstr01grate.nif	39109
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintbeam768nobracket.nif	6562
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfloordirtcoratran01.nif	17498
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfloorstfirealcove01.nif	58810
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfloorstmid01.nif	5850
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfloorstmid02.nif	13143
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfreewallcolumwall01.nif	15760
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfreewallstr01.nif	18951
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfreewallstr01low.nif	14831
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfreewallstr02.nif	17795
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfreewallstrdoor01.nif	23017
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintfreewallstrdoor01low.nif	13011
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintladder01.nif	130500
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintloftwallcustombm01.nif	27093
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintloftwallroof01a.nif	8237
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintloftwallroofdoor01a.nif	16337
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofcorin01.nif	37282
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofcorr01.nif	54627
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofgreymanecustom01.nif	174527
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofopen01.nif	47307
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofstcorcorinr.nif	42250
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofstr01.nif	31271
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofstrwin01.nif	69506
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintroofwall02.nif	31840
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallcor01.nif	25180
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallcorin01.nif	4895
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallcorwinl.nif	20780
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallcorwinr.nif	21008
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallgreymanecustom01.nif	79099
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallstcorwinl.nif	34991
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallstr01.nif	14693
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallstr01wina.nif	13013
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrintwallstr01winblow.nif	24039
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchcol01.nif	11124
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchcol02.nif	11086
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchcol03.nif	5380
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchentrancel.nif	82948
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchentrancer.nif	84884
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchfloorwoodanglel.nif	9720
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchfloorwoodangler.nif	12198
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchfloorwoodfoyer01.nif	22397
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchfloorwoodfoyer02.nif	25841
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchfloorwoodplatstairs01.nif	10431
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrtemple/wrtempintcor01.nif	98873
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrtemple/wrtempintfloormid01.nif	34090
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/whiterun/wrinteriors/wrtemple/wrtempintstr01.nif	55028
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/castle/whfireplace01.nif	54767
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/castle/whfireplace02.nif	69452
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/castle/whfireplace03.nif	64242
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/castle/whintcastlelroomfloormid01.nif	29850
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/whinttemple01.nif	1429213
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintinn01.nif	2348927
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodbackwall01.nif	80733
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodbackwall02.nif	133133
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodbackwallwindow01.nif	173268
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodfloormid02.nif	9231
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodfloormid03.nif	8915
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodfloormid04.nif	7887
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodfloormid05.nif	10607
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodfloormid06.nif	12575
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodroofleft01.nif	57905
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodroofleftwindow01.nif	165230
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodroofmid01.nif	99576
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodroofmidtop02.nif	16061
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodroofright01.nif	57943
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodroofrightwindow01.nif	165412
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodwallkitdoor01.nif	20463
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodwallkitwall01.nif	18663
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodwallkitwall02.nif	6915
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodwallkitwall03.nif	34884
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodwallkitwall04.nif	26481
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/interiorkits/wood/whintwoodwallwoodsupport01.nif	11405
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/whmarketstall01.nif	29311
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/windhelm/whmarketstall02.nif	27071
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdsbtowerintstairs01.nif	206222
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdsbtowerintwall01.nif	87692
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdsbtowerintwall02.nif	81615
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdstowerintwall01.nif	98884
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdstowerintwall02.nif	96582
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall01.nif	143386
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall02.nif	325128
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall03.nif	52603
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall04.nif	66192
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall05.nif	353901
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall06.nif	100005
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall07.nif	80437
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall08.nif	80783
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall09.nif	113055
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/architecture/winterhold/winterholdtowerintwall10.nif	335910
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachepicmushroom01.nif	536371
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushanim01.nif	113957
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushanim02.nif	116086
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushanim03.nif	117194
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushanim04.nif	118874
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushanim05.nif	123849
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushhoriz01.nif	44869
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushhoriz02.nif	44672
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushhoriz03.nif	44759
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushhoriz04.nif	44680
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushroom01.nif	48520
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushroom02.nif	48376
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushroom03.nif	48287
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushroom04.nif	48323
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/blackreach/blackreachgiantmushroom05.nif	48271
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/candles/candlehornchandelier01.nif	110671
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/candles/candlehornchandelier02.nif	110671
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/carts/vendorcartstatic01.nif	109864
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/chauruseggs/eggs.nif	2979
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/chauruseggs/eggsacs.nif	18251
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/chauruseggs/eggsacs01.nif	18266
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/chauruseggs/eggsacs02.nif	18255
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/clutter/eyeofmagnus/eyeofmagnus01.nif	1753672
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dint3way01.nif	208446
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dint3waydoor01.nif	219458
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dint4way01.nif	210481
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintcaphall01.nif	86948
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintcapstairs01.nif	134462
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintcorner01.nif	212820
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintcornerdoor01.nif	218790
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dinthall01.nif	201203
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintr3way01.nif	121064
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintr3waydoor01.nif	119864
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintrcorner01.nif	160173
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintrcorner02.nif	164707
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintrcorner04.nif	159356
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintrwall01.nif	114032
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintsmall3way01.nif	124992
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintsmall4way01.nif	144135
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dintsmallcorner01.nif	121374
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dinttowerbase01.nif	229854
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dinttowerbase02.nif	264229
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/architecture/ELFX/dinttowerstairs01.nif	278223
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caschaparchfree01.nif	58706
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/casexfreelg01.nif	63944
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/casexfreelgwide01.nif	47730
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslghallfreewall01.nif	19996
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslghallstair01.nif	138462
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslgrmcorin01.nif	114978
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslgrmmid01.nif	22577
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslgrmtolghallcorinl01.nif	132743
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslgrmtolghallcorinr01.nif	134338
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslgrmtolghallwall01.nif	108953
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/dungeons/ELFX/caslgrmtolghallwalldbl01.nif	139598
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/effects/ambient/fxscmistlow01.nif	48531
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc01/effects/ambient/fxscmistlow01small03.nif	23008
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/telvannitower/dlc2telmithryndiseased01.nif	244448
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/telvannitower/dlc2telvannitowermainint01.nif	1356402
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/architecture/thirsk/meadhall/dlc2thirskmeadhallinterior01.nif	1979450
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/clutter/dlc2darkelflantern04.nif	72694
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/clutter/dlc2darkelflantern05.nif	72694
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/clutter/dlc2darkelflantern06.nif	68270
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/apocrypha/clutter/apolightpost01.nif	66605
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/apocrypha/clutter/apolightpost02.nif	66605
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/dungeons/dwemer/clutter/dlc2dweclutterfirepot01.nif	23635
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dlc02/landscape/glaciers/dlc2glacierstraightlg01.nif	113433
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/cliffs/cavegcliffs01.nif	288929
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/cliffs/cavegcliffs03.nif	90558
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/cliffs/cavegcliffs03ns.nif	80249
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epic/cavegewall01.nif	54809
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epic/cavegewallup04.nif	28447
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epicbalcony/cavegebalconyramp02.nif	35015
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/epicwall/cavegewallstraight01.nif	26092
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/largeroom/caveglroomcorner02c.nif	114804
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/largewall/caveglwallcorner02.nif	20585
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/largewall/caveglwallstraight01.nif	20732
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/pillars/cavegepillar01.nif	60048
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/pillars/cavegepillar02.nif	49048
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/pillars/cavegepillar03.nif	108284
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/pillars/cavegepillar05.nif	36932
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/green/pillars/cavegepillar06.nif	49174
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/ice/cliffs/caveicliffs03ns.nif	63213
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/ice/shaftrock/caveishaftrtop01.nif	189334
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/caves/ice/shaftrock/caveishaftrwall01.nif	63123
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/bghalls/dwehallbg1way02.nif	322472
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/bghalls/dwehallbgendcapexbg01.nif	124063
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/facades/dwefacadetowerarch01.nif	80288
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lghalls/dwehalllg4way01.nif	563703
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lghalls/dwehalllgendcapexbg02.nif	248733
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgcorin01.nif	195873
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgcorintolghalldbl01.nif	345390
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgcorintolghallr01.nif	235250
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgcorout01.nif	147484
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgmid01.nif	119478
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgwall01.nif	170432
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgwallmidwall01.nif	382062
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgwalltolghall01.nif	278864
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/lgrooms/dwermlgwalltolghallcorinx2.nif	505085
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/platforms/dweplatbgmid01.nif	4088
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmcorin01.nif	153303
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmcorinexbgl01.nif	138295
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmcorinexbgr01.nif	142121
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmcorout01.nif	60001
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmmid01.nif	33893
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmmidbot01.nif	4042
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmwall01.nif	101331
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmwallexbg01.nif	96947
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/dwemer/smrooms/dwermsmwallexbghalf01.nif	87543
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/largeroom/implroomcorner02.nif	319165
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/largeroom/implroomcorner03.nif	349914
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/largeroom/implroomwall02.nif	267997
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/largeroom/implroomwall03.nif	212972
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptowerbase01.nif	481403
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptowerindoor01.nif	243286
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptoweroutfloor01.nif	82347
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptoweroutstairs01.nif	1193988
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptoweroutstairs02.nif	1194461
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptoweroutwall01.nif	179238
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/imperial/tower/imptowerringwall01.nif	34314
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepic/minecedoorup03.nif	52231
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/minecepillar01.nif	59850
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/minecepillar02.nif	45706
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/minecepillar03.nif	117266
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/minecepillar04.nif	59942
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/minecepillar05.nif	47155
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/caveepicpillar/minecepillar06.nif	62691
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/cavelargeroom/mineclroomwall01.nif	103763
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/cliffs/minecliffs01.nif	314583
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/mines/cliffs/minecliffs02.nif	207155
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgcorinl01.nif	209325
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgcorinr01.nif	207467
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgcoroutl01.nif	100684
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgcoroutr01.nif	101274
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgmid01.nif	80150
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgmid02.nif	13671
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgwallfront01.nif	144572
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgwallfrontexsm01.nif	191137
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgwallfrontexsmcenter01.nif	344736
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgwallside01.nif	179137
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bgrooms/norrmbgwallsideexsm01.nif	221534
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bridges/norbridge1way01x512.nif	145825
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bridges/norbridgepitwallfront01exsm02.nif	528542
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bridges/norbridgepitwallfront03.nif	443295
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bridges/norbridgermbgwallfrontexsm02.nif	188864
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/bridges/norbridgermbgwallside02exsm02.nif	159002
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/bghalls/norcathallbg1way01.nif	472557
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/bghalls/norcathallbg1wayendcapexsm01.nif	112453
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/bghalls/norcathallbg4way01.nif	151252
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm1way01.nif	708124
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm1way02.nif	352357
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm1way03.nif	378930
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm2way01.nif	588043
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm3way01.nif	540453
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm3way02.nif	682458
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm4way01.nif	653633
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm4way02.nif	602105
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/chambers/norantechamber01.nif	1544488
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/chambers/norantechamber01a.nif	1546842
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/chambers/norburialshaft01.nif	3166442
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/exterior/nortempleentrancehall01.nif	437474
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/exterior/nortmpextplatstairmid02.nif	46110
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallfront01.nif	383743
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallfrontstairs01.nif	811170
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallfronttormbgfrontl01.nif	229421
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallfronttormbgfrontr01.nif	226175
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallfronttormbgsidel01.nif	282015
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallfronttormbgsider01.nif	285783
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallside01.nif	422020
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallside02.nif	444833
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallsidestairs01.nif	903962
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallsidetormbgfrontl01.nif	299473
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallsidetormbgsidel01.nif	254561
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/pits/norpitwallsidetormbgsider01.nif	254605
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/smrooms/norrmsmfloorraised01.nif	88535
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/smrooms/norrmsmfloorraised02.nif	87672
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/temple/bghalls/nortmphallbg1wayentrance01.nif	412326
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/temple/bghalls/nortmphallbg1waystairsdown01.nif	284631
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/nordic/temple/bghalls/nortmphallbg1waywall02.nif	2951467
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/ratwaybarrel/riftenrwroombsupport01.nif	49678
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/ratwaybarrel/riftenrwroombsupport02.nif	49678
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/ratwayroom/riftenrwroomcore01.nif	412736
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/thievesguild/riftenrwtghqmain01.nif	1518973
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/thievesguild/riftenrwthievesguild01.nif	575090
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/riften/thievesguild/riftenrwthievesguild03.nif	1247114
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/dungeons/ship/shiplargeinside01.nif	1323486
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ambient/fxglowfillrndlitmid.nif	6320
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ambient/fxglowflatrndbrt.nif	3582
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ambient/fxsmokesmokelg1x1.nif	12197
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim01blue.nif	113957
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim01purple.nif	113957
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim02blue.nif	116086
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim02purple.nif	116086
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim03blue.nif	117194
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim03purple.nif	117194
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim04blue.nif	118874
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim05blue.nif	123849
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushanim05purple.nif	123849
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushhoriz01blue.nif	44869
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushhoriz02blue.nif	44672
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushhoriz03blue.nif	44759
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushhoriz04blue.nif	44680
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushroom01blue.nif	48520
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushroom02blue.nif	48376
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushroom03blue.nif	48287
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushroom04blue.nif	48323
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/blackreachmushrooms/blackreachgiantmushroom05blue.nif	48271
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/candlesmoke01.nif	8218
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/candlesmoke02.nif	8218
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/candlesmoke03.nif	8218
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/candlesmoke04.nif	8218
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/dlc2dweclutterfirepot01.nif	23635
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXblackplane.nif	772
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXDustVol.nif	13004
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXFakeLight.nif	3466
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXFakeLightDoor01.nif	1023
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXFakeLightDoor02.nif	1023
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXFakeLightHalf.nif	3466
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXGlowDust.nif	14585
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXimpchandelliercandle02.nif	292695
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXRiftenshadow.nif	1382
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXSlowWetMist.nif	39929
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXsmokewetmistlgvol01.nif	21946
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/ELFXwhiteplane.nif	790
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/lightspellstaticlight.nif	19578
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/mountains/ELFXmountaincliff02.nif	177590
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/mountains/ELFXmountainpeak01.nif	346278
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/mountains/ELFXmountainpeak02.nif	408580
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/slowmist.nif	13805
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/waterreflection.nif	33869
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/ELFX/waterreflectionhalfvisible.nif	33869
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebcorner01.nif	10687
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebcorner02.nif	21097
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebdangle01.nif	5102
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebdangle02.nif	5100
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebdooropen.nif	10776
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebroundwall01.nif	40238
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxcobwebwall01.nif	7931
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebcorner03.nif	10696
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebcorner04.nif	15346
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebhitstrip01.nif	15529
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebhitstrip01dest.nif	25984
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitcorner2.nif	4336
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitcorner3.nif	4332
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitdinner.nif	8081
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitdinnerhuman.nif	77698
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitdinnerhumangnd.nif	176814
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitpost01.nif	8689
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitskeeverdinner.nif	61681
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitskeeverdinnerstatictemp.nif	61657
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebkitwall01.nif	3717
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebshaft.nif	14720
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/effects/fxspiderwebwall01.nif	6776
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/furniture/smallcookingpot.nif	62415
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/plants/glowingmushroom01.nif	17319
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/plants/glowingmushroomcluster01.nif	60795
+EnhancedLightsandFX 3.06/00 Core Files/Meshes/plants/glowingmushroomsingle01.nif	20039
+EnhancedLightsandFX 3.06/00 Core Files/Textures/cubemaps/ELFX/ELFXblack_m.dds	4304
+EnhancedLightsandFX 3.06/00 Core Files/Textures/cubemaps/ELFX/raggedflagon_e.dds	262352
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/candlesmoke01.dds	349680
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/candlesmoke02.dds	349680
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/candlesmoke03.dds	349680
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/candlesmoke04.dds	349680
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/cubemaps/cloudysea_e.dds	1048784
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/cubemaps/tundra_e.dds	1048784
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/eggs.dds	699192
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/ELFXDrAsh.dds	349680
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/ELFXIceSubLayer.dds	349680
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/ELFXIceSurfLayer.dds	5592560
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/ELFXIceSurfLayer02_n.dds	5592560
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/ELFXIceSurfLayer_n.dds	5592560
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/largeimperial_tm.dds	699192
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/smallimperialtent_tm.dds	699192
+EnhancedLightsandFX 3.06/00 Core Files/Textures/effects/ELFX/whiteplane.dds	43832
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/dungeons/nordic/temple/smim_nordic_bonedirt.dds	2796344
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/dungeons/nordic/temple/smim_nordic_bonedirt_n.dds	5592560
+EnhancedLightsandFX 3.06/00 Core Files/Textures/smim/dungeons/nordic/temple/smim_nordic_skeleton.dds	2796344
+EnhancedLightsandFX 3.06/01 ELFXEnhancer/ELFXEnhancer.esp	196552
+EnhancedLightsandFX 3.06/01 ELFXHardcore/ELFX - Hardcore.esp	1918635
+EnhancedLightsandFX 3.06/02 ELFXExteriors/ELFX - Exteriors.esp	1307927
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXsthalmorbarracks.nif	347481
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXsthalmorbarracksw.nif	19076
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXsthalmorembassy.nif	1073816
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXsthalmorembassyw.nif	131851
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXsthalmorhouse.nif	594990
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXsthalmorhousew.nif	122320
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwharetino.nif	691414
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwharetinow.nif	15398
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhbrunwulf.nif	744873
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhbrunwulfw.nif	20619
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhcandlehearthinn.nif	1519648
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhchwindows.nif	105089
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhclancruelsea.nif	1239276
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhclancruelseadestroyed.nif	1243824
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhclancruelseaw.nif	33829
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhclanshattershield.nif	1451982
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhclanshattershieldw.nif	52131
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhhjerim1.nif	1747551
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhhjerim1w.nif	56851
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhintwoodfloormid01.nif	7931
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhmarket02.nif	340737
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhmarket02w.nif	9818
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhmarket04.nif	279963
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhmarket04w.nif	13121
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhstables.nif	314503
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhstablesw.nif	3422
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhstonequarterhouses01.nif	964867
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhstonequarterhouses01w.nif	30545
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhtempletalos.nif	181858
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhtempletalos3.nif	413819
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhtempletalos3w.nif	3659
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhtempletalosw.nif	1848
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhviolagiorano.nif	1172880
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwhviolagioranow.nif	29777
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwinterholdexttower01.nif	1249580
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwinterholdexttower01w.nif	68694
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwinterholdexttowerring01.nif	314857
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/ELFX/ELFXwinterholdexttowerring01w.nif	8322
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/markarth/mrktemplecrag01.nif	232410
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtbeebarb01.nif	568079
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtblackbriarmanor01.nif	351035
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtblacksmith01city.nif	329625
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtfarmhouse01.nif	287821
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtfarmhouse02.nif	356882
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtfishery01city.nif	173278
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rthaelgasbunkhouse01.nif	552263
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtlandc01.nif	48215
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtlandl01.nif	67633
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtlandr01.nif	38055
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtmeadery01.nif	84843
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtmeadery02.nif	238146
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtmeadery02city.nif	170095
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtmercerfreys01.nif	281005
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtmjollandtroutpurse01.nif	290305
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtorphanage01city.nif	479185
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtpawnedprawn01.nif	231946
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtplayerhouse01city.nif	301036
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtplaza02.nif	69793
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtplaza03.nif	107731
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtsnowshodhouse01.nif	295125
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rttempleplaza01.nif	372964
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/riften/rtwarehouse01.nif	357749
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbardscollege.nif	2252515
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbardscollegerooms.nif	338979
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbardscollegetower.nif	188549
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbits and pieces.nif	391602
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sblacksmith.nif	582172
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbluepalace.nif	2103497
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbluepalaceentrance.nif	375333
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sbryling house.nif	1144415
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/scastle.nif	1785563
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/serikur house.nif	593805
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sevette san house.nif	645248
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/shmd_apothecary.nif	320657
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/shouseforsale.nif	684645
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sninedivine.nif	873618
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/solitudebasemarket.nif	136271
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sraidiantraiments.nif	292590
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sstyrrshouse.nif	337192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sstyrrshousedestroyed.nif	344564
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/sthe winking skeever.nif	438051
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/svittoriavicihouse.nif	794622
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/solitude/svittoriavicihousedestroyed.nif	773074
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrbreezehome01.nif	210698
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrcastleentrance01.nif	294787
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrcastlemainbuilding01.nif	661554
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrcastlestonetowertop01.nif	345675
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrfarmhousewindmill.nif	151241
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrguardhouse01.nif	141305
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhouse02.nif	379176
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousebanneredmare01.nif	491377
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhouseblacksmith01.nif	515374
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousegreymane01.nif	242627
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousemeadery01.nif	566732
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhouseshack01.nif	246039
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhouseshack02.nif	353500
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousestables01.nif	442897
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousestores01.nif	555045
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousestores02.nif	488147
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousewind01.nif	269739
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousewind02.nif	578471
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousewind03.nif	464806
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrhousewind04.nif	304131
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrjorvaskr01.nif	966636
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrmarketstand01.nif	155688
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrmarketstand02.nif	91682
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrmarketstand03.nif	101839
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrbuildings/wrtempleofk01.nif	1130765
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrterrain/wrcompanionbase01.nif	415362
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrterrain/wrmainroadplains.nif	257374
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrterrain/wrskyforge01.nif	613142
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/whiterun/wrterrain/wrterwind01.nif	314978
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whcenter.nif	128520
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whcenter4.nif	75973
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whcenter5.nif	53359
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whcenter6.nif	39534
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whlanddead1.nif	104140
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whlanddead2.nif	36928
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whlandfront.nif	47720
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whlandfront3.nif	23572
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whmarket01.nif	53030
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whpalace1.nif	1085835
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whpalace2.nif	254040
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whprison01.nif	248691
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whstonequarter2.nif	267867
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whtempletalos2.nif	216477
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whvalunstrad2.nif	12468
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whvalunstrad3.nif	19741
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/whwallwulfharth.nif	125931
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/windhelmbridge.nif	710982
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/architecture/windhelm/windhelmbridge2.nif	250943
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/ELFXbridgeshadow.nif	837
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/ELFXbridgeshadowThin.nif	837
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/ELFXRiftenshadow.nif	1382
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/ELFXshipshadow.nif	2790
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/fxsswarm.nif	10265
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/effects/ELFX/fxsswarmdense.nif	10265
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/landscape/unique/markarthcliff02.nif	120416
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/landscape/unique/markarthcliff03.nif	143504
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Meshes/landscape/unique/markarthcliff04.nif	125771
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/architecture/solitude/sinside.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/architecture/solitude/swindow01.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/architecture/solitude/swindow03.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/architecture/solitude/swindow03_n.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/cubemaps/cloudysea_e.dds	1048784
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/cubemaps/tundra_e.dds	1048784
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/ELFXbridgeshadows.dds	87536
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/ELFXbridgeshadowsend01.dds	87536
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/ELFXbridgeshadowsthin.dds	87536
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/ELFXbridgeshadows_n.dds	87536
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/riften/riftenwindowinner01.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/riften/riftenwindows02.dds	349680
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/riften/riftenwindows02_g.dds	11064
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/riften/riftenwindows02_n.dds	349680
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/sinside.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/swindow01.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/swindow01_g.dds	174904
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/swindow01_n.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/swindow03.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/swindow03_g.dds	174904
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/solitude/swindow03_n.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/winterior.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/winterior02.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/winteriordragonsreach01.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/winteriordragonsreach02.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/winteriorjorrvaskr.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/winteriortemple.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/wrwindows01.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/wrwindows01_em.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/wrwindows01_g.dds	43832
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/whiterun/wrwindows01_n.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/ELFXwhwindow01.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whinside.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whinsidetemple.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whwindow1.dds	349680
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whwindow1_n.dds	174904
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whwindowmaps.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whwindowmapsglow_g.dds	43832
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whwindowmapsmask_m.dds	43832
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/windhelm/whwindowmaps_n.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/winterhold/winterholdwindow01.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/winterhold/winterholdwindow01_n.dds	1398256
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/winterhold/winterholdwindow02.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/winterhold/winterholdwindow02_em.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXExteriors/Textures/effects/ELFX/windows/winterhold/wtinside.dds	699192
+EnhancedLightsandFX 3.06/02 ELFXWeathers/ELFX - Weathers.esp	317372
+EnhancedLightsandFX 3.06/02 ELFXWeathers/Textures/Effects/ELFX/fxsoftraindrops.dds	87536
+EnhancedLightsandFX 3.06/02 ELFXWeathers/Textures/Effects/ELFX/fxstormraindrops.dds	349680
+EnhancedLightsandFX 3.06/02 ELFXWeathers/Textures/Effects/fxraindrops.dds	22032
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlake01.nif	14395
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakebreak01.nif	31392
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakebreak02.nif	24059
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakebreakcap.nif	8968
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakebreakcap02.nif	16890
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakebreakexplosion.nif	168336
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakecracks1.nif	2207
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakecracks1edgene.nif	2789
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakecracks2.nif	2207
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakecracks3.nif	2207
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakecracks3edgene.nif	2047
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc01frozenlakeedgene.nif	18915
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloechunks01.nif	2790
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloechunks02.nif	2764
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloechunks03.nif	2048
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloel01.nif	22105
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloem01.nif	15544
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloes01.nif	9806
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/dlc01/landscape/dlc1icefloes02.nif	6609
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshice01.nif	2701
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloechunks01.nif	2811
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloechunks02.nif	2785
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloechunks03.nif	2069
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloel01.nif	22195
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloem01.nif	15538
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloes01.nif	10036
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicefloes02.nif	6915
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicelandbrokenl01.nif	15379
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenmarshicelandbrokenl01skirt.nif	20546
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/frozenpooll01.nif	111676
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/icefloes01.nif	82173
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/icefloessolid01.nif	28541
+EnhancedLightsandFX 3.06/02 EnhancedIce/meshes/landscape/ice/icefloessolid02.nif	123961
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/effects/ELFX/ELFXIceSubLayer.dds	349680
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/effects/ELFX/ELFXIceSurfLayer.dds	5592560
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/effects/ELFX/ELFXIceSurfLayer02_n.dds	5592560
+EnhancedLightsandFX 3.06/02 EnhancedIce/textures/effects/ELFX/ELFXIceSurfLayer_n.dds	5592560
+EnhancedLightsandFX 3.06/03 NoBreezehome/ELFX - NoBreezehome.esp	610429
+EnhancedLightsandFX 3.06/03 NoHjerim/ELFX - NoHjerim.esp	616991
+EnhancedLightsandFX 3.06/03 NoHoneyside/ELFX - NoHoneyside.esp	603698
+EnhancedLightsandFX 3.06/03 NoPlayerHomes/ELFX - NoPlayerHomes.esp	737651
+EnhancedLightsandFX 3.06/03 NoProudspire/ELFX - NoProudspireManor.esp	605235
+EnhancedLightsandFX 3.06/03 NoSeverinManor/ELFX - NoSeverinManor.esp	76512
+EnhancedLightsandFX 3.06/03 NoVlindrelHall/ELFX - NoVlindrelHall.esp	602812
+EnhancedLightsandFX 3.06/03 SMIM Lantern/Meshes/clutter/common/candlelanternwithcandle01.nif	108786
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/basement/farmbmiddle02.nif	39380
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2basementent01.nif	192352
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2doorway02nodoor.nif	295444
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2doorway03.nif	306083
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2doorway04.nif	217385
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2end01.nif	391736
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2end02.nif	361040
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmint2hearth02.nif	218095
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnend01.nif	345284
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnend02.nif	308734
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnend03.nif	372372
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnend04.nif	346758
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnend05.nif	283329
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnend06.nif	352085
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnwall01.nif	143217
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintinnwallentrance01.nif	163445
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhback01.nif	441550
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhend01.nif	222656
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhend02.nif	251633
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhfront01.nif	440363
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhloft01.nif	140995
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhloft02.nif	141258
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhlofttop01.nif	25498
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintlhmid01.nif	111743
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwall01.nif	80831
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwallhearth01.nif	141696
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwallhearth02.nif	161176
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwooddoorway01.nif	90546
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwoodend01.nif	73963
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwoodend02.nif	90401
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/farmhouse/interior/farmintwoodwall01.nif	29196
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/architecture/whiterun/wrinteriors/wrintfreewallcolumwall01.nif	12914
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/cliffs/cavegcliffs01.nif	311058
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/cliffs/cavegcliffs03.nif	103980
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/cliffs/cavegcliffs03ns.nif	93672
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/epicbalcony/cavegebalconyramp02.nif	35015
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/pillars/cavegepillar01.nif	60048
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/pillars/cavegepillar02.nif	35008
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/pillars/cavegepillar03.nif	99970
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/pillars/cavegepillar05.nif	36932
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/caves/green/pillars/cavegepillar06.nif	47546
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/mines/cliffs/minecliffs01.nif	288962
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/mines/cliffs/minecliffs02.nif	206135
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/bghalls/norcathallbg1way01.nif	1159298
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm1way01.nif	1608640
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm2way01.nif	1272896
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm3way01.nif	980662
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm3way02.nif	1760337
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm4way01.nif	1442914
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/catacombs/smhalls/norcathallsm4way02.nif	1067833
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Meshes/dungeons/nordic/temple/bghalls/nortmphallbg1waywall02.nif	2951467
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Textures/smim/dungeons/green/smim_caveg_dirtcliffsroots.dds	1398256
+EnhancedLightsandFX 3.06/03 SMIM Meshes/Textures/smim/dungeons/green/smim_caveg_dirtcliffsroots_n.dds	1398256
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/effects/ELFX/candlesmoke01.dds	496
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/effects/ELFX/candlesmoke02.dds	496
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/effects/ELFX/candlesmoke03.dds	496
+EnhancedLightsandFX 3.06/04 NoCandleSmoke/Textures/effects/ELFX/candlesmoke04.dds	496
+EnhancedLightsandFX 3.06/04 Torches/meshes/clutter/common/torchpermanent01.nif	56678
+EnhancedLightsandFX 3.06/04 Torches/meshes/clutter/common/torchsconce01.nif	57671
+EnhancedLightsandFX 3.06/04 Torches/meshes/weapons/torch/torch.nif	51859
+EnhancedLightsandFX 3.06/Documentation/README.txt	3837
+EnhancedLightsandFX 3.06/fomod/Core.jpg	102294
+EnhancedLightsandFX 3.06/fomod/ELFXEnhancer.jpg	206165
+EnhancedLightsandFX 3.06/fomod/EnhancedIce.jpg	134788
+EnhancedLightsandFX 3.06/fomod/Exteriors.jpg	112131
+EnhancedLightsandFX 3.06/fomod/Hardcore.jpg	76929
+EnhancedLightsandFX 3.06/fomod/info.xml	732
+EnhancedLightsandFX 3.06/fomod/Lantern-Comp.jpg	748640
+EnhancedLightsandFX 3.06/fomod/ModuleConfig.xml	16912
+EnhancedLightsandFX 3.06/fomod/NoBreezehome.jpg	205409
+EnhancedLightsandFX 3.06/fomod/NoHjerim.jpg	317567
+EnhancedLightsandFX 3.06/fomod/NoHoneyside.jpg	248222
+EnhancedLightsandFX 3.06/fomod/NoProudspire.jpg	238273
+EnhancedLightsandFX 3.06/fomod/NoSeverinManor.jpg	124823
+EnhancedLightsandFX 3.06/fomod/NoVlindrelHall.jpg	218756
+EnhancedLightsandFX 3.06/fomod/SMIM.jpg	656587
+EnhancedLightsandFX 3.06/fomod/TorchGif.gif	11021192
+EnhancedLightsandFX 3.06/fomod/Weathers.jpg	106995
+EnhancedLightsandFX 3.06/Wizard.txt	3181

@@ -1,0 +1,1057 @@
+# source: Nether's Follower Framework - Universal Installer-55653-2-8-6b-1712793520.zip
+00 Main LE/
+00 Main LE/nwsFollowerFramework.esp	692098
+00 Main SSE/
+00 Main SSE/nwsFollowerFramework.esp	692019
+01 Required/
+01 Required/Interface/
+01 Required/Interface/NWS/
+01 Required/Interface/NWS/NFF_title.dds	338048
+01 Required/Interface/Translations/
+01 Required/Interface/Translations/nwsFollowerFramework_czech.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_english.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_french.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_german.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_italian.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_japanese.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_polish.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_russian.txt	199748
+01 Required/Interface/Translations/nwsFollowerFramework_spanish.txt	199748
+01 Required/meshes/
+01 Required/meshes/NFF/
+01 Required/meshes/NFF/Magic/
+01 Required/meshes/NFF/Magic/nwsLightspellCold.nif	31606
+01 Required/meshes/NFF/Magic/nwsLightspellGrey.nif	31606
+01 Required/meshes/NFF/Magic/nwsLightspellWarm.nif	31606
+01 Required/Readme/
+01 Required/Readme/Nether's Follower Framework - Guide.pdf	747281
+01 Required/Readme/Nether's Follower Framework - Guide.zip	577398
+01 Required/Readme/Nether's Follower Framework - Updates.txt	352944
+01 Required/Scripts/
+01 Required/Scripts/DialogueFollowerScript.pex	3697
+01 Required/Scripts/DLC2_QF_DLC2MQ04_020179DE.pex	9655
+01 Required/Scripts/FollowerAliasScript.pex	66480
+01 Required/Scripts/HirelingCommentScript.pex	1179
+01 Required/Scripts/nwsFollowerAliasSell_script.pex	1947
+01 Required/Scripts/nwsFollowerAutoLootScript.pex	3442
+01 Required/Scripts/nwsFollowerAutoSetsScript.pex	6194
+01 Required/Scripts/nwsFollowerCheckScript.pex	6074
+01 Required/Scripts/nwsFollowerCompScript.pex	3517
+01 Required/Scripts/nwsFollowerControllerExScript.pex	43956
+01 Required/Scripts/nwsFollowerControllerScript.pex	85704
+01 Required/Scripts/nwsFollowerCraftingScript.pex	18613
+01 Required/Scripts/nwsFollowerFavScript.pex	4681
+01 Required/Scripts/nwsFollowerGiftScript.pex	2603
+01 Required/Scripts/nwsFollowerHistoryScript.pex	5977
+01 Required/Scripts/nwsFollowerHomeScript.pex	12437
+01 Required/Scripts/nwsFollowerMCMExScript.pex	164946
+01 Required/Scripts/nwsFollowerMCMScript.pex	141745
+01 Required/Scripts/nwsFollowerMinionsScript.pex	2782
+01 Required/Scripts/nwsFollowerMountsScript.pex	12085
+01 Required/Scripts/nwsFollowerOutfitBox_script.pex	1039
+01 Required/Scripts/nwsFollowerPerkScript.pex	13684
+01 Required/Scripts/nwsFollowerSandboxScript.pex	17250
+01 Required/Scripts/nwsFollowerSetsScript.pex	24235
+01 Required/Scripts/nwsFollowerSettingsScript.pex	17748
+01 Required/Scripts/nwsFollowerSpellsScript.pex	705
+01 Required/Scripts/nwsFollowerStorageScript.pex	3713
+01 Required/Scripts/nwsFollowerUILIBScript.pex	76478
+01 Required/Scripts/nwsFollowerVariableScript.pex	17723
+01 Required/Scripts/nwsFollowerXStoreScript.pex	5199
+01 Required/Scripts/nwsFollower_AttackEnemyFX.pex	2796
+01 Required/Scripts/nwsFollower_BehindFX.pex	1007
+01 Required/Scripts/nwsFollower_BehindMe.pex	742
+01 Required/Scripts/nwsFollower_CastLightFX.pex	1986
+01 Required/Scripts/nwsFollower_CheckCount.pex	725
+01 Required/Scripts/nwsFollower_Collide.pex	956
+01 Required/Scripts/nwsFollower_CommandFX.pex	2380
+01 Required/Scripts/nwsFollower_ControlCommand.pex	852
+01 Required/Scripts/nwsFollower_CraftArrowDo.pex	704
+01 Required/Scripts/nwsFollower_CraftPotionDo.pex	707
+01 Required/Scripts/nwsFollower_CraftTorchDo.pex	704
+01 Required/Scripts/nwsFollower_DispellLightFX.pex	1440
+01 Required/Scripts/nwsFollower_Divorce.pex	739
+01 Required/Scripts/nwsFollower_Elope.pex	724
+01 Required/Scripts/nwsFollower_ElopeMeal.pex	755
+01 Required/Scripts/nwsFollower_ElopeStore.pex	757
+01 Required/Scripts/nwsFollower_EvalFX.pex	633
+01 Required/Scripts/nwsFollower_Expel.pex	741
+01 Required/Scripts/nwsFollower_Export.pex	748
+01 Required/Scripts/nwsFollower_FindTargetFX.pex	2106
+01 Required/Scripts/nwsFollower_FindTargetProjFX.pex	1283
+01 Required/Scripts/nwsFollower_FireSteward.pex	753
+01 Required/Scripts/nwsFollower_GiveGold.pex	657
+01 Required/Scripts/nwsFollower_GuardDismiss.pex	764
+01 Required/Scripts/nwsFollower_GuardEndFavor.pex	652
+01 Required/Scripts/nwsFollower_GuardFavor.pex	646
+01 Required/Scripts/nwsFollower_GuardFollow.pex	761
+01 Required/Scripts/nwsFollower_GuardH0.pex	746
+01 Required/Scripts/nwsFollower_GuardH150.pex	750
+01 Required/Scripts/nwsFollower_GuardH250.pex	750
+01 Required/Scripts/nwsFollower_GuardH75.pex	748
+01 Required/Scripts/nwsFollower_GuardReject.pex	722
+01 Required/Scripts/nwsFollower_GuardTrade.pex	646
+01 Required/Scripts/nwsFollower_GuardWait.pex	762
+01 Required/Scripts/nwsFollower_HaveDrink.pex	697
+01 Required/Scripts/nwsFollower_HealFX.pex	3095
+01 Required/Scripts/nwsFollower_HorsePathing.pex	1209
+01 Required/Scripts/nwsFollower_HorseTravelEnd.pex	638
+01 Required/Scripts/nwsFollower_Import.pex	758
+01 Required/Scripts/nwsFollower_MinionAlias.pex	2266
+01 Required/Scripts/nwsFollower_OpenXStorage.pex	760
+01 Required/Scripts/nwsFollower_OutfitCommand.pex	844
+01 Required/Scripts/nwsFollower_PayChecker.pex	776
+01 Required/Scripts/nwsFollower_PayOwed.pex	771
+01 Required/Scripts/nwsFollower_PlayerAlias.pex	13087
+01 Required/Scripts/nwsFollower_PlayerCbtFX.pex	1454
+01 Required/Scripts/nwsFollower_PlayerTracker.pex	1683
+01 Required/Scripts/nwsFollower_RecruitAnimal.pex	759
+01 Required/Scripts/nwsFollower_SellItems.pex	746
+01 Required/Scripts/nwsFollower_SetPartner.pex	807
+01 Required/Scripts/nwsFollower_Shake.pex	738
+01 Required/Scripts/nwsFollower_SharpWpnDo.pex	702
+01 Required/Scripts/nwsFollower_SlowFX.pex	891
+01 Required/Scripts/nwsFollower_SparAlias.pex	2972
+01 Required/Scripts/nwsFollower_SparCancel.pex	745
+01 Required/Scripts/nwsFollower_Sparring.pex	10476
+01 Required/Scripts/nwsFollower_SparStop.pex	503
+01 Required/Scripts/nwsFollower_TargetAllyFX.pex	1598
+01 Required/Scripts/nwsFollower_TauntBuffFX.pex	1968
+01 Required/Scripts/nwsFollower_TauntEnemiesFX.pex	2575
+01 Required/Scripts/nwsFollower_Teach.pex	741
+01 Required/Scripts/nwsFollower_WerewolfChangeFX.pex	2098
+01 Required/Scripts/QF_DialogueFollower_000750BA.pex	2328
+01 Required/Scripts/QF_nwsFollowerCompSaadia_030B0816.pex	755
+01 Required/Scripts/QF_nwsFollowerCompThieves_030C1D5C.pex	758
+01 Required/Scripts/QF_nwsFollowerCompWinter_030B2FB2.pex	755
+01 Required/Scripts/QF_nwsFollowerCompYsolda_030BCE24.pex	755
+01 Required/Scripts/QF_nwsFollowerMinion_032DB308.pex	1251
+01 Required/Scripts/WEDogFollowerScript.pex	652
+01 Required/Seq/
+01 Required/Seq/nwsFollowerFramework.seq	96
+01 Required/sound/
+01 Required/sound/fx/
+01 Required/sound/fx/NFF/
+01 Required/sound/fx/NFF/Announcer_1.wav	59948
+01 Required/sound/fx/NFF/Announcer_2.wav	48428
+01 Required/sound/fx/NFF/Announcer_3.wav	41728
+01 Required/sound/fx/NFF/Announcer_4.wav	64556
+01 Required/sound/fx/NFF/Announcer_5.wav	64556
+01 Required/sound/fx/NFF/Announcer_Fight.wav	64556
+01 Required/sound/fx/NFF/nwsHorseCallSnd.wav	151596
+01 Required/sound/fx/NFF/TauntFemale.wav	327400
+01 Required/sound/fx/NFF/TauntFemale_high.wav	327400
+01 Required/sound/fx/NFF/TauntFemale_low.wav	327400
+01 Required/sound/fx/NFF/TauntMale.wav	327400
+01 Required/sound/fx/NFF/TauntMale_high.wav	327400
+01 Required/sound/fx/NFF/TauntMale_low.wav	327400
+01 Required/sound/fx/NFF/TauntNeutral.wav	282616
+01 Required/sound/Voice/
+01 Required/sound/Voice/nwsFollowerFramework.esp/
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspherevoice/
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspherevoice/nwsFollowe_nwsFC_Shared_002E7909_1.fuz	13486
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspherevoice/nwsFollowe_nwsFC_Shared_002E790A_1.fuz	14976
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspherevoice/nwsFollowe_nwsFC_Shared_002E790B_1.fuz	10504
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspidervoice/
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspidervoice/nwsFollowe_nwsFC_Shared_002E7909_1.fuz	12254
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspidervoice/nwsFollowe_nwsFC_Shared_002E790A_1.fuz	12305
+01 Required/sound/Voice/nwsFollowerFramework.esp/crdwarvenspidervoice/nwsFollowe_nwsFC_Shared_002E790B_1.fuz	10796
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E6060_1.fuz	15929
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E6062_1.fuz	14056
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	12635
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	17300
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	12637
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	12600
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	12502
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRose/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	19844
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E6060_1.fuz	13695
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E6062_1.fuz	14056
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	12635
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	17300
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	12637
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	12600
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	10268
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseDeep/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	17610
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E6060_1.fuz	13695
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E6062_1.fuz	14056
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	12635
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	15066
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	12637
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	8132
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	12502
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleRoseLight/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	17610
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E6063_1.fuz	9417
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E6064_1.fuz	18559
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E6065_1.fuz	7100
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E6066_1.fuz	12005
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	13058
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	12970
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	7871
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	7628
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	8761
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSalty/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	10723
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E6063_1.fuz	7183
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E6064_1.fuz	20793
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E6065_1.fuz	7100
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E6066_1.fuz	14239
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	13058
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	12970
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	7871
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	7628
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	10995
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyDeep/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	12957
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E6063_1.fuz	9417
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E6064_1.fuz	18559
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E6065_1.fuz	7100
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E6066_1.fuz	14239
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	15292
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	12970
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	7871
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	7628
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	8761
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSaltyLight/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	10723
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E6062_1.fuz	9829
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E6063_1.fuz	5025
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E6067_1.fuz	4672
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	11956
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	16859
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	9577
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	7009
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	7289
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweet/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	12294
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E6062_1.fuz	9829
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E6063_1.fuz	5025
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E6067_1.fuz	6906
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	11956
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	14625
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	7343
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	7009
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	7289
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetDeep/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	12294
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E6062_1.fuz	9829
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E6063_1.fuz	5025
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E6067_1.fuz	4672
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	9722
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	14625
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	7343
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	4775
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	9523
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleSweetLight/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	10060
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E6068_1.fuz	7127
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	10351
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	18069
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	13393
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	8319
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	12253
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThorn/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	20822
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E6068_1.fuz	7127
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	10351
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	20303
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	13393
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	10553
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	12253
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornDeep/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	18588
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E6068_1.fuz	7127
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E6069_1.fuz	10351
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E606A_1.fuz	18069
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E606B_1.fuz	13393
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E606C_1.fuz	10553
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E606D_1.fuz	12253
+01 Required/sound/Voice/nwsFollowerFramework.esp/cvrFemaleThornLight/nwsFollowe_nwsFC_Shared_004E606E_1.fuz	18588
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowerGift__00133CC7_1.fuz	10695
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_0013DB2F_1.fuz	12756
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_0013DB30_1.fuz	6358
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_0013DB31_1.fuz	14171
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4774
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_00290EB9_1.fuz	7761
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4827
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_003192EB_1.fuz	9476
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC1SeranaVoice/nwsFollowe_nwsFC_Shared_00325907_1.fuz	16997
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_0013DB3B_1.fuz	8070
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_0013DB3C_1.fuz	6719
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_0013DB3D_1.fuz	11801
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_0013DB3E_1.fuz	28084
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_00290EB4_1.fuz	9147
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_00290EB7_1.fuz	9398
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_00325908_1.fuz	12298
+01 Required/sound/Voice/nwsFollowerFramework.esp/DLC2FemaleUniqueFrea/nwsFollowe_nwsFC_Shared_00325909_1.fuz	12280
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleargonian/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleargonian/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6550
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleargonian/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	6628
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleargonian/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15342
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleargonian/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleargonian/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12233
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalechild/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalechild/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4907
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalechild/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5783
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalechild/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	12501
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalechild/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	7062
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalechild/nwsFollowe_nwsFC_Shared_003192EC_1.fuz	16553
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	15517
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	19693
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4997
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5690
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13272
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8427
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_003192ED_1.fuz	17892
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_00325906_1.fuz	7406
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_0032590A_1.fuz	14866
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommander/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	18090
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	5642
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	4433
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	6188
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	6679
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	15811
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	16733
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	14577
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	6546
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	19319
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	23252
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	14452
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	18414
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6459
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7366
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15283
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8670
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecommoner/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9839
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4895
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5530
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	17872
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	11756
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/nwsFollowe_nwsFC_Shared_003192EF_1.fuz	7366
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecondescending/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9766
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecoward/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecoward/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4908
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecoward/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	6108
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecoward/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	20151
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecoward/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	9027
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalecoward/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9859
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4966
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7958
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	20148
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/nwsFollowe_nwsFC_Shared_003192F0_1.fuz	13072
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaledarkelf/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12144
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4939
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	6270
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15402
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	7036
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_003192F1_1.fuz	16151
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9496
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleelfhaughty/nwsFollowe_nwsFC_Shared_0032590A_1.fuz	14569
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	7980
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	6553
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	8130
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	7973
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	16330
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	16748
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	14829
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	12657
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	20549
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	20995
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	13795
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	16965
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6483
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	8081
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	21215
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	11686
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_003192ED_1.fuz	18263
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12035
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_0032590B_1.fuz	22037
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleeventoned/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	23754
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalekhajiit/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalekhajiit/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6479
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalekhajiit/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7678
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalekhajiit/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	14624
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalekhajiit/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/femalekhajiit/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12314
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowerTavern__000FAC73_1.fuz	8370
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	7664
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	5034
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	6303
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	10536
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	17027
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	20150
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	14490
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	13402
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	23064
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	19928
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	12734
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	15976
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4926
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5152
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	11125
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8271
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_003192F2_1.fuz	11953
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleNord/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12377
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldgrumpy/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldgrumpy/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4968
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldgrumpy/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7261
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldgrumpy/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16951
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldgrumpy/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldgrumpy/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9857
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldkindly/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldkindly/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	9651
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldkindly/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	9148
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldkindly/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15404
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldkindly/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleoldkindly/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12314
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	15273
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	19418
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6420
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	8191
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	19059
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_003192F3_1.fuz	13703
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9905
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleorc/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	19242
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/nwsFollowerTavern__000FAC73_1.fuz	6796
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6567
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	6589
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15589
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	11626
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleShrill/nwsFollowe_nwsFC_Shared_00325906_1.fuz	12438
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowerTavern__000FAC73_1.fuz	8896
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6440
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7345
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13049
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8839
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_003192F4_1.fuz	13212
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9916
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleSultry/nwsFollowe_nwsFC_Shared_0032590B_1.fuz	12475
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueDelphine/
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueDelphine/DialogueFo_FreeformSkyHave_004DC1F7_1.fuz	41547
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueDelphine/DialogueFo_FreeformSkyHave_004DC1F8_1.fuz	20677
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueKarliah/
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueKarliah/nwsFollowe_nwsFC_Shared_00528E32_1.fuz	8061
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueKarliah/nwsFollowe_nwsFC_Shared_00528E33_1.fuz	7105
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueKarliah/nwsFollowe_nwsFC_Shared_00528E34_1.fuz	10253
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueKarliah/nwsFollowe_nwsFC_Shared_00528E35_1.fuz	20256
+01 Required/sound/Voice/nwsFollowerFramework.esp/FemaleUniqueKarliah/nwsFollowe_nwsFC_Shared_00528E3A_1.fuz	13199
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	5502
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	5645
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	7402
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	7380
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	11889
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	13604
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	13194
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	9716
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	18220
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	18975
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	14146
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	17816
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4989
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5786
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16188
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	7047
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_003192ED_1.fuz	14532
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_00325906_1.fuz	9825
+01 Required/sound/Voice/nwsFollowerFramework.esp/femaleyoungeager/nwsFollowe_nwsFC_Shared_0032590A_1.fuz	14573
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleArgonian/
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleArgonian/nwsFollowerTavern__000FAC73_1.fuz	7482
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleArgonian/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	8059
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleArgonian/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	9678
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleArgonian/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	14681
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleArgonian/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	11271
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebandit/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebandit/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4891
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebandit/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5077
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebandit/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13765
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebandit/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	5750
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	6051
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	4403
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	5715
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	13939
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	17418
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	12573
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	8132
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	20594
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	21158
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	13138
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	17501
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4884
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7657
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16752
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	13973
+01 Required/sound/Voice/nwsFollowerFramework.esp/malebrute/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	18998
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleChild/
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleChild/nwsFollowerTavern__000FAC73_1.fuz	7389
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleChild/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4909
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleChild/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5988
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleChild/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16373
+01 Required/sound/Voice/nwsFollowerFramework.esp/MaleChild/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	10910
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	12857
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	16213
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6434
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7293
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15070
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommander/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8745
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	6332
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	6618
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	4935
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	6595
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	14715
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	13181
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	13172
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	9731
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	21016
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	17646
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	10026
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	17779
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	3282
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7886
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16964
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoner/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	9404
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	3970
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	3413
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	4231
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	4926
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	11599
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	13041
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	13043
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	8076
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	19135
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	18067
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	13239
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	18603
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4905
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7566
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	14778
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	7047
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecommoneraccented/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	19495
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	3360
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	4933
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	4911
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	6688
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	14502
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	14665
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	12541
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	8105
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	19229
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	19368
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	12878
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	16647
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6586
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7741
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16624
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecondescending/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	11761
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecoward/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecoward/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6502
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecoward/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	6026
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecoward/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	14341
+01 Required/sound/Voice/nwsFollowerFramework.esp/malecoward/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	7044
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledarkelf/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledarkelf/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	8071
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledarkelf/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	11387
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledarkelf/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	19022
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledarkelf/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledrunk/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledrunk/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	9609
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledrunk/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	9575
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledrunk/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	17031
+01 Required/sound/Voice/nwsFollowerFramework.esp/maledrunk/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	7177
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleelfhaughty/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleelfhaughty/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4937
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleelfhaughty/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5891
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleelfhaughty/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	15470
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleelfhaughty/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	10333
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	3381
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	3383
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	3275
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	3347
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	13274
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	12659
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	12406
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	9939
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	16362
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	17977
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	14397
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	15480
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	3289
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7582
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	17130
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventoned/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	9393
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	3817
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	6546
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	3977
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	4928
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	16954
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	16876
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	11194
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	8131
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	20291
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	19231
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	11383
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	17346
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4905
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5952
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16371
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	9078
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleeventonedaccented/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	22228
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleforsworn/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleforsworn/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4984
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleforsworn/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7720
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleforsworn/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13613
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleforsworn/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleguard/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleguard/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4905
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleguard/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	8184
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleguard/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	19650
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleguard/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/malekhajiit/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malekhajiit/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4962
+01 Required/sound/Voice/nwsFollowerFramework.esp/malekhajiit/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7528
+01 Required/sound/Voice/nwsFollowerFramework.esp/malekhajiit/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16398
+01 Required/sound/Voice/nwsFollowerFramework.esp/malekhajiit/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	11218
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	5981
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	8084
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	7914
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	8663
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	15906
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	17469
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	14886
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	9702
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	21367
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	21335
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	16779
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	19669
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4955
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	11734
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16086
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8313
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenord/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	20815
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	12611
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	17796
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4969
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7634
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13426
+01 Required/sound/Voice/nwsFollowerFramework.esp/malenordcommander/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldgrumpy/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldgrumpy/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	5004
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldgrumpy/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	11654
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldgrumpy/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	14358
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldgrumpy/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldkindly/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldkindly/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4951
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldkindly/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	9353
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldkindly/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	18342
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleoldkindly/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	4677
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	15205
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	15112
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6502
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7791
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	17227
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	9296
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleorc/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	19517
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	6572
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	6519
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	7269
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	7510
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	13224
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	14223
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	14251
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	12737
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	22624
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	20711
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	15792
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	15818
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	6535
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7634
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	16164
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleslycynical/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	16063
+01 Required/sound/Voice/nwsFollowerFramework.esp/malesoldier/
+01 Required/sound/Voice/nwsFollowerFramework.esp/malesoldier/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	13006
+01 Required/sound/Voice/nwsFollowerFramework.esp/malesoldier/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	13993
+01 Required/sound/Voice/nwsFollowerFramework.esp/malesoldier/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4900
+01 Required/sound/Voice/nwsFollowerFramework.esp/malesoldier/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	5783
+01 Required/sound/Voice/nwsFollowerFramework.esp/malesoldier/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13498
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CEB_1.fuz	4925
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CEC_1.fuz	5071
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CED_1.fuz	6383
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CEE_1.fuz	5619
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CEF_1.fuz	13383
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF0_1.fuz	15090
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF1_1.fuz	13318
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF2_1.fuz	11200
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF3_1.fuz	17557
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF4_1.fuz	20023
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF5_1.fuz	12980
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00167CF6_1.fuz	14137
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00290EB3_1.fuz	4898
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00290EB8_1.fuz	7466
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_00290EBC_1.fuz	13431
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_002BD7B7_1.fuz	8506
+01 Required/sound/Voice/nwsFollowerFramework.esp/maleyoungeager/nwsFollowe_nwsFC_Shared_0032593F_1.fuz	22354
+02 Scripts Source/
+02 Scripts Source/Scripts/
+02 Scripts Source/Scripts/DialogueFollowerScript.psc	4902
+02 Scripts Source/Scripts/DLC2_QF_DLC2MQ04_020179DE.psc	14906
+02 Scripts Source/Scripts/FollowerAliasScript.psc	58567
+02 Scripts Source/Scripts/HirelingCommentScript.psc	943
+02 Scripts Source/Scripts/nwsFollowerAliasSell_script.psc	1204
+02 Scripts Source/Scripts/nwsFollowerAutoLootScript.psc	2772
+02 Scripts Source/Scripts/nwsFollowerAutoSetsScript.psc	5073
+02 Scripts Source/Scripts/nwsFollowerCheckScript.psc	5001
+02 Scripts Source/Scripts/nwsFollowerCompScript.psc	2463
+02 Scripts Source/Scripts/nwsFollowerControllerExScript.psc	42532
+02 Scripts Source/Scripts/nwsFollowerControllerScript.psc	91309
+02 Scripts Source/Scripts/nwsFollowerCraftingScript.psc	16399
+02 Scripts Source/Scripts/nwsFollowerFavScript.psc	4118
+02 Scripts Source/Scripts/nwsFollowerGiftScript.psc	1914
+02 Scripts Source/Scripts/nwsFollowerHistoryScript.psc	4700
+02 Scripts Source/Scripts/nwsFollowerHomeScript.psc	12858
+02 Scripts Source/Scripts/nwsFollowerMCMExScript.psc	172077
+02 Scripts Source/Scripts/nwsFollowerMCMScript.psc	154053
+02 Scripts Source/Scripts/nwsFollowerMinionsScript.psc	2029
+02 Scripts Source/Scripts/nwsFollowerMountsScript.psc	10144
+02 Scripts Source/Scripts/nwsFollowerOutfitBox_script.psc	752
+02 Scripts Source/Scripts/nwsFollowerPerkScript.psc	12835
+02 Scripts Source/Scripts/nwsFollowerSandboxScript.psc	15800
+02 Scripts Source/Scripts/nwsFollowerSetsScript.psc	24084
+02 Scripts Source/Scripts/nwsFollowerSettingsScript.psc	20837
+02 Scripts Source/Scripts/nwsFollowerSpellsScript.psc	219
+02 Scripts Source/Scripts/nwsFollowerStorageScript.psc	3299
+02 Scripts Source/Scripts/nwsFollowerUILIBScript.psc	68541
+02 Scripts Source/Scripts/nwsFollowerVariableScript.psc	11730
+02 Scripts Source/Scripts/nwsFollowerXStoreScript.psc	4563
+02 Scripts Source/Scripts/nwsFollower_AttackEnemyFX.psc	1837
+02 Scripts Source/Scripts/nwsFollower_BehindFX.psc	421
+02 Scripts Source/Scripts/nwsFollower_BehindMe.psc	485
+02 Scripts Source/Scripts/nwsFollower_CastLightFX.psc	1335
+02 Scripts Source/Scripts/nwsFollower_CheckCount.psc	500
+02 Scripts Source/Scripts/nwsFollower_Collide.psc	652
+02 Scripts Source/Scripts/nwsFollower_CommandFX.psc	1701
+02 Scripts Source/Scripts/nwsFollower_ControlCommand.psc	568
+02 Scripts Source/Scripts/nwsFollower_CraftArrowDo.psc	478
+02 Scripts Source/Scripts/nwsFollower_CraftPotionDo.psc	480
+02 Scripts Source/Scripts/nwsFollower_CraftTorchDo.psc	478
+02 Scripts Source/Scripts/nwsFollower_DispellLightFX.psc	861
+02 Scripts Source/Scripts/nwsFollower_Divorce.psc	483
+02 Scripts Source/Scripts/nwsFollower_Elope.psc	479
+02 Scripts Source/Scripts/nwsFollower_ElopeMeal.psc	495
+02 Scripts Source/Scripts/nwsFollower_ElopeStore.psc	496
+02 Scripts Source/Scripts/nwsFollower_EvalFX.psc	179
+02 Scripts Source/Scripts/nwsFollower_Expel.psc	487
+02 Scripts Source/Scripts/nwsFollower_Export.psc	493
+02 Scripts Source/Scripts/nwsFollower_FindTargetFX.psc	1341
+02 Scripts Source/Scripts/nwsFollower_FindTargetProjFX.psc	635
+02 Scripts Source/Scripts/nwsFollower_FireSteward.psc	493
+02 Scripts Source/Scripts/nwsFollower_GiveGold.psc	448
+02 Scripts Source/Scripts/nwsFollower_GuardDismiss.psc	493
+02 Scripts Source/Scripts/nwsFollower_GuardEndFavor.psc	451
+02 Scripts Source/Scripts/nwsFollower_GuardFavor.psc	443
+02 Scripts Source/Scripts/nwsFollower_GuardFollow.psc	499
+02 Scripts Source/Scripts/nwsFollower_GuardH0.psc	488
+02 Scripts Source/Scripts/nwsFollower_GuardH150.psc	490
+02 Scripts Source/Scripts/nwsFollower_GuardH250.psc	490
+02 Scripts Source/Scripts/nwsFollower_GuardH75.psc	489
+02 Scripts Source/Scripts/nwsFollower_GuardReject.psc	482
+02 Scripts Source/Scripts/nwsFollower_GuardTrade.psc	443
+02 Scripts Source/Scripts/nwsFollower_GuardWait.psc	497
+02 Scripts Source/Scripts/nwsFollower_HaveDrink.psc	474
+02 Scripts Source/Scripts/nwsFollower_HealFX.psc	2026
+02 Scripts Source/Scripts/nwsFollower_HorsePathing.psc	638
+02 Scripts Source/Scripts/nwsFollower_HorseTravelEnd.psc	424
+02 Scripts Source/Scripts/nwsFollower_Import.psc	499
+02 Scripts Source/Scripts/nwsFollower_MinionAlias.psc	1458
+02 Scripts Source/Scripts/nwsFollower_OpenXStorage.psc	495
+02 Scripts Source/Scripts/nwsFollower_OutfitCommand.psc	582
+02 Scripts Source/Scripts/nwsFollower_PayChecker.psc	542
+02 Scripts Source/Scripts/nwsFollower_PayOwed.psc	540
+02 Scripts Source/Scripts/nwsFollower_PlayerAlias.psc	11412
+02 Scripts Source/Scripts/nwsFollower_PlayerCbtFX.psc	928
+02 Scripts Source/Scripts/nwsFollower_PlayerTracker.psc	904
+02 Scripts Source/Scripts/nwsFollower_RecruitAnimal.psc	497
+02 Scripts Source/Scripts/nwsFollower_SellItems.psc	488
+02 Scripts Source/Scripts/nwsFollower_SetPartner.psc	560
+02 Scripts Source/Scripts/nwsFollower_Shake.psc	484
+02 Scripts Source/Scripts/nwsFollower_SharpWpnDo.psc	478
+02 Scripts Source/Scripts/nwsFollower_SlowFX.psc	388
+02 Scripts Source/Scripts/nwsFollower_SparAlias.psc	3078
+02 Scripts Source/Scripts/nwsFollower_SparCancel.psc	514
+02 Scripts Source/Scripts/nwsFollower_Sparring.psc	10634
+02 Scripts Source/Scripts/nwsFollower_SparStop.psc	401
+02 Scripts Source/Scripts/nwsFollower_TargetAllyFX.psc	931
+02 Scripts Source/Scripts/nwsFollower_TauntBuffFX.psc	1129
+02 Scripts Source/Scripts/nwsFollower_TauntEnemiesFX.psc	1890
+02 Scripts Source/Scripts/nwsFollower_Teach.psc	487
+02 Scripts Source/Scripts/nwsFollower_WerewolfChangeFX.psc	1288
+02 Scripts Source/Scripts/QF_DialogueFollower_000750BA.psc	3537
+02 Scripts Source/Scripts/QF_nwsFollowerCompSaadia_030B0816.psc	578
+02 Scripts Source/Scripts/QF_nwsFollowerCompThieves_030C1D5C.psc	580
+02 Scripts Source/Scripts/QF_nwsFollowerCompWinter_030B2FB2.psc	578
+02 Scripts Source/Scripts/QF_nwsFollowerCompYsolda_030BCE24.psc	578
+02 Scripts Source/Scripts/QF_nwsFollowerMinion_032DB308.psc	1532
+02 Scripts Source/Scripts/WEDogFollowerScript.psc	703
+03 Dummy Scripts/
+03 Dummy Scripts/Scripts/
+03 Dummy Scripts/Scripts/nwsFollowerAutoGearScript.pex	484
+03 Dummy Scripts/Scripts/nwsFollowerSellBox_script.pex	494
+03 Dummy Scripts/Scripts/nwsFollower_BrawlAlias.pex	487
+03 Dummy Scripts/Scripts/nwsFollower_BrawlLook.pex	478
+03 Dummy Scripts/Scripts/nwsFollower_BrawlPCAlias.pex	491
+03 Dummy Scripts/Scripts/nwsFollower_BrawlScene1.pex	480
+03 Dummy Scripts/Scripts/nwsFollower_BrawlSceneScript.pex	490
+03 Dummy Scripts/Scripts/nwsFollower_DetectEnemies.pex	487
+03 Dummy Scripts/Scripts/nwsFollower_DummyScripts.txt	485
+03 Dummy Scripts/Scripts/nwsFollower_ForceEquipment.pex	490
+03 Dummy Scripts/Scripts/nwsFollower_GiftPlayer.pex	480
+03 Dummy Scripts/Scripts/nwsFollower_HomeEval.pex	476
+03 Dummy Scripts/Scripts/nwsFollower_SetBlades.pex	480
+03 Dummy Scripts/Scripts/nwsFollower_SofiaAlias.pex	487
+03 Dummy Scripts/Scripts/nwsTargetAlly_script.pex	486
+03 Dummy Scripts/Scripts/QF_nwsFollowerBrawl_03167CDC.pex	490
+04 SkyUILib/
+04 SkyUILib/Interface/
+04 SkyUILib/Interface/exported/
+04 SkyUILib/Interface/exported/uilib/
+04 SkyUILib/Interface/exported/uilib/UILIB_1_notificationarea.swf	14728
+04 SkyUILib/Interface/uilib/
+04 SkyUILib/Interface/uilib/buttonArt.swf	19042
+04 SkyUILib/Interface/uilib/UILIB_1_ListMenu.swf	27845
+04 SkyUILib/Interface/uilib/UILIB_1_TextInputMenu.swf	20286
+04 SkyUILib/Scripts/
+04 SkyUILib/Scripts/UILIB_1.pex	5354
+05 Perk Distributor/
+05 Perk Distributor/nwsFF_FriendlyFire_DISTR.ini	80
+05 Perk Distributor/nwsFF_SkillBoostsPerks_DISTR.ini	192
+05 Perk Distributor/nwsFF_SpellMag_DISTR.ini	82
+10 Traps/
+10 Traps/Scripts/
+10 Traps/Scripts/TrapBear.pex	4121
+10 Traps/Scripts/TrapTriggerBase.pex	8477
+20 Base Scripts/
+20 Base Scripts/Scripts/
+20 Base Scripts/Scripts/BYOH_TIF__01015D0E.pex	778
+20 Base Scripts/Scripts/BYOH_TIF__01015D0F.pex	778
+20 Base Scripts/Scripts/BYOH_TIF__01015D10.pex	778
+20 Base Scripts/Scripts/BYOH_TIF__01015D38.pex	736
+20 Base Scripts/Scripts/BYOH_TIF__01015D39.pex	736
+20 Base Scripts/Scripts/BYOH_TIF__01015D3A.pex	736
+20 Base Scripts/Scripts/BYOH_TIF__01015D3B.pex	736
+20 Base Scripts/Scripts/BYOH_TIF__01015D44.pex	734
+20 Base Scripts/Scripts/BYOH_TIF__01015D45.pex	734
+20 Base Scripts/Scripts/BYOH_TIF__01015D46.pex	734
+20 Base Scripts/Scripts/BYOH_TIF__01015D47.pex	734
+20 Base Scripts/Scripts/BYOH_TIF__01015D53.pex	936
+20 Base Scripts/Scripts/BYOH_TIF__01015D54.pex	936
+20 Base Scripts/Scripts/BYOH_TIF__01015D55.pex	936
+20 Base Scripts/Scripts/BYOH_TIF__01015D56.pex	936
+20 Base Scripts/Scripts/BYOH_TIF__01015D57.pex	936
+20 Base Scripts/Scripts/BYOH_TIF__01015D58.pex	936
+20 Base Scripts/Scripts/DLC1_TIF__0201300D.pex	765
+20 Base Scripts/Scripts/DLC1_TIF__0201300E.pex	765
+20 Base Scripts/Scripts/DLC1_TIF__0201300F.pex	765
+20 Base Scripts/Scripts/DLC1_TIF__02013010.pex	765
+20 Base Scripts/Scripts/DLC1_TIF__02013011.pex	765
+20 Base Scripts/Scripts/DLC2HirelingQuestScript.pex	2262
+20 Base Scripts/Scripts/DLC2_TIF__020208C8.pex	743
+20 Base Scripts/Scripts/DLC2_TIF__020208CB.pex	736
+20 Base Scripts/Scripts/DLC2_TIF__0202BAD4.pex	936
+20 Base Scripts/Scripts/DLC2_TIF__0202BADA.pex	778
+20 Base Scripts/Scripts/DLC2_TIF__0202BADD.pex	734
+20 Base Scripts/Scripts/DLC2_TIF__0202BAF4.pex	736
+20 Base Scripts/Scripts/DLC2_TIF__0202BF03.pex	776
+20 Base Scripts/Scripts/DLC2_TIF__02038B45.pex	725
+20 Base Scripts/Scripts/DLC2_TIF__02038B46.pex	723
+20 Base Scripts/Scripts/DLC2_TIF__02038B47.pex	1098
+20 Base Scripts/Scripts/DLC2_TIF__0203A47E.pex	894
+20 Base Scripts/Scripts/DLC2_TIF__0203C0DA.pex	936
+20 Base Scripts/Scripts/DLC2_TIF__030117BC.pex	747
+20 Base Scripts/Scripts/DLC2_TIF__030F3167.pex	734
+20 Base Scripts/Scripts/DLC2_TIF__030F3168.pex	736
+20 Base Scripts/Scripts/DLC2_TIF__030F316B.pex	936
+20 Base Scripts/Scripts/DLC2_TIF__030F3170.pex	778
+20 Base Scripts/Scripts/DLC2_TIF__030FEC71.pex	776
+20 Base Scripts/Scripts/DLC2_TIF__031A84F0.pex	778
+20 Base Scripts/Scripts/DLC2_TIF__031A84F1.pex	936
+20 Base Scripts/Scripts/DLC2_TIF__031FE974.pex	936
+20 Base Scripts/Scripts/HirelingQuest.pex	1534
+20 Base Scripts/Scripts/qf_relationshipmarriageweddin_0007404e.pex	7585
+20 Base Scripts/Scripts/TIF__0004C468.pex	726
+20 Base Scripts/Scripts/TIF__0004C470.pex	724
+20 Base Scripts/Scripts/TIF__0005C826.pex	926
+20 Base Scripts/Scripts/TIF__0005C838.pex	726
+20 Base Scripts/Scripts/TIF__0005C83B.pex	724
+20 Base Scripts/Scripts/TIF__0007508E.pex	524
+20 Base Scripts/Scripts/TIF__0007A1E9.pex	724
+20 Base Scripts/Scripts/TIF__0007A1EA.pex	926
+20 Base Scripts/Scripts/TIF__0007A1EB.pex	726
+20 Base Scripts/Scripts/TIF__0007A50B.pex	1400
+20 Base Scripts/Scripts/TIF__0007A50C.pex	926
+20 Base Scripts/Scripts/TIF__0007A50D.pex	926
+20 Base Scripts/Scripts/TIF__0007A50E.pex	926
+20 Base Scripts/Scripts/TIF__0007A50F.pex	926
+20 Base Scripts/Scripts/TIF__0007A515.pex	726
+20 Base Scripts/Scripts/TIF__0007A516.pex	726
+20 Base Scripts/Scripts/TIF__0007A517.pex	726
+20 Base Scripts/Scripts/TIF__0007A518.pex	726
+20 Base Scripts/Scripts/TIF__0007A519.pex	726
+20 Base Scripts/Scripts/TIF__0007A51A.pex	724
+20 Base Scripts/Scripts/TIF__0007A51B.pex	724
+20 Base Scripts/Scripts/TIF__0007A51C.pex	724
+20 Base Scripts/Scripts/TIF__0007A51D.pex	724
+20 Base Scripts/Scripts/TIF__0007A51E.pex	724
+20 Base Scripts/Scripts/TIF__000B0EE9.pex	768
+20 Base Scripts/Scripts/TIF__000D8DB0.pex	726
+20 Base Scripts/Scripts/TIF__000D8DB1.pex	726
+20 Base Scripts/Scripts/TIF__000D8DB2.pex	726
+20 Base Scripts/Scripts/TIF__000D8DB3.pex	726
+20 Base Scripts/Scripts/TIF__000D8DD1.pex	926
+20 Base Scripts/Scripts/TIF__000D8DD2.pex	926
+20 Base Scripts/Scripts/TIF__000D8DD3.pex	926
+20 Base Scripts/Scripts/TIF__000D8DD4.pex	926
+20 Base Scripts/Scripts/TIF__000D8DDF.pex	768
+20 Base Scripts/Scripts/TIF__000D8DE0.pex	768
+20 Base Scripts/Scripts/TIF__000D8DE1.pex	768
+20 Base Scripts/Scripts/TIF__000D8DE2.pex	768
+20 Base Scripts/Scripts/TIF__000D8E19.pex	724
+20 Base Scripts/Scripts/TIF__000D8E1A.pex	724
+20 Base Scripts/Scripts/TIF__000D8E1B.pex	724
+20 Base Scripts/Scripts/TIF__000D8E1C.pex	724
+20 Base Scripts/Scripts/TIF__000E155A.pex	926
+20 Base Scripts/Scripts/TIF__000E155B.pex	926
+20 Base Scripts/Scripts/TIF__000E158B.pex	464
+20 Base Scripts/Scripts/TIF__000E158D.pex	724
+20 Base Scripts/Scripts/TIF__000E26F2.pex	786
+20 Base Scripts/Scripts/TIF__000E26F3.pex	786
+20 Base Scripts/Scripts/TIF__000E26F4.pex	724
+20 Base Scripts/Scripts/TIF__000E26F5.pex	724
+20 Base Scripts/Scripts/TIF__000E26F8.pex	926
+20 Base Scripts/Scripts/TIF__000E26F9.pex	926
+20 Base Scripts/Scripts/TIF__000E2702.pex	926
+20 Base Scripts/Scripts/TIF__000E36DB.pex	726
+20 Base Scripts/Scripts/TIF__000E36DF.pex	724
+20 Base Scripts/Scripts/TIF__000E3E79.pex	726
+20 Base Scripts/Scripts/TIF__000F11B0.pex	724
+20 Base Scripts/Scripts/TIF__000F11B1.pex	726
+20 Base Scripts/Scripts/TIF__000F11B2.pex	926
+20 Base Scripts/Scripts/TIF__000FE6F6.pex	768
+20 Base Scripts/Scripts/TIF__020365FE.pex	724
+20 Base Scripts/Scripts/TIF__02036A6B.pex	926
+20 Base Scripts/Scripts/TIF__02036A6D.pex	748
+22 BAT Leveling/
+22 BAT Leveling/nfflevel.txt	21
+23 BAT Classes/
+23 BAT Classes/nffassassin.txt	16
+23 BAT Classes/nffbarbarian.txt	16
+23 BAT Classes/nffconjurer.txt	16
+23 BAT Classes/nffdestruction.txt	16
+23 BAT Classes/nffelemental.txt	16
+23 BAT Classes/nffmonk.txt	16
+23 BAT Classes/nffmystic.txt	16
+23 BAT Classes/nffnecromancer.txt	16
+23 BAT Classes/nffnightblade.txt	16
+23 BAT Classes/nffnightingale.txt	16
+23 BAT Classes/nffranger.txt	16
+23 BAT Classes/nffrogue.txt	16
+23 BAT Classes/nffscout.txt	16
+23 BAT Classes/nffsorcerer.txt	16
+23 BAT Classes/nffspellsword.txt	16
+23 BAT Classes/nffthief.txt	16
+23 BAT Classes/nffwarrior1h.txt	16
+23 BAT Classes/nffwarrior2h.txt	16
+23 BAT Classes/nffwitchblade.txt	16
+30 iNPC/
+30 iNPC/Scripts/
+30 iNPC/Scripts/animal3dnpc.pex	762
+30 iNPC/Scripts/follower3dnpc.pex	3971
+30 iNPC/Scripts/followerinpc.pex	939
+35 RDO Main/
+35 RDO Main/Scripts/
+35 RDO Main/Scripts/rdo_defaultdismiss.pex	936
+35 RDO Main/Scripts/rdo_defaultfollowme.pex	738
+35 RDO Main/Scripts/rdo_defaultrecruit.pex	778
+35 RDO Main/Scripts/rdo_defaultwait.pex	728
+35 RDO Main/Scripts/rdo_geleborfollowerdismiss.pex	764
+35 RDO Main/Scripts/rdo_geleborfollowerfollowme.pex	760
+35 RDO Main/Scripts/rdo_geleborfollowerrecruit.pex	784
+35 RDO Main/Scripts/rdo_geleborfollowerwait.pex	750
+35 RDO Main/Scripts/rdo_isranfollowerdismiss.pex	756
+35 RDO Main/Scripts/rdo_isranfollowerfollowme.pex	752
+35 RDO Main/Scripts/rdo_isranfollowerrecruit.pex	776
+35 RDO Main/Scripts/rdo_isranfollowerwait.pex	742
+35 RDO Main/Scripts/rdo_valericafollowerdismiss.pex	768
+35 RDO Main/Scripts/rdo_valericafollowerfollowme.pex	764
+35 RDO Main/Scripts/rdo_valericafollowerrecruit.pex	788
+35 RDO Main/Scripts/rdo_valericafollowerwait.pex	754
+36 RDO Comments/
+36 RDO Comments/Scripts/
+36 RDO Comments/Scripts/rdo_defaultidlecommenttimer.pex	1566
+36 RDO Comments/Scripts/rdo_idlecommenttimerfcmdr.pex	1578
+36 RDO Comments/Scripts/rdo_idlecommenttimerfcnd.pex	1576
+36 RDO Comments/Scripts/rdo_idlecommenttimerfdelf.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimerfelfhty.pex	1588
+36 RDO Comments/Scripts/rdo_idlecommenttimerfevnt.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimerfnord.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimerforc.pex	1576
+36 RDO Comments/Scripts/rdo_idlecommenttimerfsultry.pex	1582
+36 RDO Comments/Scripts/rdo_idlecommenttimerfye.pex	1572
+36 RDO Comments/Scripts/rdo_idlecommenttimermarg.pex	1576
+36 RDO Comments/Scripts/rdo_idlecommenttimermbrute.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimermdelf.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimermdelfcy.pex	1588
+36 RDO Comments/Scripts/rdo_idlecommenttimermdrunk.pex	1582
+36 RDO Comments/Scripts/rdo_idlecommenttimermevnt.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimermevntac.pex	1588
+36 RDO Comments/Scripts/rdo_idlecommenttimermkhajiit.pex	1586
+36 RDO Comments/Scripts/rdo_idlecommenttimermnord.pex	1580
+36 RDO Comments/Scripts/rdo_idlecommenttimermorc.pex	1576
+36 RDO Comments/Scripts/rdo_idlecommenttimermye.pex	1572
+40 NTMD Main LE/
+40 NTMD Main LE/nwsFF_NoTeamMagicDamage.esp	87794
+40 NTMD Main SSE/
+40 NTMD Main SSE/nwsFF_NoTeamMagicDamage.esp	87794
+41 NTMD Scripts/
+41 NTMD Scripts/Scripts/
+41 NTMD Scripts/Scripts/magicProjectileStormScript.pex	7867
+45 NTMD Apocalypse LE/
+45 NTMD Apocalypse LE/nwsFF_NTMD_Apocalypse.esp	64852
+45 NTMD Apocalypse SSE/
+45 NTMD Apocalypse SSE/nwsFF_NTMD_Apocalypse.esp	64850
+46 NTMD Elemental Destruction LE/
+46 NTMD Elemental Destruction LE/nwsFF_NTMD_ElementalDestruction.esp	165120
+46 NTMD Elemental Destruction SSE/
+46 NTMD Elemental Destruction SSE/nwsFF_NTMD_ElementalDestruction.esp	165120
+FOMod/
+FOMod/info.xml	1136
+FOMod/ModuleConfig.xml	39664

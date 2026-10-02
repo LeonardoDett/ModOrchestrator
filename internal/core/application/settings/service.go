@@ -217,3 +217,21 @@ func (s *Service) instanceDef(key string) (domain.Def, error) {
 	}
 	return domain.Def{}, fmt.Errorf("%w: %q", ErrUnknown, key)
 }
+
+// AppSummary returns every app-scoped setting as key → effective value
+// (support bundle summary, core/10 §4). Path settings are left out: they
+// are user folders, not configuration worth sharing.
+func (s *Service) AppSummary(ctx context.Context) (map[string]string, error) {
+	all, err := s.App(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make(map[string]string, len(all))
+	for _, e := range all {
+		if e.Def.Type == domain.TypePath {
+			continue
+		}
+		out[e.Def.Key] = e.Value
+	}
+	return out, nil
+}

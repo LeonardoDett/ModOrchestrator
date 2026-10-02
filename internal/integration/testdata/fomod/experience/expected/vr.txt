@@ -1,0 +1,15 @@
+# visible steps: 0
+# flags: skyrim_vr=On
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Step 1","group":0,"groupName":"Plugin version","options":[3],"names":["VR v1.4.15"]}]
+Interface/exported/HUDHooks.swf <- 00 Required/Interface/exported/HUDHooks.swf (19819)
+Interface/trainingmenu.swf <- 02 Menu/VR/Interface/trainingmenu.swf (35511)
+Interface/vr/vrstatsskills.swf <- 02 Menu/VR/Interface/vr/vrstatsskills.swf (9912)
+Scripts/Experience.pex <- 00 Required/Scripts/Experience.pex (1329)
+Scripts/Source/Experience.psc <- 00 Required/Scripts/Source/Experience.psc (1247)
+SKSE/Plugins/Experience.dll <- 01 Plugin/VR/SKSE/Plugins/Experience.dll (3871232)
+SKSE/Plugins/Experience.ini <- 00 Required/SKSE/Plugins/Experience.ini (2546)
+SKSE/Plugins/Experience.pdb <- 01 Plugin/VR/SKSE/Plugins/Experience.pdb (71389184)
+SKSE/Plugins/Experience/Actors/Default.ini <- 00 Required/SKSE/Plugins/Experience/Actors/Default.ini (20785)
+SKSE/Plugins/Experience/Races/Default.ini <- 00 Required/SKSE/Plugins/Experience/Races/Default.ini (6959)

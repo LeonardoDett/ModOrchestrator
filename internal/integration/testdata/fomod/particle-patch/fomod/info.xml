@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<fomod>
+  <Name>Particle Patch</Name>
+  <Author>mindflux</Author>
+  <Version MachineVersion="1.4.6">1.4.6</Version>
+  <Id>65720</Id>
+  <Description>Numerous particle fixes and improvements plus assorted other fixes.</Description>
+</fomod>

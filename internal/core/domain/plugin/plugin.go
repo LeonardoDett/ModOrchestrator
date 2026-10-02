@@ -43,7 +43,6 @@ type Origin string
 const (
 	OriginMod       Origin = "mod"
 	OriginBaseGame  Origin = "base_game"
-	OriginImplicit  Origin = "implicit"
 	OriginUnmanaged Origin = "unmanaged"
 )
 
@@ -66,8 +65,33 @@ type Plugin struct {
 	Location game.Location
 	Origin   Origin
 	// Mod is the providing mod when Origin is OriginMod.
-	Mod    mod.ID
-	Header Header
+	Mod mod.ID
+	// Implicit plugins are loaded by the game itself, always active, in
+	// the fixed positions at the top (declared by the adapter).
+	Implicit bool
+	Header   Header
+	// HeaderError is set when the adapter could not read the header
+	// (plugin_header_unreadable); Header is then empty.
+	HeaderError string
+}
+
+// LimitUsage is how many active plugins of one kind the load order uses
+// and how many the game accepts (core/12 §5: "full" 254, "light" 4096).
+type LimitUsage struct {
+	Kind string
+	Used int
+	Max  int
+}
+
+// Exceeded reports whether the limit is broken.
+func (u LimitUsage) Exceeded() bool { return u.Max > 0 && u.Used > u.Max }
+
+// Entry is one line of a serialized load order: what the adapter writes
+// to and reads from the game's load order file (D040).
+type Entry struct {
+	Name     Name
+	Enabled  bool
+	Implicit bool
 }
 
 // HasFlag reports whether the header carries f.
@@ -111,12 +135,13 @@ type Group struct {
 	After []string
 }
 
-// Rules holds the plugin rules, groups and assignments of one instance.
+// / Rules holds the plugin rules, groups and assignments of one instance.
 type Rules struct {
 	instance game.InstanceID
 	rules    []Rule
 	groups   []Group
 	assigned map[string]string // plugin key -> group
+	spelling map[string]Name   // plugin key -> name as assigned
 }
 
 // Data is the plain form for persistence.
@@ -127,18 +152,26 @@ type Data struct {
 	Assignments map[Name]string
 }
 
+// Check is what a change is checked against for cycles (D028): the plugins
+// of the load order and the hard constraints of the adapter, so a rule or a
+// group can never contradict a master (INV-ORD-04).
+type Check struct {
+	Known []Name
+	Hard  []ordering.Edge
+}
+
 // NewRules creates the rule set with only the default group.
 func NewRules(instance game.InstanceID) (*Rules, error) {
 	return RestoreRules(Data{Instance: instance})
 }
 
 // RestoreRules rebuilds a rule set. Cycles are accepted (they may come from
-// a provider) and reported by Cycle.
+// a provider, or from masters that changed) and reported by Cycle.
 func RestoreRules(d Data) (*Rules, error) {
 	if d.Instance == "" {
 		return nil, fmt.Errorf("%w: plugin rules need an instance", ErrInvalid)
 	}
-	r := &Rules{instance: d.Instance, assigned: map[string]string{}}
+	r := &Rules{instance: d.Instance, assigned: map[string]string{}, spelling: map[string]Name{}}
 	groups := d.Groups
 	if !slices.ContainsFunc(groups, func(g Group) bool { return g.Name == DefaultGroup }) {
 		groups = append([]Group{{Name: DefaultGroup}}, groups...)
@@ -165,12 +198,15 @@ func RestoreRules(d Data) (*Rules, error) {
 		r.rules = append(r.rules, rule)
 	}
 	for p, g := range d.Assignments {
-		if err := r.Assign(p, g); err != nil {
+		if err := r.assign(p, g); err != nil {
 			return nil, err
 		}
 	}
 	return r, nil
 }
+
+// Instance returns the owning instance.
+func (r *Rules) Instance() game.InstanceID { return r.instance }
 
 // Data returns a copy for persistence.
 func (r *Rules) Data() Data {
@@ -179,14 +215,44 @@ func (r *Rules) Data() Data {
 		d.Groups = append(d.Groups, Group{Name: g.Name, After: slices.Clone(g.After)})
 	}
 	for p, g := range r.assigned {
-		d.Assignments[Name(p)] = g
+		d.Assignments[r.spelling[p]] = g
 	}
 	return d
 }
 
+// List returns the rules in creation order.
+func (r *Rules) List() []Rule { return slices.Clone(r.rules) }
+
+// Rule returns one rule.
+func (r *Rules) Rule(id RuleID) (Rule, bool) {
+	i := slices.IndexFunc(r.rules, func(o Rule) bool { return o.ID == id })
+	if i < 0 {
+		return Rule{}, false
+	}
+	return r.rules[i], true
+}
+
+// Groups returns the groups, default first.
+func (r *Rules) Groups() []Group {
+	out := make([]Group, len(r.groups))
+	for i, g := range r.groups {
+		out[i] = Group{Name: g.Name, After: slices.Clone(g.After)}
+	}
+	return out
+}
+
+// Assignments returns the plugins with a group other than default.
+func (r *Rules) Assignments() map[Name]string {
+	out := make(map[Name]string, len(r.assigned))
+	for p, g := range r.assigned {
+		out[r.spelling[p]] = g
+	}
+	return out
+}
+
 // AddRule stores "p loads after q", refusing duplicates and cycles with the
-// other enabled rules and groups.
-func (r *Rules) AddRule(rule Rule, known []Name) error {
+// other enabled rules, the groups and the hard constraints.
+func (r *Rules) AddRule(rule Rule, chk Check) error {
 	if err := validateRule(rule); err != nil {
 		return err
 	}
@@ -195,14 +261,15 @@ func (r *Rules) AddRule(rule Rule, known []Name) error {
 	}) {
 		return fmt.Errorf("%w: rule %q", ErrDuplicate, rule.ID)
 	}
+	probe := r.clone()
+	probe.rules = append(probe.rules, rule)
 	if !rule.Disabled {
-		probe := *r
-		probe.rules = append(slices.Clone(r.rules), rule)
-		if err := probe.checkCycle(appendIfMissing(known, rule.Plugin, rule.After)); err != nil {
+		chk.Known = appendIfMissing(chk.Known, rule.Plugin, rule.After)
+		if err := probe.check(chk); err != nil {
 			return err
 		}
 	}
-	r.rules = append(r.rules, rule)
+	r.rules = probe.rules
 	return nil
 }
 
@@ -220,39 +287,103 @@ func (r *Rules) RemoveRule(id RuleID) error {
 	return nil
 }
 
-// SetGroup creates or updates a group, refusing unknown or cyclic "after".
-func (r *Rules) SetGroup(g Group) error {
+// SetRuleDisabled disables or enables a rule; enabling refuses a cycle.
+func (r *Rules) SetRuleDisabled(id RuleID, disabled bool, chk Check) error {
+	i := slices.IndexFunc(r.rules, func(o Rule) bool { return o.ID == id })
+	if i < 0 {
+		return fmt.Errorf("%w: rule %q", ErrNotFound, id)
+	}
+	probe := r.clone()
+	probe.rules[i].Disabled = disabled
+	if !disabled {
+		chk.Known = appendIfMissing(chk.Known, r.rules[i].Plugin, r.rules[i].After)
+		if err := probe.check(chk); err != nil {
+			return err
+		}
+	}
+	r.rules = probe.rules
+	return nil
+}
+
+// SetGroup creates or updates a group, refusing unknown or cyclic "after"
+// (also through the plugins assigned to it and the hard constraints).
+func (r *Rules) SetGroup(g Group, chk Check) error {
 	for _, a := range g.After {
 		if a != g.Name && !r.hasGroup(a) {
 			return fmt.Errorf("%w: unknown group %q", ErrInvalid, a)
 		}
 	}
-	probe := &Rules{instance: r.instance, rules: r.rules, assigned: r.assigned}
-	for _, o := range r.groups {
-		if o.Name != g.Name {
-			probe.groups = append(probe.groups, o)
-		}
+	probe := r.clone()
+	i := slices.IndexFunc(probe.groups, func(o Group) bool { return o.Name == g.Name })
+	if i >= 0 {
+		probe.groups = slices.Delete(probe.groups, i, i+1)
 	}
 	if err := probe.putGroup(g); err != nil {
 		return err
 	}
-	if c, found := probe.groupCycle(); found {
-		return fmt.Errorf("%w: %w", ErrCycle, &ordering.CycleError{Cycle: c})
+	if i >= 0 { // keep the position of an updated group
+		last := probe.groups[len(probe.groups)-1]
+		probe.groups = slices.Insert(probe.groups[:len(probe.groups)-1], i, last)
+	}
+	if err := probe.check(chk); err != nil {
+		return err
 	}
 	r.groups = probe.groups
 	return nil
 }
 
-// Assign puts plugin p in group g (DefaultGroup removes the assignment).
-func (r *Rules) Assign(p Name, g string) error {
+// DeleteGroup removes a group: its plugins go back to the default group and
+// the groups that loaded after it stop doing so. The default group cannot
+// be deleted.
+func (r *Rules) DeleteGroup(name string) error {
+	if name == DefaultGroup {
+		return fmt.Errorf("%w: the default group cannot be deleted", ErrInvalid)
+	}
+	i := slices.IndexFunc(r.groups, func(o Group) bool { return o.Name == name })
+	if i < 0 {
+		return fmt.Errorf("%w: group %q", ErrNotFound, name)
+	}
+	r.groups = slices.Delete(r.groups, i, i+1)
+	for j := range r.groups {
+		r.groups[j].After = slices.DeleteFunc(r.groups[j].After, func(a string) bool { return a == name })
+	}
+	for p, g := range r.assigned {
+		if g == name {
+			delete(r.assigned, p)
+			delete(r.spelling, p)
+		}
+	}
+	return nil
+}
+
+// HasGroup reports whether a group exists.
+func (r *Rules) HasGroup(name string) bool { return r.hasGroup(name) }
+
+// Assign puts plugin p in group g (DefaultGroup removes the assignment),
+// refusing an assignment that closes a cycle.
+func (r *Rules) Assign(p Name, g string, chk Check) error {
+	probe := r.clone()
+	if err := probe.assign(p, g); err != nil {
+		return err
+	}
+	if err := probe.check(chk); err != nil {
+		return err
+	}
+	r.assigned, r.spelling = probe.assigned, probe.spelling
+	return nil
+}
+
+func (r *Rules) assign(p Name, g string) error {
 	if strings.TrimSpace(string(p)) == "" || !r.hasGroup(g) {
 		return fmt.Errorf("%w: assignment needs a plugin and a known group", ErrInvalid)
 	}
 	if g == DefaultGroup {
 		delete(r.assigned, p.Key())
+		delete(r.spelling, p.Key())
 		return nil
 	}
 	r.assigned[p.Key()] = g
+	r.spelling[p.Key()] = p
 	return nil
 }
 
@@ -264,15 +395,19 @@ func (r *Rules) GroupOf(p Name) string {
 	return DefaultGroup
 }
 
-// Edges turns rules and groups into ordering constraints over the given
-// plugins (items are plugin keys). Group edges connect every plugin of a
-// group to every plugin of the groups it loads after; the cost is
+// Edges turns enabled rules and groups into ordering constraints over the
+// given plugins (items are plugin keys). Groups are transitive: a group
+// loads after every group reachable through "after", so an empty group in
+// the middle still orders the others (as LOOT groups do). The cost is
 // proportional to the product of group sizes, which is acceptable for the
 // V1 scale (core/00 §7).
 func (r *Rules) Edges(plugins []Name) []ordering.Edge {
 	present := map[string]bool{}
 	byGroup := map[string][]string{}
 	for _, p := range plugins {
+		if present[p.Key()] {
+			continue
+		}
 		present[p.Key()] = true
 		g := r.GroupOf(p)
 		byGroup[g] = append(byGroup[g], p.Key())
@@ -282,13 +417,16 @@ func (r *Rules) Edges(plugins []Name) []ordering.Edge {
 		if rule.Disabled || !present[rule.Plugin.Key()] || !present[rule.After.Key()] {
 			continue
 		}
-		out = append(out, ordering.Edge{Before: ordering.Item(rule.After.Key()), After: ordering.Item(rule.Plugin.Key()), Ref: "rule:" + string(rule.ID)})
+		out = append(out, ordering.Edge{Before: ordering.Item(rule.After.Key()), After: ordering.Item(rule.Plugin.Key()), Ref: RefRulePrefix + string(rule.ID)})
+	}
+	if _, cyclic := r.groupCycle(); cyclic {
+		return out // reported by Cycle; the closure is meaningless
 	}
 	for _, g := range r.groups {
-		for _, a := range g.After {
+		for _, a := range r.groupsBefore(g.Name) {
 			for _, early := range byGroup[a] {
 				for _, late := range byGroup[g.Name] {
-					out = append(out, ordering.Edge{Before: ordering.Item(early), After: ordering.Item(late), Ref: "group:" + g.Name + ">" + a})
+					out = append(out, ordering.Edge{Before: ordering.Item(early), After: ordering.Item(late), Ref: RefGroupPrefix + g.Name + ">" + a})
 				}
 			}
 		}
@@ -296,24 +434,79 @@ func (r *Rules) Edges(plugins []Name) []ordering.Edge {
 	return out
 }
 
-// Cycle reports a cycle among enabled rules and groups over the given
-// plugins.
-func (r *Rules) Cycle(plugins []Name) (ordering.Cycle, bool) {
+// groupsBefore returns every group name loads after, directly or not, in a
+// stable order.
+func (r *Rules) groupsBefore(name string) []string {
+	var out []string
+	seen := map[string]bool{name: true}
+	var walk func(string)
+	walk = func(n string) {
+		i := slices.IndexFunc(r.groups, func(g Group) bool { return g.Name == n })
+		if i < 0 {
+			return
+		}
+		for _, a := range r.groups[i].After {
+			if !seen[a] {
+				seen[a] = true
+				out = append(out, a)
+				walk(a)
+			}
+		}
+	}
+	walk(name)
+	return out
+}
+
+// Cycle reports a cycle among enabled rules, groups and the hard
+// constraints over the given plugins.
+func (r *Rules) Cycle(plugins []Name, hard []ordering.Edge) (ordering.Cycle, bool) {
 	if c, found := r.groupCycle(); found {
 		return c, true
 	}
-	items := make([]ordering.Item, len(plugins))
-	for i, p := range plugins {
-		items[i] = ordering.Item(p.Key())
+	items := make([]ordering.Item, 0, len(plugins))
+	seen := map[string]bool{}
+	for _, p := range plugins {
+		if !seen[p.Key()] {
+			seen[p.Key()] = true
+			items = append(items, ordering.Item(p.Key()))
+		}
 	}
-	return ordering.FindCycle(items, r.Edges(plugins))
+	return ordering.FindCycle(items, append(slices.Clone(hard), r.Edges(plugins)...))
 }
 
-func (r *Rules) checkCycle(plugins []Name) error {
-	if c, found := r.Cycle(plugins); found {
+// Orphans returns the enabled rules whose plugins are unknown to the
+// instance (known reports whether a plugin exists anywhere: inventory or a
+// mod that is installed but disabled). Nothing is deleted: the user
+// decides.
+func (r *Rules) Orphans(known func(Name) bool) []Rule {
+	var out []Rule
+	for _, rule := range r.rules {
+		if !rule.Disabled && (!known(rule.Plugin) || !known(rule.After)) {
+			out = append(out, rule)
+		}
+	}
+	return out
+}
+
+func (r *Rules) check(chk Check) error {
+	if c, found := r.Cycle(chk.Known, chk.Hard); found {
 		return fmt.Errorf("%w: %w", ErrCycle, &ordering.CycleError{Cycle: c})
 	}
 	return nil
+}
+
+func (r *Rules) clone() *Rules {
+	c := &Rules{instance: r.instance, rules: slices.Clone(r.rules), assigned: map[string]string{}, spelling: map[string]Name{}}
+	for _, g := range r.groups {
+		c.groups = append(c.groups, Group{Name: g.Name, After: slices.Clone(g.After)})
+	}
+	for k, v := range r.assigned {
+		c.assigned[k] = v
+	}
+	for k, v := range r.spelling {
+		c.spelling[k] = v
+	}
+	return c
 }
 
 func (r *Rules) groupCycle() (ordering.Cycle, bool) {
@@ -322,7 +515,7 @@ func (r *Rules) groupCycle() (ordering.Cycle, bool) {
 	for _, g := range r.groups {
 		items = append(items, ordering.Item(g.Name))
 		for _, a := range g.After {
-			edges = append(edges, ordering.Edge{Before: ordering.Item(a), After: ordering.Item(g.Name), Ref: "group:" + g.Name + ">" + a})
+			edges = append(edges, ordering.Edge{Before: ordering.Item(a), After: ordering.Item(g.Name), Ref: RefGroupPrefix + g.Name + ">" + a})
 		}
 	}
 	return ordering.FindCycle(items, edges)
@@ -338,7 +531,12 @@ func (r *Rules) putGroup(g Group) error {
 	if r.hasGroup(g.Name) {
 		return fmt.Errorf("%w: group %q", ErrDuplicate, g.Name)
 	}
-	r.groups = append(r.groups, Group{Name: g.Name, After: slices.Clone(g.After)})
+	var after []string
+	if len(g.After) > 0 {
+		after = slices.Clone(g.After)
+		slices.Sort(after)
+	}
+	r.groups = append(r.groups, Group{Name: g.Name, After: slices.Compact(after)})
 	return nil
 }
 

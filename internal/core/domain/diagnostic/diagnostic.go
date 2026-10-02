@@ -58,13 +58,20 @@ type Evidence struct {
 	Params Params
 }
 
-// Action is something the user can do. ID names a bridge command; the UI
-// renders its label from the catalog; Target points to where it applies.
+// Action is something the user can do. ID names the action; the UI renders
+// its label from the catalog; Target points to where it applies. Without
+// NavigateTo the action is a command the backend executes
+// (ExecuteDiagnosticAction); with it, the UI opens that place (a screen or a
+// dialog) where the problem is solved (core/10 §1.2, INV-OPS-06).
 type Action struct {
-	ID     string
-	Params Params
-	Target *event.EntityRef
+	ID         string
+	Params     Params
+	Target     *event.EntityRef
+	NavigateTo string
 }
+
+// IsCommand reports whether the backend executes the action.
+func (a Action) IsCommand() bool { return a.NavigateTo == "" }
 
 // Spec is the input to New.
 type Spec struct {
@@ -189,6 +196,16 @@ func Visible(ds []Diagnostic, sups []Suppression) []Diagnostic {
 	return slices.DeleteFunc(slices.Clone(ds), func(d Diagnostic) bool {
 		return slices.ContainsFunc(sups, func(s Suppression) bool { return s.Hides(d) })
 	})
+}
+
+// Presence is the delivery record of a diagnostic: when it was first seen
+// in a row of evaluations. It is persisted so a problem notifies once when
+// it appears, not on every recalculation (core/10 §2).
+type Presence struct {
+	Key       Key
+	Code      Code
+	Severity  Severity
+	FirstSeen time.Time
 }
 
 func compareRefs(a, b event.EntityRef) int {

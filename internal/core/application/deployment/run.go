@@ -8,12 +8,14 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/deployplan"
 	"modorchestrator/internal/core/domain/event"
+	"modorchestrator/internal/core/domain/externalchange"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/relpath"
@@ -52,6 +54,27 @@ type run struct {
 	// inline runs inside another operation (move staging, change method):
 	// no steps of its own are reported.
 	inline bool
+	// unexpected are the generated files the scan found (core/09); they
+	// never stop the run by themselves (D080).
+	unexpected []externalchange.Change
+	// resolve carries the decided external changes into the plan.
+	resolve map[string]deployplan.Resolution
+	// pre are decisions given when the run started (review outside a
+	// deploy, DLG-15).
+	pre []DecisionInput
+	// dirty: decisions changed the applied entries in memory; the commit
+	// must save them even when nothing else changed. stored is the
+	// manifest as read, the base of the delta the store writes.
+	dirty  bool
+	stored *deployment.Manifest
+	// later runs once the instance lock is released (reinstalls).
+	later []func(context.Context)
+}
+
+// startOptions are the variants of a deploy run.
+type startOptions struct {
+	auto, reconcile bool
+	pre             []DecisionInput
 }
 
 func (r *run) skipStep(ctx context.Context, name string) error {
@@ -78,6 +101,7 @@ func (s *Service) Deploy(ctx context.Context, instance game.InstanceID) (operati
 // (D036): it never waits for a decision and never writes when one is
 // needed (INV-DEP-06).
 func (s *Service) AutoDeploy(ctx context.Context, instance game.InstanceID) (operation.ID, error) {
+	ctx = ports.WithEventTags(ctx, map[string]string{ports.TagOrigin: ports.OriginAuto})
 	return s.start(ctx, instance, KindDeploy, true, false)
 }
 
@@ -107,6 +131,11 @@ func (s *Service) Purge(ctx context.Context, instance game.InstanceID) (operatio
 }
 
 func (s *Service) start(ctx context.Context, instance game.InstanceID, kind operation.Kind, auto, reconcile bool) (operation.ID, error) {
+	return s.startWith(ctx, instance, kind, startOptions{auto: auto, reconcile: reconcile})
+}
+
+func (s *Service) startWith(ctx context.Context, instance game.InstanceID, kind operation.Kind, o startOptions) (operation.ID, error) {
+	auto, reconcile := o.auto, o.reconcile
 	inst, err := s.instance(ctx, instance)
 	if err != nil {
 		return "", err
@@ -133,12 +162,14 @@ func (s *Service) start(ctx context.Context, instance game.InstanceID, kind oper
 		release()
 		return "", err
 	}
-	r := &run{inst: inst, kind: kind, auto: auto, reconcile: reconcile, t: t}
+	r := &run{inst: inst, kind: kind, auto: auto, reconcile: reconcile, t: t, pre: o.pre}
 	runCtx, cancel := context.WithCancel(context.WithoutCancel(ctx))
 	s.running.Add(1)
 	go func() {
 		defer s.running.Done()
-		defer release()
+		var once sync.Once
+		unlock := func() { once.Do(release) }
+		defer unlock()
 		defer cancel()
 		s.mu.Lock()
 		s.cancelFns[instance] = cancel
@@ -149,6 +180,10 @@ func (s *Service) start(ctx context.Context, instance game.InstanceID, kind oper
 		s.mu.Lock()
 		delete(s.cancelFns, instance)
 		s.mu.Unlock()
+		unlock()
+		for _, fn := range r.later {
+			fn(context.WithoutCancel(ctx))
+		}
 	}()
 	return t.ID(), nil
 }
@@ -338,8 +373,14 @@ func (s *Service) preflight(ctx context.Context, r *run) error {
 	if r.applied, err = s.current(ctx, r.inst.ID); err != nil {
 		return err
 	}
+	r.stored = r.applied
 	if r.in, err = s.loadInputs(ctx, r.inst.ID); err != nil {
 		return err
+	}
+	if running, err := s.Foreign.RunningProcesses(ctx, r.inst); err != nil {
+		return err
+	} else if len(running) > 0 {
+		return fail(CodeGameRunning, nil, "process", running[0])
 	}
 	if r.kind == KindPurge {
 		return nil
@@ -352,6 +393,9 @@ func (s *Service) preflight(ctx context.Context, r *run) error {
 	}
 	if c, cyclic := r.in.rules.Cycle(); cyclic {
 		return fail(CodeRuleCycle, nil, "count", strconv.Itoa(len(c.Items)))
+	}
+	if a, b, found := r.in.incompatible(); found {
+		return fail(CodeModsIncompatible, nil, "a", r.in.mods[a].DisplayName(), "b", r.in.mods[b].DisplayName())
 	}
 	return nil
 }
@@ -402,7 +446,12 @@ func (s *Service) scanStep(ctx context.Context, r *run) error {
 		return err
 	}
 	r.scanned = sc
-	return nil
+	wanted := make(map[string]bool, len(r.desired.Files))
+	for _, f := range r.desired.Files {
+		wanted[f.Location.Key()] = true
+	}
+	r.unexpected, err = s.findUnexpected(ctx, r.inst, r.in.def, r.applied, wanted)
+	return err
 }
 
 func (s *Service) planInput(ctx context.Context, r *run) deployplan.Input {
@@ -411,6 +460,7 @@ func (s *Service) planInput(ctx context.Context, r *run) deployplan.Input {
 		BlockedTargets: r.scanned.blocked, Skip: r.skip, AcceptedFallbacks: r.accepted,
 		CleanDirs:  s.boolSetting(ctx, r.inst.ID, "deploy.cleanEmptyDirs", true),
 		BackupPath: s.backupPathFor(ctx, r.inst),
+		Resolve:    r.resolve,
 	}
 	if r.kind == KindPurge {
 		in = deployplan.PurgeInput(in)
@@ -439,8 +489,10 @@ func (s *Service) backupPathFor(ctx context.Context, inst game.Instance) func(ga
 
 func (s *Service) planStep(ctx context.Context, r *run) error {
 	r.plan = deployplan.Build(s.planInput(ctx, r))
+	s.enrich(ctx, r.inst, r.in, r.applied, r.plan.Changes)
 	s.mu.Lock()
 	s.changes[r.inst.ID] = len(r.plan.Changes)
+	s.newFiles[r.inst.ID] = len(r.unexpected)
 	s.mu.Unlock()
 	if extra := r.plan.Summary.ExtraBytes; extra > 0 {
 		for _, t := range r.inst.Targets {
@@ -577,7 +629,7 @@ func (s *Service) commitStep(ctx context.Context, r *run, entries []deployment.E
 		if r.journal == nil && (r.applied == nil || r.applied.Purged()) {
 			return nil
 		}
-	case r.journal == nil && r.applied != nil && !r.applied.Purged() && r.applied.Profile == r.desired.Profile && r.applied.Fingerprint == fp:
+	case r.journal == nil && !r.dirty && r.applied != nil && !r.applied.Purged() && r.applied.Profile == r.desired.Profile && r.applied.Fingerprint == fp:
 		return nil // nothing changed: INV-DEP-04, no new manifest
 	}
 	m, err := s.manifestOf(r.inst.ID, r.desired.Profile, fp, r.t.ID(), entries, purge)
@@ -587,6 +639,7 @@ func (s *Service) commitStep(ctx context.Context, r *run, entries []deployment.E
 	if err := s.writeMarkers(ctx, r.inst, m); err != nil {
 		return err
 	}
+	s.recordBaseline(ctx, r.inst.ID, r.applied, m)
 	payload := map[string]string{"entries": strconv.Itoa(len(entries)), "failed": strconv.Itoa(len(r.failures)), "profile": string(r.desired.Profile)}
 	for k, v := range summaryPayload(r.plan.Summary) {
 		payload[k] = v
@@ -599,7 +652,7 @@ func (s *Service) commitStep(ctx context.Context, r *run, entries []deployment.E
 		evType = EventFailed
 	}
 	return s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
-		if err := tx.Manifests().Save(ctx, m, r.applied); err != nil {
+		if err := tx.Manifests().Save(ctx, m, r.stored); err != nil {
 			return err
 		}
 		if r.journal != nil {
@@ -677,7 +730,16 @@ func (s *Service) post(ctx context.Context, r *run) error {
 		delete(s.failures, r.inst.ID)
 	}
 	s.changes[r.inst.ID] = len(r.plan.Changes) + r.raced + r.untouched
+	s.newFiles[r.inst.ID] = len(r.unexpected)
+	delete(s.found, r.inst.ID) // the run saw everything again
 	s.mu.Unlock()
+	// The load order follows the deployed plugins (core/08 §7); a purge
+	// leaves the file as it is (the game ignores missing plugins).
+	if r.kind == KindDeploy && s.LoadOrder != nil && !r.cancelled {
+		if err := s.LoadOrder.AfterDeploy(ctx, r.inst.ID, r.t.ID()); err != nil {
+			return err
+		}
+	}
 	after := s.statusKey(ctx, r.inst.ID)
 	if after == r.before {
 		return nil

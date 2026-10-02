@@ -432,9 +432,13 @@ func (s *Service) recordMove(ctx context.Context, instance game.InstanceID, rec 
 // Recover finishes or discards staging moves interrupted by a previous
 // process: before the instance was saved the copy is discarded, after it
 // the old folder is. Only folders whose marker proves ownership are
-// removed. Deploy journals are not touched: they wait for the user's
-// "Reconcile now" (core/14 §5).
+// removed. Interrupted captures of generated files are finished (the user
+// decided them, core/09 §5). Deploy journals are not touched: they wait
+// for the user's "Reconcile now" (core/14 §5).
 func (s *Service) Recover(ctx context.Context) error {
+	if err := s.recoverCaptures(ctx); err != nil {
+		return err
+	}
 	all, err := s.moves(ctx)
 	if err != nil {
 		return err

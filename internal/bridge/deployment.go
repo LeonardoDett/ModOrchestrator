@@ -2,7 +2,9 @@ package bridge
 
 import (
 	"modorchestrator/internal/core/application/deployment"
+	"modorchestrator/internal/core/domain/externalchange"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
 )
 
@@ -40,6 +42,7 @@ type DeployStatusDTO struct {
 	Busy            string              `json:"busy,omitempty"`
 	PendingDecision string              `json:"pendingDecision,omitempty"`
 	ExternalChanges int                 `json:"externalChanges"`
+	NewFiles        int                 `json:"newFiles"`
 	Foreign         []ForeignFindingDTO `json:"foreign"`
 	Failures        []DeployFailureDTO  `json:"failures"`
 }
@@ -57,11 +60,42 @@ type DeploySummaryDTO struct {
 	Decisions       int   `json:"decisions"`
 }
 
+// FileFactsDTO is the size and time shown before/after in DLG-15.
+type FileFactsDTO struct {
+	Size    int64  `json:"size"`
+	ModTime string `json:"modTime,omitempty"`
+}
+
+// DeployChangeDTO is one row of DLG-15: the actions offered come from the
+// backend (core/09 §4), the UI never decides them.
 type DeployChangeDTO struct {
-	Location LocationDTO `json:"location"`
-	Kind     string      `json:"kind"`
-	Mod      string      `json:"mod,omitempty"`
-	ModName  string      `json:"modName,omitempty"`
+	Location  LocationDTO   `json:"location"`
+	Kind      string        `json:"kind"`
+	Mod       string        `json:"mod,omitempty"`
+	ModName   string        `json:"modName,omitempty"`
+	Method    string        `json:"method,omitempty"`
+	Wanted    bool          `json:"wanted"`
+	Actions   []string      `json:"actions"`
+	Suggested string        `json:"suggested,omitempty"`
+	Before    *FileFactsDTO `json:"before,omitempty"`
+	After     *FileFactsDTO `json:"after,omitempty"`
+}
+
+// ExternalDecisionDTO is the action chosen for one row of DLG-15.
+type ExternalDecisionDTO struct {
+	Location        LocationDTO `json:"location"`
+	Action          string      `json:"action"`
+	CaptureInto     string      `json:"captureInto,omitempty"`
+	CaptureName     string      `json:"captureName,omitempty"`
+	CaptureCategory string      `json:"captureCategory,omitempty"`
+}
+
+// ExternalChangesDTO is a scan outside a deploy (verify, review).
+type ExternalChangesDTO struct {
+	Instance     string            `json:"instance"`
+	Changes      []DeployChangeDTO `json:"changes"`
+	ChangeCount  int               `json:"changeCount"`
+	NewFileCount int               `json:"newFileCount"`
 }
 
 type DeployBlockedDTO struct {
@@ -88,12 +122,8 @@ type DeployPlanDTO struct {
 	Fallbacks    []DeployFallbackDTO `json:"fallbacks"`
 	ChangeCount  int                 `json:"changeCount"`
 	BlockedCount int                 `json:"blockedCount"`
+	NewFileCount int                 `json:"newFileCount"`
 	Empty        bool                `json:"empty"`
-}
-
-type DeployVerifyDTO struct {
-	Count   int               `json:"count"`
-	Changes []DeployChangeDTO `json:"changes"`
 }
 
 type DeployMethodDTO struct {
@@ -115,12 +145,42 @@ type StagingPreviewDTO struct {
 	Reason        string `json:"reason,omitempty"`
 }
 
+func toFactsDTO(f *deployment.FileFacts) *FileFactsDTO {
+	if f == nil {
+		return nil
+	}
+	dto := &FileFactsDTO{Size: f.Size}
+	if !f.ModTime.IsZero() {
+		dto.ModTime = formatTime(f.ModTime)
+	}
+	return dto
+}
+
 func toChangeDTOs(cs []deployment.ChangeView) []DeployChangeDTO {
 	out := make([]DeployChangeDTO, 0, len(cs))
 	for _, c := range cs {
-		out = append(out, DeployChangeDTO{Location: toLocationDTO(c.Location), Kind: string(c.Kind), Mod: string(c.Mod), ModName: c.ModName})
+		d := DeployChangeDTO{Location: toLocationDTO(c.Location), Kind: string(c.Kind), Mod: string(c.Mod), ModName: c.ModName,
+			Method: string(c.Method), Wanted: c.Wanted, Actions: make([]string, len(c.Actions)), Suggested: string(c.Suggested),
+			Before: toFactsDTO(c.Before), After: toFactsDTO(c.After)}
+		for i, a := range c.Actions {
+			d.Actions[i] = string(a)
+		}
+		out = append(out, d)
 	}
 	return out
+}
+
+func toExternalDecisions(list []ExternalDecisionDTO) ([]deployment.DecisionInput, error) {
+	out := make([]deployment.DecisionInput, 0, len(list))
+	for _, d := range list {
+		locs, err := toLocations([]LocationDTO{d.Location})
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, deployment.DecisionInput{Location: locs[0], Action: externalchange.Action(d.Action),
+			CaptureInto: mod.ID(d.CaptureInto), CaptureName: d.CaptureName, CaptureCategory: d.CaptureCategory})
+	}
+	return out, nil
 }
 
 func toPlanDTO(v deployment.PlanView) DeployPlanDTO {
@@ -130,7 +190,7 @@ func toPlanDTO(v deployment.PlanView) DeployPlanDTO {
 		Summary: DeploySummaryDTO{Create: s.Create, Keep: s.Keep, Replace: s.Replace, Remove: s.Remove, BackupAndCreate: s.BackupAndCreate,
 			RestoreBackup: s.RestoreBackup, Mkdir: s.Mkdir, RemoveDir: s.RemoveDir, ExtraBytes: s.ExtraBytes, Decisions: s.Decisions},
 		Changes: toChangeDTOs(v.Changes), Blocked: []DeployBlockedDTO{}, Fallbacks: []DeployFallbackDTO{},
-		ChangeCount: v.ChangeCount, BlockedCount: v.BlockedCount, Empty: v.Empty,
+		ChangeCount: v.ChangeCount, BlockedCount: v.BlockedCount, NewFileCount: v.NewFileCount, Empty: v.Empty,
 	}
 	for _, b := range v.Blocked {
 		dto.Blocked = append(dto.Blocked, DeployBlockedDTO{Location: toLocationDTO(b.Location), Reason: string(b.Reason)})
@@ -156,7 +216,7 @@ func (a *App) DeployStatus(instance string) (DeployStatusDTO, error) {
 		Instance: instance, Kind: string(v.Status.Kind), Reason: string(v.Status.Reason),
 		ActiveProfile: ProfileRefDTO{ID: v.ActiveProfile.ID, Name: v.ActiveProfile.Name},
 		Method:        string(v.Method), Entries: v.Entries, Busy: v.Busy, PendingDecision: string(v.PendingDecision),
-		ExternalChanges: v.ExternalChanges, Foreign: []ForeignFindingDTO{}, Failures: []DeployFailureDTO{},
+		ExternalChanges: v.ExternalChanges, NewFiles: v.NewFiles, Foreign: []ForeignFindingDTO{}, Failures: []DeployFailureDTO{},
 	}
 	if v.AppliedProfile.ID != "" {
 		dto.AppliedProfile = &ProfileRefDTO{ID: v.AppliedProfile.ID, Name: v.AppliedProfile.Name}
@@ -226,10 +286,15 @@ func (a *App) PendingDeployDecision(instance string) *DeployPlanDTO {
 }
 
 // ResolveDeployDecision continues a waiting deploy: the listed method
-// fallbacks are accepted, everything else that needed a decision is left
-// untouched in this run.
-func (a *App) ResolveDeployDecision(instance, op string, acceptFallbacks []string) error {
-	if err := a.c.Deployment.ResolveDecision(game.InstanceID(instance), operation.ID(op), acceptFallbacks); err != nil {
+// fallbacks are accepted and each external change gets its chosen action
+// (DLG-15); everything else that needed a decision is left untouched in
+// this run.
+func (a *App) ResolveDeployDecision(instance, op string, acceptFallbacks []string, decisions []ExternalDecisionDTO) error {
+	ds, err := toExternalDecisions(decisions)
+	if err != nil {
+		return a.fail("resolve deploy decision", err, map[string]string{"operation": op})
+	}
+	if err := a.c.Deployment.ResolveDecision(game.InstanceID(instance), operation.ID(op), acceptFallbacks, ds); err != nil {
 		return a.fail("resolve deploy decision", err, map[string]string{"operation": op})
 	}
 	return nil
@@ -243,13 +308,38 @@ func (a *App) CancelDeployDecision(instance, op string) error {
 	return nil
 }
 
-// VerifyDeployment scans the deployed files ("Verificar implantação").
-func (a *App) VerifyDeployment(instance string) (DeployVerifyDTO, error) {
-	changes, n, err := a.c.Deployment.Verify(a.context(), game.InstanceID(instance))
+// VerifyDeployment scans the deployed files and the folders around them
+// ("Verificar implantação", review of external changes, DLG-15).
+func (a *App) VerifyDeployment(instance string) (ExternalChangesDTO, error) {
+	v, err := a.c.Deployment.Verify(a.context(), game.InstanceID(instance))
 	if err != nil {
-		return DeployVerifyDTO{}, a.fail("verify deployment", err, map[string]string{"instance": instance})
+		return ExternalChangesDTO{}, a.fail("verify deployment", err, map[string]string{"instance": instance})
 	}
-	return DeployVerifyDTO{Count: n, Changes: toChangeDTOs(changes)}, nil
+	return ExternalChangesDTO{Instance: instance, Changes: toChangeDTOs(v.Changes), ChangeCount: v.ChangeCount, NewFileCount: v.NewFileCount}, nil
+}
+
+// ScanExternalChanges is the limited scan made when the window gets the
+// focus (core/09 §3); the UI rereads the status if the counts changed.
+func (a *App) ScanExternalChanges(instance string) error {
+	if err := a.c.Deployment.ScanOnFocus(a.context(), game.InstanceID(instance)); err != nil {
+		return a.fail("scan external changes", err, map[string]string{"instance": instance})
+	}
+	return nil
+}
+
+// ResolveExternalChanges applies the decisions of the review outside a
+// deploy (DLG-15): they run as a deploy, the only writer to the game
+// (D080). It returns the operation.
+func (a *App) ResolveExternalChanges(instance string, decisions []ExternalDecisionDTO) (string, error) {
+	ds, err := toExternalDecisions(decisions)
+	if err != nil {
+		return "", a.fail("resolve external changes", err, map[string]string{"instance": instance})
+	}
+	id, err := a.c.Deployment.ResolveChanges(a.context(), game.InstanceID(instance), ds)
+	if err != nil {
+		return "", a.fail("resolve external changes", err, map[string]string{"instance": instance})
+	}
+	return string(id), nil
 }
 
 // DeployMethods reports which deployment methods work and why not.
@@ -294,7 +384,7 @@ func (a *App) MoveStaging(instance, path string) (string, error) {
 }
 
 // instanceSettingKeys are the instance settings the UI edits so far (F7).
-var instanceSettingKeys = []string{"automation.deployOnChange", "deploy.cleanEmptyDirs"}
+var instanceSettingKeys = []string{"automation.deployOnChange", "deploy.cleanEmptyDirs", "deploy.autoRestoreMissing"}
 
 // ListInstanceSettings returns the editable instance-scoped settings.
 func (a *App) ListInstanceSettings(instance string) ([]SettingDTO, error) {
@@ -315,5 +405,21 @@ func (a *App) SetInstanceSetting(instance, key, value string) error {
 		return a.fail("set instance setting", err, map[string]string{"key": key, "value": value})
 	}
 	a.c.Logger.Info("instance setting changed", "instance", instance, "key", key, "value", value)
+	return nil
+}
+
+// OpenLocationFolder shows the folder holding a location of the game in the
+// file manager (DLG-15 "Abrir pasta").
+func (a *App) OpenLocationFolder(instance string, loc LocationDTO) error {
+	locs, err := toLocations([]LocationDTO{loc})
+	if err == nil {
+		var path string
+		if path, err = a.c.Deployment.LocationFolder(a.context(), game.InstanceID(instance), locs[0]); err == nil {
+			err = a.c.OpenFolder(path)
+		}
+	}
+	if err != nil {
+		return a.fail("open location folder", err, map[string]string{"instance": instance, "folder": "location"})
+	}
 	return nil
 }

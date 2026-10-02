@@ -29,7 +29,7 @@ import type { MessageKey } from "../i18n/i18n";
  */
 export type WorkspaceViewId = WorkspaceItemId;
 export type ViewId = "dashboard" | "games" | "extensions" | "settings" | WorkspaceViewId;
-export type DiagnosticsTab = "operations" | "log";
+export type DiagnosticsTab = "problems" | "history" | "operations" | "log";
 
 export interface Route {
   view: ViewId;
@@ -37,6 +37,20 @@ export interface Route {
   tab?: DiagnosticsTab;
   /** Log filter by operation id (Diagnostics › Log). */
   operation?: string;
+  /** Diagnostics › Problems: the diagnostic to select (key) or the code to filter. */
+  diagnostic?: string;
+  /** Diagnostics › History: filter by mod (Mods toolbar "Histórico", core/10 §3). */
+  mod?: { id: string; name: string };
+  /** Settings tab to open. */
+  settingsTab?: string;
+  /** Plugins / Load Order: the plugin to select in the Inspector. */
+  plugin?: string;
+  /** Plugins: a dialog to open (DLG-23 rules, DLG-24 groups). */
+  pluginDialog?: "rules" | "groups";
+  /** Load Order: open the review of an external change of the load order file. */
+  review?: boolean;
+  /** Mods: the mod to select (from "Mod de origem" of a plugin). */
+  focusMod?: string;
 }
 
 export interface NavEntry {

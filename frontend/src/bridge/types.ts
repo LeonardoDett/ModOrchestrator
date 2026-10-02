@@ -63,6 +63,8 @@ export interface OperationEvent {
   step?: string;
   progress?: { current: number; total: number };
   error?: OperationError;
+  /** Parameters of a delivery signal (notification.created...). */
+  data?: Record<string, string>;
 }
 
 /** One catalog setting (core/13) with its effective value. */
@@ -154,6 +156,10 @@ export interface Backend {
   pickImportFiles(instance: string, title: string): Promise<string[]>;
   pickImportFolder(instance: string, title: string): Promise<string[]>;
   resolveImport(operationId: string, answer: ImportAnswer): Promise<void>;
+  /** FOMOD wizard (DLG-06): the backend evaluates every selection. */
+  fomodState(operationId: string, selection: FomodSelection[]): Promise<FomodView>;
+  /** An image of the installer as a data URL ("" is the module image). */
+  fomodImage(operationId: string, image: string): Promise<string>;
   cancelImport(operationId: string): Promise<void>;
   installMods(instance: string, ids: string[]): Promise<string[]>;
   reinstallMods(instance: string, ids: string[]): Promise<string[]>;
@@ -221,15 +227,173 @@ export interface Backend {
   reconcileDeploy(instance: string): Promise<string>;
   cancelDeploy(instance: string): Promise<boolean>;
   pendingDeployDecision(instance: string): Promise<DeployPlan | null>;
-  resolveDeployDecision(instance: string, operation: string, acceptFallbacks: string[]): Promise<void>;
+  resolveDeployDecision(instance: string, operation: string, acceptFallbacks: string[], decisions: ExternalDecision[]): Promise<void>;
   cancelDeployDecision(instance: string, operation: string): Promise<void>;
-  verifyDeployment(instance: string): Promise<DeployVerify>;
+  verifyDeployment(instance: string): Promise<ExternalChanges>;
+  // External changes (F8, core/09)
+  scanExternalChanges(instance: string): Promise<void>;
+  resolveExternalChanges(instance: string, decisions: ExternalDecision[]): Promise<string>;
+  openLocationFolder(instance: string, location: FileLocation): Promise<void>;
   deployMethods(instance: string): Promise<DeployMethod[]>;
   changeDeployMethod(instance: string, method: string): Promise<string>;
   previewMoveStaging(instance: string, path: string): Promise<StagingPreview>;
   moveStaging(instance: string, path: string): Promise<string>;
   listInstanceSettings(instance: string): Promise<Setting[]>;
   setInstanceSetting(instance: string, key: string, value: string): Promise<void>;
+  // Diagnostics, notifications and history (F9, core/10)
+  diagnostics(instance: string): Promise<Problems>;
+  attentionDiagnostics(): Promise<Problems[]>;
+  markDiagnosticsVisited(instance: string): Promise<void>;
+  runHealthChecks(instance: string): Promise<void>;
+  executeDiagnosticAction(instance: string, key: string, actionId: string, index: number): Promise<DiagnosticActionResult>;
+  suppressDiagnostic(instance: string, key: string, wholeCode: boolean): Promise<void>;
+  unsuppressDiagnostic(key: string, code: string): Promise<void>;
+  suppressions(): Promise<Suppression[]>;
+  resetSuppressedDiagnostics(): Promise<number>;
+  notifications(limit: number): Promise<AppNotification[]>;
+  markNotificationsRead(ids: string[]): Promise<void>;
+  dismissNotifications(ids: string[]): Promise<void>;
+  sendDesktopNotification(id: string, title: string, body: string): Promise<void>;
+  history(filter: HistoryFilter): Promise<HistoryEntry[]>;
+  revertHistoryEntry(id: string): Promise<void>;
+  /** Save dialog + zip; "" when cancelled. */
+  exportSupportBundle(title: string, defaultName: string): Promise<string>;
+  enableImpact(instance: string, ids: string[], enabling: boolean): Promise<EnableImpact>;
+  // Plugins and load order (F11, ui/telas/plugins.md §8, load-order.md §5)
+  pluginList(instance: string): Promise<PluginList>;
+  pluginDetails(instance: string, name: string): Promise<PluginDetails>;
+  pluginRules(instance: string): Promise<PluginRules>;
+  loadOrderView(instance: string): Promise<LoadOrderView>;
+  loadOrderExplain(instance: string, name: string): Promise<PluginExplain>;
+  loadOrderDiffApplied(instance: string): Promise<LoadOrderDiff>;
+  sortPreview(instance: string): Promise<SortPreview>;
+  exportLoadOrder(instance: string): Promise<string>;
+  setPluginsEnabled(instance: string, plugins: string[], enabled: boolean): Promise<void>;
+  sortPlugins(instance: string): Promise<SortResult>;
+  undoLastSort(instance: string): Promise<void>;
+  setAutoSort(instance: string, on: boolean): Promise<void>;
+  movePlugins(instance: string, plugins: string[], index: number): Promise<PluginMoveResult>;
+  setIndexLock(instance: string, plugins: string[], locked: boolean): Promise<void>;
+  setPluginGroup(instance: string, plugins: string[], group: string): Promise<void>;
+  createPluginRule(instance: string, plugin: string, after: string): Promise<void>;
+  removePluginRule(instance: string, id: string): Promise<void>;
+  createPluginGroup(instance: string, name: string, after: string[]): Promise<void>;
+  updatePluginGroup(instance: string, name: string, after: string[]): Promise<void>;
+  deletePluginGroup(instance: string, name: string): Promise<void>;
+  applyLoadOrder(instance: string): Promise<string>;
+  restorePreviousLoadOrder(instance: string): Promise<string>;
+  importLoadOrder(instance: string, text: string): Promise<SortResult>;
+  resolveLoadOrderChange(instance: string, action: "import_load_order" | "restore_load_order"): Promise<string>;
+}
+
+// --- Diagnostics, notifications and history (internal/bridge/diagnostics.go).
+// Diagnostics are calculated by the backend on every read; texts come from
+// the i18n catalog by code + parameters (D044). ---
+
+export type DiagnosticSeverity = "error" | "warning" | "info";
+export type DiagnosticModule = "deploy" | "conflicts" | "rules" | "plugins" | "library" | "game" | "app";
+
+export interface DiagnosticEvidence {
+  kind: string;
+  ref?: EntityRef;
+  params?: Record<string, string>;
+}
+
+export interface DiagnosticAction {
+  id: string;
+  params?: Record<string, string>;
+  target?: EntityRef;
+  /** Set when the UI opens a place instead of running a backend command. */
+  navigateTo?: string;
+}
+
+export interface Diagnostic {
+  key: string;
+  code: string;
+  severity: DiagnosticSeverity;
+  blocking: boolean;
+  blocks: string[];
+  module: DiagnosticModule;
+  instance: string;
+  params: Record<string, string>;
+  evidence: DiagnosticEvidence[];
+  actions: DiagnosticAction[];
+  related: EntityRef[];
+  firstSeen?: string;
+  new: boolean;
+  suppressed: boolean;
+}
+
+export interface DiagnosticCounts {
+  blocking: number;
+  errors: number;
+  warnings: number;
+  infos: number;
+}
+
+export interface Problems {
+  instance: string;
+  name?: string;
+  items: Diagnostic[];
+  suppressed: Diagnostic[];
+  counts: DiagnosticCounts;
+  partial: boolean;
+}
+
+export interface DiagnosticActionResult {
+  operations: string[];
+}
+
+export interface Suppression {
+  key?: string;
+  code?: string;
+  createdAt: string;
+}
+
+export interface AppNotification {
+  id: string;
+  kind: "diagnostic" | "operation_result" | "info";
+  code: string;
+  params: Record<string, string>;
+  subject?: EntityRef;
+  instance?: string;
+  severity: string;
+  count: number;
+  state: "unread" | "read" | "dismissed";
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface HistoryFilter {
+  instance: string;
+  profile: string;
+  mod: string;
+  types: string[];
+  origin: string;
+  from: string;
+  to: string;
+  before: number;
+  limit: number;
+}
+
+export interface HistoryEntry {
+  id: string;
+  sequence: number;
+  type: string;
+  at: string;
+  origin: "user" | "auto" | "system";
+  subject?: EntityRef;
+  operation?: string;
+  params: Record<string, string>;
+  items: number;
+  reversible: boolean;
+  revertedBy?: string;
+  revertOf?: string;
+}
+
+export interface EnableImpact {
+  alsoEnable: NamedMod[];
+  affected: NamedMod[];
 }
 
 // --- Deploy (internal/bridge/deployment.go). Status and plans are
@@ -262,6 +426,8 @@ export interface DeployStatus {
   /** Deploy waiting at await_decision. */
   pendingDecision?: string;
   externalChanges: number;
+  /** Generated files found in managed folders (they never block, D080). */
+  newFiles: number;
   foreign: ForeignFinding[];
   failures: DeployFailure[];
 }
@@ -279,11 +445,56 @@ export interface DeploySummary {
   decisions: number;
 }
 
+export type ExternalChangeKind = "missing" | "modified" | "replaced" | "unexpected" | "permission" | "load_order";
+
+export type ExternalAction =
+  | "restore"
+  | "accept_removal"
+  | "keep_change"
+  | "revert"
+  | "save_to_mod"
+  | "capture"
+  | "leave_unmanaged"
+  | "ignore_now"
+  | "retry"
+  | "import_load_order"
+  | "restore_load_order";
+
+export interface FileFacts {
+  size: number;
+  modTime?: string;
+}
+
+/** One row of DLG-15; the actions offered come from the backend (core/09 §4). */
 export interface DeployChange {
   location: FileLocation;
-  kind: string;
+  kind: ExternalChangeKind;
   mod?: string;
   modName?: string;
+  method?: string;
+  wanted: boolean;
+  actions: ExternalAction[];
+  /** Pre-selected action; absent for generated files (nothing is pre-selected). */
+  suggested?: ExternalAction;
+  before?: FileFacts;
+  after?: FileFacts;
+}
+
+/** The action chosen for one row of DLG-15. */
+export interface ExternalDecision {
+  location: FileLocation;
+  action: ExternalAction;
+  captureInto?: string;
+  captureName?: string;
+  captureCategory?: string;
+}
+
+/** A scan outside a deploy (verify, review). */
+export interface ExternalChanges {
+  instance: string;
+  changes: DeployChange[];
+  changeCount: number;
+  newFileCount: number;
 }
 
 export interface DeployBlocked {
@@ -310,12 +521,8 @@ export interface DeployPlan {
   fallbacks: DeployFallback[];
   changeCount: number;
   blockedCount: number;
+  newFileCount: number;
   empty: boolean;
-}
-
-export interface DeployVerify {
-  count: number;
-  changes: DeployChange[];
 }
 
 export interface DeployMethod {
@@ -552,16 +759,84 @@ export interface DuplicateMod {
   version: string;
 }
 
-export type ImportChoice = "reinstall" | "variant" | "replace" | "continue" | "root" | "cancel";
+export type ImportChoice = "reinstall" | "variant" | "replace" | "continue" | "root" | "install" | "cancel";
 
 export interface ImportDecision {
-  kind: "duplicate_archive" | "duplicate_name" | "suspicious_ratio" | "root_ambiguous" | "root_unrecognized" | "fomod_pending";
+  kind: "duplicate_archive" | "duplicate_name" | "suspicious_ratio" | "root_ambiguous" | "root_unrecognized" | "fomod_script" | "fomod";
   choices: ImportChoice[];
   duplicates: DuplicateMod[];
   suggestedLabel?: string;
   candidates: string[];
   folders: string[];
   ratio?: number;
+  fomod?: FomodDecision;
+}
+
+/** Options chosen in one group of the FOMOD wizard, by display position. */
+export interface FomodSelection {
+  step: number;
+  group: number;
+  options: number[];
+}
+
+export interface FomodWarning {
+  code: string;
+  params: Record<string, string>;
+}
+
+/** The FOMOD wizard an import waits on (DLG-06); steps come from fomodState. */
+export interface FomodDecision {
+  module: string;
+  hasImage: boolean;
+  /** Choices of the previous installation (reinstall), preselected. */
+  previous: FomodSelection[];
+  warnings: FomodWarning[];
+}
+
+export type FomodGroupType = "SelectExactlyOne" | "SelectAtMostOne" | "SelectAtLeastOne" | "SelectAll" | "SelectAny";
+export type FomodOptionType = "Required" | "Optional" | "Recommended" | "NotUsable" | "CouldBeUsable";
+
+export interface FomodOption {
+  index: number;
+  name: string;
+  description: string;
+  image?: string;
+  type: FomodOptionType;
+  selected: boolean;
+  locked: boolean;
+  disabled: boolean;
+}
+
+export interface FomodGroup {
+  index: number;
+  name: string;
+  type: FomodGroupType;
+  options: FomodOption[];
+  problem?: "exactly_one" | "at_least_one" | "at_most_one";
+}
+
+export interface FomodStep {
+  index: number;
+  name: string;
+  visible: boolean;
+  groups: FomodGroup[];
+}
+
+export interface FomodSummary {
+  files: number;
+  size: number;
+  folders: { folder: string; files: number }[];
+  warnings: FomodWarning[];
+  requirements: { file: string; mod?: string; modName?: string }[];
+}
+
+/** The wizard evaluated by the backend for the visited groups. */
+export interface FomodView {
+  steps: FomodStep[];
+  selection: FomodSelection[];
+  problems: FomodSelection[];
+  summary?: FomodSummary;
+  planError?: string;
 }
 
 export interface QueueItem {
@@ -579,6 +854,9 @@ export interface ImportAnswer {
   mod?: string;
   label?: string;
   root?: string;
+  /** FOMOD: the visited groups and the requirement files to turn into rules. */
+  fomod?: FomodSelection[];
+  requirements?: string[];
 }
 
 export interface RemovalPreview {
@@ -880,4 +1158,172 @@ export interface PairDecision {
 export interface RuleCycle {
   mods: ConflictMod[];
   rules: { id: string; winner: NamedMod; loser: NamedMod; source: string }[];
+}
+
+// --- Plugins and load order (internal/bridge/plugins.go, core/08). The
+// inventory, indexes, constraints and problems are calculated by the
+// backend; the UI only shows and asks (anti-pattern 1). ---
+
+export type PluginOrigin = "mod" | "base_game" | "unmanaged";
+
+export interface PluginRow {
+  name: string;
+  enabled: boolean;
+  implicit: boolean;
+  locked: boolean;
+  /** 1-based place in the full load order. */
+  position: number;
+  /** Load index in the adapter format ("0A", "FE:003"); "" when inactive. */
+  index: string;
+  origin: PluginOrigin;
+  mod: string;
+  modName: string;
+  flags: string[];
+  group: string;
+  masters: number;
+  problems: number;
+  problem: string;
+  severity: DiagnosticSeverity | "";
+  author: string;
+  version: string;
+  description: string;
+  rules: number;
+}
+
+export interface PluginLimit {
+  kind: string;
+  used: number;
+  max: number;
+}
+
+export interface DisabledPlugin {
+  name: string;
+  mod: string;
+  modName: string;
+  losing: boolean;
+}
+
+export interface PluginList {
+  rows: PluginRow[];
+  limits: PluginLimit[];
+  active: number;
+  errors: number;
+  autoSort: boolean;
+  disabled: DisabledPlugin[];
+  external: boolean;
+  cycle: string[];
+  manualOrder: boolean;
+  hasLoadOrder: boolean;
+}
+
+export interface PluginMaster {
+  name: string;
+  present: boolean;
+  active: boolean;
+  before: boolean;
+  mod: string;
+  modName: string;
+  disabled: boolean;
+}
+
+export interface PluginRule {
+  id: string;
+  plugin: string;
+  after: string;
+  source: string;
+  disabled: boolean;
+  orphan: boolean;
+}
+
+export interface PluginDetails extends PluginRow {
+  path: string;
+  headerError: string;
+  mastersList: PluginMaster[];
+  dependents: string[];
+  ruleList: PluginRule[];
+  diagnostics: Diagnostic[];
+}
+
+export interface PluginGroup {
+  name: string;
+  after: string[];
+  plugins: string[];
+  default: boolean;
+}
+
+export interface PluginRules {
+  rules: PluginRule[];
+  groups: PluginGroup[];
+  plugins: string[];
+}
+
+export interface LoadOrderState {
+  supported: boolean;
+  applied: boolean;
+  differences: number;
+  external: boolean;
+  fileExists: boolean;
+  unreadable: boolean;
+  canRestorePrevious: boolean;
+}
+
+export interface LoadOrderView extends PluginList {
+  state: LoadOrderState;
+  canUndoSort: boolean;
+}
+
+/** A constraint that holds a plugin in place (kind: master, master_flag, rule, group). */
+export interface PluginReason {
+  kind: string;
+  rule: string;
+  group: string;
+  afterGroup: string;
+  other: string;
+  before: boolean;
+  plugin: string;
+}
+
+export interface PluginExplain {
+  plugin: string;
+  position: number;
+  fixed: boolean;
+  locked: boolean;
+  group: string;
+  after: PluginReason[];
+  dependents: PluginReason[];
+}
+
+export interface PluginMove {
+  plugin: string;
+  from: number;
+  to: number;
+  because: PluginReason[];
+}
+
+export interface SortPreview {
+  moves: PluginMove[];
+  confirmAbove: number;
+  cycle: string[];
+}
+
+export interface SortResult {
+  moved: number;
+  moves: PluginMove[];
+}
+
+export interface PluginMoveResult {
+  applied: boolean;
+  violated: PluginReason[];
+  nearest: number;
+}
+
+export interface LoadOrderLine {
+  name: string;
+  enabled: boolean;
+}
+
+export interface LoadOrderDiff {
+  desired: LoadOrderLine[];
+  applied: LoadOrderLine[];
+  exists: boolean;
 }

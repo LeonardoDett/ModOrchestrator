@@ -186,6 +186,37 @@ type Input struct {
 	CleanDirs bool
 	// BackupPath returns where the original of loc goes in the BackupStore.
 	BackupPath func(loc game.Location) relpath.Path
+	// Resolve carries the user's decisions about external changes of this
+	// run, by location key (core/09 §4). A location without one keeps
+	// waiting for a decision (or is skipped).
+	Resolve map[string]Resolution
+}
+
+// ResolutionKind is how a decided external change enters the plan.
+type ResolutionKind string
+
+const (
+	// ResolveForget: the file at the location is not the manager's any
+	// more; the location is planned as if it had no link (restore of a
+	// missing file, accepted removal).
+	ResolveForget ResolutionKind = "forget"
+	// ResolveAdopt: the observed file is the manager's as it is now (kept
+	// hardlink edit, copy or file saved to the mod); with Relink the
+	// staged file is put back over it (revert of an edited copy, file
+	// saved to the mod that must become a link again).
+	ResolveAdopt ResolutionKind = "adopt"
+	// ResolveSetAside: the observed file is someone else's; it moves to the
+	// BackupStore (recorded as the original when none is kept yet) and the
+	// location gets the desired state (revert of a replaced file).
+	ResolveSetAside ResolutionKind = "set_aside"
+)
+
+// Resolution is the decision about one external change.
+type Resolution struct {
+	Kind ResolutionKind
+	// Relink re-materialises the staged file after adopting (wanted
+	// locations only).
+	Relink bool
 }
 
 // Build computes the plan.
@@ -250,9 +281,25 @@ func Build(in Input) Plan {
 				backup = &e
 			}
 		}
+		if res, ok := in.Resolve[k]; ok && link != nil {
+			var done bool
+			if link, done = p.resolve(in, res, loc, link, backup, obs, d, isWanted, creating); done {
+				continue
+			}
+		}
 		if link != nil {
-			recorded := mod.File{Size: link.Evidence.Size, Hash: link.Evidence.Hash}
-			if c, changed := externalchange.Classify(*link, obs, recorded); changed {
+			c, changed := externalchange.Classify(*link, obs)
+			if changed && c.Kind == externalchange.KindMissing && !isWanted {
+				// The manager wanted the file gone anyway: nothing to decide
+				// and nothing written there; the original comes back.
+				add(deployment.Action{Kind: deployment.ActionRemoveManaged, Location: loc, Current: link})
+				if backup != nil {
+					add(deployment.Action{Kind: deployment.ActionRestoreBackup, Location: loc, Current: backup})
+				}
+				continue
+			}
+			if changed {
+				c.Wanted = isWanted
 				p.Changes = append(p.Changes, c)
 				continue
 			}
@@ -311,6 +358,58 @@ func Build(in Input) Plan {
 	p.Actions = deployment.SortForApply(p.Actions)
 	p.Summary = summarize(p, want)
 	return p
+}
+
+// resolve plans a decided external change. It returns the link the normal
+// planning continues with, or done when the location is fully planned.
+func (p *Plan) resolve(in Input, res Resolution, loc game.Location, link, backup *deployment.Entry, obs deployment.Observation,
+	d DesiredFile, wanted bool, creating map[string]DesiredFile) (*deployment.Entry, bool) {
+	add := func(a deployment.Action) { p.Actions = append(p.Actions, a) }
+	switch res.Kind {
+	case ResolveForget:
+		if !wanted || obs.Exists || obs.Unreadable {
+			// Not wanted: a missing link is simply dropped below.
+			return link, false
+		}
+		return nil, false
+	case ResolveAdopt:
+		if !obs.Exists || obs.IsDir || obs.Unreadable {
+			return link, false // nothing to adopt: classified again
+		}
+		adopted := *link
+		adopted.Evidence = obs.Evidence
+		if adopted.Evidence.Hash == "" && obs.Evidence.Size == link.Evidence.Size {
+			adopted.Evidence.Hash = link.Evidence.Hash
+		}
+		if res.Relink && wanted {
+			add(deployment.Action{Kind: deployment.ActionReplaceManaged, Location: loc, Desired: entryOf(d), Current: &adopted})
+			creating[loc.Key()] = d
+			return nil, true
+		}
+		return &adopted, false
+	case ResolveSetAside:
+		if !obs.Exists || obs.IsDir || obs.Unreadable {
+			return link, false
+		}
+		aside := &deployment.Entry{Location: loc, Kind: deployment.KindBackup, BackupPath: in.backupPath(loc), Evidence: obs.Evidence}
+		switch {
+		case wanted && backup == nil:
+			// No original is kept: the found file becomes it (D034).
+			add(deployment.Action{Kind: deployment.ActionBackupAndCreate, Location: loc, Desired: entryOf(d), Backup: aside})
+			creating[loc.Key()] = d
+		case wanted:
+			add(deployment.Action{Kind: deployment.ActionSetAside, Location: loc, Current: link, Backup: aside})
+			add(deployment.Action{Kind: deployment.ActionCreate, Location: loc, Desired: entryOf(d)})
+			creating[loc.Key()] = d
+		default:
+			add(deployment.Action{Kind: deployment.ActionSetAside, Location: loc, Current: link, Backup: aside})
+			if backup != nil {
+				add(deployment.Action{Kind: deployment.ActionRestoreBackup, Location: loc, Current: backup})
+			}
+		}
+		return nil, true
+	}
+	return link, false
 }
 
 // planDirs adds the folders new files need and the cleanup of folders the

@@ -5,6 +5,7 @@ import {
   cloneElement,
   isValidElement,
   type ComponentPropsWithoutRef,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -115,7 +116,7 @@ const stepVariants = defineRecipe({
       vertical: "flex-row items-start gap-3",
     },
     interactive: {
-      true: "cursor-pointer",
+      true: "cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
       false: "",
     },
   },
@@ -131,6 +132,8 @@ interface StepperStepProps extends ComponentPropsWithoutRef<"div"> {
   index: number;
   /** Hide the connector after this step (set by Root) */
   isLast?: boolean;
+  /** In an interactive stepper, a step that cannot be chosen yet */
+  disabled?: boolean;
 }
 
 /**
@@ -139,9 +142,11 @@ interface StepperStepProps extends ComponentPropsWithoutRef<"div"> {
 function StepperStep({
   index,
   isLast = false,
+  disabled = false,
   className,
   children,
   onClick,
+  onKeyDown,
   ...props
 }: StepperStepProps) {
   const { value, onChange, orientation, interactive } = useStepperContext("Step");
@@ -151,8 +156,26 @@ function StepperStep({
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
     onClick?.(event);
-    if (interactive) onChange(index);
+    if (interactive && !disabled) onChange(index);
   };
+
+  // An interactive step is a button for the keyboard and assistive tech.
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    onKeyDown?.(event);
+    if (!interactive || disabled || event.defaultPrevented) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onChange(index);
+    }
+  };
+  const a11y = interactive
+    ? {
+        role: "button",
+        tabIndex: disabled ? -1 : 0,
+        "aria-disabled": disabled || undefined,
+        "aria-current": status === "current" ? ("step" as const) : undefined,
+      }
+    : { "aria-current": status === "current" ? ("step" as const) : undefined };
 
   return (
     <StepProvider value={{ index, status }}>
@@ -164,6 +187,8 @@ function StepperStep({
         )}
         data-status={status}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        {...a11y}
         {...props}
       >
         {children}

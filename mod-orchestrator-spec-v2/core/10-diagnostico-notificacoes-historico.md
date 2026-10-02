@@ -1,6 +1,6 @@
 # Diagnóstico, notificações, histórico e logs
 
-Referências: D014, D020, D027, D044; INV-OPS-05/06. Vortex: `health_check`, notificações com ações e "never show again", `history_management` (HistoryDialog), `diagnostics_files`, `support_bundle`, `NotificationAggregator`. MO2: botão Problems.
+Referências: D014, D020, D027, D044, D082 (mecânica da F9), D084 (proposta); INV-OPS-05/06. Vortex: `health_check`, notificações com ações e "never show again", `history_management` (HistoryDialog), `diagnostics_files`, `support_bundle`, `NotificationAggregator`. MO2: botão Problems.
 
 Quatro conceitos separados, que **não se substituem**:
 
@@ -46,6 +46,12 @@ Severidade no modelo é `error` / `warning` / `info`, mais a lista `blocks[]` de
 | `plugin_limit_exceeded` | error | launch (aviso) | plugins | Abrir Plugins |
 | `plugin_disabled_master` | warning | — | plugins | Ativar master |
 | `plugin_header_unreadable` | warning | — | plugins | Abrir pasta |
+| `plugin_master_order` | error | — (só ordem externa) | plugins | Revisar |
+| `plugin_rule_orphan` | warning | — | plugins | Remover regra / Abrir regras |
+| `plugin_rule_cycle` | error | sort de plugins | plugins | Abrir regras |
+| `plugin_lock_conflict` | warning | — | plugins | Abrir Load Order |
+| `plugin_from_losing_file` | info | — | plugins | Abrir Conflicts |
+| `bsa_without_plugin` (adapter) | info | — | plugins | Abrir Plugins |
 | `game_not_found` | blocking | tudo da instância | games | Localizar jogo |
 | `game_version_changed` | warning | — | games/adapter | Detalhes |
 | `game_running` | blocking | deploy, purge | games | Aguardar |

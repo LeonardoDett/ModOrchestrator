@@ -48,6 +48,12 @@ const (
 	CodeModTypeUnknown    = "mod_type_unknown"
 	CodeNameEmpty         = "name_empty"
 	CodeSourceMissing     = "import_source_missing"
+	CodeModNotFound       = "mod_not_found"
+	// FOMOD (core/03 §8).
+	CodeFomodInvalidXML       = "fomod_invalid_xml"
+	CodeFomodModuleDeps       = "fomod_module_dependencies_failed"
+	CodeFomodInvalidSelection = "fomod_invalid_selection"
+	CodeFomodImage            = "fomod_image_unavailable"
 )
 
 func fail(code string, cause error, kv ...string) *Error {

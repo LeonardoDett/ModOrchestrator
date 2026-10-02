@@ -6,6 +6,7 @@ package game
 import (
 	"errors"
 	"fmt"
+	"path"
 	"slices"
 	"strings"
 
@@ -109,6 +110,35 @@ type Definition struct {
 	// (generic adapter); Targets and ModTypes are then only a template and
 	// the adapter builds the effective definition per instance.
 	CustomTargets bool
+	// ToolOutputs are folders where tools generate files (core/09 §3):
+	// they are searched for unexpected files, with their subfolders, even
+	// when they hold no managed file.
+	ToolOutputs []Location
+	// UnmanagedHints are patterns of generated files suggested as "leave
+	// unmanaged" (core/12 §9).
+	UnmanagedHints []FilePattern
+}
+
+// FilePattern matches the locations of one target whose path (case
+// insensitive, "/" separators) matches Glob as in path.Match.
+type FilePattern struct {
+	Target TargetID
+	Glob   string
+}
+
+// Matches reports whether loc matches the pattern.
+func (p FilePattern) Matches(loc Location) bool {
+	if loc.Target != p.Target {
+		return false
+	}
+	ok, err := path.Match(strings.ToLower(p.Glob), loc.Path.Key())
+	return err == nil && ok
+}
+
+// HintsUnmanaged reports whether a generated file at loc is suggested as
+// "leave unmanaged".
+func (d Definition) HintsUnmanaged(loc Location) bool {
+	return slices.ContainsFunc(d.UnmanagedHints, func(p FilePattern) bool { return p.Matches(loc) })
 }
 
 // Validate checks mod types against targets. NewDefinition only builds the

@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
-import type { Backend, ImportAnswer, ModDetails, ModRow, QueueItem } from "../bridge/types";
+import type { Backend, FomodSelection, FomodView, ImportAnswer, ModDetails, ModRow, QueueItem } from "../bridge/types";
 
 const row = (over: Partial<ModRow>): ModRow => ({
   id: "m1",
@@ -146,6 +146,138 @@ describe("Mods screen (F4)", () => {
     await user.click(within(dialog).getByText("Option B"));
     await user.click(within(dialog).getByRole("button", { name: "Install" }));
     expect(state.answers).toEqual([{ choice: "root", root: "Option B" }]);
+  });
+
+  it("runs the FOMOD wizard: the backend evaluates each click, the summary confirms requirements (DLG-06)", async () => {
+    const user = userEvent.setup();
+    const { state, backend, notify } = world();
+    const asked: FomodSelection[][] = [];
+    // A fake backend: 2K is Recommended, 4K adds an ini through a flag, the
+    // Dawnguard patch is NotUsable. The UI must show what comes back.
+    backend.fomodState = async (_op, selection) => {
+      asked.push(selection);
+      const chosen = selection.find((s) => s.step === 0 && s.group === 0)?.options ?? [0];
+      const view: FomodView = {
+        steps: [
+          {
+            index: 0,
+            name: "Textures",
+            visible: true,
+            groups: [
+              {
+                index: 0,
+                name: "Resolution",
+                type: "SelectExactlyOne",
+                options: [
+                  { index: 0, name: "2K", description: "2K textures", type: "Recommended", selected: chosen.includes(0), locked: false, disabled: false },
+                  { index: 1, name: "4K", description: "4K textures", type: "Optional", selected: chosen.includes(1), locked: false, disabled: false },
+                ],
+              },
+              {
+                index: 1,
+                name: "Patches",
+                type: "SelectAny",
+                options: [{ index: 0, name: "Dawnguard patch", description: "", type: "NotUsable", selected: false, locked: false, disabled: true }],
+              },
+            ],
+          },
+        ],
+        selection: [
+          { step: 0, group: 0, options: chosen },
+          { step: 0, group: 1, options: [] },
+        ],
+        problems: [],
+        summary: {
+          files: chosen.includes(1) ? 3 : 2,
+          size: 2048,
+          folders: [
+            { folder: "", files: 1 },
+            { folder: "textures", files: 1 },
+          ],
+          warnings: [{ code: "fomod_missing_source", params: { source: "extras/readme.txt" } }],
+          requirements: [{ file: "SkyUI_SE.esp", mod: "m1", modName: "SkyUI" }],
+        },
+      };
+      return view;
+    };
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    state.queue = [
+      {
+        operationId: "op1",
+        kind: "import",
+        label: "Wizard Mod.zip",
+        status: "running",
+        step: "plan_install",
+        cancellable: true,
+        decision: { kind: "fomod", choices: ["install", "cancel"], duplicates: [], candidates: [], folders: [], fomod: { module: "Wizard Mod", hasImage: false, previous: [], warnings: [] } },
+      },
+    ];
+    notify();
+    await user.click(await screen.findByRole("button", { name: "Decide…" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText("Step 1 of 1")).toBeInTheDocument();
+    expect(await within(dialog).findByRole("radio", { name: "2K" })).toHaveAttribute("aria-checked", "true");
+    expect(within(dialog).getByText("Recommended")).toBeInTheDocument();
+    expect(within(dialog).getByRole("checkbox", { name: "Dawnguard patch" })).toBeDisabled();
+    expect(within(dialog).getByText("Not usable with your current setup.")).toBeInTheDocument();
+
+    await user.click(within(dialog).getByRole("radio", { name: "4K" }));
+    await waitFor(() => expect(within(dialog).getByRole("radio", { name: "4K" })).toHaveAttribute("aria-checked", "true"));
+    expect(asked.at(-1)).toEqual([{ step: 0, group: 0, options: [1] }]);
+
+    await user.click(within(dialog).getByRole("button", { name: "Next" }));
+    expect(await within(dialog).findByText("Files by destination")).toBeInTheDocument();
+    expect(within(dialog).getByText(/^3 files ·/)).toBeInTheDocument();
+    expect(within(dialog).getByText("The installer refers to extras/readme.txt, which is not in the archive; it was skipped.")).toBeInTheDocument();
+    // No rule without an explicit action (INV-CON-02): unchecked by default.
+    const requirement = within(dialog).getByRole("checkbox", { name: "Create a requirement rule: this mod requires SkyUI (SkyUI_SE.esp)" });
+    expect(requirement).toHaveAttribute("aria-checked", "false");
+    await user.click(requirement);
+    await user.click(within(dialog).getByRole("button", { name: "Install" }));
+    expect(state.answers).toEqual([
+      {
+        choice: "install",
+        fomod: [
+          { step: 0, group: 0, options: [1] },
+          { step: 0, group: 1, options: [] },
+        ],
+        requirements: ["SkyUI_SE.esp"],
+      },
+    ]);
+  });
+
+  it("reinstalls a FOMOD with the previous choices in one click (D030)", async () => {
+    const user = userEvent.setup();
+    const { state, backend, notify } = world();
+    backend.fomodState = async (_op, selection) => ({
+      steps: [{ index: 0, name: "Main", visible: true, groups: [{ index: 0, name: "Version", type: "SelectExactlyOne", options: [{ index: 0, name: "AE", description: "", type: "Optional", selected: selection.length === 0, locked: false, disabled: false }, { index: 1, name: "SE", description: "", type: "Optional", selected: selection.length > 0, locked: false, disabled: false }] }] }],
+      selection: [{ step: 0, group: 0, options: selection.length ? [1] : [0] }],
+      problems: [],
+      summary: { files: 1, size: 1, folders: [], warnings: [], requirements: [] },
+    });
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    const previous = [{ step: 0, group: 0, options: [1] }];
+    state.queue = [
+      {
+        operationId: "op2",
+        kind: "reinstall",
+        label: "Engine Fixes",
+        status: "running",
+        cancellable: true,
+        decision: { kind: "fomod", choices: ["install", "cancel"], duplicates: [], candidates: [], folders: [], fomod: { module: "Engine Fixes", hasImage: false, previous, warnings: [] } },
+      },
+    ];
+    notify();
+    await user.click(await screen.findByRole("button", { name: "Decide…" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText("The choices of the previous installation are loaded.")).toBeInTheDocument();
+    expect(await within(dialog).findByRole("radio", { name: "SE" })).toHaveAttribute("aria-checked", "true");
+    await user.click(within(dialog).getByRole("button", { name: "Install with the previous choices" }));
+    expect(state.answers).toEqual([{ choice: "install", fomod: previous }]);
   });
 
   it("removes selected mods through DLG-07, reporting orphan rules", async () => {

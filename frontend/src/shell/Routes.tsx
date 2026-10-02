@@ -9,8 +9,10 @@ import { HonestEmpty, PageBody } from "../pages/PageBody";
 import { SettingsPage } from "../pages/SettingsPage";
 import { ModsPage } from "../pages/ModsPage";
 import { ProfilesPage } from "../pages/ProfilesPage";
-import { OverviewPage, WorkspacePlaceholder } from "../pages/WorkspacePages";
-import { VIEWS, isWorkspaceView, useNavigation } from "./navigation";
+import { LoadOrderPage } from "../pages/LoadOrderPage";
+import { PluginsPage } from "../pages/PluginsPage";
+import { OverviewPage } from "../pages/WorkspacePages";
+import { isWorkspaceView, useNavigation } from "./navigation";
 
 /**
  * Renders the current route. A workspace route the backend no longer offers
@@ -54,7 +56,8 @@ export function Routes() {
     case "conflicts":
       return <ConflictsPage />;
     case "plugins":
+      return <PluginsPage />;
     case "load_order":
-      return <WorkspacePlaceholder view={route.view} icon={VIEWS[route.view].icon} />;
+      return <LoadOrderPage />;
   }
 }

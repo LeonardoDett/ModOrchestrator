@@ -1,0 +1,269 @@
+# source: Kitty Follower - M'rissi - Sa'chil Replacer FOMOD 184186 1.11 2026-08-21T15-17Z Ks18n0jLY.7z
+00 Core/
+00 Core/meshes/
+00 Core/meshes/actors/
+00 Core/meshes/actors/character/
+00 Core/meshes/actors/character/FaceGenData/
+00 Core/meshes/actors/character/FaceGenData/FaceGeom/
+00 Core/meshes/actors/character/FaceGenData/FaceGeom/KittyFollower.esp/
+00 Core/meshes/KittyFollowerData/
+00 Core/meshes/KittyFollowerData/Body/
+00 Core/meshes/KittyFollowerData/Brows/
+00 Core/meshes/KittyFollowerData/Claws/
+00 Core/meshes/KittyFollowerData/Ears/
+00 Core/meshes/KittyFollowerData/Ears/xml/
+00 Core/meshes/KittyFollowerData/Eyes/
+00 Core/meshes/KittyFollowerData/Hair/
+00 Core/meshes/KittyFollowerData/Head/
+00 Core/meshes/KittyFollowerData/Tail/
+00 Core/meshes/Obicnii/
+00 Core/meshes/Obicnii/GothGFOutfit/
+00 Core/textures/
+00 Core/textures/actors/
+00 Core/textures/actors/character/
+00 Core/textures/actors/character/FaceGenData/
+00 Core/textures/actors/character/FaceGenData/FaceTint/
+00 Core/textures/actors/character/FaceGenData/FaceTint/KittyFollower.esp/
+00 Core/textures/KittyFollowerData/
+00 Core/textures/KittyFollowerData/BodyTextures/
+00 Core/textures/KittyFollowerData/Brows/
+00 Core/textures/KittyFollowerData/Claws/
+00 Core/textures/KittyFollowerData/Ears/
+00 Core/textures/KittyFollowerData/Eyes/
+00 Core/textures/KittyFollowerData/Hair/
+00 Core/textures/KittyFollowerData/Head/
+00 Core/textures/KittyFollowerData/Tail/
+00 Core/textures/Obicnii/
+00 Core/textures/Obicnii/GothGFOutfit/
+01 Plugin/
+02 Plugin MTail/
+03 Plugin KTail/
+04 Plugin KTail MTail/
+05 Plugin NoSpawn/
+06 Plugin NoSpawn MTail/
+07 Plugin NoActor/
+07 Scripts/
+07 Scripts/Scripts/
+07 Scripts/Scripts/Source/
+08 Plugin NoActor MTail/
+10 Voice Paxti/
+11 Voice Aria/
+30 OBody Body/
+31 OBody Outfit/
+31 OBody Outfit/Meshes/
+31 OBody Outfit/Meshes/Obicnii/
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/
+32 Kitty Preset/
+33 BodySlide Outfit/
+33 BodySlide Outfit/CalienteTools/
+33 BodySlide Outfit/CalienteTools/BodySlide/
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Heels3BA/
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Shorts3BA/
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Top3BA/
+33 BodySlide Outfit/CalienteTools/BodySlide/SliderSets/
+34 BodySlide Preset/
+34 BodySlide Preset/CalienteTools/
+34 BodySlide Preset/CalienteTools/BodySlide/
+34 BodySlide Preset/CalienteTools/BodySlide/SliderPresets/
+40 Mrissi Core/
+40 Mrissi Core/meshes/
+40 Mrissi Core/meshes/actors/
+40 Mrissi Core/meshes/actors/character/
+40 Mrissi Core/meshes/actors/character/FaceGenData/
+40 Mrissi Core/meshes/actors/character/FaceGenData/FaceGeom/
+40 Mrissi Core/meshes/actors/character/FaceGenData/FaceGeom/MrissiTailOfTroubles.esp/
+40 Mrissi Core/textures/
+40 Mrissi Core/textures/actors/
+40 Mrissi Core/textures/actors/character/
+40 Mrissi Core/textures/actors/character/FaceGenData/
+40 Mrissi Core/textures/actors/character/FaceGenData/FaceTint/
+40 Mrissi Core/textures/actors/character/FaceGenData/FaceTint/MrissiTailOfTroubles.esp/
+41 Mrissi SkyPatcher/
+41 Mrissi SkyPatcher/SKSE/
+41 Mrissi SkyPatcher/SKSE/Plugins/
+41 Mrissi SkyPatcher/SKSE/Plugins/SkyPatcher/
+41 Mrissi SkyPatcher/SKSE/Plugins/SkyPatcher/npc/
+41 Mrissi SkyPatcher/SKSE/Plugins/SkyPatcher/npc/Kitty - Mrissi Replacer/
+42 Mrissi Plugin/
+43 Mrissi Preset/
+50 Sachil Core/
+50 Sachil Core/meshes/
+50 Sachil Core/meshes/actors/
+50 Sachil Core/meshes/actors/character/
+50 Sachil Core/meshes/actors/character/FaceGenData/
+50 Sachil Core/meshes/actors/character/FaceGenData/FaceGeom/
+50 Sachil Core/meshes/actors/character/FaceGenData/FaceGeom/SU04SachilFollower.esp/
+50 Sachil Core/textures/
+50 Sachil Core/textures/actors/
+50 Sachil Core/textures/actors/character/
+50 Sachil Core/textures/actors/character/FaceGenData/
+50 Sachil Core/textures/actors/character/FaceGenData/FaceTint/
+50 Sachil Core/textures/actors/character/FaceGenData/FaceTint/SU04SachilFollower.esp/
+52 Sachil Plugin/
+53 Sachil Preset/
+55 Sachil NoTail/
+fomod/
+fomod/images/
+00 Core/meshes/actors/character/FaceGenData/FaceGeom/KittyFollower.esp/00000800.nif	3273444
+00 Core/meshes/KittyFollowerData/Body/femalebody_0.nif	2007466
+00 Core/meshes/KittyFollowerData/Body/femalebody_1.nif	2007466
+00 Core/meshes/KittyFollowerData/Body/femalefeet_0.nif	786505
+00 Core/meshes/KittyFollowerData/Body/femalefeet_1.nif	786505
+00 Core/meshes/KittyFollowerData/Body/femalehands_0.nif	953658
+00 Core/meshes/KittyFollowerData/Body/femalehands_1.nif	953658
+00 Core/meshes/KittyFollowerData/Brows/femalebrows.nif	34171
+00 Core/meshes/KittyFollowerData/Brows/FemaleHeadBrows.tri	88258
+00 Core/meshes/KittyFollowerData/Brows/FemaleHeadBrowsCharGen.tri	193709
+00 Core/meshes/KittyFollowerData/Brows/FemaleHeadBrowsRace.tri	45584
+00 Core/meshes/KittyFollowerData/Claws/ClawsBlackF_1.nif	57021
+00 Core/meshes/KittyFollowerData/Claws/ClawsBlackM_1.nif	57014
+00 Core/meshes/KittyFollowerData/Ears/Ear1.nif	81606
+00 Core/meshes/KittyFollowerData/Ears/Ear1.tri	30168
+00 Core/meshes/KittyFollowerData/Ears/Ear2.nif	87617
+00 Core/meshes/KittyFollowerData/Ears/Ear2.tri	34424
+00 Core/meshes/KittyFollowerData/Ears/Ear3.nif	51736
+00 Core/meshes/KittyFollowerData/Ears/Ear3.tri	9696
+00 Core/meshes/KittyFollowerData/Ears/Ear_in.nif	203390
+00 Core/meshes/KittyFollowerData/Ears/Ear_in.tri	97504
+00 Core/meshes/KittyFollowerData/Ears/Ear_in45.nif	203395
+00 Core/meshes/KittyFollowerData/Ears/Ear_in45.tri	97504
+00 Core/meshes/KittyFollowerData/Ears/Ear_out1.nif	399352
+00 Core/meshes/KittyFollowerData/Ears/Ear_out1.tri	187480
+00 Core/meshes/KittyFollowerData/Ears/Ear_out2.nif	391102
+00 Core/meshes/KittyFollowerData/Ears/Ear_out2.tri	209560
+00 Core/meshes/KittyFollowerData/Ears/Ear_out245.nif	391107
+00 Core/meshes/KittyFollowerData/Ears/Ear_out245.tri	209560
+00 Core/meshes/KittyFollowerData/Ears/xml/KittyEar_HDT.xml	5890
+00 Core/meshes/KittyFollowerData/Eyes/FEFemaleEyesGlow.nif	16992
+00 Core/meshes/KittyFollowerData/Eyes/FELashesFemale.nif	16369
+00 Core/meshes/KittyFollowerData/Hair/00hairline02.nif	28460
+00 Core/meshes/KittyFollowerData/Hair/00hairline02.tri	14206
+00 Core/meshes/KittyFollowerData/Hair/hairleigh.nif	838349
+00 Core/meshes/KittyFollowerData/Hair/hairleigh.tri	148
+00 Core/meshes/KittyFollowerData/Hair/hairlineleigh.nif	838349
+00 Core/meshes/KittyFollowerData/Hair/hairlineleigh.tri	148
+00 Core/meshes/KittyFollowerData/Head/FemaleHead.nif	328495
+00 Core/meshes/KittyFollowerData/Head/FemaleHead.tri	1284045
+00 Core/meshes/KittyFollowerData/Head/FemaleHeadCharGen.tri	3055880
+00 Core/meshes/KittyFollowerData/Head/FemaleHeadRaces.tri	478752
+00 Core/meshes/KittyFollowerData/skeleton_female.nif	87006
+00 Core/meshes/KittyFollowerData/Tail/FemaleTailKhajiit.nif	1417723
+00 Core/meshes/KittyFollowerData/Tail/KittyTailPhysicsShort.xml	18304
+00 Core/meshes/Obicnii/GothGFOutfit/Collar.nif	985440
+00 Core/meshes/Obicnii/GothGFOutfit/GO_Collar.nif	404757
+00 Core/meshes/Obicnii/GothGFOutfit/GO_Heels.nif	431784
+00 Core/meshes/Obicnii/GothGFOutfit/GO_Shorts.nif	528081
+00 Core/meshes/Obicnii/GothGFOutfit/GO_Top.nif	795766
+00 Core/meshes/Obicnii/GothGFOutfit/Heels.tri	788007
+00 Core/meshes/Obicnii/GothGFOutfit/Heels_0.nif	1049070
+00 Core/meshes/Obicnii/GothGFOutfit/Heels_1.nif	1049070
+00 Core/meshes/Obicnii/GothGFOutfit/Shorts.tri	3465114
+00 Core/meshes/Obicnii/GothGFOutfit/Shorts_0.nif	1414620
+00 Core/meshes/Obicnii/GothGFOutfit/Shorts_1.nif	1414620
+00 Core/meshes/Obicnii/GothGFOutfit/Top.tri	8563508
+00 Core/meshes/Obicnii/GothGFOutfit/Top_0.nif	4095363
+00 Core/meshes/Obicnii/GothGFOutfit/Top_1.nif	4095363
+00 Core/textures/actors/character/FaceGenData/FaceTint/KittyFollower.esp/00000800.dds	16777344
+00 Core/textures/KittyFollowerData/BodyTextures/femalebody_1.dds	22369796
+00 Core/textures/KittyFollowerData/BodyTextures/femalebody_1_msn.dds	22369796
+00 Core/textures/KittyFollowerData/BodyTextures/femalebody_1_s.dds	11184972
+00 Core/textures/KittyFollowerData/BodyTextures/femalebody_1_sk.dds	2872
+00 Core/textures/KittyFollowerData/BodyTextures/femalehands_1.dds	22369796
+00 Core/textures/KittyFollowerData/BodyTextures/femalehands_1_msn.dds	2796388
+00 Core/textures/KittyFollowerData/BodyTextures/femalehands_1_s.dds	1398268
+00 Core/textures/KittyFollowerData/BodyTextures/femalehands_1_sk.dds	2872
+00 Core/textures/KittyFollowerData/Brows/EMB_01.dds	2796388
+00 Core/textures/KittyFollowerData/Brows/EMB_23D.dds	2796388
+00 Core/textures/KittyFollowerData/Brows/EMB_n.dds	2796388
+00 Core/textures/KittyFollowerData/Claws/claws_black.dds	43832
+00 Core/textures/KittyFollowerData/Claws/claws_n.dds	87556
+00 Core/textures/KittyFollowerData/Ears/ear01.dds	5592560
+00 Core/textures/KittyFollowerData/Ears/ear01_45.dds	5592560
+00 Core/textures/KittyFollowerData/Ears/ear01_n.dds	5592560
+00 Core/textures/KittyFollowerData/Eyes/fe_cat_aquabrown.dds	349700
+00 Core/textures/KittyFollowerData/Eyes/FE_Cat_AquaBrownB.dds	349700
+00 Core/textures/KittyFollowerData/Eyes/FE_Cat_CherryB.dds	349700
+00 Core/textures/KittyFollowerData/Eyes/fe_cat_g.dds	349700
+00 Core/textures/KittyFollowerData/furrytail_drk.dds	1398276
+00 Core/textures/KittyFollowerData/Hair/00hairlong.dds	1398256
+00 Core/textures/KittyFollowerData/Hair/00hairlong_n.dds	1396864
+00 Core/textures/KittyFollowerData/Hair/hairleigh.dds	1398256
+00 Core/textures/KittyFollowerData/Hair/hairleigh_n.dds	1398256
+00 Core/textures/KittyFollowerData/Head/femalehead.dds	22369796
+00 Core/textures/KittyFollowerData/Head/femalehead_msn.dds	22369796
+00 Core/textures/KittyFollowerData/Head/femalehead_s.dds	2796364
+00 Core/textures/KittyFollowerData/Head/femalehead_sk.dds	2872
+00 Core/textures/KittyFollowerData/Tail/kittytail_diffuse_.dds	1398276
+00 Core/textures/KittyFollowerData/Tail/kittytail_specular__.dds	699192
+00 Core/textures/Obicnii/GothGFOutfit/Bra_D.dds	5592580
+00 Core/textures/Obicnii/GothGFOutfit/Bra_N.dds	5592580
+00 Core/textures/Obicnii/GothGFOutfit/Collar_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Collar_N.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/FishNet_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/FishNet_N.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Heels_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Heels_N.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Jacket_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Jacket_N.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Metals_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Metals_M.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Metals_N.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/mipblur_DefaultOutside1_dielectric.dds	524408
+00 Core/textures/Obicnii/GothGFOutfit/ore_steel_e.dds	1048784
+00 Core/textures/Obicnii/GothGFOutfit/Panties_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Panties_N.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Short_D.dds	22369796
+00 Core/textures/Obicnii/GothGFOutfit/Short_N.dds	22369796
+01 Plugin/KittyFollower.esp	58409
+02 Plugin MTail/KittyFollower.esp	58419
+03 Plugin KTail/KittyFollower.esp	58419
+04 Plugin KTail MTail/KittyFollower.esp	58429
+05 Plugin NoSpawn/KittyFollower.esp	58409
+06 Plugin NoSpawn MTail/KittyFollower.esp	58419
+07 Plugin NoActor/KittyFollower.esp	56954
+07 Scripts/Scripts/KittyFollowerSpawn.pex	1489
+07 Scripts/Scripts/Source/KittyFollowerSpawn.psc	1416
+08 Plugin NoActor MTail/KittyFollower.esp	56964
+10 Voice Paxti/KittyFollower - Paxti Voice.esp	1427
+11 Voice Aria/KittyFollower - Aria Voice.esp	1427
+30 OBody Body/Kitty - OBody Patch.esp	1903
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Heels.tri	788007
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Heels_0.nif	1049070
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Heels_1.nif	1049070
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Shorts.tri	3465114
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Shorts_0.nif	1414620
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Shorts_1.nif	1414620
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Top.tri	8563508
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Top_0.nif	4095363
+31 OBody Outfit/Meshes/Obicnii/GothGFOutfit/Top_1.nif	4095363
+32 Kitty Preset/OBodyNG_PDA_KittyFollower.ini	205
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Heels3BA/Obi_GothGF_Heels3BA.nif	1048986
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Heels3BA/Obi_GothGF_Heels3BA.osd	1378614
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Shorts3BA/Obi_GothGF_Shorts3BA.nif	1414535
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Shorts3BA/Obi_GothGF_Shorts3BA.osd	6251049
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Top3BA/Obi_GothGF_Top3BA.nif	4095281
+33 BodySlide Outfit/CalienteTools/BodySlide/ShapeData/Obi_GothGF_Top3BA/Obi_GothGF_Top3BA.osd	15365921
+33 BodySlide Outfit/CalienteTools/BodySlide/SliderSets/Obi_GothGF_Heels3BA.osp	6858
+33 BodySlide Outfit/CalienteTools/BodySlide/SliderSets/Obi_GothGF_Shorts3BA.osp	40317
+33 BodySlide Outfit/CalienteTools/BodySlide/SliderSets/Obi_GothGF_Top3BA.osp	65176
+34 BodySlide Preset/CalienteTools/BodySlide/SliderPresets/Yet Another Slim body.xml	25604
+40 Mrissi Core/meshes/actors/character/FaceGenData/FaceGeom/MrissiTailOfTroubles.esp/0000AA19.nif	3273451
+40 Mrissi Core/textures/actors/character/FaceGenData/FaceTint/MrissiTailOfTroubles.esp/0000AA19.dds	16777344
+41 Mrissi SkyPatcher/SKSE/Plugins/SkyPatcher/npc/Kitty - Mrissi Replacer/MrissiTailOfTroubles.esp.ini	2069
+42 Mrissi Plugin/Kitty - Mrissi Replacer.esp	1205
+43 Mrissi Preset/OBodyNG_PDA_Mrissi.ini	483
+50 Sachil Core/meshes/actors/character/FaceGenData/FaceGeom/SU04SachilFollower.esp/0002B025.nif	3273449
+50 Sachil Core/textures/actors/character/FaceGenData/FaceTint/SU04SachilFollower.esp/0002B025.dds	16777344
+52 Sachil Plugin/Kitty - Sachil Replacer.esp	2059
+53 Sachil Preset/OBodyNG_PDA_Sachil.ini	473
+55 Sachil NoTail/Kitty - Sachil Replacer.esp	2049
+fomod/images/Final 1.png	4521604
+fomod/images/Kitty Follower.png	4303077
+fomod/images/Kitty tail.png	1764436
+fomod/images/M'rissi tail.png	1985055
+fomod/images/Mrissi.png	1602665
+fomod/images/Sachil tail.png	1485135
+fomod/images/Sachil.png	1438286
+fomod/info.xml	730
+fomod/ModuleConfig.xml	32166

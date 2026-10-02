@@ -124,6 +124,9 @@ type EventDTO struct {
 	Step        string        `json:"step,omitempty"`
 	Progress    *ProgressDTO  `json:"progress,omitempty"`
 	Error       *ErrorDTO     `json:"error,omitempty"`
+	// Data carries the parameters of a delivery signal (notification id,
+	// desktop flag), never domain state.
+	Data map[string]string `json:"data,omitempty"`
 }
 
 func toOperationDTO(op *operation.Operation) OperationDTO {
@@ -155,6 +158,9 @@ func toEventDTO(e event.Event) EventDTO {
 		OccurredAt:  formatTime(e.OccurredAt),
 		OperationID: e.OperationID,
 		Subject:     refDTO(e.Subject),
+	}
+	if m, ok := e.Payload.(map[string]string); ok && isSignal(e.Type) {
+		dto.Data = m
 	}
 	if p, ok := e.Payload.(operation.EventPayload); ok {
 		dto.Status = string(p.Status)

@@ -9,15 +9,19 @@ import (
 	"log/slog"
 	"os"
 	"strconv"
+	"time"
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
 	"modorchestrator/internal/core/application/conflicts"
 	"modorchestrator/internal/core/application/deployment"
+	"modorchestrator/internal/core/application/diagnostics"
 	"modorchestrator/internal/core/application/games"
+	"modorchestrator/internal/core/application/history"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
+	"modorchestrator/internal/core/application/plugins"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/game"
@@ -30,7 +34,9 @@ import (
 	"modorchestrator/internal/infrastructure/hashing"
 	"modorchestrator/internal/infrastructure/logging"
 	"modorchestrator/internal/infrastructure/persistence/sqlite"
+	"modorchestrator/internal/infrastructure/plugincache"
 	"modorchestrator/internal/infrastructure/stores"
+	"modorchestrator/internal/infrastructure/supportbundle"
 	"modorchestrator/internal/infrastructure/system"
 )
 
@@ -46,7 +52,13 @@ type Container struct {
 	Conflicts  *conflicts.Service
 	Deployment *deployment.Service
 	AutoDeploy *deployment.AutoDeployer
-	Logger     *slog.Logger
+	// Plugins owns the plugin inventory and the load order (core/08).
+	Plugins *plugins.Service
+	// Diagnostics gathers health checks, suppressions and notifications;
+	// History is the projection of events with reversal (core/10).
+	Diagnostics *diagnostics.Service
+	History     *history.Service
+	Logger      *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
 	Interrupted []*operation.Operation
 	// InterruptedDeploys lists instances with a deploy journal to reconcile.
@@ -129,6 +141,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Drives:      fsys,
 		Versions:    system.FileVersions{},
 		Stores:      &stores.Scanner{FS: fsys, Reg: stores.NewRegistry(), Env: os.Getenv},
+		Processes:   system.Processes{},
 		Ops:         ops,
 		IDs:         ids,
 		Clock:       clock,
@@ -151,6 +164,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		FS:            fsys,
 		Extractor:     archive.New(),
 		Hasher:        hashing.SHA256{},
+		Versions:      system.FileVersions{},
 		Settings:      settingsSvc,
 		Ops:           ops,
 		Locks:         locks,
@@ -189,6 +203,30 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:         clock,
 	})
 
+	pluginsSvc := plugins.NewService(plugins.Deps{
+		Registry:      registry,
+		Instances:     instances,
+		Mods:          sqlite.NewModRepository(db),
+		Installations: sqlite.NewInstallationRepository(db),
+		Profiles:      profiles,
+		Rules:         sqlite.NewRuleRepository(db),
+		Overrides:     sqlite.NewOverrideRepository(db),
+		PluginRules:   sqlite.NewPluginRuleRepository(db),
+		Manifests:     sqlite.NewManifestRepository(db),
+		State:         appState,
+		UoW:           sqlite.NewUnitOfWork(db),
+		Publisher:     bus,
+		FS:            fsys,
+		Hasher:        hashing.SHA256{},
+		Folders:       system.Folders{},
+		Cache:         plugincache.New(paths.Cache),
+		Settings:      settingsSvc,
+		Ops:           ops,
+		Locks:         locks,
+		IDs:           ids,
+		Clock:         clock,
+	})
+
 	deploySvc := deployment.NewService(deployment.Deps{
 		Registry:      registry,
 		Instances:     instances,
@@ -205,6 +243,12 @@ func New(ctx context.Context) (c *Container, err error) {
 		FS:            fsys,
 		Settings:      settingsSvc,
 		Foreign:       gamesSvc,
+		Archives:      sqlite.NewArchiveRepository(db),
+		Decisions:     sqlite.NewExternalDecisionRepository(db),
+		Hasher:        hashing.SHA256{},
+		Library:       librarySvc,
+		Exclusions:    conflictsSvc,
+		LoadOrder:     pluginsSvc,
 		Ops:           ops,
 		Locks:         locks,
 		IDs:           ids,
@@ -215,6 +259,51 @@ func New(ctx context.Context) (c *Container, err error) {
 	unsubAuto := bus.Subscribe(autoDeploy.Handle)
 	prevUnsub := unsub
 	unsub = func() { unsubAuto(); prevUnsub() }
+
+	diagSvc := diagnostics.NewService(diagnostics.Deps{
+		Registry:     registry,
+		Instances:    instances,
+		Profiles:     profiles,
+		Mods:         sqlite.NewModRepository(db),
+		Rules:        sqlite.NewRuleRepository(db),
+		Suppressions: sqlite.NewSuppressionRepository(db),
+		Presence:     sqlite.NewPresenceRepository(db),
+		Notifs:       sqlite.NewNotificationRepository(db),
+		State:        appState,
+		UoW:          sqlite.NewUnitOfWork(db),
+		Publisher:    bus,
+		FS:           fsys,
+		Settings:     settingsSvc,
+		Conflicts:    conflictsSvc,
+		Deploy:       deploySvc,
+		Games:        gamesSvc,
+		Library:      librarySvc,
+		Commands:     profilesSvc,
+		Plugins:      pluginsSvc,
+		IDs:          ids,
+		Clock:        clock,
+	})
+	historySvc := history.NewService(history.Deps{
+		History:   sqlite.NewHistoryRepository(db),
+		Mods:      sqlite.NewModRepository(db),
+		Profiles:  profiles,
+		Settings:  settingsSvc,
+		Commands:  profilesSvc,
+		Conflicts: conflictsSvc,
+		Library:   librarySvc,
+		Clock:     clock,
+	})
+	// Diagnostics follow every committed change (core/10 §1: recalculated
+	// after their triggers) and turn operation outcomes into notifications.
+	unsubDiag := bus.Subscribe(diagSvc.Handle)
+	prevUnsub2 := unsub
+	unsub = func() { unsubDiag(); prevUnsub2() }
+	// The load order follows the inventory (core/08 §3) and the file is
+	// watched while the app is open (core/08 §7).
+	unsubPlugins := bus.Subscribe(pluginsSvc.Handle)
+	prevUnsub3 := unsub
+	unsub = func() { unsubPlugins(); prevUnsub3() }
+	pluginsSvc.StartMonitor(2 * time.Second)
 
 	interrupted, err := ops.RecoverInterrupted(ctx)
 	if err != nil {
@@ -236,6 +325,26 @@ func New(ctx context.Context) (c *Container, err error) {
 	if err != nil {
 		logger.Error("deploy journals", logging.KeyError, err.Error())
 	}
+	if n, err := historySvc.Prune(ctx); err != nil {
+		logger.Error("history retention", logging.KeyError, err.Error())
+	} else if n > 0 {
+		logger.Info("history retention", "pruned", n)
+	}
+	verifyStaging := false
+	if v, err := settingsSvc.AppValue(ctx, "library.verifyStagingOnStartup"); err == nil {
+		verifyStaging, _ = strconv.ParseBool(v.Value)
+	}
+	// The first evaluation runs off the startup path; it records which
+	// problems exist so only new ones notify later.
+	go func() {
+		bg := context.Background()
+		if verifyStaging {
+			_ = diagSvc.VerifyStagingAll(bg)
+		}
+		if err := diagSvc.RefreshAll(bg); err != nil {
+			logger.Warn("diagnostics refresh", logging.KeyError, err.Error())
+		}
+	}()
 	logger.Info("startup", "dataDir", paths.Root, "schemaVersion", version, "interruptedOperations", len(interrupted), "interruptedDeploys", len(interruptedDeploys))
 
 	return &Container{
@@ -249,6 +358,9 @@ func New(ctx context.Context) (c *Container, err error) {
 		Conflicts:          conflictsSvc,
 		Deployment:         deploySvc,
 		AutoDeploy:         autoDeploy,
+		Plugins:            pluginsSvc,
+		Diagnostics:        diagSvc,
+		History:            historySvc,
 		Logger:             logger,
 		Interrupted:        interrupted,
 		InterruptedDeploys: interruptedDeploys,
@@ -267,6 +379,8 @@ func (c *Container) OpenLogFolder() error { return system.OpenFolder(c.Paths.Log
 func (c *Container) Close() error {
 	c.unsub()
 	c.AutoDeploy.Close()
+	c.Plugins.Close()
+	c.Diagnostics.Close()
 	c.Logger.Info("shutdown")
 	err := c.db.Close()
 	if lerr := c.logFile.Close(); err == nil {
@@ -278,3 +392,13 @@ func (c *Container) Close() error {
 // OpenFolder shows a folder in the file manager. Callers pass only paths
 // the application resolved itself (an instance's own folders).
 func (c *Container) OpenFolder(path string) error { return system.OpenFolder(path) }
+
+// ExportSupportBundle writes the support bundle zip to path (core/10 §4).
+func (c *Container) ExportSupportBundle(ctx context.Context, path, appVersion string) error {
+	home, _ := os.UserHomeDir()
+	b, err := c.Diagnostics.SupportBundle(ctx, appVersion, c.SchemaVersion, home, c.Settings)
+	if err != nil {
+		return err
+	}
+	return supportbundle.Write(path, b, c.Paths.Logs)
+}

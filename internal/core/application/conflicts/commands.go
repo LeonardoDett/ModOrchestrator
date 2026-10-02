@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/application/profiles"
@@ -114,6 +115,12 @@ func (s *Service) SetFileOverrides(ctx context.Context, instance game.InstanceID
 			return err
 		}
 		now := s.Clock.Now()
+		previous := make([]string, len(locs))
+		for i, l := range locs {
+			if o, ok := intent.Override(l); ok {
+				previous[i] = string(o.Winner)
+			}
+		}
 		for _, l := range locs {
 			if err := intent.SetOverride(l, winner, now); err != nil {
 				return fail(CodeLocationUnsafe, err, "path", l.String())
@@ -125,7 +132,7 @@ func (s *Service) SetFileOverrides(ctx context.Context, instance game.InstanceID
 		if err := tx.Overrides().Save(ctx, intent); err != nil {
 			return err
 		}
-		tx.Emit(s.newEvent(EventOverrideSet, instance, batchPayload(locs, "winner", string(winner), "winnerName", name)))
+		tx.Emit(s.newEvent(EventOverrideSet, instance, batchPayload(locs, "winner", string(winner), "winnerName", name, "previous", strings.Join(previous, lineSep))))
 		if len(reviewed) > 0 {
 			tx.Emit(s.newEvent(EventReviewed, instance, map[string]string{"pairs": strconv.Itoa(len(reviewed)), "reason": "override"}))
 		}
@@ -167,10 +174,19 @@ func (s *Service) ClearFileOverrides(ctx context.Context, instance game.Instance
 		if err != nil {
 			return err
 		}
-		var cleared []game.Location
+		var (
+			cleared []game.Location
+			winners []string
+		)
 		for _, l := range locs {
+			o, had := intent.Override(l)
 			if intent.ClearOverride(l) == nil {
 				cleared = append(cleared, l)
+				if had {
+					winners = append(winners, string(o.Winner))
+				} else {
+					winners = append(winners, "")
+				}
 			}
 		}
 		if len(cleared) == 0 {
@@ -179,7 +195,7 @@ func (s *Service) ClearFileOverrides(ctx context.Context, instance game.Instance
 		if err := tx.Overrides().Save(ctx, intent); err != nil {
 			return err
 		}
-		tx.Emit(s.newEvent(EventOverrideCleared, instance, batchPayload(cleared)))
+		tx.Emit(s.newEvent(EventOverrideCleared, instance, batchPayload(cleared, "winners", strings.Join(winners, lineSep))))
 		return nil
 	})
 }
@@ -308,10 +324,20 @@ func (s *Service) DecidePairs(ctx context.Context, instance game.InstanceID, dec
 
 // batchPayload describes a batch of locations for history: the count and
 // the first path.
+// batchPayload describes a batch of locations: the first one for the
+// history line and every one ("locations", one "target:path" per line) so
+// the history can revert the batch (core/10 §3).
 func batchPayload(locs []game.Location, kv ...string) map[string]string {
-	p := map[string]string{"count": strconv.Itoa(len(locs)), "target": string(locs[0].Target), "path": locs[0].Path.String()}
+	all := make([]string, len(locs))
+	for i, l := range locs {
+		all[i] = string(l.Target) + ":" + l.Path.String()
+	}
+	p := map[string]string{"count": strconv.Itoa(len(locs)), "target": string(locs[0].Target), "path": locs[0].Path.String(), "locations": strings.Join(all, lineSep)}
 	for i := 0; i+1 < len(kv); i += 2 {
 		p[kv[i]] = kv[i+1]
 	}
 	return p
 }
+
+// lineSep separates the items of a list in an event payload.
+const lineSep = "\n"

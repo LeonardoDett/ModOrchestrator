@@ -88,6 +88,15 @@ type Settings interface {
 // (INV-DEP-08).
 type Foreign interface {
 	CheckForeign(ctx context.Context, inst game.Instance) ([]games.Finding, error)
+	// RunningProcesses lists the game processes running now (game_running
+	// blocks deploy and purge, core/11 §6).
+	RunningProcesses(ctx context.Context, inst game.Instance) ([]string, error)
+}
+
+// LoadOrder writes the game's load order file in the post step of a
+// deploy (core/04 §5 step 9, core/08 §7); nil for no plugin support.
+type LoadOrder interface {
+	AfterDeploy(ctx context.Context, instance game.InstanceID, op operation.ID) error
 }
 
 // Deps are the ports the engine needs.
@@ -107,10 +116,17 @@ type Deps struct {
 	FS            ports.FileSystem
 	Settings      Settings
 	Foreign       Foreign
-	Ops           *operations.Service
-	Locks         *instancelock.Locks
-	IDs           operations.IDGenerator
-	Clock         operations.Clock
+	// Triage of external changes (F8, core/09).
+	Archives   ports.Archives
+	Decisions  ports.ExternalDecisions
+	Hasher     ports.Hasher
+	Library    Library
+	Exclusions Exclusions
+	Ops        *operations.Service
+	LoadOrder  LoadOrder
+	Locks      *instancelock.Locks
+	IDs        operations.IDGenerator
+	Clock      operations.Clock
 }
 
 // Service implements the deploy use cases.
@@ -123,8 +139,12 @@ type Service struct {
 	// needsDecision marks instances whose auto-deploy stopped before a
 	// decision (status blocked until a plan without decisions runs).
 	needsDecision map[game.InstanceID]bool
-	// changes is the number of external changes the last scan saw.
-	changes map[game.InstanceID]int
+	// changes is the number of external changes to managed files the last
+	// scan saw; newFiles the number of generated files.
+	changes  map[game.InstanceID]int
+	newFiles map[game.InstanceID]int
+	// found is the latest scan outside a deploy (focus, verify).
+	found map[game.InstanceID]*found
 	// failures are the locations the last deploy/purge could not apply.
 	failures map[game.InstanceID][]Failure
 	// lastStatus is what the status query returned last, to emit
@@ -151,7 +171,7 @@ type probeResult struct {
 func NewService(d Deps) *Service {
 	return &Service{
 		Deps: d, decisions: map[game.InstanceID]*waiting{}, needsDecision: map[game.InstanceID]bool{},
-		changes: map[game.InstanceID]int{}, failures: map[game.InstanceID][]Failure{}, lastStatus: map[game.InstanceID]string{},
+		changes: map[game.InstanceID]int{}, newFiles: map[game.InstanceID]int{}, found: map[game.InstanceID]*found{}, failures: map[game.InstanceID][]Failure{}, lastStatus: map[game.InstanceID]string{},
 		installations: map[mod.InstallationID]*mod.Installation{}, symlinkProbe: map[string]probeResult{},
 		cancelFns: map[game.InstanceID]context.CancelFunc{},
 	}

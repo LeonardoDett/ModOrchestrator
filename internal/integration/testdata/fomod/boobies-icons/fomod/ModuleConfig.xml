@@ -1,0 +1,2766 @@
+<!-- Created with FOMOD Creation Tool 1.7.0.37 [http://www.nexusmods.com/fallout4/mods/6821] --> 
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd"> 
+	<moduleName>B.O.O.B.I.E.S (aka Immersive Icons)</moduleName> 
+	<moduleImage path="fomod\images\IconPage.jpg" /> 
+	<installSteps order="Explicit"> 
+		
+		<installStep name="Beautifully Overhauled and Objectively Better Icons Enhanced for SkyUI"> 
+			<optionalFileGroups order="Explicit"> 
+				<group name="Main Module" type="SelectExactlyOne"> 
+					<plugins order="Explicit"> 
+						<plugin name="Core Files"> 
+							<description>
+							Core files required to install B.O.O.B.I.E.S.
+							On the next page, the installer will recognize any supported mods by looking for their active plugins in your list. 
+							It will not be able to identify any mods you may have merged so be sure to select those manually. 
+								
+							Keyword Item Distributor (KID) files will be installed for each selected mod to ensure they use the appropriate icons. 
+							</description> 
+							<image path="fomod\images\IconPage.jpg" /> 
+							<conditionFlags> 
+								<flag name="FullInstall">On</flag> 
+							</conditionFlags> 
+							<files> 
+								<file source="BOOBIES_GENERAL_KID.ini" destination="BOOBIES_GENERAL_KID.ini" priority="0" /> 
+								<file source="BOOBIES_GENERAL_ARMOR_KID.ini" destination="BOOBIES_GENERAL_ARMOR_KID.ini" priority="0" /> 
+								<file source="BOOBIES_GENERAL_WEAPONS.ini" destination="BOOBIES_GENERAL_WEAPONS.ini" priority="0" /> 
+								<file source="BOOBIES_ImmersiveIcons_KID.ini" destination="BOOBIES_ImmersiveIcons_KID.ini" priority="0" /> 
+								<file source="BOOBIES_ImmersiveIcons.esp" destination="BOOBIES_ImmersiveIcons.esp" priority="0" /> 
+								<file source="KIDs\BOOBIES_Skyrim_KID.ini" destination="BOOBIES_Skyrim_KID.ini" priority="0" /> 
+								<folder source="SKSE" destination="SKSE" priority="0" /> 
+								<folder source="Interface" destination="Interface" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<type name="Recommended"/> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Only Files for AIT"> 
+							<description>
+							Only the files required to install Aura's Inventory Tweaks.
+
+							Only install this option if you are using Aura's Inventory Tweaks for SkyUI by GroundAura 
+							[https://www.nexusmods.com/skyrimspecialedition/mods/68557]. 
+							If you select this option please send all your questions to that mod page. 
+								
+							This will only install the icon files, everything else will be handled by AIT.
+							</description> 
+							<image path="FOMOD\images\Aura Inventory Tweaks.jpg" /> 
+							<conditionFlags> 
+								<flag name="FullInstall">Off</flag> 
+							</conditionFlags> 
+							<files> 
+								<folder source="Interface\BOOBIES Immersive Icons" destination="Interface\BOOBIES Immersive Icons" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="AIT.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+					</plugins> 
+				</group> 
+			</optionalFileGroups> 
+		</installStep>
+		
+		<installStep name="Keyword Item Distribution Modules - DX Armors">
+			<visible> 
+                <dependencies operator="And"> 
+                        <flagDependency flag="FullInstall" value="On"/> 
+                </dependencies> 
+            </visible> 
+			<optionalFileGroups order="Explicit">
+				<group name="Select Mods To Support" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Ancient Draugr"> 
+							<description>This will install a custom Keyword Item Distribution file for Ancient Draugr, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\AncientDraugr.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_AncientDraugr_KID.ini" destination="BOOBIES_AncientDraugr_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="AncientDraugr.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Cassandra Apocrypha UNP"> 
+							<description>This will install a custom Keyword Item Distribution file for Cassandra Apocrypha UNP, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Cassandra Apocrypha UNP.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Cassandra Apocrypha UNP_KID.ini" destination="BOOBIES_Cassandra Apocrypha UNP_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Cassandra Apocrypha UNP.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Cassandra Frost Witch"> 
+							<description>This will install a custom Keyword Item Distribution file for Cassandra Frost Witch, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Cassandra Frost Witch.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Cassandra Frost Witch_KID.ini" destination="BOOBIES_Cassandra Frost Witch_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Cassandra Frost Witch.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Celes Rogue Armor UNP"> 
+							<description>This will install a custom Keyword Item Distribution file for Celes Rogue Armor UNP, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Celes Rogue Armor UNP.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Celes Rogue Armor UNP_KID.ini" destination="BOOBIES_Celes Rogue Armor UNP_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Celes Rogue Armor UNP.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Celes Tarot Outfit Cloth UNP"> 
+							<description>This will install a custom Keyword Item Distribution file for Celes Tarot Outfit Cloth UNP, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Celes Tarot Outfit Cloth UNP.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Celes Tarot Outfit Cloth UNP_KID.ini" destination="BOOBIES_Celes Tarot Outfit Cloth UNP_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Celes Tarot Outfit Cloth UNP.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Celes Nightingale Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Celes Nightingale Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Celes Nightingale Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Celes Nightingale Armor_KID.ini" destination="BOOBIES_Celes Nightingale Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Celes Nightingale Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Crimson Blood Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Crimson Blood Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Crimson Blood Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Crimson Blood Armor_KID.ini" destination="BOOBIES_Crimson Blood Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Crimson Blood Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Christmas Bunny Outfit"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Christmas Bunny Outfit, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Christmas Bunny Outfit_KID.ini" destination="BOOBIES_DX Christmas Bunny Outfit_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Christmas Bunny Outfit.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Dark Knight Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Dark Knight Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Dark Knight Armor.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Dark Knight Armor_KID.ini" destination="BOOBIES_DX Dark Knight Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Dark Knight Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Daughter of the Sea"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Daughter of the Sea, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Daughter of the Sea.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Daughter of the Sea_KID.ini" destination="BOOBIES_DX Daughter of the Sea_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Daughter of the Sea.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Druid Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Druid Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Druid Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Druid Armor_KID.ini" destination="BOOBIES_DX Druid Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Druid Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Gwelda Dawnguard Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Gwelda Dawnguard Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Gwelda Dawnguard Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Gwelda Dawnguard Armor_KID.ini" destination="BOOBIES_Gwelda Dawnguard Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Gwelda Dawnguard Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Gwelda Red Riding Hood"> 
+							<description>This will install a custom Keyword Item Distribution file for Gwelda Red Riding Hood, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Gwelda Red Riding Hood.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Gwelda Red Riding Hood_KID.ini" destination="BOOBIES_Gwelda Red Riding Hood_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Gwelda Red Riding Hood.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Gwelda Vampire"> 
+							<description>This will install a custom Keyword Item Distribution file for Gwelda Vampire, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Gwelda Vampire.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Gwelda Vampire_KID.ini" destination="BOOBIES_Gwelda Vampire_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Gwelda Vampire.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Gwelda Witch"> 
+							<description>This will install a custom Keyword Item Distribution file for Gwelda Witch, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Gwelda Witch.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Gwelda Witch_KID.ini" destination="BOOBIES_Gwelda Witch_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Gwelda Witch.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Merta Assassin Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Merta Assassin Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Merta Assassin Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Merta Assassin Armor_KID.ini" destination="BOOBIES_Merta Assassin Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Merta Assassin Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Merta Black Rose Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Merta Black Rose Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Merta Black Rose Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Merta Black Rose Armor_KID.ini" destination="BOOBIES_Merta Black Rose Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Merta Black Rose Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Morenn Outfit"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Morenn Outfit, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Morenn Outfit.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Morenn Outfit_KID.ini" destination="BOOBIES_DX Morenn Outfit_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Morenn Outfit.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Necromancer Robes"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Necromancer Robes, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Necromancer Robes.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Necromancer Robes_KID.ini" destination="BOOBIES_DX Necromancer Robes_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Necromancer Robes.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Sotteta Huntress Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Sotteta Huntress Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Sotteta Huntress Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Sotteta Huntress Armor_KID.ini" destination="BOOBIES_Sotteta Huntress Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Sotteta Huntress Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Sotteta Necromancer Outfit"> 
+							<description>This will install a custom Keyword Item Distribution file for Sotteta Necromancer Outfit, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Sotteta Necromancer Outfit.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Sotteta Necromancer Outfit_KID.ini" destination="BOOBIES_Sotteta Necromancer Outfit_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Sotteta Necromancer Outfit.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Spartan Bard Outfit"> 
+							<description>This will install a custom Keyword Item Distribution file for Spartan Bard Outfit, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Spartan Bard Outfit.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Spartan Bard Outfit_KID.ini" destination="BOOBIES_Spartan Bard Outfit_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Spartan Bard Outfit.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Stella Mithril Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Stella Mithril Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Stella Mithril Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Stella Mithril Armor_KID.ini" destination="BOOBIES_Stella Mithril Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Stella Mithril Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Tembtra Thief Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Tembtra Thief Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Tembtra Thief Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Tembtra Thief Armor_KID.ini" destination="BOOBIES_Tembtra Thief Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Tembtra Thief Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Ursine Armor Pack"> 
+							<description>This will install a custom Keyword Item Distribution file for Ursine Armor Pack, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Ursine Armor Pack.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Ursine Armor Pack_KID.ini" destination="BOOBIES_Ursine Armor Pack_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Ursine Armor Pack.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Witch Hunter Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for DX Witch Hunter Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Witch Hunter Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DX Witch Hunter Armor_KID.ini" destination="BOOBIES_DX Witch Hunter Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DX Witch Hunter Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+
+		<installStep name="Keyword Item Distribution Modules - Pure Magic">
+			<visible> 
+                <dependencies operator="And"> 
+                        <flagDependency flag="FullInstall" value="On"/> 
+                </dependencies> 
+            </visible>
+			<optionalFileGroups order="Explicit">
+				<group name="Select Mods To Support" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Apocalypse - Magic of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Apocalypse - Magic of Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Apocalypse.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Apocalypse_KID.ini" destination="BOOBIES_Apocalypse_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Apocalypse - Magic of Skyrim.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Arclight"> 
+							<description>This will install a custom Keyword Item Distribution file for Arclight, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Arclight.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Arclight_KID.ini" destination="BOOBIES_Arclight_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Arclight.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Astral Magic 2"> 
+							<description>This will install a custom Keyword Item Distribution file for Astral Magic 2, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Astral Magic 2.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Astral_KID.ini" destination="BOOBIES_Astral_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Astral.esl" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Inquisition"> 
+							<description>This will install a custom Keyword Item Distribution file for Inquisition, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Inquisition.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Inquisition_KID.ini" destination="BOOBIES_Inquisition_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Inquisition - Spell Addon.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Sonic Magic"> 
+							<description>This will install a custom Keyword Item Distribution file for Sonic Magic, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Sonic Magic.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Shockwave_KID.ini" destination="BOOBIES_Shockwave_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Shockwave.esl" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Storm Calling Magic"> 
+							<description>This will install a custom Keyword Item Distribution file for Storm Calling Magic, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Storm Calling Magic.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_StormCalling_KID.ini" destination="BOOBIES_StormCalling_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="StormCalling.esl" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+
+		<installStep name="Keyword Item Distribution Modules - Pure Weapons">
+			<visible> 
+                <dependencies operator="And"> 
+                        <flagDependency flag="FullInstall" value="On"/> 
+                </dependencies> 
+            </visible>
+			<optionalFileGroups order="Explicit">
+				<group name="Select Mods To Support" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Aegean Sentinel Halberd"> 
+							<description>This will install a custom Keyword Item Distribution file for Aegean Sentinel Halberd, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\FGCAegeanSentinelHalberd.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_FGCAegeanSentinelHalberd_KID.ini" destination="BOOBIES_FGCAegeanSentinelHalberd_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="FGCAegeanSentinelHalberd.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Animated Armoury"> 
+							<description>This will install a custom Keyword Item Distribution file for Animated Armoury, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Animated Armoury.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_NewArmoury_KID.ini" destination="BOOBIES_NewArmoury_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="NewArmoury.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Blade Staff of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Blade staff of Skyrim, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\BladeStaff.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_BladeStaff_KID.ini" destination="BOOBIES_BladeStaff_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="BladeStaff.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="CL's Rapier"> 
+							<description>This will install a custom Keyword Item Distribution file for CL's Rapier, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\CL's Rapier.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_CL's Rapier_KID.ini" destination="BOOBIES_CL's Rapier_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="CL's Rapier.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Cosmo-War Scythe"> 
+							<description>This will install a custom Keyword Item Distribution file for Cosmo-War Scythe, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\war scythe.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_war scythe_KID.ini" destination="BOOBIES_war scythe_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="war scythe.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Fire Emblem Killer Weapons"> 
+							<description>This will install a custom Keyword Item Distribution file for Fire Emblem Killer Weapons, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Fire Emblem Killer Weapons.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_KillerWeapons_KID.ini" destination="BOOBIES_KillerWeapons_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="KillerWeapons.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Hammerfell Armory SE"> 
+							<description>This will install a custom Keyword Item Distribution file for Hammerfell Armory SE, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Hammerfell Armory.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_HammerfellArmorySE_KID.ini" destination="BOOBIES_HammerfellArmorySE_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Hammerfell Armory SE.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Heavy Armory - New Weapons"> 
+							<description>This will install a custom Keyword Item Distribution file for Heavy Armory - New Weapons, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Heavy Armory.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_PrvtI_HeavyArmory_KID.ini" destination="BOOBIES_PrvtI_HeavyArmory_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="PrvtI_HeavyArmory.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="JaySuS Swords SE"> 
+							<description>This will install a custom Keyword Item Distribution file for JaySuS Swords SE, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\JaySuS Swords.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_JSwords_KID.ini" destination="BOOBIES_JSwords_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="Or"> 
+												<fileDependency file="JSwords.esm" state="Active"/> 
+												<fileDependency file="JSwordsD.esm" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Insanity's Sorrow"> 
+							<description>This will install a custom Keyword Item Distribution file for Insanity's Sorrow, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Insanity's Sorrow.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Insanity's Sorrow_KID.ini" destination="BOOBIES_Insanity's Sorrow_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Insanity's Sorrow.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="InsanitySorrow Weapons Pack"> 
+							<description>This will install a custom Keyword Item Distribution file for InsanitySorrow Weapons Pack, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<files> 
+								<file source="KIDs\BOOBIES_InsanitySorrow Weapons Pack_KID.ini" destination="BOOBIES_InsanitySorrow Weapons Pack_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="InsanitySorrow Weapons Pack.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Katana Crafting"> 
+							<description>This will install a custom Keyword Item Distribution file for Katana Crafting, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Katana Crafting.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_KatanaCrafting_KID.ini" destination="BOOBIES_KatanaCrafting_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="KatanaCrafting.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Nicos Twinblades SE"> 
+							<description>This will install a custom Keyword Item Distribution file for Nicos Twinblades SE, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Nicos Twinblades.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Nicos_Twinblades_KID.ini" destination="BOOBIES_Nicos_Twinblades_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Nicos Twinblades.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Quarterstaff SE"> 
+							<description>This will install a custom Keyword Item Distribution file for Quarterstaff SE, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Quarterstaff.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Quarterstaff_KID.ini" destination="BOOBIES_Quarterstaff_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Quarterstaff.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Rapier and Dirk by Flarescale"> 
+							<description>This will install a custom Keyword Item Distribution file for Rapier and Dirk by Flarescale, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Rapier_and_Dirk_by_Flarescale.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Rapier_and_Dirk_by_Flarescale_KID.ini" destination="BOOBIES_Rapier_and_Dirk_by_Flarescale_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Rapier_and_Dirk_by_Flarescale.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Royal Armory"> 
+							<description>This will install a custom Keyword Item Distribution file for Royal Armory, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Royal Armory.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_PrvtI_RoyalArmory_KID.ini" destination="BOOBIES_PrvtI_RoyalArmory_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="PrvtIRoyalArmory.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Scythe Of The Crow Mother"> 
+							<description>This will install a custom Keyword Item Distribution file for Scythe Of The Crow Mother, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\ScytheOfTheCrow.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_ScytheOfTheCrow_KID.ini" destination="BOOBIES_ScytheOfTheCrow_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="ScytheOfTheCrow.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Silverthorn Weaponry"> 
+							<description>This will install a custom Keyword Item Distribution file for Silverthorn Weaponry, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Austio Weapons.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Austio Weapons_KID.ini" destination="BOOBIES_Austio Weapons_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Austio Weapons.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Skyblivion's Akaviri Warblade"> 
+							<description>This will install a custom Keyword Item Distribution file for Skyblivion's Akaviri Warblade, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\AKWarblade_Kazuhide.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_AKWarblade_Kazuhide_KID.ini" destination="BOOBIES_AKWarblade_Kazuhide_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="AKWarblade_Kazuhide.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Spear Of Leonidas"> 
+							<description>This will install a custom Keyword Item Distribution file for Spear Of Leonidas, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\SpearOfLeonidas.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_SpearOfLeonidas_KID.ini" destination="BOOBIES_SpearOfLeonidas_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="SpearOfLeonidas.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Spear Fantasy"> 
+							<description>This will install a custom Keyword Item Distribution file for Spear Fantasy, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Spear Fantasy.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Spear Fantasy_KID.ini" destination="BOOBIES_Spear Fantasy_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Spear Fantasy.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Twinblades Of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Twinblades Of Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Twinblades Of Skyrim.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_TwinbladesOfSkyrim_KID.ini" destination="BOOBIES_TwinbladesOfSkyrim_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="TwinbladesOfSkyrim.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Yol'Kreh Scythes"> 
+							<description>This will install a custom Keyword Item Distribution file for Yol'Kreh Scythes, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Yol Kreh Scythes.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Yol'Kreh Scythes_KID.ini" destination="BOOBIES_Yol'Kreh Scythes_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Yol'Kreh Scythes.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+
+		<installStep name="Keyword Item Distribution Modules - Skimpîes and Bikinies">
+			<visible> 
+                <dependencies operator="And"> 
+                        <flagDependency flag="FullInstall" value="On"/> 
+                </dependencies> 
+            </visible>
+			<optionalFileGroups order="Explicit">
+				<group name="Select Mods To Support" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Dark Elf Blader"> 
+							<description>This will install a custom Keyword Item Distribution file for Dark Elf Blader, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\[Ryan Reos] Dark Elf Blader.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_[Ryan Reos] Dark Elf Blader_KID.ini" destination="BOOBIES_[Ryan Reos] Dark Elf Blader_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="[Ryan Reos] Dark Elf Blader.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Dragonscale Bikini Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Dragonscale Bikini Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Dragonscale Bikini Armor.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DragonscaleBikini_KID.ini" destination="BOOBIES_DragonscaleBikini_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DragonscaleBikini.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Draugr Bikini Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Draugr Bikini Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Draugr Bikini Armor.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DraugrBikini_KID.ini" destination="BOOBIES_DraugrBikini_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DraugrBikini.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Stalhrim Bikini SSE"> 
+							<description>This will install a custom Keyword Item Distribution file for Stalhrim Bikini SSE, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Stalhrim Bikini.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_StalhrimBikini_KID.ini" destination="BOOBIES_StalhrimBikini_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="StalhrimBikini.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="TAWOBA - The Amazing World of Bikini Armors REMASTERED"> 
+							<description>This will install a custom Keyword Item Distribution file for The Amazing World of Bikini Armors REMASTERED (aka "TAWOBA"), allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\TAWOBA.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_TAWOBA_KID.ini" destination="BOOBIES_TAWOBA_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="The Amazing World of Bikini Armors REMASTERED.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="TEWOBA - The Expanded World of Bikini Armors"> 
+							<description>This will install a custom Keyword Item Distribution file for The Expanded World of Bikini Armors (aka "TEWOBA"), allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\TEWOBA.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_TEWOBA_KID.ini" destination="BOOBIES_TEWOBA_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="(Pumpkin)-TEWOBA-TheExpandedWorldofBikiniArmor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+
+		<installStep name="Keyword Item Distribution Modules - All the rest"> 
+			<visible> 
+                <dependencies operator="And"> 
+                        <flagDependency flag="FullInstall" value="On"/> 
+                </dependencies> 
+            </visible>
+			<optionalFileGroups order="Explicit">
+				<group name="Asura Guard Armor Support" type="SelectAtMostOne">
+					<plugins order="Explicit">
+						<plugin name="Asuras Guard [Armor] - Heavy Version"> 
+							<description>This will install a custom Keyword Item Distribution file for Asuras Guard [Armor], allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Asuras Guard [Armor].jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Asuras Guard [Armor]_Heavy_KID.ini" destination="BOOBIES_Asuras Guard [Armor]_Heavy_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Asuras Guard [Armor].esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Asuras Guard [Armor] - Light Version"> 
+							<description>This will install a custom Keyword Item Distribution file for Asuras Guard [Armor], allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Asuras Guard [Armor].jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Asuras Guard [Armor]_Light_KID.ini" destination="BOOBIES_Asuras Guard [Armor]_Light_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Asuras Guard [Armor].esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Select Mods To Support" type="SelectAny"> 
+					<plugins order="Explicit">
+						<plugin name="AddItemMenu - Ultimate Mod Explorer"> 
+							<description>This will install a custom Keyword Item Distribution file for AddItemMenu - Ultimate Mod Explorer, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\AddItemMenu.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_AddItemMenuSE_KID.ini" destination="BOOBIES_AddItemMenuSE_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="AddItemMenuSE.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Armor of Intrigue"> 
+							<description>This will install a custom Keyword Item Distribution file for Armor of Intrigue, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Armor of Intrigue.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Armor of Intrigue_KID.ini" destination="BOOBIES_Armor of Intrigue_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Armor of Intrigue.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Bandolier Bags and Pouches"> 
+							<description>This will install a custom Keyword Item Distribution file for Bandolier Bags and Pouches, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Dr_Bandolier.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Dr_Bandolier_KID.ini" destination="BOOBIES_Dr_Bandolier_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Dr_Bandolier.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Billyro Ultimate Swords Anthology"> 
+							<description>This will install a custom Keyword Item Distribution file for Billyro Ultimate Swords Anthology, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Billyro's Weapons.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Billyro's_Weapons_KID.ini" destination="BOOBIES_Billyro's_Weapons_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Billyro's Weapons.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Black Widow Outfit"> 
+							<description>This will install a custom Keyword Item Distribution file for Black Widow Outfit, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Black Widow Outfit.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Black Widow Outfit_KID.ini" destination="BOOBIES_Black Widow Outfit_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Black Widow Outfit.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Beyond Skyrim - Bruma"> 
+							<description>This will install a custom Keyword Item Distribution file for Beyond Skyrim - Bruma, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Bruma.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Bruma_KID.ini" destination="BOOBIES_Bruma_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="Or"> 
+												<fileDependency file="BSAssets.esm" state="Active"/> 
+												<fileDependency file="BSHeartland.esm" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Book Of Shadows"> 
+							<description>This will install a custom Keyword Item Distribution file for Book Of Shadows, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Book Of Shadows.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Book Of Shadows_KID.ini" destination="BOOBIES_Book Of Shadows_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Book Of Shadows.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="[Christine] Dragon Gladiator"> 
+							<description>This will install a custom Keyword Item Distribution file for [Christine] Dragon Fighter, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\[Christine] Dragon Gladiator.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Christine Dragon Gladiator_KID.ini" destination="BOOBIES_Christine Dragon Gladiator_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="[Christine] Dragon Gladiator.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="[Christine] Dragon Fighter"> 
+							<description>This will install a custom Keyword Item Distribution file for [Christine] Dragon Fighter, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\[Christine] Dragon Fighter.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Christine Dragon Fighter_KID.ini" destination="BOOBIES_Christine Dragon Fighter_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="[Christine] Dragon Fighter.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="[Christine] Queen Blade"> 
+							<description>This will install a custom Keyword Item Distribution file for [Christine] Queen Blade, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\[Christine] Queen Blade.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Christine Queen Blade_KID.ini" destination="BOOBIES_Christine Queen Blade_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="[Christine] Queens Blade.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="[COCO] Shadow Assassin"> 
+							<description>This will install a custom Keyword Item Distribution file for [COCO] Shadow Assassin, adding a new keyword to identify this special item type within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\[COCO] Shadow Assassin.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_[COCO] Shadow Assassin_KID.ini" destination="BOOBIES_[COCO] Shadow Assassin_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="[COCO] Shadow Assassin.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Complete Crafting Overhaul Remastered"> 
+							<description>This will install a custom Keyword Item Distribution file for Complete Crafting Overhaul Remastered, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Complete Crafting Overhaul Remastered.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_CCOR_KID.ini" destination="BOOBIES_CCOR_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Complete Crafting Overhaul_Remastered.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Creation Club Content"> 
+							<description>This will install a custom Keyword Item Distribution file for several Creation Club mods, allowing any special item types within those mods to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Creation Club.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_CC_Content_KID.ini" destination="BOOBIES_CC_Content_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="Or"> 
+												<fileDependency file="ccbgssse002-exoticarrows.esl" state="Active"/> 
+												<fileDependency file="ccbgssse003-zombies.esl" state="Active"/> 
+												<fileDependency file="ccbgssse010-petdwarvenarmoredmudcrab.esl" state="Active"/> 
+												<fileDependency file="ccbgssse014-spellpack01.esl" state="Active"/> 
+												<fileDependency file="ccbgssse025-advdsgs.esm" state="Active"/> 
+												<fileDependency file="ccbgssse035-petnhound.esl" state="Active"/> 
+												<fileDependency file="ccbgssse067-daedinv.esm" state="Active"/> 
+												<fileDependency file="cckrtsse001_altar.esl" state="Active"/> 
+												<fileDependency file="ccvsvsse003-necroarts.esl" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Crystalwind Estate"> 
+							<description>This will install a custom Keyword Item Distribution file for Crystalwind Estate, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Crystalwind Estate.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Crystalwind_Estate_KID.ini" destination="BOOBIES_Crystalwind_Estate_KID.ini.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Crystalwind_Estate.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Cutting Room Floor"> 
+							<description>This will install a custom Keyword Item Distribution file for Cutting Room Floor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Cutting Room Floor.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Cutting_Room_Floor_KID.ini" destination="BOOBIES_Cutting_Room_Floor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Cutting Room Floor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Daedric Reaper Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Daedric Reaper Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Daedric Reaper Armor.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Daedric Reaper Armor_KID.ini" destination="BOOBIES_Daedric Reaper Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Daedric Reaper Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Dawnguard Arsenal"> 
+							<description>This will install a custom Keyword Item Distribution file for Dawnguard Arsenal, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Dawnguard Arsenal.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DawnguardArsenal_KID.ini" destination="BOOBIES_DawnguardArsenal_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DawnguardArsenal.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Detailed NPCs - Blanket Scarves for NPCs"> 
+							<description>This will install a custom Keyword Item Distribution file for Detailed NPCs - Blanket Scarves for NPCs, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Detailed NPCs - Blanket Scarves for NPCs.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DNPCsBlanketScarf_KID.ini" destination="BOOBIES_DNPCsBlanketScarf_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DNPCsBlanketScarf.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Detailed NPCs - Scarves for NPCs"> 
+							<description>This will install a custom Keyword Item Distribution file for Detailed NPCs - Scarves for NPCs, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Detailed NPCs - Scarves for NPCs.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DNPCsScarvesAIO_KID.ini" destination="BOOBIES_DNPCsScarvesAIO_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DNPCsScarvesAIO.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Demon Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Demon Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Demon Armor.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Demon Armor_KID.ini" destination="BOOBIES_Demon Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Demon Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="DM BDOR Pack by Team TAL"> 
+							<description>This will install a custom Keyword Item Distribution file for DM BDOR Pack by Team TAL, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<files> 
+								<file source="KIDs\BOOBIES_DM BDOR Pack by Team TAL_KID.ini" destination="BOOBIES_DM BDOR Pack by Team TAL_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DM BDOR Pack by Team TAL.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Dragon Plate Brazen Renewal"> 
+							<description>This will install a custom Keyword Item Distribution file for Dragon Plate Brazen Renewal, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Dragon Plate Brazen Renewal.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DragonPlateBrazen_KID.ini" destination="BOOBIES_DragonPlateBrazen_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DragonPlateBrazen.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Ebony Damascus Blades"> 
+							<description>This will install a custom Keyword Item Distribution file for Ebony Damascus Blades, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\DX Witch Hunter Armor.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Ebony Damascus Blades_KID.ini" destination="BOOBIES_Ebony Damascus Blades_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Ebony Damascus Blades.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="EGIL Shadow of Akavir"> 
+							<description>This will install a custom Keyword Item Distribution file for EGIL Shadow of Akavir, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\EGIL Shadow of Akavir.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_EGIL Shadow of Akavir_KID.ini" destination="BOOBIES_EGIL Shadow of Akavir_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="EGIL Shadow of Akavir.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Elemental Destruction Magic Redux"> 
+							<description>This will install a custom Keyword Item Distribution file for Elemental Destruction Magic Redux, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Elemental Destruction Magic Redux.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Elemental_Destruction_Magic_Redux_KID.ini" destination="BOOBIES_Elemental_Destruction_Magic_Redux_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Elemental Destruction Magic Redux.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="ESO The Breton Knight HDT-SMP"> 
+							<description>This will install a custom Keyword Item Distribution file for ESO The Breton Knight HDT-SMP, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\The Legends-Breton Knight.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_The Legends-Breton Knight_KID.ini" destination="BOOBIES_The Legends-Breton Knight_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="The Legends-Breton Knight.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Face Masks of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Face Masks of Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Face Masks of Skyrim.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_FaceMasksOfSkyrim_KID.ini" destination="BOOBIES_FaceMasksOfSkyrim_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="FaceMasksOfSkyrim.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Firebrand Scarf"> 
+							<description>This will install a custom Keyword Item Distribution file for Firebrand Scarf, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Firebrand Scarf.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Firebrand Scarf_KID.ini" destination="BOOBIES_Firebrand Scarf_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Firebrand Scarf.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="GR Inari Ears and Tails SMP"> 
+							<description>This will install a custom Keyword Item Distribution file for GR Inari Ears and Tails SMP, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\GR Inari Ears Tails SMP.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_GR Inari EarsTails SMP_KID.ini" destination="BOOBIES_GR Inari EarsTails SMP_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="GR Inari EarsTails SMP.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Heart of the Reach"> 
+							<description>This will install a custom Keyword Item Distribution file for Heart of the Reach, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Heart of the Reach.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_HeartOfTheReach_KID.ini" destination="BOOBIES_HeartOfTheReach_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="HeartOfTheReach.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Helps To Have A Compass"> 
+							<description>This will install a custom Keyword Item Distribution file for Helps To Have A Compass, allowing any special item types within that mod to use the compass icon.</description> 
+							<image path="fomod\images\Helps To Have A Compass.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Helps To Have A Compass_KID.ini" destination="BOOBIES_Helps To Have A Compass_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Helps To Have A Compass.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Helps To Have A Map"> 
+							<description>This will install a custom Keyword Item Distribution file for Helps To Have A Map, allowing any special item types within that mod to use the map icon.</description> 
+							<image path="fomod\images\Helps To Have A Map.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Helps To Have A Map_KID.ini" destination="BOOBIES_Helps To Have A Map_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Helps To Have A Map.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Hunterborn"> 
+							<description>This will install a custom Keyword Item Distribution file for Hunterborn, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Hunterborn.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Hunterborn_KID.ini" destination="BOOBIES_Hunterborn_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Hunterborn.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Inigo"> 
+							<description>This will install a custom Keyword Item Distribution file for Inigo, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Inigo.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Inigo_KID.ini" destination="BOOBIES_Inigo_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Inigo.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Interesting NPCs"> 
+							<description>This will install a custom Keyword Item Distribution file for Interesting NPCs, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Interesting NPCs.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_3DNPC_KID.ini" destination="BOOBIES_3DNPC_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="3DNPC.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Instincts - Animal Taming in Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Instincts - Animal Taming in Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Instincts.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Instincts_KID.ini" destination="BOOBIES_Instincts_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Instincts - Animal Taming in Skyrim.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="League of Assassins Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for League of Assassins Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\League of Assassins Armor.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_League of Assassins Armor_KID.ini" destination="BOOBIES_League of Assassins Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="League of Assassins Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Legacy of the Dragonborn"> 
+							<description>This will install a custom Keyword Item Distribution file for Legacy of the Dragonborn, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\LegacyoftheDragonborn.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_LegacyoftheDragonborn_KID.ini" destination="BOOBIES_LegacyoftheDragonborn_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="LegacyoftheDragonborn.esm" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Legacy of the Dragonborn - The Curator's Companion"> 
+							<description>This will install a custom Keyword Item Distribution file for Legacy of the Dragonborn - The Curator's Companion, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Curator's Companion.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DBM_RelicNotifications_KID.ini" destination="BOOBIES_DBM_RelicNotifications_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DBM_RelicNotifications.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Legends of Aetherium"> 
+							<description>This will install a custom Keyword Item Distribution file for Legends of Aetherium, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Legends of Aetherium.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_LegendsOfAetherium_KID.ini" destination="BOOBIES_LegendsOfAetherium_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="LegendsOfAetherium.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Mihail Monsters and Animals"> 
+							<description>This will install a custom Keyword Item Distribution package for several of Mihail's Monsters and Animals mods, allowing any special item types within them (usually summoning spellbooks) to benefit from the appropriate icons. Enable this option if you have any or all of the following mods: Aegis of the Sigil, Ash Golem, Banekins, Bone Colossus, Draugr Horse Mount, Grummites, Mountain Lions, Ogrim, Ruinachs, Scamps, or Storm Golem.</description> 
+							<image path="fomod\images\Mihail.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Mihail_Mods_KID.ini" destination="BOOBIES_Mihail_Mods_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="Or"> 
+												<fileDependency file="mihailaegisofthesigil.esp" state="Active"/> 
+												<fileDependency file="mihailashgolem.esp" state="Active"/> 
+												<fileDependency file="mihailbanekins.esp" state="Active"/> 
+												<fileDependency file="mihailesobonecolossus.esp" state="Active"/> 
+												<fileDependency file="mihailgrummite.esp" state="Active"/> 
+												<fileDependency file="mihailhelhest.esp" state="Active"/> 
+												<fileDependency file="mihailmountainlion.esp" state="Active"/> 
+												<fileDependency file="mihailogrim.esp" state="Active"/> 
+												<fileDependency file="mihailruinachs.esp" state="Active"/> 
+												<fileDependency file="mihailscampstandalone.esp" state="Active"/> 
+												<fileDependency file="mihailstormgolem.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Miracles of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Miracles of Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Miracles of Skyrim.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_DS2Miracles_KID.ini" destination="BOOBIES_DS2Miracles_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="DS2Miracles.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Mysterious Knight - CBBE-TBD-UUNP SE"> 
+							<description>This will install a custom Keyword Item Distribution file for Mysterious Knight - CBBE-TBD-UUNP SE, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\[dint999] MysteriousKnightSet.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_[dint999] MysteriousKnightSet_KID.ini" destination="BOOBIES_[dint999] MysteriousKnightSet_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="[dint999] MysteriousKnightSet.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Nether's Follower Framework"> 
+							<description>This will install a custom Keyword Item Distribution file for Nether's Follower Framework, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Nether's Follower Framework.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_nwsFollowerFramework_KID.ini" destination="BOOBIES_nwsFollowerFramework_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="nwsFollowerFramework.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Object Categorization Framework (OCF)"> 
+							<description>This will install a custom Keyword Item Distribution file for Object Categorization Framework, allowing BOOBIES to recognize any items with OCF keywords and assign the appropriate icons.</description> 
+							<image path="fomod\images\OCF.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_OCF_KID.ini" destination="BOOBIES_OCF_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="OCF.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Odin - Skyrim Magic Overhaul"> 
+							<description>This will install a custom Keyword Item Distribution file for Odin - Skyrim Magic Overhaul, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Odin.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Odin_KID.ini" destination="BOOBIES_Odin_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Odin - Skyrim Magic Overhaul.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Organized Bandits of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Organized Bandits of Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\OBIS SE.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_OBIS SE_KID.ini" destination="BOOBIES_OBIS SE_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="OBIS SE.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Pierced Ears - Earrings SE"> 
+							<description>This will install a custom Keyword Item Distribution file for Pierced Ears - Earrings SE, allowing any special item types within that mod to be displayed with the proper earing icon.</description> 
+							<image path="fomod\images\Pierced Ears - Earrings SE.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_NosPiercedEarsAll_KID.ini" destination="BOOBIES_NosPiercedEarsAll_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="NosPiercedEarsAll.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Project AHO"> 
+							<description>This will install a custom Keyword Item Distribution file for Project AHO, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Project AHO.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Project_AHO_KID.ini" destination="BOOBIES_Project_AHO_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Dwarfsphere.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Regalia Of The Scorned"> 
+							<description>This will install a custom Keyword Item Distribution file for Regalia Of The Scorned, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\RegaliaOfTheScorned.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_RegaliaOfTheScorned_KID.ini" destination="BOOBIES_RegaliaOfTheScorned_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="RegaliaOfTheScorned.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Relationship Dialogue Overhaul"> 
+							<description>This will install a custom Keyword Item Distribution file for Relationship Dialogue Overhaul, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Relationship Dialogue Overhaul.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_RDO_KID.ini" destination="BOOBIES_RDO_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Relationship Dialogue Overhaul.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Rosa Round-Bottom"> 
+							<description>This will install a custom Keyword Item Distribution file for Rosa Round-Bottom, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Rosa Round-Bottom.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_RosaFollower_KID.ini" destination="BOOBIES_RosaFollower_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="RosaFollower.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Simple Wearable Lantern"> 
+							<description>This will install a custom Keyword Item Distribution file for Simple Wearable Lantern, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Simple Wearable Lantern.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_QwibLantern_KID.ini" destination="BOOBIES_QwibLantern_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="QwibLantern.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Skyrim Underground"> 
+							<description>This will install a custom Keyword Item Distribution file for Skyrim Underground, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\AKSkyrimUnderground.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_AKSkyrimUnderground_KID.ini" destination="BOOBIES_AKSkyrimUnderground_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="AKSkyrimUnderground.esm" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Skyrims Unique Treasures"> 
+							<description>This will install a custom Keyword Item Distribution file for Skyrims Unique Treasures, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\SkyrimsUniqueTreasures.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_SkyrimsUniqueTreasures_KID.ini" destination="BOOBIES_SkyrimsUniqueTreasures_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="SkyrimsUniqueTreasures.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Toccata"> 
+							<description>This will install a custom Keyword Item Distribution file for Toccata, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Toccata.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Toccata_KID.ini" destination="BOOBIES_Toccata_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Toccata.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Triumvirate - Mage Archetypes"> 
+							<description>This will install a custom Keyword Item Distribution file for Triumvirate - Mage Archetypes, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Triumvirate.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Triumvirate_KID.ini" destination="BOOBIES_Triumvirate_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Triumvirate - Mage Archetypes.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Twilight Princess Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Twilight Princess Armor, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Twilight Princess Armor.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Twilight_Princess_Armor_KID.ini" destination="BOOBIES_Twilight_Princess_Armor_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Twilight Princess Armor.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Undeath Remastered"> 
+							<description>This will install a custom Keyword Item Distribution file for Undeath Remastered, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Undeath Remastered.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Undeath_KID.ini" destination="BOOBIES_Undeath_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Undeath.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Unslaad"> 
+							<description>This will install a custom Keyword Item Distribution file for Unslaad, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Unslaad.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Unslaad_KID.ini" destination="BOOBIES_Unslaad_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Unslaad.esm" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin>
+						<plugin name="Vigilant"> 
+							<description>This will install a custom Keyword Item Distribution file for Vigilant, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Vigilant.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Vigilant_KID.ini" destination="BOOBIES_Vigilant_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Vigilant.esm" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Viridian Armor - Color Variations"> 
+							<description>This will install a custom Keyword Item Distribution file for Viridian Armor - Color Variations, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Viridian Armor - Color Variations.jpeg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Viridian Armor - Color Variations_KID.ini" destination="BOOBIES_Viridian Armor - Color Variations_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Viridian Armor - Color Variations.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Viridian Knight Armor"> 
+							<description>This will install a custom Keyword Item Distribution file for Viridian Knight Armor - Color Variations, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\KSA_vdk.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_KSA_vdk_KID.ini" destination="BOOBIES_KSA_vdk_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="KSA_vdk.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Wet and Cold"> 
+							<description>This will install a custom Keyword Item Distribution file for Wet and Cold, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\WetandCold.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_WetandCold_KID.ini" destination="BOOBIES_WetandCold_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="WetandCold.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Wild Huntress"> 
+							<description>This will install a custom Keyword Item Distribution file for Wild Huntress, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\WildHuntress.png" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_WildHuntress_KID.ini" destination="BOOBIES_WildHuntress_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="WildHuntress.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Wintersun - Faiths of Skyrim"> 
+							<description>This will install a custom Keyword Item Distribution file for Wintersun - Faiths of Skyrim, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Wintersun.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Wintersun_KID.ini" destination="BOOBIES_Wintersun_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Wintersun - Faiths of Skyrim.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+						<plugin name="Wyrmstooth"> 
+							<description>This will install a custom Keyword Item Distribution file for Wyrmstooth, allowing any special item types within that mod to benefit from the appropriate icons.</description> 
+							<image path="fomod\images\Wyrmstooth.jpg" /> 
+							<files> 
+								<file source="KIDs\BOOBIES_Wyrmstooth_KID.ini" destination="BOOBIES_Wyrmstooth_KID.ini" priority="0" /> 
+							</files> 
+							<typeDescriptor> 
+								<dependencyType> 
+									<defaultType name="Optional"/> 
+									<patterns> 
+										<pattern> 
+											<dependencies operator="And"> 
+												<fileDependency file="Wyrmstooth.esp" state="Active"/> 
+											</dependencies> 
+											<type name="Recommended"/> 
+										</pattern> 
+									</patterns> 
+								</dependencyType> 
+							</typeDescriptor> 
+						</plugin> 
+					</plugins> 
+				</group> 
+			</optionalFileGroups> 
+		</installStep> 
+
+	</installSteps> 
+</config>

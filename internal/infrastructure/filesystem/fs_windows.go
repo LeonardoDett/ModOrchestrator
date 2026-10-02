@@ -4,9 +4,12 @@ package filesystem
 
 import (
 	"errors"
+	"io/fs"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
+	"time"
 
 	"golang.org/x/sys/windows"
 
@@ -127,4 +130,12 @@ func fixedDrives() ([]string, error) {
 		}
 	}
 	return out, nil
+}
+
+// createdAt is the creation time Windows keeps for every file.
+func createdAt(fi fs.FileInfo) time.Time {
+	if d, ok := fi.Sys().(*syscall.Win32FileAttributeData); ok {
+		return time.Unix(0, d.CreationTime.Nanoseconds())
+	}
+	return time.Time{}
 }

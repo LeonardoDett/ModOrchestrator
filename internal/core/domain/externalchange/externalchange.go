@@ -1,6 +1,7 @@
 // Package externalchange classifies divergences between the applied state
 // (manifest) and the observed filesystem, and validates the decisions the
-// user may take about them (core/09). State category: calculated. An
+// user may take about them (core/09). State category: calculated, except
+// the "leave unmanaged" decision (Unmanaged), which is persisted. An
 // external change is never assumed to belong to the manager and is never
 // settled silently (D008, INV-EXT-02); generated files are never deleted
 // automatically (D046, INV-EXT-03).
@@ -10,6 +11,8 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strings"
+	"time"
 
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/game"
@@ -29,7 +32,7 @@ const (
 	KindUnexpected Kind = "unexpected"
 	KindPermission Kind = "permission"
 	// KindLoadOrder: the game's load order file differs from the last write
-	// (D040). It has no file entry.
+	// (D040). It has no file entry; detection arrives with F11.
 	KindLoadOrder Kind = "load_order"
 )
 
@@ -41,29 +44,50 @@ type Change struct {
 	// load order changes, which the manager does not own.
 	Expected *deployment.Entry
 	Observed deployment.Observation
+	// Wanted: the desired state still deploys the location.
+	Wanted bool
+	// Retained: the archive of the mod is kept, so a hardlink edit can be
+	// reverted by reinstalling (core/09 §4).
+	Retained bool
+	// MatchesOriginal: a replaced location now holds a file identical to
+	// the original kept in the BackupStore (the store put it back).
+	MatchesOriginal bool
+	// HintUnmanaged: the adapter suggests leaving this generated file
+	// unmanaged (core/12 §9).
+	HintUnmanaged bool
 }
 
 // Managed reports whether the location belongs to the manager.
 func (c Change) Managed() bool { return c.Expected != nil }
 
+// Method is the deployment method of the managed entry ("" otherwise).
+func (c Change) Method() game.DeploymentMethod {
+	if c.Expected == nil {
+		return ""
+	}
+	return c.Expected.Method
+}
+
 // Classify compares a manifest link entry with what a scan observed. It
-// returns false when the observation confirms the entry. recorded is the
-// file of the installation (size/hash registered at install), used to tell
-// an edit through a hardlink (same file, new content) from a match.
-func Classify(entry deployment.Entry, obs deployment.Observation, recorded mod.File) (Change, bool) {
+// returns false when the observation confirms the entry. An edit through a
+// hardlink keeps the file identity: it is told apart by the size, time or
+// hash recorded when the link was verified.
+func Classify(entry deployment.Entry, obs deployment.Observation) (Change, bool) {
 	c := Change{Location: entry.Location, Expected: &entry, Observed: obs}
 	switch {
 	case obs.Unreadable:
 		c.Kind = KindPermission
 	case !obs.Exists:
 		c.Kind = KindMissing
+	case obs.IsDir:
+		c.Kind = KindReplaced
 	case !entry.Evidence.Matches(obs.Evidence, entry.Method):
 		if entry.Method == game.MethodCopy {
 			c.Kind = KindModified
 		} else {
 			c.Kind = KindReplaced
 		}
-	case entry.Method == game.MethodHardlink && contentChanged(recorded, obs.Evidence):
+	case entry.Method == game.MethodHardlink && contentChanged(entry.Evidence, obs.Evidence):
 		c.Kind = KindModified
 	default:
 		return Change{}, false
@@ -71,20 +95,24 @@ func Classify(entry deployment.Entry, obs deployment.Observation, recorded mod.F
 	return c, true
 }
 
-// Unexpected builds the change for a file found in a managed folder without
-// manifest entry, created after the last deploy.
+// Unexpected builds the change for a file found in a managed folder (or a
+// known tool output) without manifest entry, created after the deployment
+// started.
 func Unexpected(loc game.Location, obs deployment.Observation) (Change, error) {
 	if err := loc.Validate(); err != nil {
 		return Change{}, fmt.Errorf("%w: %v", ErrInvalid, err)
 	}
-	if !obs.Exists {
+	if !obs.Exists || obs.IsDir {
 		return Change{}, fmt.Errorf("%w: an unexpected file must exist", ErrInvalid)
 	}
 	return Change{Location: loc, Kind: KindUnexpected, Observed: obs}, nil
 }
 
-func contentChanged(recorded mod.File, obs deployment.Evidence) bool {
+func contentChanged(recorded, obs deployment.Evidence) bool {
 	if obs.Size != recorded.Size {
+		return true
+	}
+	if !recorded.ModTime.IsZero() && !obs.ModTime.IsZero() && !recorded.ModTime.Equal(obs.ModTime) {
 		return true
 	}
 	return recorded.Hash != "" && obs.Hash != "" && recorded.Hash != obs.Hash
@@ -107,21 +135,29 @@ const (
 	ActionRestoreLoadOrder Action = "restore_load_order"
 )
 
-// Allowed returns the actions offered for a change, suggested one first.
-// method is the deployment method of the managed entry ("" otherwise).
-func Allowed(kind Kind, method game.DeploymentMethod) []Action {
-	switch kind {
+// Actions returns the actions offered for a change, the suggested one first
+// when there is a suggestion (Suggested).
+func Actions(c Change) []Action {
+	switch c.Kind {
 	case KindMissing:
 		return []Action{ActionRestore, ActionAcceptRemoval, ActionIgnoreNow}
 	case KindModified:
-		if method == game.MethodHardlink {
-			return []Action{ActionKeepChange, ActionRevert, ActionIgnoreNow}
+		if c.Method() == game.MethodHardlink {
+			if c.Retained {
+				return []Action{ActionKeepChange, ActionRevert, ActionIgnoreNow}
+			}
+			return []Action{ActionKeepChange, ActionIgnoreNow}
 		}
 		return []Action{ActionSaveToMod, ActionRevert, ActionIgnoreNow}
 	case KindReplaced:
-		return []Action{ActionRevert, ActionSaveToMod, ActionIgnoreNow}
+		if c.MatchesOriginal {
+			return []Action{ActionRevert, ActionSaveToMod, ActionIgnoreNow}
+		}
+		return []Action{ActionSaveToMod, ActionRevert, ActionIgnoreNow}
 	case KindUnexpected:
-		// No suggestion: the UI must not pre-select (core/09 §4).
+		if c.HintUnmanaged {
+			return []Action{ActionLeaveUnmanaged, ActionCapture, ActionIgnoreNow}
+		}
 		return []Action{ActionCapture, ActionLeaveUnmanaged, ActionIgnoreNow}
 	case KindPermission:
 		return []Action{ActionRetry, ActionIgnoreNow}
@@ -129,6 +165,19 @@ func Allowed(kind Kind, method game.DeploymentMethod) []Action {
 		return []Action{ActionRestoreLoadOrder, ActionImportLoadOrder}
 	}
 	return nil
+}
+
+// Suggested is the action pre-selected in the dialog (core/09 §4 "Padrão
+// sugerido"). Generated files have none unless the adapter hints them: the
+// user must choose (an undecided row is left as it is).
+func Suggested(c Change) Action {
+	if c.Kind == KindUnexpected && !c.HintUnmanaged {
+		return ""
+	}
+	if a := Actions(c); len(a) > 0 {
+		return a[0]
+	}
+	return ""
 }
 
 // Decision is the user's choice for one change.
@@ -142,15 +191,39 @@ type Decision struct {
 
 // Validate checks that the action is offered for the change.
 func (d Decision) Validate() error {
-	method := game.DeploymentMethod("")
-	if d.Change.Expected != nil {
-		method = d.Change.Expected.Method
-	}
-	if !slices.Contains(Allowed(d.Change.Kind, method), d.Action) {
+	if !slices.Contains(Actions(d.Change), d.Action) {
 		return fmt.Errorf("%w: %s is not allowed for a %s change", ErrInvalid, d.Action, d.Change.Kind)
 	}
 	if d.CaptureInto != "" && d.Action != ActionCapture {
 		return fmt.Errorf("%w: only captures have a target mod", ErrInvalid)
 	}
 	return nil
+}
+
+// Unmanaged is the persisted decision "leave as unmanaged" for a generated
+// file (core/09 §4, D046): the location is never listed as unexpected again
+// and the file is never touched.
+type Unmanaged struct {
+	Instance  game.InstanceID
+	Location  game.Location
+	DecidedAt time.Time
+}
+
+// NewUnmanaged validates the decision.
+func NewUnmanaged(instance game.InstanceID, loc game.Location, at time.Time) (Unmanaged, error) {
+	if instance == "" {
+		return Unmanaged{}, fmt.Errorf("%w: decision needs an instance", ErrInvalid)
+	}
+	if err := loc.Validate(); err != nil {
+		return Unmanaged{}, fmt.Errorf("%w: %v", ErrInvalid, err)
+	}
+	return Unmanaged{Instance: instance, Location: loc, DecidedAt: at}, nil
+}
+
+// IsOwnFile reports whether a file name is one the manager writes in a
+// target (markers and the temporary name of a replacement): such files are
+// never unexpected.
+func IsOwnFile(name string) bool {
+	n := strings.ToLower(name)
+	return strings.HasPrefix(n, ".modorchestrator-") || strings.HasSuffix(n, ".modorchestrator-tmp")
 }

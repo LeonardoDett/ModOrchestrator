@@ -40,11 +40,6 @@ func (Basic) Plan(entries []Entry, ctx Context, opts Options) (Result, error) {
 			return Result{}, fmt.Errorf("%w: root %q is not a folder of the archive", ErrInvalidOption, root)
 		}
 	} else {
-		if HasModuleConfig(entries) {
-			return Result{Decision: &Decision{
-				Kind: DecisionFomodPending, Candidates: candidates(entries, "", ctx), Folders: folders(entries),
-			}}, nil
-		}
 		var d *Decision
 		root, d = ResolveRoot(entries, ctx)
 		if d != nil {

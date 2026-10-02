@@ -63,6 +63,9 @@ describe("i18n catalogs (D044)", () => {
       join(internal, "core", "application", "profiles", "errors.go"),
       join(internal, "core", "application", "conflicts", "commands.go"),
       join(internal, "bridge", "conflicts.go"),
+      join(internal, "core", "application", "diagnostics", "actions.go"),
+      join(internal, "core", "application", "history", "service.go"),
+      join(internal, "core", "application", "plugins", "service.go"),
     ]
       .map((file) => readFileSync(file, "utf8"))
       .join("\n");

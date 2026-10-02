@@ -259,7 +259,8 @@ func (s *Service) AddIncompatibility(ctx context.Context, instance game.Instance
 // §4); rules from other sources can only be disabled.
 func (s *Service) RemoveRule(ctx context.Context, instance game.InstanceID, id rules.ID) error {
 	return s.editRules(ctx, instance, func(set *rules.Set, _ map[mod.ID]string) (map[string]string, error) {
-		return map[string]string{"rule": string(id)}, ruleError(set.Remove(id))
+		desc := ruleDescription(set, id)
+		return desc, ruleError(set.Remove(id))
 	}, EventRuleRemoved)
 }
 

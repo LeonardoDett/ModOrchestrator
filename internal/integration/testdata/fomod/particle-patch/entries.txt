@@ -1,0 +1,835 @@
+# source: Particle Patch 65720 1.4.6 2026-08-16T10-10Z CmfxYj1Gq.zip
+assets/
+assets/ambient/
+assets/ambient/meshes/
+assets/ambient/meshes/effects/
+assets/ambient/meshes/effects/ambient/
+assets/ambient/meshes/effects/ambient/fxambbeamdust00.nif	5906
+assets/ambient/meshes/effects/ambient/fxambbeamdust01.nif	5714
+assets/ambient/meshes/effects/ambient/fxambbeamdust02.nif	6034
+assets/ambient/meshes/effects/ambient/fxambbeamdust03.nif	5968
+assets/ambient/meshes/effects/ambient/fxambbeamdust04.nif	5394
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig00.nif	5909
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig01.nif	5909
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig02.nif	6165
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig03.nif	6165
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig04.nif	5973
+assets/ambient/meshes/effects/ambient/fxambbeamdustbigdim00.nif	4768
+assets/ambient/meshes/effects/ambient/fxambbeamdustbigdim01.nif	4768
+assets/ambient/meshes/effects/ambient/fxambbeamdustbigdim02.nif	5024
+assets/ambient/meshes/effects/ambient/fxambbeamdustbigdim03.nif	5024
+assets/ambient/meshes/effects/ambient/fxambbeamdustbigdim04.nif	4832
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig_dim00.nif	5923
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig_dim01.nif	5923
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig_dim02.nif	6179
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig_dim03.nif	6179
+assets/ambient/meshes/effects/ambient/fxambbeamdustbig_dim04.nif	5987
+assets/ambient/meshes/effects/ambient/fxambbeamdustdim00.nif	5059
+assets/ambient/meshes/effects/ambient/fxambbeamdustdim01.nif	4573
+assets/ambient/meshes/effects/ambient/fxambbeamdustdim02.nif	4893
+assets/ambient/meshes/effects/ambient/fxambbeamdustdim03.nif	4829
+assets/ambient/meshes/effects/ambient/fxambbeamdustdim04.nif	4253
+assets/ambient/meshes/effects/ambient/fxambbeamdust_dim00.nif	5920
+assets/ambient/meshes/effects/ambient/fxambbeamdust_dim01.nif	5728
+assets/ambient/meshes/effects/ambient/fxambbeamdust_dim02.nif	6048
+assets/ambient/meshes/effects/ambient/fxambbeamdust_dim03.nif	5984
+assets/ambient/meshes/effects/ambient/fxambbeamdust_dim04.nif	5408
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog00.nif	5063
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog01.nif	4577
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog02.nif	4897
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog03.nif	4833
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog04.nif	4257
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig00.nif	4772
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig01.nif	4772
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig02.nif	5028
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig03.nif	5028
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig04.nif	4836
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig_dim00.nif	4772
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig_dim01.nif	4772
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig_dim02.nif	5028
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig_dim03.nif	5028
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbig_dim04.nif	4836
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbrt01.nif	4580
+assets/ambient/meshes/effects/ambient/fxambbeamslowfogbrt02.nif	4900
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog_dim00.nif	5063
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog_dim01.nif	4577
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog_dim02.nif	4897
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog_dim03.nif	4833
+assets/ambient/meshes/effects/ambient/fxambbeamslowfog_dim04.nif	4257
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke00.nif	4767
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke01.nif	4575
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke02.nif	4895
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke03.nif	4831
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke04.nif	4255
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig00.nif	4770
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig01.nif	4770
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig02.nif	5026
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig03.nif	5026
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig04.nif	4834
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig_dim00.nif	4778
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig_dim01.nif	4778
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig_dim02.nif	5034
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig_dim03.nif	5034
+assets/ambient/meshes/effects/ambient/fxambbeamsmokebig_dim04.nif	4841
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke_dim00.nif	4775
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke_dim01.nif	4583
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke_dim02.nif	4902
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke_dim03.nif	4838
+assets/ambient/meshes/effects/ambient/fxambbeamsmoke_dim04.nif	4263
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist00.nif	7049
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist01.nif	6856
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist02.nif	7176
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist03.nif	7022
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist04.nif	6536
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig00.nif	7051
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig01.nif	7051
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig02.nif	7307
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig03.nif	7174
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig04.nif	7115
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig_dim00.nif	7086
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig_dim01.nif	7086
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig_dim02.nif	7342
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig_dim03.nif	7342
+assets/ambient/meshes/effects/ambient/fxambbeamwetmistbig_dim04.nif	7150
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist_dim00.nif	7083
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist_dim01.nif	6891
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist_dim02.nif	7211
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist_dim03.nif	7147
+assets/ambient/meshes/effects/ambient/fxambbeamwetmist_dim04.nif	6571
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust00.nif	4741
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust01.nif	4549
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust02.nif	4869
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust03.nif	4805
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust04.nif	4229
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig00.nif	4744
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig01.nif	4744
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig02.nif	5000
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig03.nif	5000
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig04.nif	4808
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig_dim00.nif	4751
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig_dim01.nif	4751
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig_dim02.nif	5007
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig_dim03.nif	5007
+assets/ambient/meshes/effects/ambient/fxambbeamxbdustbig_dim04.nif	4815
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust_dim00.nif	4748
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust_dim01.nif	4556
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust_dim02.nif	4876
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust_dim03.nif	4812
+assets/ambient/meshes/effects/ambient/fxambbeamxbdust_dim04.nif	4236
+assets/ambient/meshes/effects/ambient/testambbeamraintest.nif	6432
+assets/ambient/meshes/effects/fxmzarktowerbeam.nif	8917
+assets/ambient/meshes/effects/fxslowmistbeam.nif	4994
+assets/ambient/meshes/effects/fx_rainandmistbeamnoglow.nif	7807
+assets/ambient/meshes/effects/fx_rainandmistbeam_fast.nif	9847
+assets/bsa/
+assets/bsa/Particle Patch.bsa	61317608
+assets/bsa-beams/
+assets/bsa-beams/Particle Patch.bsa	61926141
+assets/campfire/
+assets/campfire/meshes/
+assets/campfire/meshes/creationclub/
+assets/campfire/meshes/creationclub/qdrsse002/
+assets/campfire/meshes/creationclub/qdrsse002/ccqdrsse002_fxcampfirenewrocks01.nif	142515
+assets/loose/
+assets/loose/meshes/
+assets/loose/meshes/actors/
+assets/loose/meshes/actors/atronachflame/
+assets/loose/meshes/actors/atronachflame/character assets/
+assets/loose/meshes/actors/atronachflame/character assets/atronachflame.nif	677393
+assets/loose/meshes/actors/atronachflame/character assets/fxatronachfiretrail.nif	91498
+assets/loose/meshes/actors/character/
+assets/loose/meshes/actors/character/character assets/
+assets/loose/meshes/actors/character/character assets/faceparts/
+assets/loose/meshes/actors/character/character assets/faceparts/femaleargonianscar.nif	10408
+assets/loose/meshes/actors/character/character assets/faceparts/femaleargonianscar01.nif	10415
+assets/loose/meshes/actors/character/character assets/faceparts/femaleargonianscar02.nif	10415
+assets/loose/meshes/actors/character/character assets/faceparts/femaleargonianscar03.nif	10415
+assets/loose/meshes/actors/character/character assets/faceparts/femaleargonianscar04.nif	10417
+assets/loose/meshes/actors/character/character assets/faceparts/femaleargonianscar05.nif	10417
+assets/loose/meshes/actors/character/character assets/faceparts/femalebrows.nif	10383
+assets/loose/meshes/actors/character/character assets/faceparts/femalemaskleftside.nif	14193
+assets/loose/meshes/actors/character/character assets/faceparts/femalemaskrightside.nif	14287
+assets/loose/meshes/actors/character/character assets/faceparts/khajiitfemalescar01.nif	23933
+assets/loose/meshes/actors/character/character assets/faceparts/khajiitfemalescar02.nif	23935
+assets/loose/meshes/actors/character/character assets/faceparts/khajiitfemalescar03.nif	23935
+assets/loose/meshes/actors/character/character assets/faceparts/maleargonianscar.nif	14667
+assets/loose/meshes/actors/character/character assets/faceparts/maleargonianscar01.nif	14669
+assets/loose/meshes/actors/character/character assets/faceparts/maleargonianscar02.nif	14669
+assets/loose/meshes/actors/character/character assets/faceparts/maleargonianscar03.nif	14669
+assets/loose/meshes/actors/character/character assets/faceparts/maleargonianscar04.nif	14669
+assets/loose/meshes/actors/character/character assets/faceparts/malebrows.nif	9004
+assets/loose/meshes/actors/character/character assets/faceparts/malekhajiitscar01.nif	19456
+assets/loose/meshes/actors/character/character assets/faceparts/malekhajiitscar02.nif	19456
+assets/loose/meshes/actors/character/character assets/faceparts/malekhajiitscar03.nif	19456
+assets/loose/meshes/actors/character/character assets/faceparts/maskleftside.nif	13040
+assets/loose/meshes/actors/character/character assets/faceparts/maskrightside.nif	13042
+assets/loose/meshes/actors/dwarvenspherecenturion/
+assets/loose/meshes/actors/dwarvenspherecenturion/character assets/
+assets/loose/meshes/actors/dwarvenspherecenturion/character assets/steamspherefx.nif	19209
+assets/loose/meshes/architecture/
+assets/loose/meshes/architecture/farmhouse/
+assets/loose/meshes/architecture/farmhouse/lumbermill01waterwheel01.nif	155092
+assets/loose/meshes/architecture/farmhouse/lumbermill01waterwheel02.nif	154984
+assets/loose/meshes/architecture/markarth/
+assets/loose/meshes/architecture/markarth/water/
+assets/loose/meshes/architecture/markarth/water/markarthwaterfallcliff02.nif	9758
+assets/loose/meshes/architecture/markarth/water/markarthwaterfallcliff03.nif	57769
+assets/loose/meshes/architecture/markarth/water/markarthwaterfallcliff04.nif	61762
+assets/loose/meshes/architecture/markarth/water/markarthwatersystemstream.nif	38015
+assets/loose/meshes/architecture/riften/
+assets/loose/meshes/architecture/riften/blackbriarchalet.nif	661497
+assets/loose/meshes/architecture/riften/goldenglowestate01.nif	676477
+assets/loose/meshes/architecture/riften/rtbeebarb01.nif	586423
+assets/loose/meshes/architecture/riften/rtblackbriarmanor01.nif	396611
+assets/loose/meshes/architecture/riften/rtblacksmith01.nif	362175
+assets/loose/meshes/architecture/riften/rtblacksmith01city.nif	344163
+assets/loose/meshes/architecture/riften/rtfarmhouse01.nif	297352
+assets/loose/meshes/architecture/riften/rtfarmhouse02.nif	366415
+assets/loose/meshes/architecture/riften/rtfishery01.nif	322452
+assets/loose/meshes/architecture/riften/rtfishery01city.nif	210811
+assets/loose/meshes/architecture/riften/rthaelgasbunkhouse01.nif	579119
+assets/loose/meshes/architecture/riften/rtkeep01.nif	423731
+assets/loose/meshes/architecture/riften/rtmeadery01.nif	94888
+assets/loose/meshes/architecture/riften/rtmeadery02.nif	285729
+assets/loose/meshes/architecture/riften/rtmercerfreys01.nif	299605
+assets/loose/meshes/architecture/riften/rtmjollandtroutpurse01.nif	334618
+assets/loose/meshes/architecture/riften/rtorphanage01.nif	695019
+assets/loose/meshes/architecture/riften/rtpawnedprawn01.nif	241989
+assets/loose/meshes/architecture/riften/rtplayerhouse01.nif	443316
+assets/loose/meshes/architecture/riften/rtplayerhouse01city.nif	310806
+assets/loose/meshes/architecture/riften/rtsnowshodhouse01.nif	339107
+assets/loose/meshes/architecture/riften/rtwarehouse01.nif	367645
+assets/loose/meshes/architecture/solitude/
+assets/loose/meshes/architecture/solitude/clutter/
+assets/loose/meshes/architecture/solitude/clutter/sgrate01.nif	11637
+assets/loose/meshes/architecture/solitude/clutter/smarketstall01.nif	17246
+assets/loose/meshes/architecture/solitude/clutter/smarketstalltop.nif	40144
+assets/loose/meshes/architecture/solitude/clutter/strellis01.nif	147573
+assets/loose/meshes/architecture/solitude/doors/
+assets/loose/meshes/architecture/solitude/doors/shousedoor01.nif	83339
+assets/loose/meshes/architecture/solitude/sbluepalaceentrance.nif	369726
+assets/loose/meshes/architecture/solitude/sbryling house.nif	560897
+assets/loose/meshes/architecture/solitude/serikur house.nif	577544
+assets/loose/meshes/architecture/solitude/shousedoor01.nif	83339
+assets/loose/meshes/architecture/solitude/sthalmorhouse.nif	664313
+assets/loose/meshes/architecture/solitude/svittoriavicihouse.nif	772664
+assets/loose/meshes/architecture/solitude/svittoriavicihousedestroyed.nif	785576
+assets/loose/meshes/architecture/whiterun/
+assets/loose/meshes/architecture/whiterun/wrbuildings/
+assets/loose/meshes/architecture/whiterun/wrbuildings/wrlodwindowglow01.nif	21085
+assets/loose/meshes/architecture/whiterun/wreffects/
+assets/loose/meshes/architecture/whiterun/wreffects/wrrapidrocks01.nif	34707
+assets/loose/meshes/architecture/whiterun/wreffects/wrstairswater01river01.nif	19353
+assets/loose/meshes/architecture/whiterun/wreffects/wrterwind01waterfall01.nif	36949
+assets/loose/meshes/architecture/whiterun/wreffects/wrwaterstream.nif	36536
+assets/loose/meshes/architecture/whiterun/wrinteriors/
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrdungeon/
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrdungeon/wrdunintcustomdoor01.nif	29904
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrintwallstr01winb.nif	17009
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrjorvaskr/
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchentrancel.nif	67156
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchentrancer.nif	69164
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchstr01.nif	15826
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchstrslopel.nif	15752
+assets/loose/meshes/architecture/whiterun/wrinteriors/wrjorvaskr/wrintchstrsloper.nif	15637
+assets/loose/meshes/architecture/whiterun/wrterrain/
+assets/loose/meshes/architecture/whiterun/wrterrain/wrstairsstreaml.nif	7420
+assets/loose/meshes/architecture/whiterun/wrterrain/wrstairsstreamr.nif	7290
+assets/loose/meshes/architecture/windhelm/
+assets/loose/meshes/architecture/windhelm/effects/
+assets/loose/meshes/architecture/windhelm/effects/whfxwindowglow01.nif	1747
+assets/loose/meshes/architecture/windhelm/effects/whfxwindowglow02.nif	1731
+assets/loose/meshes/architecture/windhelm/effects/whfxwindowglow03.nif	1731
+assets/loose/meshes/architecture/windhelm/effects/whfxwindowglow04.nif	1846
+assets/loose/meshes/architecture/windhelm/interiorkits/
+assets/loose/meshes/architecture/windhelm/interiorkits/castle/
+assets/loose/meshes/architecture/windhelm/interiorkits/castle/whintcastlelroomwallwindow01.nif	22117
+assets/loose/meshes/architecture/windhelm/interiorkits/castle/whintcastleroomcornerwindow01.nif	59068
+assets/loose/meshes/architecture/windhelm/interiorkits/castle/whintcastleroomwallwindow01.nif	22169
+assets/loose/meshes/architecture/windhelm/interiorkits/castle/whintcastleroomwallwindow03.nif	31454
+assets/loose/meshes/architecture/windhelm/interiorkits/castle/whintcastleroomwallwindowl01.nif	37980
+assets/loose/meshes/architecture/windhelm/interiorkits/wood/
+assets/loose/meshes/architecture/windhelm/interiorkits/wood/whintinn01.nif	1948739
+assets/loose/meshes/architecture/windhelm/interiorkits/wood/whintwoodroofleftwindow01.nif	116771
+assets/loose/meshes/architecture/windhelm/interiorkits/wood/whintwoodroofrightwindow01.nif	118904
+assets/loose/meshes/architecture/windhelm/whshorttower.nif	11701
+assets/loose/meshes/clutter/
+assets/loose/meshes/clutter/blackreach/
+assets/loose/meshes/clutter/blackreach/blackreachsmallmushroom01.nif	12641
+assets/loose/meshes/clutter/blackreach/blackreachsmallmushroom02.nif	12960
+assets/loose/meshes/clutter/blackreach/blackreachsmallmushroom03.nif	12802
+assets/loose/meshes/clutter/blackreach/blackreachsmallmushroom04.nif	12642
+assets/loose/meshes/clutter/blackreach/blackreachsmallmushroom05.nif	13149
+assets/loose/meshes/clutter/blackreach/blackreachsun01.nif	316788
+assets/loose/meshes/clutter/brewerycasklargeclosed02.nif	43914
+assets/loose/meshes/clutter/chauruseggs/
+assets/loose/meshes/clutter/chauruseggs/eggs.nif	4174
+assets/loose/meshes/clutter/chauruseggs/eggsacs.nif	19418
+assets/loose/meshes/clutter/chauruseggs/eggsacs01.nif	19368
+assets/loose/meshes/clutter/chauruseggs/eggsacs02.nif	19357
+assets/loose/meshes/clutter/common/
+assets/loose/meshes/clutter/common/removabletorch01.nif	22991
+assets/loose/meshes/clutter/common/torchpermanent01.nif	47980
+assets/loose/meshes/clutter/common/torchsconce01.nif	46843
+assets/loose/meshes/clutter/deadanimals/
+assets/loose/meshes/clutter/deadanimals/mountedfemaleelk.nif	44660
+assets/loose/meshes/clutter/deadanimals/mountedmaleelk.nif	75255
+assets/loose/meshes/clutter/displaycases/
+assets/loose/meshes/clutter/displaycases/displaycaselgangled01.nif	24778
+assets/loose/meshes/clutter/displaycases/displaycaselgflat01.nif	23470
+assets/loose/meshes/clutter/displaycases/displaycasesmangled01.nif	22015
+assets/loose/meshes/clutter/displaycases/displaycasesmflat01.nif	23449
+assets/loose/meshes/clutter/falmertotems/
+assets/loose/meshes/clutter/falmertotems/falmertotem.nif	24666
+assets/loose/meshes/clutter/food/
+assets/loose/meshes/clutter/food/longtaffy01.nif	23641
+assets/loose/meshes/clutter/food/nuttybread01.nif	24589
+assets/loose/meshes/clutter/giant/
+assets/loose/meshes/clutter/giant/giantcampfire01burning.nif	153896
+assets/loose/meshes/clutter/giant/giantcampfire01burningnoland.nif	89438
+assets/loose/meshes/clutter/glazedcandles01.nif	35448
+assets/loose/meshes/clutter/glazedcandlesstatic02.nif	61543
+assets/loose/meshes/clutter/imperial/
+assets/loose/meshes/clutter/imperial/impwallsconcecandle01.nif	71398
+assets/loose/meshes/clutter/imperial/impwallsconcecandle02.nif	69341
+assets/loose/meshes/clutter/ingredients/
+assets/loose/meshes/clutter/ingredients/carrot01.nif	17463
+assets/loose/meshes/clutter/ingredients/daedraheart.nif	10412
+assets/loose/meshes/clutter/ingredients/tomato.nif	8801
+assets/loose/meshes/clutter/pelts/
+assets/loose/meshes/clutter/pelts/peltfarmwall01.nif	3249
+assets/loose/meshes/clutter/pelts/peltfarmwall02.nif	3113
+assets/loose/meshes/clutter/pelts/peltfarmwall03.nif	3861
+assets/loose/meshes/clutter/pelts/peltfloor01.nif	1977
+assets/loose/meshes/clutter/pelts/peltfloor02.nif	1909
+assets/loose/meshes/clutter/pelts/peltfloor03.nif	2283
+assets/loose/meshes/clutter/pelts/pelthanging01.nif	3247
+assets/loose/meshes/clutter/pelts/pelthanging02.nif	3111
+assets/loose/meshes/clutter/pelts/pelthanging03.nif	3859
+assets/loose/meshes/clutter/ruins/
+assets/loose/meshes/clutter/ruins/ruinscandlesconceon01.nif	99510
+assets/loose/meshes/clutter/ruins/ruinscandlesconceon02.nif	93981
+assets/loose/meshes/clutter/ruins/ruinsfloorcandlelampmidon.nif	79697
+assets/loose/meshes/clutter/ruins/ruinsfloorcandlelampmidon02.nif	73838
+assets/loose/meshes/clutter/ruins/ruinsfloorcandlelampsmon.nif	75543
+assets/loose/meshes/clutter/ruins/ruinsfloorcandlelampsmon02.nif	63606
+assets/loose/meshes/clutter/ruins/ruinsspidersac01.nif	30458
+assets/loose/meshes/clutter/ruins/ruinsspidersac02.nif	31982
+assets/loose/meshes/clutter/ruins/ruinsspidersac03.nif	19110
+assets/loose/meshes/clutter/ruins/ruinsspidersac04.nif	33848
+assets/loose/meshes/clutter/ruins/ruinsspidersac05.nif	50305
+assets/loose/meshes/clutter/silver/
+assets/loose/meshes/clutter/silver/silvercandlestick01.nif	86464
+assets/loose/meshes/clutter/silver/silvercandlestick02.nif	228325
+assets/loose/meshes/clutter/silver/silvercandlestick03.nif	79276
+assets/loose/meshes/clutter/sovngarde/
+assets/loose/meshes/clutter/sovngarde/sovcandlestick01.nif	86436
+assets/loose/meshes/clutter/sovngarde/sovcandlestick01static.nif	85430
+assets/loose/meshes/clutter/sovngarde/sovcandlestick02.nif	228297
+assets/loose/meshes/clutter/sovngarde/sovcandlestick02static.nif	143933
+assets/loose/meshes/clutter/sovngarde/sovcandlestick03.nif	79248
+assets/loose/meshes/clutter/sovngarde/sovcandlestick03static.nif	78210
+assets/loose/meshes/clutter/woodfires/
+assets/loose/meshes/clutter/woodfires/campfire01burning.nif	51308
+assets/loose/meshes/clutter/woodfires/campfire01landburning.nif	52931
+assets/loose/meshes/clutter/woodfires/fireplacewood01burning.nif	21321
+assets/loose/meshes/critters/
+assets/loose/meshes/critters/bee/
+assets/loose/meshes/critters/bee/critterbeehive.nif	17611
+assets/loose/meshes/critters/bee/critterbeehivevacant.nif	17539
+assets/loose/meshes/dlc01/
+assets/loose/meshes/dlc01/clutter/
+assets/loose/meshes/dlc01/clutter/vampireclutter/
+assets/loose/meshes/dlc01/clutter/vampireclutter/dlc01vampirethrallfeedta01.nif	286037
+assets/loose/meshes/dlc01/clutter/vampireclutter/dlc01vampirethrallfeedta02.nif	310913
+assets/loose/meshes/dlc01/effects/
+assets/loose/meshes/dlc01/effects/ambient/
+assets/loose/meshes/dlc01/effects/ambient/dlc1fxambbeamgladespot.nif	89175
+assets/loose/meshes/dlc01/effects/ambient/fxscmistlow01.nif	48611
+assets/loose/meshes/dlc01/effects/ambient/fxscmistlow01small03.nif	23088
+assets/loose/meshes/dlc01/effects/dawnguardlightbeam01.nif	44679
+assets/loose/meshes/dlc01/effects/dlc1charusfrozeninicepose01.nif	72758
+assets/loose/meshes/dlc01/effects/dlc1wayshrinelightbeam01.nif	15763
+assets/loose/meshes/dlc01/effects/fxambbeamwetmistlong01.nif	7962
+assets/loose/meshes/dlc01/magic/
+assets/loose/meshes/dlc01/magic/dlc1_suncloakspellhandfx.nif	31103
+assets/loose/meshes/dlc01/magic/dlc1_vampirebanehandfx.nif	31229
+assets/loose/meshes/dlc01/plants/
+assets/loose/meshes/dlc01/plants/caveworm/
+assets/loose/meshes/dlc01/plants/caveworm/cavewormlarge.nif	90820
+assets/loose/meshes/dlc01/plants/cavewormgroup/
+assets/loose/meshes/dlc01/plants/cavewormgroup/animations/
+assets/loose/meshes/dlc01/plants/cavewormgroup/animations/idleclose.hkx	2576
+assets/loose/meshes/dlc01/plants/cavewormgroup/animations/idleopen.hkx	3552
+assets/loose/meshes/dlc01/plants/cavewormgroup/caveworm3group.nif	88986
+assets/loose/meshes/dlc01/plants/cavewormgroup/characterassets/
+assets/loose/meshes/dlc01/plants/cavewormgroup/characterassets/skeleton.hkx	2592
+assets/loose/meshes/dlc01/plants/cavewormsmall/
+assets/loose/meshes/dlc01/plants/cavewormsmall/animations/
+assets/loose/meshes/dlc01/plants/cavewormsmall/animations/idleclose.hkx	1808
+assets/loose/meshes/dlc01/plants/cavewormsmall/animations/idleopen.hkx	2096
+assets/loose/meshes/dlc01/plants/cavewormsmall/cavewormsmall.nif	33009
+assets/loose/meshes/dlc01/plants/cavewormsmall/characterassets/
+assets/loose/meshes/dlc01/plants/cavewormsmall/characterassets/skeleton.hkx	1696
+assets/loose/meshes/dlc01/soulcairn/
+assets/loose/meshes/dlc01/soulcairn/sc_chest.nif	51421
+assets/loose/meshes/dlc01/soulcairn/sc_chest01.nif	62721
+assets/loose/meshes/dlc01/soulcairn/sc_chest02.nif	56264
+assets/loose/meshes/dlc02/
+assets/loose/meshes/dlc02/architecture/
+assets/loose/meshes/dlc02/architecture/ravenrock/
+assets/loose/meshes/dlc02/architecture/ravenrock/dlc2blacksmithforge01rr.nif	2539054
+assets/loose/meshes/dlc02/architecture/riekling/
+assets/loose/meshes/dlc02/architecture/riekling/dlc2rieklingfence01.nif	33614
+assets/loose/meshes/dlc02/architecture/riekling/dlc2rieklingfence02.nif	14787
+assets/loose/meshes/dlc02/architecture/riekling/dlc2rieklingfenceend.nif	34058
+assets/loose/meshes/dlc02/clutter/
+assets/loose/meshes/dlc02/clutter/dlc2darkelflantern01.nif	235621
+assets/loose/meshes/dlc02/clutter/dlc2darkelflantern02.nif	161193
+assets/loose/meshes/dlc02/clutter/dlc2darkelflantern03.nif	73799
+assets/loose/meshes/dlc02/clutter/dlc2darkelflantern04.nif	73799
+assets/loose/meshes/dlc02/clutter/dlc2darkelflantern05.nif	73799
+assets/loose/meshes/dlc02/clutter/dlc2darkelflantern06.nif	68887
+assets/loose/meshes/dlc02/effects/
+assets/loose/meshes/dlc02/effects/ashexp01.nif	30223
+assets/loose/meshes/dlc02/effects/ashhandfx01.nif	33141
+assets/loose/meshes/dlc02/effects/dlc2ashspawnexp01.nif	44277
+assets/loose/meshes/dlc02/effects/dlc2ashspawnhandeffects.nif	24134
+assets/loose/meshes/dlc02/effects/dlc2ashspawnprojectile01.nif	18696
+assets/loose/meshes/dlc02/effects/dlc2fxambplantsmoke.nif	8395
+assets/loose/meshes/dlc02/effects/dlc2telmithrynteleportfxactivate.nif	16500
+assets/loose/meshes/dlc02/effects/dlc2telmithrynteleportfxactivatebeam.nif	25569
+assets/loose/meshes/dlc02/effects/mq03skaalvilliagebarrier.nif	167216
+assets/loose/meshes/dlc02/effects/mq03skaalvilliagebarrier02.nif	76346
+assets/loose/meshes/dlc02/effects/mq03skaalvilliagebarrier03.nif	64244
+assets/loose/meshes/dlc02/effects/telvannitorchlightfx.nif	26013
+assets/loose/meshes/dlc02/landscape/
+assets/loose/meshes/dlc02/landscape/dlc2firecrater02.nif	130692
+assets/loose/meshes/dlc02/landscape/dlc2firecraterround.nif	109799
+assets/loose/meshes/effects/
+assets/loose/meshes/effects/ambient/
+assets/loose/meshes/effects/ambient/fxglowfillrndlitbrt.nif	6315
+assets/loose/meshes/effects/ambient/fxglowfillrndlitdim.nif	6315
+assets/loose/meshes/effects/ambient/fxglowfillrndlitmid.nif	6315
+assets/loose/meshes/effects/ambient/fxglowfillrndlitxbrt.nif	6316
+assets/loose/meshes/effects/ambient/fxglowfillrndlitxdim.nif	6316
+assets/loose/meshes/effects/ambient/fxglowfillroundbrt.nif	6314
+assets/loose/meshes/effects/ambient/fxglowfillrounddim.nif	6314
+assets/loose/meshes/effects/ambient/fxglowfillroundmid.nif	6298
+assets/loose/meshes/effects/ambient/fxglowfillroundxbrt.nif	6315
+assets/loose/meshes/effects/ambient/fxglowfillroundxdim.nif	6315
+assets/loose/meshes/effects/ambient/fxglowflatrndbrt.nif	3589
+assets/loose/meshes/effects/ambient/fxglowflatrnddim.nif	3589
+assets/loose/meshes/effects/ambient/fxglowflatrndmid.nif	3589
+assets/loose/meshes/effects/ambient/fxglowflatrndxbrt.nif	3590
+assets/loose/meshes/effects/ambient/fxglowflatrndxdim.nif	3590
+assets/loose/meshes/effects/ambient/fxmistlow01.nif	13781
+assets/loose/meshes/effects/ambient/fxmistlow01adjust.nif	13781
+assets/loose/meshes/effects/ambient/fxmistlow01halfvis.nif	13821
+assets/loose/meshes/effects/ambient/fxmistlow01longadjust.nif	20661
+assets/loose/meshes/effects/ambient/fxmistlowsmokey01long.nif	20652
+assets/loose/meshes/effects/ambient/fxmistlowswirls01.nif	13788
+assets/loose/meshes/effects/ambient/fxmistlowswirls01halfvis.nif	13802
+assets/loose/meshes/effects/ambient/fxmistlowswirls01long.nif	20694
+assets/loose/meshes/effects/ambient/fxmistlowswirls01longhalfvis.nif	20708
+assets/loose/meshes/effects/ambient/fxmistlowswirls02.nif	14476
+assets/loose/meshes/effects/ambient/fxmistlowswirls02halfvis.nif	14490
+assets/loose/meshes/effects/ambient/fxmistlowwet01.nif	13790
+assets/loose/meshes/effects/ambient/fxmistlowwet01halfvis.nif	13804
+assets/loose/meshes/effects/ambient/fxmistlowwet01long.nif	20568
+assets/loose/meshes/effects/ambient/fxmistlowwet01longhalfvis.nif	20710
+assets/loose/meshes/effects/ambient/fxmistlowwet02.nif	14478
+assets/loose/meshes/effects/ambient/fxmistlowwet02halfvis.nif	14492
+assets/loose/meshes/effects/ambient/fxmistmillwheel01.nif	9062
+assets/loose/meshes/effects/ambient/fxmiststreet01.nif	2160
+assets/loose/meshes/effects/ambient/fxsmokeriverwoodsmith01.nif	9061
+assets/loose/meshes/effects/ambient/fxsmokewetmistlg1x1.nif	8661
+assets/loose/meshes/effects/ambient/fxsmokewetmistlg2x1.nif	12741
+assets/loose/meshes/effects/ambient/fxsmokewetmistlgvol01.nif	21927
+assets/loose/meshes/effects/ambient/fxsmokewispslgvol01.nif	13311
+assets/loose/meshes/effects/ambient/testambbeamraintest.nif	6432
+assets/loose/meshes/effects/fallingdustexplosion01.nif	10985
+assets/loose/meshes/effects/fxambblowingfog01.nif	8407
+assets/loose/meshes/effects/fxambblowingfogmenu.nif	29849
+assets/loose/meshes/effects/fxambsnowblowingdrifttip.nif	44957
+assets/loose/meshes/effects/fxambsnowblowingplane.nif	35571
+assets/loose/meshes/effects/fxambsnowblowingplaneheavy.nif	19421
+assets/loose/meshes/effects/fxambsnowblowingskylight.nif	32336
+assets/loose/meshes/effects/fxambsnowblowingsm.nif	11622
+assets/loose/meshes/effects/fxambsnowblowingsmint.nif	16427
+assets/loose/meshes/effects/fxbatgroup.nif	222564
+assets/loose/meshes/effects/fxcameraattachblowingfog.nif	4122
+assets/loose/meshes/effects/fxcameraattachdust.nif	8445
+assets/loose/meshes/effects/fxcameraattachdustfalmer.nif	7000
+assets/loose/meshes/effects/fxcameraattachfinedust.nif	8090
+assets/loose/meshes/effects/fxcameraattachfinemist.nif	5682
+assets/loose/meshes/effects/fxcameraattachfluffs.nif	5356
+assets/loose/meshes/effects/fxcameraattachfog.nif	3844
+assets/loose/meshes/effects/fxcameraattachleaves.nif	6450
+assets/loose/meshes/effects/fxcameraattachleaveswindy.nif	7926
+assets/loose/meshes/effects/fxcameraattachleaveswindyup.nif	8248
+assets/loose/meshes/effects/fxcameraattachneedles.nif	5509
+assets/loose/meshes/effects/fxcameraattachneedleswindy.nif	7693
+assets/loose/meshes/effects/fxcameraattachneedleswindyup.nif	8704
+assets/loose/meshes/effects/fxcameraattachupsnow.nif	6904
+assets/loose/meshes/effects/fxcobwebcorner01.nif	10668
+assets/loose/meshes/effects/fxcobwebcorner02.nif	21078
+assets/loose/meshes/effects/fxcobwebdangle01.nif	5083
+assets/loose/meshes/effects/fxcobwebdangle02.nif	5081
+assets/loose/meshes/effects/fxcobwebdooropen.nif	10757
+assets/loose/meshes/effects/fxcobwebexplosion02.nif	5780
+assets/loose/meshes/effects/fxcobwebroundwall01.nif	40221
+assets/loose/meshes/effects/fxcobwebwall01.nif	7912
+assets/loose/meshes/effects/fxdirtgiantexplosion.nif	10771
+assets/loose/meshes/effects/fxdragondeathlhandfire.nif	4787
+assets/loose/meshes/effects/fxdragondeathrhandfire.nif	4787
+assets/loose/meshes/effects/fxdrips01.nif	6765
+assets/loose/meshes/effects/fxdrips01tall.nif	6782
+assets/loose/meshes/effects/fxdrips01_more.nif	6912
+assets/loose/meshes/effects/fxdrips01_more_wider.nif	6918
+assets/loose/meshes/effects/fxdustburstmed.nif	12497
+assets/loose/meshes/effects/fxdustburstsm.nif	12496
+assets/loose/meshes/effects/fxdustbursttiny.nif	12498
+assets/loose/meshes/effects/fxdustdrop01.nif	13972
+assets/loose/meshes/effects/fxdustdrop02.nif	30807
+assets/loose/meshes/effects/fxdwesteam01.nif	12320
+assets/loose/meshes/effects/fxdwesteam01irratic.nif	17219
+assets/loose/meshes/effects/fxdwesteam01short.nif	16353
+assets/loose/meshes/effects/fxemptyexplosionart.nif	1988
+assets/loose/meshes/effects/fxfirewithembers01.nif	88083
+assets/loose/meshes/effects/fxfirewithembers01_cheap.nif	8138
+assets/loose/meshes/effects/fxfirewithembers01_lite.nif	14738
+assets/loose/meshes/effects/fxfirewithembers02.nif	86568
+assets/loose/meshes/effects/fxfirewithembers02toggle.nif	93596
+assets/loose/meshes/effects/fxfirewithembers03.nif	75604
+assets/loose/meshes/effects/fxfirewithembersheavytoggle.nif	103520
+assets/loose/meshes/effects/fxfirewithemberslogs01.nif	104649
+assets/loose/meshes/effects/fxfog01.nif	13724
+assets/loose/meshes/effects/fxfogfacing01.nif	4585
+assets/loose/meshes/effects/fxfogrollingfacing01.nif	4866
+assets/loose/meshes/effects/fxmzarktowerbeam.nif	8917
+assets/loose/meshes/effects/fxrapids.nif	5541
+assets/loose/meshes/effects/fxrapids02.nif	5481
+assets/loose/meshes/effects/fxrapidsbig01.nif	22436
+assets/loose/meshes/effects/fxrapidsfallsline01.nif	5921
+assets/loose/meshes/effects/fxrapidsfallstop.nif	30735
+assets/loose/meshes/effects/fxrapidsringheavy.nif	12401
+assets/loose/meshes/effects/fxrapidsrocks01.nif	99428
+assets/loose/meshes/effects/fxslowdustmist.nif	32436
+assets/loose/meshes/effects/fxslowmistbeam.nif	4994
+assets/loose/meshes/effects/fxspiderwebcorner03.nif	10674
+assets/loose/meshes/effects/fxspiderwebcorner04.nif	15324
+assets/loose/meshes/effects/fxspiderwebhitstrip01.nif	15502
+assets/loose/meshes/effects/fxspiderwebhitstrip01dest.nif	25963
+assets/loose/meshes/effects/fxspiderwebkitcorner2.nif	2714
+assets/loose/meshes/effects/fxspiderwebkitcorner3.nif	2710
+assets/loose/meshes/effects/fxspiderwebkitdinner.nif	8052
+assets/loose/meshes/effects/fxspiderwebkitdinnerhuman.nif	77669
+assets/loose/meshes/effects/fxspiderwebkitdinnerhumangnd.nif	176797
+assets/loose/meshes/effects/fxspiderwebkitpost01.nif	4628
+assets/loose/meshes/effects/fxspiderwebkitskeeverdinner.nif	73170
+assets/loose/meshes/effects/fxspiderwebkitskeeverdinnerstatictemp.nif	61628
+assets/loose/meshes/effects/fxspiderwebkitwall01.nif	2095
+assets/loose/meshes/effects/fxspiderwebshaft.nif	10317
+assets/loose/meshes/effects/fxspiderwebstripexplosion.nif	14569
+assets/loose/meshes/effects/fxspiderwebwall01.nif	6754
+assets/loose/meshes/effects/fxsplashheavy.nif	16560
+assets/loose/meshes/effects/fxsplashlargechurn.nif	30094
+assets/loose/meshes/effects/fxsplashlargechurnnorapids.nif	12198
+assets/loose/meshes/effects/fxsplashsmallparticles.nif	13821
+assets/loose/meshes/effects/fxsplashsmallparticleslong.nif	35730
+assets/loose/meshes/effects/fxsteambillow.nif	21588
+assets/loose/meshes/effects/fxsteamcrack.nif	30612
+assets/loose/meshes/effects/fxsteamjet.nif	19415
+assets/loose/meshes/effects/fxsteamjetfast.nif	19233
+assets/loose/meshes/effects/fxwaterfallmistblast.nif	14438
+assets/loose/meshes/effects/fxwaterfallmistblastlite.nif	9659
+assets/loose/meshes/effects/fxwaterfallskirtslope.nif	21345
+assets/loose/meshes/effects/fxwaterfallskirtslopenomist.nif	17955
+assets/loose/meshes/effects/fxwaterfallskirttallfront.nif	29282
+assets/loose/meshes/effects/fxwaterfallthin128x128.nif	31100
+assets/loose/meshes/effects/fxwaterfallthin2048x128.nif	44677
+assets/loose/meshes/effects/fxwaterfallthin2048x128_m.nif	44677
+assets/loose/meshes/effects/fxwaterfallthin2048x512.nif	80818
+assets/loose/meshes/effects/fxwaterfallthin256x128.nif	27397
+assets/loose/meshes/effects/fxwaterfallthin3096x256.nif	38618
+assets/loose/meshes/effects/fxwaterfallthin4096x256.nif	47621
+assets/loose/meshes/effects/fxwaterfallthin512x128.nif	33284
+assets/loose/meshes/effects/fxwaterfallthin512x64.nif	23363
+assets/loose/meshes/effects/fxwaterfallthinleak.nif	8045
+assets/loose/meshes/effects/fxwaterfallthinleaksmall.nif	6294
+assets/loose/meshes/effects/fxwaterfallthinsheet.nif	25773
+assets/loose/meshes/effects/fxwaterfallthinspray2048.nif	19678
+assets/loose/meshes/effects/fxwaterjet01.nif	43554
+assets/loose/meshes/effects/fxwaterjetlight.nif	30848
+assets/loose/meshes/effects/fxwaterjet_large01.nif	23533
+assets/loose/meshes/effects/fx_rainandmistbeam.nif	8365
+assets/loose/meshes/effects/fx_rainandmistbeamnoglow.nif	7807
+assets/loose/meshes/effects/fx_rainandmistbeam_fast.nif	9847
+assets/loose/meshes/effects/impacteffects/
+assets/loose/meshes/effects/impacteffects/fxdragonfireimpact.nif	9108
+assets/loose/meshes/effects/impacteffects/fxdragonfireimpactactor.nif	8996
+assets/loose/meshes/effects/impacteffects/fxdragonfireimpactsteam.nif	9095
+assets/loose/meshes/effects/impacteffects/fxdragonfireimpactwater.nif	393
+assets/loose/meshes/effects/impacteffects/fxwebsliceimpact.nif	3588
+assets/loose/meshes/effects/mgmagicfirepillar01.nif	44287
+assets/loose/meshes/effects/moteeffect01.nif	19946
+assets/loose/meshes/effects/ms06potemasummon.nif	82298
+assets/loose/meshes/effects/watersplash.nif	8127
+assets/loose/meshes/furniture/
+assets/loose/meshes/furniture/alchemyworkbench.nif	193868
+assets/loose/meshes/furniture/alchemyworkstation.nif	86436
+assets/loose/meshes/furniture/bedroll/
+assets/loose/meshes/furniture/bedroll/bedroll01.nif	12255
+assets/loose/meshes/furniture/blacksmithforgemarker.nif	2370158
+assets/loose/meshes/furniture/blacksmithforgemarkerwr.nif	268197
+assets/loose/meshes/furniture/blacksmithingskyforgemarker.nif	2405901
+assets/loose/meshes/furniture/clutter/
+assets/loose/meshes/furniture/clutter/leveranimatingmetal.nif	22142
+assets/loose/meshes/furniture/clutter/milllogpile.nif	775257
+assets/loose/meshes/furniture/fxspiderwebkitdoorspecial.nif	114561
+assets/loose/meshes/furniture/fxspiderwebkitdoorspecialdest.nif	38298
+assets/loose/meshes/furniture/smallcookingpot.nif	67813
+assets/loose/meshes/interface/
+assets/loose/meshes/interface/intmenufogparticles.nif	36467
+assets/loose/meshes/magic/
+assets/loose/meshes/magic/absorbbluehandfx01.nif	19695
+assets/loose/meshes/magic/absorbgreenhandfx01.nif	22407
+assets/loose/meshes/magic/absorbredhandfx01.nif	22405
+assets/loose/meshes/magic/alterposfxhand01.nif	108943
+assets/loose/meshes/magic/baneundeadhandeffects.nif	18063
+assets/loose/meshes/magic/blizzardhandeffects.nif	17765
+assets/loose/meshes/magic/da16skullhandfx01.nif	14490
+assets/loose/meshes/magic/da16skullofcorruptiondestructionhandeffects.nif	17275
+assets/loose/meshes/magic/detectlifefxhand01.nif	32794
+assets/loose/meshes/magic/fireball01handeffects.nif	20983
+assets/loose/meshes/magic/fireballdragonprojectile01.nif	21020
+assets/loose/meshes/magic/fireballexp01.nif	29402
+assets/loose/meshes/magic/fireballexpsmall01.nif	10867
+assets/loose/meshes/magic/firestormhandeffects.nif	24139
+assets/loose/meshes/magic/firewallfx01.nif	18440
+assets/loose/meshes/magic/frostbolthandfx01.nif	14879
+assets/loose/meshes/magic/frosthandfx01.nif	12338
+assets/loose/meshes/magic/fxfirecloakhandeffects.nif	29990
+assets/loose/meshes/magic/fxicecloakhandeffects.nif	35785
+assets/loose/meshes/magic/fxlightspellhandeffects.nif	30165
+assets/loose/meshes/magic/fxshockcloakhandeffects.nif	37269
+assets/loose/meshes/magic/healfxhand01.nif	37267
+assets/loose/meshes/magic/healmystfxhand01.nif	40967
+assets/loose/meshes/magic/healritualhandeffects.nif	18059
+assets/loose/meshes/magic/illusionmassgreenhandeffects.nif	17679
+assets/loose/meshes/magic/illusionmassredhandeffects.nif	17894
+assets/loose/meshes/magic/illusionnegfxhand01.nif	32955
+assets/loose/meshes/magic/illusionposfxhand01.nif	32877
+assets/loose/meshes/magic/impactlightspell.nif	8005
+assets/loose/meshes/magic/invisfxhand01.nif	106833
+assets/loose/meshes/magic/lightningstormhandeffects.nif	17921
+assets/loose/meshes/magic/lightspellactorfx.nif	22376
+assets/loose/meshes/magic/lightspellhazard.nif	23832
+assets/loose/meshes/magic/lightspellprojectile.nif	9838
+assets/loose/meshes/magic/lightspellstaticlight.nif	20524
+assets/loose/meshes/magic/magdragonfire01.nif	47827
+assets/loose/meshes/magic/magdragonmouthfireskin.nif	126168
+assets/loose/meshes/magic/magfirebreathshout.nif	20629
+assets/loose/meshes/magic/nighteyefxhand01.nif	48748
+assets/loose/meshes/magic/paralyzefxhand01.nif	47636
+assets/loose/meshes/magic/paralyzemasshandeffects.nif	18001
+assets/loose/meshes/magic/reanimatehandfx01.nif	26167
+assets/loose/meshes/magic/reanimateritualcastbodyfx.nif	49537
+assets/loose/meshes/magic/reanimateritualhandeffects.nif	17297
+assets/loose/meshes/magic/reanimatetargetfx.nif	14825
+assets/loose/meshes/magic/shieldritualhandeffects.nif	18071
+assets/loose/meshes/magic/shieldspellhand01.nif	64851
+assets/loose/meshes/magic/shockhandeffects.nif	17529
+assets/loose/meshes/magic/soultraphandeffects.nif	34990
+assets/loose/meshes/magic/staffofmagnusfxhand01.nif	39117
+assets/loose/meshes/magic/summonbanishhandfx01.nif	28604
+assets/loose/meshes/magic/summoncommandhandfx01.nif	27903
+assets/loose/meshes/magic/summonhandfx01.nif	34888
+assets/loose/meshes/magic/summonritualcastbodyfx.nif	57152
+assets/loose/meshes/magic/summonritualhandeffects.nif	17238
+assets/loose/meshes/magic/summontargetfx.nif	70907
+assets/loose/meshes/magic/summonvalortargetfx.nif	71442
+assets/loose/meshes/magic/telekinesisfxhand01.nif	20632
+assets/loose/meshes/magic/tg06controlhandeffects.nif	12789
+assets/loose/meshes/magic/tg08irkngthandmercershockwave.nif	88821
+assets/loose/meshes/magic/turnundeadfxhand01.nif	35949
+assets/loose/meshes/magic/wardfxhand01.nif	2609
+assets/loose/meshes/magic/wardinhandfx.nif	25159
+assets/loose/meshes/mps/
+assets/loose/meshes/mps/mpschaurusspit.nif	7640
+assets/loose/meshes/mps/mpsfallingdusteffect.nif	5356
+assets/loose/meshes/mps/mpsfireboltimpact01.nif	9340
+assets/loose/meshes/mps/mpsfirelg01.nif	6416
+assets/loose/meshes/mps/mpsfirelg02.nif	3197
+assets/loose/meshes/mps/mpsfirelgsmoke01.nif	3388
+assets/loose/meshes/mps/mpsfiresmall01.nif	6254
+assets/loose/meshes/mps/mpsfiresmsmoke01.nif	3388
+assets/loose/meshes/mps/mpsfirewallbase.nif	2805
+assets/loose/meshes/mps/mpsmiststreet01.nif	7041
+assets/loose/meshes/mps/mpssmokechimney01.nif	6274
+assets/loose/meshes/mps/mpssmokechimney02.nif	6243
+assets/loose/meshes/mps/mpsspiderspitlines.nif	3288
+assets/loose/meshes/mps/mpsspiderspitsplash.nif	3062
+assets/loose/meshes/mps/mpsspiderspitspray.nif	3618
+assets/loose/meshes/mps/mpstorchfire01.nif	2936
+assets/loose/meshes/plants/
+assets/loose/meshes/plants/floradeathbell01.nif	37552
+assets/loose/meshes/plants/floradeathbell02.nif	87799
+assets/loose/meshes/plants/floraleek01.nif	15853
+assets/loose/meshes/plants/florapotatoplant01.nif	21840
+assets/loose/meshes/plants/glowingmushroom01.nif	18469
+assets/loose/meshes/plants/glowingmushroomcluster01.nif	62970
+assets/loose/meshes/plants/glowingmushroomsingle01.nif	22163
+assets/loose/meshes/traps/
+assets/loose/meshes/traps/hingetrap/
+assets/loose/meshes/traps/hingetrap/traphingetrigger01.nif	65174
+assets/loose/meshes/traps/oiltrap/
+assets/loose/meshes/traps/oiltrap/oiltrap01.nif	49347
+assets/loose/meshes/water/
+assets/loose/meshes/water/watercreekdeep01.nif	138258
+assets/loose/meshes/weapons/
+assets/loose/meshes/weapons/dawnbreaker/
+assets/loose/meshes/weapons/dawnbreaker/1stpersondawnbreaker.nif	74008
+assets/loose/meshes/weapons/dawnbreaker/dawnbreaker.nif	56362
+assets/loose/meshes/weapons/torch/
+assets/loose/meshes/weapons/torch/torch.nif	39566
+assets/loose/textures/
+assets/loose/textures/architecture/
+assets/loose/textures/architecture/whiterun/
+assets/loose/textures/architecture/whiterun/wrlodwindows01.dds	87536
+assets/loose/textures/architecture/whiterun/wrlodwindows01_g.dds	87536
+assets/loose/textures/clutter/
+assets/loose/textures/clutter/blackreachmushroom01_g.dds	1398276
+assets/loose/textures/clutter/blackreachmushroom02_g.dds	1398276
+assets/loose/textures/clutter/chauruseggs/
+assets/loose/textures/clutter/chauruseggs/eggsacs_g.dds	349700
+assets/loose/textures/clutter/chauruseggs/eggs_g.dds	349700
+assets/loose/textures/clutter/displaycaseglass.dds	1398276
+assets/loose/textures/clutter/displaycase_n.dds	1398276
+assets/loose/textures/clutter/ingredients/
+assets/loose/textures/clutter/ingredients/daedraheart_g.dds	87556
+assets/loose/textures/effects/
+assets/loose/textures/effects/fxcobwebs.dds	5592580
+assets/loose/textures/effects/fxembers_g.dds	349700
+assets/loose/textures/effects/fxembers_n.dds	349700
+assets/loose/textures/effects/fxwoodburning2.dds	349700
+assets/loose/textures/effects/fxwoodburning2_g.dds	1398276
+assets/loose/textures/effects/fxwoodburning2_n.dds	5592580
+assets/loose/textures/effects/gradients/
+assets/loose/textures/effects/gradients/gradcobweb.dds	87556
+assets/loose/textures/effects/gradients/gradconjurefx.dds	22052
+assets/loose/textures/effects/gradients/gradcreek01.dds	22052
+assets/loose/textures/effects/gradients/gradfiremx.dds	87588
+assets/loose/textures/effects/gradients/gradhealmagic.dds	22052
+assets/loose/textures/effects/gradients/gradillusion01m.dds	22052
+assets/loose/textures/effects/gradients/gradillusiondark01m.dds	22052
+assets/loose/textures/effects/gradients/gradlightspell.dds	87588
+assets/loose/textures/effects/gradients/gradreanimatefx.dds	22052
+assets/loose/textures/effects/gradients/gradsplash.dds	43876
+assets/loose/textures/effects/gradients/gradsteamthin.dds	87556
+assets/loose/textures/effects/gradients/gradwatermist.dds	87556
+assets/loose/textures/effects/gradients/gradwhitewater.dds	87588
+assets/loose/textures/effects/gradients/gradwhitewatermedsoft.dds	87588
+assets/loose/textures/effects/gradients/gradwhitewatermedsoftinv.dds	87588
+assets/loose/textures/effects/gradients/gradwhitewatersoft.dds	87556
+assets/loose/textures/effects/gradients/gradwsplash01.dds	22020
+assets/loose/textures/effects/pp_black.dds	5636
+assets/loose/textures/plants/
+assets/loose/textures/plants/deathbell01_g.dds	349700
+assets/noglow/
+assets/noglow/meshes/
+assets/noglow/meshes/effects/
+assets/noglow/meshes/effects/ambient/
+assets/noglow/meshes/effects/ambient/fxglowfillrndlitbrt.nif	6317
+assets/noglow/meshes/effects/ambient/fxglowfillrndlitdim.nif	6317
+assets/noglow/meshes/effects/ambient/fxglowfillrndlitmid.nif	6317
+assets/noglow/meshes/effects/ambient/fxglowfillrndlitxbrt.nif	6318
+assets/noglow/meshes/effects/ambient/fxglowfillrndlitxdim.nif	6318
+assets/noglow/meshes/effects/ambient/fxglowfillroundbrt.nif	6316
+assets/noglow/meshes/effects/ambient/fxglowfillrounddim.nif	6316
+assets/noglow/meshes/effects/ambient/fxglowfillroundmid.nif	6300
+assets/noglow/meshes/effects/ambient/fxglowfillroundxbrt.nif	6317
+assets/noglow/meshes/effects/ambient/fxglowfillroundxdim.nif	6317
+assets/remove_candle_glow/
+assets/remove_candle_glow/textures/
+assets/remove_candle_glow/textures/effects/
+assets/remove_candle_glow/textures/effects/candleglow01.dds	5636
+assets/remove_yellow_glow/
+assets/remove_yellow_glow/textures/
+assets/remove_yellow_glow/textures/effects/
+assets/remove_yellow_glow/textures/effects/glowBig.dds	5636
+assets/remove_yellow_glow/textures/effects/glowslightflash.dds	5636
+assets/remove_yellow_glow/textures/effects/glowsoft01.dds	5636
+assets/tex/
+assets/tex/meshes/
+assets/tex/meshes/effects/
+assets/tex/meshes/effects/fxwaterfallskirtslopenomist.nif	17949
+assets/tex/meshes/interface/
+assets/tex/meshes/interface/intmenufogparticles.nif	36463
+assets/tex/meshes/traps/
+assets/tex/meshes/traps/oiltrappuddle01/
+assets/tex/meshes/traps/oiltrappuddle01/oiltrappuddle01.nif	10606
+assets/tex/meshes/traps/oiltrappuddle01/oiltrappuddle01light.nif	10611
+assets/tex/textures/
+assets/tex/textures/dlc02/
+assets/tex/textures/dlc02/effects/
+assets/tex/textures/dlc02/effects/dlc2brightcloudtile.dds	5592580
+assets/tex/textures/dlc02/furniture/
+assets/tex/textures/dlc02/furniture/dlc2darkelffurniture01.dds	5592580
+assets/tex/textures/effects/
+assets/tex/textures/effects/cloud2.dds	1398276
+assets/tex/textures/effects/cloudtest.dds	1398276
+assets/tex/textures/effects/cloudtile.dds	1398276
+assets/tex/textures/effects/cloudtileflat_n.dds	1398276
+assets/tex/textures/effects/cloudtilelight.dds	1398276
+assets/tex/textures/effects/cloudtilelight_dim.dds	1398276
+assets/tex/textures/effects/cloudtile_dim.dds	1398276
+assets/tex/textures/effects/darkswirls.dds	5592580
+assets/tex/textures/effects/darkswirlsinvert_n.dds	5592580
+assets/tex/textures/effects/darkswirlsoil.dds	5592580
+assets/tex/textures/effects/darkswirls_n.dds	5592580
+assets/tex/textures/effects/dimfog.dds	1398276
+assets/tex/textures/effects/dusttiny.dds	5592580
+assets/tex/textures/effects/dusttiny_dim.dds	5592580
+assets/tex/textures/effects/dusttiny_dimmer.dds	5592580
+assets/tex/textures/effects/fluiddrops.dds	699236
+assets/tex/textures/effects/fluiddrops02.dds	349700
+assets/tex/textures/effects/fluidsubsplatfilm.dds	699236
+assets/tex/textures/effects/fxcobwebs.dds	22369796
+assets/tex/textures/effects/fxcrackstile.dds	22369796
+assets/tex/textures/effects/fxfogheavy.dds	1398276
+assets/tex/textures/effects/fxfoglight.dds	1398276
+assets/tex/textures/effects/fxglowspotlinear.dds	349700
+assets/tex/textures/effects/fxglowspotlinearalpha.dds	349700
+assets/tex/textures/effects/fxglowspotlinearblack.dds	349700
+assets/tex/textures/effects/fxglowspotlineardim.dds	349700
+assets/tex/textures/effects/fxpuffstile.dds	1398276
+assets/tex/textures/effects/fxsparkfieldgray.dds	5592580
+assets/tex/textures/effects/fxspiderwebs.dds	5592580
+assets/tex/textures/effects/fxsteamthickanim.dds	5592580
+assets/tex/textures/effects/magichglow01.dds	22020
+assets/tex/textures/effects/magicicewisps.dds	5592580
+assets/tex/textures/effects/mxsmokeanim.dds	5592580
+assets/tex/textures/effects/oil_n.dds	5592580
+assets/tex/textures/effects/rainsheettiny.dds	5592580
+assets/tex/textures/effects/rainsheettiny_dim.dds	5592580
+assets/tex/textures/effects/smokeparticles01.dds	1398276
+assets/webmother/
+assets/webmother/meshes/
+assets/webmother/meshes/creationclub/
+assets/webmother/meshes/creationclub/bgssse069/
+assets/webmother/meshes/creationclub/bgssse069/actors/
+assets/webmother/meshes/creationclub/bgssse069/actors/webmother/
+assets/webmother/meshes/creationclub/bgssse069/actors/webmother/webmother.nif	871478
+fomod/
+fomod/info.xml	287
+fomod/ModuleConfig.xml	12305
+img/
+img/01.jpg	317107
+img/02a.jpg	141084
+img/02b.jpg	137924
+img/03a.jpg	162280
+img/03b.jpg	134529
+plugin/
+plugin/Particle Patch.esp	5942

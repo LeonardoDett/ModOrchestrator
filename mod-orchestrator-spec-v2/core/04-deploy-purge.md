@@ -43,7 +43,8 @@ Ações por Location:
 | `remove_managed` | aplicado tem, desejado não tem, observado confere | não |
 | `backup_and_create` | desejado tem, aplicado não tem, observado tem arquivo não gerenciado | não (D034), mas listado no resumo |
 | `restore_backup` | aplicado tem `backup` para a Location e o desejado não usa mais | não |
-| `external_change` | aplicado tem e observado **não** confere | **sim** (core/09) |
+| `external_change` | aplicado tem e observado **não** confere (exceto ausente numa Location que o desejado não quer mais: a entrada é só esquecida, D080) | **sim** (core/09) |
+| `set_aside` | decisão "Reverter" de um `replaced` cujo original já está guardado: o arquivo encontrado vai para o BackupStore sem ser registrado (D080) | resultado de decisão |
 | `method_fallback` | método preferido impossível | **sim** |
 | `blocked` | target inacessível, caminho longo não suportado, permissão | **sim** (resolver fora e repetir) |
 | `mkdir` / `rmdir_managed` | pastas necessárias / pastas criadas pelo gerenciador que ficam vazias (se setting ligado) | não |

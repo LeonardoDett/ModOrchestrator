@@ -19,6 +19,8 @@ type Paths struct {
 	Database string
 	// Logs holds the rotating technical log (core/10 §4).
 	Logs string
+	// Cache holds discardable caches (core/14 §1: plugin headers).
+	Cache string
 }
 
 // Resolve returns the data paths, creating the root directory if needed.
@@ -42,5 +44,6 @@ func Resolve() (Paths, error) {
 		Root:     root,
 		Database: filepath.Join(root, "state.db"),
 		Logs:     filepath.Join(root, "logs"),
+		Cache:    filepath.Join(root, "cache"),
 	}, nil
 }

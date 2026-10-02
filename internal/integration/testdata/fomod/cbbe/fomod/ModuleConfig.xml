@@ -1,0 +1,655 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
+	<moduleName>Caliente&apos;s Beautiful Bodies Enhancer -CBBE-</moduleName>
+	<moduleImage path="FOMod\CBBE.png"/>
+	<requiredInstallFiles>
+		<folder source="00 Required (Slim)" destination="" />
+	</requiredInstallFiles>
+	<installSteps order="Explicit">
+		<installStep name="Base Options">
+			<optionalFileGroups order="Explicit">
+				<group name="Body Shape" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Slim">
+							<description>
+								<![CDATA[Choose this option if you want to use the slim body shape. Affects the other options as well.]]>
+							</description>
+							<image path="FOMod\Slim.jpg"/>
+							<conditionFlags>
+								<flag name="bSlim">On</flag>
+							</conditionFlags>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Curvy">
+							<description>
+								<![CDATA[Choose this option if you want to use the curvy default shape. Affects the other options as well.]]>
+							</description>
+							<image path="FOMod\Curvy.jpg"/>
+							<conditionFlags>
+								<flag name="bCurvy">On</flag>
+							</conditionFlags>
+							<files>
+								<folder source="01 Curvy" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Vanilla Shape">
+							<description>
+								<![CDATA[The CBBE body, shaped to conform closely to the proportions of the vanilla female body - with a few adjustments. Affects the other options as well.]]>
+							</description>
+							<image path="FOMod\Vanilla.jpg"/>
+							<conditionFlags>
+								<flag name="bVanilla">On</flag>
+							</conditionFlags>
+							<files>
+								<folder source="02 Vanilla" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Underwear Options" type="SelectAtMostOne">
+					<plugins order="Explicit">
+						<plugin name="Underwear">
+							<description>
+								<![CDATA[This will replace the nude body with underwear. Color and shape options for this one follow in the next step. The bows can be removed in BodySlide. To stay nude, don't select this!]]>
+							</description>
+							<image path="FOMod\Underwear.jpg"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwear">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="NeverNude">
+							<description>
+								<![CDATA[This will replace the nude body with the vanilla underwear. To stay nude, don't select this!]]>
+							</description>
+							<image path="FOMod\NeverNude.jpg"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bNeverNude">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Outfit Options" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Vanilla Outfits">
+							<description>
+								<![CDATA[Choose this option if you want to install the adjusted vanilla outfits for CBBE. Required for the shape and properly appearing body textures. Includes BodySlide addon for the outfits as well.]]>
+							</description>
+							<image path="FOMod\CBBE.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bVanillaOutfits">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Recommended"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Face Options" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Face Pack">
+							<description>
+								<![CDATA[Installs female head textures and masks that are compatible with the default CBBE body textures. Required if you don't use another CBBE compatible set of head and body textures already.]]>
+							</description>
+							<image path="FOMod\Face Pack.jpg"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bFacePack">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Recommended"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Dirt to Beauty Marks">
+							<description>
+								<![CDATA[Turns the facial dirt options in the character creation into three beauty mark options. Doesn't affect NPCs, unless their face is regenerated in the Creation Kit.]]>
+							</description>
+							<image path="FOMod\Beauty Marks.jpg"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bDirtToBeautyMarks">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Eyebrow Options" type="SelectAtMostOne">
+					<plugins order="Explicit">
+						<plugin name="Thin + Trimmed Brows">
+							<description>
+								<![CDATA[Female eyebrow textures that are both thinned out and trimmed. They match the hair colors more closely than vanilla eyebrows.]]>
+							</description>
+							<image path="FOMod\Thin + Trimmed Brows.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bThinTrimmedBrows">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Thin + Trimmed Brows (Light)">
+							<description>
+								<![CDATA[Female eyebrow textures that are both thinned out and trimmed. Light option is recommended for very light hair colors.]]>
+							</description>
+							<image path="FOMod\Thin + Trimmed Brows (Light).png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bThinTrimmedBrowsLight">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Trimmed Brows">
+							<description>
+								<![CDATA[Female eyebrow textures that are a little more trimmed compared to vanilla. They match the hair colors more closely than vanilla eyebrows.]]>
+							</description>
+							<image path="FOMod\Trimmed Brows.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bTrimmedBrows">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Trimmed Brows (Light)">
+							<description>
+								<![CDATA[Female eyebrow textures that are a little more trimmed compared to vanilla. Light option is recommended for very light hair colors.]]>
+							</description>
+							<image path="FOMod\Trimmed Brows (Light).png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bTrimmedBrowsLight">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Bushier Brows">
+							<description>
+								<![CDATA[Female eyebrow textures that aren't trimmed, so they are a little bushier just like vanilla. They match the hair colors more closely than vanilla eyebrows.]]>
+							</description>
+							<image path="FOMod\Bushier Brows.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bBushierBrows">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Bushier Brows (Light)">
+							<description>
+								<![CDATA[Female eyebrow textures that aren't trimmed, so they are a little bushier just like vanilla. Light option is recommended for very light hair colors.]]>
+							</description>
+							<image path="FOMod\Bushier Brows (Light).png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bBushierBrowsLight">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Miscellaneous" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Pubic Hair">
+							<description>
+								<![CDATA[Installs a body texture with pubic hair on the front.]]>
+							</description>
+							<image path="FOMod\Pubic Hair.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bPubicHair">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+		<installStep name="Underwear Options">
+			<visible>
+				<flagDependency flag="bUnderwear" value="On" />
+			</visible>
+			<optionalFileGroups order="Explicit">
+				<group name="Mesh" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Normal">
+							<description>
+								<![CDATA[The underwear in its normal shape. The bows can be removed in BodySlide.]]>
+							</description>
+							<image path="FOMod\Underwear.jpg"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwearRevealing">Off</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Revealing">
+							<description>
+								<![CDATA[The underwear in its more revealing shape. The bows can be removed in BodySlide.]]>
+							</description>
+							<image path="FOMod\Underwear Revealing.jpg"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwearRevealing">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Color" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Black">
+							<description>
+								<![CDATA[The underwear in a black color.]]>
+							</description>
+							<image path="FOMod\Underwear Black.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Dark Purple">
+							<description>
+								<![CDATA[The underwear in a dark purple color.]]>
+							</description>
+							<image path="FOMod\Underwear Dark Purple.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwearDarkPurple">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Aqua">
+							<description>
+								<![CDATA[The underwear in a aqua color.]]>
+							</description>
+							<image path="FOMod\Underwear Aqua.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwearAqua">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Grey">
+							<description>
+								<![CDATA[The underwear in a grey color.]]>
+							</description>
+							<image path="FOMod\Underwear Gray.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwearGrey">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Dark Red">
+							<description>
+								<![CDATA[The underwear in a dark red color.]]>
+							</description>
+							<image path="FOMod\Underwear Dark Red.png"/>
+							<files>
+								<folder source="== Installer ==" destination="" priority="0"/>
+							</files>
+							<conditionFlags>
+								<flag name="bUnderwearDarkRed">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+		<installStep name="Optional Features">
+			<optionalFileGroups order="Explicit">
+				<group name="SKEE (RaceMenu)" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="RaceMenu Morphs (BodyMorph)">
+							<description>
+								<![CDATA[Adds in-game morphs to RaceMenu via a script and plugin. Needs bodies and outfits to be built with the "Build Morphs" checkbox in BodySlide. Requires RaceMenu SE.]]>
+							</description>
+							<image path="FOMod\CBBE.png"/>
+							<files>
+								<folder source="26 RaceMenu Morphs" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+				<group name="Morph Files" type="SelectAny">
+					<plugins order="Explicit">
+						<plugin name="Morph Files (Body)">
+							<description>
+								<![CDATA[Adds morph (.tri) files for in-game morphs for the body. Requires RaceMenu SE to be of use.]]>
+							</description>
+							<image path="FOMod\CBBE.png"/>
+							<files>
+								<folder source="27 Morph Files (Body)" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Morph Files (Outfits)">
+							<description>
+								<![CDATA[Adds morph (.tri) files for in-game morphs for the vanilla outfits. Requires RaceMenu SE to be of use.]]>
+							</description>
+							<image path="FOMod\CBBE.png"/>
+							<files>
+								<folder source="28 Morph Files (Outfits)" destination="" priority="0"/>
+							</files>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+	</installSteps>
+	
+	<conditionalFileInstalls>
+		<patterns>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bNeverNude" value="On"/>
+					<flagDependency flag="bSlim" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="03 NeverNude Slim" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bNeverNude" value="On"/>
+					<flagDependency flag="bCurvy" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="04 NeverNude Curvy" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bNeverNude" value="On"/>
+					<flagDependency flag="bVanilla" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="05 NeverNude Vanilla" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bVanillaOutfits" value="On"/>
+					<flagDependency flag="bSlim" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="06 Outfits Slim" destination=""/>
+					<folder source="09 Outfits BodySlide" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bVanillaOutfits" value="On"/>
+					<flagDependency flag="bCurvy" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="07 Outfits Curvy" destination=""/>
+					<folder source="09 Outfits BodySlide" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bVanillaOutfits" value="On"/>
+					<flagDependency flag="bVanilla" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="08 Outfits Vanilla" destination=""/>
+					<folder source="09 Outfits BodySlide" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bFacePack" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="10 Face Pack" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bThinTrimmedBrows" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="12 Thin + Trimmed Brows" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bThinTrimmedBrowsLight" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="12 Thin + Trimmed Brows (Light)" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bTrimmedBrows" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="13 Trimmed Brows" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bTrimmedBrowsLight" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="13 Trimmed Brows (Light)" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bBushierBrows" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="14 Bushier Brows" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bBushierBrowsLight" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="14 Bushier Brows (Light)" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bDirtToBeautyMarks" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="15 Dirt to Beauty Marks" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bPubicHair" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="11 Pubic Hair" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="16 Underwear" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearRevealing" value="Off"/>
+					<flagDependency flag="bCurvy" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="17 Underwear Curvy" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearRevealing" value="Off"/>
+					<flagDependency flag="bVanilla" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="18 Underwear Vanilla" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearRevealing" value="On"/>
+					<flagDependency flag="bSlim" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="19 Underwear Revealing Slim" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearRevealing" value="On"/>
+					<flagDependency flag="bCurvy" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="20 Underwear Revealing Curvy" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearRevealing" value="On"/>
+					<flagDependency flag="bVanilla" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="21 Underwear Revealing Vanilla" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearDarkPurple" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="22 Underwear Dark Purple" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearAqua" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="23 Underwear Aqua" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearGrey" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="24 Underwear Grey" destination=""/>
+				</files>
+			</pattern>
+			<pattern>
+				<dependencies>
+					<flagDependency flag="bUnderwear" value="On"/>
+					<flagDependency flag="bUnderwearDarkRed" value="On"/>
+				</dependencies>
+				<files>
+					<folder source="25 Underwear Dark Red" destination=""/>
+				</files>
+			</pattern>
+		</patterns>
+	</conditionalFileInstalls>
+</config>

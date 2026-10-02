@@ -129,7 +129,11 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `deploy_failed` | deploy/purge terminou com Locations não aplicadas | `count`, `first`, `reason`, `locations`, `codes` |
 | `file_locked`, `permission_denied`, `path_too_long`, `io_error`, `verify_failed`, `external_change_raced` | falha de uma Location (motivo em `deploy_failed`) | — |
 | `nothing_to_purge`, `purge_incomplete`, `nothing_to_reconcile`, `method_unchanged`, `staging_unchanged` | purge, reconciliação, troca de método e mover staging (D078) | `instance`, `method`, `count` |
+| `external_decision_invalid`, `capture_target_mismatch` | decisão de alteração externa não oferecida / mod que não implanta no target da captura (core/09, D080) | `path`, `action`, `mod`, `target` |
 | `folders_invalid` (motivos `not_absolute`, `overlap`, `other_instance`, `not_directory`) | nova pasta de staging inválida (core/04 §10) | `folder`, `reason` |
+| `mods_incompatible`, `game_running` | preflight de deploy (e purge, para `game_running`): incompatíveis habilitados / jogo em execução (core/06 §4, D082) | `a`, `b`, `process` |
+| `diagnostic_not_found`, `diagnostic_action_invalid`, `diagnostic_not_suppressible` | ação de um diagnóstico já resolvido / não oferecida / suprimir bloqueante (core/10, D082) | `key`, `action`, `code` |
+| `history_entry_not_found`, `history_not_reversible`, `history_already_reverted`, `history_stale` | reverter entrada do histórico (core/10 §3, D082) | `entry`, `type` |
 
 Erros de operação (`OperationError`) também carregam `params` desde a F4 (D067), para a UI traduzir a mensagem com os mesmos parâmetros.
 

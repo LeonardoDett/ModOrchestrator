@@ -172,10 +172,11 @@ func applyPairDecisions(set *rules.Set, decisions []PairDecision, names map[mod.
 				continue
 			}
 			if r.Source == rules.SourceUser {
+				desc := ruleDescription(set, r.ID)
 				if err := set.Remove(r.ID); err != nil {
 					return nil, ruleError(err)
 				}
-				changes = append(changes, ruleChange{EventRuleRemoved, r.ID, map[string]string{"rule": string(r.ID)}})
+				changes = append(changes, ruleChange{EventRuleRemoved, r.ID, desc})
 			} else {
 				if err := set.SetDisabled(r.ID, true); err != nil {
 					return nil, ruleError(err)

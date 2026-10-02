@@ -1,0 +1,61 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
+  <moduleName position="Left" colour="000000">Installation of Blended Roads</moduleName>
+  <installSteps order="Explicit">
+    <installStep name="">
+      <optionalFileGroups order="Explicit">
+        <group name="Main Files" type="SelectExactlyOne">
+          <!--<designer.metadata.do.not.edit> {"name":"Main Files"}-->
+          <plugins order="Ascending">
+            <plugin name="Blended Roads">
+              <!--<designer.metadata.do.not.edit> {"name":"Blended Roads"}-->
+              <description>Blended roads with vanilla flat road meshes, no performance drop.</description>
+              <image path="images\flat_blend.jpg"/>
+              <files>
+                <folder source="00 Blended Roads" destination="" priority="0" alwaysInstall="false" installIfUsable="false"/>
+              </files>
+              <typeDescriptor>
+                <type name="Optional"/>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="REALly Blended Roads">
+              <!--<designer.metadata.do.not.edit> {"name":"REALly Blended Roads"}-->
+              <description>REALly Blended roads with 3D road meshes, similar to Real Roads, but with minor performance drop.</description>
+              <image path="images\real_blend.jpg"/>
+              <files>
+                <folder source="02 REALly Blended ROADS" destination="" priority="0" alwaysInstall="false" installIfUsable="false"/>
+              </files>
+              <typeDescriptor>
+                <type name="Optional"/>
+              </typeDescriptor>
+            </plugin>
+          </plugins>
+        </group>
+        <group name="SMIM Compatibility Patch" type="SelectAtMostOne">
+          <!--<designer.metadata.do.not.edit> {"name":"SMIM Compatibility Patch"}-->
+          <plugins order="Ascending">
+            <plugin name="Blended Roads">
+              <!--<designer.metadata.do.not.edit> {"name":"Blended Roads"}-->
+              <description>SMIM Compatibility Patch for the bridge. Pick  this if you have selected Blended Roads as Main Files. Or none if you don't use SMIM.</description>
+              <files>
+                <folder source="01 Blended Roads SMIM Compatibility patch" destination="" priority="0" alwaysInstall="false" installIfUsable="false"/>
+              </files>
+              <typeDescriptor>
+                <type name="Optional"/>
+              </typeDescriptor>
+            </plugin>
+            <plugin name="REALly Blended Roads">
+              <!--<designer.metadata.do.not.edit> {"name":"REALly Blended Roads"}-->
+              <description>SMIM Compatibility Patch for the bridge. Pick  this if you have selected REALly Blended Roads as Main Files. Or none if you don't use SMIM.</description>
+              <files>
+                <folder source="03 REALly Blended ROADS SMIM Compatibility Patch" destination="" priority="0" alwaysInstall="false" installIfUsable="false"/>
+              </files>
+              <typeDescriptor>
+                <type name="Optional"/>
+              </typeDescriptor>
+            </plugin>
+          </plugins>
+        </group>
+      </optionalFileGroups>
+    </installStep>
+  </installSteps>
+</config>

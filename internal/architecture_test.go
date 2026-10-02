@@ -69,7 +69,7 @@ var (
 	calculatedState = []string{
 		"core/domain/conflict", "core/domain/deployplan", "core/domain/deploystate",
 		"core/domain/externalchange", "core/domain/diagnostic", "core/domain/dependency",
-		"core/domain/installer",
+		"core/domain/installer", "core/domain/health",
 	}
 	pureAlgorithms = []string{"core/domain/ordering", "core/domain/relpath"}
 )

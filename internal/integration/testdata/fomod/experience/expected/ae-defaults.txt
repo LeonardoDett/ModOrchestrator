@@ -1,0 +1,15 @@
+# visible steps: 0,1
+# flags: skyrim_vr=Off
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Step 1","group":0,"groupName":"Plugin version","options":[1],"names":["AE v1.6.1170"]},{"step":1,"stepName":"Step 2","group":0,"groupName":"Aspect ratio","options":[0],"names":["16:9"]}]
+Interface/exported/HUDHooks.swf <- 00 Required/Interface/exported/HUDHooks.swf (19819)
+Interface/statsmenu.swf <- 02 Menu/SE/16x9/Interface/statsmenu.swf (34640)
+Interface/trainingmenu.swf <- 02 Menu/SE/16x9/Interface/trainingmenu.swf (23730)
+Scripts/Experience.pex <- 00 Required/Scripts/Experience.pex (1329)
+Scripts/Source/Experience.psc <- 00 Required/Scripts/Source/Experience.psc (1247)
+SKSE/Plugins/Experience.dll <- 01 Plugin/AE1170/SKSE/Plugins/Experience.dll (3851264)
+SKSE/Plugins/Experience.ini <- 00 Required/SKSE/Plugins/Experience.ini (2546)
+SKSE/Plugins/Experience.pdb <- 01 Plugin/AE1170/SKSE/Plugins/Experience.pdb (83398656)
+SKSE/Plugins/Experience/Actors/Default.ini <- 00 Required/SKSE/Plugins/Experience/Actors/Default.ini (20785)
+SKSE/Plugins/Experience/Races/Default.ini <- 00 Required/SKSE/Plugins/Experience/Races/Default.ini (6959)

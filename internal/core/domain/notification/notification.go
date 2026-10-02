@@ -52,6 +52,11 @@ type Notification struct {
 	Code    string
 	Params  diagnostic.Params
 	Subject event.EntityRef
+	// Instance is the game instance it is about ("" for the app).
+	Instance string
+	// Severity of the diagnostic, or of the operation outcome ("error" for
+	// a failure), for the icon (never only colour, D043).
+	Severity string
 	// Count > 1 when similar notifications were aggregated ("12 mods
 	// installed").
 	Count     int

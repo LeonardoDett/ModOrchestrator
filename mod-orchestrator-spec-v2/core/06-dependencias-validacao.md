@@ -1,6 +1,6 @@
 # Dependências e validação
 
-Referências: D014, D027; INV-OPS-06. Vortex: `mod-dependency-manager`, `health_check` (`modRequirementsCheck`, `fileRequirementsCheck`), `script-extender-error-check`, `test-setup`, `test-gameversion`. MO2: aviso de masters faltando, "Problems".
+Referências: D014, D027, D082, D084 (proposta); INV-OPS-06. Vortex: `mod-dependency-manager`, `health_check` (`modRequirementsCheck`, `fileRequirementsCheck`), `script-extender-error-check`, `test-setup`, `test-gameversion`. MO2: aviso de masters faltando, "Problems".
 
 ## 1. Tipos de requisito
 

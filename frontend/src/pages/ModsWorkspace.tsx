@@ -15,6 +15,7 @@ import {
   Spinner,
   Toolbar,
   Typography,
+  useToast,
   type ContextMenuItem,
   type DataTableRowMove,
   type DataTableSort,
@@ -34,7 +35,9 @@ import { MoveToDialog, OrderHistoryDialog, RulesDialog, SeparatorDialog, useMove
 import { categoryOptions, matchesStatus, type StatusFilter } from "../features/mods/mod-labels";
 import { entryOf, modRows, moveRequestFor, orderedRows, type ListRow } from "../features/mods/mod-order";
 import { useDeploy } from "../features/deploy/DeployContext";
+import { ProblemBand } from "../features/diagnostics/ProblemBand";
 import { useI18n } from "../i18n/i18n";
+import { useNavigation } from "../shell/navigation";
 import { PageBody } from "./PageBody";
 
 type ConflictFilter = "all" | "any" | "unreviewed" | "fully_overwritten";
@@ -68,6 +71,8 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const { t, tp } = i18n;
   const backend = useBackend();
   const run = useAction();
+  const { addToast } = useToast();
+  const { navigate, route } = useNavigation();
   const { density, get } = useSettings();
   const mods = useModList(instance);
   const order = useModOrder(instance);
@@ -135,6 +140,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const ids = selectedRows.map((r) => r.id);
   const selectedEntries = visible.filter((r) => selected.has(r.id)).flatMap((r) => entryOf(r) ?? []);
 
+  // "Mod de origem" of a plugin opens the mod (ui/telas/plugins.md §9).
+  const focusMod = route.focusMod;
+  useEffect(() => {
+    if (focusMod && rows.some((r) => r.id === focusMod)) {
+      setSelected(new Set([focusMod]));
+      setInspected(focusMod);
+    }
+  }, [focusMod, rows]);
+
   // The Inspector follows the focused mod row.
   useEffect(() => {
     if (focused && rows.some((r) => r.id === focused)) setInspected(focused);
@@ -155,9 +169,30 @@ export function ModsWorkspace({ instance }: { instance: string }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [undo, run, backend, instance]);
 
+  // Requirements never block enabling; the backend tells what else the mod
+  // needs ("Também habilitar: X, Y") or who depends on it (core/06 §6), and
+  // nothing more is enabled unless the user asks.
   const onToggle = useCallback(
-    (row: ModRow, enabled: boolean) => void run(() => backend.setModsEnabled(instance, [row.id], enabled)),
-    [run, backend, instance],
+    (row: ModRow, enabled: boolean) =>
+      void (async () => {
+        const result = await run(() => backend.setModsEnabled(instance, [row.id], enabled));
+        if (!result.ok) return;
+        const impact = await backend.enableImpact(instance, [row.id], enabled).catch(() => null);
+        if (!impact) return;
+        if (enabled && impact.alsoEnable.length > 0) {
+          const ids = impact.alsoEnable.map((m) => m.id);
+          addToast({
+            title: t("mods.deps.alsoEnable", { mod: row.name, names: impact.alsoEnable.map((m) => m.name).join(", ") }),
+            variant: "info",
+            duration: 10000,
+            action: { label: t("mods.deps.alsoEnableAction"), onClick: () => void run(() => backend.setModsEnabled(instance, ids, true)) },
+          });
+        }
+        if (!enabled && impact.affected.length > 0) {
+          addToast({ title: t("mods.deps.affected", { names: impact.affected.map((m) => m.name).join(", ") }), variant: "warning", duration: 8000 });
+        }
+      })(),
+    [run, backend, instance, addToast, t],
   );
   const onToggleSeparator = useCallback(
     (sep: Separator) => void run(() => backend.updateSeparator(instance, { ...sep, collapsed: !sep.collapsed })),
@@ -260,7 +295,13 @@ export function ModsWorkspace({ instance }: { instance: string }) {
               <Button variant="outline" startIcon={<FolderTree aria-hidden="true" />} onClick={() => setCategoriesOpen(true)}>
                 {t("mods.toolbar.categories")}
               </Button>
-              <Button variant="outline" startIcon={<History aria-hidden="true" />} onClick={() => setHistoryOpen(true)}>
+              <Button
+                variant="outline"
+                startIcon={<History aria-hidden="true" />}
+                onClick={() =>
+                  navigate({ view: "diagnostics", tab: "history", mod: inspectedRow ? { id: inspectedRow.id, name: inspectedRow.name } : undefined })
+                }
+              >
                 {t("mods.toolbar.history")}
               </Button>
             </>
@@ -290,6 +331,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                 </Menu.Trigger>
                 <Menu.Content>
                   <Menu.Item onSelect={() => setSeparatorEdit({})}>{t("mods.action.newSeparator")}</Menu.Item>
+                  <Menu.Item onSelect={() => setHistoryOpen(true)}>{t("mods.orderHistory.title")}</Menu.Item>
                 </Menu.Content>
               </Menu.Root>
             </>
@@ -297,6 +339,8 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         />
 
         <ImportQueuePanel items={items} onDecide={setDeciding} />
+
+        <ProblemBand modules={["rules", "library", "game"]} exclude={["rule_cycle"]} />
 
         {cycle.status === "ready" && cycle.data ? (
           <Alert.Root variant="danger">

@@ -132,6 +132,7 @@ Docs: core/09, VORTEX-08, DLG-15.
 Entregas: classificação completa, diálogo com ação por linha, captura para mod, "deixar não gerenciado", scan ao focar, monitor do arquivo de load order (preparado para F11).
 Invariantes: INV-EXT-02/03.
 Demonstração: editar um plugin no xEdit via hardlink; gerar saída do Nemesis e capturá-la.
+Estado: implementada (D080; D081 aguarda confirmação). Testes: domínio (`externalchange`, resoluções em `deployplan`, `set_aside` em `deployment`), repositório (`sqlite/external_repository_test.go`), integração em NTFS real (`internal/integration/external_test.go`: edição por hardlink mantida, original reposto pela loja revertido, saídas de ferramentas capturadas ou deixadas não gerenciadas e preservadas em deploy e purge, ausente restaurado/aceito/auto-restaurado, cópia salva/revertida, decisão inválida recusada, varredura ao focar, captura interrompida concluída) e UI (`pages/Deploy.test.tsx`). O monitor do `plugins.txt` fica com a F11 (o tipo `load_order` já existe no domínio). Pendente: demonstração manual com xEdit e Nemesis.
 
 ## F9: Dependências, diagnósticos, notificações e histórico
 
@@ -140,6 +141,7 @@ Docs: core/06, core/10, ui/telas/diagnostics.md, ui/telas/dashboard.md (dashlet 
 Entregas: registro de HealthChecks com o catálogo V1 (exceto plugins), supressão, notificações (toast/sino/desktop, agregação), histórico com filtros e reversão, pacote de diagnóstico, tela Diagnostics completa, faixas de problemas nas telas.
 Invariantes: INV-OPS-06.
 Demonstração: mod com requisito desabilitado → diagnóstico → "Habilitar" resolve; incompatíveis bloqueiam deploy.
+Estado: implementada (D082, D083; D084 aguarda confirmação). Testes: domínio (`health/rules_test.go`), adapter (`skyrimse/health_test.go`), repositórios (`sqlite/diagnostics_repository_test.go`), pacote (`supportbundle/writer_test.go`), processos (`system`), integração (`internal/integration/diagnostics_test.go`: requisito desabilitado resolvido pela ação, incompatíveis bloqueando deploy/status/operação, supressão e reativação, notificação única e agregada, reversões do histórico e filtro por mod, INV-OPS-06), UI (`pages/Diagnostics.test.tsx`) e lib (`toast.test.tsx`). Pendente: demonstração manual no app com dados reais.
 
 ## F10: FOMOD completo
 
@@ -147,6 +149,7 @@ Docs: core/03 §3–5, DLG-06.
 
 Entregas: parser (encodings, XXE desligado), avaliador de condições puro, plano determinístico, assistente com imagens, reinstall com escolhas anteriores, requisitos detectados, fixtures de 10+ FOMODs reais.
 Demonstração: instalar 5 FOMODs populares de Skyrim com opções diferentes e reinstalar um trocando opções.
+Estado: implementada (D085 e D086 aguardam confirmação; D087). Testes: domínio (`domain/fomod`: parser, encodings, XXE, ordem, avaliação, fases/prioridade, escolhas), instalador (`domain/installer`: script C#), fixtures reais (`integration/fomod_fixtures_test.go`: 14 FOMODs de Skyrim SE, 26 casos, reinstall determinístico), pipeline (`integration/fomod_test.go`: assistente, requisito como regra `metadata`, reinstall com escolhas anteriores e trocando opções, dependências do módulo, script, cancelar), UI (`pages/ModsPage.test.tsx`) e lib (`stepper.test.tsx`). Pendente: demonstração manual no app com os 5 FOMODs.
 
 ## F11: Plugins e load order (Skyrim)
 
@@ -155,6 +158,7 @@ Docs: core/08, core/12 §5–9, ui/telas/plugins.md, ui/telas/load-order.md, DLG
 Entregas: inventário, leitura de cabeçalho com cache, PluginState/LoadOrder por profile, restrições do adapter, sort nativo com prévia, auto-sort, regras, grupos (lista), IndexLock, serialização `plugins.txt` no pós-deploy, triagem de alteração externa, diagnósticos de plugins, telas Plugins e Load Order.
 Invariantes: INV-PLG-01..03.
 Demonstração: 200 plugins reais; master faltando resolvido pelo Inspector; `plugins.txt` alterado por fora gera triagem.
+Estado: implementada (D088; D089 aguarda confirmação). Testes: domínio (`plugin/loadorder_test.go`: propriedade INV-PLG-01 com 300 rodadas, sort/settle/place/merge, regra contra master recusada, grupos transitivos; `health/plugins_test.go`), adapter (`skyrimse/plugins_test.go`: cabeçalho TES4, ESL ⇒ `FE:xxx`, `plugins.txt` lido de volta idêntico, BSA sem plugin), repositório (`sqlite/plugin_repository_test.go`), integração em disco real (`internal/integration/plugins_test.go`: plugin de mod entra ativo e no lugar certo, deploy escreve `plugins.txt` (INV-PLG-02), sort em ordem válida não muda nada, master faltando resolvido pela ação do diagnóstico, `plugins.txt` alterado por fora detectado pelo monitor, não sobrescrito por deploy nem apply (INV-PLG-03), importar e restaurar, arquivo pré-existente vai para triagem, regras/grupos/locks/movimento recusado com alternativa, 200 plugins em 20 mods) e UI (`pages/Plugins.test.tsx`). Pendente: demonstração manual com 200 plugins reais e o jogo aceitando o `plugins.txt` escrito.
 
 ## F12: Settings, Dashboard, Overview e Launch
 

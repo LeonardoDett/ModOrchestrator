@@ -1,0 +1,59 @@
+# source: Experience 17751 3.7.4 2026-09-06T17-17Z pQ0AZ3wMz.7z
+00 Required/
+00 Required/Interface/
+00 Required/Interface/exported/
+00 Required/Scripts/
+00 Required/Scripts/Source/
+00 Required/SKSE/
+00 Required/SKSE/Plugins/
+00 Required/SKSE/Plugins/Experience/
+00 Required/SKSE/Plugins/Experience/Actors/
+00 Required/SKSE/Plugins/Experience/Races/
+01 Plugin/
+01 Plugin/AE/
+01 Plugin/AE/SKSE/
+01 Plugin/AE/SKSE/Plugins/
+01 Plugin/AE1170/
+01 Plugin/AE1170/SKSE/
+01 Plugin/AE1170/SKSE/Plugins/
+01 Plugin/SE/
+01 Plugin/SE/SKSE/
+01 Plugin/SE/SKSE/Plugins/
+01 Plugin/VR/
+01 Plugin/VR/SKSE/
+01 Plugin/VR/SKSE/Plugins/
+02 Menu/
+02 Menu/SE/
+02 Menu/SE/16x9/
+02 Menu/SE/16x9/Interface/
+02 Menu/SE/21x9/
+02 Menu/SE/21x9/Interface/
+02 Menu/VR/
+02 Menu/VR/Interface/
+02 Menu/VR/Interface/vr/
+fomod/
+00 Required/Interface/exported/HUDHooks.swf	19819
+00 Required/Scripts/Experience.pex	1329
+00 Required/Scripts/Source/Experience.psc	1247
+00 Required/SKSE/Plugins/Experience/Actors/Default.ini	20785
+00 Required/SKSE/Plugins/Experience/Races/Default.ini	6959
+00 Required/SKSE/Plugins/Experience.ini	2546
+01 Plugin/AE/SKSE/Plugins/Experience.pdb	67588096
+01 Plugin/AE1170/SKSE/Plugins/Experience.pdb	83398656
+01 Plugin/SE/SKSE/Plugins/Experience.pdb	79171584
+01 Plugin/VR/SKSE/Plugins/Experience.pdb	71389184
+02 Menu/SE/16x9/Interface/statsmenu.swf	34640
+02 Menu/SE/16x9/Interface/trainingmenu.swf	23730
+02 Menu/SE/21x9/Interface/statsmenu.swf	34693
+02 Menu/SE/21x9/Interface/trainingmenu.swf	23621
+02 Menu/VR/Interface/trainingmenu.swf	35511
+02 Menu/VR/Interface/vr/vrstatsskills.swf	9912
+fomod/16x9.png	4154
+fomod/21x9.png	4149
+fomod/info.xml	480
+fomod/Logo.png	21046
+fomod/ModuleConfig.xml	21898
+01 Plugin/AE/SKSE/Plugins/Experience.dll	4080640
+01 Plugin/AE1170/SKSE/Plugins/Experience.dll	3851264
+01 Plugin/SE/SKSE/Plugins/Experience.dll	3843072
+01 Plugin/VR/SKSE/Plugins/Experience.dll	3871232

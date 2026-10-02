@@ -35,7 +35,7 @@ Saída (**plano de instalação**, puro dado):
 
 O instalador **nunca** escreve na staging nem no jogo: quem materializa o plano é a operação de import (core/02, step `stage`). Isso permite pré-visualizar e testar instaladores sem filesystem.
 
-Colisão de destino dentro do plano: o de maior `priority` vence; empate → o último declarado vence (regra do FOMOD). O plano final nunca tem dois arquivos na mesma Location (INV-LIB-02).
+Colisão de destino dentro do plano (D085): as instruções são aplicadas em fases — `requiredInstallFiles`, opções dos passos visíveis, `conditionalFileInstalls` — e a fase posterior vence; dentro da fase, o de maior `priority` vence; empate → o último declarado vence. O plano final nunca tem dois arquivos na mesma Location (INV-LIB-02).
 
 ## 3. FOMOD: modelo
 
@@ -88,17 +88,19 @@ Instaladores de adapter também produzem só planos (anti-pattern 24).
 
 ## 7. Segurança
 
-- Nenhum script é executado (C# `script.cs`, `.bat`, `.exe`): FOMOD com script → `installer_unsupported` ("instalador com script C# não suportado") com ação "instalar manualmente escolhendo a pasta" (instalador `basic` com escolha de root).
-- Imagens do FOMOD são lidas da pasta temporária e servidas à UI como dados, nunca como caminho de arquivo arbitrário.
+- Nenhum script é executado (C# `script.cs`, `.bat`, `.exe`): FOMOD com script (sem `ModuleConfig.xml`) para na decisão `fomod_script`, que explica que o instalador com script C# não é suportado e oferece "instalar manualmente escolhendo a pasta" (árvore do DLG-05, instalador `basic` com escolha de root; D086 item 7).
+- Imagens do FOMOD são lidas da pasta temporária e servidas à UI como dados (data URL), só as referenciadas pelo módulo ou por uma opção, nunca como caminho de arquivo arbitrário (D086 item 12).
 - XML: sem entidades externas (XXE desabilitado), limite de tamanho (padrão 8 MB).
 
 ## 8. Erros
 
-`installer_unsupported`, `installer_failed`, `fomod_invalid_xml`, `fomod_module_dependencies_failed`, `fomod_invalid_selection` (não deveria acontecer se a UI respeita a consulta; defesa em profundidade), `no_installable_files`.
+`installer_unsupported`, `installer_failed`, `fomod_invalid_xml`, `fomod_module_dependencies_failed`, `fomod_invalid_selection` (não deveria acontecer se a UI respeita a consulta; defesa em profundidade), `fomod_image_unavailable`, `no_installable_files`.
+
+Avisos do plano (não bloqueiam; mostrados no resumo do assistente): `fomod_unknown_version`, `fomod_missing_source`, `fomod_invalid_destination`, `fomod_choice_dropped`.
 
 ## 9. Critérios de aceite
 
-- Suite de fixtures com pelo menos 10 FOMODs reais de Skyrim cobrindo todos os tipos de grupo, flags, `conditionalFileInstalls`, `fileDependency` e passos invisíveis: o plano gerado é idêntico ao esperado.
+- Suite de fixtures com pelo menos 10 FOMODs reais de Skyrim cobrindo todos os tipos de grupo, flags, `conditionalFileInstalls`, `fileDependency` e passos invisíveis: o plano gerado é idêntico ao esperado (`internal/integration/testdata/fomod`, D086 item 13).
 - Reinstalar um mod FOMOD sem mudar nada reproduz o mesmo plano.
 - FOMOD com script C# é recusado com mensagem clara e alternativa.
 - Nenhum instalador escreve em disco (verificável por port de filesystem falso nos testes).

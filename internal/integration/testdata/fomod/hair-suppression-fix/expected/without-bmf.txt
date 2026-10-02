@@ -1,0 +1,6 @@
+# visible steps: 0
+# flags: BeardMaskFix=Off
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Beard Mask Fix","group":0,"groupName":"Do you want Beard Mask Fix included?","options":[0],"names":["No Beard Mask Fix"]}]
+SKSE/plugins/HairSuppressionFix.dll <- NoBeardMaskFix/SKSE/plugins/HairSuppressionFix.dll (569344)

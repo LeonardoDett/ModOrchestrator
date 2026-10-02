@@ -1,4 +1,4 @@
-import { Eye, RefreshCw, Rocket, Wrench } from "lucide-react";
+import { Eye, FileSearch, RefreshCw, Rocket, Wrench } from "lucide-react";
 import { Badge, Button, Popover, Stack, Typography } from "dettmann-ui";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useDeploy } from "./DeployContext";
@@ -11,8 +11,8 @@ import { statusLook } from "./deploy-labels";
  */
 export function DeployStatusButton() {
   const i18n = useI18n();
-  const { t, has } = i18n;
-  const { status, deploy, reconcile, openPreview, openFailures } = useDeploy();
+  const { t, tp, has } = i18n;
+  const { status, deploy, reconcile, openPreview, openFailures, openReview } = useDeploy();
   if (!status) return null;
   const look = statusLook(status);
   const Icon = look.icon;
@@ -40,6 +40,7 @@ export function DeployStatusButton() {
         <Stack gap="sm">
           <Typography variant="heading-6">{t(look.label)}</Typography>
           {has(reasonKey) ? <Typography variant="body-sm">{t(reasonKey as MessageKey, { count: status.externalChanges })}</Typography> : null}
+          {status.newFiles > 0 ? <Typography variant="body-sm">{tp("deploy.newFiles", status.newFiles)}</Typography> : null}
           <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
             <dt className="text-fg-muted">{t("deploy.field.active")}</dt>
             <dd className="text-fg">{status.activeProfile.name}</dd>
@@ -67,6 +68,11 @@ export function DeployStatusButton() {
             {canDeploy ? (
               <Button size="sm" startIcon={<Rocket aria-hidden="true" />} onClick={() => void deploy()}>
                 {t("deploy.action.deploy")}
+              </Button>
+            ) : null}
+            {status.externalChanges > 0 || status.newFiles > 0 ? (
+              <Button size="sm" variant="outline" startIcon={<FileSearch aria-hidden="true" />} disabled={busy} onClick={openReview}>
+                {t("deploy.action.review")}
               </Button>
             ) : null}
             {status.kind === "failed" && status.failures.length > 0 ? (

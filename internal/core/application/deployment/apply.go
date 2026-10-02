@@ -70,6 +70,21 @@ func (s *Service) execute(ctx context.Context, inst game.Instance, a deployment.
 		}
 		return nil
 
+	case deployment.ActionSetAside:
+		// Only the file the user saw and decided about moves; it is kept
+		// in the BackupStore, never deleted (D046, INV-DEP-01).
+		if !obs.Exists || obs.IsDir || !a.Backup.Evidence.SameOriginal(obs.Evidence) {
+			return errRaced
+		}
+		bp := backupFile(inst, a.Backup.BackupPath)
+		if err := s.FS.MkdirAll(ctx, parentPath(bp)); err != nil {
+			return err
+		}
+		if s.observe(ctx, bp).Exists {
+			return errRaced
+		}
+		return s.FS.Rename(ctx, dst, bp)
+
 	case deployment.ActionCreate:
 		if obs.Exists {
 			return errRaced

@@ -33,8 +33,14 @@ func (t *txRepos) Categories() ports.Categories       { return &CategoryReposito
 func (t *txRepos) Profiles() ports.Profiles           { return &ProfileRepository{db: t.q} }
 func (t *txRepos) Rules() ports.Rules                 { return &RuleRepository{db: t.q} }
 func (t *txRepos) Overrides() ports.Overrides         { return &OverrideRepository{db: t.q} }
+func (t *txRepos) PluginRules() ports.PluginRules     { return &PluginRuleRepository{db: t.q} }
 func (t *txRepos) Manifests() ports.Manifests         { return &ManifestRepository{db: t.q} }
 func (t *txRepos) Journals() ports.Journals           { return &JournalRepository{db: t.q} }
+func (t *txRepos) ExternalDecisions() ports.ExternalDecisions {
+	return &ExternalDecisionRepository{db: t.q}
+}
+func (t *txRepos) Notifications() ports.Notifications { return &NotificationRepository{db: t.q} }
+func (t *txRepos) Presence() ports.Presence           { return &PresenceRepository{db: t.q} }
 func (t *txRepos) Emit(events ...event.Event)         { t.events = append(t.events, events...) }
 
 // Do runs fn in a transaction and appends the emitted events to it.
@@ -48,7 +54,7 @@ func (u *UnitOfWork) Do(ctx context.Context, fn func(ctx context.Context, tx por
 	if err := fn(ctx, repos); err != nil {
 		return nil, err
 	}
-	stored, err := appendEvents(ctx, tx, repos.events)
+	stored, err := appendEvents(ctx, tx, tagged(repos.events, ports.EventTags(ctx)))
 	if err != nil {
 		return nil, err
 	}
@@ -68,10 +74,15 @@ func appendEvents(ctx context.Context, q querier, events []event.Event) ([]event
 		if err != nil {
 			return nil, err
 		}
+		m, _ := e.Payload.(map[string]string)
+		instance, err := eventInstance(ctx, q, e, m)
+		if err != nil {
+			return nil, err
+		}
 		res, err := q.ExecContext(ctx, `
-			INSERT INTO events (id, type, occurred_at, operation_id, subject_kind, subject_id, payload_json)
-			VALUES (?, ?, ?, ?, ?, ?, ?)`,
-			e.ID, string(e.Type), formatTime(e.OccurredAt), nullString(e.OperationID), e.Subject.Kind, e.Subject.ID, payload)
+			INSERT INTO events (id, type, occurred_at, operation_id, subject_kind, subject_id, payload_json, instance_id)
+			VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+			e.ID, string(e.Type), formatTime(e.OccurredAt), nullString(e.OperationID), e.Subject.Kind, e.Subject.ID, payload, instance)
 		if err != nil {
 			return nil, fmt.Errorf("append event: %w", err)
 		}
@@ -81,6 +92,29 @@ func appendEvents(ctx context.Context, q querier, events []event.Event) ([]event
 		stored[i] = e
 	}
 	return stored, nil
+}
+
+// tagged merges the context tags (origin, revertOf) into the map payloads
+// of events; a value the event set itself wins.
+func tagged(events []event.Event, tags map[string]string) []event.Event {
+	if len(tags) == 0 {
+		return events
+	}
+	out := make([]event.Event, len(events))
+	for i, e := range events {
+		if m, ok := e.Payload.(map[string]string); ok || e.Payload == nil {
+			merged := make(map[string]string, len(m)+len(tags))
+			for k, v := range tags {
+				merged[k] = v
+			}
+			for k, v := range m {
+				merged[k] = v
+			}
+			e.Payload = merged
+		}
+		out[i] = e
+	}
+	return out
 }
 
 // EventLog reads events by subject (history of a mod, core/02 §12).

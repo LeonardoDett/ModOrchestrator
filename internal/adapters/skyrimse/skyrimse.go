@@ -12,6 +12,7 @@ import (
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
+	"modorchestrator/internal/core/domain/relpath"
 )
 
 const (
@@ -97,6 +98,8 @@ func (Adapter) Definitions() []game.Definition {
 				Detect: []game.DetectRule{{All: []string{"skse64_loader.exe"}}},
 			},
 		},
+		ToolOutputs:    toolOutputs(),
+		UnmanagedHints: []game.FilePattern{{Target: TargetData, Glob: "*.log"}},
 	}}
 }
 
@@ -251,5 +254,20 @@ func (Adapter) ContentFlags(_ game.ID, footprint []game.Location) []mod.ContentF
 		out = append(out, f)
 	}
 	slices.Sort(out)
+	return out
+}
+
+// toolOutputs are the folders where Skyrim tools write what they generate
+// (core/12 §9): searched for unexpected files even without managed files.
+func toolOutputs() []game.Location {
+	paths := []string{
+		"meshes/actors/character/behaviors", "meshes/actors/character/animations",
+		"tools/GenerateFNIS_for_Users", "Nemesis_Engine", "CalienteTools/BodySlide/ShapeData",
+		"TexGen_Output", "DynDOLOD_Output", "SKSE/Plugins",
+	}
+	out := make([]game.Location, len(paths))
+	for i, p := range paths {
+		out[i] = game.Location{Target: TargetData, Path: relpath.MustParse(p)}
+	}
 	return out
 }

@@ -1,0 +1,7 @@
+# visible steps: 0,1
+# flags: SkyrimSE=On
+# requirements: 
+# mod type: default
+# options: [{"step":0,"stepName":"Game Version","group":0,"groupName":"Game Version","options":[0],"names":["Skyrim Special Edition"]},{"step":1,"stepName":"Extras","group":0,"groupName":"Select Addons","options":[],"names":[]}]
+SKSE/Plugins/BeardMaskFix.dll <- SkyrimSE/SKSE/Plugins/BeardMaskFix.dll (385024)
+SKSE/Plugins/BeardMaskFix.pdb <- SkyrimSE/SKSE/Plugins/BeardMaskFix.pdb (12619776)

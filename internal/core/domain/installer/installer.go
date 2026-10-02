@@ -13,6 +13,7 @@ import (
 	"slices"
 	"strings"
 
+	"modorchestrator/internal/core/domain/fomod"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/relpath"
 )
@@ -157,11 +158,15 @@ type RootHints struct {
 // Empty reports whether the adapter declared nothing to recognise.
 func (h RootHints) Empty() bool { return len(h.Dirs) == 0 && len(h.Extensions) == 0 }
 
-// Context is what an installer knows about the game (core/03 §2). F10 adds
-// what FOMOD conditions need (active plugins, versions).
+// Context is what an installer knows about the game (core/03 §2).
 type Context struct {
 	Definition game.Definition
 	Hints      RootHints
+	// Content reads an extracted file of the archive (FOMOD XML); nil
+	// before extraction. Installers only read through it.
+	Content func(p relpath.Path) ([]byte, error)
+	// Fomod are the facts FOMOD conditions read (plugin states, versions).
+	Fomod fomod.Env
 }
 
 // Options are the choices recorded in Installation.Options so a reinstall
@@ -187,13 +192,20 @@ type File struct {
 	Size   int64
 }
 
+// Warning is a non-fatal finding of an installer, with a stable code.
+type Warning = fomod.Warning
+
 // Plan is the pure result of an installer (core/03 §2).
 type Plan struct {
 	Installer string
 	ModType   game.ModTypeID
 	Files     []File
 	Options   Options
-	Warnings  []string
+	Warnings  []Warning
+	// Requirements are files the mod declares it needs (FOMOD
+	// moduleDependencies); they become DependencyRules only when the user
+	// confirms them (core/03 §2).
+	Requirements []string
 }
 
 // Locations returns the plan destinations as locations of target.
@@ -213,18 +225,24 @@ const (
 	DecisionRootAmbiguous DecisionKind = "root_ambiguous"
 	// DecisionRootUnrecognized: nothing looks like a mod for this game.
 	DecisionRootUnrecognized DecisionKind = "root_unrecognized"
-	// DecisionFomodPending: the archive has a FOMOD installer, which arrives
-	// in F10; until then the user picks the folder (core/03 §7 fallback).
-	DecisionFomodPending DecisionKind = "fomod_pending"
+	// DecisionFomodScript: the FOMOD installer is a C# script, which is
+	// never executed; the user may install a folder of the archive with the
+	// basic installer instead (core/03 §7).
+	DecisionFomodScript DecisionKind = "fomod_script"
+	// DecisionFomod: the FOMOD wizard (DLG-06).
+	DecisionFomod DecisionKind = "fomod"
 )
 
-// Decision asks the user to choose the root (DLG-05).
+// Decision asks the user to choose the root (DLG-05) or to go through the
+// FOMOD wizard (DLG-06).
 type Decision struct {
 	Kind DecisionKind
 	// Candidates are the suggested roots ("" is the archive root).
 	Candidates []string
 	// Folders are every folder of the archive, for the tree.
 	Folders []string
+	// Fomod is the wizard to show, for DecisionFomod.
+	Fomod *FomodRequest
 }
 
 // Result is either a plan or a decision.

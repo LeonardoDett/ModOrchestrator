@@ -176,14 +176,19 @@ func TestBasicDetectsModTypeFromFootprint(t *testing.T) {
 	}
 }
 
-func TestBasicStopsOnModuleConfigUntilFomodExists(t *testing.T) {
-	es := entries(t, "fomod/ModuleConfig.xml", "Core/textures/a.dds", "Option/textures/b.dds")
-	res, _ := Basic{}.Plan(es, bethesdaLike(), nil)
-	if res.Decision == nil || res.Decision.Kind != DecisionFomodPending {
-		t.Fatalf("decision = %+v", res.Decision)
+// core/03 §7: a C# script is never run; the user picks a folder and the
+// basic installer installs it.
+func TestFomodScriptAsksForFolder(t *testing.T) {
+	es := entries(t, "fomod/script.cs", "Core/textures/a.dds", "Option/textures/b.dds")
+	if ok, why := (Fomod{}).Supports(es, bethesdaLike()); !ok || why != "fomod/script.cs" {
+		t.Fatalf("supports = %v %q", ok, why)
 	}
-	res, _ = Basic{}.Plan(es, bethesdaLike(), Options{OptionRoot: "Core"})
-	if res.Plan == nil || !slices.Equal(dests(res.Plan), []string{"textures/a.dds"}) {
+	res, err := Fomod{}.Plan(es, bethesdaLike(), nil)
+	if err != nil || res.Decision == nil || res.Decision.Kind != DecisionFomodScript {
+		t.Fatalf("decision = %+v, %v", res.Decision, err)
+	}
+	res, _ = Fomod{}.Plan(es, bethesdaLike(), Options{OptionRoot: "Core"})
+	if res.Plan == nil || res.Plan.Installer != BasicID || !slices.Equal(dests(res.Plan), []string{"textures/a.dds"}) {
 		t.Fatalf("plan = %+v", res)
 	}
 }

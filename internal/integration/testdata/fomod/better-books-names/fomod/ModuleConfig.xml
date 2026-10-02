@@ -1,0 +1,79 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
+	<moduleName>Better Skill and Quest Books Names SE</moduleName>
+	<moduleImage path="images\banner.jpg"/>
+	<installSteps order="Explicit">
+		<installStep name="Choose One">
+			<optionalFileGroups>
+				<group name="Choose One" type="SelectExactlyOne">
+					<plugins order="Explicit">
+						<plugin name="Skyrim AE (With All CC Mods)">
+							<description>
+								Select this version if you have the Anniversary Edition DLC that comes with ALL the Creation Club content (not just the free AE upgrade). Plugin is ESL so it doesn't take up one of your ESP slots.
+							</description>
+							<image path="images\AE+CC.png"/>
+							<files>
+								<file source="AE with all CC\Better Skill and Quest Books Names SE.esp" destination="Better Skill and Quest Books Names SE.esp"/>
+							</files>
+							<conditionFlags>
+								<flag name="NoticeCheck">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Skyrim AE (Free Upgrade)">
+							<description>
+								Select this version if you have the Anniversary Edition free upgrade but not the paid DLC that comes with ALL the Creation Club content. Plugin is ESL so it doesn't take up one of your ESP slots.
+							</description>
+							<image path="images\AE+CC.png"/>
+							<files>
+								<file source="AE free upgrade\Better Skill and Quest Books Names SE.esp" destination="Better Skill and Quest Books Names SE.esp"/>
+							</files>
+							<conditionFlags>
+								<flag name="NoticeCheck">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>
+						<plugin name="Skyrim SE (Legacy)">
+							<description>
+								This is the legacy version for people still using Skyrim SE v1.5.97.0. Plugin is ESL so it doesn't take up one of your ESP slots.
+							</description>
+							<image path="images\SE-legacy.png"/>
+							<files>
+								<file source="SE-legacy\Better Skill and Quest Books Names SE.esp" destination="Better Skill and Quest Books Names SE.esp"/>
+							</files>
+							<conditionFlags>
+								<flag name="NoticeCheck">On</flag>
+							</conditionFlags>
+							<typeDescriptor>
+								<type name="Optional"/>
+							</typeDescriptor>
+						</plugin>						
+					</plugins>
+				</group>
+			</optionalFileGroups>
+		</installStep>
+		<installStep name="Thanks">
+      	     <optionalFileGroups>
+               <group name="Thanks" type="SelectAll">
+                 <plugins order="Explicit">
+                   <plugin name="Readme">
+                     <description>
+                       Thanks to all who have endorsed and kept using my mod over the years since it first came out for Skyrim (Oldrim). If you have been enjoying it for some time or you are new and find it worth your time, please consider using the donation button on the Nexus, every septim is appreciated.
+                     </description>
+					 <image path="images\Thanks.png"/>
+                     <conditionFlags>
+                       <flag name="NoticeCheck">On</flag>
+                     </conditionFlags>
+                     <typeDescriptor>
+                       <type name="Required"/>
+                     </typeDescriptor>
+                   </plugin>
+                 </plugins>
+               </group>
+             </optionalFileGroups>
+        </installStep>
+	</installSteps>
+</config>

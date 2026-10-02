@@ -21,12 +21,15 @@ import (
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
 	conflictsvc "modorchestrator/internal/core/application/conflicts"
+	diagsvc "modorchestrator/internal/core/application/diagnostics"
+	historysvc "modorchestrator/internal/core/application/history"
 	deploysvc "modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
+	pluginsvc "modorchestrator/internal/core/application/plugins"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/event"
@@ -40,6 +43,7 @@ import (
 	"modorchestrator/internal/infrastructure/filesystem"
 	"modorchestrator/internal/infrastructure/hashing"
 	"modorchestrator/internal/infrastructure/persistence/sqlite"
+	"modorchestrator/internal/infrastructure/plugincache"
 	"modorchestrator/internal/infrastructure/system"
 )
 
@@ -61,6 +65,9 @@ type env struct {
 	events   []event.Event
 	dep      *deploysvc.Service
 	auto     *deploysvc.AutoDeployer
+	diag     *diagsvc.Service
+	hist     *historysvc.Service
+	plug     *pluginsvc.Service
 	db       *sql.DB
 	bus      *eventbus.Bus
 	eventsMu sync.Mutex
@@ -152,6 +159,17 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 	}
 	e.conf = e.newConf()
 	t.Cleanup(func() { e.conf.Wait() })
+	e.plug = pluginsvc.NewService(pluginsvc.Deps{
+		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods,
+		Installations: sqlite.NewInstallationRepository(db), Profiles: profiles, Rules: e.rules,
+		Overrides: sqlite.NewOverrideRepository(db), PluginRules: sqlite.NewPluginRuleRepository(db),
+		Manifests: sqlite.NewManifestRepository(db), State: sqlite.NewAppState(db), UoW: sqlite.NewUnitOfWork(db),
+		Publisher: bus, FS: fsys, Hasher: hashing.SHA256{}, Folders: testFolders{root: filepath.Join(dir, "LocalAppData")},
+		Cache:    plugincache.New(filepath.Join(dir, "cache")),
+		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
+		Ops:      e.ops, Locks: locks, IDs: ids, Clock: clock,
+	})
+	t.Cleanup(e.plug.Close)
 	e.dep = deploysvc.NewService(deploysvc.Deps{
 		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods,
 		Installations: sqlite.NewInstallationRepository(db), Profiles: profiles, Rules: e.rules,
@@ -159,10 +177,25 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Journals: sqlite.NewJournalRepository(db), State: sqlite.NewAppState(db), UoW: sqlite.NewUnitOfWork(db),
 		Publisher: bus, FS: fsys, Foreign: e.games,
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
-		Ops:      e.ops, Locks: locks, IDs: ids, Clock: clock,
+		Archives: sqlite.NewArchiveRepository(db), Decisions: sqlite.NewExternalDecisionRepository(db),
+		Hasher: hashing.SHA256{}, Library: e.lib, Exclusions: e.conf, LoadOrder: e.plug,
+		Ops: e.ops, Locks: locks, IDs: ids, Clock: clock,
 	})
 	e.auto = deploysvc.NewAutoDeployer(e.dep)
 	t.Cleanup(func() { e.auto.Close(); e.dep.Wait() })
+	e.diag = diagsvc.NewService(diagsvc.Deps{
+		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles, Mods: e.mods, Rules: e.rules,
+		Suppressions: sqlite.NewSuppressionRepository(db), Presence: sqlite.NewPresenceRepository(db),
+		Notifs: sqlite.NewNotificationRepository(db), State: sqlite.NewAppState(db), UoW: sqlite.NewUnitOfWork(db),
+		Publisher: bus, FS: fsys, Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
+		Conflicts: e.conf, Deploy: e.dep, Games: e.games, Library: e.lib, Commands: e.prof, Plugins: e.plug, IDs: ids, Clock: clock,
+	})
+	t.Cleanup(e.diag.Close)
+	e.hist = historysvc.NewService(historysvc.Deps{
+		History: sqlite.NewHistoryRepository(db), Mods: e.mods, Profiles: profiles,
+		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
+		Commands: e.prof, Conflicts: e.conf, Library: e.lib, Clock: clock,
+	})
 
 	if o.existing {
 		list, err := sqlite.NewGameInstanceRepository(db).List(ctx)

@@ -1,0 +1,12 @@
+# source: Hair Suppression Fix 179400 1.3.0 2026-08-25T14-08Z pQ0AZ3BSQ.7z
+FOMOD/
+IncludeBeardMaskFix/
+IncludeBeardMaskFix/SKSE/
+IncludeBeardMaskFix/SKSE/plugins/
+NoBeardMaskFix/
+NoBeardMaskFix/SKSE/
+NoBeardMaskFix/SKSE/plugins/
+FOMOD/info.xml	1022
+FOMOD/ModuleConfig.xml	7432
+IncludeBeardMaskFix/SKSE/plugins/HairSuppressionFix.dll	569856
+NoBeardMaskFix/SKSE/plugins/HairSuppressionFix.dll	569344

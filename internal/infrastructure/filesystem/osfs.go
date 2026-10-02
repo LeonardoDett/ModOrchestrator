@@ -37,7 +37,7 @@ func (OS) Stat(_ context.Context, path string) (ports.FileInfo, error) {
 	if err != nil {
 		return ports.FileInfo{}, err
 	}
-	info := ports.FileInfo{Exists: true, IsDir: fi.IsDir(), Size: fi.Size(), ModTime: fi.ModTime()}
+	info := ports.FileInfo{Exists: true, IsDir: fi.IsDir(), Size: fi.Size(), ModTime: fi.ModTime(), Created: createdAt(fi)}
 	if fi.Mode()&os.ModeSymlink != 0 {
 		info.IsSymlink = true
 		info.LinkTarget, _ = os.Readlink(p)

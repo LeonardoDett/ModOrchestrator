@@ -290,7 +290,7 @@ func TestExternalChangeKeepsItsLocation(t *testing.T) {
 	if view.ChangeCount != 1 || view.Changes[0].Location.Path.String() != "Alpha.esp" || view.Changes[0].Kind != "replaced" {
 		t.Fatalf("decision view = %+v", view)
 	}
-	if err := e.dep.ResolveDecision(e.inst.ID, op, nil); err != nil {
+	if err := e.dep.ResolveDecision(e.inst.ID, op, nil, nil); err != nil {
 		t.Fatal(err)
 	}
 	e.dep.Wait()
@@ -313,7 +313,7 @@ func TestExternalChangeKeepsItsLocation(t *testing.T) {
 		t.Fatal(err)
 	}
 	e.waitDeployDecision(op)
-	if err := e.dep.ResolveDecision(e.inst.ID, op, nil); err != nil {
+	if err := e.dep.ResolveDecision(e.inst.ID, op, nil, nil); err != nil {
 		t.Fatal(err)
 	}
 	e.dep.Wait()

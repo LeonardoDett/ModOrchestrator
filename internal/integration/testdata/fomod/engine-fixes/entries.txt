@@ -1,0 +1,21 @@
+# source: Engine Fixes - Main File-17230-7-0-20-1772078239.7z
+EngineFixes FOMOD Installer/
+EngineFixes FOMOD Installer/AE/
+EngineFixes FOMOD Installer/AE/SKSE/
+EngineFixes FOMOD Installer/AE/SKSE/Plugins/
+EngineFixes FOMOD Installer/fomod/
+EngineFixes FOMOD Installer/Required/
+EngineFixes FOMOD Installer/Required/SKSE/
+EngineFixes FOMOD Installer/Required/SKSE/Plugins/
+EngineFixes FOMOD Installer/SE/
+EngineFixes FOMOD Installer/SE/SKSE/
+EngineFixes FOMOD Installer/SE/SKSE/Plugins/
+EngineFixes FOMOD Installer/Required/SKSE/Plugins/EngineFixes_preload.txt	0
+EngineFixes FOMOD Installer/Required/SKSE/Plugins/EngineFixes_SNCT.ini	0
+EngineFixes FOMOD Installer/AE/SKSE/Plugins/EngineFixes.pdb	30085120
+EngineFixes FOMOD Installer/fomod/info.xml	230
+EngineFixes FOMOD Installer/fomod/ModuleConfig.xml	3763
+EngineFixes FOMOD Installer/Required/SKSE/Plugins/EngineFixes.toml	9119
+EngineFixes FOMOD Installer/SE/SKSE/Plugins/EngineFixes.pdb	30068736
+EngineFixes FOMOD Installer/AE/SKSE/Plugins/EngineFixes.dll	2456064
+EngineFixes FOMOD Installer/SE/SKSE/Plugins/EngineFixes.dll	2453504

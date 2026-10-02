@@ -142,3 +142,26 @@ func TestSettleRestoreAndRemoveDir(t *testing.T) {
 		t.Fatalf("restored and removed: %+v", entries)
 	}
 }
+
+// A set-aside is confirmed when the found file sits in the BackupStore and
+// left the location; only the stale link is forgotten, nothing recorded.
+func TestSettleSetAside(t *testing.T) {
+	stale := link("a.esp")
+	found := Evidence{FileID: "v:found", Size: 1}
+	aside := &Entry{Location: loc("a.esp"), Kind: KindBackup, BackupPath: relpath.MustParse("data/a.esp.backup1"), Evidence: found}
+	j, err := NewJournal("i1", "op", JournalDeploy, "p1", "fp", []Action{{Kind: ActionSetAside, Location: loc("a.esp"), Current: &stale, Backup: aside}}, t0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_ = j.Mark(0, StateDone)
+	moved := fakeAfter{at: map[string]Observation{}, backups: map[string]Observation{aside.BackupPath.Key(): {Exists: true, Evidence: found}}}
+	entries, out := Settle([]Entry{stale}, j, moved)
+	if len(entries) != 0 || !out[0].Done {
+		t.Fatalf("set aside: %+v %+v", entries, out)
+	}
+	notMoved := fakeAfter{at: map[string]Observation{loc("a.esp").Key(): {Exists: true, Evidence: found}}, backups: map[string]Observation{}}
+	entries, out = Settle([]Entry{stale}, j, notMoved)
+	if len(entries) != 1 || out[0].Done {
+		t.Fatalf("nothing moved, nothing forgotten: %+v %+v", entries, out)
+	}
+}

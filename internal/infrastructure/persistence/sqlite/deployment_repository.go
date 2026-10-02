@@ -220,12 +220,16 @@ func sameEntry(a, b deployment.Entry) bool {
 }
 
 type loadOrderRecord struct {
-	Profile   string    `json:"profile"`
-	Order     []string  `json:"order"`
-	Enabled   []string  `json:"enabled"`
-	FileHash  string    `json:"fileHash"`
-	Operation string    `json:"operation"`
-	AppliedAt time.Time `json:"appliedAt"`
+	Profile     string    `json:"profile"`
+	Order       []string  `json:"order"`
+	Enabled     []string  `json:"enabled"`
+	FileHash    string    `json:"fileHash"`
+	PendingHash string    `json:"pendingHash,omitempty"`
+	PrevOrder   []string  `json:"prevOrder,omitempty"`
+	PrevEnabled []string  `json:"prevEnabled,omitempty"`
+	Original    string    `json:"original,omitempty"`
+	Operation   string    `json:"operation"`
+	AppliedAt   time.Time `json:"appliedAt"`
 }
 
 func (r *ManifestRepository) CurrentLoadOrder(ctx context.Context, instance game.InstanceID) (*deployment.AppliedLoadOrder, error) {
@@ -241,24 +245,16 @@ func (r *ManifestRepository) CurrentLoadOrder(ctx context.Context, instance game
 	if err := json.Unmarshal([]byte(body), &rec); err != nil {
 		return nil, fmt.Errorf("sqlite: decode load order: %w", err)
 	}
-	lo := &deployment.AppliedLoadOrder{Instance: instance, Profile: deployment.ProfileID(rec.Profile), FileHash: rec.FileHash, Operation: operation.ID(rec.Operation), AppliedAt: rec.AppliedAt}
-	for _, n := range rec.Order {
-		lo.Order = append(lo.Order, plugin.Name(n))
-	}
-	for _, n := range rec.Enabled {
-		lo.Enabled = append(lo.Enabled, plugin.Name(n))
-	}
+	lo := &deployment.AppliedLoadOrder{Instance: instance, Profile: deployment.ProfileID(rec.Profile), FileHash: rec.FileHash, PendingHash: rec.PendingHash, Original: rec.Original, Operation: operation.ID(rec.Operation), AppliedAt: rec.AppliedAt}
+	lo.Order, lo.Enabled = pluginNames(rec.Order), pluginNames(rec.Enabled)
+	lo.PrevOrder, lo.PrevEnabled = pluginNames(rec.PrevOrder), pluginNames(rec.PrevEnabled)
 	return lo, nil
 }
 
 func (r *ManifestRepository) SaveLoadOrder(ctx context.Context, lo *deployment.AppliedLoadOrder) error {
-	rec := loadOrderRecord{Profile: string(lo.Profile), FileHash: lo.FileHash, Operation: string(lo.Operation), AppliedAt: lo.AppliedAt.UTC()}
-	for _, n := range lo.Order {
-		rec.Order = append(rec.Order, string(n))
-	}
-	for _, n := range lo.Enabled {
-		rec.Enabled = append(rec.Enabled, string(n))
-	}
+	rec := loadOrderRecord{Profile: string(lo.Profile), FileHash: lo.FileHash, PendingHash: lo.PendingHash, Original: lo.Original, Operation: string(lo.Operation), AppliedAt: lo.AppliedAt.UTC()}
+	rec.Order, rec.Enabled = nameStrings(lo.Order), nameStrings(lo.Enabled)
+	rec.PrevOrder, rec.PrevEnabled = nameStrings(lo.PrevOrder), nameStrings(lo.PrevEnabled)
 	body, err := json.Marshal(rec)
 	if err != nil {
 		return err
@@ -419,4 +415,20 @@ func (r *JournalRepository) Instances(ctx context.Context) ([]game.InstanceID, e
 		out = append(out, game.InstanceID(id))
 	}
 	return out, rows.Err()
+}
+
+func pluginNames(ss []string) []plugin.Name {
+	var out []plugin.Name
+	for _, n := range ss {
+		out = append(out, plugin.Name(n))
+	}
+	return out
+}
+
+func nameStrings(ns []plugin.Name) []string {
+	var out []string
+	for _, n := range ns {
+		out = append(out, string(n))
+	}
+	return out
 }

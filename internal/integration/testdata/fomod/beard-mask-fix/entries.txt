@@ -1,0 +1,29 @@
+# source: Beard Mask Fix 80232 1.0.2 2026-08-28T16-55Z yIjvuhTJ7.7z
+fomod/images/skyrim_se.jpg	32023
+fomod/images/skyrim_vr.jpg	34490
+fomod/info.xml	600
+fomod/ModuleConfig.xml	6688
+SkyrimSE/SKSE/Plugins/BeardMaskFix.pdb	12619776
+SkyrimVR/SKSE/Plugins/BeardMaskFix.pdb	18378752
+SkyrimSE/BeardMaskFix.esp	3853
+SkyrimVR/BeardMaskFix.esp	3853
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_0.nif	29344
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_1.nif	29344
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Arg_0.nif	29317
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Arg_1.nif	29317
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Kha_0.nif	29317
+Meshes/BeardMaskFix/Armor/DBArmor/DBArmorHoodMasked_Kha_1.nif	29317
+SkyrimSE/SKSE/Plugins/BeardMaskFix.dll	385024
+SkyrimVR/SKSE/Plugins/BeardMaskFix.dll	596992
+SkyrimVR/SKSE/Plugins/
+SkyrimVR/SKSE/
+SkyrimVR/
+SkyrimSE/SKSE/Plugins/
+SkyrimSE/SKSE/
+SkyrimSE/
+Meshes/BeardMaskFix/Armor/DBArmor/
+Meshes/BeardMaskFix/Armor/
+Meshes/BeardMaskFix/
+Meshes/
+fomod/images/
+fomod/

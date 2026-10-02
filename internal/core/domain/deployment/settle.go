@@ -96,6 +96,17 @@ func Settle(prev []Entry, j *Journal, after After) ([]Entry, []Outcome) {
 				drop(KindLink, a.Location)
 				done = true
 			}
+		case ActionSetAside:
+			// Done once the found file sits in the BackupStore and left the
+			// location; the stale link of the location is forgotten then.
+			if a.Backup != nil {
+				b := after.Backup(a.Backup.BackupPath)
+				left := !obs.Exists || !a.Backup.Evidence.SameOriginal(obs.Evidence)
+				if left && b.Exists && !b.IsDir && a.Backup.Evidence.SameOriginal(b.Evidence) {
+					drop(KindLink, a.Location)
+					done = true
+				}
+			}
 		case ActionRestoreBackup:
 			if a.Current != nil {
 				b := after.Backup(a.Current.BackupPath)

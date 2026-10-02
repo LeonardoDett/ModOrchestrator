@@ -1,0 +1,1157 @@
+# source: CBBE 3BA (3BBB)-30174-2-48-1740765899.zip
+00 Base - NeverNude/
+00 Base - NeverNude/CalienteTools/
+00 Base - NeverNude/CalienteTools/BodySlide/
+00 Base - NeverNude/CalienteTools/BodySlide/ShapeData/
+00 Base - NeverNude/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/
+00 Base - NeverNude/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing NeverNude UniBoob.nif	2129725
+00 Base - NeverNude/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing NeverNude UniBoob.osd	9671278
+00 Base - NeverNude/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing NeverNude.nif	2129881
+00 Base - NeverNude/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing NeverNude.osd	1785519
+00 Base - NeverNude/CalienteTools/BodySlide/SliderSets/
+00 Base - NeverNude/CalienteTools/BodySlide/SliderSets/SE 3BBB Amazing NeverNude.osp	128246
+00 Base - UnderWear/
+00 Base - UnderWear/CalienteTools/
+00 Base - UnderWear/CalienteTools/BodySlide/
+00 Base - UnderWear/CalienteTools/BodySlide/ShapeData/
+00 Base - UnderWear/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/
+00 Base - UnderWear/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing Underwear Uniboob.nif	3637960
+00 Base - UnderWear/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing Underwear Uniboob.osd	17778459
+00 Base - UnderWear/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing Underwear.nif	3642082
+00 Base - UnderWear/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BBB Amazing Underwear.osd	17231371
+00 Base - UnderWear/CalienteTools/BodySlide/SliderSets/
+00 Base - UnderWear/CalienteTools/BodySlide/SliderSets/SE 3BBB Amazing UnderWear.osp	203076
+00 Base/
+00 Base/CalienteTools/
+00 Base/CalienteTools/BodySlide/
+00 Base/CalienteTools/BodySlide/RefTemplates/
+00 Base/CalienteTools/BodySlide/RefTemplates/CBBE 3BA UniBody.xml	3176
+00 Base/CalienteTools/BodySlide/RefTemplates/CBBE 3BA.xml	604
+00 Base/CalienteTools/BodySlide/RefTemplates/CBBE 3BA/
+00 Base/CalienteTools/BodySlide/RefTemplates/CBBE 3BA/CBBE 3BA Reference.osp	51057
+00 Base/CalienteTools/BodySlide/RefTemplates/CBBE 3BA/CBBE 3BA UniBody Ref.osp	443080
+00 Base/CalienteTools/BodySlide/ShapeData/
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA Reference/
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA Reference/CBBE 3BA Ref.nif	3435663
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA Reference/CBBE 3BA Ref.osd	7949075
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA Reference/CBBE 3BA remove nip sliders.nif	2690
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA Reference/CBBE 3BA remove nip sliders.osd	2840
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniBody Ref.nif	2759553
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniBody Ref.osd	41752415
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniBoob Ref.nif	2759553
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniBoob Ref.osd	41762999
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniButt Ref.nif	1316582
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniButt Ref.osd	5627972
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniLowerCurtain Ref.nif	2149209
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniLowerCurtain Ref.osd	35230482
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniString1 Ref.nif	2706210
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniString1 Ref.osd	41712852
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniString2 Ref.nif	2676294
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniString2 Ref.osd	41194530
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniString3 Ref.nif	2583912
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniString3 Ref.osd	39756366
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniUpperCurtain Ref.nif	2699280
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniUpperCurtain Ref.osd	39897183
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniUpperCurtain Tight Ref.nif	2699268
+00 Base/CalienteTools/BodySlide/ShapeData/CBBE 3BA UniBody Ref/CBBE 3BA UniUpperCurtain Tight Ref.osd	40630902
+00 Base/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/
+00 Base/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/CBBE 3BA 1st person Arm.osd	287648
+00 Base/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/SE 3BBB Body Amazing v2.nif	2007364
+00 Base/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/SE 3BBB Body Amazing v2.osd	8815319
+00 Base/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/SE 3BBB Body Amazing.nif	1772721
+00 Base/CalienteTools/BodySlide/ShapeData/SE 3BBB Amazing/SE 3BBB Body Amazing.osd	7860205
+00 Base/CalienteTools/BodySlide/SliderCategories/
+00 Base/CalienteTools/BodySlide/SliderCategories/CBBE 3BA.xml	9755
+00 Base/CalienteTools/BodySlide/SliderGroups/
+00 Base/CalienteTools/BodySlide/SliderGroups/CBBE 3BA.xml	10409
+00 Base/CalienteTools/BodySlide/SliderSets/
+00 Base/CalienteTools/BodySlide/SliderSets/CBBE 3BA 1st person.osp	10066
+00 Base/CalienteTools/BodySlide/SliderSets/SE 3BBB Amazing.osp	45845
+00 Base/meshes/
+00 Base/meshes/actors/
+00 Base/meshes/actors/character/
+00 Base/meshes/actors/character/character assets/
+00 Base/meshes/actors/character/character assets/1stpersonfemalebody.tri	146128
+00 Base/meshes/actors/character/character assets/1stpersonfemalebody_0.nif	172603
+00 Base/meshes/actors/character/character assets/1stpersonfemalebody_1.nif	172603
+00 Base/meshes/actors/character/character assets/1stpersonfemalehands.tri	3048
+00 Base/meshes/actors/character/character assets/1stpersonfemalehands_0.nif	582708
+00 Base/meshes/actors/character/character assets/1stpersonfemalehands_1.nif	582708
+00 Base/meshes/actors/character/character assets/femalebody.tri	5015997
+00 Base/meshes/actors/character/character assets/femalebody_0.nif	2007574
+00 Base/meshes/actors/character/character assets/femalebody_1.nif	2007574
+00 Base/meshes/actors/character/character assets/femalefeet.tri	68994
+00 Base/meshes/actors/character/character assets/femalefeet_0.nif	786505
+00 Base/meshes/actors/character/character assets/femalefeet_1.nif	786505
+00 Base/meshes/actors/character/character assets/femalehands.tri	3048
+00 Base/meshes/actors/character/character assets/femalehands_0.nif	582699
+00 Base/meshes/actors/character/character assets/femalehands_1.nif	582699
+00 Base/meshes/actors/character/character assets/femalehandsargonian.tri	3048
+00 Base/meshes/actors/character/character assets/femalehandsargonian_0.nif	582749
+00 Base/meshes/actors/character/character assets/femalehandsargonian_1.nif	582749
+00 Base/Textures/
+00 Base/Textures/Unibody/
+00 Base/Textures/Unibody/Uni_D.dds	184
+00 Base/Textures/Unibody/Uni_N.dds	184
+00 Base/Textures/Unibody/Uni_S.dds	184
+00-1 ECE Slider/
+00-1 ECE Slider/Meshes/
+00-1 ECE Slider/Meshes/CharacterMakingExtender/
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/defaultRaces_slider.ini	31543
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/elfraces_slider.ini	28776
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/humanraces_noScale_slider.ini	31542
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/humanraces_slider.ini	31537
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/MBS_defaultRaces_slider.ini	53112
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/MBS_elfraces_slider.ini	49472
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/MBS_humanraces_noScale_slider.ini	53113
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/MBS_humanraces_slider.ini	53115
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/MBS_orcraces_slider.ini	52972
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/orcraces_slider.ini	31204
+00-1 ECE Slider/Meshes/CharacterMakingExtender/commonTriRaces/unSupportedRaces_slider.ini	4123
+01 ygBase - NeverNude/
+01 ygBase - NeverNude/CalienteTools/
+01 ygBase - NeverNude/CalienteTools/BodySlide/
+01 ygBase - NeverNude/CalienteTools/BodySlide/SliderSets/
+01 ygBase - NeverNude/CalienteTools/BodySlide/SliderSets/SE ygNord 3BBB Amazing - NeverNude.osp	128623
+01 ygBase - UnderWear/
+01 ygBase - UnderWear/CalienteTools/
+01 ygBase - UnderWear/CalienteTools/BodySlide/
+01 ygBase - UnderWear/CalienteTools/BodySlide/SliderSets/
+01 ygBase - UnderWear/CalienteTools/BodySlide/SliderSets/SE ygNord 3BBB Amazing - UnderWear.osp	205408
+01 ygBase/
+01 ygBase/CalienteTools/
+01 ygBase/CalienteTools/BodySlide/
+01 ygBase/CalienteTools/BodySlide/SliderSets/
+01 ygBase/CalienteTools/BodySlide/SliderSets/SE ygNord 3BBB Amazing.osp	45240
+01 ygBase/meshes/
+01 ygBase/meshes/actors/
+01 ygBase/meshes/actors/character/
+01 ygBase/meshes/actors/character/ygNord/
+01 ygBase/meshes/actors/character/ygNord/femalebody.tri	5015997
+01 ygBase/meshes/actors/character/ygNord/femalebody_0.nif	2007564
+01 ygBase/meshes/actors/character/ygNord/femalebody_1.nif	2007564
+01 ygBase/meshes/actors/character/ygNord/femalefeet.tri	68994
+01 ygBase/meshes/actors/character/ygNord/femalefeet_0.nif	786495
+01 ygBase/meshes/actors/character/ygNord/femalefeet_1.nif	786495
+01 ygBase/meshes/actors/character/ygNord/femalehands.tri	3048
+01 ygBase/meshes/actors/character/ygNord/femalehands_0.nif	582689
+01 ygBase/meshes/actors/character/ygNord/femalehands_1.nif	582689
+01 ygBase/meshes/actors/character/ygNord/skeleton_female.nif	87069
+03 UniqueCharacterBase - NeverNude/
+03 UniqueCharacterBase - NeverNude/CalienteTools/
+03 UniqueCharacterBase - NeverNude/CalienteTools/BodySlide/
+03 UniqueCharacterBase - NeverNude/CalienteTools/BodySlide/SliderSets/
+03 UniqueCharacterBase - NeverNude/CalienteTools/BodySlide/SliderSets/SE Unique 3BBB Amazing - NeverNude.osp	128655
+03 UniqueCharacterBase - NeverNude/CalienteTools/BodySlide/SliderSets/SE Unique Vampire 3BBB Amazing - NeverNude.osp	128685
+03 UniqueCharacterBase - UnderWear/
+03 UniqueCharacterBase - UnderWear/CalienteTools/
+03 UniqueCharacterBase - UnderWear/CalienteTools/BodySlide/
+03 UniqueCharacterBase - UnderWear/CalienteTools/BodySlide/SliderSets/
+03 UniqueCharacterBase - UnderWear/CalienteTools/BodySlide/SliderSets/SE Unique 3BBB Amazing - UnderWear.osp	205437
+03 UniqueCharacterBase - UnderWear/CalienteTools/BodySlide/SliderSets/SE Unique Vampire 3BBB Amazing - UnderWear.osp	205470
+03 UniqueCharacterBase/
+03 UniqueCharacterBase/CalienteTools/
+03 UniqueCharacterBase/CalienteTools/BodySlide/
+03 UniqueCharacterBase/CalienteTools/BodySlide/SliderSets/
+03 UniqueCharacterBase/CalienteTools/BodySlide/SliderSets/SE Unique 3BBB Amazing.osp	45288
+03 UniqueCharacterBase/CalienteTools/BodySlide/SliderSets/SE Unique Vampire 3BBB Amazing.osp	45333
+03 UniqueCharacterBase/meshes/
+03 UniqueCharacterBase/meshes/actors/
+03 UniqueCharacterBase/meshes/actors/character/
+03 UniqueCharacterBase/meshes/actors/character/unique/
+03 UniqueCharacterBase/meshes/actors/character/unique/female/
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalebody.tri	5015997
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalebody_0.nif	2007571
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalebody_1.nif	2007571
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalefeet.tri	68994
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalefeet_0.nif	786502
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalefeet_1.nif	786502
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalehands.tri	3048
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalehands_0.nif	582696
+03 UniqueCharacterBase/meshes/actors/character/unique/female/femalehands_1.nif	582696
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalebody.tri	5015997
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalebody_0.nif	2007579
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalebody_1.nif	2007579
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalefeet.tri	68994
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalefeet_0.nif	786510
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalefeet_1.nif	786510
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalehands.tri	3048
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalehands_0.nif	582704
+03 UniqueCharacterBase/meshes/actors/character/unique/Vampire/female/femalehands_1.nif	582704
+10 Physics Patch/
+10 Physics Patch/00 CBPC Base/
+10 Physics Patch/00 CBPC Base/SKSE/
+10 Physics Patch/00 CBPC Base/SKSE/Plugins/
+10 Physics Patch/00 CBPC Base/SKSE/Plugins/CBPCMasterConfig_3BA.txt	699
+10 Physics Patch/00 CBPC Base/SKSE/Plugins/CBPCMasterConfig_SOSScroum.txt	107
+10 Physics Patch/00 CBPC Base/SKSE/Plugins/CBPCollisionConfig.txt	5304
+10 Physics Patch/00 CBPC Base/SKSE/Plugins/CBPConfig_SOSScroum.txt	442
+10 Physics Patch/01 SMP Base/
+10 Physics Patch/01 SMP Base/CalienteTools/
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/3BBB Collision Armor Amazing A.nif	823606
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/3BBB Collision Armor Amazing B.nif	823671
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/3BBB Collision Armor Amazing C.nif	823671
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/3BBB Collision Armor Amazing D.nif	823671
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/3BBB Collision Armor Amazing.nif	823541
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/ShapeData/3BBB Collision Armor/3BBB Collision Armor Amazing.osd	3424757
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/SliderSets/
+10 Physics Patch/01 SMP Base/CalienteTools/BodySlide/SliderSets/3BBB Collision Armor Amazing.osp	398475
+10 Physics Patch/01 SMP Base/meshes/
+10 Physics Patch/01 SMP Base/meshes/armor/
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF1.tri	1411615
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF1_0.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF1_1.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF2.tri	1411615
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF2_0.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF2_1.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF3.tri	1411615
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF3_0.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF3_1.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF4.tri	1411615
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF4_0.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorF4_1.nif	823619
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorP.tri	1411615
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorP_0.nif	823608
+10 Physics Patch/01 SMP Base/meshes/armor/Mu3B/3BBBCollisionArmorP_1.nif	823608
+10 Physics Patch/01 SMP Base/SKSE/
+10 Physics Patch/01 SMP Base/SKSE/Plugins/
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/Boner.xml	1195
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/HeadMale.xml	1314
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/MaleBody.xml	990
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/MaleGenitals.xml	940
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/MaleHands.xml	1046
+10 Physics Patch/01 SMP Base/SKSE/Plugins/hdtSkinnedMeshConfigs/penis.xml	1361
+10 Physics Patch/05 CBPCSystem01/
+10 Physics Patch/05 CBPCSystem01/SKSE/
+10 Physics Patch/05 CBPCSystem01/SKSE/Plugins/
+10 Physics Patch/05 CBPCSystem01/SKSE/Plugins/CBPCSystem.ini	2230
+10 Physics Patch/05 CBPCSystem02/
+10 Physics Patch/05 CBPCSystem02/SKSE/
+10 Physics Patch/05 CBPCSystem02/SKSE/Plugins/
+10 Physics Patch/05 CBPCSystem02/SKSE/Plugins/CBPCSystem.ini	2230
+10 Physics Patch/05 CBPCSystem03/
+10 Physics Patch/05 CBPCSystem03/SKSE/
+10 Physics Patch/05 CBPCSystem03/SKSE/Plugins/
+10 Physics Patch/05 CBPCSystem03/SKSE/Plugins/CBPCSystem.ini	2229
+10 Physics Patch/11 Type B/
+10 Physics Patch/11 Type B/Meshes/
+10 Physics Patch/11 Type B/Meshes/actors/
+10 Physics Patch/11 Type B/Meshes/actors/character/
+10 Physics Patch/11 Type B/Meshes/actors/character/character assets/
+10 Physics Patch/11 Type B/Meshes/actors/character/character assets/CUSTOM CBBE SMP.xml	16039
+10 Physics Patch/11 Type B/SKSE/
+10 Physics Patch/11 Type B/SKSE/Plugins/
+10 Physics Patch/11 Type B/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/11 Type B/SKSE/Plugins/hdtSkinnedMeshConfigs/defaultBBPs.xml	715
+10 Physics Patch/20 Dcup Full SMP - 2/
+10 Physics Patch/20 Dcup Full SMP - 2/SKSE/
+10 Physics Patch/20 Dcup Full SMP - 2/SKSE/Plugins/
+10 Physics Patch/20 Dcup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/20 Dcup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94146
+10 Physics Patch/20 Dcup Full SMP - 3/
+10 Physics Patch/20 Dcup Full SMP - 3/SKSE/
+10 Physics Patch/20 Dcup Full SMP - 3/SKSE/Plugins/
+10 Physics Patch/20 Dcup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/20 Dcup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94152
+10 Physics Patch/20 Dcup Full SMP/
+10 Physics Patch/20 Dcup Full SMP/SKSE/
+10 Physics Patch/20 Dcup Full SMP/SKSE/Plugins/
+10 Physics Patch/20 Dcup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/20 Dcup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96185
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 2/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 2/SKSE/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 2/SKSE/Plugins/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94144
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 3/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 3/SKSE/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 3/SKSE/Plugins/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94152
+10 Physics Patch/21 Dcup SMP and CBPC Heavy/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy/SKSE/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy/SKSE/Plugins/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96185
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 2/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 2/SKSE/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 2/SKSE/Plugins/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94142
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 3/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 3/SKSE/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 3/SKSE/Plugins/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94152
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2/SKSE/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2/SKSE/Plugins/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/21 Dcup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96185
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 2/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 2/SKSE/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 2/SKSE/Plugins/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94127
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 3/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 3/SKSE/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 3/SKSE/Plugins/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/23 Dcup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94138
+10 Physics Patch/23 Dcup SMP and CBPC Lite/
+10 Physics Patch/23 Dcup SMP and CBPC Lite/SKSE/
+10 Physics Patch/23 Dcup SMP and CBPC Lite/SKSE/Plugins/
+10 Physics Patch/23 Dcup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/23 Dcup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96164
+10 Physics Patch/30 Ccup Full SMP - 2/
+10 Physics Patch/30 Ccup Full SMP - 2/SKSE/
+10 Physics Patch/30 Ccup Full SMP - 2/SKSE/Plugins/
+10 Physics Patch/30 Ccup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/30 Ccup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94162
+10 Physics Patch/30 Ccup Full SMP - 3/
+10 Physics Patch/30 Ccup Full SMP - 3/SKSE/
+10 Physics Patch/30 Ccup Full SMP - 3/SKSE/Plugins/
+10 Physics Patch/30 Ccup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/30 Ccup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/30 Ccup Full SMP/
+10 Physics Patch/30 Ccup Full SMP/SKSE/
+10 Physics Patch/30 Ccup Full SMP/SKSE/Plugins/
+10 Physics Patch/30 Ccup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/30 Ccup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96201
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 2/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 2/SKSE/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 2/SKSE/Plugins/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94162
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 3/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 3/SKSE/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 3/SKSE/Plugins/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/31 Ccup SMP and CBPC Heavy/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy/SKSE/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy/SKSE/Plugins/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96201
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 2/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 2/SKSE/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 2/SKSE/Plugins/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94162
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 3/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 3/SKSE/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 3/SKSE/Plugins/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2/SKSE/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2/SKSE/Plugins/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/31 Ccup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96201
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 2/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 2/SKSE/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 2/SKSE/Plugins/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94148
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 3/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 3/SKSE/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 3/SKSE/Plugins/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/33 Ccup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94144
+10 Physics Patch/33 Ccup SMP and CBPC Lite/
+10 Physics Patch/33 Ccup SMP and CBPC Lite/SKSE/
+10 Physics Patch/33 Ccup SMP and CBPC Lite/SKSE/Plugins/
+10 Physics Patch/33 Ccup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/33 Ccup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96183
+10 Physics Patch/40 Bcup Full SMP - 2/
+10 Physics Patch/40 Bcup Full SMP - 2/SKSE/
+10 Physics Patch/40 Bcup Full SMP - 2/SKSE/Plugins/
+10 Physics Patch/40 Bcup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/40 Bcup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94160
+10 Physics Patch/40 Bcup Full SMP - 3/
+10 Physics Patch/40 Bcup Full SMP - 3/SKSE/
+10 Physics Patch/40 Bcup Full SMP - 3/SKSE/Plugins/
+10 Physics Patch/40 Bcup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/40 Bcup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/40 Bcup Full SMP/
+10 Physics Patch/40 Bcup Full SMP/SKSE/
+10 Physics Patch/40 Bcup Full SMP/SKSE/Plugins/
+10 Physics Patch/40 Bcup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/40 Bcup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96199
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 2/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 2/SKSE/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 2/SKSE/Plugins/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 3/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 3/SKSE/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 3/SKSE/Plugins/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/41 Bcup SMP and CBPC Heavy/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy/SKSE/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy/SKSE/Plugins/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96199
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 2/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 2/SKSE/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 2/SKSE/Plugins/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94156
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 3/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 3/SKSE/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 3/SKSE/Plugins/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2/SKSE/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2/SKSE/Plugins/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/41 Bcup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96197
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 2/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 2/SKSE/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 2/SKSE/Plugins/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94142
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 3/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 3/SKSE/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 3/SKSE/Plugins/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/43 Bcup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94144
+10 Physics Patch/43 Bcup SMP and CBPC Lite/
+10 Physics Patch/43 Bcup SMP and CBPC Lite/SKSE/
+10 Physics Patch/43 Bcup SMP and CBPC Lite/SKSE/Plugins/
+10 Physics Patch/43 Bcup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/43 Bcup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96178
+10 Physics Patch/50 Acup Full SMP - 2/
+10 Physics Patch/50 Acup Full SMP - 2/SKSE/
+10 Physics Patch/50 Acup Full SMP - 2/SKSE/Plugins/
+10 Physics Patch/50 Acup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/50 Acup Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94162
+10 Physics Patch/50 Acup Full SMP - 3/
+10 Physics Patch/50 Acup Full SMP - 3/SKSE/
+10 Physics Patch/50 Acup Full SMP - 3/SKSE/Plugins/
+10 Physics Patch/50 Acup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/50 Acup Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/50 Acup Full SMP/
+10 Physics Patch/50 Acup Full SMP/SKSE/
+10 Physics Patch/50 Acup Full SMP/SKSE/Plugins/
+10 Physics Patch/50 Acup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/50 Acup Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96201
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 2/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 2/SKSE/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 2/SKSE/Plugins/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94161
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 3/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 3/SKSE/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 3/SKSE/Plugins/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/51 Acup SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/51 Acup SMP and CBPC Heavy/
+10 Physics Patch/51 Acup SMP and CBPC Heavy/SKSE/
+10 Physics Patch/51 Acup SMP and CBPC Heavy/SKSE/Plugins/
+10 Physics Patch/51 Acup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/51 Acup SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96201
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 2/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 2/SKSE/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 2/SKSE/Plugins/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94161
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 3/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 3/SKSE/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 3/SKSE/Plugins/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94158
+10 Physics Patch/51 Acup SMP and CBPC Heavy2/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2/SKSE/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2/SKSE/Plugins/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/51 Acup SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96199
+10 Physics Patch/53 Acup SMP and CBPC Lite - 2/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 2/SKSE/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 2/SKSE/Plugins/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94147
+10 Physics Patch/53 Acup SMP and CBPC Lite - 3/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 3/SKSE/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 3/SKSE/Plugins/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/53 Acup SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	94144
+10 Physics Patch/53 Acup SMP and CBPC Lite/
+10 Physics Patch/53 Acup SMP and CBPC Lite/SKSE/
+10 Physics Patch/53 Acup SMP and CBPC Lite/SKSE/Plugins/
+10 Physics Patch/53 Acup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/53 Acup SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	96182
+10 Physics Patch/60 3BCA Full SMP - 2/
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-A-Amazing.xml	94162
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-B-Amazing.xml	94160
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-C-Amazing.xml	94162
+10 Physics Patch/60 3BCA Full SMP - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-D-Amazing.xml	94146
+10 Physics Patch/60 3BCA Full SMP - 3/
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-A-Amazing.xml	94158
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-B-Amazing.xml	94158
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-C-Amazing.xml	94158
+10 Physics Patch/60 3BCA Full SMP - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-D-Amazing.xml	94152
+10 Physics Patch/60 3BCA Full SMP/
+10 Physics Patch/60 3BCA Full SMP/SKSE/
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-A-Amazing.xml	96201
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-B-Amazing.xml	96199
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-C-Amazing.xml	96201
+10 Physics Patch/60 3BCA Full SMP/SKSE/Plugins/hdtSkinnedMeshConfigs/outfits/3BCA-D-Amazing.xml	96185
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	94161
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	94162
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	94144
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	94152
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	96201
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	96199
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	96201
+10 Physics Patch/62 3BCA SMP and CBPC Heavy/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	96185
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	94161
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	94156
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	94162
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	94142
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	94158
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2 - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	94152
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	96199
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	96197
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	96201
+10 Physics Patch/62 3BCA SMP and CBPC Heavy2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	96185
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	94147
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	94142
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	94148
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	94127
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	94144
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	94144
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	94144
+10 Physics Patch/62 3BCA SMP and CBPC Lite - 3/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	94138
+10 Physics Patch/62 3BCA SMP and CBPC Lite/
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	96182
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	96178
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	96183
+10 Physics Patch/62 3BCA SMP and CBPC Lite/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	96164
+10 Physics Patch/65 AllCup SMP and CBPC Lite2/
+10 Physics Patch/65 AllCup SMP and CBPC Lite2/SKSE/
+10 Physics Patch/65 AllCup SMP and CBPC Lite2/SKSE/Plugins/
+10 Physics Patch/65 AllCup SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/65 AllCup SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/3BBB-Amazing.xml	93383
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-A-Amazing.xml	93383
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-B-Amazing.xml	93383
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-C-Amazing.xml	93383
+10 Physics Patch/66 3BCA SMP and CBPC Lite2/SKSE/Plugins/hdtSkinnedMeshConfigs/Outfits/3BCA-D-Amazing.xml	93383
+10 Physics Patch/70 SOS Physics - Base/
+10 Physics Patch/70 SOS Physics - Base/SKSE/
+10 Physics Patch/70 SOS Physics - Base/SKSE/Plugins/
+10 Physics Patch/70 SOS Physics - Base/SKSE/Plugins/CBPCMasterConfig_SOS.txt	358
+10 Physics Patch/70 SOS Physics - Base/SKSE/Plugins/CBPConfig_SOS.txt	2315
+10 Physics Patch/70 SOS Physics - CBPC Floppy/
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/MusSOSManagerGlobal.pex	2180
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/MusSOSManagerOstim.pex	2828
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/MusSOSManagerSL.pex	1919
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/source/
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/source/MusSOSManagerGlobal.psc	2637
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/source/MusSOSManagerOstim.psc	2600
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/scripts/source/MusSOSManagerSL.psc	1271
+10 Physics Patch/70 SOS Physics - CBPC nonFloppy/SOSPhysicsManager.esp	423
+10 Physics Patch/75 CBPC Separation/
+10 Physics Patch/75 CBPC Separation/SKSE/
+10 Physics Patch/75 CBPC Separation/SKSE/Plugins/
+10 Physics Patch/75 CBPC Separation/SKSE/Plugins/CBPConfig.txt	13
+10 Physics Patch/75 CBPC Separation/SKSE/Plugins/CBPConfig_BBP.txt	817
+10 Physics Patch/76 CBPC S - BBL/
+10 Physics Patch/76 CBPC S - BBL/SKSE/
+10 Physics Patch/76 CBPC S - BBL/SKSE/Plugins/
+10 Physics Patch/76 CBPC S - BBL/SKSE/Plugins/CBPConfig_belly.txt	1564
+10 Physics Patch/76 CBPC S - BBL/SKSE/Plugins/CBPConfig_butt.txt	3156
+10 Physics Patch/76 CBPC S - BBL/SKSE/Plugins/CBPConfig_leg.txt	9617
+10 Physics Patch/77 CBPC M - BBL/
+10 Physics Patch/77 CBPC M - BBL/SKSE/
+10 Physics Patch/77 CBPC M - BBL/SKSE/Plugins/
+10 Physics Patch/77 CBPC M - BBL/SKSE/Plugins/CBPConfig_belly.txt	1562
+10 Physics Patch/77 CBPC M - BBL/SKSE/Plugins/CBPConfig_butt.txt	3108
+10 Physics Patch/77 CBPC M - BBL/SKSE/Plugins/CBPConfig_leg.txt	9483
+10 Physics Patch/78 CBPC BBL - Normal/
+10 Physics Patch/78 CBPC BBL - Normal/SKSE/
+10 Physics Patch/78 CBPC BBL - Normal/SKSE/Plugins/
+10 Physics Patch/78 CBPC BBL - Normal/SKSE/Plugins/CBPConfig_BellyAmplitude.txt	27
+10 Physics Patch/78 CBPC BBL - Normal/SKSE/Plugins/CBPConfig_ButtAmplitude.txt	76
+10 Physics Patch/78 CBPC BBL - Normal/SKSE/Plugins/CBPConfig_LegAmplitude.txt	184
+10 Physics Patch/79 CBPC BBL - Less/
+10 Physics Patch/79 CBPC BBL - Less/SKSE/
+10 Physics Patch/79 CBPC BBL - Less/SKSE/Plugins/
+10 Physics Patch/79 CBPC BBL - Less/SKSE/Plugins/CBPConfig_BellyAmplitude.txt	25
+10 Physics Patch/79 CBPC BBL - Less/SKSE/Plugins/CBPConfig_ButtAmplitude.txt	76
+10 Physics Patch/79 CBPC BBL - Less/SKSE/Plugins/CBPConfig_LegAmplitude.txt	184
+10 Physics Patch/80 CBPC Breast A-D/
+10 Physics Patch/80 CBPC Breast A-D/SKSE/
+10 Physics Patch/80 CBPC Breast A-D/SKSE/Plugins/
+10 Physics Patch/80 CBPC Breast A-D/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/80 CBPC Breast B-D/
+10 Physics Patch/80 CBPC Breast B-D/SKSE/
+10 Physics Patch/80 CBPC Breast B-D/SKSE/Plugins/
+10 Physics Patch/80 CBPC Breast B-D/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	380
+10 Physics Patch/80 CBPC Breast C-D/
+10 Physics Patch/80 CBPC Breast C-D/SKSE/
+10 Physics Patch/80 CBPC Breast C-D/SKSE/Plugins/
+10 Physics Patch/80 CBPC Breast C-D/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/80 CBPC Breast D-D/
+10 Physics Patch/80 CBPC Breast D-D/SKSE/
+10 Physics Patch/80 CBPC Breast D-D/SKSE/Plugins/
+10 Physics Patch/80 CBPC Breast D-D/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/80 CBPC Collision B-D/
+10 Physics Patch/80 CBPC Collision B-D/SKSE/
+10 Physics Patch/80 CBPC Collision B-D/SKSE/Plugins/
+10 Physics Patch/80 CBPC Collision B-D/SKSE/Plugins/CBPCollisionConfig_Female.txt	8858
+10 Physics Patch/80 CBPC Collision D-D/
+10 Physics Patch/80 CBPC Collision D-D/SKSE/
+10 Physics Patch/80 CBPC Collision D-D/SKSE/Plugins/
+10 Physics Patch/80 CBPC Collision D-D/SKSE/Plugins/CBPCollisionConfig_Female.txt	8841
+10 Physics Patch/81 CBPC Breast A-C/
+10 Physics Patch/81 CBPC Breast A-C/SKSE/
+10 Physics Patch/81 CBPC Breast A-C/SKSE/Plugins/
+10 Physics Patch/81 CBPC Breast A-C/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/81 CBPC Breast B-C/
+10 Physics Patch/81 CBPC Breast B-C/SKSE/
+10 Physics Patch/81 CBPC Breast B-C/SKSE/Plugins/
+10 Physics Patch/81 CBPC Breast B-C/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/81 CBPC Breast C-C/
+10 Physics Patch/81 CBPC Breast C-C/SKSE/
+10 Physics Patch/81 CBPC Breast C-C/SKSE/Plugins/
+10 Physics Patch/81 CBPC Breast C-C/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/81 CBPC Breast D-C/
+10 Physics Patch/81 CBPC Breast D-C/SKSE/
+10 Physics Patch/81 CBPC Breast D-C/SKSE/Plugins/
+10 Physics Patch/81 CBPC Breast D-C/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/81 CBPC Collision C-C/
+10 Physics Patch/81 CBPC Collision C-C/SKSE/
+10 Physics Patch/81 CBPC Collision C-C/SKSE/Plugins/
+10 Physics Patch/81 CBPC Collision C-C/SKSE/Plugins/CBPCollisionConfig_Female.txt	8855
+10 Physics Patch/82 CBPC Breast A-B/
+10 Physics Patch/82 CBPC Breast A-B/SKSE/
+10 Physics Patch/82 CBPC Breast A-B/SKSE/Plugins/
+10 Physics Patch/82 CBPC Breast A-B/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/82 CBPC Breast B-B/
+10 Physics Patch/82 CBPC Breast B-B/SKSE/
+10 Physics Patch/82 CBPC Breast B-B/SKSE/Plugins/
+10 Physics Patch/82 CBPC Breast B-B/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/82 CBPC Breast C-B/
+10 Physics Patch/82 CBPC Breast C-B/SKSE/
+10 Physics Patch/82 CBPC Breast C-B/SKSE/Plugins/
+10 Physics Patch/82 CBPC Breast C-B/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/82 CBPC Breast D-B/
+10 Physics Patch/82 CBPC Breast D-B/SKSE/
+10 Physics Patch/82 CBPC Breast D-B/SKSE/Plugins/
+10 Physics Patch/82 CBPC Breast D-B/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/82 CBPC Collision B-B/
+10 Physics Patch/82 CBPC Collision B-B/SKSE/
+10 Physics Patch/82 CBPC Collision B-B/SKSE/Plugins/
+10 Physics Patch/82 CBPC Collision B-B/SKSE/Plugins/CBPCollisionConfig_Female.txt	8881
+10 Physics Patch/82 CBPC Collision D-B/
+10 Physics Patch/82 CBPC Collision D-B/SKSE/
+10 Physics Patch/82 CBPC Collision D-B/SKSE/Plugins/
+10 Physics Patch/82 CBPC Collision D-B/SKSE/Plugins/CBPCollisionConfig_Female.txt	8857
+10 Physics Patch/83 CBPC Breast A-A/
+10 Physics Patch/83 CBPC Breast A-A/SKSE/
+10 Physics Patch/83 CBPC Breast A-A/SKSE/Plugins/
+10 Physics Patch/83 CBPC Breast A-A/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/83 CBPC Breast B-A/
+10 Physics Patch/83 CBPC Breast B-A/SKSE/
+10 Physics Patch/83 CBPC Breast B-A/SKSE/Plugins/
+10 Physics Patch/83 CBPC Breast B-A/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/83 CBPC Breast C-A/
+10 Physics Patch/83 CBPC Breast C-A/SKSE/
+10 Physics Patch/83 CBPC Breast C-A/SKSE/Plugins/
+10 Physics Patch/83 CBPC Breast C-A/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/83 CBPC Breast D-A/
+10 Physics Patch/83 CBPC Breast D-A/SKSE/
+10 Physics Patch/83 CBPC Breast D-A/SKSE/Plugins/
+10 Physics Patch/83 CBPC Breast D-A/SKSE/Plugins/CBPConfig_BreastAmplitude.txt	378
+10 Physics Patch/86 CBPC NoVagina/
+10 Physics Patch/86 CBPC NoVagina/SKSE/
+10 Physics Patch/86 CBPC NoVagina/SKSE/Plugins/
+10 Physics Patch/86 CBPC NoVagina/SKSE/Plugins/CBPCMasterConfig_Vagina.txt	158
+10 Physics Patch/86 CBPC Vagina/
+10 Physics Patch/86 CBPC Vagina/SKSE/
+10 Physics Patch/86 CBPC Vagina/SKSE/Plugins/
+10 Physics Patch/86 CBPC Vagina/SKSE/Plugins/CBPCMasterConfig_Vagina.txt	154
+10 Physics Patch/86 CBPC Vagina/SKSE/Plugins/CBPConfig_Vagina.txt	2321
+10 Physics Patch/87 CBPC Anal/
+10 Physics Patch/87 CBPC Anal/SKSE/
+10 Physics Patch/87 CBPC Anal/SKSE/Plugins/
+10 Physics Patch/87 CBPC Anal/SKSE/Plugins/CBPCMasterConfig_Anal.txt	49
+10 Physics Patch/87 CBPC NoAnal/
+10 Physics Patch/87 CBPC NoAnal/SKSE/
+10 Physics Patch/87 CBPC NoAnal/SKSE/Plugins/
+10 Physics Patch/87 CBPC NoAnal/SKSE/Plugins/CBPCMasterConfig_Anal.txt	50
+10 Physics Patch/90 CBPC Real Bounce - AntiGravity/
+10 Physics Patch/90 CBPC Real Bounce - AntiGravity/SKSE/
+10 Physics Patch/90 CBPC Real Bounce - AntiGravity/SKSE/Plugins/
+10 Physics Patch/90 CBPC Real Bounce - AntiGravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	567
+10 Physics Patch/90 CBPC Real Bounce - Gravity/
+10 Physics Patch/90 CBPC Real Bounce - Gravity/SKSE/
+10 Physics Patch/90 CBPC Real Bounce - Gravity/SKSE/Plugins/
+10 Physics Patch/90 CBPC Real Bounce - Gravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	579
+10 Physics Patch/90 CBPC Real Bounce - MoreGravity/
+10 Physics Patch/90 CBPC Real Bounce - MoreGravity/SKSE/
+10 Physics Patch/90 CBPC Real Bounce - MoreGravity/SKSE/Plugins/
+10 Physics Patch/90 CBPC Real Bounce - MoreGravity/SKSE/Plugins/CBPConfig_3b_MoreGravity.txt	1371
+10 Physics Patch/90 CBPC Real Bounce/
+10 Physics Patch/90 CBPC Real Bounce/SKSE/
+10 Physics Patch/90 CBPC Real Bounce/SKSE/Plugins/
+10 Physics Patch/90 CBPC Real Bounce/SKSE/Plugins/CBPConfig_3b.txt	13049
+10 Physics Patch/91 CBPC Very High Elasticity - AntiGravity/
+10 Physics Patch/91 CBPC Very High Elasticity - AntiGravity/SKSE/
+10 Physics Patch/91 CBPC Very High Elasticity - AntiGravity/SKSE/Plugins/
+10 Physics Patch/91 CBPC Very High Elasticity - AntiGravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	617
+10 Physics Patch/91 CBPC Very High Elasticity - Gravity/
+10 Physics Patch/91 CBPC Very High Elasticity - Gravity/SKSE/
+10 Physics Patch/91 CBPC Very High Elasticity - Gravity/SKSE/Plugins/
+10 Physics Patch/91 CBPC Very High Elasticity - Gravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	629
+10 Physics Patch/91 CBPC Very High Elasticity - MoreGravity/
+10 Physics Patch/91 CBPC Very High Elasticity - MoreGravity/SKSE/
+10 Physics Patch/91 CBPC Very High Elasticity - MoreGravity/SKSE/Plugins/
+10 Physics Patch/91 CBPC Very High Elasticity - MoreGravity/SKSE/Plugins/CBPConfig_3b_MoreGravity.txt	1368
+10 Physics Patch/91 CBPC Very High Elasticity/
+10 Physics Patch/91 CBPC Very High Elasticity/SKSE/
+10 Physics Patch/91 CBPC Very High Elasticity/SKSE/Plugins/
+10 Physics Patch/91 CBPC Very High Elasticity/SKSE/Plugins/CBPConfig_3b.txt	13034
+10 Physics Patch/92 CBPC Very softness - AntiGravity/
+10 Physics Patch/92 CBPC Very softness - AntiGravity/SKSE/
+10 Physics Patch/92 CBPC Very softness - AntiGravity/SKSE/Plugins/
+10 Physics Patch/92 CBPC Very softness - AntiGravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	620
+10 Physics Patch/92 CBPC Very softness - Gravity/
+10 Physics Patch/92 CBPC Very softness - Gravity/SKSE/
+10 Physics Patch/92 CBPC Very softness - Gravity/SKSE/Plugins/
+10 Physics Patch/92 CBPC Very softness - Gravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	632
+10 Physics Patch/92 CBPC Very softness - MoreGravity/
+10 Physics Patch/92 CBPC Very softness - MoreGravity/SKSE/
+10 Physics Patch/92 CBPC Very softness - MoreGravity/SKSE/Plugins/
+10 Physics Patch/92 CBPC Very softness - MoreGravity/SKSE/Plugins/CBPConfig_3b_MoreGravity.txt	1365
+10 Physics Patch/92 CBPC Very softness/
+10 Physics Patch/92 CBPC Very softness/SKSE/
+10 Physics Patch/92 CBPC Very softness/SKSE/Plugins/
+10 Physics Patch/92 CBPC Very softness/SKSE/Plugins/CBPConfig_3b.txt	13016
+10 Physics Patch/93 CBPC RB n VS - AntiGravity/
+10 Physics Patch/93 CBPC RB n VS - AntiGravity/SKSE/
+10 Physics Patch/93 CBPC RB n VS - AntiGravity/SKSE/Plugins/
+10 Physics Patch/93 CBPC RB n VS - AntiGravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	558
+10 Physics Patch/93 CBPC RB n VS - Gravity/
+10 Physics Patch/93 CBPC RB n VS - Gravity/SKSE/
+10 Physics Patch/93 CBPC RB n VS - Gravity/SKSE/Plugins/
+10 Physics Patch/93 CBPC RB n VS - Gravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	579
+10 Physics Patch/93 CBPC RB n VS - MoreGravity/
+10 Physics Patch/93 CBPC RB n VS - MoreGravity/SKSE/
+10 Physics Patch/93 CBPC RB n VS - MoreGravity/SKSE/Plugins/
+10 Physics Patch/93 CBPC RB n VS - MoreGravity/SKSE/Plugins/CBPConfig_3b_MoreGravity.txt	1316
+10 Physics Patch/93 CBPC RB n VS/
+10 Physics Patch/93 CBPC RB n VS/SKSE/
+10 Physics Patch/93 CBPC RB n VS/SKSE/Plugins/
+10 Physics Patch/93 CBPC RB n VS/SKSE/Plugins/CBPConfig_3b.txt	3564
+10 Physics Patch/94 CBPC BBP - Gravity/
+10 Physics Patch/94 CBPC BBP - Gravity/SKSE/
+10 Physics Patch/94 CBPC BBP - Gravity/SKSE/Plugins/
+10 Physics Patch/94 CBPC BBP - Gravity/SKSE/Plugins/CBPConfig_BBP_Gravity.txt	187
+10 Physics Patch/94 CBPC BBP - MoreGravity/
+10 Physics Patch/94 CBPC BBP - MoreGravity/SKSE/
+10 Physics Patch/94 CBPC BBP - MoreGravity/SKSE/Plugins/
+10 Physics Patch/94 CBPC BBP - MoreGravity/SKSE/Plugins/CBPConfig_BBP_MoreGravity.txt	330
+10 Physics Patch/94 CBPC PushUp/
+10 Physics Patch/94 CBPC PushUp/SKSE/
+10 Physics Patch/94 CBPC PushUp/SKSE/Plugins/
+10 Physics Patch/94 CBPC PushUp/SKSE/Plugins/CBPConfig_3b_armor.txt	1796
+10 Physics Patch/94 CBPC PushUp/SKSE/Plugins/CBPConfig_BBP_armor.txt	545
+10 Physics Patch/95 CBPC Preset/
+10 Physics Patch/95 CBPC Preset/SKSE/
+10 Physics Patch/95 CBPC Preset/SKSE/Plugins/
+10 Physics Patch/95 CBPC Preset/SKSE/Plugins/CBPConfig.txt	2743
+10 Physics Patch/97 CBPC NoGravity/
+10 Physics Patch/97 CBPC NoGravity/SKSE/
+10 Physics Patch/97 CBPC NoGravity/SKSE/Plugins/
+10 Physics Patch/97 CBPC NoGravity/SKSE/Plugins/CBPConfig_3b_Gravity.txt	535
+10 Physics Patch/97 CBPC NoGravity/SKSE/Plugins/CBPConfig_BBP_Gravity.txt	171
+10 Physics Patch/97 CBPC NoMoreGravity/
+10 Physics Patch/97 CBPC NoMoreGravity/SKSE/
+10 Physics Patch/97 CBPC NoMoreGravity/SKSE/Plugins/
+10 Physics Patch/97 CBPC NoMoreGravity/SKSE/Plugins/CBPConfig_3b_MoreGravity.txt	1280
+10 Physics Patch/97 CBPC NoMoreGravity/SKSE/Plugins/CBPConfig_BBP_MoreGravity.txt	326
+10 Physics Patch/97 CBPC NoPushUp/
+10 Physics Patch/97 CBPC NoPushUp/SKSE/
+10 Physics Patch/97 CBPC NoPushUp/SKSE/Plugins/
+10 Physics Patch/97 CBPC NoPushUp/SKSE/Plugins/CBPConfig_3b_armor.txt	1796
+10 Physics Patch/97 CBPC NoPushUp/SKSE/Plugins/CBPConfig_BBP_armor.txt	545
+10 Physics Patch/99 Only CBPC/
+10 Physics Patch/99 Only CBPC/3BBB.esp	3288
+10 Physics Patch/99 Only CBPC/SKSE/
+10 Physics Patch/99 Only CBPC/SKSE/Plugins/
+10 Physics Patch/99 Only CBPC/SKSE/Plugins/hdtSkinnedMeshConfigs/
+10 Physics Patch/99 Only CBPC/SKSE/Plugins/hdtSkinnedMeshConfigs/defaultBBPs.xml	231
+15 RaceMenuMorphs/
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/RaceMenuMorphsCBBE.esp	697
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/RaceMenuMorphsCBBE.pex	22295
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/RaceMenuMorphsCBBEUIExtensions.pex	5556
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/RaceMenuMorphsCBBEUIListMenu.pex	5264
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/RaceMenuMorphsCBBEUIMenuBase.pex	3278
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/RaceMenuMorphsCBBEUITextEntryMenu.pex	2137
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/Source/
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/Source/RaceMenuMorphsCBBE.psc	20648
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/Source/RaceMenuMorphsCBBEUIExtensions.psc	5744
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/Source/RaceMenuMorphsCBBEUIListMenu.psc	5146
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/Source/RaceMenuMorphsCBBEUIMenuBase.psc	3509
+15 RaceMenuMorphs/00 RaceMenuMorphs - CBBE/Scripts/Source/RaceMenuMorphsCBBEUITextEntryMenu.psc	1803
+15 RaceMenuMorphs/90 Old RaceMenuMorphs - 3BBB/
+15 RaceMenuMorphs/90 Old RaceMenuMorphs - 3BBB/3BBB-RaceMenuMorphs.esp	348
+15 RaceMenuMorphs/90 Old RaceMenuMorphs - 3BBB/Scripts/
+15 RaceMenuMorphs/90 Old RaceMenuMorphs - 3BBB/Scripts/RaceMenuMorphs3BBB.pex	18164
+15 RaceMenuMorphs/90 Old RaceMenuMorphs - 3BBB/Scripts/Source/
+15 RaceMenuMorphs/90 Old RaceMenuMorphs - 3BBB/Scripts/Source/RaceMenuMorphs3BBB.psc	15797
+20 Compatible/
+20 Compatible/00 with MCM/
+20 Compatible/00 with MCM/00 Base/
+20 Compatible/00 with MCM/00 Base/Interface/
+20 Compatible/00 with MCM/00 Base/Interface/translations/
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_chinese.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_czech.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_english.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_french.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_german.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_italian.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_japanese.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_polish.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_russian.txt	7678
+20 Compatible/00 with MCM/00 Base/Interface/translations/3BBB_spanish.txt	7666
+20 Compatible/00 with MCM/00 Base/Scripts/
+20 Compatible/00 with MCM/00 Base/Scripts/Mus3BAddon_PlayerAlias.pex	593
+20 Compatible/00 with MCM/00 Base/Scripts/Mus3BAddonMCM.pex	30869
+20 Compatible/00 with MCM/00 Base/Scripts/Mus3BPhysicsManager.pex	15584
+20 Compatible/00 with MCM/00 Base/Scripts/MusActorPhysicsAlias.pex	819
+20 Compatible/00 with MCM/00 Base/Scripts/Source/
+20 Compatible/00 with MCM/00 Base/Scripts/Source/Mus3BAddon_PlayerAlias.psc	388
+20 Compatible/00 with MCM/00 Base/Scripts/Source/Mus3BAddonMCM.psc	34512
+20 Compatible/00 with MCM/00 Base/Scripts/Source/Mus3BPhysicsManager.psc	17544
+20 Compatible/00 with MCM/00 Base/Scripts/Source/MusActorPhysicsAlias.psc	264
+20 Compatible/00 with MCM/00 Base/Scripts/Source/ToggleSpellNPC3BBB.psc	4209
+20 Compatible/00 with MCM/00 Base/Scripts/Source/ToggleSpellNPC3BBBMultiple.psc	4223
+20 Compatible/00 with MCM/00 Base/Scripts/Source/ToggleSpellP3BBB.psc	2502
+20 Compatible/00 with MCM/00 Base/Scripts/ToggleSpellNPC3BBB.pex	633
+20 Compatible/00 with MCM/00 Base/Scripts/ToggleSpellNPC3BBBMultiple.pex	657
+20 Compatible/00 with MCM/00 Base/Scripts/ToggleSpellP3BBB.pex	629
+20 Compatible/00 with MCM/10 no Compatible/
+20 Compatible/00 with MCM/10 no Compatible/3BBB.esp	20257
+20 Compatible/00 with MCM/11 FG/
+20 Compatible/00 with MCM/11 FG/3BBB.esp	20456
+20 Compatible/00 with MCM/20 Physics - FullSMP/
+20 Compatible/00 with MCM/20 Physics - FullSMP/SKSE/
+20 Compatible/00 with MCM/20 Physics - FullSMP/SKSE/Plugins/
+20 Compatible/00 with MCM/20 Physics - FullSMP/SKSE/Plugins/StorageUtilData/
+20 Compatible/00 with MCM/20 Physics - FullSMP/SKSE/Plugins/StorageUtilData/CBBE 3BA/
+20 Compatible/00 with MCM/20 Physics - FullSMP/SKSE/Plugins/StorageUtilData/CBBE 3BA/PhysicsManager.json	169
+20 Compatible/00 with MCM/21 Physics - Heavy/
+20 Compatible/00 with MCM/21 Physics - Heavy/SKSE/
+20 Compatible/00 with MCM/21 Physics - Heavy/SKSE/Plugins/
+20 Compatible/00 with MCM/21 Physics - Heavy/SKSE/Plugins/StorageUtilData/
+20 Compatible/00 with MCM/21 Physics - Heavy/SKSE/Plugins/StorageUtilData/CBBE 3BA/
+20 Compatible/00 with MCM/21 Physics - Heavy/SKSE/Plugins/StorageUtilData/CBBE 3BA/PhysicsManager.json	169
+20 Compatible/00 with MCM/22 Physics - Heavy2/
+20 Compatible/00 with MCM/22 Physics - Heavy2/SKSE/
+20 Compatible/00 with MCM/22 Physics - Heavy2/SKSE/Plugins/
+20 Compatible/00 with MCM/22 Physics - Heavy2/SKSE/Plugins/StorageUtilData/
+20 Compatible/00 with MCM/22 Physics - Heavy2/SKSE/Plugins/StorageUtilData/CBBE 3BA/
+20 Compatible/00 with MCM/22 Physics - Heavy2/SKSE/Plugins/StorageUtilData/CBBE 3BA/PhysicsManager.json	169
+20 Compatible/00 with MCM/23 Physics - Lite/
+20 Compatible/00 with MCM/23 Physics - Lite/SKSE/
+20 Compatible/00 with MCM/23 Physics - Lite/SKSE/Plugins/
+20 Compatible/00 with MCM/23 Physics - Lite/SKSE/Plugins/StorageUtilData/
+20 Compatible/00 with MCM/23 Physics - Lite/SKSE/Plugins/StorageUtilData/CBBE 3BA/
+20 Compatible/00 with MCM/23 Physics - Lite/SKSE/Plugins/StorageUtilData/CBBE 3BA/PhysicsManager.json	169
+20 Compatible/00 with MCM/23 Physics - Lite2/
+20 Compatible/00 with MCM/23 Physics - Lite2/SKSE/
+20 Compatible/00 with MCM/23 Physics - Lite2/SKSE/Plugins/
+20 Compatible/00 with MCM/23 Physics - Lite2/SKSE/Plugins/StorageUtilData/
+20 Compatible/00 with MCM/23 Physics - Lite2/SKSE/Plugins/StorageUtilData/CBBE 3BA/
+20 Compatible/00 with MCM/23 Physics - Lite2/SKSE/Plugins/StorageUtilData/CBBE 3BA/PhysicsManager.json	169
+20 Compatible/10 VRIK Beasts/
+20 Compatible/10 VRIK Beasts/SKSE/
+20 Compatible/10 VRIK Beasts/SKSE/Plugins/
+20 Compatible/10 VRIK Beasts/SKSE/Plugins/CBPCollisionConfig_VRIK_Beasts.txt	5684
+30 Vagina Texture/
+30 Vagina Texture/00 base - 1K/
+30 Vagina Texture/00 base - 1K/textures/
+30 Vagina Texture/00 base - 1K/textures/actors/
+30 Vagina Texture/00 base - 1K/textures/actors/character/
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/femalebody_etc_1_msn.dds	1398276
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/femalebody_etc_1_s.dds	1398276
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/femalebody_etc_1_sk.dds	1398276
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/femalebody_etc_v2_1_msn.dds	1398276
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/femalebody_etc_v2_1_s.dds	1398276
+30 Vagina Texture/00 base - 1K/textures/actors/character/female/femalebody_etc_v2_1_sk.dds	1398276
+30 Vagina Texture/00 base - 2K/
+30 Vagina Texture/00 base - 2K/textures/
+30 Vagina Texture/00 base - 2K/textures/actors/
+30 Vagina Texture/00 base - 2K/textures/actors/character/
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/femalebody_etc_1_msn.dds	5592580
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/femalebody_etc_1_s.dds	5592580
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/femalebody_etc_1_sk.dds	5592580
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/femalebody_etc_v2_1_msn.dds	5592580
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/femalebody_etc_v2_1_s.dds	5592580
+30 Vagina Texture/00 base - 2K/textures/actors/character/female/femalebody_etc_v2_1_sk.dds	5592580
+30 Vagina Texture/00 base/
+30 Vagina Texture/00 base/textures/
+30 Vagina Texture/00 base/textures/actors/
+30 Vagina Texture/00 base/textures/actors/character/
+30 Vagina Texture/00 base/textures/actors/character/female/
+30 Vagina Texture/00 base/textures/actors/character/female/femalebody_etc_1_msn.dds	22369796
+30 Vagina Texture/00 base/textures/actors/character/female/femalebody_etc_1_s.dds	22369796
+30 Vagina Texture/00 base/textures/actors/character/female/femalebody_etc_1_sk.dds	22369796
+30 Vagina Texture/00 base/textures/actors/character/female/femalebody_etc_v2_1_msn.dds	22369796
+30 Vagina Texture/00 base/textures/actors/character/female/femalebody_etc_v2_1_s.dds	22369796
+30 Vagina Texture/00 base/textures/actors/character/female/femalebody_etc_v2_1_sk.dds	22369796
+30 Vagina Texture/01 base - sk_black/
+30 Vagina Texture/01 base - sk_black/textures/
+30 Vagina Texture/01 base - sk_black/textures/actors/
+30 Vagina Texture/01 base - sk_black/textures/actors/character/
+30 Vagina Texture/01 base - sk_black/textures/actors/character/female/
+30 Vagina Texture/01 base - sk_black/textures/actors/character/female/femalebody_etc_1_sk.dds	152
+30 Vagina Texture/01 base - sk_black/textures/actors/character/female/femalebody_etc_v2_1_sk.dds	152
+30 Vagina Texture/11 pink - 1K/
+30 Vagina Texture/11 pink - 1K/textures/
+30 Vagina Texture/11 pink - 1K/textures/actors/
+30 Vagina Texture/11 pink - 1K/textures/actors/character/
+30 Vagina Texture/11 pink - 1K/textures/actors/character/female/
+30 Vagina Texture/11 pink - 1K/textures/actors/character/female/femalebody_etc_1.dds	1398276
+30 Vagina Texture/11 pink - 1K/textures/actors/character/female/femalebody_etc_v2_1.dds	1398276
+30 Vagina Texture/11 pink - 2K/
+30 Vagina Texture/11 pink - 2K/textures/
+30 Vagina Texture/11 pink - 2K/textures/actors/
+30 Vagina Texture/11 pink - 2K/textures/actors/character/
+30 Vagina Texture/11 pink - 2K/textures/actors/character/female/
+30 Vagina Texture/11 pink - 2K/textures/actors/character/female/femalebody_etc_1.dds	5592580
+30 Vagina Texture/11 pink - 2K/textures/actors/character/female/femalebody_etc_v2_1.dds	5592580
+30 Vagina Texture/11 pink/
+30 Vagina Texture/11 pink/textures/
+30 Vagina Texture/11 pink/textures/actors/
+30 Vagina Texture/11 pink/textures/actors/character/
+30 Vagina Texture/11 pink/textures/actors/character/female/
+30 Vagina Texture/11 pink/textures/actors/character/female/femalebody_etc_1.dds	22369796
+30 Vagina Texture/11 pink/textures/actors/character/female/femalebody_etc_v2_1.dds	22369796
+30 Vagina Texture/13 black and pink - 1K/
+30 Vagina Texture/13 black and pink - 1K/textures/
+30 Vagina Texture/13 black and pink - 1K/textures/actors/
+30 Vagina Texture/13 black and pink - 1K/textures/actors/character/
+30 Vagina Texture/13 black and pink - 1K/textures/actors/character/female/
+30 Vagina Texture/13 black and pink - 1K/textures/actors/character/female/femalebody_etc_1.dds	1398276
+30 Vagina Texture/13 black and pink - 1K/textures/actors/character/female/femalebody_etc_v2_1.dds	1398276
+30 Vagina Texture/13 black and pink - 2K/
+30 Vagina Texture/13 black and pink - 2K/textures/
+30 Vagina Texture/13 black and pink - 2K/textures/actors/
+30 Vagina Texture/13 black and pink - 2K/textures/actors/character/
+30 Vagina Texture/13 black and pink - 2K/textures/actors/character/female/
+30 Vagina Texture/13 black and pink - 2K/textures/actors/character/female/femalebody_etc_1.dds	5592580
+30 Vagina Texture/13 black and pink - 2K/textures/actors/character/female/femalebody_etc_v2_1.dds	5592580
+30 Vagina Texture/13 black and pink/
+30 Vagina Texture/13 black and pink/textures/
+30 Vagina Texture/13 black and pink/textures/actors/
+30 Vagina Texture/13 black and pink/textures/actors/character/
+30 Vagina Texture/13 black and pink/textures/actors/character/female/
+30 Vagina Texture/13 black and pink/textures/actors/character/female/femalebody_etc_1.dds	22369796
+30 Vagina Texture/13 black and pink/textures/actors/character/female/femalebody_etc_v2_1.dds	22369796
+30 Vagina Texture/15 pale pink - 1K/
+30 Vagina Texture/15 pale pink - 1K/textures/
+30 Vagina Texture/15 pale pink - 1K/textures/actors/
+30 Vagina Texture/15 pale pink - 1K/textures/actors/character/
+30 Vagina Texture/15 pale pink - 1K/textures/actors/character/female/
+30 Vagina Texture/15 pale pink - 1K/textures/actors/character/female/femalebody_etc_1.dds	1398276
+30 Vagina Texture/15 pale pink - 1K/textures/actors/character/female/femalebody_etc_v2_1.dds	1398276
+30 Vagina Texture/15 pale pink - 2K/
+30 Vagina Texture/15 pale pink - 2K/textures/
+30 Vagina Texture/15 pale pink - 2K/textures/actors/
+30 Vagina Texture/15 pale pink - 2K/textures/actors/character/
+30 Vagina Texture/15 pale pink - 2K/textures/actors/character/female/
+30 Vagina Texture/15 pale pink - 2K/textures/actors/character/female/femalebody_etc_1.dds	5592580
+30 Vagina Texture/15 pale pink - 2K/textures/actors/character/female/femalebody_etc_v2_1.dds	5592580
+30 Vagina Texture/15 pale pink/
+30 Vagina Texture/15 pale pink/textures/
+30 Vagina Texture/15 pale pink/textures/actors/
+30 Vagina Texture/15 pale pink/textures/actors/character/
+30 Vagina Texture/15 pale pink/textures/actors/character/female/
+30 Vagina Texture/15 pale pink/textures/actors/character/female/femalebody_etc_1.dds	22369796
+30 Vagina Texture/15 pale pink/textures/actors/character/female/femalebody_etc_v2_1.dds	22369796
+30 Vagina Texture/20 red - 1K/
+30 Vagina Texture/20 red - 1K/textures/
+30 Vagina Texture/20 red - 1K/textures/actors/
+30 Vagina Texture/20 red - 1K/textures/actors/character/
+30 Vagina Texture/20 red - 1K/textures/actors/character/female/
+30 Vagina Texture/20 red - 1K/textures/actors/character/female/femalebody_etc_1.dds	1398276
+30 Vagina Texture/20 red - 1K/textures/actors/character/female/femalebody_etc_v2_1.dds	1398276
+30 Vagina Texture/20 red - 2K/
+30 Vagina Texture/20 red - 2K/textures/
+30 Vagina Texture/20 red - 2K/textures/actors/
+30 Vagina Texture/20 red - 2K/textures/actors/character/
+30 Vagina Texture/20 red - 2K/textures/actors/character/female/
+30 Vagina Texture/20 red - 2K/textures/actors/character/female/femalebody_etc_1.dds	5592580
+30 Vagina Texture/20 red - 2K/textures/actors/character/female/femalebody_etc_v2_1.dds	5592580
+30 Vagina Texture/20 red/
+30 Vagina Texture/20 red/textures/
+30 Vagina Texture/20 red/textures/actors/
+30 Vagina Texture/20 red/textures/actors/character/
+30 Vagina Texture/20 red/textures/actors/character/female/
+30 Vagina Texture/20 red/textures/actors/character/female/femalebody_etc_1.dds	22369796
+30 Vagina Texture/20 red/textures/actors/character/female/femalebody_etc_v2_1.dds	22369796
+30 Vagina Texture/21 deep pink - 1K/
+30 Vagina Texture/21 deep pink - 1K/textures/
+30 Vagina Texture/21 deep pink - 1K/textures/actors/
+30 Vagina Texture/21 deep pink - 1K/textures/actors/character/
+30 Vagina Texture/21 deep pink - 1K/textures/actors/character/female/
+30 Vagina Texture/21 deep pink - 1K/textures/actors/character/female/femalebody_etc_1.dds	1398276
+30 Vagina Texture/21 deep pink - 1K/textures/actors/character/female/femalebody_etc_v2_1.dds	1398276
+30 Vagina Texture/21 deep pink - 2K/
+30 Vagina Texture/21 deep pink - 2K/textures/
+30 Vagina Texture/21 deep pink - 2K/textures/actors/
+30 Vagina Texture/21 deep pink - 2K/textures/actors/character/
+30 Vagina Texture/21 deep pink - 2K/textures/actors/character/female/
+30 Vagina Texture/21 deep pink - 2K/textures/actors/character/female/femalebody_etc_1.dds	5592580
+30 Vagina Texture/21 deep pink - 2K/textures/actors/character/female/femalebody_etc_v2_1.dds	5592580
+30 Vagina Texture/21 deep pink/
+30 Vagina Texture/21 deep pink/textures/
+30 Vagina Texture/21 deep pink/textures/actors/
+30 Vagina Texture/21 deep pink/textures/actors/character/
+30 Vagina Texture/21 deep pink/textures/actors/character/female/
+30 Vagina Texture/21 deep pink/textures/actors/character/female/femalebody_etc_1.dds	22369796
+30 Vagina Texture/21 deep pink/textures/actors/character/female/femalebody_etc_v2_1.dds	22369796
+30 Vagina Texture/22 pale - 1K/
+30 Vagina Texture/22 pale - 1K/textures/
+30 Vagina Texture/22 pale - 1K/textures/actors/
+30 Vagina Texture/22 pale - 1K/textures/actors/character/
+30 Vagina Texture/22 pale - 1K/textures/actors/character/female/
+30 Vagina Texture/22 pale - 1K/textures/actors/character/female/femalebody_etc_1.dds	1398276
+30 Vagina Texture/22 pale - 1K/textures/actors/character/female/femalebody_etc_v2_1.dds	1398276
+30 Vagina Texture/22 pale - 2K/
+30 Vagina Texture/22 pale - 2K/textures/
+30 Vagina Texture/22 pale - 2K/textures/actors/
+30 Vagina Texture/22 pale - 2K/textures/actors/character/
+30 Vagina Texture/22 pale - 2K/textures/actors/character/female/
+30 Vagina Texture/22 pale - 2K/textures/actors/character/female/femalebody_etc_1.dds	5592580
+30 Vagina Texture/22 pale - 2K/textures/actors/character/female/femalebody_etc_v2_1.dds	5592580
+30 Vagina Texture/22 pale/
+30 Vagina Texture/22 pale/textures/
+30 Vagina Texture/22 pale/textures/actors/
+30 Vagina Texture/22 pale/textures/actors/character/
+30 Vagina Texture/22 pale/textures/actors/character/female/
+30 Vagina Texture/22 pale/textures/actors/character/female/femalebody_etc_1.dds	22369796
+30 Vagina Texture/22 pale/textures/actors/character/female/femalebody_etc_v2_1.dds	22369796
+fomod/
+fomod/image/
+fomod/image/big-small.jpg	617935
+fomod/image/big.jpg	744700
+fomod/image/BoobsAntiGravity.jpg	962735
+fomod/image/BoobsGravity.jpg	1029666
+fomod/image/BoobsMoreGravity.jpg	1880807
+fomod/image/BoobsNoMoreGravity.jpg	1812853
+fomod/image/BoobsPushup1.gif	1052752
+fomod/image/BronzeShine.JPG	16866
+fomod/image/CBPCPerformance1.jpg	213577
+fomod/image/CBPCPerformance2.jpg	214044
+fomod/image/CBPCPerformance3.jpg	220159
+fomod/image/CBPCPerformance4.jpg	218323
+fomod/image/flat.jpg	78474
+fomod/image/FullSMP.jpg	50190
+fomod/image/medium.jpg	253502
+fomod/image/OnlyCBPC.jpg	51231
+fomod/image/Pale Pink Pussy.jpg	486789
+fomod/image/Pink Pussy.jpg	542377
+fomod/image/Reddarker Pussy.jpg	368119
+fomod/image/SandCH.jpg	50264
+fomod/image/SandCH2.jpg	56899
+fomod/image/SandCL.jpg	52307
+fomod/image/SandCL2.jpg	58953
+fomod/image/small-big.jpg	596752
+fomod/image/small.jpg	205768
+fomod/image/Type A.jpg	198987
+fomod/image/Type B.jpg	126500
+fomod/image/TypeExNew.jpg	304817
+fomod/image/TypeExOld.jpg	311863
+fomod/image/Vag2_PalePinkPussy.jpg	514373
+fomod/image/Vag2_PinkPussy.jpg	661009
+fomod/image/Vag2_RedDarkPussy.jpg	609352
+fomod/info.xml	316
+fomod/ModuleConfig.xml	198232

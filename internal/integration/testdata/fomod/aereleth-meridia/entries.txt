@@ -1,0 +1,530 @@
+# source: Aereleth Meridia - AIO-92528-2-0-1746532982.7z
+Aereleth Meridia Default/zzzAerelethMeridiaDefault SPID_DISTR.ini	130
+Aereleth Meridia Default + Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/00000800.nif	2386338
+Aereleth Meridia Default + Preset Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/00000800.nif	3250654
+Aereleth Meridia Follower/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/00000800.nif	3250701
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing.pex	727
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing1.pex	729
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing2.pex	729
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing3.pex	729
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing4.pex	729
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing5.pex	729
+Aereleth Meridia Follower/Scripts/AerelethMeridiaBlessing6.pex	729
+Aereleth Meridia Follower/Scripts/AerelethMeridiaDA09Tracker.pex	1053
+Aereleth Meridia Follower/Scripts/AerelethMeridiaDismiss.pex	927
+Aereleth Meridia Follower/Scripts/AerelethMeridiaDoingFavor.pex	635
+Aereleth Meridia Follower/Scripts/AerelethMeridiaDoingFavorEnd.pex	641
+Aereleth Meridia Follower/Scripts/AerelethMeridiaFollow1.pex	769
+Aereleth Meridia Follower/Scripts/AerelethMeridiaFollow2.pex	769
+Aereleth Meridia Follower/Scripts/AerelethMeridiaFollow3.pex	769
+Aereleth Meridia Follower/Scripts/AerelethMeridiaFollow4.pex	769
+Aereleth Meridia Follower/Scripts/AerelethMeridiaFollowAfterWait.pex	743
+Aereleth Meridia Follower/Scripts/AerelethMeridiaSpellNerfOff.pex	738
+Aereleth Meridia Follower/Scripts/AerelethMeridiaSpellNerfOff1.pex	740
+Aereleth Meridia Follower/Scripts/AerelethMeridiaSpellNerfOn.pex	736
+Aereleth Meridia Follower/Scripts/AerelethMeridiaSpellNerfOn1.pex	738
+Aereleth Meridia Follower/Scripts/AerelethMeridiaSpellToggle.pex	1980
+Aereleth Meridia Follower/Scripts/AerelethMeridiaTrade.pex	625
+Aereleth Meridia Follower/Scripts/AerelethMeridiaWait.pex	719
+Aereleth Meridia Follower/Seq/AerelethMeridiaFollower.seq	8
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000829_1.fuz	36986
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000082A_1.fuz	22852
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000082B_1.fuz	27743
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000082C_1.fuz	40727
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000082F_1.fuz	49350
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000830_1.fuz	49166
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000831_1.fuz	21125
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000832_1.fuz	37553
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000083E_1.fuz	51338
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000083F_1.fuz	49386
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000840_1.fuz	33763
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000841_1.fuz	37217
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000842_1.fuz	46846
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000843_1.fuz	28292
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000844_1.fuz	36149
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000845_1.fuz	20985
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000084B_1.fuz	24727
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000084C_1.fuz	24994
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000084D_1.fuz	29170
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000084E_1.fuz	35481
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000084F_1.fuz	24727
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000850_1.fuz	24994
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000851_1.fuz	29170
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000852_1.fuz	35481
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000853_1.fuz	24271
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000854_1.fuz	17673
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000855_1.fuz	27694
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000856_1.fuz	34736
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000857_1.fuz	12983
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_00000859_1.fuz	11679
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000085A_1.fuz	62698
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000085B_1.fuz	43795
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/0_Aereleth_0_AerelethMerid_0000085D_1.fuz	20992
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFollower__00000839_1.fuz	20211
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFollower__0000083A_1.fuz	13042
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000833_1.fuz	34213
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000834_1.fuz	51399
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000835_1.fuz	28148
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000836_1.fuz	11730
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000837_1.fuz	17658
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000838_1.fuz	17660
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_0000083B_1.fuz	20120
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_0000083C_1.fuz	13253
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_0000083D_1.fuz	44998
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000860_1.fuz	40727
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/FollowerCommentary01__0000085F_1.fuz	63848
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/FollowerCommentary03__0000085E_1.fuz	47358
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000862_1.fuz	27743
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/DialogueFo_DialogueFollowe_00000861_1.fuz	22852
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing.psc	478
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing1.psc	479
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing2.psc	479
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing3.psc	479
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing4.psc	479
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing5.psc	479
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaBlessing6.psc	479
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaDA09Tracker.psc	366
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaDismiss.psc	713
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaDoingFavor.psc	446
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaDoingFavorEnd.psc	454
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaFollow1.psc	530
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaFollow2.psc	530
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaFollow3.psc	530
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaFollow4.psc	530
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaFollowAfterWait.psc	487
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaSpellNerfOff.psc	485
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaSpellNerfOff1.psc	486
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaSpellNerfOn.psc	484
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaSpellNerfOn1.psc	485
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaSpellToggle.psc	1148
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaTrade.psc	441
+Aereleth Meridia Follower/Source/Scripts/AerelethMeridiaWait.psc	474
+Aereleth Meridia Follower/AerelethMeridiaFollower.esp	74661
+Aereleth Meridia Ghost/AerelethMeridiaGhost SPID_DISTR.ini	61
+Aereleth Meridia Ghost/AerelethMeridiaGhost.esp	714
+Aereleth Meridia Heels/AerelethMeridiaHeels.esp	1375
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/brows/FemaleHeadBrowsChargen.tri	236344
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/brows/FemaleHeadBrowsRace.tri	45584
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/brows/femalebrows.nif	34195
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/brows/femaleheadbrows.tri	121826
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/eyes/eyePulse16.nif	16448
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/eyes/eyePulseBase.nif	16365
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/hair/FontanaDiTrevi.nif	1384126
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/hair/FontanaDiTrevi.tri	802588
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/hair/FontanaDiTreviHL.nif	1384126
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/hair/straightscalpHUMAN.nif	83373
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/hair/straightscalpHUMAN.tri	63726
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/head/femalehead.nif	322304
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/head/femalehead.tri	1284057
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/head/femaleheadchargen.tri	3147931
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/head/femaleheadraces.tri	501771
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/mouth/mouthhumanf.nif	12971
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/mouth/mouthhumanfchargen.tri	36769
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/HolyAngel Armor_0.nif	3853257
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/HolyAngel Armor_1.nif	3853257
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/HolyAngel Boots_0.nif	808160
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/HolyAngel Boots_1.nif	808160
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressPanty_1.nif	72822
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressPanty_0.nif	72822
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressLong_1.nif	4099206
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressLong_0.nif	4099206
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressHeels_1.nif	4284378
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressHeels_0.nif	4284378
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressArms_1.nif	1065885
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressArms_0.nif	1065885
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressArmRibbon_1.nif	59317
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/ElegantDressArmRibbon_0.nif	59317
+Aereleth Meridia Main/Meshes/Xing/Vindictus/HolyAngel/HolyAngel.xml	36453
+Aereleth Meridia Main/Meshes/Xing/Vindictus/HolyAngel/GND/HolyAngel Armor.nif	475696
+Aereleth Meridia Main/Meshes/Xing/Vindictus/HolyAngel/GND/HolyAngel Boots.nif	83658
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/dress.xml	55672
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/ElegantDressArmRibbon_GND.nif	21941
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/ElegantDressArms_GND.nif	181055
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/ElegantDressHeels_GND.nif	1402692
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/ElegantDressLong_GND.nif	776611
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/ElegantDressPanty_GND.nif	26637
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/brows/femalebrow_n.dds	2796388
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/brows/Hverg_femalebrow_02.dds	2796388
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/etc/VaginalAnalCanal2.dds	22369796
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/etc/VaginalAnalCanal2_msn.dds	22369796
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/etc/VaginalAnalCanal2_s.dds	22369796
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/etc/VaginalAnalCanal2_sk.dds	22369796
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/eyebrown_n.dds	5592532
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/eyebrown_sk.dds	699192
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/eyecornea_n.dds	5592532
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/eyecubemap.dds	262352
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/eyeenvironmentmask_m.dds	262271
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/glow16.dds	1398256
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/glow16_base.dds	1398256
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/glow16_g.dds	699192
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/hair/FontanaDiTrevi.dds	1398256
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/hair/FontanaDiTrevi_n.dds	349680
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/hair/hairline01.dds	5592560
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/hair/hairline01_n.dds	349680
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/mouth/mouthhuman.dds	1398256
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/mouth/mouthhuman_n.dds	5592532
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/blankdetailmap.DDS	180
+Aereleth Meridia Main/Textures/Actors/Character/FaceGenData/FaceTint/AerelethMeridiaFollower.esp/00000800.dds	1048704
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/bronze_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_foot_m.dds	699192
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_foot_normal.dds	22369776
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand_glow_m.dds	174904
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand_glow_normal.dds	5592560
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand_m.dds	699192
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand_normal.dds	22369776
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_lower_m.dds	174904
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_lower_metal_m.dds	699192
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_lower_metal_normal.dds	22369776
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_lower_normal.dds	5592560
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_glow_m.dds	2796344
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_glow_normal.dds	89478640
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_m.dds	699192
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_metal.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_metal_m.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_metal_normal.dds	22369776
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_normal.dds	22369776
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/lavacubemap_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/wrtemple_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_foot.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_hand.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_hand_glow.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_hand_glow_outer.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_lower.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_lower_metal.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_upper.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_upper_glow.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_upper_glow_outer.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_upper_metal.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_upperSlutty.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_head.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/HolyAngel_Xing_head_outer.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_head_m.dds	174904
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_head_normal.dds	5592560
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/bloodshinybright_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/cavegreencube_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/chitin_e_ebony.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/chrome_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/duncaveruingreen_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/ore_quicksilver_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/portalcave01_e.dds	4194512
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_foot.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_lower_metal.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_glow.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upperSlutty.dds	1398256
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand_glow.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_hand_glow_outer.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_head.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_head_outer.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_lower.dds	349680
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/HolyAngel_Xing_upper_glow_outer.dds	349680
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Black.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Blue.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Burgundy.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Gold.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long_Black.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long_Blue.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long_Burgundy.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long_Gold.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long_N.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_Long_White.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_n.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Dress_White.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Gloves.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Gloves_Black.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Gloves_Blue.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Gloves_Burgundy.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Gloves_Gold.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Gloves_n.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/gloves_white.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Laces.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Laces_Black.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Laces_n.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Metal.dds	262292
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Metal_n.dds	262292
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Necklace.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Necklace_g.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Necklace_n.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties_Black.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties_Blue.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties_Burgundy.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties_Gold.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties_n.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Panties_White.dds	16532
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Sandals.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Sandals_Black.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Sandals_Blue.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Sandals_Burgundy.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Sandals_Gold.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Sandals_n.dds	1398256
+Aereleth Meridia Main/Textures/clothes/elegant_dress/sandals_white.dds	1048724
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Stockings.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Stockings_Black.dds	4194452
+Aereleth Meridia Main/Textures/clothes/elegant_dress/Stockings_n.dds	4194452
+Aereleth Meridia Main/CalienteTools/BodySlide/SliderPresets/Aereleth Meridia - UNP.xml	479
+Aereleth Meridia Main/CalienteTools/BodySlide/SliderPresets/Aereleth Meridia - CBBE.xml	511
+Aereleth Meridia Main/AerelethMeridiaMain.esp	62964
+Aereleth Meridia Replacer/Meshes/Actors/Character/FaceGenData/FaceGeom/Skyrim.esm/0004E4DF.nif	3250701
+Aereleth Meridia Replacer/Scripts/AerelethMeridiaSkyTrigger.pex	692
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaartifact_00075362_1.fuz	348707
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaartifact_00075362_2.fuz	243333
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiadawnbreake_0004e4ca_1.fuz	384480
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiadawnbreake_0004e4ce_1.fuz	357602
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiadawnbreake_0004e4ce_3.fuz	185531
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiadawnbreake_0004e4ce_4.fuz	387325
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiadawnbreake_0004e4cf_1.fuz	165047
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaquestexpla_0004e4d1_3.fuz	204175
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaqueststart_0004e4cc_3.fuz	367451
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaqueststart_0004e4cc_4.fuz	244320
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaqueststart_0004e4cc_5.fuz	329696
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaqueststart_0004e4cd_1.fuz	225975
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaquestwhy_0004e4c6_1.fuz	309941
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaquestwhy_0004e4c6_2.fuz	178065
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaquestwhy_0004e4c6_3.fuz	165652
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09meridiaquestyes_0004e4cb_1.fuz	149698
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09sharedinfos_00081c4c_1.fuz	348104
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09_da09sharedinfos_00081c4c_3.fuz	336031
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4c7_1.fuz	177431
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4c7_2.fuz	327725
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4c8_1.fuz	167405
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4c8_2.fuz	119635
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4c8_3.fuz	165625
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4c9_1.fuz	136756
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4d0_1.fuz	252593
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__0004e4d0_3.fuz	242472
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c4b_1.fuz	128882
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c4f_1.fuz	215211
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c50_1.fuz	270412
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c50_3.fuz	176190
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c51_1.fuz	148954
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c51_2.fuz	244308
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c52_1.fuz	148740
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c52_2.fuz	177952
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c53_1.fuz	108798
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c53_2.fuz	233914
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c53_3.fuz	258583
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c54_1.fuz	225132
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c54_3.fuz	138698
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c56_1.fuz	155208
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__00081c56_2.fuz	166685
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/da09__000851fd_1.fuz	215076
+Aereleth Meridia Replacer/Source/Scripts/AerelethMeridiaSkyTrigger.psc	214
+Aereleth Meridia Replacer/AerelethMeridiaReplacer.esp	2340
+Aereleth Meridia Replacer/Textures/Actors/Character/FaceGenData/FaceTint/Skyrim.esm/0004E4DF.dds	1048704
+Aereleth Meridia Replacer - Meridia's Order/AerelethMeridiaReplacer - Meridia's Order.esp	615
+Aereleth Meridia SMP Hair/AerelethMeridiaSMPHair SPID_DISTR.ini	80
+Aereleth Meridia SMP Hair/AerelethMeridiaSMPHair.esp	1254
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/AerelethMeridia/Armor/FontanaDiTrevi.tri	745594
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/AerelethMeridia/Armor/FontanaDiTrevi.xml	5766
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/AerelethMeridia/Armor/FontanaDiTrevi_0.nif	3011719
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/AerelethMeridia/Armor/FontanaDiTrevi_1.nif	3011719
+Aereleth Meridia SMP Hair/Scripts/AerelethMeridiaSMPHairScript.pex	1193
+Aereleth Meridia SMP Hair/Source/Scripts/AerelethMeridiaSMPHairScript.psc	495
+Aereleth Meridia SMP Hair/Textures/Actors/Character/AerelethMeridia/Armor/FontanaDiTrevi.dds	1398256
+Aereleth Meridia SMP Hair/Textures/Actors/Character/AerelethMeridia/Armor/FontanaDiTrevi_n.dds	349680
+Aereleth Meridia SMP Hair/Textures/Actors/Character/AerelethMeridia/Armor/hairline01.dds	5592560
+Aereleth Meridia SMP Hair/Textures/Actors/Character/AerelethMeridia/Armor/hairline01_n.dds	349680
+Aereleth Meridia Wardrobe/AerelethMeridiaWardrobe.esp	582
+Aereleth Meridia Wings/AerelethMeridiaWings.esp	829
+fomod/images/follower.png	2630522
+fomod/images/preset.png	5102503
+fomod/images/replacer.png	2006376
+fomod/images/wings.png	2562402
+fomod/images/alt_hair.png	2893005
+fomod/images/wardrobe.png	2313227
+fomod/images/ghost.png	1404030
+fomod/images/alt.png	2256609
+fomod/images/meridia's order.png	3277367
+fomod/info.xml	598
+fomod/ModuleConfig.xml	28366
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/00000800.nif	2386385
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/Skyrim.esm/0004E4DF.nif	2386385
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/AerelethMeridia/Hair/Erratic.nif	951896
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/AerelethMeridia/Hair/Erratic.tri	568308
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/AerelethMeridia/Hair/ErraticHL.nif	951896
+Aereleth Meridia Alt Hair/textures/actors/character/AerelethMeridia/Hair/Erratic.dds	5592560
+Aereleth Meridia Alt Hair/textures/actors/character/AerelethMeridia/Hair/Erratic_n.dds	1398256
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/femalebody_0.nif	2310212
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/femalebody_1.nif	2310212
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/femalefeet_0.nif	923237
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/femalefeet_1.nif	923237
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/femalehands_0.nif	497848
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/femalehands_1.nif	497848
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalebody_1.dds	44739384
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalebody_1_msn.dds	22369796
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalebody_1_s.dds	11184952
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalebody_1_sk.dds	152
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehands_1.dds	1398248
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehands_1_msn.dds	699236
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehands_1_s.dds	349672
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehands_1_sk.dds	152
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehead.dds	11184952
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehead_msn.dds	5592580
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehead_s.dds	2796344
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/femalehead_sk.dds	152
+Aereleth Meridia BHUNP/AerelethMeridiaBHUNP SPID_DISTR.ini	67
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/femalebody_0.nif	2007466
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/femalebody_1.nif	2007466
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/femalefeet_0.nif	786505
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/femalefeet_1.nif	786505
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/femalehands_0.nif	582699
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/femalehands_1.nif	582699
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalebody_1.dds	44739384
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalebody_1_msn.dds	22369796
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalebody_1_s.dds	11184952
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalebody_1_sk.dds	152
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehands_1.dds	1398248
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehands_1_msn.dds	1398276
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehands_1_s.dds	699192
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehands_1_sk.dds	152
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehead.dds	11184952
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehead_msn.dds	5592580
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehead_s.dds	2796344
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/femalehead_sk.dds	152
+Aereleth Meridia CBBE 3BA/AerelethMeridia3BA SPID_DISTR.ini	70
+Aereleth Meridia Default + Preset Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/
+Aereleth Meridia Default + Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/
+Aereleth Meridia Follower/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/AerelethMeridiaFollower.esp/
+Aereleth Meridia Main/Textures/Actors/Character/FaceGenData/FaceTint/AerelethMeridiaFollower.esp/
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/FemaleUniqueMeridia/
+Aereleth Meridia Replacer/Textures/Actors/Character/FaceGenData/FaceTint/Skyrim.esm/
+Aereleth Meridia Default + Preset Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/
+Aereleth Meridia Replacer/Meshes/Actors/Character/FaceGenData/FaceGeom/Skyrim.esm/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/Skyrim.esm/
+Aereleth Meridia Default + Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/
+Aereleth Meridia Default + Preset Hair/Meshes/Actors/Character/FaceGenData/
+Aereleth Meridia SMP Hair/Textures/Actors/Character/AerelethMeridia/Armor/
+Aereleth Meridia Replacer/Textures/Actors/Character/FaceGenData/FaceTint/
+Aereleth Meridia Alt Hair/textures/actors/character/AerelethMeridia/Hair/
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/AerelethMeridia/Armor/
+Aereleth Meridia Default + Alt Hair/Meshes/Actors/Character/FaceGenData/
+Aereleth Meridia Replacer/Meshes/Actors/Character/FaceGenData/FaceGeom/
+Aereleth Meridia Follower/Meshes/Actors/Character/FaceGenData/FaceGeom/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/FaceGenData/FaceGeom/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/AerelethMeridia/Hair/
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/mouth/
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/brows/
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/femaleuniquemeridia/
+Aereleth Meridia Main/Textures/Actors/Character/FaceGenData/FaceTint/
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/hair/
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/eyes/
+Aereleth Meridia SMP Hair/Textures/Actors/Character/AerelethMeridia/
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/etc/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/mouth/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/brows/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/armor/
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/AerelethMeridia/
+Aereleth Meridia Alt Hair/textures/actors/character/AerelethMeridia/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/head/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/hair/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/eyes/
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/AerelethMeridia/
+Aereleth Meridia Follower/Sound/Voice/AerelethMeridiaFollower.esp/
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/AerelethMeridia/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/AerelethMeridia/
+Aereleth Meridia BHUNP/Textures/Actors/Character/AerelethMeridia/
+Aereleth Meridia Replacer/Textures/Actors/Character/FaceGenData/
+Aereleth Meridia Main/Textures/Actors/Character/AerelethMeridia/
+Aereleth Meridia Default + Preset Hair/Meshes/Actors/Character/
+Aereleth Meridia BHUNP/Meshes/Actors/Character/AerelethMeridia/
+Aereleth Meridia Replacer/Meshes/Actors/Character/FaceGenData/
+Aereleth Meridia Main/Meshes/Actors/Character/AerelethMeridia/
+Aereleth Meridia Follower/Meshes/Actors/Character/FaceGenData/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/FaceGenData/
+Aereleth Meridia Main/Textures/Actors/Character/FaceGenData/
+Aereleth Meridia Main/CalienteTools/BodySlide/SliderPresets/
+Aereleth Meridia Default + Alt Hair/Meshes/Actors/Character/
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/Wh/
+Aereleth Meridia Main/Meshes/Xing/Vindictus/HolyAngel/GND/
+Aereleth Meridia Main/Textures/Xing/Vindictus/HolyAngel/
+Aereleth Meridia Main/Meshes/Xing/Vindictus/HolyAngel/
+Aereleth Meridia Main/Textures/clothes/elegant_dress/
+Aereleth Meridia Default + Preset Hair/Meshes/Actors/
+Aereleth Meridia SMP Hair/Textures/Actors/Character/
+Aereleth Meridia Replacer/Textures/Actors/Character/
+Aereleth Meridia CBBE 3BA/Textures/Actors/Character/
+Aereleth Meridia Alt Hair/textures/actors/character/
+Aereleth Meridia Main/Meshes/clothes/elegant_dress/
+Aereleth Meridia SMP Hair/Meshes/Actors/Character/
+Aereleth Meridia Replacer/Meshes/Actors/Character/
+Aereleth Meridia Follower/Meshes/Actors/Character/
+Aereleth Meridia Default + Alt Hair/Meshes/Actors/
+Aereleth Meridia CBBE 3BA/Meshes/Actors/Character/
+Aereleth Meridia Alt Hair/Meshes/Actors/Character/
+Aereleth Meridia Replacer/sound/voice/skyrim.esm/
+Aereleth Meridia BHUNP/Textures/Actors/Character/
+Aereleth Meridia Main/Textures/Actors/Character/
+Aereleth Meridia BHUNP/Meshes/Actors/Character/
+Aereleth Meridia Main/Textures/Xing/Vindictus/
+Aereleth Meridia Main/Meshes/Actors/Character/
+Aereleth Meridia Main/CalienteTools/BodySlide/
+Aereleth Meridia Default + Preset Hair/Meshes/
+Aereleth Meridia Replacer - Meridia's Order/
+Aereleth Meridia Main/Meshes/Xing/Vindictus/
+Aereleth Meridia Default + Alt Hair/Meshes/
+Aereleth Meridia SMP Hair/Textures/Actors/
+Aereleth Meridia Replacer/Textures/Actors/
+Aereleth Meridia CBBE 3BA/Textures/Actors/
+Aereleth Meridia Alt Hair/textures/actors/
+Aereleth Meridia SMP Hair/Source/Scripts/
+Aereleth Meridia Replacer/Source/Scripts/
+Aereleth Meridia Follower/Source/Scripts/
+Aereleth Meridia SMP Hair/Meshes/Actors/
+Aereleth Meridia Replacer/Meshes/Actors/
+Aereleth Meridia Follower/Meshes/Actors/
+Aereleth Meridia CBBE 3BA/Meshes/Actors/
+Aereleth Meridia Alt Hair/Meshes/Actors/
+Aereleth Meridia Main/Textures/clothes/
+Aereleth Meridia Default + Preset Hair/
+Aereleth Meridia BHUNP/Textures/Actors/
+Aereleth Meridia Replacer/sound/voice/
+Aereleth Meridia Main/Textures/Actors/
+Aereleth Meridia Follower/Sound/Voice/
+Aereleth Meridia Main/Meshes/clothes/
+Aereleth Meridia BHUNP/Meshes/Actors/
+Aereleth Meridia Main/Textures/Xing/
+Aereleth Meridia Main/Meshes/Actors/
+Aereleth Meridia Main/CalienteTools/
+Aereleth Meridia Default + Alt Hair/
+Aereleth Meridia SMP Hair/Textures/
+Aereleth Meridia Replacer/Textures/
+Aereleth Meridia CBBE 3BA/Textures/
+Aereleth Meridia Alt Hair/textures/
+Aereleth Meridia SMP Hair/Scripts/
+Aereleth Meridia Replacer/Scripts/
+Aereleth Meridia Main/Meshes/Xing/
+Aereleth Meridia Follower/Scripts/
+Aereleth Meridia SMP Hair/Source/
+Aereleth Meridia SMP Hair/Meshes/
+Aereleth Meridia Replacer/Source/
+Aereleth Meridia Replacer/Meshes/
+Aereleth Meridia Follower/Source/
+Aereleth Meridia Follower/Meshes/
+Aereleth Meridia CBBE 3BA/Meshes/
+Aereleth Meridia Alt Hair/Meshes/
+Aereleth Meridia Replacer/sound/
+Aereleth Meridia Follower/Sound/
+Aereleth Meridia BHUNP/Textures/
+Aereleth Meridia Main/Textures/
+Aereleth Meridia Follower/Seq/
+Aereleth Meridia BHUNP/Meshes/
+Aereleth Meridia Main/Meshes/
+Aereleth Meridia Wardrobe/
+Aereleth Meridia SMP Hair/
+Aereleth Meridia Replacer/
+Aereleth Meridia Follower/
+Aereleth Meridia CBBE 3BA/
+Aereleth Meridia Alt Hair/
+Aereleth Meridia Default/
+Aereleth Meridia Wings/
+Aereleth Meridia Heels/
+Aereleth Meridia Ghost/
+Aereleth Meridia BHUNP/
+Aereleth Meridia Main/
+fomod/images/
+fomod/

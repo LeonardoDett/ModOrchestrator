@@ -11,9 +11,7 @@ import (
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/deploystate"
-	"modorchestrator/internal/core/domain/externalchange"
 	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/profile"
 	"modorchestrator/internal/core/domain/relpath"
@@ -41,8 +39,19 @@ type StatusView struct {
 	// PendingDecision is the deploy waiting at await_decision.
 	PendingDecision operation.ID
 	ExternalChanges int
-	Foreign         []games.Finding
-	Failures        []Failure
+	// NewFiles counts generated files found in managed folders (core/09
+	// `unexpected`): they need a review but never block (D080).
+	NewFiles int
+	Foreign  []games.Finding
+	Failures []Failure
+	// StagingProblem is staging_missing / staging_foreign ("" when fine);
+	// JournalPending means a deploy or purge was interrupted (D035).
+	StagingProblem string
+	JournalPending bool
+	// Incompatible names the first pair of enabled incompatible mods.
+	Incompatible []string
+	// Running lists the game processes running now.
+	Running []string
 }
 
 // Status derives the deployment status.
@@ -70,12 +79,14 @@ func (s *Service) Status(ctx context.Context, instance game.InstanceID) (StatusV
 		return StatusView{}, err
 	}
 	input.JournalPending = slices.Contains(journals, instance)
+	v.JournalPending = input.JournalPending
 	if v.Foreign, err = s.Foreign.CheckForeign(ctx, in.inst); err != nil {
 		return StatusView{}, err
 	}
 	s.mu.Lock()
 	needs := s.needsDecision[instance]
 	v.ExternalChanges = s.changes[instance]
+	v.NewFiles = s.newFiles[instance]
 	v.Failures = slices.Clone(s.failures[instance])
 	if w, ok := s.decisions[instance]; ok {
 		v.PendingDecision = w.view.Operation
@@ -89,7 +100,15 @@ func (s *Service) Status(ctx context.Context, instance game.InstanceID) (StatusV
 	}
 	input.LastDeployFailed = len(v.Failures) > 0
 	code, _ := s.stagingProblem(ctx, in.inst)
+	v.StagingProblem = code
 	_, cyclic := in.rules.Cycle()
+	a, b, incompatible := in.incompatible()
+	if incompatible {
+		v.Incompatible = []string{in.mods[a].DisplayName(), in.mods[b].DisplayName()}
+	}
+	if v.Running, err = s.Foreign.RunningProcesses(ctx, in.inst); err != nil {
+		return StatusView{}, err
+	}
 	switch {
 	case len(v.Foreign) > 0:
 		input.Blocked = deploystate.ReasonForeignDeployment
@@ -99,6 +118,10 @@ func (s *Service) Status(ctx context.Context, instance game.InstanceID) (StatusV
 		input.Blocked = deploystate.ReasonStagingForeign
 	case cyclic:
 		input.Blocked = deploystate.ReasonRuleCycle
+	case incompatible:
+		input.Blocked = deploystate.ReasonModsIncompatible
+	case len(v.Running) > 0:
+		input.Blocked = deploystate.ReasonGameRunning
 	case needs:
 		input.Blocked = deploystate.ReasonNeedsDecision
 	case v.ExternalChanges > 0:
@@ -160,46 +183,6 @@ func (s *Service) statusKey(ctx context.Context, instance game.InstanceID) strin
 		return ""
 	}
 	return string(v.Status.Kind) + "/" + string(v.Status.Reason)
-}
-
-// Verify scans the locations of the manifest (on demand, "Verificar
-// implantação") and reports the external changes found. It only reads.
-func (s *Service) Verify(ctx context.Context, instance game.InstanceID) ([]ChangeView, int, error) {
-	inst, err := s.instance(ctx, instance)
-	if err != nil {
-		return nil, 0, err
-	}
-	m, err := s.current(ctx, instance)
-	if err != nil || m == nil {
-		return nil, 0, err
-	}
-	in, _ := s.loadInputs(ctx, instance)
-	var out []ChangeView
-	n := 0
-	for _, e := range m.Links() {
-		if ctx.Err() != nil {
-			return nil, 0, ctx.Err()
-		}
-		obs := s.observe(ctx, targetPath(inst, e.Location))
-		c, changed := externalchange.Classify(e, obs, mod.File{Size: e.Evidence.Size, Hash: e.Evidence.Hash})
-		if !changed {
-			continue
-		}
-		n++
-		if len(out) < viewLimit {
-			cv := ChangeView{Location: c.Location, Kind: c.Kind, Mod: e.Mod}
-			if in != nil {
-				if mm, ok := in.mods[e.Mod]; ok {
-					cv.ModName = mm.DisplayName()
-				}
-			}
-			out = append(out, cv)
-		}
-	}
-	s.mu.Lock()
-	s.changes[instance] = n
-	s.mu.Unlock()
-	return out, n, nil
 }
 
 // Interrupted lists the instances with a deploy or purge journal left by a

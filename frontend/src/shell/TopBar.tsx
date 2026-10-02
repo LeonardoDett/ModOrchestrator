@@ -5,6 +5,8 @@ import { useOperations } from "../bridge/queries";
 import { useI18n } from "../i18n/i18n";
 import { ProfileSelect } from "../features/profiles/ProfileSelect";
 import { DeployStatusButton } from "../features/deploy/DeployStatusButton";
+import { NotificationBell } from "../features/diagnostics/NotificationBell";
+import { ProblemsButton } from "../features/diagnostics/ProblemsButton";
 import { PALETTE_KEYS } from "./shortcuts";
 
 export type ShellDialog = "palette" | "shortcuts" | "about";
@@ -17,10 +19,10 @@ interface TopBarProps {
 }
 
 /**
- * Page top bar (ui/00 §2.3), with the profile select and the deploy status
- * of the active game. Slots that depend on later phases (problems and
- * notifications F9, provider account V2) keep their place but render
- * nothing until they exist (anti-pattern 18).
+ * Page top bar (ui/00 §2.3), with the profile select, the deploy status
+ * and the problems counter of the active game, and the notification bell.
+ * The provider account (V2) keeps no place until it exists
+ * (anti-pattern 18).
  */
 export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: TopBarProps) {
   const { t, tp } = useI18n();
@@ -46,7 +48,9 @@ export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: Top
           {t("app.offline")}
         </Badge>
       ) : null}
-      <div data-slot="problems" />
+      <div data-slot="problems">
+        <ProblemsButton />
+      </div>
       <Button
         variant="ghost"
         size="sm"
@@ -67,7 +71,9 @@ export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: Top
           </Badge>
         ) : null}
       </Button>
-      <div data-slot="notifications" />
+      <div data-slot="notifications">
+        <NotificationBell onOpenOperations={onOpenOperations} />
+      </div>
       <Menu.Root placement="bottom-end">
         <Menu.Trigger>
           <Button variant="ghost" size="icon-sm" aria-label={t("topbar.help")}>

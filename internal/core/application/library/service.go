@@ -97,11 +97,15 @@ type Deps struct {
 	FS        ports.FileSystem
 	Extractor ports.Extractor
 	Hasher    ports.Hasher
-	Settings  Settings
-	Ops       *operations.Service
-	Locks     *instancelock.Locks
-	IDs       operations.IDGenerator
-	Clock     operations.Clock
+	// Versions reads the game version FOMOD conditions compare (optional);
+	// AppVersion is the manager version they see (fommDependency).
+	Versions   ports.VersionReader
+	AppVersion string
+	Settings   Settings
+	Ops        *operations.Service
+	Locks      *instancelock.Locks
+	IDs        operations.IDGenerator
+	Clock      operations.Clock
 }
 
 // Service implements the library use cases. There is deliberately no
@@ -153,12 +157,13 @@ func (s *Service) env(ctx context.Context, id game.InstanceID) (env, error) {
 	return env{inst: inst, adapter: a, def: def}, nil
 }
 
-// installContext is the installer context and stack of an instance: the
-// adapter's own installers first, the basic installer last (core/03 §1).
+// installContext is the installer context and stack of an instance: FOMOD
+// (10), the adapter's own installers (20), the basic installer last (90;
+// core/03 §1).
 func (e env) installContext() (installer.Context, []installer.Installer) {
 	h := e.adapter.RootHints(e.inst.Game)
 	ctx := installer.Context{Definition: e.def, Hints: installer.RootHints{Dirs: h.Dirs, Extensions: h.Extensions}}
-	var stack []installer.Installer
+	stack := []installer.Installer{installer.Fomod{}}
 	if p, ok := e.adapter.(ports.InstallerProvider); ok {
 		stack = append(stack, p.Installers(e.inst.Game)...)
 	}
