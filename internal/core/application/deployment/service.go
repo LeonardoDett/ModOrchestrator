@@ -36,6 +36,10 @@ const (
 	KindDeploy       operation.Kind = "deploy"
 	KindPurge        operation.Kind = "purge"
 	KindMoveStaging  operation.Kind = "move_staging"
+
+	// KindMoveArchives moves the ArchiveStore (core/13).
+
+	KindMoveArchives operation.Kind = "move_archives"
 	KindChangeMethod operation.Kind = "change_method"
 
 	StepReconcile     = "reconcile"
@@ -68,12 +72,15 @@ const (
 	EventStatusChanged   event.Type = "deployment.status_changed"
 	EventExternalChanges event.Type = "deployment.external_changes_detected"
 	EventStagingMoved    event.Type = "staging.moved"
+
+	EventArchivesMoved   event.Type = "archives.moved"
 	EventMethodChanged   event.Type = "deployment.method_changed"
 
 	subjectInstance = "instance"
 	holderDeploy    = "deploy"
 	holderPurge     = "purge"
-	holderMove      = "move_staging"
+	holderMove      = "move_staging"
+	holderMoveArchives = "move_archives"
 	holderMethod    = "change_method"
 )
 

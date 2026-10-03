@@ -348,13 +348,17 @@ func (a *App) History(filter HistoryFilterDTO) ([]HistoryEntryDTO, error) {
 	}
 	out := make([]HistoryEntryDTO, len(list))
 	for i, e := range list {
-		out[i] = HistoryEntryDTO{
-			ID: e.ID, Sequence: e.Sequence, Type: e.Type, At: formatTime(e.At), Origin: e.Origin, Subject: refDTO(e.Subject),
-			Operation: e.Operation, Params: nonNil(e.Params), Items: e.Items, Reversible: e.Reversible,
-			RevertedBy: e.RevertedBy, RevertOf: e.RevertOf,
-		}
+		out[i] = toHistoryEntryDTO(e)
 	}
 	return out, nil
+}
+
+func toHistoryEntryDTO(e history.Entry) HistoryEntryDTO {
+	return HistoryEntryDTO{
+		ID: e.ID, Sequence: e.Sequence, Type: e.Type, At: formatTime(e.At), Origin: e.Origin, Subject: refDTO(e.Subject),
+		Operation: e.Operation, Params: nonNil(e.Params), Items: e.Items, Reversible: e.Reversible,
+		RevertedBy: e.RevertedBy, RevertOf: e.RevertOf,
+	}
 }
 
 // RevertHistoryEntry applies the inverse of an entry as a new command.

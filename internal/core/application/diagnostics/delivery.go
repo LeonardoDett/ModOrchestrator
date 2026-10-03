@@ -212,9 +212,10 @@ func (s *Service) updateNotifications(ctx context.Context, ids []notification.ID
 // operationFinished turns the end of an operation into a notification
 // (core/10 §2): failures and cancellations always; successes except the
 // ones auto-deploy produced (it acts on the user's own changes and its
-// status is visible). Several of the same kind in a short time aggregate.
+// status is visible) and a successful launch (the game window is the
+// result). Several of the same kind in a short time aggregate.
 func (s *Service) operationFinished(ctx context.Context, e event.Event, p operation.EventPayload, auto bool, started time.Time, desktopOn bool) error {
-	if p.Status == operation.StatusSucceeded && auto {
+	if p.Status == operation.StatusSucceeded && (auto || p.Kind == opLaunch) {
 		return nil
 	}
 	instance := s.instanceOf(ctx, e.Subject)

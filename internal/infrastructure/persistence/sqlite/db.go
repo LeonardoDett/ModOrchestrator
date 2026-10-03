@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"fmt"
 	"net/url"
-	"strings"
 
 	_ "modernc.org/sqlite" // registers the "sqlite" driver
 )
@@ -15,6 +14,20 @@ import (
 // Open opens (creating if needed) the database at path and applies all
 // pending migrations. Use ":memory:" for tests.
 func Open(ctx context.Context, path string) (*sql.DB, error) {
+	db, err := OpenUnmigrated(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	if err := Migrate(ctx, db); err != nil {
+		db.Close()
+		return nil, err
+	}
+	return db, nil
+}
+
+// OpenUnmigrated opens the database without migrating, so the caller can
+// back it up before the migrations run (core/14 §2 "pre-migration").
+func OpenUnmigrated(ctx context.Context, path string) (*sql.DB, error) {
 	pragmas := url.Values{}
 	pragmas.Add("_pragma", "foreign_keys(1)")
 	pragmas.Add("_pragma", "busy_timeout(5000)")
@@ -25,8 +38,7 @@ func Open(ctx context.Context, path string) (*sql.DB, error) {
 	}
 	// The name is part of a URI: "#", "?" and "%" in a folder name would cut
 	// or change it.
-	name := strings.NewReplacer("%", "%25", "?", "%3F", "#", "%23").Replace(path)
-	db, err := sql.Open("sqlite", "file:"+name+"?"+pragmas.Encode())
+	db, err := sql.Open("sqlite", "file:"+uriName(path)+"?"+pragmas.Encode())
 	if err != nil {
 		return nil, fmt.Errorf("sqlite: open %s: %w", path, err)
 	}
@@ -36,10 +48,6 @@ func Open(ctx context.Context, path string) (*sql.DB, error) {
 	if err := db.PingContext(ctx); err != nil {
 		db.Close()
 		return nil, fmt.Errorf("sqlite: ping: %w", err)
-	}
-	if err := Migrate(ctx, db); err != nil {
-		db.Close()
-		return nil, err
 	}
 	return db, nil
 }

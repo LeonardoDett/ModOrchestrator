@@ -112,7 +112,7 @@ func (a *App) SuggestGameFolders(gameID, root, name string) (FoldersDTO, error) 
 	if err != nil {
 		return FoldersDTO{}, a.fail("suggest folders", err, map[string]string{"game": gameID})
 	}
-	return FoldersDTO{Staging: f.Staging, ArchiveStore: f.ArchiveStore, BackupStore: f.BackupStore}, nil
+	return FoldersDTO{Staging: f.Staging, ArchiveStore: f.ArchiveStore, BackupStore: f.BackupStore, SuggestedStaging: f.SuggestedStaging}, nil
 }
 
 // VerifyGameSetup runs the read-only verification step of the assistant.

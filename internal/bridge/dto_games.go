@@ -103,9 +103,10 @@ type SetupDTO struct {
 }
 
 type FoldersDTO struct {
-	Staging      string `json:"staging"`
-	ArchiveStore string `json:"archiveStore"`
-	BackupStore  string `json:"backupStore"`
+	Staging          string `json:"staging"`
+	ArchiveStore     string `json:"archiveStore"`
+	BackupStore      string `json:"backupStore"`
+	SuggestedStaging string `json:"suggestedStaging,omitempty"`
 }
 
 type MethodStatusDTO struct {

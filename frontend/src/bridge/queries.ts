@@ -183,3 +183,47 @@ export function useLoadOrderView(instance: string) {
 export function useLoadOrderExplain(instance: string, name: string) {
   return useBackendQuery((b) => (name ? b.loadOrderExplain(instance, name) : Promise.resolve(null)), [instance, name], { onOperationEvents: true });
 }
+
+// --- F12: Settings, Play, Overview and Dashboard. Reads follow operation
+// events: launches, deploys, backups and the game process watch all signal
+// through them (D021). ---
+
+export function useRestartState() {
+  return useBackendQuery((b) => b.restartState(), [], { onOperationEvents: true });
+}
+
+export function useBackupStatus() {
+  return useBackendQuery((b) => b.backupStatus(), [], { onOperationEvents: true });
+}
+
+export function useWorkarounds() {
+  return useBackendQuery((b) => b.workarounds(), []);
+}
+
+export function useExtensions() {
+  return useBackendQuery(async (b) => (await b.extensions()) ?? [], []);
+}
+
+export function useLaunchCheck(instance: string) {
+  return useBackendQuery(async (b) => (instance ? await b.launchCheck(instance) : null), [instance], { onOperationEvents: true });
+}
+
+export function useInstanceOverview(instance: string) {
+  return useBackendQuery((b) => b.instanceOverview(instance), [instance], { onOperationEvents: true });
+}
+
+export function useDashboardLayout() {
+  return useBackendQuery(async (b) => (await b.dashboardLayout()) ?? [], [], { onOperationEvents: true });
+}
+
+export function useFirstSteps() {
+  return useBackendQuery((b) => b.firstSteps(), [], { onOperationEvents: true });
+}
+
+export function useRecentGames() {
+  return useBackendQuery(async (b) => (await b.recentGames()) ?? [], [], { onOperationEvents: true });
+}
+
+export function useActiveGameStatus() {
+  return useBackendQuery((b) => b.activeGameStatus(), [], { onOperationEvents: true });
+}

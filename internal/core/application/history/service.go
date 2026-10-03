@@ -45,7 +45,7 @@ const (
 )
 
 // hidden are event types that are delivery or bookkeeping, not actions.
-var hidden = []string{"operation.", "diagnostics.", "notification.", "deployment.planned", "deployment.status_changed"}
+var hidden = []string{"operation.", "diagnostics.", "notification.", "deployment.planned", "deployment.status_changed", "game.running_changed"}
 
 // Error is a failure with a stable code and parameters (D044).
 type Error struct {

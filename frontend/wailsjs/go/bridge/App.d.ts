@@ -4,6 +4,8 @@ import {bridge} from '../models';
 
 export function ActivateProfile(arg1:string):Promise<void>;
 
+export function ActiveGameStatus():Promise<bridge.ActiveGameDTO>;
+
 export function AddDependencyRule(arg1:string,arg2:string,arg3:string,arg4:string):Promise<string>;
 
 export function AddIncompatibilityRule(arg1:string,arg2:string,arg3:string):Promise<string>;
@@ -11,6 +13,8 @@ export function AddIncompatibilityRule(arg1:string,arg2:string,arg3:string):Prom
 export function ApplyLoadOrder(arg1:string):Promise<string>;
 
 export function AttentionDiagnostics():Promise<Array<bridge.ProblemsDTO>>;
+
+export function BackupStatus():Promise<bridge.BackupStatusDTO>;
 
 export function CancelDeploy(arg1:string):Promise<boolean>;
 
@@ -20,9 +24,13 @@ export function CancelImport(arg1:string):Promise<void>;
 
 export function CancelOperation(arg1:string):Promise<boolean>;
 
+export function CancelRestore():Promise<void>;
+
 export function Categories(arg1:string):Promise<Array<bridge.CategoryDTO>>;
 
 export function ChangeDeployMethod(arg1:string,arg2:string):Promise<string>;
+
+export function CleanTempFiles():Promise<bridge.TempCleanupDTO>;
 
 export function ClearFileOverrides(arg1:string,arg2:Array<bridge.LocationDTO>):Promise<void>;
 
@@ -33,6 +41,8 @@ export function ConflictIndicators(arg1:string):Promise<Array<bridge.ConflictInd
 export function ConflictPairDetail(arg1:string,arg2:string,arg3:string,arg4:boolean):Promise<bridge.ConflictPairDetailDTO>;
 
 export function ConflictPairs(arg1:string,arg2:boolean,arg3:string):Promise<bridge.ConflictPairsDTO>;
+
+export function CreateBackup():Promise<bridge.BackupDTO>;
 
 export function CreateOrderRule(arg1:string,arg2:string,arg3:string):Promise<string>;
 
@@ -45,6 +55,8 @@ export function CreateProfile(arg1:string,arg2:string,arg3:string):Promise<strin
 export function CreateSeparator(arg1:string,arg2:string,arg3:string,arg4:bridge.AnchorDTO):Promise<string>;
 
 export function CreateSnapshot(arg1:string):Promise<string>;
+
+export function DashboardLayout():Promise<Array<bridge.DashletDTO>>;
 
 export function DecidePairs(arg1:string,arg2:Array<bridge.PairDecisionDTO>):Promise<void>;
 
@@ -74,6 +86,10 @@ export function ExportLoadOrder(arg1:string):Promise<string>;
 
 export function ExportSupportBundle(arg1:string,arg2:string):Promise<string>;
 
+export function Extensions():Promise<Array<bridge.ExtensionDTO>>;
+
+export function FirstSteps():Promise<bridge.FirstStepsDTO>;
+
 export function FomodImage(arg1:string,arg2:string):Promise<string>;
 
 export function FomodState(arg1:string,arg2:Array<bridge.FomodSelectionDTO>):Promise<bridge.FomodViewDTO>;
@@ -99,6 +115,12 @@ export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResu
 export function ImportQueue(arg1:string):Promise<Array<bridge.QueueItemDTO>>;
 
 export function InstallMods(arg1:string,arg2:Array<string>):Promise<Array<string>>;
+
+export function InstanceOverview(arg1:string):Promise<bridge.InstanceOverviewDTO>;
+
+export function Launch(arg1:string,arg2:bridge.LaunchRequestDTO):Promise<string>;
+
+export function LaunchCheck(arg1:string):Promise<bridge.LaunchCheckDTO>;
 
 export function ListAppSettings():Promise<Array<bridge.SettingDTO>>;
 
@@ -138,6 +160,8 @@ export function ModOrder(arg1:string):Promise<bridge.ModOrderDTO>;
 
 export function ModRules(arg1:string):Promise<Array<bridge.RuleDTO>>;
 
+export function MoveArchiveStore(arg1:string,arg2:string):Promise<string>;
+
 export function MoveMods(arg1:string,arg2:bridge.MoveRequestDTO):Promise<bridge.MoveResultDTO>;
 
 export function MovePlugins(arg1:string,arg2:Array<string>,arg3:number):Promise<bridge.PluginMoveResultDTO>;
@@ -145,6 +169,10 @@ export function MovePlugins(arg1:string,arg2:Array<string>,arg3:number):Promise<
 export function MoveStaging(arg1:string,arg2:string):Promise<string>;
 
 export function Notifications(arg1:number):Promise<Array<bridge.NotificationDTO>>;
+
+export function OpenBackupsFolder():Promise<void>;
+
+export function OpenDataFolder():Promise<void>;
 
 export function OpenInstanceFolder(arg1:string,arg2:string):Promise<void>;
 
@@ -159,6 +187,8 @@ export function OpenModFolder(arg1:string):Promise<void>;
 export function OrderHistory(arg1:string):Promise<Array<bridge.OrderChangeDTO>>;
 
 export function PendingDeployDecision(arg1:string):Promise<bridge.DeployPlanDTO>;
+
+export function PickBackupFile(arg1:string):Promise<string>;
 
 export function PickFolder(arg1:string):Promise<string>;
 
@@ -176,6 +206,8 @@ export function PreviewDeploy(arg1:string,arg2:boolean):Promise<bridge.DeployPla
 
 export function PreviewModRemoval(arg1:string,arg2:Array<string>):Promise<bridge.RemovalPreviewDTO>;
 
+export function PreviewMoveArchives(arg1:string,arg2:string):Promise<bridge.ArchivesPreviewDTO>;
+
 export function PreviewMoveStaging(arg1:string,arg2:string):Promise<bridge.StagingPreviewDTO>;
 
 export function PreviewOrderRule(arg1:string,arg2:string,arg3:string):Promise<bridge.RulePreviewDTO>;
@@ -189,6 +221,8 @@ export function ProfileSnapshots(arg1:string):Promise<Array<bridge.SnapshotDTO>>
 export function Purge(arg1:string):Promise<string>;
 
 export function RebuildPluginHeaderCache():Promise<void>;
+
+export function RecentGames():Promise<Array<bridge.RecentGameDTO>>;
 
 export function ReconcileDeploy(arg1:string):Promise<string>;
 
@@ -215,6 +249,14 @@ export function ResolveExternalChanges(arg1:string,arg2:Array<bridge.ExternalDec
 export function ResolveImport(arg1:string,arg2:bridge.AnswerDTO):Promise<void>;
 
 export function ResolveLoadOrderChange(arg1:string,arg2:string):Promise<string>;
+
+export function RestartApp():Promise<void>;
+
+export function RestartState():Promise<bridge.RestartStateDTO>;
+
+export function RestoreBackup(arg1:string):Promise<void>;
+
+export function RestoreBackupFromFile(arg1:string):Promise<void>;
 
 export function RestorePreviousLoadOrder(arg1:string):Promise<string>;
 
@@ -299,5 +341,7 @@ export function ValidateGameRoot(arg1:string,arg2:string):Promise<bridge.RootChe
 export function VerifyDeployment(arg1:string):Promise<bridge.ExternalChangesDTO>;
 
 export function VerifyGameSetup(arg1:bridge.SetupDTO):Promise<bridge.VerificationDTO>;
+
+export function Workarounds():Promise<bridge.WorkaroundsDTO>;
 
 export function Workspace():Promise<bridge.WorkspaceDTO>;

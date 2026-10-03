@@ -27,6 +27,8 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Histórico (projeção, filtros, reversão) | core/10 §3, `history.retentionDays`, D070/D082 | — | Diagnostics › Histórico, Mods (toolbar) |
 | Lock de instância / concorrência | core/00, todas as operações | INV-OPS-02 | todas as ações mutantes |
 | Settings (novo setting ou default) | core/13 e o core do módulo dono | — | Settings |
+| Backups do banco / restauração | core/14 §3–4, D090 | INV-OPS-01 | Settings › Soluções, DLG-27, diagnóstico `backup_failed` |
+| Launch (Play) | core/11 §6, core/04 §9, core/10 (coluna "launch (aviso)"), D045, D090 | INV-DEP-06 | barra de título, DLG-26, Overview, Dashboard |
 | Persistência / schema | core/14, migrations | — | — |
 | Integração dettmann-ui / tema | ui/03, ui/04, todos ui/telas | — | todas |
 | Distribuição de tela (vs Vortex) | ui/00 (divergências), ui/telas/*, references/vortex | — | a tela |

@@ -13,14 +13,17 @@ import (
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
+	"modorchestrator/internal/core/application/backups"
 	"modorchestrator/internal/core/application/conflicts"
 	"modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/diagnostics"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/history"
 	"modorchestrator/internal/core/application/instancelock"
+	"modorchestrator/internal/core/application/launch"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
+	"modorchestrator/internal/core/application/overview"
 	"modorchestrator/internal/core/application/plugins"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
@@ -58,7 +61,12 @@ type Container struct {
 	// History is the projection of events with reversal (core/10).
 	Diagnostics *diagnostics.Service
 	History     *history.Service
-	Logger      *slog.Logger
+	// Launch owns Play (core/11 §6); Overview the summaries of the
+	// Overview and the Dashboard; Backups the database backups (core/14).
+	Launch   *launch.Service
+	Overview *overview.Service
+	Backups  *backups.Service
+	Logger   *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
 	Interrupted []*operation.Operation
 	// InterruptedDeploys lists instances with a deploy journal to reconcile.
@@ -67,6 +75,16 @@ type Container struct {
 	// CustomTitleBar is ui.customTitleBar as read at startup: the setting
 	// requires a restart, so this is what the running window uses.
 	CustomTitleBar bool
+	// GPUAcceleration is app.gpuAcceleration as read at startup.
+	GPUAcceleration bool
+	// StartupSettings are the restart-required settings as read at
+	// startup ("Reiniciar agora" compares against them).
+	StartupSettings map[string]string
+	// Restored: a database backup was put in place at this start.
+	Restored bool
+	// LongPaths is the OS long path support (workarounds.longPathSupport):
+	// enabled, and whether it could be read.
+	LongPaths, LongPathsKnown bool
 
 	db      *sql.DB
 	logFile *logging.RotatingFile
@@ -87,7 +105,15 @@ func New(ctx context.Context) (c *Container, err error) {
 	var level slog.LevelVar
 	logger := logging.NewLogger(logFile, &level)
 
-	db, err := sqlite.Open(ctx, paths.Database)
+	// A restore asked for in the previous run is put in place before the
+	// database opens (core/14 §4).
+	restored, err := sqlite.ApplyPendingRestore(paths.Database, paths.RestorePending)
+	if err != nil {
+		logger.Error("apply restore", logging.KeyError, err.Error())
+	} else if restored {
+		logger.Info("database restored from backup")
+	}
+	db, err := sqlite.OpenUnmigrated(ctx, paths.Database)
 	if err != nil {
 		logger.Error("open database", logging.KeyError, err.Error())
 		logFile.Close()
@@ -99,18 +125,45 @@ func New(ctx context.Context) (c *Container, err error) {
 			logFile.Close()
 		}
 	}()
+	fsys := filesystem.New()
+	ids, clock := system.IDs{}, system.Clock{}
+	appState := sqlite.NewAppState(db)
+	backupSvc := backups.NewService(backups.Deps{
+		Store: sqlite.NewBackups(db), FS: fsys, State: appState, Clock: clock,
+		Dir: paths.Backups, Pending: paths.RestorePending,
+	})
+	// Before migrating an existing database, a pre-migration backup
+	// (core/14 §2–3). A failure is logged and recorded, not fatal: each
+	// migration is its own transaction.
+	if cur, latest, perr := sqlite.PendingMigrations(ctx, db); perr == nil && cur > 0 && cur < latest {
+		if _, berr := backupSvc.Create(ctx, backups.KindPreMigration); berr != nil {
+			logger.Error("pre-migration backup", logging.KeyError, berr.Error())
+		}
+	}
+	if err = sqlite.Migrate(ctx, db); err != nil {
+		logger.Error("migrate database", logging.KeyError, err.Error())
+		return nil, err
+	}
 	version, err := sqlite.SchemaVersion(ctx, db)
 	if err != nil {
 		return nil, err
 	}
 
 	settingsSvc := appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1)
+	settingsSvc.DataDir, settingsSvc.Prefs = paths.Root, system.Preferences{}
 	if lv, err := settingsSvc.AppValue(ctx, "app.logLevel"); err == nil {
 		level.Set(logging.ParseLevel(lv.Value))
 	}
-	customTitleBar := true
+	customTitleBar, gpu := true, true
 	if v, err := settingsSvc.AppValue(ctx, "ui.customTitleBar"); err == nil {
 		customTitleBar, _ = strconv.ParseBool(v.Value)
+	}
+	if v, err := settingsSvc.AppValue(ctx, "app.gpuAcceleration"); err == nil {
+		gpu, _ = strconv.ParseBool(v.Value)
+	}
+	startupSettings, err := settingsSvc.RestartValues(ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	bus := eventbus.New()
@@ -124,13 +177,10 @@ func New(ctx context.Context) (c *Container, err error) {
 		unsub()
 		return nil, fmt.Errorf("bootstrap: adapters: %w", err)
 	}
-	fsys := filesystem.New()
-	ids, clock := system.IDs{}, system.Clock{}
 	// One lock table for every mutating service (D065, INV-OPS-02).
 	locks := instancelock.New()
 	instances := sqlite.NewGameInstanceRepository(db)
 	profiles := sqlite.NewProfileRepository(db)
-	appState := sqlite.NewAppState(db)
 	gamesSvc := games.NewService(games.Deps{
 		Registry:    registry,
 		Instances:   instances,
@@ -142,6 +192,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Versions:    system.FileVersions{},
 		Stores:      &stores.Scanner{FS: fsys, Reg: stores.NewRegistry(), Env: os.Getenv},
 		Processes:   system.Processes{},
+		Settings:    settingsSvc,
 		Ops:         ops,
 		IDs:         ids,
 		Clock:       clock,
@@ -283,6 +334,13 @@ func New(ctx context.Context) (c *Container, err error) {
 		IDs:          ids,
 		Clock:        clock,
 	})
+	diagSvc.Backups = backupSvc
+	backupSvc.OnFailure = func() { _ = diagSvc.RefreshAll(context.Background()) }
+	launchSvc := launch.NewService(launch.Deps{
+		Registry: registry, Instances: instances, FS: fsys, Launcher: system.Launcher{},
+		Deploy: deploySvc, Diagnostics: diagSvc, Games: gamesSvc, Settings: settingsSvc,
+		Ops: ops, UoW: sqlite.NewUnitOfWork(db), Publisher: bus, IDs: ids, Clock: clock,
+	})
 	historySvc := history.NewService(history.Deps{
 		History:   sqlite.NewHistoryRepository(db),
 		Mods:      sqlite.NewModRepository(db),
@@ -304,6 +362,14 @@ func New(ctx context.Context) (c *Container, err error) {
 	prevUnsub3 := unsub
 	unsub = func() { unsubPlugins(); prevUnsub3() }
 	pluginsSvc.StartMonitor(2 * time.Second)
+	// Play turns into "Em execução" and deploy stays blocked while the
+	// game runs (core/11 §6).
+	launchSvc.StartMonitor(2 * time.Second)
+	overviewSvc := overview.NewService(overview.Sources{
+		Games: gamesSvc, Instances: instances, Deploy: deploySvc, Diagnostics: diagSvc,
+		Library: librarySvc, Conflicts: conflictsSvc, Plugins: pluginsSvc, History: historySvc,
+		Settings: settingsSvc, Facts: sqlite.NewFacts(db),
+	})
 
 	interrupted, err := ops.RecoverInterrupted(ctx)
 	if err != nil {
@@ -320,6 +386,14 @@ func New(ctx context.Context) (c *Container, err error) {
 	// user's "Reconcile now" (deploy_interrupted, core/14 §5).
 	if err := deploySvc.Recover(ctx); err != nil {
 		logger.Error("deployment recovery", logging.KeyError, err.Error())
+	}
+	// After a restore the manifests may not match the disk: every instance
+	// is "unknown" until a scan (core/14 §4).
+	if restored {
+		if err := deploySvc.MarkUnverified(ctx); err != nil {
+			logger.Error("mark restored instances", logging.KeyError, err.Error())
+		}
+		_ = backupSvc.Restored(ctx)
 	}
 	interruptedDeploys, err := deploySvc.Interrupted(ctx)
 	if err != nil {
@@ -345,6 +419,15 @@ func New(ctx context.Context) (c *Container, err error) {
 			logger.Warn("diagnostics refresh", logging.KeyError, err.Error())
 		}
 	}()
+	// The app opened without error: keep it as the last good startup, then
+	// back up every hour of use with changes (core/14 §3).
+	backupSvc.Start(time.Hour)
+	go func() {
+		if _, err := backupSvc.Create(context.Background(), backups.KindStartup); err != nil {
+			logger.Error("startup backup", logging.KeyError, err.Error())
+		}
+	}()
+	longPaths, longPathsKnown := system.Preferences{}.LongPaths()
 	logger.Info("startup", "dataDir", paths.Root, "schemaVersion", version, "interruptedOperations", len(interrupted), "interruptedDeploys", len(interruptedDeploys))
 
 	return &Container{
@@ -361,11 +444,19 @@ func New(ctx context.Context) (c *Container, err error) {
 		Plugins:            pluginsSvc,
 		Diagnostics:        diagSvc,
 		History:            historySvc,
+		Launch:             launchSvc,
+		Overview:           overviewSvc,
+		Backups:            backupSvc,
 		Logger:             logger,
 		Interrupted:        interrupted,
 		InterruptedDeploys: interruptedDeploys,
 		SchemaVersion:      version,
 		CustomTitleBar:     customTitleBar,
+		GPUAcceleration:    gpu,
+		StartupSettings:    startupSettings,
+		Restored:           restored,
+		LongPaths:          longPaths,
+		LongPathsKnown:     longPathsKnown,
 		db:                 db,
 		logFile:            logFile,
 		unsub:              unsub,
@@ -381,6 +472,10 @@ func (c *Container) Close() error {
 	c.AutoDeploy.Close()
 	c.Plugins.Close()
 	c.Diagnostics.Close()
+	c.Launch.Close()
+	// The exit backup (core/14 §3 "na saída normal") before the database
+	// closes.
+	c.Backups.Close()
 	c.Logger.Info("shutdown")
 	err := c.db.Close()
 	if lerr := c.logFile.Close(); err == nil {
@@ -402,3 +497,11 @@ func (c *Container) ExportSupportBundle(ctx context.Context, path, appVersion st
 	}
 	return supportbundle.Write(path, b, c.Paths.Logs)
 }
+
+// WaitForRestart waits for the previous process of a restart to exit
+// before this one opens the database.
+func WaitForRestart(args []string, timeout time.Duration) { system.WaitForPrevious(args, timeout) }
+
+// Restart starts a new process of the app that waits for this one; the
+// caller quits right after ("Reiniciar agora", core/13).
+func (c *Container) Restart() error { return system.Restart() }

@@ -38,6 +38,10 @@ type Folders struct {
 	Staging      string
 	ArchiveStore string
 	BackupStore  string
+	// SuggestedStaging is always the suggestion; Staging is left empty for
+	// the user to choose when mods.useSuggestedStaging is off (core/13,
+	// Vortex "Automatically use suggested path for staging folder").
+	SuggestedStaging string
 }
 
 // MethodStatus says whether a deployment method can work with this setup and
@@ -103,6 +107,10 @@ func (s *Service) SuggestFolders(ctx context.Context, id game.ID, root, name str
 			BackupStore:  game.JoinPath(dir, "backups"),
 		}
 		if !slices.ContainsFunc(all, func(i game.Instance) bool { return game.Overlaps(i.Staging, dir) }) || n > 50 {
+			f.SuggestedStaging = f.Staging
+			if !s.useSuggestedStaging(ctx) {
+				f.Staging = ""
+			}
 			return f, nil
 		}
 	}
@@ -308,7 +316,10 @@ func (s *Service) register(ctx context.Context, inst game.Instance) (err error) 
 	if err = s.Profiles.SetActive(ctx, inst.ID, p.ID()); err != nil {
 		return err
 	}
-	return s.State.Set(ctx, stateActiveInstance, string(inst.ID))
+	if err := s.State.Set(ctx, stateActiveInstance, string(inst.ID)); err != nil {
+		return err
+	}
+	return s.MarkUsed(ctx, inst.ID)
 }
 
 // prepared records what prepareFolders created so a failure can undo it.
@@ -701,4 +712,12 @@ func safeFolderName(name string) string {
 		return "game"
 	}
 	return out
+}
+
+func (s *Service) useSuggestedStaging(ctx context.Context) bool {
+	if s.Settings == nil {
+		return true
+	}
+	v, err := s.Settings.AppValue(ctx, "mods.useSuggestedStaging")
+	return err != nil || v.Value != "false"
 }

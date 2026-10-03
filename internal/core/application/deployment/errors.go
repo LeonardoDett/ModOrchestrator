@@ -55,7 +55,8 @@ const (
 	CodeFolderForeign    = "folder_foreign"
 	CodeNoJournal        = "nothing_to_reconcile"
 	CodeMethodSame       = "method_unchanged"
-	CodeStagingSame      = "staging_unchanged"
+	CodeStagingSame      = "staging_unchanged"
+	CodeArchivesSame     = "archives_unchanged"
 	CodeInstanceNotFound = "not_found"
 	// CodeDecisionInvalid: an action not offered for the change (core/09
 	// §4), or a capture without destination.

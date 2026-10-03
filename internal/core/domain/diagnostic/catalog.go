@@ -78,6 +78,16 @@ var modules = map[Code]Module{
 	CodeDiskSpaceLow:     ModuleApp, CodeBackupFailed: ModuleApp,
 }
 
+// launchWarnings are the codes of core/10 §1.1 whose "Bloqueia" column says
+// "launch (aviso)": they do not block, but the pre-launch check shows them
+// with "Jogar mesmo assim" (D045, DLG-26).
+var launchWarnings = map[Code]bool{
+	CodePluginMissingMaster: true, CodePluginLimitExceeded: true, CodeFrameworkMissing: true,
+}
+
+// WarnsBeforeLaunch reports whether the pre-launch check shows the code.
+func WarnsBeforeLaunch(c Code) bool { return launchWarnings[c] }
+
 // ModuleOf returns the module of a catalog code ("" for unknown codes).
 func ModuleOf(c Code) Module { return modules[c] }
 

@@ -78,6 +78,8 @@ Como ficou (F3): `Workspace()` devolve a instância ativa, as instâncias para t
 
 Botão Play na barra de título: executa `launch()` do adapter pelo `ProcessLauncher`, após a checagem pré-lançamento (core/04 §9). Enquanto o jogo roda (detecção por processo), deploy/purge ficam bloqueados (`game_running`). Ferramentas adicionais (hotbar) V1.x.
 
+Como ficou (F12, D090): interface opcional `ports.LaunchSupport` (opções de lançamento; Skyrim: SKSE se o loader está na raiz, senão o executável); jogo genérico usa o executável declarado; sem opção, Play fica indisponível com o motivo. Operação `launch` (`check`, `deploy`, `start`) e monitor de processo (`game.running_changed`).
+
 ## 7. Extensões (V2)
 
 Contrato previsto: manifesto (id, versão, autor, capabilities fornecidas, versão mínima do app, permissões: filesystem de quais pastas, rede, processos), ciclo de vida (instalar, habilitar, desabilitar, atualizar, remover, reinício necessário), isolamento (processo separado ou WASM, a decidir). Na V1, a tela Extensions lista os adapters embutidos (nome, versão, jogos, capabilities, "embutido") e explica que extensões de terceiros virão; sem botões falsos (anti-pattern 18).

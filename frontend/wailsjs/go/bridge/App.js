@@ -6,6 +6,10 @@ export function ActivateProfile(arg1) {
   return window['go']['bridge']['App']['ActivateProfile'](arg1);
 }
 
+export function ActiveGameStatus() {
+  return window['go']['bridge']['App']['ActiveGameStatus']();
+}
+
 export function AddDependencyRule(arg1, arg2, arg3, arg4) {
   return window['go']['bridge']['App']['AddDependencyRule'](arg1, arg2, arg3, arg4);
 }
@@ -20,6 +24,10 @@ export function ApplyLoadOrder(arg1) {
 
 export function AttentionDiagnostics() {
   return window['go']['bridge']['App']['AttentionDiagnostics']();
+}
+
+export function BackupStatus() {
+  return window['go']['bridge']['App']['BackupStatus']();
 }
 
 export function CancelDeploy(arg1) {
@@ -38,12 +46,20 @@ export function CancelOperation(arg1) {
   return window['go']['bridge']['App']['CancelOperation'](arg1);
 }
 
+export function CancelRestore() {
+  return window['go']['bridge']['App']['CancelRestore']();
+}
+
 export function Categories(arg1) {
   return window['go']['bridge']['App']['Categories'](arg1);
 }
 
 export function ChangeDeployMethod(arg1, arg2) {
   return window['go']['bridge']['App']['ChangeDeployMethod'](arg1, arg2);
+}
+
+export function CleanTempFiles() {
+  return window['go']['bridge']['App']['CleanTempFiles']();
 }
 
 export function ClearFileOverrides(arg1, arg2) {
@@ -64,6 +80,10 @@ export function ConflictPairDetail(arg1, arg2, arg3, arg4) {
 
 export function ConflictPairs(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['ConflictPairs'](arg1, arg2, arg3);
+}
+
+export function CreateBackup() {
+  return window['go']['bridge']['App']['CreateBackup']();
 }
 
 export function CreateOrderRule(arg1, arg2, arg3) {
@@ -88,6 +108,10 @@ export function CreateSeparator(arg1, arg2, arg3, arg4) {
 
 export function CreateSnapshot(arg1) {
   return window['go']['bridge']['App']['CreateSnapshot'](arg1);
+}
+
+export function DashboardLayout() {
+  return window['go']['bridge']['App']['DashboardLayout']();
 }
 
 export function DecidePairs(arg1, arg2) {
@@ -146,6 +170,14 @@ export function ExportSupportBundle(arg1, arg2) {
   return window['go']['bridge']['App']['ExportSupportBundle'](arg1, arg2);
 }
 
+export function Extensions() {
+  return window['go']['bridge']['App']['Extensions']();
+}
+
+export function FirstSteps() {
+  return window['go']['bridge']['App']['FirstSteps']();
+}
+
 export function FomodImage(arg1, arg2) {
   return window['go']['bridge']['App']['FomodImage'](arg1, arg2);
 }
@@ -196,6 +228,18 @@ export function ImportQueue(arg1) {
 
 export function InstallMods(arg1, arg2) {
   return window['go']['bridge']['App']['InstallMods'](arg1, arg2);
+}
+
+export function InstanceOverview(arg1) {
+  return window['go']['bridge']['App']['InstanceOverview'](arg1);
+}
+
+export function Launch(arg1, arg2) {
+  return window['go']['bridge']['App']['Launch'](arg1, arg2);
+}
+
+export function LaunchCheck(arg1) {
+  return window['go']['bridge']['App']['LaunchCheck'](arg1);
 }
 
 export function ListAppSettings() {
@@ -274,6 +318,10 @@ export function ModRules(arg1) {
   return window['go']['bridge']['App']['ModRules'](arg1);
 }
 
+export function MoveArchiveStore(arg1, arg2) {
+  return window['go']['bridge']['App']['MoveArchiveStore'](arg1, arg2);
+}
+
 export function MoveMods(arg1, arg2) {
   return window['go']['bridge']['App']['MoveMods'](arg1, arg2);
 }
@@ -288,6 +336,14 @@ export function MoveStaging(arg1, arg2) {
 
 export function Notifications(arg1) {
   return window['go']['bridge']['App']['Notifications'](arg1);
+}
+
+export function OpenBackupsFolder() {
+  return window['go']['bridge']['App']['OpenBackupsFolder']();
+}
+
+export function OpenDataFolder() {
+  return window['go']['bridge']['App']['OpenDataFolder']();
 }
 
 export function OpenInstanceFolder(arg1, arg2) {
@@ -316,6 +372,10 @@ export function OrderHistory(arg1) {
 
 export function PendingDeployDecision(arg1) {
   return window['go']['bridge']['App']['PendingDeployDecision'](arg1);
+}
+
+export function PickBackupFile(arg1) {
+  return window['go']['bridge']['App']['PickBackupFile'](arg1);
 }
 
 export function PickFolder(arg1) {
@@ -350,6 +410,10 @@ export function PreviewModRemoval(arg1, arg2) {
   return window['go']['bridge']['App']['PreviewModRemoval'](arg1, arg2);
 }
 
+export function PreviewMoveArchives(arg1, arg2) {
+  return window['go']['bridge']['App']['PreviewMoveArchives'](arg1, arg2);
+}
+
 export function PreviewMoveStaging(arg1, arg2) {
   return window['go']['bridge']['App']['PreviewMoveStaging'](arg1, arg2);
 }
@@ -376,6 +440,10 @@ export function Purge(arg1) {
 
 export function RebuildPluginHeaderCache() {
   return window['go']['bridge']['App']['RebuildPluginHeaderCache']();
+}
+
+export function RecentGames() {
+  return window['go']['bridge']['App']['RecentGames']();
 }
 
 export function ReconcileDeploy(arg1) {
@@ -428,6 +496,22 @@ export function ResolveImport(arg1, arg2) {
 
 export function ResolveLoadOrderChange(arg1, arg2) {
   return window['go']['bridge']['App']['ResolveLoadOrderChange'](arg1, arg2);
+}
+
+export function RestartApp() {
+  return window['go']['bridge']['App']['RestartApp']();
+}
+
+export function RestartState() {
+  return window['go']['bridge']['App']['RestartState']();
+}
+
+export function RestoreBackup(arg1) {
+  return window['go']['bridge']['App']['RestoreBackup'](arg1);
+}
+
+export function RestoreBackupFromFile(arg1) {
+  return window['go']['bridge']['App']['RestoreBackupFromFile'](arg1);
 }
 
 export function RestorePreviousLoadOrder(arg1) {
@@ -596,6 +680,10 @@ export function VerifyDeployment(arg1) {
 
 export function VerifyGameSetup(arg1) {
   return window['go']['bridge']['App']['VerifyGameSetup'](arg1);
+}
+
+export function Workarounds() {
+  return window['go']['bridge']['App']['Workarounds']();
 }
 
 export function Workspace() {

@@ -259,10 +259,15 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
                       <div key={key} className="contents">
                         <dt className="text-fg-muted">{t(label)}</dt>
                         <dd className="min-w-0">
-                          <div className="break-all font-mono text-xs text-fg">{folders[key]}</div>
+                          <div className="break-all font-mono text-xs text-fg">{folders[key] || t("wizard.folders.choose")}</div>
                           <div className="text-xs text-fg-muted">{t(help)}</div>
                         </dd>
-                        <dd>
+                        <dd className="flex gap-2">
+                          {key === "staging" && !folders.staging && folders.suggestedStaging ? (
+                            <Button size="sm" variant="ghost" onClick={() => setFolders({ ...folders, staging: folders.suggestedStaging ?? "" })}>
+                              {t("wizard.folders.suggest")}
+                            </Button>
+                          ) : null}
                           <Button size="sm" variant="outline" onClick={() => void changeFolder(key)}>
                             {t("wizard.change")}
                           </Button>
@@ -334,7 +339,7 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
                 </Button>
               ) : null}
               {step === 1 ? (
-                <Button disabled={!folders || busy} onClick={() => void goVerification()}>
+                <Button disabled={!folders || !folders.staging || busy} onClick={() => void goVerification()}>
                   {t("common.next")}
                 </Button>
               ) : null}

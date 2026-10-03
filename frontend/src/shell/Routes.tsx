@@ -1,11 +1,10 @@
 import { useEffect } from "react";
-import { Puzzle } from "lucide-react";
 import { useWorkspace } from "../bridge/queries";
 import { ConflictsPage } from "../pages/ConflictsPage";
 import { DashboardPage } from "../pages/DashboardPage";
 import { DiagnosticsPage } from "../pages/DiagnosticsPage";
 import { GamesPage } from "../pages/GamesPage";
-import { HonestEmpty, PageBody } from "../pages/PageBody";
+import { ExtensionsPage } from "../pages/ExtensionsPage";
 import { SettingsPage } from "../pages/SettingsPage";
 import { ModsPage } from "../pages/ModsPage";
 import { ProfilesPage } from "../pages/ProfilesPage";
@@ -38,11 +37,7 @@ export function Routes() {
     case "games":
       return <GamesPage />;
     case "extensions":
-      return (
-        <PageBody>
-          <HonestEmpty icon={Puzzle} title="extensions.emptyTitle" description="extensions.emptyDescription" />
-        </PageBody>
-      );
+      return <ExtensionsPage />;
     case "settings":
       return <SettingsPage />;
     case "diagnostics":

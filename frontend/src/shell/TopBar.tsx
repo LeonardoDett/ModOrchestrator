@@ -31,7 +31,7 @@ export function TopBar({ title, onOpenOperations, onOpenDialog, onOpenLog }: Top
   const running = operations.status === "ready" ? operations.data.filter((op) => op.status === "running").length : 0;
 
   return (
-    <div className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-structure px-4">
+    <div data-slot="topbar" className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-structure px-4">
       <Typography as="h1" variant="heading-6" className="min-w-0 truncate">
         {title}
       </Typography>

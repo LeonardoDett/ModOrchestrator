@@ -71,7 +71,7 @@ export interface OperationEvent {
 export interface Setting {
   key: string;
   tab: string;
-  type: "bool" | "int" | "enum" | "path";
+  type: "bool" | "int" | "enum" | "path" | "list";
   value: string;
   default: string;
   isDefault: boolean;
@@ -284,6 +284,191 @@ export interface Backend {
   restorePreviousLoadOrder(instance: string): Promise<string>;
   importLoadOrder(instance: string, text: string): Promise<SortResult>;
   resolveLoadOrderChange(instance: string, action: "import_load_order" | "restore_load_order"): Promise<string>;
+  // Settings, Workarounds and Extensions (F12, core/13, core/14 §3–4)
+  restartState(): Promise<RestartState>;
+  restartApp(): Promise<void>;
+  openDataFolder(): Promise<void>;
+  openBackupsFolder(): Promise<void>;
+  backupStatus(): Promise<BackupStatus>;
+  createBackup(): Promise<Backup>;
+  restoreBackup(id: string): Promise<void>;
+  /** Open dialog; "" when cancelled. */
+  pickBackupFile(title: string): Promise<string>;
+  restoreBackupFromFile(path: string): Promise<void>;
+  cancelRestore(): Promise<void>;
+  workarounds(): Promise<Workarounds>;
+  cleanTempFiles(): Promise<TempCleanup>;
+  rebuildPluginHeaderCache(): Promise<void>;
+  previewMoveArchives(instance: string, path: string): Promise<ArchivesPreview>;
+  moveArchiveStore(instance: string, path: string): Promise<string>;
+  extensions(): Promise<Extension[]>;
+  // Play, Overview and Dashboard (F12, core/11 §6, overview.md, dashboard.md)
+  launchCheck(instance: string): Promise<LaunchCheck>;
+  launch(instance: string, request: LaunchRequest): Promise<string>;
+  instanceOverview(instance: string): Promise<InstanceOverview>;
+  dashboardLayout(): Promise<Dashlet[]>;
+  firstSteps(): Promise<FirstSteps>;
+  recentGames(): Promise<RecentGame[]>;
+  activeGameStatus(): Promise<ActiveGameStatus>;
+}
+
+// --- Settings, Workarounds and Extensions (internal/bridge/settings.go). ---
+
+export interface RestartState {
+  /** Restart-required settings changed since the app started. */
+  settings: string[];
+  /** A database restore waits for the restart. */
+  restore: boolean;
+}
+
+export type BackupKind = "auto" | "manual" | "pre_migration" | "startup" | "pre_restore";
+
+export interface Backup {
+  id: string;
+  kind: BackupKind;
+  at: string;
+  size: number;
+}
+
+export interface BackupStatus {
+  lastAuto?: string;
+  lastManual?: string;
+  lastStartup?: string;
+  failure?: { kind: BackupKind; at: string; reason: string };
+  restorePending?: string;
+  restoredAt?: string;
+  backups: Backup[];
+}
+
+export interface Workarounds {
+  longPaths: "enabled" | "disabled" | "unknown";
+}
+
+export interface TempCleanup {
+  removed: number;
+  skipped: number;
+}
+
+export interface ArchivesPreview {
+  from: string;
+  to: string;
+  bytes: number;
+  free: number;
+  sameVolume: boolean;
+  problem?: string;
+  reason?: string;
+}
+
+export interface ExtensionGame {
+  id: string;
+  name: string;
+  capabilities: string[];
+  custom: boolean;
+}
+
+export interface Extension {
+  name: string;
+  version: string;
+  games: ExtensionGame[];
+  capabilities: string[];
+  builtIn: boolean;
+  active: boolean;
+}
+
+// --- Play, Overview and Dashboard (internal/bridge/overview.go). ---
+
+export type LaunchState = "ready" | "deploy" | "warnings" | "blocked" | "running" | "busy" | "unavailable";
+
+export interface LaunchOption {
+  id: string;
+  exe: string;
+  default: boolean;
+}
+
+export interface LaunchCheck {
+  instance: string;
+  state: LaunchState;
+  options: LaunchOption[];
+  deployKind: DeployStatusKind;
+  deployReason: string;
+  deployNeeded: boolean;
+  autoDeploy: boolean;
+  deployProblem: boolean;
+  busy?: string;
+  running: string[];
+  blocking: Diagnostic[];
+  warnings: Diagnostic[];
+  unavailable?: string;
+}
+
+export interface LaunchRequest {
+  option: string;
+  deploy: boolean;
+  confirmed: boolean;
+}
+
+export interface AttentionGroup {
+  code: string;
+  severity: DiagnosticSeverity;
+  blocking: boolean;
+  count: number;
+  first: Diagnostic;
+}
+
+export interface ModsSummary {
+  enabled: number;
+  total: number;
+  size: number;
+  files: number;
+}
+
+export interface PluginsSummary {
+  active: number;
+  limits: { kind: string; used: number; max: number }[];
+}
+
+export interface ConflictsSummary {
+  pairs: number;
+  unreviewed: number;
+  overrides: number;
+}
+
+export interface InstanceOverview {
+  instance: ManagedGame;
+  status?: DeployStatus;
+  attention: AttentionGroup[];
+  attentionPartial: boolean;
+  mods?: ModsSummary;
+  plugins?: PluginsSummary;
+  conflicts?: ConflictsSummary;
+  recent: HistoryEntry[];
+}
+
+export type DashletId = "first_steps" | "attention" | "active_game" | "recent_games" | "recent_operations" | "whats_new";
+
+export interface Dashlet {
+  id: DashletId;
+  hidden: boolean;
+  pinned: boolean;
+  visible: boolean;
+  locked: boolean;
+}
+
+export interface FirstSteps {
+  steps: { id: "manage_game" | "import_mod" | "deploy" | "play"; done: boolean }[];
+  complete: boolean;
+}
+
+export interface RecentGame {
+  instance: ManagedGame;
+  lastUsed?: string;
+}
+
+export interface ActiveGameStatus {
+  instance?: ManagedGame;
+  status?: DeployStatus;
+  mods?: ModsSummary;
+  conflicts?: ConflictsSummary;
 }
 
 // --- Diagnostics, notifications and history (internal/bridge/diagnostics.go).
@@ -645,6 +830,8 @@ export interface GameFolders {
   staging: string;
   archiveStore: string;
   backupStore: string;
+  /** The suggestion; staging is empty when mods.useSuggestedStaging is off. */
+  suggestedStaging?: string;
 }
 
 export interface MethodStatus {

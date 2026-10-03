@@ -11,10 +11,12 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"time"
 
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
+	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/game"
 )
 
@@ -37,6 +39,10 @@ type Deps struct {
 	Stores      ports.StoreScanner
 	// Processes tells whether the game runs (nil: never running).
 	Processes ports.ProcessProbe
+	// Settings is optional (nil: catalog defaults).
+	Settings interface {
+		AppValue(ctx context.Context, key string) (appsettings.Effective, error)
+	}
 	Ops         *operations.Service
 	// Locks is the per-instance lock shared with every mutating service
 	// (D065); a nil value gets a private table (tests).
@@ -240,7 +246,52 @@ func (s *Service) SetActive(ctx context.Context, id game.InstanceID) error {
 	if _, err := s.Instances.Get(ctx, id); err != nil {
 		return err
 	}
-	return s.State.Set(ctx, stateActiveInstance, string(id))
+	if err := s.State.Set(ctx, stateActiveInstance, string(id)); err != nil {
+		return err
+	}
+	return s.MarkUsed(ctx, id)
+}
+
+// stateLastUsed keys when an instance was last activated, managed or
+// launched ("Jogos recentes", ui/telas/dashboard.md).
+const stateLastUsed = "games.lastUsed."
+
+// MarkUsed records that the instance was used now.
+func (s *Service) MarkUsed(ctx context.Context, id game.InstanceID) error {
+	return s.State.Set(ctx, stateLastUsed+string(id), s.Clock.Now().UTC().Format(time.RFC3339Nano))
+}
+
+// Recent is a managed instance with when it was last used.
+type Recent struct {
+	Instance game.Instance
+	LastUsed time.Time
+}
+
+// Recent lists the managed instances, the most recently used first (never
+// used ones last, by name), at most limit.
+func (s *Service) Recent(ctx context.Context, limit int) ([]Recent, error) {
+	list, err := s.Instances.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Recent, 0, len(list))
+	for _, inst := range list {
+		r := Recent{Instance: inst}
+		if v, err := s.State.Get(ctx, stateLastUsed+string(inst.ID)); err == nil {
+			r.LastUsed, _ = time.Parse(time.RFC3339Nano, v)
+		}
+		out = append(out, r)
+	}
+	slices.SortStableFunc(out, func(a, b Recent) int {
+		if c := b.LastUsed.Compare(a.LastUsed); c != 0 {
+			return c
+		}
+		return strings.Compare(strings.ToLower(a.Instance.DisplayName), strings.ToLower(b.Instance.DisplayName))
+	})
+	if limit > 0 && len(out) > limit {
+		out = out[:limit]
+	}
+	return out, nil
 }
 
 // Rename changes the display name; names are unique per game.

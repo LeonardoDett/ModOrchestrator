@@ -196,3 +196,11 @@ func timePtr(t *time.Time) *string {
 	s := formatTime(*t)
 	return &s
 }
+
+// optTime formats a time, "" for the zero time.
+func optTime(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+	return formatTime(t)
+}

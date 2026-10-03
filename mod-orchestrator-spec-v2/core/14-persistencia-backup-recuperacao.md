@@ -40,6 +40,8 @@ Backup usa a API de backup online do SQLite (consistente mesmo com o app aberto)
 - Restaurar exige reinício; antes, faz backup do estado atual.
 - Após restaurar: todas as instâncias ficam `unknown` (core/04 §7) até um scan; o manifesto restaurado pode não corresponder ao disco, então o próximo deploy tratará divergências como external changes (nada é apagado às cegas).
 
+Como ficou (F12, D090): arquivos `state-<UTC>-<tipo>.db` (`auto`, `manual`, `pre_migration`, `startup`, `pre_restore`); automático só quando `total_changes()` mudou; restauração gravada em `<dataDir>/state.restore-pending.db` e aplicada antes de abrir o banco na inicialização seguinte; instâncias marcadas `not_verified` até um scan completo.
+
 ## 5. Recuperação de falhas
 
 | Situação | Detecção | Tratamento |

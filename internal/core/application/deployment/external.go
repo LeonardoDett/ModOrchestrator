@@ -400,7 +400,41 @@ func (s *Service) wantedKeys(ctx context.Context, inst game.Instance, in *inputs
 // ("Verificar implantação") and when the user opens the review of external
 // changes outside a deploy (DLG-15). It only reads.
 func (s *Service) Verify(ctx context.Context, instance game.InstanceID) (ChangesView, error) {
-	return s.scanChanges(ctx, instance, time.Time{})
+	v, err := s.scanChanges(ctx, instance, time.Time{})
+	if err == nil {
+		s.markVerified(ctx, instance)
+	}
+	return v, err
+}
+
+// stateUnverified marks an instance whose manifest came from a restored
+// database backup: the status is unknown until a full scan compares it
+// with the disk (core/14 §4, core/04 §7 "banco restaurado sem scan").
+const stateUnverified = "deployment.unverified."
+
+// MarkUnverified is called at startup after a restore was applied.
+func (s *Service) MarkUnverified(ctx context.Context) error {
+	list, err := s.Instances.List(ctx)
+	if err != nil {
+		return err
+	}
+	for _, inst := range list {
+		if err := s.State.Set(ctx, stateUnverified+string(inst.ID), "1"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *Service) verified(ctx context.Context, instance game.InstanceID) bool {
+	_, err := s.State.Get(ctx, stateUnverified+string(instance))
+	return err != nil
+}
+
+func (s *Service) markVerified(ctx context.Context, instance game.InstanceID) {
+	if !s.verified(ctx, instance) {
+		_ = s.State.Delete(ctx, stateUnverified+string(instance))
+	}
 }
 
 // ScanOnFocus is the limited scan made when the app window gets the focus

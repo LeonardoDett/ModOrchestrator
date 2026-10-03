@@ -178,10 +178,30 @@ type StoreScanner interface {
 	Scan(ctx context.Context, hints []RegistryHint) ([]StoreInstall, error)
 }
 
-// ProcessLauncher starts and watches the game (core/11 §6).
+// ProcessLauncher starts the game (core/11 §6). It starts the executable
+// and returns; it never waits for it to exit. Whether the game runs is
+// ProcessProbe's question.
 type ProcessLauncher interface {
-	Launch(ctx context.Context, exe string, args []string, workDir string) error
-	Running(ctx context.Context, exeName string) (bool, error)
+	Start(ctx context.Context, exe string, args []string, workDir string) error
+}
+
+// LaunchOption is one way to start a game (core/11 §1 `launch()`): the
+// executable and working folder relative to the game root ("" = root).
+// Exactly one option of a list is the default (Play); the others are in
+// the Play menu (e.g. "Lançar sem SKSE", core/12 §8).
+type LaunchOption struct {
+	ID      string
+	Exe     string
+	Args    []string
+	WorkDir string
+	Default bool
+}
+
+// LaunchSupport is implemented by adapters with the `launch` capability.
+// The adapter only reads to decide (a loader present in the root); the core
+// starts the process.
+type LaunchSupport interface {
+	LaunchOptions(ctx context.Context, fs FileReader, inst game.Instance) ([]LaunchOption, error)
 }
 
 // Candidate is an installation the adapter recognises; managing it is always
@@ -374,4 +394,17 @@ type HeaderCache interface {
 	// cache de cabeçalhos de plugins", core/13).
 	Flush() error
 	Clear() error
+}
+
+// DatabaseBackups copies the state database (core/14 §3–4). Create uses the
+// online backup API, consistent while the app runs; Inspect validates a
+// file (integrity and known schema) without changing it; CopyFile copies a
+// validated database file. Destinations are written whole or not at all.
+type DatabaseBackups interface {
+	Create(ctx context.Context, dst string) error
+	// Changes counts the rows changed since the database was opened; the
+	// automatic backup runs only when it moved.
+	Changes(ctx context.Context) (int64, error)
+	Inspect(ctx context.Context, path string) (schema int, err error)
+	CopyFile(ctx context.Context, src, dst string) error
 }

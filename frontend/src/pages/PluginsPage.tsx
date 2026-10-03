@@ -71,7 +71,10 @@ function PluginsWorkspace({ instance }: { instance: string }) {
   const list = usePluginList(instance);
   const rules = usePluginRules(instance);
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<StatusFilter>("all");
+  const [status, setStatus] = useState<StatusFilter>(route.filter === "active" ? "active" : "all");
+  useEffect(() => {
+    if (route.filter === "active") setStatus("active");
+  }, [route.filter]);
   const [flag, setFlag] = useState<FlagFilter>("all");
   const [origin, setOrigin] = useState<OriginFilter>("all");
   const [problemsOnly, setProblemsOnly] = useState(false);

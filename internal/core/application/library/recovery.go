@@ -142,3 +142,57 @@ func (s *Service) recoverArchives(ctx context.Context, inst game.Instance) error
 	}
 	return nil
 }
+
+// TempResult is what "Limpar arquivos temporários" did.
+type TempResult struct {
+	// Removed counts the temporary folders removed; Skipped the instances
+	// left alone because an operation holds them.
+	Removed, Skipped int
+}
+
+// CleanTemp removes the temporary work of operations that are not running
+// (Settings › Workarounds "Limpar arquivos temporários", core/13): the
+// operation folders below <staging>/.tmp and the "*.installing" folders,
+// only in stagings whose marker proves they are the instance's (D058).
+// Instances an operation holds are skipped, never waited for (D038).
+func (s *Service) CleanTemp(ctx context.Context) (TempResult, error) {
+	instances, err := s.Instances.List(ctx)
+	if err != nil {
+		return TempResult{}, err
+	}
+	var r TempResult
+	for _, inst := range instances {
+		release, err := s.Locks.Acquire(inst.ID, "clean_temp")
+		if err != nil {
+			r.Skipped++
+			continue
+		}
+		r.Removed += s.cleanInstanceTemp(ctx, inst)
+		release()
+	}
+	return r, nil
+}
+
+func (s *Service) cleanInstanceTemp(ctx context.Context, inst game.Instance) int {
+	if !s.ownsFolder(ctx, inst.Staging, game.StagingMarker, inst.ID) {
+		return 0
+	}
+	n := 0
+	tmp := game.JoinPath(inst.Staging, ".tmp")
+	if entries, err := s.FS.ReadDir(ctx, tmp); err == nil {
+		n += len(entries)
+		_ = s.FS.RemoveAll(ctx, tmp)
+	}
+	entries, err := s.FS.ReadDir(ctx, inst.Staging)
+	if err != nil {
+		return n
+	}
+	for _, e := range entries {
+		if e.IsDir && strings.HasSuffix(e.Name, ".installing") {
+			if s.FS.RemoveAll(ctx, game.JoinPath(inst.Staging, e.Name)) == nil {
+				n++
+			}
+		}
+	}
+	return n
+}

@@ -24,6 +24,7 @@ import { FileWinnersDialog, usePairDecisions } from "../features/conflicts/Confl
 import { locationText, modLabel, useConflictText } from "../features/conflicts/conflict-labels";
 import { PairFiles } from "../features/conflicts/PairFiles";
 import { useI18n, type MessageKey } from "../i18n/i18n";
+import { useNavigation } from "../shell/navigation";
 import { HonestEmpty, PageBody } from "./PageBody";
 
 type Filter = "all" | "unreviewed" | "rule" | "order" | "override" | "redundant";
@@ -65,7 +66,11 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
   const run = useAction();
   const [includeDisabled, setIncludeDisabled] = useState(false);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<Filter>("all");
+  const { route } = useNavigation();
+  const [filter, setFilter] = useState<Filter>(FILTERS.includes(route.filter as Filter) ? (route.filter as Filter) : "all");
+  useEffect(() => {
+    if (FILTERS.includes(route.filter as Filter)) setFilter(route.filter as Filter);
+  }, [route.filter]);
   const [group, setGroup] = useState<"pair" | "mod">("pair");
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [focused, setFocused] = useState<string | null>(null);

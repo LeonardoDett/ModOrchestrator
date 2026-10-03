@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"slices"
+	"strconv"
 	"strings"
 
 	"modorchestrator/internal/core/application/ports"
@@ -16,6 +17,16 @@ import (
 
 // ErrUnknown is returned for keys outside the available catalog.
 var ErrUnknown = errors.New("settings: unknown setting")
+
+// ErrReadOnly is returned when a setting cannot be stored: it is shown only
+// (app.dataDir) or it changes through an operation (staging, method).
+var ErrReadOnly = errors.New("settings: setting is not editable here")
+
+// Preferences reports the OS preferences derived defaults follow
+// ("segue o SO", core/13).
+type Preferences interface {
+	ReduceMotion() bool
+}
 
 // Effective is a setting with the value that applies now.
 type Effective struct {
@@ -32,6 +43,10 @@ type Service struct {
 	repo    ports.Settings
 	locale  ports.SystemLocale
 	release domain.Release
+	// DataDir is the application data folder (app.dataDir, shown only).
+	DataDir string
+	// Prefs gives the OS preferences (nil: none known).
+	Prefs Preferences
 }
 
 // NewService wires the service; only settings of release r are exposed.
@@ -78,8 +93,10 @@ func (s *Service) AppValue(ctx context.Context, key string) (Effective, error) {
 // SetApp validates and stores an explicit app-scoped value. Choosing the
 // default value stores it explicitly: the user picked it.
 func (s *Service) SetApp(ctx context.Context, key, value string) error {
-	if _, err := s.appDef(key); err != nil {
+	if d, err := s.appDef(key); err != nil {
 		return err
+	} else if d.ReadOnly {
+		return fmt.Errorf("%w: %q", ErrReadOnly, key)
 	}
 	v, err := domain.NewValue(domain.ScopeApp, "", key, value)
 	if err != nil {
@@ -123,6 +140,10 @@ func (s *Service) derivedDefault(d domain.Def) string {
 	switch d.Key {
 	case "ui.language":
 		return MatchLanguage(s.locale.Language(), d.Options)
+	case "ui.reduceMotion":
+		return strconv.FormatBool(s.Prefs != nil && s.Prefs.ReduceMotion())
+	case "app.dataDir":
+		return s.DataDir
 	}
 	return ""
 }
@@ -168,9 +189,9 @@ func (s *Service) InstanceValue(ctx context.Context, instance, key string) (Effe
 	return s.effective(d, explicit), nil
 }
 
-// Instance returns the instance-scoped settings among keys (catalog order),
-// for the parts of Settings that exist so far (F7: Mods › Deploy and
-// Interface › Automation). The full screen is F12.
+// Instance returns the instance-scoped settings among keys (catalog order);
+// nil keys means every editable one. Settings changed by an operation
+// (ByOperation) are never listed: their value lives in the instance.
 func (s *Service) Instance(ctx context.Context, instance string, keys []string) ([]Effective, error) {
 	stored, err := s.repo.List(ctx, domain.ScopeInstance, instance)
 	if err != nil {
@@ -182,7 +203,7 @@ func (s *Service) Instance(ctx context.Context, instance string, keys []string) 
 	}
 	var out []Effective
 	for _, d := range domain.Available(s.release) {
-		if d.Scope == domain.ScopeInstance && slices.Contains(keys, d.Key) {
+		if d.Scope == domain.ScopeInstance && !d.ByOperation && (keys == nil || slices.Contains(keys, d.Key)) {
 			out = append(out, s.effective(d, explicit))
 		}
 	}
@@ -191,8 +212,10 @@ func (s *Service) Instance(ctx context.Context, instance string, keys []string) 
 
 // SetInstance validates and stores an explicit instance-scoped value.
 func (s *Service) SetInstance(ctx context.Context, instance, key, value string) error {
-	if _, err := s.instanceDef(key); err != nil {
+	if d, err := s.instanceDef(key); err != nil {
 		return err
+	} else if d.ByOperation {
+		return fmt.Errorf("%w: %q", ErrReadOnly, key)
 	}
 	v, err := domain.NewValue(domain.ScopeInstance, instance, key, value)
 	if err != nil {
@@ -232,6 +255,40 @@ func (s *Service) AppSummary(ctx context.Context) (map[string]string, error) {
 			continue
 		}
 		out[e.Def.Key] = e.Value
+	}
+	return out, nil
+}
+
+// RestartValues returns the effective values of the settings that apply
+// only after a restart. The composition root keeps them as read at startup
+// and RestartPending compares against them.
+func (s *Service) RestartValues(ctx context.Context) (map[string]string, error) {
+	all, err := s.App(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := map[string]string{}
+	for _, e := range all {
+		if e.Def.RestartRequired {
+			out[e.Def.Key] = e.Value
+		}
+	}
+	return out, nil
+}
+
+// RestartPending lists the restart-required settings whose effective value
+// differs from the one the running process started with ("Reiniciar
+// agora", core/13).
+func (s *Service) RestartPending(ctx context.Context, startup map[string]string) ([]string, error) {
+	now, err := s.RestartValues(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var out []string
+	for _, d := range domain.Available(s.release) {
+		if v, ok := now[d.Key]; ok && startup[d.Key] != v {
+			out = append(out, d.Key)
+		}
 	}
 	return out, nil
 }

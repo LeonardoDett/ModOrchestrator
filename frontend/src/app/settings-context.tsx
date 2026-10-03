@@ -52,6 +52,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     [reload],
   );
 
+  const relativeTimes = get("ui.relativeTimes")?.value === "true";
   const languageValue = get("ui.language")?.value;
   const language: Language = isLanguage(languageValue) ? languageValue : FALLBACK.language;
   const density: Density = get("theme.density")?.value === "compact" ? "compact" : FALLBACK.density;
@@ -73,7 +74,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   return (
     <SettingsContext.Provider value={value}>
       <ThemeSync mode={get("theme.mode")?.value ?? FALLBACK.mode} theme={get("theme.id")?.value ?? FALLBACK.theme} />
-      <I18nProvider language={language}>{children}</I18nProvider>
+      <PresentationSync
+        reduceMotion={get("ui.reduceMotion")?.value === "true"}
+        compactHeaders={get("ui.compactHeaders")?.value === "true"}
+        fontScale={Number(get("theme.fontScale")?.value ?? "100") || 100}
+      />
+      <I18nProvider language={language} relativeTimes={relativeTimes}>
+        {children}
+      </I18nProvider>
     </SettingsContext.Provider>
   );
 }
@@ -86,6 +94,21 @@ function ThemeSync({ mode, theme }: { mode: string; theme: string }) {
   useEffect(() => {
     setTheme(theme);
   }, [theme, setTheme]);
+  return null;
+}
+
+/**
+ * Presentation settings of core/13 applied to the document: reduced motion
+ * and compact headers as data attributes (styled in app.css), the font
+ * scale as the root font size (every rem follows it).
+ */
+function PresentationSync({ reduceMotion, compactHeaders, fontScale }: { reduceMotion: boolean; compactHeaders: boolean; fontScale: number }) {
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.reduceMotion = String(reduceMotion);
+    root.dataset.compactHeaders = String(compactHeaders);
+    root.style.fontSize = fontScale === 100 ? "" : `${fontScale}%`;
+  }, [reduceMotion, compactHeaders, fontScale]);
   return null;
 }
 

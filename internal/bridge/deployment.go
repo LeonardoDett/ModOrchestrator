@@ -212,6 +212,11 @@ func (a *App) DeployStatus(instance string) (DeployStatusDTO, error) {
 	if err != nil {
 		return DeployStatusDTO{}, a.fail("deploy status", err, map[string]string{"instance": instance})
 	}
+	return toDeployStatusDTO(v), nil
+}
+
+func toDeployStatusDTO(v deployment.StatusView) DeployStatusDTO {
+	instance := string(v.Instance)
 	dto := DeployStatusDTO{
 		Instance: instance, Kind: string(v.Status.Kind), Reason: string(v.Status.Reason),
 		ActiveProfile: ProfileRefDTO{ID: v.ActiveProfile.ID, Name: v.ActiveProfile.Name},
@@ -230,7 +235,7 @@ func (a *App) DeployStatus(instance string) (DeployStatusDTO, error) {
 	for _, f := range v.Failures {
 		dto.Failures = append(dto.Failures, DeployFailureDTO{Location: toLocationDTO(f.Location), Action: string(f.Action), Code: f.Code})
 	}
-	return dto, nil
+	return dto
 }
 
 // PreviewDeploy computes what a deploy (or purge) would do, reading only.
@@ -383,12 +388,11 @@ func (a *App) MoveStaging(instance, path string) (string, error) {
 	return string(id), nil
 }
 
-// instanceSettingKeys are the instance settings the UI edits so far (F7).
-var instanceSettingKeys = []string{"automation.deployOnChange", "deploy.cleanEmptyDirs", "deploy.autoRestoreMissing"}
-
-// ListInstanceSettings returns the editable instance-scoped settings.
+// ListInstanceSettings returns every editable instance-scoped setting of
+// the catalog (core/13); the ones changed by an operation (staging,
+// ArchiveStore, method) are not listed.
 func (a *App) ListInstanceSettings(instance string) ([]SettingDTO, error) {
-	all, err := a.c.Settings.Instance(a.context(), instance, instanceSettingKeys)
+	all, err := a.c.Settings.Instance(a.context(), instance, nil)
 	if err != nil {
 		return nil, a.fail("list instance settings", err, map[string]string{"instance": instance})
 	}

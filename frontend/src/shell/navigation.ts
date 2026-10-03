@@ -43,6 +43,10 @@ export interface Route {
   mod?: { id: string; name: string };
   /** Settings tab to open. */
   settingsTab?: string;
+  /** Initial filter of a list screen (Overview numbers lead to the filtered screen). */
+  filter?: string;
+  /** Dashboard: open in customize mode (Settings › Interface › Dashboard). */
+  customize?: boolean;
   /** Plugins / Load Order: the plugin to select in the Inspector. */
   plugin?: string;
   /** Plugins: a dialog to open (DLG-23 rules, DLG-24 groups). */

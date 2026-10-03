@@ -51,3 +51,32 @@ func TestNewValue(t *testing.T) {
 		}
 	}
 }
+
+func TestListSetting(t *testing.T) {
+	opts := []string{"a", "b", "c"}
+	items, err := ParseList("c,-a", opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := []ListItem{{ID: "c"}, {ID: "a", Mode: ListHidden}, {ID: "b"}}
+	if len(items) != len(want) {
+		t.Fatalf("got %v", items)
+	}
+	for i := range want {
+		if items[i] != want[i] {
+			t.Fatalf("got %v, want %v", items, want)
+		}
+	}
+	if FormatList(items) != "c,-a,b" {
+		t.Fatalf("format: %s", FormatList(items))
+	}
+	for _, bad := range []string{"x", "a,a", "-a,+a"} {
+		if _, err := ParseList(bad, opts); err == nil {
+			t.Errorf("%q must be refused", bad)
+		}
+	}
+	d, _ := Lookup("ui.dashboard.dashlets")
+	if err := d.Validate("+first_steps,-whats_new"); err != nil {
+		t.Fatal(err)
+	}
+}

@@ -215,6 +215,7 @@ func (s *Service) pipeline(ctx context.Context, r *run) error {
 	if err := s.step(ctx, r, StepScan, func() error { return s.scanStep(ctx, r) }); err != nil {
 		return err
 	}
+	s.markVerified(ctx, r.inst.ID)
 	if err := s.step(ctx, r, StepPlan, func() error { return s.planStep(ctx, r) }); err != nil {
 		return err
 	}

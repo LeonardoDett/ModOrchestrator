@@ -15,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"modorchestrator/internal/core/application/backups"
 	"modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/library"
@@ -91,6 +92,11 @@ type Plugins interface {
 	Export(ctx context.Context, instance game.InstanceID) (string, error)
 }
 
+// Backups reports the last failed database backup (backup_failed).
+type Backups interface {
+	LastFailure(ctx context.Context) *backups.Failure
+}
+
 // Deps are the ports the service needs.
 type Deps struct {
 	Registry     *games.Registry
@@ -112,7 +118,9 @@ type Deps struct {
 	Library      Library
 	Commands     Profiles
 	Plugins      Plugins
-	IDs          operations.IDGenerator
+	// Backups is optional (nil: backup_failed never appears).
+	Backups Backups
+	IDs     operations.IDGenerator
 	Clock        operations.Clock
 }
 

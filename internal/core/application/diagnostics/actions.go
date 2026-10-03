@@ -276,7 +276,7 @@ func Commands() []string {
 func Places() []string {
 	return []string{
 		health.NavigateImport, health.NavigateRules, NavigateDeployPlan, NavigateDeployChanges, NavigateDeployResult,
-		NavigateSettingsMods, NavigateGame, NavigateStaging, NavigateGameFolder, "conflicts", "conflicts.mod",
+		NavigateSettingsMods, NavigateWorkarounds, NavigateGame, NavigateStaging, NavigateGameFolder, "conflicts", "conflicts.mod",
 		health.NavigatePlugins, health.NavigatePluginRules, health.NavigateLoadOrder, health.NavigateLoadOrderCheck,
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"time"
 
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/ports"
@@ -36,6 +37,8 @@ const (
 	ActionGameDetails     = "games.details"
 	ActionRelocateGame    = "games.relocate"
 	ActionOpenFolder      = "folder.open"
+	// ActionBackupDetails opens Settings › Workarounds (backup_failed).
+	ActionBackupDetails = "backups.details"
 	NavigateDeployPlan    = "deploy.plan"
 	NavigateDeployChanges = "deploy.changes"
 	NavigateDeployResult  = "deploy.result"
@@ -43,6 +46,8 @@ const (
 	NavigateGame          = "games.instance"
 	NavigateStaging       = "folder.staging"
 	NavigateGameFolder    = "folder.game"
+	// NavigateWorkarounds opens Settings › Workarounds (database backups).
+	NavigateWorkarounds = "settings.workarounds"
 
 	// lowSpace is the free space under which disk_space_low warns.
 	lowSpace = 2 << 30
@@ -392,6 +397,20 @@ func (s *Service) appChecks(ctx context.Context, inst game.Instance) ([]diagnost
 			Actions:  []diagnostic.Action{{ID: ActionOpenFolder, Target: &ref, NavigateTo: f.nav}},
 			Related:  []event.EntityRef{ref, {Kind: "volume", ID: f.which}},
 		})
+	}
+	// backup_failed is an app fact shown in every game (diagnostics are
+	// evaluated per instance); its key is the same everywhere.
+	if s.Backups != nil {
+		if f := s.Backups.LastFailure(ctx); f != nil {
+			ref := event.EntityRef{Kind: "app", ID: "database"}
+			p := diagnostic.Params{"kind": string(f.Kind), "at": f.At.Format(time.RFC3339), "reason": f.Reason}
+			specs = append(specs, diagnostic.Spec{
+				Code: diagnostic.CodeBackupFailed, Severity: diagnostic.SeverityWarning, Params: p,
+				Evidence: []diagnostic.Evidence{{Kind: "backup", Ref: &ref, Params: p}},
+				Actions:  []diagnostic.Action{{ID: ActionBackupDetails, NavigateTo: NavigateWorkarounds}},
+				Related:  []event.EntityRef{ref},
+			})
+		}
 	}
 	return build(specs...)
 }

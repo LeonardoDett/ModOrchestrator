@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 )
 
 // ErrInvalid is returned for unknown keys or invalid values.
@@ -31,6 +32,10 @@ const (
 	TypeInt  Type = "int"
 	TypeEnum Type = "enum"
 	TypePath Type = "path"
+	// TypeList is an ordered list of option ids separated by commas; each
+	// id may carry a mode prefix ("-" hidden, "+" pinned). Used by the
+	// dashboard layout (ui.dashboard.dashlets).
+	TypeList Type = "list"
 )
 
 // Release says when a setting becomes available; later releases are
@@ -72,6 +77,12 @@ type Def struct {
 	Advanced       bool
 	// RestartRequired shows the "Reiniciar agora" notice.
 	RestartRequired bool
+	// ReadOnly settings are shown, never stored (app.dataDir).
+	ReadOnly bool
+	// ByOperation means the value lives in the game instance and changes
+	// only through an operation with preview (move staging, change method:
+	// ui/telas/settings-extensions.md); it is never stored as a setting.
+	ByOperation bool
 }
 
 // Catalog is the V1 settings catalog of core/13, in tab order.
@@ -84,6 +95,7 @@ var Catalog = []Def{
 	{Key: "ui.reduceMotion", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1, DerivedDefault: true},
 	{Key: "ui.compactHeaders", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "false"},
 	{Key: "ui.advancedMode", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "false"},
+	{Key: "ui.dashboard.dashlets", Scope: ScopeApp, Type: TypeList, Tab: TabInterface, Release: V1, Default: strings.Join(Dashlets, ","), Options: Dashlets},
 	{Key: "automation.deployOnChange", Scope: ScopeInstance, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "true"},
 	{Key: "automation.enableOnInstall", Scope: ScopeInstance, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "true"},
 	{Key: "automation.deployDelayMs", Scope: ScopeApp, Type: TypeInt, Tab: TabInterface, Release: V1, Default: "1500", Min: 0, Max: 60000, Advanced: true},
@@ -92,6 +104,7 @@ var Catalog = []Def{
 	{Key: "app.startMinimized", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1x, Default: "false"},
 	{Key: "automation.installOnDownload", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V2, Default: "false"},
 
+	{Key: "app.dataDir", Scope: ScopeApp, Type: TypePath, Tab: TabApplication, Release: V1, DerivedDefault: true, ReadOnly: true},
 	{Key: "app.logLevel", Scope: ScopeApp, Type: TypeEnum, Tab: TabApplication, Release: V1, Default: "info", Options: []string{"error", "warn", "info", "debug"}},
 	{Key: "app.gpuAcceleration", Scope: ScopeApp, Type: TypeBool, Tab: TabApplication, Release: V1, Default: "true", RestartRequired: true},
 	{Key: "app.updateCheck", Scope: ScopeApp, Type: TypeBool, Tab: TabApplication, Release: V1, Default: "false"},
@@ -101,11 +114,11 @@ var Catalog = []Def{
 	{Key: "snapshots.autoRetention", Scope: ScopeApp, Type: TypeInt, Tab: TabApplication, Release: V1, Default: "20", Min: 1, Max: 500},
 	{Key: "snapshots.bulkThreshold", Scope: ScopeApp, Type: TypeInt, Tab: TabApplication, Release: V1, Default: "10", Min: 1, Max: 10000},
 
-	{Key: "mods.stagingPath", Scope: ScopeInstance, Type: TypePath, Tab: TabMods, Release: V1, DerivedDefault: true},
+	{Key: "mods.stagingPath", Scope: ScopeInstance, Type: TypePath, Tab: TabMods, Release: V1, DerivedDefault: true, ByOperation: true},
 	{Key: "mods.useSuggestedStaging", Scope: ScopeApp, Type: TypeBool, Tab: TabMods, Release: V1, Default: "true"},
-	{Key: "mods.archiveStorePath", Scope: ScopeInstance, Type: TypePath, Tab: TabMods, Release: V1, DerivedDefault: true},
+	{Key: "mods.archiveStorePath", Scope: ScopeInstance, Type: TypePath, Tab: TabMods, Release: V1, DerivedDefault: true, ByOperation: true},
 	{Key: "mods.importRetention", Scope: ScopeApp, Type: TypeEnum, Tab: TabMods, Release: V1, Default: "copy", Options: []string{"copy", "move", "none"}},
-	{Key: "deploy.method", Scope: ScopeInstance, Type: TypeEnum, Tab: TabMods, Release: V1, DerivedDefault: true, Options: []string{"hardlink", "symlink", "copy"}},
+	{Key: "deploy.method", Scope: ScopeInstance, Type: TypeEnum, Tab: TabMods, Release: V1, DerivedDefault: true, Options: []string{"hardlink", "symlink", "copy"}, ByOperation: true},
 	{Key: "deploy.cleanEmptyDirs", Scope: ScopeInstance, Type: TypeBool, Tab: TabMods, Release: V1, Default: "true"},
 	{Key: "deploy.autoRestoreMissing", Scope: ScopeInstance, Type: TypeBool, Tab: TabMods, Release: V1, Default: "false"},
 	{Key: "deploy.verifyOnFocus", Scope: ScopeApp, Type: TypeBool, Tab: TabMods, Release: V1, Default: "true"},
@@ -160,6 +173,10 @@ func (d Def) Validate(value string) error {
 	case TypePath:
 		if value == "" {
 			return fmt.Errorf("%w: %s expects a path", ErrInvalid, d.Key)
+		}
+	case TypeList:
+		if _, err := ParseList(value, d.Options); err != nil {
+			return fmt.Errorf("%w: %s: %v", ErrInvalid, d.Key, err)
 		}
 	default:
 		return fmt.Errorf("%w: %s has unknown type %q", ErrInvalid, d.Key, d.Type)

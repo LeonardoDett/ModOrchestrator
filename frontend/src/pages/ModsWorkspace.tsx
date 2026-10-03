@@ -83,7 +83,10 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const cycle = useRuleCycle(instance);
 
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState<StatusFilter>("all");
+  const [status, setStatus] = useState<StatusFilter>(route.filter === "enabled" || route.filter === "disabled" ? route.filter : "all");
+  useEffect(() => {
+    if (route.filter === "enabled" || route.filter === "disabled") setStatus(route.filter);
+  }, [route.filter]);
   const [category, setCategory] = useState("");
   const [group, setGroup] = useState("none");
   const [sort, setSort] = useState<DataTableSort | null>(PRIORITY_SORT);

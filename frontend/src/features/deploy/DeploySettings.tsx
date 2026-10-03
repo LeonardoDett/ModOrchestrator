@@ -1,122 +1,135 @@
-import { useEffect, useState } from "react";
-import { FolderInput, FolderOpen } from "lucide-react";
-import { Alert, Badge, Button, Input, Modal, Spinner, Stack, Switch, Typography } from "dettmann-ui";
+import { useEffect, useState, type ReactNode } from "react";
+import { FolderInput, FolderOpen, Sparkles } from "lucide-react";
+import { Alert, Badge, Button, Input, Modal, Spinner, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
-import { useDeployMethods, useInstanceDetails, useInstanceSettings } from "../../bridge/queries";
-import type { DeployMethod, Setting, StagingPreview } from "../../bridge/types";
+import { useDeployMethods, useInstanceDetails } from "../../bridge/queries";
+import type { ArchivesPreview, DeployMethod, GameFolders, ManagedGame, StagingPreview } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
+import { SettingLine, SettingsSection } from "../settings/SettingControls";
 import { formatBytes } from "./deploy-labels";
 
 /**
- * Settings › Mods of the active game (ui/telas/settings-extensions.md):
- * folders and deploy. Paths and the method are not edited in place: they
- * open DLG-18, an operation with preview (purge, change, deploy again).
+ * Settings › Mods of one game (ui/telas/settings-extensions.md): the
+ * folders and the deploy method. Paths and the method are not edited in
+ * place: they open an operation with preview (DLG-18 move staging, move the
+ * ArchiveStore, change method: purge, change, deploy again).
  */
-export function DeploySettings({ instance }: { instance: string }) {
+export function GameFoldersSection({ instance }: { instance: string }) {
   const { t } = useI18n();
+  const backend = useBackend();
+  const run = useAction();
   const details = useInstanceDetails(instance);
-  const methods = useDeployMethods(instance);
-  const settings = useInstanceSettings(instance);
-  const [moving, setMoving] = useState(false);
-  const [method, setMethod] = useState<DeployMethod | null>(null);
+  const [moving, setMoving] = useState<"staging" | "archives" | null>(null);
 
-  if (details.status === "loading" || methods.status === "loading") return <Spinner label={t("common.loading")} />;
+  if (details.status === "loading") return <Spinner label={t("common.loading")} />;
   if (details.status === "error") return <ErrorAlert title="games.loadError" error={details.error} onRetry={details.reload} />;
-  if (methods.status === "error") return <ErrorAlert title="settings.loadError" error={methods.error} onRetry={methods.reload} />;
-  if (details.status !== "ready" || methods.status !== "ready") return null;
+  if (details.status !== "ready") return null;
+  const g = details.data;
+  const rows = [
+    { which: "staging", label: "settings.mods.stagingPath.label", help: "settings.mods.stagingPath.description", path: g.staging },
+    { which: "archives", label: "settings.mods.archiveStorePath.label", help: "settings.mods.archiveStorePath.description", path: g.archiveStore },
+  ] as const;
 
   return (
-    <Stack gap="lg" className="max-w-2xl">
-      <section aria-labelledby="settings-folders" className="rounded-xl border border-border bg-surface p-4">
-        <Stack gap="sm">
-          <Typography id="settings-folders" variant="heading-6">
-            {t("settings.mods.folders")}
-          </Typography>
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="min-w-0 flex-1">
-              <Typography variant="body-sm" color="muted-fg">
-                {t("games.details.staging")}
-              </Typography>
-              <p className="break-all font-mono text-xs text-fg">{details.data.staging}</p>
-            </div>
-            <Button variant="outline" size="sm" startIcon={<FolderInput aria-hidden="true" />} onClick={() => setMoving(true)}>
-              {t("settings.mods.moveStaging")}
-            </Button>
-          </div>
-        </Stack>
-      </section>
-
-      <section aria-labelledby="settings-deploy" className="rounded-xl border border-border bg-surface p-4">
-        <Stack gap="sm">
-          <Typography id="settings-deploy" variant="heading-6">
-            {t("settings.mods.deploy")}
-          </Typography>
-          <Typography variant="body-sm" color="muted-fg">
-            {t("settings.mods.methodHelp")}
-          </Typography>
-          <ul className="divide-y divide-border rounded-lg border border-border">
-            {methods.data.map((m) => (
-              <li key={m.method} className="flex flex-wrap items-center gap-3 px-3 py-2">
-                <div className="min-w-0 flex-1">
-                  <Typography variant="body-sm" className="font-medium">
-                    {t(`deploy.method.${m.method}` as MessageKey)}
-                  </Typography>
-                  <Typography variant="caption" color="muted-fg">
-                    {m.available ? t(`settings.mods.methodAbout.${m.method}` as MessageKey) : t(`deploy.methodReason.${m.reason ?? "unknown"}` as MessageKey)}
-                  </Typography>
-                </div>
-                {m.preferred ? (
-                  <Badge tone="success">{t("settings.mods.inUse")}</Badge>
-                ) : m.available ? (
-                  <Button size="sm" variant="outline" onClick={() => setMethod(m)}>
-                    {t("settings.mods.useMethod")}
-                  </Button>
-                ) : (
-                  <Badge variant="muted">{t("settings.mods.unavailable")}</Badge>
-                )}
-              </li>
-            ))}
-          </ul>
-          {settings.status === "ready" ? settings.data.map((s) => <InstanceSwitch key={s.key} instance={instance} setting={s} onSaved={settings.reload} />) : null}
-        </Stack>
-      </section>
-
-      {moving ? <MoveStagingDialog instance={instance} onClose={() => setMoving(false)} /> : null}
-      {method ? <ChangeMethodDialog instance={instance} method={method} onClose={() => setMethod(null)} /> : null}
-    </Stack>
+    <SettingsSection id="mods-folders" title={t("settings.mods.folders")}>
+      {rows.map((r) => (
+        <SettingLine key={r.which} label={t(r.label)} description={t(r.help)}>
+          <span className="max-w-xs break-all font-mono text-xs text-fg">{r.path}</span>
+          <Button size="sm" variant="ghost" startIcon={<FolderOpen aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.openInstanceFolder(instance, r.which))}>
+            {t("settings.open")}
+          </Button>
+          <Button size="sm" variant="outline" startIcon={<FolderInput aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => setMoving(r.which)}>
+            {t("settings.mods.moveStaging")}
+          </Button>
+        </SettingLine>
+      ))}
+      {moving === "staging" ? <MoveStagingDialog instance={instance} game={g} onClose={() => setMoving(null)} /> : null}
+      {moving === "archives" ? <MoveArchivesDialog instance={instance} game={g} onClose={() => setMoving(null)} /> : null}
+    </SettingsSection>
   );
 }
 
-function InstanceSwitch({ instance, setting, onSaved }: { instance: string; setting: Setting; onSaved: () => void }) {
-  const i18n = useI18n();
-  const { t } = i18n;
+/** Deploy section of Settings › Mods: methods (DLG-18) and the switches the caller adds. */
+export function DeployMethodSection({ instance, children }: { instance: string; children?: ReactNode }) {
+  const { t } = useI18n();
+  const methods = useDeployMethods(instance);
+  const [method, setMethod] = useState<DeployMethod | null>(null);
+
+  if (methods.status === "loading") return <Spinner label={t("common.loading")} />;
+  if (methods.status === "error") return <ErrorAlert title="settings.loadError" error={methods.error} onRetry={methods.reload} />;
+  if (methods.status !== "ready") return null;
+
+  return (
+    <SettingsSection id="mods-deploy" title={t("settings.mods.deploy")} description={t("settings.mods.methodHelp")}>
+      {methods.data.map((m) => (
+        <SettingLine
+          key={m.method}
+          label={t(`deploy.method.${m.method}` as MessageKey)}
+          description={m.available ? t(`settings.mods.methodAbout.${m.method}` as MessageKey) : t(`deploy.methodReason.${m.reason ?? "unknown"}` as MessageKey)}
+        >
+          {m.preferred ? (
+            <Badge tone="success">{t("settings.mods.inUse")}</Badge>
+          ) : m.available ? (
+            <Button size="sm" variant="outline" onClick={() => setMethod(m)}>
+              {t("settings.mods.useMethod")}
+            </Button>
+          ) : (
+            <Badge variant="muted">{t("settings.mods.unavailable")}</Badge>
+          )}
+        </SettingLine>
+      ))}
+      {children}
+      {method ? <ChangeMethodDialog instance={instance} method={method} onClose={() => setMethod(null)} /> : null}
+    </SettingsSection>
+  );
+}
+
+/** "Sugerir": the folder the assistant would propose for this game (core/11 §4). */
+function useSuggestion(game: ManagedGame, pick: (f: GameFolders) => string) {
   const backend = useBackend();
   const run = useAction();
-  const label = `settings.${setting.key}.label`;
-  const description = `settings.${setting.key}.description`;
+  return async () => {
+    const r = await run(() => backend.suggestGameFolders(game.gameId, game.root, game.name), { quiet: true });
+    return r.ok ? pick(r.value) : "";
+  };
+}
+
+/** Folder field with "Sugerir" and "Procurar…" (ui/telas/settings-extensions.md). */
+function FolderField({ label, value, onChange, onBrowse, onSuggest }: { label: string; value: string; onChange: (v: string) => void; onBrowse: () => void; onSuggest: () => void }) {
+  const { t } = useI18n();
   return (
-    <Switch
-      checked={setting.value === "true"}
-      label={i18n.has(label) ? t(label) : setting.key}
-      description={i18n.has(description) ? t(description) : undefined}
-      onCheckedChange={(on) =>
-        void run(() => backend.setInstanceSetting(instance, setting.key, String(on))).then((r) => {
-          if (r.ok) onSaved();
-        })
-      }
-    />
+    <Input.Root fullWidth value={value} onChange={(v: string) => onChange(v)}>
+      <Input.Label>{label}</Input.Label>
+      <div className="flex gap-2">
+        <Input.Box className="flex-1">
+          <Input.Field />
+        </Input.Box>
+        <Button variant="ghost" startIcon={<Sparkles aria-hidden="true" />} onClick={onSuggest}>
+          {t("settings.suggest")}
+        </Button>
+        <Button variant="outline" startIcon={<FolderOpen aria-hidden="true" />} onClick={onBrowse}>
+          {t("wizard.browse")}
+        </Button>
+      </div>
+    </Input.Root>
   );
+}
+
+function problemKey(i18n: ReturnType<typeof useI18n>, problem?: string, reason?: string): string {
+  if (!problem) return "";
+  return i18n.has(`error.${problem}.${reason}`) ? `error.${problem}.${reason}` : `error.${problem}`;
 }
 
 /** DLG-18 Mover staging: preview of space, purge and deploy. */
-function MoveStagingDialog({ instance, onClose }: { instance: string; onClose: () => void }) {
+function MoveStagingDialog({ instance, game, onClose }: { instance: string; game: ManagedGame; onClose: () => void }) {
   const i18n = useI18n();
   const { t } = i18n;
   const backend = useBackend();
   const run = useAction();
+  const suggest = useSuggestion(game, (f) => f.suggestedStaging || f.staging);
   const [path, setPath] = useState("");
   const [preview, setPreview] = useState<StagingPreview | null>(null);
   const [error, setError] = useState<UIError | null>(null);
@@ -143,7 +156,7 @@ function MoveStagingDialog({ instance, onClose }: { instance: string; onClose: (
     if (result.ok) onClose();
     else setError(result.error);
   };
-  const problem = preview?.problem ? (i18n.has(`error.${preview.problem}.${preview.reason}`) ? `error.${preview.problem}.${preview.reason}` : `error.${preview.problem}`) : "";
+  const problem = problemKey(i18n, preview?.problem, preview?.reason);
 
   return (
     <Modal.Root open onOpenChange={(open) => !open && !busy && onClose()}>
@@ -153,17 +166,7 @@ function MoveStagingDialog({ instance, onClose }: { instance: string; onClose: (
         </Modal.Header>
         <Modal.Body>
           <Stack gap="md">
-            <Input.Root fullWidth value={path} onChange={(v: string) => setPath(v)}>
-              <Input.Label>{t("settings.mods.newStaging")}</Input.Label>
-              <div className="flex gap-2">
-                <Input.Box className="flex-1">
-                  <Input.Field />
-                </Input.Box>
-                <Button variant="outline" startIcon={<FolderOpen aria-hidden="true" />} onClick={() => void browse()}>
-                  {t("wizard.browse")}
-                </Button>
-              </div>
-            </Input.Root>
+            <FolderField label={t("settings.mods.newStaging")} value={path} onChange={setPath} onBrowse={() => void browse()} onSuggest={() => void suggest().then(setPath)} />
             {preview && !preview.problem ? (
               <Stack gap="xs">
                 <Typography variant="body-sm">{t("settings.mods.moveSize", { size: formatBytes(preview.bytes) })}</Typography>
@@ -176,6 +179,83 @@ function MoveStagingDialog({ instance, onClose }: { instance: string; onClose: (
                     <Alert.Description>{t("settings.mods.moveNoHardlink")}</Alert.Description>
                   </Alert.Root>
                 ) : null}
+              </Stack>
+            ) : null}
+            {problem ? (
+              <Alert.Root variant="danger">
+                <Alert.Description>{t(problem as MessageKey, { folder: preview?.to ?? "", reason: preview?.reason ?? "" })}</Alert.Description>
+              </Alert.Root>
+            ) : null}
+            {error ? (
+              <Alert.Root variant="danger">
+                <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
+              </Alert.Root>
+            ) : null}
+          </Stack>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="outline" disabled={busy} onClick={onClose}>
+            {t("common.cancel")}
+          </Button>
+          <Button disabled={busy || !preview || Boolean(preview.problem)} onClick={() => void move()}>
+            {t("settings.mods.move")}
+          </Button>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal.Root>
+  );
+}
+
+/** Move the ArchiveStore (core/13 mods.archiveStorePath: "mudar = mover archives"). */
+function MoveArchivesDialog({ instance, game, onClose }: { instance: string; game: ManagedGame; onClose: () => void }) {
+  const i18n = useI18n();
+  const { t } = i18n;
+  const backend = useBackend();
+  const run = useAction();
+  const suggest = useSuggestion(game, (f) => f.archiveStore);
+  const [path, setPath] = useState("");
+  const [preview, setPreview] = useState<ArchivesPreview | null>(null);
+  const [error, setError] = useState<UIError | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    setPreview(null);
+    setError(null);
+    if (!path.trim()) return;
+    const timer = setTimeout(() => {
+      backend.previewMoveArchives(instance, path).then(setPreview, (e: unknown) => setError(toUIError(e)));
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [backend, instance, path]);
+
+  const browse = async () => {
+    const picked = await run(() => backend.pickFolder(t("settings.mods.pickArchives")), { quiet: true });
+    if (picked.ok && picked.value) setPath(picked.value);
+  };
+  const move = async () => {
+    setBusy(true);
+    const result = await run(() => backend.moveArchiveStore(instance, path), { quiet: true });
+    setBusy(false);
+    if (result.ok) onClose();
+    else setError(result.error);
+  };
+  const problem = problemKey(i18n, preview?.problem, preview?.reason);
+
+  return (
+    <Modal.Root open onOpenChange={(open) => !open && !busy && onClose()}>
+      <Modal.Content size="md" aria-describedby={undefined}>
+        <Modal.Header>
+          <Modal.Title>{t("settings.mods.moveArchivesTitle")}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Stack gap="md">
+            <FolderField label={t("settings.mods.newArchives")} value={path} onChange={setPath} onBrowse={() => void browse()} onSuggest={() => void suggest().then(setPath)} />
+            {preview && !preview.problem ? (
+              <Stack gap="xs">
+                <Typography variant="body-sm">{t("settings.mods.moveArchivesSize", { size: formatBytes(preview.bytes) })}</Typography>
+                <Typography variant="body-sm" color="muted-fg">
+                  {t(preview.sameVolume ? "settings.mods.moveSameVolume" : "settings.mods.moveCopy")}
+                </Typography>
               </Stack>
             ) : null}
             {problem ? (

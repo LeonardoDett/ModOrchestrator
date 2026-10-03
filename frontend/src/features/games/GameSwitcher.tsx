@@ -8,8 +8,7 @@ import { useAction } from "./use-action";
 
 /**
  * Launcher area of the title bar (ui/00 §2.1): the active game and a switch
- * between managed instances. Play arrives with F12 (D045); the area reserved
- * for it stays empty until then (anti-pattern 18).
+ * between managed instances. Play sits next to it (PlayButton, D045).
  */
 export function GameSwitcher() {
   const { t } = useI18n();

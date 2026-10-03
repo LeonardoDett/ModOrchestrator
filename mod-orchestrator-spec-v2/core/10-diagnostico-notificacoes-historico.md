@@ -61,6 +61,8 @@ Severidade no modelo é `error` / `warning` / `info`, mais a lista `blocks[]` de
 
 Novos checks exigem entrada nesta tabela (mapa de impacto).
 
+A coluna "launch (aviso)" é catálogo (`diagnostic.WarnsBeforeLaunch`): esses códigos aparecem no DLG-26 com "Jogar mesmo assim"; os que bloqueiam `launch` deixam só as ações (D090). `backup_failed` é fato do app mostrado em todos os jogos (D091 item 4).
+
 ### 1.2 Diagnostic
 Campos em core/01. Regras:
 - `key = checkId + subject` estável; permite supressão e "novo desde".

@@ -21,6 +21,10 @@ type Paths struct {
 	Logs string
 	// Cache holds discardable caches (core/14 §1: plugin headers).
 	Cache string
+	// Backups holds the database backups (core/14 §1, §3); RestorePending
+	// is the validated copy a restore puts in place at the next start.
+	Backups        string
+	RestorePending string
 }
 
 // Resolve returns the data paths, creating the root directory if needed.
@@ -45,5 +49,9 @@ func Resolve() (Paths, error) {
 		Database: filepath.Join(root, "state.db"),
 		Logs:     filepath.Join(root, "logs"),
 		Cache:    filepath.Join(root, "cache"),
+		Backups:  filepath.Join(root, "backups"),
+		// Next to the database: the rename that applies it stays in the
+		// same folder and volume.
+		RestorePending: filepath.Join(root, "state.restore-pending.db"),
 	}, nil
 }

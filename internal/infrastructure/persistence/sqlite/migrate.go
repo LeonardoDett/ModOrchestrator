@@ -66,6 +66,22 @@ func SchemaVersion(ctx context.Context, db *sql.DB) (int, error) {
 	return v, err
 }
 
+// PendingMigrations returns the applied schema version of a database that
+// may not have the migrations table yet (0 for a new database) and the
+// version this build migrates to.
+func PendingMigrations(ctx context.Context, db *sql.DB) (current, latest int, err error) {
+	var n int
+	if err := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM sqlite_master WHERE type = 'table' AND name = 'schema_migrations'`).Scan(&n); err != nil {
+		return 0, 0, err
+	}
+	if n > 0 {
+		if current, err = SchemaVersion(ctx, db); err != nil {
+			return 0, 0, err
+		}
+	}
+	return current, LatestSchemaVersion(), nil
+}
+
 // Migrate applies pending migrations, each in its own transaction. A
 // database newer than this build is refused rather than silently used.
 func Migrate(ctx context.Context, db *sql.DB) error {

@@ -52,6 +52,7 @@ export type Place =
   | "deploy.changes"
   | "deploy.result"
   | "settings.mods"
+  | "settings.workarounds"
   | "games.instance"
   | "folder.staging"
   | "folder.game"
@@ -72,6 +73,7 @@ export const PLACES: Record<Place, (c: PlaceContext) => Promise<void> | void> = 
   "deploy.changes": ({ deploy }) => deploy.openReview(),
   "deploy.result": ({ deploy }) => deploy.openFailures(),
   "settings.mods": ({ navigate }) => navigate({ view: "settings", settingsTab: "mods" }),
+  "settings.workarounds": ({ navigate }) => navigate({ view: "settings", settingsTab: "workarounds" }),
   "games.instance": ({ navigate }) => navigate({ view: "games" }),
   "folder.staging": async ({ d, backend, run }) => {
     await run(() => backend.openInstanceFolder(d.instance, "staging"));

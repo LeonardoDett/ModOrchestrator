@@ -134,6 +134,10 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `mods_incompatible`, `game_running` | preflight de deploy (e purge, para `game_running`): incompatíveis habilitados / jogo em execução (core/06 §4, D082) | `a`, `b`, `process` |
 | `diagnostic_not_found`, `diagnostic_action_invalid`, `diagnostic_not_suppressible` | ação de um diagnóstico já resolvido / não oferecida / suprimir bloqueante (core/10, D082) | `key`, `action`, `code` |
 | `history_entry_not_found`, `history_not_reversible`, `history_already_reverted`, `history_stale` | reverter entrada do histórico (core/10 §3, D082) | `entry`, `type` |
+| `setting_read_only` | setting só exibido ou alterado por operação (core/13, D090) | `key` |
+| `backup_failed`, `backup_not_found`, `backup_invalid`, `restore_not_pending` | backups e restauração do banco (core/14 §3–4, D090) | `kind`, `backup`, `path` |
+| `archives_unchanged` | mover o ArchiveStore para a mesma pasta (D090) | `folder` |
+| `launch_unavailable`, `launch_blocked`, `launch_needs_confirmation`, `launch_deploy_failed`, `launch_option_unknown`, `launch_start_failed` | Play (core/11 §6, core/04 §9, D090) | `reason`, `code`, `status`, `operation`, `option`, `exe` |
 
 Erros de operação (`OperationError`) também carregam `params` desde a F4 (D067), para a UI traduzir a mensagem com os mesmos parâmetros.
 

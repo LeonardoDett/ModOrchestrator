@@ -18,6 +18,7 @@ const (
 	CodeNotFound       = "not_found"
 	CodeSettingUnknown = "setting_unknown"
 	CodeSettingInvalid = "setting_invalid"
+	CodeSettingReadOnly = "setting_read_only"
 )
 
 // Error is what reaches the UI when a call fails: a stable code, parameters
@@ -57,6 +58,8 @@ func uiError(err error, params map[string]string) error {
 	}
 	code := CodeInternal
 	switch {
+	case errors.Is(err, appsettings.ErrReadOnly):
+		code = CodeSettingReadOnly
 	case errors.Is(err, appsettings.ErrUnknown):
 		code = CodeSettingUnknown
 	case errors.Is(err, settings.ErrInvalid):

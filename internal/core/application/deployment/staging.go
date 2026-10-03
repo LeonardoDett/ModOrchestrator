@@ -23,6 +23,8 @@ const stateMoves = "deployment.stagingMoves"
 type moveRecord struct {
 	From string `json:"from"`
 	To   string `json:"to"`
+	// Folder is "archives" for a move of the ArchiveStore ("" = staging).
+	Folder string `json:"folder,omitempty"`
 }
 
 // StagingPreview is what DLG-18 shows before moving the staging.
@@ -86,18 +88,44 @@ func cleanFolder(p string) string {
 // staging: absolute, different, not overlapping the game, its targets, the
 // other folders of the instance or of other instances; missing or empty.
 func (s *Service) checkNewStaging(ctx context.Context, inst game.Instance, to string) (code, reason string) {
+	return s.checkNewFolder(ctx, inst, folderStaging, to)
+}
+
+// managedFolder is a folder of the instance that can move: the staging or
+// the ArchiveStore (core/13 mods.stagingPath, mods.archiveStorePath).
+type managedFolder struct {
+	name, marker, same, foreign string
+	get                         func(game.Instance) string
+	set                         func(*game.Instance, string)
+}
+
+var (
+	folderStaging = managedFolder{name: "staging", marker: game.StagingMarker, same: CodeStagingSame, foreign: CodeStagingForeign,
+		get: func(i game.Instance) string { return i.Staging }, set: func(i *game.Instance, p string) { i.Staging = p }}
+	folderArchives = managedFolder{name: "archives", marker: game.ArchivesMarker, same: CodeArchivesSame, foreign: CodeFolderForeign,
+		get: func(i game.Instance) string { return i.ArchiveStore }, set: func(i *game.Instance, p string) { i.ArchiveStore = p }}
+)
+
+func folderOf(rec moveRecord) managedFolder {
+	if rec.Folder == folderArchives.name {
+		return folderArchives
+	}
+	return folderStaging
+}
+
+func (s *Service) checkNewFolder(ctx context.Context, inst game.Instance, f managedFolder, to string) (code, reason string) {
 	if game.Volume(to) == "" {
 		return CodeFolderInvalid, "not_absolute"
 	}
-	if game.SamePath(to, inst.Staging) {
-		return CodeStagingSame, ""
+	if game.SamePath(to, f.get(inst)) {
+		return f.same, ""
 	}
 	moved := inst
-	moved.Staging = to
+	f.set(&moved, to)
 	if err := moved.Validate(); err != nil {
 		return CodeFolderInvalid, "overlap"
 	}
-	if game.Overlaps(to, inst.Staging) {
+	if game.Overlaps(to, f.get(inst)) {
 		return CodeFolderInvalid, "overlap"
 	}
 	all, err := s.Instances.List(ctx)
@@ -117,16 +145,16 @@ func (s *Service) checkNewStaging(ctx context.Context, inst game.Instance, to st
 	obs := s.observe(ctx, to)
 	switch {
 	case obs.Unreadable:
-		return CodeStagingForeign, "unreadable"
+		return f.foreign, "unreadable"
 	case obs.Exists && !obs.IsDir:
 		return CodeFolderInvalid, "not_directory"
 	case obs.Exists:
 		entries, err := s.FS.ReadDir(ctx, to)
 		if err != nil {
-			return CodeStagingForeign, "unreadable"
+			return f.foreign, "unreadable"
 		}
 		if len(entries) > 0 {
-			return CodeStagingForeign, "not_empty"
+			return f.foreign, "not_empty"
 		}
 	}
 	return "", ""
@@ -331,6 +359,10 @@ func (s *Service) moveStaging(ctx context.Context, t *operations.Tracker, inst g
 // walk lists the files below dir (relative paths), skipping the marker and
 // leftovers of interrupted imports, which belong to the old place.
 func (s *Service) walk(ctx context.Context, root, rel string, out *[]string) error {
+	return s.walkFolder(ctx, folderStaging, root, rel, out)
+}
+
+func (s *Service) walkFolder(ctx context.Context, f managedFolder, root, rel string, out *[]string) error {
 	dir := root
 	if rel != "" {
 		dir = game.JoinPath(root, rel)
@@ -341,7 +373,7 @@ func (s *Service) walk(ctx context.Context, root, rel string, out *[]string) err
 	}
 	for _, e := range entries {
 		name := e.Name
-		if rel == "" && (strings.EqualFold(name, game.StagingMarker) || name == ".tmp" || strings.HasSuffix(name, ".installing") || strings.HasPrefix(name, ".modorchestrator-probe-")) {
+		if rel == "" && (strings.EqualFold(name, f.marker) || name == ".tmp" || strings.HasSuffix(name, ".installing") || strings.HasSuffix(name, ".partial") || strings.HasPrefix(name, ".modorchestrator-probe-")) {
 			continue
 		}
 		child := name
@@ -349,7 +381,7 @@ func (s *Service) walk(ctx context.Context, root, rel string, out *[]string) err
 			child = rel + `\` + name
 		}
 		if e.IsDir {
-			if err := s.walk(ctx, root, child, out); err != nil {
+			if err := s.walkFolder(ctx, f, root, child, out); err != nil {
 				return err
 			}
 			continue
@@ -388,7 +420,11 @@ func (s *Service) copyVerified(ctx context.Context, src, dst string, same bool) 
 // discardFolder removes a staging folder only if its marker proves it is
 // the instance's (D058).
 func (s *Service) discardFolder(ctx context.Context, instance game.InstanceID, dir string) {
-	if owner, ok := s.markerOwner(ctx, game.JoinPath(dir, game.StagingMarker)); ok && owner == instance {
+	s.discardManaged(ctx, folderStaging, instance, dir)
+}
+
+func (s *Service) discardManaged(ctx context.Context, f managedFolder, instance game.InstanceID, dir string) {
+	if owner, ok := s.markerOwner(ctx, game.JoinPath(dir, f.marker)); ok && owner == instance {
 		_ = s.FS.RemoveAll(ctx, dir)
 	}
 }
@@ -455,14 +491,154 @@ func (s *Service) Recover(ctx context.Context) error {
 		case errors.Is(err, ports.ErrNotFound):
 		case err != nil:
 			return err
-		case game.SamePath(inst.Staging, rec.To):
-			s.discardFolder(ctx, inst.ID, rec.From)
+		case game.SamePath(folderOf(rec).get(inst), rec.To):
+			s.discardManaged(ctx, folderOf(rec), inst.ID, rec.From)
 		default:
-			s.discardFolder(ctx, inst.ID, rec.To)
+			s.discardManaged(ctx, folderOf(rec), inst.ID, rec.To)
 		}
 		if err := s.recordMove(ctx, game.InstanceID(id), nil); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// ArchivesPreview is what the move of the ArchiveStore shows first.
+type ArchivesPreview struct {
+	From, To   string
+	Bytes      int64
+	Free       int64
+	SameVolume bool
+	Problem    string
+	Reason     string
+}
+
+// PreviewMoveArchives validates a new ArchiveStore and estimates the move
+// (core/13 mods.archiveStorePath: "mudar = mover archives").
+func (s *Service) PreviewMoveArchives(ctx context.Context, instance game.InstanceID, to string) (ArchivesPreview, error) {
+	inst, err := s.instance(ctx, instance)
+	if err != nil {
+		return ArchivesPreview{}, err
+	}
+	p := ArchivesPreview{From: inst.ArchiveStore, To: cleanFolder(to)}
+	p.Problem, p.Reason = s.checkNewFolder(ctx, inst, folderArchives, p.To)
+	var files []string
+	if err := s.walkFolder(ctx, folderArchives, inst.ArchiveStore, "", &files); err == nil {
+		for _, rel := range files {
+			p.Bytes += s.observe(ctx, game.JoinPath(inst.ArchiveStore, rel)).Evidence.Size
+		}
+	}
+	p.SameVolume, _ = s.FS.SameVolume(ctx, inst.ArchiveStore, p.To)
+	p.Free, _ = s.FS.FreeSpace(ctx, p.To)
+	if p.Problem == "" && !p.SameVolume && p.Free < p.Bytes {
+		p.Problem = CodeDiskFull
+	}
+	return p, nil
+}
+
+// MoveArchiveStore moves the retained archives to a new folder: copy file
+// by file with verification (hardlinks on the same volume), save the
+// instance, remove the old folder (only with the instance's marker).
+// Nothing is deployed from archives, so no purge is needed. Interrupted,
+// the ArchiveStore stays valid at its origin until the save.
+func (s *Service) MoveArchiveStore(ctx context.Context, instance game.InstanceID, to string) (operation.ID, error) {
+	inst, err := s.instance(ctx, instance)
+	if err != nil {
+		return "", err
+	}
+	to = cleanFolder(to)
+	if code, reason := s.checkNewFolder(ctx, inst, folderArchives, to); code != "" {
+		return "", fail(code, nil, "folder", to, "reason", reason)
+	}
+	release, err := s.Locks.Acquire(inst.ID, holderMoveArchives)
+	if err != nil {
+		return "", err
+	}
+	t, err := s.Ops.Enqueue(ctx, operations.Spec{Kind: KindMoveArchives, Subject: event.EntityRef{Kind: subjectInstance, ID: string(inst.ID)},
+		Steps: []string{StepValidate, StepCopy, StepSave, StepCleanup}})
+	if err != nil {
+		release()
+		return "", err
+	}
+	s.running.Add(1)
+	go func() {
+		defer s.running.Done()
+		defer release()
+		_ = s.Ops.Execute(context.WithoutCancel(ctx), t, func(ctx context.Context, t *operations.Tracker) error {
+			if err := t.BeginStep(ctx, StepValidate); err != nil {
+				return err
+			}
+			if err := t.CompleteStep(ctx, StepValidate); err != nil {
+				return err
+			}
+			return s.moveFolder(ctx, t, inst, folderArchives, to, EventArchivesMoved)
+		})
+	}()
+	return t.ID(), nil
+}
+
+// moveFolder copies a managed folder to "to", switches the instance to it
+// and removes the old one; the record in app_state lets recovery discard
+// the side that lost.
+func (s *Service) moveFolder(ctx context.Context, t *operations.Tracker, inst game.Instance, f managedFolder, to string, done event.Type) error {
+	if err := t.BeginStep(ctx, StepCopy); err != nil {
+		return err
+	}
+	from := f.get(inst)
+	if err := s.recordMove(ctx, inst.ID, &moveRecord{From: from, To: to, Folder: f.name}); err != nil {
+		return err
+	}
+	if err := s.FS.MkdirAll(ctx, to); err != nil {
+		return fail(fileErrorCode(err), err, "folder", to)
+	}
+	if err := s.FS.WriteFile(ctx, game.JoinPath(to, f.marker), game.NewFolderMarker(f.name, inst.ID)); err != nil {
+		return fail(fileErrorCode(err), err, "folder", to)
+	}
+	same, _ := s.FS.SameVolume(ctx, from, to)
+	var files []string
+	if err := s.walkFolder(ctx, f, from, "", &files); err != nil {
+		return err
+	}
+	for i, rel := range files {
+		if ctx.Err() != nil {
+			return ctx.Err()
+		}
+		if err := s.copyVerified(ctx, game.JoinPath(from, rel), game.JoinPath(to, rel), same); err != nil {
+			return fail(fileErrorCode(err), err, "path", rel)
+		}
+		if i%markBatch == 0 {
+			_ = t.Progress(ctx, int64(i), int64(len(files)))
+		}
+	}
+	if err := t.CompleteStep(ctx, StepCopy); err != nil {
+		return err
+	}
+	if err := t.BeginStep(ctx, StepSave); err != nil {
+		return err
+	}
+	cur, err := s.instance(ctx, inst.ID)
+	if err != nil {
+		return err
+	}
+	f.set(&cur, to)
+	if err := s.Instances.Save(ctx, cur); err != nil {
+		return err
+	}
+	if err := s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
+		tx.Emit(s.newEvent(done, inst.ID, t.ID(), map[string]string{"from": from, "to": to, "files": strconv.Itoa(len(files))}))
+		return nil
+	}); err != nil {
+		return err
+	}
+	if err := t.CompleteStep(ctx, StepSave); err != nil {
+		return err
+	}
+	if err := t.BeginStep(ctx, StepCleanup); err != nil {
+		return err
+	}
+	s.discardManaged(ctx, f, inst.ID, from)
+	if err := s.recordMove(ctx, inst.ID, nil); err != nil {
+		return err
+	}
+	return t.CompleteStep(ctx, StepCleanup)
 }

@@ -167,6 +167,8 @@ Docs: core/13, ui/telas/settings-extensions.md, ui/telas/dashboard.md, ui/telas/
 Entregas: todas as abas de Settings V1, Extensions (lista de embutidos), Dashboard com dashlets e personalização, Overview completa, Play com pré-lançamento e detecção de jogo em execução, backups/restauração do banco (core/14 §3–4).
 Demonstração: da instalação do app até jogar Skyrim com mods usando só a UI.
 
+Estado: implementada (D090, D092; D091 aguarda confirmação). Testes: domínio (`settings`: lista, catálogo), aplicação (`settings`: somente leitura, por operação, padrão derivado, reinício; `backups`: automático só com mudança, retenção, falha, restauração), infraestrutura (`sqlite/backup_test.go`: backup online, validação, restauração pendente aplicada antes de abrir), adapter (`skyrimse/launch_test.go`), integração em disco real (`launch_test.go`: Play implanta antes e lança, confirmação sem auto-deploy, opção SKSE, bloqueio por outro gerenciador, transições do processo; `overview_test.go`; `TestMoveArchiveStore`; `TestCleanTemp`), lib (`input-number.test.tsx`) e UI (`pages/F12.test.tsx`: abas V1 sem reservadas, settings por jogo, modo avançado e stepper, aviso de reinício, DLG-27, Extensions, Play e DLG-26, Overview, Dashboard). Revisão visual no `wails dev` (claro/escuro). Pendente: demonstração manual da instalação até jogar Skyrim real.
+
 ## F13: Polimento de UX
 
 Docs: ui/00–04, todos os ui/telas.

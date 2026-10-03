@@ -509,3 +509,50 @@ func TestInterruptedJournalBlocksUntilReconciled(t *testing.T) {
 	_ = errors.New
 	_ = strings.TrimSpace
 }
+
+// core/13 mods.archiveStorePath: changing it moves the retained archives
+// (verified copy, instance saved, old folder removed only with its marker);
+// the mods keep reinstalling from the new place.
+func TestMoveArchiveStore(t *testing.T) {
+	e := newEnvWith(t, envOptions{method: game.MethodHardlink})
+	ids := e.installFiles(deployMods, "Alpha")
+	old := e.inst.ArchiveStore
+	to := filepath.Join(e.dir, "mo", "archives2")
+	p, err := e.dep.PreviewMoveArchives(ctx, e.inst.ID, to)
+	if err != nil || p.Problem != "" || p.Bytes == 0 || !p.SameVolume {
+		t.Fatalf("preview = %+v %v", p, err)
+	}
+	if same, _ := e.dep.PreviewMoveArchives(ctx, e.inst.ID, old); same.Problem != deploysvc.CodeArchivesSame {
+		t.Fatalf("same folder = %+v", same)
+	}
+	if bad, _ := e.dep.PreviewMoveArchives(ctx, e.inst.ID, filepath.Join(e.inst.Staging, "x")); bad.Problem == "" {
+		t.Fatal("an ArchiveStore inside the staging is refused")
+	}
+	op, err := e.dep.MoveArchiveStore(ctx, e.inst.ID, to)
+	if err != nil {
+		t.Fatal(err)
+	}
+	e.dep.Wait()
+	if o := e.op(op); o.Status != operation.StatusSucceeded {
+		t.Fatalf("move: %s %+v", o.Status, o.Error)
+	}
+	inst, _ := sqlite.NewGameInstanceRepository(e.db).Get(ctx, e.inst.ID)
+	if !game.SamePath(inst.ArchiveStore, to) {
+		t.Fatalf("archive store = %s", inst.ArchiveStore)
+	}
+	if _, err := os.Stat(old); !os.IsNotExist(err) {
+		t.Fatal("old folder removed")
+	}
+	if _, err := os.Stat(filepath.Join(to, game.ArchivesMarker)); err != nil {
+		t.Fatal("marker of the new folder")
+	}
+	e.inst = inst
+	reinstall, err := e.lib.ReinstallMods(ctx, e.inst.ID, ids)
+	if err != nil {
+		t.Fatal(err)
+	}
+	e.lib.Wait()
+	if o := e.op(reinstall[0]); o.Status != operation.StatusSucceeded {
+		t.Fatalf("reinstall from the moved archive: %s %+v", o.Status, o.Error)
+	}
+}

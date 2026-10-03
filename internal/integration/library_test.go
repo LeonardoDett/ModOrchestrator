@@ -711,3 +711,22 @@ func TestToggleAndModType(t *testing.T) {
 		t.Fatalf("files after type change = %v", got)
 	}
 }
+
+// Settings › Workarounds "Limpar arquivos temporários": leftovers of
+// operations go, mods stay; a busy instance is skipped.
+func TestCleanTemp(t *testing.T) {
+	e := newEnv(t)
+	e.installMods("Alpha")
+	e.write(filepath.Join(e.inst.Staging, ".tmp", "op1", "x.dds"), "x")
+	e.write(filepath.Join(e.inst.Staging, "abc.installing", "y.dds"), "y")
+	r, err := e.lib.CleanTemp(ctx)
+	if err != nil || r.Removed != 2 || r.Skipped != 0 {
+		t.Fatalf("clean = %+v %v", r, err)
+	}
+	if got := tree(t, e.inst.Staging); slices.ContainsFunc(got, func(p string) bool { return strings.Contains(p, ".tmp") || strings.Contains(p, ".installing") }) {
+		t.Fatalf("staging = %v", got)
+	}
+	if len(e.rows()) != 1 || len(e.files(e.only().ID)) == 0 {
+		t.Fatal("mods untouched")
+	}
+}

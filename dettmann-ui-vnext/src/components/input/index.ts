@@ -7,6 +7,7 @@ import { InputSelect, type SelectOption } from "./input.select";
 import { InputCombobox, type ComboboxOption } from "./input.combobox";
 import { InputMultiSelect } from "./input.multi-select";
 import { InputPin } from "./input.pin";
+import { InputNumber } from "./input.number";
 import { InputHelperText } from "./input.helper-text";
 import { InputError } from "./input.error";
 
@@ -54,6 +55,8 @@ export const Input = {
   MultiSelect: InputMultiSelect,
   /** OTP / verification code slots */
   Pin: InputPin,
+  /** Numeric stepper (draft committed on blur/Enter, clamped to min/max) */
+  Number: InputNumber,
   /** Helper text below the input */
   HelperText: InputHelperText,
   /** Error message display */

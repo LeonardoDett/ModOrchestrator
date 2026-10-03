@@ -109,3 +109,42 @@ func TestAppListsOnlyAvailableAppSettings(t *testing.T) {
 		}
 	}
 }
+
+type prefs bool
+
+func (p prefs) ReduceMotion() bool { return bool(p) }
+
+func TestDerivedDefaultsReadOnlyAndRestart(t *testing.T) {
+	ctx := context.Background()
+	svc, _ := newService("en")
+	svc.DataDir, svc.Prefs = `C:\data`, prefs(true)
+	if v, _ := svc.AppValue(ctx, "app.dataDir"); v.Value != `C:\data` {
+		t.Fatalf("dataDir: %+v", v)
+	}
+	if v, _ := svc.AppValue(ctx, "ui.reduceMotion"); v.Value != "true" || !v.IsDefault {
+		t.Fatalf("reduceMotion follows the OS: %+v", v)
+	}
+	if err := svc.SetApp(ctx, "app.dataDir", `D:\x`); !errors.Is(err, ErrReadOnly) {
+		t.Fatalf("dataDir is read-only: %v", err)
+	}
+	if err := svc.SetInstance(ctx, "i1", "deploy.method", "copy"); !errors.Is(err, ErrReadOnly) {
+		t.Fatalf("method changes through an operation: %v", err)
+	}
+	inst, err := svc.Instance(ctx, "i1", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, e := range inst {
+		if e.Def.ByOperation || e.Def.Scope != domain.ScopeInstance {
+			t.Errorf("%s must not be listed", e.Def.Key)
+		}
+	}
+	start, _ := svc.RestartValues(ctx)
+	if p, _ := svc.RestartPending(ctx, start); len(p) != 0 {
+		t.Fatalf("nothing changed: %v", p)
+	}
+	_ = svc.SetApp(ctx, "app.gpuAcceleration", "false")
+	if p, _ := svc.RestartPending(ctx, start); len(p) != 1 || p[0] != "app.gpuAcceleration" {
+		t.Fatalf("pending: %v", p)
+	}
+}

@@ -61,7 +61,7 @@ func (s *Service) Status(ctx context.Context, instance game.InstanceID) (StatusV
 		return StatusView{}, err
 	}
 	v := StatusView{Instance: instance, Method: in.inst.PreferredMethod, ActiveProfile: ProfileRef{ID: string(in.profile.ID()), Name: in.profile.Name()}}
-	input := deploystate.Input{ActiveProfile: deployment.ProfileID(in.profile.ID()), Desired: in.fingerprint, Verified: true}
+	input := deploystate.Input{ActiveProfile: deployment.ProfileID(in.profile.ID()), Desired: in.fingerprint, Verified: s.verified(ctx, instance)}
 	h, err := s.Manifests.Header(ctx, instance)
 	switch {
 	case err == nil:

@@ -101,6 +101,14 @@ A aba não aparece na V1 (anti-pattern 18). Chaves previstas V2: pasta de downlo
 | `theme.density` | app | comfortable/compact | comfortable | V1 |
 | Editor de cores/fontes (Vortex permite clonar tema) | app | — | — | V1.x |
 
+## Implementação (F12, D090/D091)
+
+- `app.dataDir` é só exibido (com "Abrir"); `mods.stagingPath`, `mods.archiveStorePath` e `deploy.method` vivem na instância e mudam por operação com prévia (mover staging, mover arquivos, trocar método), nunca como valor gravado.
+- `ui.dashboard.dashlets` é uma lista ordenada (`-id` oculto, `+id` fixado); a ordem muda em Dashboard › Personalizar.
+- Limites usam o stepper `Input.Number` (D092); avançados só com `ui.advancedMode`.
+- `app.updateCheck`/`app.updateChannel` ficam ocultos até a F15 (D091 item 1).
+- Reinício: aviso persistente com "Reiniciar agora" enquanto um setting `RestartRequired` difere do valor da inicialização ou uma restauração aguarda.
+
 ## Critérios de aceite
 
 - Todo setting V1 desta tabela existe, com o default indicado, e aparece na aba indicada.

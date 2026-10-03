@@ -4,6 +4,7 @@ import { Button } from "dettmann-ui";
 import logo from "../assets/logo.png";
 import { useBackend } from "../bridge/backend-context";
 import { GameSwitcher } from "../features/games/GameSwitcher";
+import { PlayButton } from "../features/launch/PlayButton";
 import { useI18n } from "../i18n/i18n";
 
 /** Wails frameless windows move by dragging elements with this CSS property. */
@@ -12,7 +13,7 @@ const noDrag = { "--wails-draggable": "no-drag" } as CSSProperties;
 
 /**
  * Custom title bar (ui/00 §2.1, ui.customTitleBar): launcher area (active
- * game select and Play arrive with games, F3/F12), a reserved area for the
+ * game select and Play, F3/F12), a reserved area for the
  * tools hotbar (V1.x, D045: space only, no action) and the window controls
  * when the window is frameless.
  */
@@ -29,6 +30,9 @@ export function TitleBar({ windowControls }: { windowControls: boolean }) {
       <div role="group" aria-label={t("titlebar.launcher")} data-slot="launcher" className="flex h-full items-center gap-2 border-l border-border px-3">
         <span style={noDrag}>
           <GameSwitcher />
+        </span>
+        <span style={noDrag}>
+          <PlayButton />
         </span>
       </div>
       {/* Reserved: tools hotbar (V1.x). */}
