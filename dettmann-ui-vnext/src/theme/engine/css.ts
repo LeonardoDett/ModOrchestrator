@@ -5,14 +5,15 @@ const decls = (...maps: Record<string, string>[]) =>
 
 /**
  * Serializa o tema em duas regras (claro e escuro), uma por linha. Com `root`, o tema
- * também vale como padrão do documento: `:root` entra antes do seletor claro e `.dark`
- * antes do seletor escuro.
+ * também vale como padrão do documento: `:where(:root)` entra antes do seletor claro e
+ * `:where(.dark, [data-ui-mode="dark"])` antes do escuro (especificidade zero: outro
+ * `data-theme` sempre vence, em qualquer ordem).
  */
 export function toCSS(theme: ResolvedTheme, opts: { root?: boolean } = {}): string {
   const t = `[data-theme="${theme.id}"]`;
-  const light = `${opts.root ? ":root," : ""}${t}`;
+  const light = `${opts.root ? ":where(:root)," : ""}${t}`;
   const dark = [
-    `${opts.root ? ".dark," : ""}.dark ${t}`,
+    `${opts.root ? ':where(.dark, [data-ui-mode="dark"]),' : ""}.dark ${t}`,
     `.dark${t}`,
     `${t}[data-ui-mode="dark"]`,
     `[data-ui-mode="dark"] ${t}`,

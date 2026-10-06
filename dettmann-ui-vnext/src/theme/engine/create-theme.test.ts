@@ -40,5 +40,40 @@ test("toCSS emits light and dark blocks with --ui- prefix", () => {
   expect(css).toContain('.dark [data-theme="t"]');
   expect(css).toMatch(/--ui-canvas:#[0-9a-f]{6};/);
   expect(css).not.toMatch(/NaN|undefined/);
-  expect(toCSS(createTheme(cfg), { root: true })).toMatch(/^:root,\[data-theme="t"\]\{/);
+  expect(toCSS(createTheme(cfg), { root: true })).toMatch(/^:where\(:root\),\[data-theme="t"\]\{/);
+});
+test("root selectors are zero-specificity so other themes always win", () => {
+  const t = createTheme(cfg);
+  const u = createTheme({ ...cfg, id: "u" });
+  const rootCss = toCSS(t, { root: true });
+  expect(rootCss).toContain('\n:where(.dark, [data-ui-mode="dark"]),.dark [data-theme="t"],');
+  for (const css of [rootCss + toCSS(u), toCSS(u) + rootCss]) {
+    const selectors = css.split("\n").filter(Boolean).map((l) => l.slice(0, l.indexOf("{")));
+    expect(selectors).toHaveLength(4);
+    for (const sel of selectors) {
+      const isU = sel.includes('data-theme="u"');
+      expect(sel.includes(":where(")).toBe(!isU);
+      if (!isU) expect(sel.replace(/:where\([^)]*\)/g, "")).not.toMatch(/^(:root|\.dark)/);
+    }
+  }
+});
+test("dark override applies to dark only", () => {
+  const t = createTheme({ ...cfg, overrides: { dark: { canvas: "#101010" } } });
+  expect(t.dark.canvas).toBe("#101010");
+  expect(t.light.canvas).not.toBe("#101010");
+});
+test("dark shadow alpha values", () => {
+  const t = createTheme(cfg);
+  expect(t.dark["shadow-raised"]).toContain("/ 0.3)");
+  expect(t.dark["shadow-overlay"]).toContain("/ 0.4)");
+  expect(t.dark["shadow-modal"]).toContain("/ 0.5)");
+});
+test("density-scale per density", () => {
+  expect(createTheme({ ...cfg, density: "compact" }).shared["density-scale"]).toBe("0.875");
+  expect(createTheme(cfg).shared["density-scale"]).toBe("1");
+  expect(createTheme({ ...cfg, density: "spacious" }).shared["density-scale"]).toBe("1.125");
+});
+test("override warning names pair and measured ratio", () => {
+  const t = createTheme({ ...cfg, overrides: { light: { "on-emphasis": "#777777" } } });
+  expect(t.warnings.join("\n")).toMatch(/light: override contrast on-emphasis on emphasis-fill\S* is \d+\.\d{2}:1 \(target/);
 });
