@@ -19,6 +19,7 @@
 @source inline("text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
 @import "./../styles/theme/themes.generated.css";
 @import "./../styles/theme/foundations.css";
+@import "./../styles/fonts/fonts.css";
 
 /* Papéis L3 (spec 5.2): bg-canvas, text-fg-muted, bg-danger-fill, text-on-emphasis... */
 @theme inline {
