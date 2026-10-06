@@ -27,3 +27,7 @@ test("clampChroma brings out-of-gamut colors into sRGB keeping hue", () => {
   expect(out.h).toBe(150);
   expect(out.l).toBe(0.7);
 });
+test.each(["oklch(0.5 0.1 1e999)", "oklch(1e999 0.1 30)", "rgb(1e999 0 0)", "hsl(1e400 50% 50%)"])(
+  "rejects non-finite numbers in %s",
+  (input) => expect(parseColor(input)).toBeNull(),
+);

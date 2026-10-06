@@ -1,0 +1,165 @@
+import { deltaEOK } from "./color/contrast";
+import { CONTRAST_TARGETS, snap, solveLightness, targetMetric, type ContrastTarget } from "./solve";
+import type { ColorIntent, Mode, NormalizedConfig, Oklch } from "./types";
+
+export const COLOR_INTENTS: readonly ColorIntent[] = ["brand", "accent", "info", "success", "warning", "danger"];
+export type StatusIntent = Exclude<ColorIntent, "brand" | "accent">;
+export const STATUS_HUES: Record<StatusIntent, number> = { info: 250, success: 150, warning: 80, danger: 27 };
+
+/** Distância perceptual mínima entre o fill da marca e o de cada status. */
+export const MIN_STATUS_DELTA_E = 0.08;
+const ROTATION_STEP = 10;
+const ROTATION_MAX = 40;
+const CHROMA_STEP = 0.02;
+const STATUS_MIN_C = 0.06;
+const STATUS_MAX_C = 0.19;
+/** Faixa da luminosidade-base dos status: marca preta/branca não pode gerar status preto/branco. */
+const STATUS_MIN_L = 0.45;
+const STATUS_MAX_L = 0.85;
+/** Deslocamentos de luminosidade-base tentados em cada matiz do giro de status. */
+const L_OFFSETS = [0, -0.05, 0.05, -0.1, 0.1];
+
+const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+
+/** Diferença angular com sinal, em (-180, 180]. */
+export const hueDelta = (from: number, to: number): number => ((((to - from) % 360) + 540) % 360) - 180;
+
+/** Interpolação circular de matiz. */
+export const mixHue = (from: number, to: number, t: number): number => (from + hueDelta(from, to) * t + 360) % 360;
+
+/** Matiz e croma dos cinzas: matiz da marca, deslocado por `neutral`; croma 0 para marca acromática. */
+export function neutralTone(config: NormalizedConfig): { h: number; c: number } {
+  const { brand, neutral, vibrance } = config;
+  if (brand.c === 0) return { h: 0, c: 0 };
+  const h = neutral === "cool" ? mixHue(brand.h, 250, 0.5) : neutral === "warm" ? mixHue(brand.h, 70, 0.5) : brand.h;
+  const base = neutral === "neutral" ? 0.006 : 0.012;
+  return { h, c: Math.min(base * (0.5 + vibrance), 0.03) };
+}
+
+export interface IntentColors {
+  fill: Oklch;
+  hover: Oklch;
+  pressed: Oklch;
+  on: Oklch;
+  subtle: Oklch;
+  text: Oklch;
+  border: Oklch;
+}
+
+/** Faixa de luminosidade dos fills no dark. */
+const DARK_FILL_L: [number, number] = [0.65, 0.82];
+const STATE_STEPS: Record<Mode, [number, number]> = { light: [-0.05, -0.09], dark: [0.05, 0.09] };
+
+function fillStates(fill: Oklch, mode: Mode): [Oklch, Oklch, Oklch] {
+  const [hover, pressed] = STATE_STEPS[mode];
+  return [fill, snap({ ...fill, l: fill.l + hover }), snap({ ...fill, l: fill.l + pressed })];
+}
+
+/** Quase-branco e quase-preto tingidos no matiz da semente. */
+function onCandidates(seed: Oklch): { white: Oklch; black: Oklch } {
+  const c = seed.c === 0 ? 0 : 0.01;
+  return { white: snap({ l: 0.99, c, h: seed.h }), black: snap({ l: 0.18, c, h: seed.h }) };
+}
+
+/**
+ * Fill sólido + estados + `on`. O `on` precisa atingir a meta sobre fill, hover e pressed.
+ * Light: a semente é mantida se algum `on` já atinge a meta; senão o fill anda na
+ * luminosidade (escurece para o quase-branco ou clareia para o quase-preto, o que mudar
+ * menos). Dark: L clampada em [.65, .82] e, se preciso, clareia para o quase-preto.
+ */
+export function solveFill(seed: Oklch, mode: Mode, target: ContrastTarget): Pick<IntentColors, "fill" | "hover" | "pressed" | "on"> {
+  const metric = targetMetric(target);
+  const worst = (fill: Oklch, on: Oklch) => Math.min(...fillStates(fill, mode).map((s) => metric(on, s)));
+  const { white, black } = onCandidates(seed);
+  const start = snap(mode === "light" ? seed : { ...seed, l: clamp(seed.l, DARK_FILL_L[0], DARK_FILL_L[1]) });
+
+  let fill = start;
+  if (Math.max(worst(start, white), worst(start, black)) < 1) {
+    const lighter = solveLightness(start, [black], 1, "lighter", worst);
+    if (mode === "dark") fill = lighter.color;
+    else {
+      const darker = solveLightness(start, [white], 1, "darker", worst);
+      const cost = (r: { color: Oklch; met: boolean }) => (r.met ? Math.abs(r.color.l - start.l) : Infinity);
+      fill = cost(lighter) < cost(darker) ? lighter.color : darker.color;
+    }
+  }
+  const [f, hover, pressed] = fillStates(fill, mode);
+  const on = worst(fill, white) >= worst(fill, black) ? white : black;
+  return { fill: f, hover, pressed, on };
+}
+
+/** Papéis completos de um intent a partir da semente. `surfaces` = canvas e surface já resolvidos. */
+export function intentColors(seed: Oklch, config: NormalizedConfig, mode: Mode, surfaces: Oklch[]): IntentColors {
+  const targets = CONTRAST_TARGETS[config.contrast];
+  const light = mode === "light";
+  const { fill, hover, pressed, on } = solveFill(seed, mode, targets["on-fill"]);
+  const subtle = snap({ l: light ? 0.96 : 0.27, c: subtleChroma(seed, config.vibrance), h: seed.h });
+  const text = solveLightness(
+    { l: fill.l, c: seed.c, h: seed.h },
+    [subtle, ...surfaces],
+    1,
+    light ? "darker" : "lighter",
+    targetMetric(targets["intent-text"]),
+  ).color;
+  const border = snap({ l: light ? 0.82 : 0.45, c: seed.c * 0.5, h: seed.h });
+  return { fill, hover, pressed, on, subtle, text, border };
+}
+
+export function subtleChroma(seed: Oklch, vibrance: number): number {
+  return Math.min(seed.c * 0.25, 0.05) * (0.5 + vibrance);
+}
+
+/** Semente inicial de um status: matiz semântico, croma e luminosidade derivadas da marca. */
+export function statusSeed(status: StatusIntent, brand: Oklch, mode: Mode): Oklch {
+  // no dark a faixa do fill já vale aqui, para que os deslocamentos de L do giro tenham efeito
+  const base = mode === "dark" ? clamp(brand.l, DARK_FILL_L[0], DARK_FILL_L[1]) : clamp(brand.l, STATUS_MIN_L, STATUS_MAX_L);
+  const l = status === "warning" && mode === "light" ? Math.max(base, 0.72) : base;
+  return { l, c: clamp(brand.c, STATUS_MIN_C, STATUS_MAX_C), h: STATUS_HUES[status] };
+}
+
+/**
+ * Sementes e papéis de todos os intents de cor. Status perto demais da marca
+ * (ΔE OKLab < 0.08 entre fills) giram o matiz em passos de 10° até ±40° (primeiro para
+ * longe da marca), usando o menor giro que resolve; em cada giro a luminosidade-base pode
+ * andar ±0.05/±0.1 e a croma subir em passos de 0.02 até 0.19. Se nada resolver, fica o
+ * melhor e um aviso.
+ */
+export function buildIntents(
+  config: NormalizedConfig,
+  mode: Mode,
+  surfaces: Oklch[],
+  minDelta = MIN_STATUS_DELTA_E,
+): { intents: Record<ColorIntent, IntentColors>; warnings: string[] } {
+  const warnings: string[] = [];
+  const brand = intentColors(config.brand, config, mode, surfaces);
+  const intents = { brand, accent: intentColors(config.accent, config, mode, surfaces) } as Record<ColorIntent, IntentColors>;
+  for (const status of Object.keys(STATUS_HUES) as StatusIntent[]) {
+    const seed = statusSeed(status, config.brand, mode);
+    const attempt = (h: number, c: number, l: number) => {
+      const colors = intentColors({ l, c, h }, config, mode, surfaces);
+      return { h, c, colors, delta: deltaEOK(brand.fill, colors.fill) };
+    };
+    // menor giro de matiz possível (primeiro para longe da marca, depois para o outro lado);
+    // em cada matiz, a luminosidade-base pode andar ±0.05/±0.1 e a croma subir até 0.19 —
+    // o gamut às vezes limita a croma e a meta do `on` força fills à mesma luminância
+    let best = attempt(seed.h, seed.c, seed.l);
+    const away = hueDelta(config.brand.h, seed.h) >= 0 ? 1 : -1;
+    const hues = [seed.h];
+    for (let step = ROTATION_STEP; step <= ROTATION_MAX; step += ROTATION_STEP)
+      hues.push((seed.h + away * step + 360) % 360, (seed.h - away * step + 360) % 360);
+    search: for (const h of hues)
+      for (const dl of L_OFFSETS)
+        for (let c = seed.c; c <= STATUS_MAX_C + 1e-9; c += CHROMA_STEP) {
+          if (best.delta >= minDelta) break search;
+          if (h === seed.h && dl === 0 && c === seed.c) continue;
+          const next = attempt(h, c, clamp(seed.l + dl, 0, 1));
+          if (next.delta > best.delta) best = next;
+        }
+    if (best.delta < minDelta)
+      warnings.push(
+        `${status}-fill is too close to brand-fill in ${mode} mode (ΔE ${best.delta.toFixed(3)} < ${minDelta})`,
+      );
+    intents[status] = best.colors;
+  }
+  return { intents, warnings };
+}

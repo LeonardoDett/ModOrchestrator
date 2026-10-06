@@ -92,6 +92,7 @@ function num(token: string, percentScale: number): number | null {
   const m = /^([+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?)(%|deg|turn|rad|grad)?$/i.exec(token);
   if (!m) return null;
   const v = parseFloat(m[1] ?? "");
+  if (!Number.isFinite(v)) return null;
   switch (m[2]?.toLowerCase()) {
     case "%": return (v / 100) * percentScale;
     case "turn": return v * 360;

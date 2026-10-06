@@ -168,14 +168,17 @@ export function validateMotionSpec(partial: Partial<MotionSpec>, mode: "dev" | "
     else if (mode === "dev") {
       const range = hi === Infinity ? `>= ${lo}` : `in [${lo}, ${hi}]`;
       throw new Error(`Invalid motion spec: ${key}=${value} (must be ${range})`);
-    } else out[key] = Number.isNaN(value) ? lo : Math.min(Math.max(value, lo), hi);
+    } else out[key] = Number.isFinite(value) ? Math.min(Math.max(value, lo), hi) : lo;
   }
   return out;
 }
 
 export function resolveMotionSpecs(ceiling: MotionLevel, tune: MotionTune = {}): Record<MotionLevel, MotionSpec> {
   const tuned = {} as Record<MotionLevel, MotionSpec>;
-  for (const level of MOTION_LEVELS) tuned[level] = { ...MOTION_DEFAULTS[level], ...tune[level] };
+  for (const level of MOTION_LEVELS) {
+    const defined = Object.entries(tune[level] ?? {}).filter(([, v]) => v !== undefined);
+    tuned[level] = { ...MOTION_DEFAULTS[level], ...Object.fromEntries(defined) };
+  }
   const cap = MOTION_LEVELS.indexOf(ceiling);
   const out = {} as Record<MotionLevel, MotionSpec>;
   MOTION_LEVELS.forEach((level, i) => {

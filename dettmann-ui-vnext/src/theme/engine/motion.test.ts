@@ -64,3 +64,14 @@ test("explicit positions only appear when off the uniform grid", () => {
   expect(easing).toMatch(/\d%/);
   expect(easing).not.toMatch(/NaN|Infinity/);
 });
+test("prod maps non-finite values to the lower bound", () => {
+  expect(
+    validateMotionSpec({ stiffness: Infinity, duration: NaN, damping: -Infinity, pressScale: Infinity }, "prod"),
+  ).toEqual({ stiffness: 1, duration: 0, damping: 1, pressScale: 0.8 });
+  expect(() => validateMotionSpec({ stiffness: Infinity }, "dev")).toThrow(/stiffness/);
+});
+test("undefined tune fields keep the default", () => {
+  const s = resolveMotionSpecs("expressive", { calm: { damping: undefined, stagger: 5 } });
+  expect(s.calm.damping).toBe(MOTION_DEFAULTS.calm.damping);
+  expect(s.calm.stagger).toBe(5);
+});
