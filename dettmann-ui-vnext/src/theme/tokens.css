@@ -1,158 +1,297 @@
+/*
+ * Ponte Tailwind v4 do dettmann-ui. Os valores vêm de themes.generated.css
+ * (gerado a partir dos presets por `npm run theme:build`); aqui só há mapeamento
+ * de papéis para utilitários, o contrato de intent, state layers e movimento.
+ */
 @import "tailwindcss";
 @source "../";
 @source "../../src/**/*.{ts,tsx}";
+/* Utilitários da ponte que ainda não têm consumidor em src: sempre emitidos. */
+@source inline("bg-{canvas,surface,raised,sunken,structure,selected,track,fill-neutral,fill-neutral-hover,emphasis-fill,emphasis-subtle,overlay} text-{fg,fg-muted,fg-subtle,fg-disabled,structure-fg,on-emphasis,emphasis-text} border-{border,border-subtle,border-strong,structure-border,emphasis-border} bg-intent-{fill,subtle} {hover:,active:,}bg-intent-fill-{hover,pressed} text-on-intent text-intent-text border-intent-border stroke-intent-fill {hover:,active:,}bg-state-{hover,pressed} bg-state-selected ring-focus outline-focus rounded-{control,chip,card,panel,pill} h-control-{sm,md,lg} shadow-{raised,overlay,modal} text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
+@import "./../styles/theme/themes.generated.css";
 @import "./../styles/theme/foundations.css";
-@import "./../styles/theme/themes.css";
 
+/* Papéis L3 (spec 5.2): bg-canvas, text-fg-muted, bg-danger-fill, text-on-emphasis... */
 @theme inline {
-  --color-page: var(--ui-canvas);
+  --color-canvas: var(--ui-canvas);
   --color-surface: var(--ui-surface);
   --color-raised: var(--ui-raised);
   --color-sunken: var(--ui-sunken);
-  --color-structure: var(--ui-structure);
-  --color-structure-raised: var(--ui-structure-raised);
-  --color-muted: var(--ui-sunken);
-  --color-hover: color-mix(in oklab, var(--ui-fg) 6%, transparent);
-  --color-pressed: color-mix(in oklab, var(--ui-fg) 10%, transparent);
-  --color-border-subtle: var(--ui-border-subtle);
-  --color-border: var(--ui-border);
-  --color-border-strong: var(--ui-border-strong);
   --color-fg: var(--ui-fg);
-  --color-fg-muted: var(--ui-fg-secondary);
-  --color-fg-subtle: var(--ui-fg-tertiary);
+  --color-fg-muted: var(--ui-fg-muted);
+  --color-fg-subtle: var(--ui-fg-subtle);
   --color-fg-disabled: var(--ui-fg-disabled);
-  --color-fg-inverse: var(--ui-fg-inverse);
-  --color-ring: var(--ui-focus);
-  /* Canonical semantic names. `primary` remains a compatibility alias. */
-  --color-brand: var(--ui-brand);
-  --color-brand-hover: var(--ui-brand-hover);
-  --color-brand-pressed: var(--ui-brand-pressed);
+  --color-border: var(--ui-border);
+  --color-border-subtle: var(--ui-border-subtle);
+  --color-border-strong: var(--ui-border-strong);
+  --color-structure: var(--ui-structure);
+  --color-structure-fg: var(--ui-structure-fg);
+  --color-structure-border: var(--ui-structure-border);
+  --color-selected: var(--ui-selected);
+  --color-track: var(--ui-track);
+  --color-fill-neutral: var(--ui-fill-neutral);
+  --color-fill-neutral-hover: var(--ui-fill-neutral-hover);
+  --color-emphasis-fill: var(--ui-emphasis-fill);
+  --color-emphasis-fill-hover: var(--ui-emphasis-fill-hover);
+  --color-emphasis-fill-pressed: var(--ui-emphasis-fill-pressed);
+  --color-on-emphasis: var(--ui-on-emphasis);
+  --color-emphasis-subtle: var(--ui-emphasis-subtle);
+  --color-emphasis-text: var(--ui-emphasis-text);
+  --color-emphasis-border: var(--ui-emphasis-border);
+  --color-focus: var(--ui-focus);
+  --color-brand-fill: var(--ui-brand-fill);
+  --color-brand-fill-hover: var(--ui-brand-fill-hover);
+  --color-brand-fill-pressed: var(--ui-brand-fill-pressed);
   --color-on-brand: var(--ui-on-brand);
   --color-brand-subtle: var(--ui-brand-subtle);
-  --color-brand-subtle-hover: var(--ui-brand-subtle-hover);
-  --color-brand-border: var(--ui-brand-border);
   --color-brand-text: var(--ui-brand-text);
-  --color-primary: var(--ui-brand);
-  --color-primary-hover: var(--ui-brand-hover);
-  --color-primary-pressed: var(--ui-brand-pressed);
-  --color-on-primary: var(--ui-on-brand);
-  --color-primary-subtle: var(--ui-brand-subtle);
-  --color-primary-subtle-hover: var(--ui-brand-subtle-hover);
-  --color-primary-border: var(--ui-brand-border);
-  --color-primary-text: var(--ui-brand-text);
-  --color-secondary: var(--ui-secondary);
-  --color-secondary-hover: var(--ui-secondary-hover);
-  --color-secondary-pressed: var(--ui-secondary-pressed);
-  --color-on-secondary: var(--ui-on-secondary);
-  --color-secondary-subtle: var(--ui-secondary-subtle);
-  --color-secondary-subtle-hover: var(--ui-secondary-subtle-hover);
-  --color-secondary-border: var(--ui-secondary-border);
-  --color-secondary-text: var(--ui-secondary-text);
-  --color-accent: var(--ui-accent);
-  --color-accent-hover: var(--ui-accent-hover);
-  --color-accent-pressed: var(--ui-accent-pressed);
+  --color-brand-border: var(--ui-brand-border);
+  --color-accent-fill: var(--ui-accent-fill);
+  --color-accent-fill-hover: var(--ui-accent-fill-hover);
+  --color-accent-fill-pressed: var(--ui-accent-fill-pressed);
   --color-on-accent: var(--ui-on-accent);
   --color-accent-subtle: var(--ui-accent-subtle);
-  --color-accent-subtle-hover: var(--ui-accent-subtle-hover);
-  --color-accent-border: var(--ui-accent-border);
   --color-accent-text: var(--ui-accent-text);
-  --color-info: var(--ui-info);
-  --color-info-hover: var(--ui-info-hover);
-  --color-info-pressed: var(--ui-info-pressed);
+  --color-accent-border: var(--ui-accent-border);
+  --color-info-fill: var(--ui-info-fill);
+  --color-info-fill-hover: var(--ui-info-fill-hover);
+  --color-info-fill-pressed: var(--ui-info-fill-pressed);
   --color-on-info: var(--ui-on-info);
   --color-info-subtle: var(--ui-info-subtle);
-  --color-info-subtle-hover: var(--ui-info-subtle-hover);
-  --color-info-border: var(--ui-info-border);
   --color-info-text: var(--ui-info-text);
-  --color-success: var(--ui-success);
-  --color-success-hover: var(--ui-success-hover);
-  --color-success-pressed: var(--ui-success-pressed);
+  --color-info-border: var(--ui-info-border);
+  --color-success-fill: var(--ui-success-fill);
+  --color-success-fill-hover: var(--ui-success-fill-hover);
+  --color-success-fill-pressed: var(--ui-success-fill-pressed);
   --color-on-success: var(--ui-on-success);
   --color-success-subtle: var(--ui-success-subtle);
-  --color-success-subtle-hover: var(--ui-success-subtle-hover);
-  --color-success-border: var(--ui-success-border);
   --color-success-text: var(--ui-success-text);
-  --color-warning: var(--ui-warning);
-  --color-warning-hover: var(--ui-warning-hover);
-  --color-warning-pressed: var(--ui-warning-pressed);
+  --color-success-border: var(--ui-success-border);
+  --color-warning-fill: var(--ui-warning-fill);
+  --color-warning-fill-hover: var(--ui-warning-fill-hover);
+  --color-warning-fill-pressed: var(--ui-warning-fill-pressed);
   --color-on-warning: var(--ui-on-warning);
   --color-warning-subtle: var(--ui-warning-subtle);
-  --color-warning-subtle-hover: var(--ui-warning-subtle-hover);
-  --color-warning-border: var(--ui-warning-border);
   --color-warning-text: var(--ui-warning-text);
-  --color-danger: var(--ui-danger);
-  --color-danger-hover: var(--ui-danger-hover);
-  --color-danger-pressed: var(--ui-danger-pressed);
+  --color-warning-border: var(--ui-warning-border);
+  --color-danger-fill: var(--ui-danger-fill);
+  --color-danger-fill-hover: var(--ui-danger-fill-hover);
+  --color-danger-fill-pressed: var(--ui-danger-fill-pressed);
   --color-on-danger: var(--ui-on-danger);
   --color-danger-subtle: var(--ui-danger-subtle);
-  --color-danger-subtle-hover: var(--ui-danger-subtle-hover);
-  --color-danger-border: var(--ui-danger-border);
   --color-danger-text: var(--ui-danger-text);
+  --color-danger-border: var(--ui-danger-border);
   --color-overlay: var(--ui-overlay);
 }
 
 /*
- * Layering: Tailwind v4 builds z-* utilities from the --z-index-* namespace.
- * The generated foundations expose the scale as --z-*, which no utility
- * reads, so z-modal, z-dropdown... produced no CSS and overlays stacked
- * under sticky table headers. These aliases give the utilities their values.
+ * Contrato de intent: componentes declaram data-intent="<intent>" e pintam com
+ * bg-intent-fill, text-on-intent, bg-intent-subtle, text-intent-text,
+ * border-intent-border e stroke-intent-fill.
  */
 @theme inline {
-  --z-index-dropdown: var(--ui-z-dropdown);
-  --z-index-sticky: var(--ui-z-sticky);
-  --z-index-overlay: var(--ui-z-overlay);
-  --z-index-modal: var(--ui-z-modal);
-  --z-index-popover: var(--ui-z-popover);
-  --z-index-toast: var(--ui-z-toast);
+  --color-intent-fill: var(--intent-fill);
+  --color-intent-fill-hover: var(--intent-fill-hover);
+  --color-intent-fill-pressed: var(--intent-fill-pressed);
+  --color-on-intent: var(--on-intent);
+  --color-intent-subtle: var(--intent-subtle);
+  --color-intent-text: var(--intent-text);
+  --color-intent-border: var(--intent-border);
+}
+
+[data-intent="neutral"] {
+  --intent-fill: var(--ui-fill-neutral);
+  --intent-fill-hover: var(--ui-fill-neutral-hover);
+  --intent-fill-pressed: var(--ui-fill-neutral-hover);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-selected);
+  --intent-text: var(--ui-fg);
+  --intent-border: var(--ui-border-strong);
+}
+
+[data-intent="brand"] {
+  --intent-fill: var(--ui-emphasis-fill);
+  --intent-fill-hover: var(--ui-emphasis-fill-hover);
+  --intent-fill-pressed: var(--ui-emphasis-fill-pressed);
+  --on-intent: var(--ui-on-emphasis);
+  --intent-subtle: var(--ui-emphasis-subtle);
+  --intent-text: var(--ui-emphasis-text);
+  --intent-border: var(--ui-emphasis-border);
+}
+
+[data-intent="accent"] {
+  --intent-fill: var(--ui-accent-fill);
+  --intent-fill-hover: var(--ui-accent-fill-hover);
+  --intent-fill-pressed: var(--ui-accent-fill-pressed);
+  --on-intent: var(--ui-on-accent);
+  --intent-subtle: var(--ui-accent-subtle);
+  --intent-text: var(--ui-accent-text);
+  --intent-border: var(--ui-accent-border);
+}
+
+[data-intent="info"] {
+  --intent-fill: var(--ui-info-fill);
+  --intent-fill-hover: var(--ui-info-fill-hover);
+  --intent-fill-pressed: var(--ui-info-fill-pressed);
+  --on-intent: var(--ui-on-info);
+  --intent-subtle: var(--ui-info-subtle);
+  --intent-text: var(--ui-info-text);
+  --intent-border: var(--ui-info-border);
+}
+
+[data-intent="success"] {
+  --intent-fill: var(--ui-success-fill);
+  --intent-fill-hover: var(--ui-success-fill-hover);
+  --intent-fill-pressed: var(--ui-success-fill-pressed);
+  --on-intent: var(--ui-on-success);
+  --intent-subtle: var(--ui-success-subtle);
+  --intent-text: var(--ui-success-text);
+  --intent-border: var(--ui-success-border);
+}
+
+[data-intent="warning"] {
+  --intent-fill: var(--ui-warning-fill);
+  --intent-fill-hover: var(--ui-warning-fill-hover);
+  --intent-fill-pressed: var(--ui-warning-fill-pressed);
+  --on-intent: var(--ui-on-warning);
+  --intent-subtle: var(--ui-warning-subtle);
+  --intent-text: var(--ui-warning-text);
+  --intent-border: var(--ui-warning-border);
+}
+
+[data-intent="danger"] {
+  --intent-fill: var(--ui-danger-fill);
+  --intent-fill-hover: var(--ui-danger-fill-hover);
+  --intent-fill-pressed: var(--ui-danger-fill-pressed);
+  --on-intent: var(--ui-on-danger);
+  --intent-subtle: var(--ui-danger-subtle);
+  --intent-text: var(--ui-danger-text);
+  --intent-border: var(--ui-danger-border);
 }
 
 /*
- * Tone contract: components set data-tone="<tone>" (theme/tone.ts) and paint
- * with bg-tone, text-on-tone, bg-tone-subtle, border-tone-border and
- * text-tone-text. Each tone maps to one semantic role of themes.css.
+ * State layers (spec 4.4): overlays sobre a base do nó. A base é fg em
+ * superfícies neutras e a cor do intent em superfícies tingidas; as variáveis
+ * são recalculadas onde a base muda.
  */
+:root,
+[data-intent="neutral"] {
+  --state-base: var(--ui-fg);
+}
+
+[data-intent]:not([data-intent="neutral"]) {
+  --state-base: var(--intent-fill);
+}
+
+:root,
+[data-intent] {
+  --state-hover: color-mix(in oklab, var(--state-base) 6%, transparent);
+  --state-pressed: color-mix(in oklab, var(--state-base) 10%, transparent);
+  --state-selected: color-mix(in oklab, var(--state-base) 14%, transparent);
+}
+
 @theme inline {
-  --color-tone: var(--tone);
-  --color-tone-hover: var(--tone-hover);
-  --color-tone-pressed: var(--tone-pressed);
-  --color-on-tone: var(--on-tone);
-  --color-tone-subtle: var(--tone-subtle);
-  --color-tone-subtle-hover: var(--tone-subtle-hover);
-  --color-tone-border: var(--tone-border);
-  --color-tone-text: var(--tone-text);
+  --color-state-hover: var(--state-hover);
+  --color-state-pressed: var(--state-pressed);
+  --color-state-selected: var(--state-selected);
 }
 
-[data-tone="primary"] {
-  --tone: var(--ui-brand); --tone-hover: var(--ui-brand-hover); --tone-pressed: var(--ui-brand-pressed); --on-tone: var(--ui-on-brand);
-  --tone-subtle: var(--ui-brand-subtle); --tone-subtle-hover: var(--ui-brand-subtle-hover); --tone-border: var(--ui-brand-border); --tone-text: var(--ui-brand-text);
+/* Primitivas L2 (spec 6): espaçamento por densidade, forma, alturas, elevação e tipo. */
+@theme inline {
+  --spacing: calc(0.25rem * var(--ui-density-scale));
+
+  --radius-control: var(--ui-radius-control);
+  --radius-chip: var(--ui-radius-chip);
+  --radius-card: var(--ui-radius-card);
+  --radius-panel: var(--ui-radius-panel);
+  --radius-pill: var(--ui-radius-pill);
+
+  --spacing-control-sm: var(--ui-control-sm);
+  --spacing-control-md: var(--ui-control-md);
+  --spacing-control-lg: var(--ui-control-lg);
+
+  --shadow-raised: var(--ui-shadow-raised);
+  --shadow-overlay: var(--ui-shadow-overlay);
+  --shadow-modal: var(--ui-shadow-modal);
+
+  --font-sans: var(--ui-font-sans);
+  --font-mono: var(--ui-font-mono);
+
+  --text-caption: var(--ui-text-caption);
+  --text-caption--line-height: var(--ui-text-caption-leading);
+  --text-label: var(--ui-text-label);
+  --text-label--line-height: var(--ui-text-label-leading);
+  --text-body: var(--ui-text-body);
+  --text-body--line-height: var(--ui-text-body-leading);
+  --text-body-lg: var(--ui-text-body-lg);
+  --text-body-lg--line-height: var(--ui-text-body-lg-leading);
+  --text-title-sm: var(--ui-text-title-sm);
+  --text-title-sm--line-height: var(--ui-text-title-sm-leading);
+  --text-title: var(--ui-text-title);
+  --text-title--line-height: var(--ui-text-title-leading);
+  --text-display: var(--ui-text-display);
+  --text-display--line-height: var(--ui-text-display-leading);
+  --text-display-lg: var(--ui-text-display-lg);
+  --text-display-lg--line-height: var(--ui-text-display-lg-leading);
 }
 
-[data-tone="secondary"] {
-  --tone: var(--ui-secondary); --tone-hover: var(--ui-secondary-hover); --tone-pressed: var(--ui-secondary-pressed); --on-tone: var(--ui-on-secondary);
-  --tone-subtle: var(--ui-secondary-subtle); --tone-subtle-hover: var(--ui-secondary-subtle-hover); --tone-border: var(--ui-secondary-border); --tone-text: var(--ui-secondary-text);
+/*
+ * Contexto de movimento (spec 6.5): `data-motion` escolhe o nível; a raiz usa
+ * calm. Componentes e utilitários leem só --motion-*.
+ */
+:root {
+  --motion-ease: var(--ui-motion-calm-ease);
+  --motion-duration: var(--ui-motion-calm-duration);
+  --motion-spring-duration: var(--ui-motion-calm-spring-duration);
+  --motion-amp: var(--ui-motion-calm-amp);
+  --motion-press: var(--ui-motion-calm-press);
+  --motion-stagger: var(--ui-motion-calm-stagger);
 }
 
-[data-tone="accent"] {
-  --tone: var(--ui-accent); --tone-hover: var(--ui-accent-hover); --tone-pressed: var(--ui-accent-pressed); --on-tone: var(--ui-on-accent);
-  --tone-subtle: var(--ui-accent-subtle); --tone-subtle-hover: var(--ui-accent-subtle-hover); --tone-border: var(--ui-accent-border); --tone-text: var(--ui-accent-text);
+[data-motion="calm"] {
+  --motion-ease: var(--ui-motion-calm-ease);
+  --motion-duration: var(--ui-motion-calm-duration);
+  --motion-spring-duration: var(--ui-motion-calm-spring-duration);
+  --motion-amp: var(--ui-motion-calm-amp);
+  --motion-press: var(--ui-motion-calm-press);
+  --motion-stagger: var(--ui-motion-calm-stagger);
 }
 
-[data-tone="info"] {
-  --tone: var(--ui-info); --tone-hover: var(--ui-info-hover); --tone-pressed: var(--ui-info-pressed); --on-tone: var(--ui-on-info);
-  --tone-subtle: var(--ui-info-subtle); --tone-subtle-hover: var(--ui-info-subtle-hover); --tone-border: var(--ui-info-border); --tone-text: var(--ui-info-text);
+[data-motion="responsive"] {
+  --motion-ease: var(--ui-motion-responsive-ease);
+  --motion-duration: var(--ui-motion-responsive-duration);
+  --motion-spring-duration: var(--ui-motion-responsive-spring-duration);
+  --motion-amp: var(--ui-motion-responsive-amp);
+  --motion-press: var(--ui-motion-responsive-press);
+  --motion-stagger: var(--ui-motion-responsive-stagger);
 }
 
-[data-tone="success"] {
-  --tone: var(--ui-success); --tone-hover: var(--ui-success-hover); --tone-pressed: var(--ui-success-pressed); --on-tone: var(--ui-on-success);
-  --tone-subtle: var(--ui-success-subtle); --tone-subtle-hover: var(--ui-success-subtle-hover); --tone-border: var(--ui-success-border); --tone-text: var(--ui-success-text);
+[data-motion="expressive"] {
+  --motion-ease: var(--ui-motion-expressive-ease);
+  --motion-duration: var(--ui-motion-expressive-duration);
+  --motion-spring-duration: var(--ui-motion-expressive-spring-duration);
+  --motion-amp: var(--ui-motion-expressive-amp);
+  --motion-press: var(--ui-motion-expressive-press);
+  --motion-stagger: var(--ui-motion-expressive-stagger);
 }
 
-[data-tone="warning"] {
-  --tone: var(--ui-warning); --tone-hover: var(--ui-warning-hover); --tone-pressed: var(--ui-warning-pressed); --on-tone: var(--ui-on-warning);
-  --tone-subtle: var(--ui-warning-subtle); --tone-subtle-hover: var(--ui-warning-subtle-hover); --tone-border: var(--ui-warning-border); --tone-text: var(--ui-warning-text);
+@utility motion-transition {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, translate, scale;
+  transition-duration: var(--motion-duration);
+  transition-timing-function: var(--motion-ease);
 }
 
-[data-tone="danger"] {
-  --tone: var(--ui-danger); --tone-hover: var(--ui-danger-hover); --tone-pressed: var(--ui-danger-pressed); --on-tone: var(--ui-on-danger);
-  --tone-subtle: var(--ui-danger-subtle); --tone-subtle-hover: var(--ui-danger-subtle-hover); --tone-border: var(--ui-danger-border); --tone-text: var(--ui-danger-text);
+/*
+ * Mesma lista de motion-transition (as duas podem coexistir no nó); só `scale`
+ * usa a duração da mola.
+ */
+@utility motion-press {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform, translate, scale;
+  transition-duration: var(--motion-duration), var(--motion-duration), var(--motion-duration), var(--motion-duration),
+    var(--motion-duration), var(--motion-duration), var(--motion-duration), var(--motion-spring-duration);
+  transition-timing-function: var(--motion-ease);
+
+  &:active:not(:disabled) {
+    scale: var(--motion-press);
+  }
 }

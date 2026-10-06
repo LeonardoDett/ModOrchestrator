@@ -1,34 +1,10 @@
+/*
+ * Fundações estáticas: densidade por região, camadas (z-index), containers e
+ * redução de movimento. Importado depois de themes.generated.css para que
+ * `data-density` vença o tema declarado no mesmo nó.
+ */
+
 :root {
-  --ui-space-0: 0px;
-  --ui-space-1: 4px;
-  --ui-space-2: 8px;
-  --ui-space-3: 12px;
-  --ui-space-4: 16px;
-  --ui-space-5: 20px;
-  --ui-space-6: 24px;
-  --ui-space-7: 28px;
-  --ui-space-8: 32px;
-  --ui-space-9: 36px;
-  --ui-space-10: 40px;
-  --ui-space-11: 44px;
-  --ui-space-12: 48px;
-  --ui-space-14: 56px;
-  --ui-space-16: 64px;
-  --ui-space-20: 80px;
-  --ui-space-24: 96px;
-  --ui-radius-none: 0px;
-  --ui-radius-xs: 2px;
-  --ui-radius-sm: 4px;
-  --ui-radius-md: 6px;
-  --ui-radius-lg: 8px;
-  --ui-radius-xl: 12px;
-  --ui-radius-2xl: 16px;
-  --ui-radius-full: 9999px;
-  --ui-duration-fast: 120ms;
-  --ui-duration-normal: 180ms;
-  --ui-duration-slow: 260ms;
-  --ui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --ui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
   --ui-z-dropdown: 1000;
   --ui-z-sticky: 1100;
   --ui-z-overlay: 1200;
@@ -42,25 +18,38 @@
   --ui-container-2xl: 1440px;
 }
 
-.dark {
+/* Densidade (spec 6.2): aplicável à raiz ou a qualquer região. */
+[data-density="compact"] {
+  --ui-density-scale: 0.875;
+  --ui-control-sm: 28px;
+  --ui-control-md: 32px;
+  --ui-control-lg: 36px;
 }
 
+[data-density="comfortable"] {
+  --ui-density-scale: 1;
+  --ui-control-sm: 32px;
+  --ui-control-md: 36px;
+  --ui-control-lg: 40px;
+}
+
+[data-density="spacious"] {
+  --ui-density-scale: 1.125;
+  --ui-control-sm: 36px;
+  --ui-control-md: 40px;
+  --ui-control-lg: 48px;
+}
+
+/*
+ * Layering: Tailwind v4 gera z-* a partir do namespace --z-index-*.
+ */
 @theme inline {
-  --radius-none: var(--ui-radius-none);
-  --radius-xs: var(--ui-radius-xs);
-  --radius-sm: var(--ui-radius-sm);
-  --radius-md: var(--ui-radius-md);
-  --radius-lg: var(--ui-radius-lg);
-  --radius-xl: var(--ui-radius-xl);
-  --radius-2xl: var(--ui-radius-2xl);
-  --radius-full: var(--ui-radius-full);
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --duration-fast: var(--ui-duration-fast);
-  --duration-normal: var(--ui-duration-normal);
-  --duration-slow: var(--ui-duration-slow);
-  --ease-standard: var(--ui-ease-standard);
-  --ease-exit: var(--ui-ease-exit);
+  --z-index-dropdown: var(--ui-z-dropdown);
+  --z-index-sticky: var(--ui-z-sticky);
+  --z-index-overlay: var(--ui-z-overlay);
+  --z-index-modal: var(--ui-z-modal);
+  --z-index-popover: var(--ui-z-popover);
+  --z-index-toast: var(--ui-z-toast);
   --z-dropdown: var(--ui-z-dropdown);
   --z-sticky: var(--ui-z-sticky);
   --z-overlay: var(--ui-z-overlay);
@@ -74,10 +63,30 @@
   --max-width-container-2xl: var(--ui-container-2xl);
 }
 
+/*
+ * Redução de movimento: preferência do sistema e setting do app
+ * (`:root[data-reduce-motion="true"]`). Deslocamento, rebote e escala somem;
+ * o feedback de cor/opacidade permanece, curto e linear. Os seletores têm
+ * especificidade maior que `:root` e `[data-motion="..."]` de tokens.css.
+ */
 @media (prefers-reduced-motion: reduce) {
-  :root {
-    --ui-duration-fast: 1ms;
-    --ui-duration-normal: 1ms;
-    --ui-duration-slow: 1ms;
+  :root:root,
+  :root [data-motion] {
+    --motion-ease: linear;
+    --motion-amp: 0;
+    --motion-press: 1;
+    --motion-duration: 120ms;
+    --motion-spring-duration: 120ms;
+    --motion-stagger: 0ms;
   }
+}
+
+:root[data-reduce-motion="true"],
+:root[data-reduce-motion="true"] [data-motion] {
+  --motion-ease: linear;
+  --motion-amp: 0;
+  --motion-press: 1;
+  --motion-duration: 120ms;
+  --motion-spring-duration: 120ms;
+  --motion-stagger: 0ms;
 }
