@@ -4,3 +4,20 @@ export interface Oklch {
   c: number;
   h: number;
 }
+
+/** Intensidade de movimento; a ordem de `MOTION_LEVELS` é a ordem de intensidade. */
+export type MotionLevel = "calm" | "responsive" | "expressive";
+
+export interface MotionSpec {
+  stiffness: number;
+  damping: number;
+  mass: number;
+  /** Duração de transições não-mola, em ms. */
+  duration: number;
+  amplitude: number;
+  pressScale: number;
+  /** Atraso entre itens de uma sequência, em ms. */
+  stagger: number;
+}
+
+export type MotionTune = Partial<Record<MotionLevel, Partial<MotionSpec>>>;
