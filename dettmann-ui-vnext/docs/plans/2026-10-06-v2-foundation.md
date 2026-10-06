@@ -545,7 +545,7 @@ test("every emphasis × intent combination yields classes and attrs", () => { fo
 - Produces:
   - `interface MotionValues { ease: string; duration: number; springDuration: number; amp: number; press: number; stagger: number; reduced: boolean }`
   - `readMotion(el: Element): MotionValues` — lê as `--motion-*` computadas; `reduced` = media query **ou** `el.closest(':root[data-reduce-motion="true"]')`; valores ausentes (jsdom) caem para `MOTION_DEFAULTS.calm`
-  - `animate(el: Element, keyframes: Keyframe[] | ((m: MotionValues) => Keyframe[]), opts?: { durationFactor?: number; spring?: boolean }): Animation | null` — usa `springDuration`/`ease` quando `spring !== false`, senão `duration` + `ease`; reduzido → keyframes reduzidos a opacidade (remove `transform/translate/rotate/scale`) e 120 ms; sem `el.animate` → `null`
+  - `animate(el: Element, keyframes: Keyframe[] | ((m: MotionValues) => Keyframe[]), opts?: { durationFactor?: number; spring?: boolean; delay?: number; iterations?: number; direction?: PlaybackDirection; fill?: FillMode }): Animation | null` — usa `springDuration`/`ease` quando `spring !== false`, senão `duration` + `ease`; `delay`, `iterations`, `direction` e `fill` são repassados à WAAPI (suporte a loops, stagger e coreografias, ver `docs/specs/referencia-icones-animados.md`); reduzido → keyframes reduzidos a opacidade (remove `transform/translate/rotate/scale`), 120 ms e `iterations` limitado a 1; sem `el.animate` → `null`
   - `<MotionScope level?: MotionLevel; tune?: Partial<MotionSpec>; children>` — renderiza `div` com `data-motion` (nível efetivo = `min(level, teto do tema)`) e, com `tune`, `style` com as `--motion-*` recalculadas via `springToLinear`; usa `display: contents` quando não há `tune`
   - `useMotion(): { level: MotionLevel; spec: MotionSpec }`
   - `<Presence show: boolean; enter?: Keyframe[] | ((m) => Keyframe[]); exit?: …; children: ReactElement>` — mantém o filho montado até a saída terminar; padrões: enter `opacity 0→1` + `translateY(4px × amp)→0`, exit o inverso
@@ -564,6 +564,10 @@ test("animate strips transforms when app-level reduce motion is on", () => {
   expect(spy.mock.calls[0][1]).toMatchObject({ duration: 120 });
 });
 test("animate honors prefers-reduced-motion", () => { /* matchMedia mock true → mesmo resultado */ });
+test("animate passes delay/iterations/direction/fill through and caps loops when reduced", () => {
+  /* sem redução: opts { delay: 40, iterations: Infinity, direction: "alternate", fill: "both" } chegam ao spy;
+     com data-reduce-motion: iterations === 1 */
+});
 test("MotionScope clamps to the theme ceiling", () => {
   render(<ThemeProvider theme={{ id: "c", label: "C", brand: "#123456", motion: "responsive" }}><MotionScope level="expressive"><Probe /></MotionScope></ThemeProvider>);
   expect(screen.getByTestId("probe").closest("[data-motion]")!.getAttribute("data-motion")).toBe("responsive");
