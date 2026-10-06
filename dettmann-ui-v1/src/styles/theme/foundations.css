@@ -1,0 +1,83 @@
+:root {
+  --ui-space-0: 0px;
+  --ui-space-1: 4px;
+  --ui-space-2: 8px;
+  --ui-space-3: 12px;
+  --ui-space-4: 16px;
+  --ui-space-5: 20px;
+  --ui-space-6: 24px;
+  --ui-space-7: 28px;
+  --ui-space-8: 32px;
+  --ui-space-9: 36px;
+  --ui-space-10: 40px;
+  --ui-space-11: 44px;
+  --ui-space-12: 48px;
+  --ui-space-14: 56px;
+  --ui-space-16: 64px;
+  --ui-space-20: 80px;
+  --ui-space-24: 96px;
+  --ui-radius-none: 0px;
+  --ui-radius-xs: 2px;
+  --ui-radius-sm: 4px;
+  --ui-radius-md: 6px;
+  --ui-radius-lg: 8px;
+  --ui-radius-xl: 12px;
+  --ui-radius-2xl: 16px;
+  --ui-radius-full: 9999px;
+  --ui-duration-fast: 120ms;
+  --ui-duration-normal: 180ms;
+  --ui-duration-slow: 260ms;
+  --ui-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ui-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ui-z-dropdown: 1000;
+  --ui-z-sticky: 1100;
+  --ui-z-overlay: 1200;
+  --ui-z-modal: 1300;
+  --ui-z-popover: 1400;
+  --ui-z-toast: 1500;
+  --ui-container-sm: 640px;
+  --ui-container-md: 768px;
+  --ui-container-lg: 1024px;
+  --ui-container-xl: 1280px;
+  --ui-container-2xl: 1440px;
+}
+
+.dark {
+}
+
+@theme inline {
+  --radius-none: var(--ui-radius-none);
+  --radius-xs: var(--ui-radius-xs);
+  --radius-sm: var(--ui-radius-sm);
+  --radius-md: var(--ui-radius-md);
+  --radius-lg: var(--ui-radius-lg);
+  --radius-xl: var(--ui-radius-xl);
+  --radius-2xl: var(--ui-radius-2xl);
+  --radius-full: var(--ui-radius-full);
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --duration-fast: var(--ui-duration-fast);
+  --duration-normal: var(--ui-duration-normal);
+  --duration-slow: var(--ui-duration-slow);
+  --ease-standard: var(--ui-ease-standard);
+  --ease-exit: var(--ui-ease-exit);
+  --z-dropdown: var(--ui-z-dropdown);
+  --z-sticky: var(--ui-z-sticky);
+  --z-overlay: var(--ui-z-overlay);
+  --z-modal: var(--ui-z-modal);
+  --z-popover: var(--ui-z-popover);
+  --z-toast: var(--ui-z-toast);
+  --max-width-container-sm: var(--ui-container-sm);
+  --max-width-container-md: var(--ui-container-md);
+  --max-width-container-lg: var(--ui-container-lg);
+  --max-width-container-xl: var(--ui-container-xl);
+  --max-width-container-2xl: var(--ui-container-2xl);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ui-duration-fast: 1ms;
+    --ui-duration-normal: 1ms;
+    --ui-duration-slow: 1ms;
+  }
+}
