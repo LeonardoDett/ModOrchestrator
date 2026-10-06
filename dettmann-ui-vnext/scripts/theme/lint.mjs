@@ -2,6 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const sourceDir = path.resolve(process.argv[2] ?? "src");
+/** Camadas de produto: o motor de tema e os presets podem conter cores literais. */
+const scopes = ["components", "templates", "primitives"].map((d) => path.join(sourceDir, d)).filter((d) => fs.existsSync(d));
 const forbiddenDependencies = ["tailwind-variants", "clsx"];
 const rawProductColorPatterns = [
   /\bbg-(?:black|white)\b/,
@@ -15,13 +17,13 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const file = path.join(dir, entry.name);
     if (entry.isDirectory()) result.push(...walk(file));
-    else if (/\.(ts|tsx)$/.test(entry.name)) result.push(file);
+    else if (/\.(ts|tsx)$/.test(entry.name) && !/\.test\./.test(entry.name)) result.push(file);
   }
   return result;
 }
 
 const offenders = [];
-for (const file of walk(sourceDir)) {
+for (const file of scopes.flatMap(walk)) {
   if (file.includes(`${path.sep}__tests__${path.sep}`)) continue;
   const source = fs.readFileSync(file, "utf8");
   for (const dependency of forbiddenDependencies) {

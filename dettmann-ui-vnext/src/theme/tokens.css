@@ -6,8 +6,17 @@
 @import "tailwindcss";
 @source "../";
 @source "../../src/**/*.{ts,tsx}";
-/* Utilitários da ponte que ainda não têm consumidor em src: sempre emitidos. */
-@source inline("bg-{canvas,surface,raised,sunken,structure,selected,track,fill-neutral,fill-neutral-hover,emphasis-fill,emphasis-subtle,overlay} text-{fg,fg-muted,fg-subtle,fg-disabled,structure-fg,on-emphasis,emphasis-text} border-{border,border-subtle,border-strong,structure-border,emphasis-border} bg-intent-{fill,subtle} {hover:,active:,}bg-intent-fill-{hover,pressed} text-on-intent text-intent-text border-intent-border stroke-intent-fill {hover:,active:,}bg-state-{hover,pressed} bg-state-selected ring-focus outline-focus rounded-{control,chip,card,panel,pill} h-control-{sm,md,lg} shadow-{raised,overlay,modal} text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
+/*
+ * Safelist da ponte: todo utilitário de papel, intent, estado e primitiva é
+ * emitido mesmo sem consumidor em src (o app consome dist/index.css).
+ */
+@source inline("{bg,text,border}-{canvas,surface,raised,sunken,fg,fg-muted,fg-subtle,fg-disabled,border,border-subtle,border-strong,structure,structure-fg,structure-border,selected,track,fill-neutral,fill-neutral-hover,focus,overlay}");
+@source inline("{bg,text,border}-{emphasis,brand,accent,info,success,warning,danger,intent}-{fill,fill-hover,fill-pressed,subtle,text,border}");
+@source inline("{bg,text,border}-on-{emphasis,brand,accent,info,success,warning,danger,intent}");
+@source inline("stroke-intent-fill {hover:,active:,}bg-{intent,emphasis}-fill-{hover,pressed}");
+@source inline("{hover:,active:,}bg-state-{hover,pressed} bg-state-selected {ring,outline}-focus");
+@source inline("rounded-{control,chip,card,panel,pill} h-control-{sm,md,lg} shadow-{raised,overlay,modal}");
+@source inline("text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
 @import "./../styles/theme/themes.generated.css";
 @import "./../styles/theme/foundations.css";
 
@@ -171,10 +180,14 @@
 
 /*
  * State layers (spec 4.4): overlays sobre a base do nó. A base é fg em
- * superfícies neutras e a cor do intent em superfícies tingidas; as variáveis
- * são recalculadas onde a base muda.
+ * superfícies neutras e a cor do intent em superfícies tingidas. As variáveis
+ * são recalculadas onde a base ou o tema/modo mudam (escopos aninhados);
+ * intents tingidos vencem por especificidade (0,2,0) e por ordem.
  */
 :root,
+[data-theme],
+[data-ui-mode],
+.dark,
 [data-intent="neutral"] {
   --state-base: var(--ui-fg);
 }
@@ -184,6 +197,9 @@
 }
 
 :root,
+[data-theme],
+[data-ui-mode],
+.dark,
 [data-intent] {
   --state-hover: color-mix(in oklab, var(--state-base) 6%, transparent);
   --state-pressed: color-mix(in oklab, var(--state-base) 10%, transparent);

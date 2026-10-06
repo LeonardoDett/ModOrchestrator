@@ -4,10 +4,13 @@ import { DEFAULT_PRESET, PRESETS, renderPresetsCSS, type PresetId } from "./inde
 
 // Sem @types/node no projeto: especificador não literal, tipado localmente.
 const NODE_FS: string = "node:fs";
-const fs = (await import(/* @vite-ignore */ NODE_FS)) as { readFileSync(path: string, encoding: "utf8"): string };
+const fs = (await import(/* @vite-ignore */ NODE_FS)) as { readFileSync(path: URL, encoding: "utf8"): string };
+
+const lf = (s: string) => s.replace(/\r\n/g, "\n");
+/** Lê um arquivo relativo a este teste (independe do cwd), normalizando CRLF. */
+const read = (rel: string) => lf(fs.readFileSync(new URL(rel, import.meta.url), "utf8"));
 
 const ids = Object.keys(PRESETS) as PresetId[];
-const lf = (s: string) => s.replace(/\r\n/g, "\n");
 
 test("default preset is forest and all five presets exist", () => {
   expect(DEFAULT_PRESET).toBe("forest");
@@ -30,16 +33,16 @@ test("renderPresetsCSS starts with the header and forest as the root theme", () 
 });
 
 test("generated CSS is up to date", () => {
-  expect(lf(fs.readFileSync("src/styles/theme/themes.generated.css", "utf8"))).toBe(lf(renderPresetsCSS()));
+  expect(read("../../styles/theme/themes.generated.css")).toBe(lf(renderPresetsCSS()));
 });
 
 test("tokens.css exposes every generated role as a Tailwind color", () => {
-  const tokens = lf(fs.readFileSync("src/theme/tokens.css", "utf8"));
+  const tokens = read("../tokens.css");
   for (const role of ROLE_NAMES) expect(tokens).toContain(`--color-${role}: var(--ui-${role});`);
 });
 
 test("tokens.css maps neutral and brand intents to their roles", () => {
-  const tokens = lf(fs.readFileSync("src/theme/tokens.css", "utf8"));
+  const tokens = read("../tokens.css");
   const block = (intent: string) => tokens.split(`\n[data-intent="${intent}"] {`)[1]?.split("}")[0]?.trim();
   expect(block("neutral")).toBe(
     [
@@ -55,4 +58,45 @@ test("tokens.css maps neutral and brand intents to their roles", () => {
   expect(block("brand")).toContain("--intent-fill: var(--ui-emphasis-fill);");
   expect(block("brand")).toContain("--on-intent: var(--ui-on-emphasis);");
   expect(block("danger")).toContain("--intent-fill: var(--ui-danger-fill);");
+});
+
+test("state layers re-resolve in nested theme, mode and intent scopes", () => {
+  const tokens = read("../tokens.css");
+  const scopes = [":root,", "[data-theme],", "[data-ui-mode],", ".dark,"].join("\n");
+  const base = `${scopes}\n[data-intent="neutral"] {\n  --state-base: var(--ui-fg);\n}`;
+  const tinted = `[data-intent]:not([data-intent="neutral"]) {\n  --state-base: var(--intent-fill);\n}`;
+  const layers = `${scopes}\n[data-intent] {\n  --state-hover: color-mix(in oklab, var(--state-base) 6%, transparent);`;
+  for (const rule of [base, tinted, layers]) expect(tokens).toContain(rule);
+  // Intents tingidos vencem por especificidade (0,2,0 > 0,1,0) e também vêm depois.
+  expect(tokens.indexOf(tinted)).toBeGreaterThan(tokens.indexOf(base));
+});
+
+/** Expansão de chaves sem aninhamento, como `@source inline` do Tailwind. */
+function expand(token: string): string[] {
+  const m = token.match(/\{([^{}]*)\}/);
+  if (!m) return [token];
+  return m[1]!.split(",").flatMap((alt) => expand(token.replace(m[0], alt)));
+}
+
+test("bridge utilities are safelisted for every role and intent", () => {
+  const tokens = read("../tokens.css");
+  const inline = [...tokens.matchAll(/@source inline\("([^"]*)"\)/g)].map((m) => m[1]!).join(" ");
+  const safelist = new Set(inline.split(/\s+/).filter(Boolean).flatMap(expand));
+  const intentRoles = ["intent-fill", "intent-fill-hover", "intent-fill-pressed", "on-intent", "intent-subtle", "intent-text", "intent-border"];
+  const wanted = [
+    ...[...ROLE_NAMES, ...intentRoles].flatMap((r) => ["bg", "text", "border"].map((p) => `${p}-${r}`)),
+    "stroke-intent-fill",
+    "hover:bg-intent-fill-hover",
+    "active:bg-intent-fill-pressed",
+    "hover:bg-state-hover",
+    "active:bg-state-pressed",
+    "bg-state-selected",
+    "rounded-control",
+    "h-control-md",
+    "shadow-raised",
+    "text-caption",
+    "motion-transition",
+    "motion-press",
+  ];
+  expect(wanted.filter((u) => !safelist.has(u))).toEqual([]);
 });

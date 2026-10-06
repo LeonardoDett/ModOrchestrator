@@ -42,6 +42,19 @@ test("toCSS emits light and dark blocks with --ui- prefix", () => {
   expect(css).not.toMatch(/NaN|undefined/);
   expect(toCSS(createTheme(cfg), { root: true })).toMatch(/^:where\(:root\),\[data-theme="t"\]\{/);
 });
+test("dark selector list covers every way a theme meets dark mode", () => {
+  for (const css of [toCSS(createTheme(cfg)), toCSS(createTheme(cfg), { root: true })]) {
+    const dark = css.split("\n")[1]!;
+    const selectors = dark.slice(0, dark.indexOf("{")).replace(/^:where\([^)]*\),/, "").split(",");
+    expect(selectors).toEqual([
+      '.dark [data-theme="t"]',
+      '.dark[data-theme="t"]',
+      '[data-theme="t"][data-ui-mode="dark"]',
+      '[data-ui-mode="dark"] [data-theme="t"]',
+      '[data-theme="t"] [data-ui-mode="dark"]',
+    ]);
+  }
+});
 test("root selectors are zero-specificity so other themes always win", () => {
   const t = createTheme(cfg);
   const u = createTheme({ ...cfg, id: "u" });
