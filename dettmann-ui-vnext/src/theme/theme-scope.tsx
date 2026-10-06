@@ -1,16 +1,60 @@
-import type { CSSProperties, ReactNode } from "react";
-import { inputsToStyle, type ThemeInputs } from "./theme-inputs";
-import type { ResolvedTheme } from "./theme-definitions";
+import { useContext, useInsertionEffect, useMemo, type ReactNode } from "react";
+import { MOTION_LEVELS, type Mode, type MotionLevel, type ThemeConfig } from "./engine";
+import { DEFAULT_PRESET } from "./presets";
+import { injectTheme, resolveThemeInput } from "./inject";
+import { EMPTY_REGISTRY, ThemeScopeContext, themeInputKey } from "./theme-context";
 
 export interface ThemeScopeProps {
-  theme?: string;
-  mode?: ResolvedTheme;
-  inputs?: ThemeInputs;
+  /** Id (preset ou registro do provider) ou config inline; sem ele, herda o tema mais próximo. */
+  theme?: string | ThemeConfig;
+  /** Força o modo na subárvore (`data-ui-mode`). */
+  mode?: Mode;
+  density?: ThemeConfig["density"];
+  /** Nível pedido; limitado pelo teto de movimento do tema. Padrão `"calm"`. */
+  motion?: MotionLevel;
   className?: string;
   children: ReactNode;
 }
 
-export function ThemeScope({ theme = "forest", mode = "light", inputs, className, children }: ThemeScopeProps) {
-  const style = inputsToStyle(inputs, mode) as CSSProperties | undefined;
-  return <div data-theme={theme} data-ui-mode={mode} style={style} className={className}>{children}</div>;
+function clampMotion(level: MotionLevel, ceiling: MotionLevel): MotionLevel {
+  return MOTION_LEVELS[Math.min(MOTION_LEVELS.indexOf(level), MOTION_LEVELS.indexOf(ceiling))]!;
+}
+
+/**
+ * Subárvore com outro tema, modo, densidade ou movimento. Sempre emite `data-theme`
+ * (o próprio ou o herdado) e `data-motion`; `data-ui-mode` e `data-density` só quando
+ * definidos. Configs não-preset são injetadas como `<style>`.
+ */
+export function ThemeScope({ theme: themeProp, mode, density, motion, className, children }: ThemeScopeProps) {
+  const parent = useContext(ThemeScopeContext);
+  const registry = parent?.registry ?? EMPTY_REGISTRY;
+  const key = themeInputKey(themeProp);
+  const theme = useMemo(
+    () =>
+      themeProp !== undefined
+        ? resolveThemeInput(themeProp, registry)
+        : (parent?.theme ?? resolveThemeInput(DEFAULT_PRESET, registry)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [key, parent?.theme, registry],
+  );
+
+  useInsertionEffect(() => {
+    if (themeProp !== undefined) injectTheme(theme);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [theme]);
+
+  const scope = useMemo(() => ({ theme, registry }), [theme, registry]);
+  return (
+    <ThemeScopeContext.Provider value={scope}>
+      <div
+        data-theme={theme.id}
+        data-ui-mode={mode}
+        data-density={density}
+        data-motion={clampMotion(motion ?? "calm", theme.config.motion.ceiling)}
+        className={className}
+      >
+        {children}
+      </div>
+    </ThemeScopeContext.Provider>
+  );
 }

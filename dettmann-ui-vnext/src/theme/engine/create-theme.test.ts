@@ -62,12 +62,29 @@ test("root selectors are zero-specificity so other themes always win", () => {
   expect(rootCss).toContain('\n:where(.dark, [data-ui-mode="dark"]),.dark [data-theme="t"],');
   for (const css of [rootCss + toCSS(u), toCSS(u) + rootCss]) {
     const selectors = css.split("\n").filter(Boolean).map((l) => l.slice(0, l.indexOf("{")));
-    expect(selectors).toHaveLength(4);
+    expect(selectors).toHaveLength(6);
     for (const sel of selectors) {
+      if (sel.endsWith('[data-ui-mode="light"]')) {
+        // Claro forçado: sempre preso ao próprio data-theme, nunca vaza para outro tema.
+        expect(sel).toMatch(/^\[data-theme="[tu]"\]\[data-ui-mode="light"\]$/);
+        continue;
+      }
       const isU = sel.includes('data-theme="u"');
       expect(sel.includes(":where(")).toBe(!isU);
       if (!isU) expect(sel.replace(/:where\([^)]*\)/g, "")).not.toMatch(/^(:root|\.dark)/);
     }
+  }
+});
+test("forced light rule comes after dark and carries only per-mode light roles", () => {
+  const t = createTheme(cfg);
+  for (const css of [toCSS(t), toCSS(t, { root: true })]) {
+    const lines = css.split("\n").filter(Boolean);
+    expect(lines).toHaveLength(3);
+    const forced = lines[2]!;
+    expect(forced.startsWith('[data-theme="t"][data-ui-mode="light"]{')).toBe(true);
+    expect(forced).toContain(`--ui-canvas:${t.light.canvas};`);
+    expect(forced).not.toContain("--ui-radius-");
+    expect(forced).not.toContain("--ui-font-");
   }
 });
 test("dark override applies to dark only", () => {

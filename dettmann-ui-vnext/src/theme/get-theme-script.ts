@@ -1,23 +1,24 @@
 /** Default localStorage key for the color mode. */
 export const THEME_STORAGE_KEY = "ui-theme-mode";
 
-/** Default localStorage key for the preset name (`data-theme`). */
+/** Default localStorage key for the theme id (`data-theme`). */
 export const THEME_NAME_STORAGE_KEY = "ui-theme";
 
 export interface GetThemeScriptOptions {
   /** Storage key — must match ThemeProvider `storageKey`. */
   storageKey?: string;
-  /** Storage key for the preset name. */
+  /** Storage key for the theme id — must match ThemeProvider `themeStorageKey`. */
   themeStorageKey?: string;
   /** Fallback when storage is empty or invalid. */
   defaultMode?: "light" | "dark" | "system";
-  /** Preset applied before paint. `default` leaves data-theme unset. */
+  /** Theme id applied before paint when storage is empty. Default `"forest"`. */
   defaultTheme?: string;
 }
 
 /**
- * Blocking inline script: reads mode and preset and applies `.dark` plus
- * `data-theme` on `<html>` before first paint.
+ * Blocking inline script: reads mode and theme id and applies `.dark` plus
+ * `data-theme` on `<html>` before first paint. Self-contained (no imports) so it can
+ * be inlined; storage or `matchMedia` failures fall back to the defaults.
  */
 export function getThemeScript(options: GetThemeScriptOptions = {}): string {
   const storageKey = options.storageKey ?? THEME_STORAGE_KEY;
@@ -25,5 +26,5 @@ export function getThemeScript(options: GetThemeScriptOptions = {}): string {
   const defaultMode = options.defaultMode ?? "system";
   const defaultTheme = options.defaultTheme ?? "forest";
 
-  return `(function(){try{var mk=${JSON.stringify(storageKey)};var tk=${JSON.stringify(themeKey)};var d=${JSON.stringify(defaultMode)};var dt=${JSON.stringify(defaultTheme)};var s=localStorage.getItem(mk);var m=(s==="light"||s==="dark"||s==="system")?s:d;var mode=m==="system"?(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):m;var theme=localStorage.getItem(tk)||dt;var e=document.documentElement;e.classList.remove("light");e.classList.toggle("dark",mode==="dark");if(theme&&theme!=="default")e.setAttribute("data-theme",theme);else e.removeAttribute("data-theme");e.style.colorScheme=mode;}catch(e){}})();`;
+  return `(function(){var mk=${JSON.stringify(storageKey)},tk=${JSON.stringify(themeKey)},d=${JSON.stringify(defaultMode)},dt=${JSON.stringify(defaultTheme)};function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var s=g(mk),m=(s==="light"||s==="dark"||s==="system")?s:d,mode=m;if(m==="system"){try{mode=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){mode="light"}}var e=document.documentElement;e.setAttribute("data-theme",g(tk)||dt);e.classList.remove("light");e.classList.toggle("dark",mode==="dark");e.style.colorScheme=mode;})();`;
 }

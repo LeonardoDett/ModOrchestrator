@@ -1,92 +1,122 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { ThemeContext } from "./theme-context";
-import type { ThemeMode, ResolvedTheme, ThemeRegistry } from "./theme-definitions";
+import { useCallback, useEffect, useInsertionEffect, useMemo, useState, type ReactNode } from "react";
+import type { Mode, ThemeConfig } from "./engine";
+import { DEFAULT_PRESET } from "./presets";
 import { THEME_NAME_STORAGE_KEY, THEME_STORAGE_KEY } from "./get-theme-script";
-import { applyInputs, resetInputs, type ThemeInputs } from "./theme-inputs";
-import { THEME_REGISTRY } from "./theme-definitions";
+import { injectTheme, isKnownThemeId, resolveThemeInput } from "./inject";
+import { EMPTY_REGISTRY, ThemeContext, ThemeScopeContext, themeInputKey, type ThemeMode } from "./theme-context";
 
 export interface ThemeProviderProps {
   children: ReactNode;
-  defaultMode?: ThemeMode;
+  /** Tema controlado: id de preset, chave de `themes` ou config inline. Vence o valor salvo. */
+  theme?: string | ThemeConfig;
+  /** Id usado quando não há `theme` nem valor salvo válido. Padrão `"forest"`. */
   defaultTheme?: string;
-  theme?: string;
+  /** Registro do consumidor (id → config); seus temas são resolvidos e injetados em runtime. */
+  themes?: Record<string, ThemeConfig>;
+  defaultMode?: ThemeMode;
   storageKey?: string;
   themeStorageKey?: string;
   targetSelector?: string;
   disableTransitionOnChange?: boolean;
-  /** Add product-specific recipes without changing the library source. */
-  themes?: ThemeRegistry;
 }
 
-function getSystemTheme(): ResolvedTheme {
-  if (typeof window === "undefined") return "light";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+function getSystemMode(): Mode {
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  } catch {
+    return "light";
+  }
 }
-function resolveTheme(mode: ThemeMode): ResolvedTheme {
-  return mode === "system" ? getSystemTheme() : mode;
-}
+const resolveMode = (mode: ThemeMode): Mode => (mode === "system" ? getSystemMode() : mode);
+
 function readStored(key: string): string | null {
-  try { return typeof window === "undefined" ? null : localStorage.getItem(key); } catch { return null; }
+  try {
+    return typeof window === "undefined" ? null : localStorage.getItem(key);
+  } catch {
+    return null;
+  }
 }
 function writeStored(key: string, value: string): void {
-  try { if (typeof window !== "undefined") localStorage.setItem(key, value); } catch { /* storage is optional */ }
+  try {
+    if (typeof window !== "undefined") localStorage.setItem(key, value);
+  } catch {
+    /* storage is optional */
+  }
 }
-function isMode(value: string | null): value is ThemeMode {
-  return value === "light" || value === "dark" || value === "system";
-}
+const isMode = (value: string | null): value is ThemeMode => value === "light" || value === "dark" || value === "system";
 
 export function ThemeProvider({
   children,
-  defaultMode = "system",
-  defaultTheme = "forest",
   theme: themeProp,
+  defaultTheme = DEFAULT_PRESET,
+  themes = EMPTY_REGISTRY,
+  defaultMode = "system",
   storageKey = THEME_STORAGE_KEY,
   themeStorageKey = THEME_NAME_STORAGE_KEY,
   targetSelector,
   disableTransitionOnChange = false,
-  themes = THEME_REGISTRY,
 }: ThemeProviderProps) {
-  const initialTheme = themeProp ?? defaultTheme;
   const [mode, setModeState] = useState<ThemeMode>(defaultMode);
-  const [resolvedMode, setResolvedMode] = useState<ResolvedTheme>(defaultMode === "dark" ? "dark" : "light");
-  const [theme, setThemeState] = useState(initialTheme);
-  const [inputs, setInputsState] = useState<ThemeInputs>({});
+  const [resolvedMode, setResolvedMode] = useState<Mode>(defaultMode === "dark" ? "dark" : "light");
+  const [selected, setSelected] = useState<string | ThemeConfig>(themeProp ?? defaultTheme);
   const [mounted, setMounted] = useState(false);
 
-  const setMode = useCallback((newMode: ThemeMode) => {
-    setModeState(newMode);
-    writeStored(storageKey, newMode);
-  }, [storageKey]);
-  const setTheme = useCallback((next: string) => {
-    setThemeState(next);
-    writeStored(themeStorageKey, next);
-  }, [themeStorageKey]);
-  const setInputs = useCallback((partial: ThemeInputs) => {
-    setInputsState((current) => ({ light: { ...current.light, ...partial.light }, dark: { ...current.dark, ...partial.dark } }));
-  }, []);
-  const clearOverrides = useCallback(() => setInputsState({}), []);
+  // Tema controlado: uma mudança da prop substitui a seleção atual.
+  const propKey = themeInputKey(themeProp);
+  const [prevPropKey, setPrevPropKey] = useState(propKey);
+  if (propKey !== prevPropKey) {
+    setPrevPropKey(propKey);
+    if (themeProp !== undefined) setSelected(themeProp);
+  }
+
+  const setMode = useCallback(
+    (next: ThemeMode) => {
+      setModeState(next);
+      writeStored(storageKey, next);
+    },
+    [storageKey],
+  );
+  const setTheme = useCallback(
+    (next: string | ThemeConfig) => {
+      setSelected(next);
+      if (typeof next === "string") writeStored(themeStorageKey, next);
+    },
+    [themeStorageKey],
+  );
 
   useEffect(() => {
     const storedMode = readStored(storageKey);
-    const storedTheme = readStored(themeStorageKey);
     const nextMode = isMode(storedMode) ? storedMode : defaultMode;
     setModeState(nextMode);
-    setResolvedMode(resolveTheme(nextMode));
-    setThemeState(storedTheme || initialTheme);
+    setResolvedMode(resolveMode(nextMode));
+    if (themeProp === undefined) {
+      const storedTheme = readStored(themeStorageKey);
+      setSelected(storedTheme && isKnownThemeId(storedTheme, themes) ? storedTheme : defaultTheme);
+    }
     setMounted(true);
-  }, [storageKey, themeStorageKey, defaultMode, initialTheme]);
-
-  useEffect(() => { if (mounted) setResolvedMode(resolveTheme(mode)); }, [mode, mounted]);
+    // Leitura do armazenamento só na montagem (e se as chaves mudarem).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [storageKey, themeStorageKey]);
 
   useEffect(() => {
-    if (!mounted || mode !== "system") return;
+    if (mounted) setResolvedMode(resolveMode(mode));
+  }, [mode, mounted]);
+
+  useEffect(() => {
+    if (!mounted || mode !== "system" || typeof window.matchMedia !== "function") return;
     const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const handle = () => setResolvedMode(getSystemTheme());
+    const handle = () => setResolvedMode(getSystemMode());
     media.addEventListener("change", handle);
     return () => media.removeEventListener("change", handle);
   }, [mode, mounted]);
+
+  const selectedKey = themeInputKey(selected);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const theme = useMemo(() => resolveThemeInput(selected, themes), [selectedKey, themes]);
+
+  useInsertionEffect(() => injectTheme(theme), [theme]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -95,28 +125,28 @@ export function ThemeProvider({
     const apply = () => {
       target.classList.toggle("dark", resolvedMode === "dark");
       target.classList.toggle("light", resolvedMode === "light");
-      const knownTheme = themes[theme];
-      if (theme && theme !== "default" && knownTheme) target.setAttribute("data-theme", theme);
-      else if (theme && theme !== "default") target.setAttribute("data-theme", theme);
-      else target.removeAttribute("data-theme");
-      resetInputs(target);
+      target.setAttribute("data-theme", theme.id);
       target.style.colorScheme = resolvedMode;
     };
-    if (!disableTransitionOnChange) { apply(); return; }
+    if (!disableTransitionOnChange) {
+      apply();
+      return;
+    }
     const style = document.createElement("style");
     style.textContent = "*,*::before,*::after{transition:none!important}";
     document.head.appendChild(style);
     apply();
     requestAnimationFrame(() => requestAnimationFrame(() => style.remove()));
-  }, [mounted, resolvedMode, theme, targetSelector, disableTransitionOnChange, themes]);
+  }, [mounted, resolvedMode, theme, targetSelector, disableTransitionOnChange]);
 
-  useEffect(() => {
-    if (!mounted) return;
-    const target = targetSelector ? document.querySelector(targetSelector) : document.documentElement;
-    if (!(target instanceof HTMLElement)) return;
-    applyInputs(inputs, target, resolvedMode);
-  }, [mounted, inputs, targetSelector, resolvedMode]);
-
-  const value = useMemo(() => ({ mode, resolvedTheme: resolvedMode, resolvedMode, setMode, theme, setTheme, setInputs, resetInputs: clearOverrides }), [mode, resolvedMode, setMode, theme, setTheme, setInputs, clearOverrides]);
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  const value = useMemo(
+    () => ({ mode, resolvedMode, setMode, theme, setTheme }),
+    [mode, resolvedMode, setMode, theme, setTheme],
+  );
+  const scope = useMemo(() => ({ theme, registry: themes }), [theme, themes]);
+  return (
+    <ThemeContext.Provider value={value}>
+      <ThemeScopeContext.Provider value={scope}>{children}</ThemeScopeContext.Provider>
+    </ThemeContext.Provider>
+  );
 }

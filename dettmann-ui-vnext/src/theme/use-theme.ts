@@ -1,25 +1,26 @@
 import { useCallback, useContext, useMemo } from "react";
-import { ThemeContext } from "./theme-context";
-export type { ThemeMode, ResolvedTheme } from "./theme-definitions";
+import { ThemeContext, type ThemeMode } from "./theme-context";
+import type { Mode, ResolvedTheme, ThemeConfig } from "./engine";
+export type { ThemeMode } from "./theme-context";
 
 export interface UseThemeReturn {
-  mode: import("./theme-definitions").ThemeMode;
-  resolvedMode: import("./theme-definitions").ResolvedTheme;
-  resolvedTheme: import("./theme-definitions").ResolvedTheme;
+  mode: ThemeMode;
+  resolvedMode: Mode;
   isDark: boolean;
-  setMode: (mode: import("./theme-definitions").ThemeMode) => void;
+  setMode: (mode: ThemeMode) => void;
   toggle: () => void;
-  theme: string;
-  setTheme: (theme: string) => void;
-  setInputs: (partial: import("./theme-inputs").ThemeInputs) => void;
-  resetInputs: () => void;
+  theme: ResolvedTheme;
+  setTheme: (next: string | ThemeConfig) => void;
 }
 
 export function useTheme(): UseThemeReturn {
   const context = useContext(ThemeContext);
   if (!context) throw new Error("useTheme must be used within a ThemeProvider.");
-  const { mode, resolvedMode, setMode, theme, setTheme, setInputs, resetInputs } = context;
+  const { mode, resolvedMode, setMode, theme, setTheme } = context;
   const isDark = resolvedMode === "dark";
   const toggle = useCallback(() => setMode(isDark ? "light" : "dark"), [isDark, setMode]);
-  return useMemo(() => ({ mode, resolvedMode, resolvedTheme: resolvedMode, isDark, setMode, toggle, theme, setTheme, setInputs, resetInputs }), [mode, resolvedMode, isDark, setMode, toggle, theme, setTheme, setInputs, resetInputs]);
+  return useMemo(
+    () => ({ mode, resolvedMode, isDark, setMode, toggle, theme, setTheme }),
+    [mode, resolvedMode, isDark, setMode, toggle, theme, setTheme],
+  );
 }
