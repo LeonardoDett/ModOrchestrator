@@ -7,7 +7,7 @@ import { EMPTY_REGISTRY, ThemeScopeContext, themeInputKey } from "./theme-contex
 export interface ThemeScopeProps {
   /** Id (preset ou registro do provider) ou config inline; sem ele, herda o tema mais próximo. */
   theme?: string | ThemeConfig;
-  /** Força o modo na subárvore (`data-ui-mode`). */
+  /** Força o modo na subárvore (`data-ui-mode`); sem ele, reemite o modo forçado herdado. */
   mode?: Mode;
   density?: ThemeConfig["density"];
   /** Nível pedido; limitado pelo teto de movimento do tema. Padrão `"calm"`. */
@@ -22,8 +22,10 @@ function clampMotion(level: MotionLevel, ceiling: MotionLevel): MotionLevel {
 
 /**
  * Subárvore com outro tema, modo, densidade ou movimento. Sempre emite `data-theme`
- * (o próprio ou o herdado) e `data-motion`; `data-ui-mode` e `data-density` só quando
- * definidos. Configs não-preset são injetadas como `<style>`.
+ * (o próprio ou o herdado) e `data-motion`. `data-ui-mode` sai quando este escopo ou um
+ * ancestral força um modo (o próprio vence): um escopo aninhado numa ilha clara sob
+ * `.dark` continua claro. `data-density` só quando definido. Configs não-preset são
+ * injetadas como `<style>`.
  */
 export function ThemeScope({ theme: themeProp, mode, density, motion, className, children }: ThemeScopeProps) {
   const parent = useContext(ThemeScopeContext);
@@ -43,12 +45,13 @@ export function ThemeScope({ theme: themeProp, mode, density, motion, className,
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
-  const scope = useMemo(() => ({ theme, registry }), [theme, registry]);
+  const forcedMode = mode ?? parent?.forcedMode;
+  const scope = useMemo(() => ({ theme, registry, forcedMode }), [theme, registry, forcedMode]);
   return (
     <ThemeScopeContext.Provider value={scope}>
       <div
         data-theme={theme.id}
-        data-ui-mode={mode}
+        data-ui-mode={forcedMode}
         data-density={density}
         data-motion={clampMotion(motion ?? "calm", theme.config.motion.ceiling)}
         className={className}

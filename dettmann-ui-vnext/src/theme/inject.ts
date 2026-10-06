@@ -28,6 +28,9 @@ export function isKnownThemeId(id: string, registry: Record<string, ThemeConfig>
   return isPresetId(id) || Object.prototype.hasOwnProperty.call(registry, id);
 }
 
+/** Mensagens já reportadas em produção: cada erro aparece uma vez por sessão. */
+const reported = new Set<string>();
+
 const cache = new Map<string, ResolvedTheme>();
 const CACHE_LIMIT = 64;
 
@@ -44,7 +47,8 @@ function build(config: ThemeConfig, mode: "dev" | "prod"): ResolvedTheme {
 /**
  * Resolve um id (preset embutido ou chave de `registry`) ou uma config inline.
  * Ids embutidos têm precedência sobre o registro. Id desconhecido ou config inválida:
- * em dev lança `ThemeConfigError`; em produção faz `console.error` e usa o preset padrão.
+ * em dev lança `ThemeConfigError`; em produção faz `console.error` (uma vez por mensagem)
+ * e usa o preset padrão.
  */
 export function resolveThemeInput(input: string | ThemeConfig, registry: Record<string, ThemeConfig>): ResolvedTheme {
   const mode = isDev() ? "dev" : "prod";
@@ -55,7 +59,10 @@ export function resolveThemeInput(input: string | ThemeConfig, registry: Record<
     return build(isPresetId(input) ? PRESETS[input as keyof typeof PRESETS] : registry[input]!, mode);
   } catch (err) {
     if (mode === "dev" || !(err instanceof ThemeConfigError)) throw err;
-    console.error(err.message);
+    if (!reported.has(err.message)) {
+      reported.add(err.message);
+      console.error(err.message);
+    }
     return build(PRESETS[DEFAULT_PRESET], mode);
   }
 }

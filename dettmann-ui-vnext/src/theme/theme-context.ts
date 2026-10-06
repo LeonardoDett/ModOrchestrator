@@ -14,10 +14,14 @@ export interface ThemeContextValue {
 
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-/** Tema mais próximo (provider ou `ThemeScope`) e o registro do consumidor, para escopos aninhados. */
+/**
+ * Tema mais próximo (provider ou `ThemeScope`), o registro do consumidor e o modo forçado
+ * pelo ancestral mais próximo (se houver), para escopos aninhados.
+ */
 export interface ThemeScopeContextValue {
   theme: ResolvedTheme;
   registry: Record<string, ThemeConfig>;
+  forcedMode?: Mode;
 }
 
 export const ThemeScopeContext = createContext<ThemeScopeContextValue | null>(null);

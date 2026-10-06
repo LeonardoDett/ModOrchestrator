@@ -24,6 +24,8 @@ function show(value: unknown): string {
   }
 }
 
+const THEME_ID = /^[a-z0-9][a-z0-9_-]*$/;
+
 const COLOR_HINT = "a CSS color: hex, rgb(), hsl() or oklch()";
 
 function color(field: string, value: unknown): Oklch {
@@ -81,6 +83,9 @@ function overrides(value: ThemeConfig["overrides"]): NormalizedConfig["overrides
  */
 export function normalizeConfig(config: ThemeConfig, opts: { mode?: "dev" | "prod" } = {}): NormalizedConfig {
   const mode = opts.mode ?? "dev";
+  // O id vira seletor CSS (`[data-theme="id"]`) e atributo; só caracteres seguros.
+  if (typeof config.id !== "string" || !THEME_ID.test(config.id))
+    throw new ThemeConfigError("id", config.id, "lowercase letters, digits, '-' or '_', starting with a letter or digit");
   const brand = color("brand", config.brand);
   const accent =
     config.accent === undefined

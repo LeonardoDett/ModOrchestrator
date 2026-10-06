@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useInsertionEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useInsertionEffect, useLayoutEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import type { Mode, ThemeConfig } from "./engine";
 import { DEFAULT_PRESET } from "./presets";
 import { THEME_NAME_STORAGE_KEY, THEME_STORAGE_KEY } from "./get-theme-script";
@@ -22,14 +22,35 @@ export interface ThemeProviderProps {
   disableTransitionOnChange?: boolean;
 }
 
-function getSystemMode(): Mode {
+const DARK_QUERY = "(prefers-color-scheme: dark)";
+
+function systemMedia(): MediaQueryList | null {
   try {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia(DARK_QUERY) : null;
   } catch {
-    return "light";
+    return null;
   }
 }
-const resolveMode = (mode: ThemeMode): Mode => (mode === "system" ? getSystemMode() : mode);
+
+function subscribeSystemDark(onChange: () => void): () => void {
+  const media = systemMedia();
+  media?.addEventListener("change", onChange);
+  return () => media?.removeEventListener("change", onChange);
+}
+const getSystemDark = () => systemMedia()?.matches ?? false;
+const getServerSystemDark = () => false;
+const useSystemDark = () => useSyncExternalStore(subscribeSystemDark, getSystemDark, getServerSystemDark);
+
+function subscribeStorage(onChange: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("storage", onChange);
+  return () => window.removeEventListener("storage", onChange);
+}
+const getServerStored = () => null;
+function useStoredValue(key: string): string | null {
+  const read = useCallback(() => readStored(key), [key]);
+  return useSyncExternalStore(subscribeStorage, read, getServerStored);
+}
 
 function readStored(key: string): string | null {
   try {
@@ -45,6 +66,9 @@ function writeStored(key: string, value: string): void {
     /* storage is optional */
   }
 }
+/** Layout effect no cliente (estado correto antes do paint); effect comum no servidor. */
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 const isMode = (value: string | null): value is ThemeMode => value === "light" || value === "dark" || value === "system";
 
 export function ThemeProvider({
@@ -58,59 +82,50 @@ export function ThemeProvider({
   targetSelector,
   disableTransitionOnChange = false,
 }: ThemeProviderProps) {
-  const [mode, setModeState] = useState<ThemeMode>(defaultMode);
-  const [resolvedMode, setResolvedMode] = useState<Mode>(defaultMode === "dark" ? "dark" : "light");
-  const [selected, setSelected] = useState<string | ThemeConfig>(themeProp ?? defaultTheme);
+  // Valores salvos lidos durante a renderização no cliente (o primeiro commit já usa o tema
+  // salvo, sem quadro com o padrão); na hidratação vale o snapshot do servidor (`null`) e o
+  // React re-renderiza com o do cliente. Mudanças em outras abas chegam pelo evento `storage`.
+  const storedModeRaw = useStoredValue(storageKey);
+  const storedThemeRaw = useStoredValue(themeStorageKey);
+  const systemDark = useSystemDark();
+
+  const [chosenMode, setChosenMode] = useState<ThemeMode | undefined>(undefined);
+  const [chosenTheme, setChosenTheme] = useState<string | ThemeConfig | undefined>(undefined);
   const [mounted, setMounted] = useState(false);
 
-  // Tema controlado: uma mudança da prop substitui a seleção atual.
+  // Tema controlado: uma mudança da prop descarta a escolha feita por `setTheme`.
   const propKey = themeInputKey(themeProp);
   const [prevPropKey, setPrevPropKey] = useState(propKey);
   if (propKey !== prevPropKey) {
     setPrevPropKey(propKey);
-    if (themeProp !== undefined) setSelected(themeProp);
+    setChosenTheme(undefined);
   }
+
+  const mode: ThemeMode = chosenMode ?? (isMode(storedModeRaw) ? storedModeRaw : defaultMode);
+  const resolvedMode: Mode = mode === "system" ? (systemDark ? "dark" : "light") : mode;
+  const selected: string | ThemeConfig =
+    chosenTheme ??
+    themeProp ??
+    (storedThemeRaw && isKnownThemeId(storedThemeRaw, themes) ? storedThemeRaw : defaultTheme);
 
   const setMode = useCallback(
     (next: ThemeMode) => {
-      setModeState(next);
+      setChosenMode(next);
       writeStored(storageKey, next);
     },
     [storageKey],
   );
   const setTheme = useCallback(
     (next: string | ThemeConfig) => {
-      setSelected(next);
+      setChosenTheme(next);
       if (typeof next === "string") writeStored(themeStorageKey, next);
     },
     [themeStorageKey],
   );
 
-  useEffect(() => {
-    const storedMode = readStored(storageKey);
-    const nextMode = isMode(storedMode) ? storedMode : defaultMode;
-    setModeState(nextMode);
-    setResolvedMode(resolveMode(nextMode));
-    if (themeProp === undefined) {
-      const storedTheme = readStored(themeStorageKey);
-      setSelected(storedTheme && isKnownThemeId(storedTheme, themes) ? storedTheme : defaultTheme);
-    }
-    setMounted(true);
-    // Leitura do armazenamento só na montagem (e se as chaves mudarem).
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey, themeStorageKey]);
-
-  useEffect(() => {
-    if (mounted) setResolvedMode(resolveMode(mode));
-  }, [mode, mounted]);
-
-  useEffect(() => {
-    if (!mounted || mode !== "system" || typeof window.matchMedia !== "function") return;
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const handle = () => setResolvedMode(getSystemMode());
-    media.addEventListener("change", handle);
-    return () => media.removeEventListener("change", handle);
-  }, [mode, mounted]);
+  // O `<html>` só é tocado depois da montagem (antes do paint): na hidratação ele mantém
+  // o que o script pré-paint aplicou até o estado do cliente estar resolvido.
+  useIsomorphicLayoutEffect(() => setMounted(true), []);
 
   const selectedKey = themeInputKey(selected);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,7 +133,7 @@ export function ThemeProvider({
 
   useInsertionEffect(() => injectTheme(theme), [theme]);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (!mounted) return;
     const target = targetSelector ? document.querySelector(targetSelector) : document.documentElement;
     if (!(target instanceof HTMLElement)) return;

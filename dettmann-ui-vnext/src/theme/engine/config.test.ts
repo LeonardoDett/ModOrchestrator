@@ -60,3 +60,13 @@ test("motion tune is validated: dev throws, prod clamps", () => {
 });
 test("seed and enum errors throw even in prod", () =>
   expect(() => normalizeConfig({ ...base, brand: "teal" }, { mode: "prod" })).toThrow(ThemeConfigError));
+test.each([`x"]{}*{display:none}[a="`, "", "Mine", "-a", "a b"])("unsafe id %j throws", (id) => {
+  expect(() => normalizeConfig({ ...base, id })).toThrow(ThemeConfigError);
+  try {
+    normalizeConfig({ ...base, id });
+  } catch (err) {
+    expect((err as ThemeConfigError).field).toBe("id");
+    expect((err as ThemeConfigError).value).toBe(id);
+  }
+});
+test("safe id is accepted", () => expect(normalizeConfig({ ...base, id: "mine-2" }).id).toBe("mine-2"));
