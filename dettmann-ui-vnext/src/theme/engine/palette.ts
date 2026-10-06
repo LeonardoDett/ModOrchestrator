@@ -16,6 +16,7 @@ const STATUS_MAX_C = 0.19;
 /** Faixa da luminosidade-base dos status: marca preta/branca não pode gerar status preto/branco. */
 const STATUS_MIN_L = 0.45;
 const STATUS_MAX_L = 0.85;
+const WARNING_LIGHT_MIN_L = 0.72;
 /** Deslocamentos de luminosidade-base tentados em cada matiz do giro de status. */
 const L_OFFSETS = [0, -0.05, 0.05, -0.1, 0.1];
 
@@ -49,10 +50,34 @@ export interface IntentColors {
 /** Faixa de luminosidade dos fills no dark. */
 const DARK_FILL_L: [number, number] = [0.65, 0.82];
 const STATE_STEPS: Record<Mode, [number, number]> = { light: [-0.05, -0.09], dark: [0.05, 0.09] };
+/** ΔL mínimo entre hover/pressed e o fill, e entre si, após quantização. */
+const MIN_STATE_DL = 0.03;
+/** Distância mínima (ΔE OKLab) entre um fill e canvas/surface. */
+export const MIN_SURFACE_DELTA_E = 0.08;
 
-function fillStates(fill: Oklch, mode: Mode): [Oklch, Oklch, Oklch] {
-  const [hover, pressed] = STATE_STEPS[mode];
-  return [fill, snap({ ...fill, l: fill.l + hover }), snap({ ...fill, l: fill.l + pressed })];
+/**
+ * fill, hover e pressed. Os passos seguem o modo (light escurece, dark clareia); quando o
+ * pressed bateria no limite de L, os dois passos invertem. Se a quantização em 8 bits
+ * aproximar demais (perto do preto), o passo cresce até ΔL >= 0.03.
+ */
+export function fillStates(fill: Oklch, mode: Mode): [Oklch, Oklch, Oklch] {
+  const [h, p] = STATE_STEPS[mode];
+  const step = (from: Oklch, delta: number) => {
+    let c = from;
+    for (let d = delta; Math.abs(d) <= 1; d += Math.sign(d) * 0.01) {
+      c = snap({ ...fill, l: clamp(from.l + d, 0, 1) });
+      if (Math.abs(c.l - from.l) >= MIN_STATE_DL) return { c, ok: true };
+    }
+    return { c, ok: false };
+  };
+  const build = (dir: number) => {
+    const hover = step(fill, dir * h);
+    const pressed = step(hover.c, dir * (p - h));
+    return { states: [fill, hover.c, pressed.c] as [Oklch, Oklch, Oklch], ok: hover.ok && pressed.ok };
+  };
+  const preferred = fill.l + p < 0 || fill.l + p > 1 ? -1 : 1;
+  const first = build(preferred);
+  return first.ok ? first.states : build(-preferred).states;
 }
 
 /** Quase-branco e quase-preto tingidos no matiz da semente. */
@@ -63,36 +88,56 @@ function onCandidates(seed: Oklch): { white: Oklch; black: Oklch } {
 
 /**
  * Fill sólido + estados + `on`. O `on` precisa atingir a meta sobre fill, hover e pressed.
- * Light: a semente é mantida se algum `on` já atinge a meta; senão o fill anda na
- * luminosidade (escurece para o quase-branco ou clareia para o quase-preto, o que mudar
- * menos). Dark: L clampada em [.65, .82] e, se preciso, clareia para o quase-preto.
+ * 1. Light: parte da semente; dark: L clampada em [.65, .82].
+ * 2. Se o fill estiver a menos de ΔE 0.08 de algum dos `surfaces`, afasta-se deles em L
+ *    (escurece no light, clareia no dark).
+ * 3. Se nenhum `on` atinge a meta: light escurece rumo ao quase-branco; dark clareia rumo
+ *    ao quase-preto. `darkOn` (warning no light) clareia rumo ao quase-preto, preservando
+ *    o piso de L; se isso não bastar, escurece.
+ * O `on` final é o candidato com maior contraste.
  */
-export function solveFill(seed: Oklch, mode: Mode, target: ContrastTarget): Pick<IntentColors, "fill" | "hover" | "pressed" | "on"> {
+export function solveFill(
+  seed: Oklch,
+  mode: Mode,
+  target: ContrastTarget,
+  surfaces: Oklch[] = [],
+  darkOn = false,
+): Pick<IntentColors, "fill" | "hover" | "pressed" | "on"> {
+  const light = mode === "light";
   const metric = targetMetric(target);
   const worst = (fill: Oklch, on: Oklch) => Math.min(...fillStates(fill, mode).map((s) => metric(on, s)));
+  const distinct = (c: Oklch) => surfaces.every((sf) => deltaEOK(c, sf) >= MIN_SURFACE_DELTA_E);
   const { white, black } = onCandidates(seed);
-  const start = snap(mode === "light" ? seed : { ...seed, l: clamp(seed.l, DARK_FILL_L[0], DARK_FILL_L[1]) });
+  const initial = snap(light ? seed : { ...seed, l: clamp(seed.l, DARK_FILL_L[0], DARK_FILL_L[1]) });
+  const start = solveLightness(initial, surfaces, MIN_SURFACE_DELTA_E, light ? "darker" : "lighter", deltaEOK).color;
 
   let fill = start;
   if (Math.max(worst(start, white), worst(start, black)) < 1) {
-    const lighter = solveLightness(start, [black], 1, "lighter", worst);
-    if (mode === "dark") fill = lighter.color;
-    else {
-      const darker = solveLightness(start, [white], 1, "darker", worst);
-      const cost = (r: { color: Oklch; met: boolean }) => (r.met ? Math.abs(r.color.l - start.l) : Infinity);
-      fill = cost(lighter) < cost(darker) ? lighter.color : darker.color;
-    }
+    const toBlack = !light || darkOn ? solveLightness(start, [black], 1, "lighter", worst) : null;
+    fill =
+      toBlack && toBlack.met && distinct(toBlack.color)
+        ? toBlack.color
+        : solveLightness(start, [white], 1, "darker", worst).color;
   }
   const [f, hover, pressed] = fillStates(fill, mode);
   const on = worst(fill, white) >= worst(fill, black) ? white : black;
   return { fill: f, hover, pressed, on };
 }
 
-/** Papéis completos de um intent a partir da semente. `surfaces` = canvas e surface já resolvidos. */
-export function intentColors(seed: Oklch, config: NormalizedConfig, mode: Mode, surfaces: Oklch[]): IntentColors {
+/**
+ * Papéis completos de um intent a partir da semente. `surfaces` = canvas e surface já
+ * resolvidos; `darkOn` resolve o fill no light rumo ao quase-preto (warning).
+ */
+export function intentColors(
+  seed: Oklch,
+  config: NormalizedConfig,
+  mode: Mode,
+  surfaces: Oklch[],
+  darkOn = false,
+): IntentColors {
   const targets = CONTRAST_TARGETS[config.contrast];
   const light = mode === "light";
-  const { fill, hover, pressed, on } = solveFill(seed, mode, targets["on-fill"]);
+  const { fill, hover, pressed, on } = solveFill(seed, mode, targets["on-fill"], surfaces, darkOn);
   const subtle = snap({ l: light ? 0.96 : 0.27, c: subtleChroma(seed, config.vibrance), h: seed.h });
   const text = solveLightness(
     { l: fill.l, c: seed.c, h: seed.h },
@@ -113,7 +158,7 @@ export function subtleChroma(seed: Oklch, vibrance: number): number {
 export function statusSeed(status: StatusIntent, brand: Oklch, mode: Mode): Oklch {
   // no dark a faixa do fill já vale aqui, para que os deslocamentos de L do giro tenham efeito
   const base = mode === "dark" ? clamp(brand.l, DARK_FILL_L[0], DARK_FILL_L[1]) : clamp(brand.l, STATUS_MIN_L, STATUS_MAX_L);
-  const l = status === "warning" && mode === "light" ? Math.max(base, 0.72) : base;
+  const l = status === "warning" && mode === "light" ? Math.max(base, WARNING_LIGHT_MIN_L) : base;
   return { l, c: clamp(brand.c, STATUS_MIN_C, STATUS_MAX_C), h: STATUS_HUES[status] };
 }
 
@@ -135,9 +180,14 @@ export function buildIntents(
   const intents = { brand, accent: intentColors(config.accent, config, mode, surfaces) } as Record<ColorIntent, IntentColors>;
   for (const status of Object.keys(STATUS_HUES) as StatusIntent[]) {
     const seed = statusSeed(status, config.brand, mode);
+    // warning no light mantém o piso de L (.72) e resolve o fill rumo ao `on` escuro
+    const warningLight = status === "warning" && mode === "light";
+    const targets = CONTRAST_TARGETS[config.contrast];
+    // a busca só precisa do fill; os demais papéis saem uma vez, da semente escolhida
     const attempt = (h: number, c: number, l: number) => {
-      const colors = intentColors({ l, c, h }, config, mode, surfaces);
-      return { h, c, colors, delta: deltaEOK(brand.fill, colors.fill) };
+      const candidate = { l: warningLight ? Math.max(l, WARNING_LIGHT_MIN_L) : l, c, h };
+      const { fill } = solveFill(candidate, mode, targets["on-fill"], surfaces, warningLight);
+      return { seed: candidate, delta: deltaEOK(brand.fill, fill) };
     };
     // menor giro de matiz possível (primeiro para longe da marca, depois para o outro lado);
     // em cada matiz, a luminosidade-base pode andar ±0.05/±0.1 e a croma subir até 0.19 —
@@ -159,7 +209,7 @@ export function buildIntents(
       warnings.push(
         `${status}-fill is too close to brand-fill in ${mode} mode (ΔE ${best.delta.toFixed(3)} < ${minDelta})`,
       );
-    intents[status] = best.colors;
+    intents[status] = intentColors(best.seed, config, mode, surfaces, warningLight);
   }
   return { intents, warnings };
 }

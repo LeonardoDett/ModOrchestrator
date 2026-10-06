@@ -85,16 +85,20 @@ export interface ContrastResult {
   pass: boolean;
 }
 
-/** Mede todos os pares de `CONTRAST_PAIRS` presentes em `roles` (valores em hex/CSS). */
+/** Mede todos os pares de `CONTRAST_PAIRS` em `roles` (valores em hex/CSS); ausente ou inválido reprova. */
 export function contrastReport(roles: Record<string, string>, contrast: ContrastLevel): ContrastResult[] {
   const out: ContrastResult[] = [];
+  const color = (role: RoleName) => (typeof roles[role] === "string" ? parseColor(roles[role]) : null);
   for (const { fg, bg: bgs, kind } of CONTRAST_PAIRS) {
-    const fgColor = roles[fg] === undefined ? null : parseColor(roles[fg]);
-    if (!fgColor) continue;
+    const fgColor = color(fg);
     const target = CONTRAST_TARGETS[contrast][kind];
     for (const bg of bgs) {
-      const bgColor = roles[bg] === undefined ? null : parseColor(roles[bg]);
-      if (!bgColor) continue;
+      const bgColor = color(bg);
+      // papel ausente ou que não faz parse reprova (razão 0), nunca é pulado
+      if (!fgColor || !bgColor) {
+        out.push({ fg, bg, kind, ratio: 0, target: target.wcag, pass: false });
+        continue;
+      }
       const ratio = wcagContrast(fgColor, bgColor);
       const result: ContrastResult = { fg, bg, kind, ratio, target: target.wcag, pass: ratio >= target.wcag };
       if (target.apca !== undefined) {
@@ -135,6 +139,16 @@ export function buildRoles(config: NormalizedConfig, mode: Mode): { roles: Recor
   const solve = (start: Oklch, against: Oklch[], kind: ContrastKind) =>
     solveLightness(start, against, 1, dir, targetMetric(targets[kind])).color;
 
+  /**
+   * Texto secundário/meta: o primeiro valor que atinge a meta andando da superfície em
+   * direção ao fg (o L mais próximo das superfícies que passa contra todas elas). Assim
+   * fg > fg-muted > fg-subtle em contraste, cada um no mínimo da sua meta.
+   */
+  const fromSurface = (against: Oklch[], kind: ContrastKind) => {
+    const ls = against.map((bg) => bg.l);
+    return solve(neutral(light ? Math.max(...ls) : Math.min(...ls)), against, kind);
+  };
+
   const L = SURFACE_L[mode];
   const canvas = snap(neutral(L.canvas));
   const surface = snap(neutral(L.surface));
@@ -153,14 +167,14 @@ export function buildRoles(config: NormalizedConfig, mode: Mode): { roles: Recor
     raised,
     sunken,
     fg: solve(neutral(light ? 0.22 : 0.95), surfaces, "text"),
-    "fg-muted": solve(neutral(light ? 0.45 : 0.75), surfaces, "text-secondary"),
-    "fg-subtle": solve(neutral(light ? 0.45 : 0.75), [canvas, surface], "text-meta"),
+    "fg-muted": fromSurface(surfaces, "text-secondary"),
+    "fg-subtle": fromSurface([canvas, surface], "text-meta"),
     "fg-disabled": snap(neutral(light ? 0.7 : 0.45)),
     "border-subtle": snap(neutral(surface.l + sign * 0.05)),
     border: snap(neutral(surface.l + sign * 0.09)),
     "border-strong": solve(neutral(surface.l + sign * 0.09), [surface, canvas], "control-border"),
     structure,
-    "structure-fg": solve(neutral(light ? 0.45 : 0.75), surfaces, "text-secondary"),
+    "structure-fg": fromSurface(surfaces, "text-secondary"),
     "structure-border": snap({ ...structureTone, l: structureTone.l + sign * 0.09 }),
     selected: snap({
       l: light ? 0.96 : 0.27,

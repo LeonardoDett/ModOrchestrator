@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { inGamut, parseColor } from "./color/convert";
-import { deltaEOK } from "./color/contrast";
+import { deltaEOK, wcagContrast } from "./color/contrast";
 import { normalizeConfig } from "./config";
 import { buildIntents } from "./palette";
 import { buildRoles, CONTRAST_PAIRS, contrastReport, ROLE_NAMES } from "./roles";
@@ -17,9 +17,11 @@ function mulberry32(seed: number): () => number {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-const rand = mulberry32(42);
-const randomBrand = (_i: number): string =>
-  "#" + Array.from({ length: 3 }, () => Math.floor(rand() * 256).toString(16).padStart(2, "0")).join("");
+/** Cada marca depende só do índice: reordenar testes não muda a amostra. */
+const randomBrand = (i: number): string => {
+  const rand = mulberry32(42 + i);
+  return "#" + Array.from({ length: 3 }, () => Math.floor(rand() * 256).toString(16).padStart(2, "0")).join("");
+};
 
 const seeds = Array.from({ length: 300 }, (_, i) => randomBrand(i));
 const edge = ["#ffff00", "#0a0a0a", "#fafafa", "#808080", "#000000", "#ffffff", "#16a34a", "#dc2626", "#2563eb", "#f59e0b"];
@@ -31,6 +33,29 @@ test.each([...edge, ...seeds])("all contrast targets pass for %s in both modes a
       const { roles } = buildRoles(normalizeConfig({ id: "t", label: "t", brand, contrast }), mode);
       const failing = contrastReport(roles, contrast).filter((r) => !r.pass);
       expect(failing).toEqual([]);
+    }
+});
+
+const L = (hex: string) => parseColor(hex)!.l;
+const hex = (hex: string) => parseColor(hex)!;
+const FILL_INTENTS = ["brand", "accent", "info", "success", "warning", "danger"] as const;
+
+test.each([...edge, ...seeds])("text hierarchy and distinct fills/states for %s", (brand) => {
+  for (const contrast of ["standard", "high"] as const)
+    for (const mode of ["light", "dark"] as const) {
+      const { roles } = buildRoles(normalizeConfig({ id: "t", label: "t", brand, contrast }), mode);
+      const where = `${brand} ${contrast} ${mode}`;
+      const canvas = hex(roles.canvas);
+      const ratio = (role: "fg" | "fg-muted" | "fg-subtle") => wcagContrast(hex(roles[role]), canvas);
+      expect(ratio("fg"), where).toBeGreaterThan(ratio("fg-muted"));
+      expect(ratio("fg-muted"), where).toBeGreaterThan(ratio("fg-subtle"));
+      expect(Math.abs(L(roles.fg) - L(roles["fg-muted"])), where).toBeGreaterThanOrEqual(0.06);
+      expect(Math.abs(L(roles["fg-muted"]) - L(roles["fg-subtle"])), where).toBeGreaterThanOrEqual(0.06);
+      for (const x of FILL_INTENTS) {
+        const fill = hex(roles[`${x}-fill`]);
+        for (const surface of ["canvas", "surface"] as const)
+          expect(deltaEOK(fill, hex(roles[surface])), `${where} ${x} vs ${surface}`).toBeGreaterThanOrEqual(0.08);
+      }
     }
 });
 
@@ -129,13 +154,62 @@ test("missing accent is derived 150 degrees away from the brand", () => {
 });
 
 test("fill states step in lightness with the mode", () => {
-  const L = (hex: string) => parseColor(hex)!.l;
   const light = buildRoles(normalizeConfig(cfg()), "light").roles;
   expect(L(light["brand-fill-hover"])).toBeLessThan(L(light["brand-fill"]));
   expect(L(light["brand-fill-pressed"])).toBeLessThan(L(light["brand-fill-hover"]));
   const dark = buildRoles(normalizeConfig(cfg()), "dark").roles;
   expect(L(dark["brand-fill-hover"])).toBeGreaterThan(L(dark["brand-fill"]));
   expect(L(dark["brand-fill-pressed"])).toBeGreaterThan(L(dark["brand-fill-hover"]));
+});
+
+test("hover and pressed always differ from the fill and from each other", () => {
+  for (const brand of edge)
+    for (const contrast of ["standard", "high"] as const)
+      for (const mode of ["light", "dark"] as const) {
+        const { roles } = buildRoles(normalizeConfig(cfg({ brand, contrast })), mode);
+        for (const x of FILL_INTENTS) {
+          const where = `${brand} ${contrast} ${mode} ${x}`;
+          const [f, h, p] = (["fill", "fill-hover", "fill-pressed"] as const).map((s) => L(roles[`${x}-${s}`]));
+          expect(Math.abs(h! - f!), where).toBeGreaterThanOrEqual(0.03);
+          expect(Math.abs(p! - f!), where).toBeGreaterThanOrEqual(0.03);
+          expect(Math.abs(p! - h!), where).toBeGreaterThanOrEqual(0.03);
+        }
+      }
+});
+
+test("white and black brands produce fills distinct from the surfaces", () => {
+  for (const brand of ["#ffffff", "#000000"])
+    for (const mode of ["light", "dark"] as const) {
+      const { roles } = buildRoles(normalizeConfig(cfg({ brand })), mode);
+      for (const surface of ["canvas", "surface"] as const)
+        expect(deltaEOK(hex(roles["brand-fill"]), hex(roles[surface])), `${brand} ${mode}`).toBeGreaterThanOrEqual(0.08);
+      expect(roles["brand-fill-hover"]).not.toBe(roles["brand-fill"]);
+      expect(roles["brand-fill-pressed"]).not.toBe(roles["brand-fill-hover"]);
+    }
+});
+
+test("light fills that fail are darkened toward the light on-color", () => {
+  const { roles } = buildRoles(normalizeConfig(cfg({ brand: "#f59e0b", contrast: "high" })), "light");
+  expect(L(roles["brand-fill"])).toBeLessThan(L("#f59e0b"));
+  expect(L(roles["on-brand"])).toBeGreaterThan(0.9);
+});
+
+test("warning keeps its light floor with a dark on-color", () => {
+  for (const brand of [...edge, ...seeds.slice(0, 30)])
+    for (const contrast of ["standard", "high"] as const) {
+      const { roles } = buildRoles(normalizeConfig(cfg({ brand, contrast })), "light");
+      expect(L(roles["warning-fill"]), brand).toBeGreaterThanOrEqual(0.72 - 0.005);
+      expect(L(roles["on-warning"])).toBeLessThan(0.3);
+    }
+});
+
+test("contrastReport fails missing or unparseable roles instead of skipping them", () => {
+  const { roles } = buildRoles(normalizeConfig(cfg()), "light");
+  const { fg: _drop, ...rest } = roles;
+  const missing = contrastReport({ ...rest, canvas: "teal" }, "standard").filter((r) => !r.pass);
+  expect(missing.filter((r) => r.fg === "fg")).toHaveLength(5);
+  expect(missing.filter((r) => r.bg === "canvas" && r.fg !== "fg").length).toBeGreaterThan(0);
+  expect(missing.every((r) => r.ratio === 0)).toBe(true);
 });
 
 test("overlay alpha depends on the mode", () => {

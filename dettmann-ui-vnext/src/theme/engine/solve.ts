@@ -42,12 +42,22 @@ export function targetMetric(target: ContrastTarget): (fg: Oklch, bg: Oklch) => 
  * Medir contraste sobre ela garante que o hex final atinge a meta.
  */
 export function snap(c: Oklch): Oklch {
+  const key = `${c.l} ${c.c} ${c.h}`;
+  const hit = snapCache.get(key);
+  if (hit) return hit;
   const l = Math.min(1, Math.max(0, c.l));
-  return parseColor(toHex({ l, c: Math.max(0, c.c), h: c.h }))!;
+  const out = parseColor(toHex({ l, c: Math.max(0, c.c), h: c.h }))!;
+  if (snapCache.size >= SNAP_CACHE_MAX) snapCache.clear();
+  snapCache.set(key, Object.freeze(out));
+  return out;
 }
 
+/** Memo de `snap` (função pura; o solver reavalia as mesmas cores muitas vezes). */
+const snapCache = new Map<string, Oklch>();
+const SNAP_CACHE_MAX = 20000;
+
 const ITERATIONS = 24;
-const MIN_STEP = 1e-4;
+const MIN_STEP = 5e-4;
 
 /**
  * Ajusta só a luminosidade (matiz e croma mantidos, croma reduzida ao gamut) até
