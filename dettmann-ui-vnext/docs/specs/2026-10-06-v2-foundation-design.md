@@ -1,6 +1,6 @@
 # dettmann-ui v2 — Fundação (tokens, temas, ênfase, movimento)
 
-Status: aprovado em brainstorming (2026-10-06), aguardando revisão do spec escrito.
+Status: aprovado (2026-10-06).
 Subprojeto 1 de 4 da reformulação da dettmann-ui v2.
 
 ## 1. Contexto e problema
@@ -343,6 +343,29 @@ Orchestrator (4); MotionLab; editor de tema dentro do Mod Orchestrator.
 ## 13. Documentação a atualizar
 
 - `dettmann-ui-vnext/docs/theme-system.md`, `architecture.md`, `decisions.md`, `README.md`.
-- Skills `.cursor/skills/dettmann-ui/theme-first` e `component-authoring` (novo contrato `emphasis × intent`, proibição de cor local).
+- Skills: substituídas pelas da seção 14.
 - `mod-orchestrator-spec-v2/docs-ia/decisoes.md`: nova decisão registrando a adoção
   da dettmann-ui v2 e a migração planejada (subprojeto 4).
+- `AGENTS.md` do Mod Orchestrator: apontar para as novas skills.
+
+## 14. Skills
+
+Três skills substituem as quatro atuais (`theme-first`, `composition`,
+`component-authoring`, `ui-review`), absorvendo o conteúdo ainda válido delas.
+
+| Skill | Gatilho | Conteúdo |
+|---|---|---|
+| `dettmann-ui-use` | trabalho de UI em projeto consumidor | criar tema com `createTheme`; escolher `emphasis × intent` (tabela de decisão); orçamento 60/30/10; quando usar `MotionScope`/prop `motion`; composição por slots; faltou componente genérico → usar `dettmann-ui-author`, nunca criar paralelo. Termina com checklist de revisão de tela (absorve `ui-review`), incluindo rodar `BudgetInspector`. |
+| `dettmann-ui-author` | qualquer alteração dentro da lib | as 4 camadas e o que cada uma pode tocar; anatomia de componente (recipe, slots, `emphasis` via tabela central, `data-layer`, movimento via primitivas, nenhuma cor local); testes obrigatórios; `theme:lint`; docs e skills a atualizar ao mudar contrato. |
+| `dettmann-ui-improve` | sob demanda | auditoria somente leitura em duas direções. Consumidor: padrões repetidos que deveriam virar componente, cor/raio/duração hardcoded, telas fora do orçamento, micro-interações ausentes (ações sem feedback, listas sem `Presence`, reordenação sem `useFlip`). Lib: componentes sem estados loading/empty/error, sem teclado, sem movimento; lacunas de catálogo. Saída: relatório priorizado por impacto × esforço com arquivo:linha e correção sugerida. Não altera código. |
+
+- **Fonte única**: `dettmann-ui-vnext/skills/<nome>/SKILL.md`.
+- **Distribuição**: `npm run skills:install -- <caminho-do-projeto>` copia para
+  `<projeto>/.claude/skills/` e `<projeto>/.cursor/skills/` (sobrescreve as versões
+  dettmann-ui anteriores, não toca outras skills). As skills antigas em
+  `dettmann-ui-vnext/.cursor/skills/dettmann-ui/` são removidas.
+- **Evolução**: nascem cobrindo a fundação; os subprojetos 2 e 3 acrescentam as
+  seções de ícones e componentes. Atualizar as skills faz parte do critério de
+  conclusão de cada ciclo.
+- **Qualidade**: escritas com o processo de `superpowers:writing-skills` (teste
+  com agente sem contexto antes de considerar pronta).
