@@ -41,6 +41,7 @@ Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (component-
 | L5 | ✅ **resolvida na F6** (D074): `Tree` com `checkedIds`/`onCheckedIdsChange` (caixa por nó; pasta marca/desmarca todas as folhas, estado misto, `Space` no nó em foco), `renderEnd` (coluna no fim da linha, ex.: select de vencedor) e `labels` (expandir/recolher/caixa traduzíveis). Lógica pura em `tree.model.ts`. | Conflicts, Inspector de Mod | F6 |
 | L6 | **Visualização em grafo** (nós/arestas) para ciclos e grupos. | V1.x | — |
 | L7 | ✅ **resolvida na F9** (D083): `Toast` com `action` (botão que executa e fecha). | Mods ("Também habilitar") | F9 |
+| L8 | ✅ **resolvida na F13** (D093): `ContextMenu` abre por teclado (`Shift+F10`/tecla de menu) e devolve o foco; `Inspector` com `onClose` (botão e `Esc`). | Mods, todos os Inspectors | F13 |
 
 Antes de cada fase, conferir a lib: a lacuna pode ter sido resolvida.
 

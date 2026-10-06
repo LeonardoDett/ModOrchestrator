@@ -769,3 +769,24 @@ Status: proposta (aguarda confirmação do usuário)
 Status: vigente (executa D016)
 
 `Input.Number`: stepper numérico da família Input (botões − e + com nome acessível, `type=number`, setas ↑/↓ e Enter confirmam, Esc descarta). Digitação é rascunho confirmado no blur/Enter, com `min`/`max` aplicados, para "12" não gravar "1" no caminho; rascunho vazio volta ao valor. Usado pelos limites de Settings ("stepper numérico para limites"). Teste em `input-number.test.tsx`. Consequência (D052): levar a mudança à cópia da lib do projeto Cayshin.
+
+## D093 — dettmann-ui na F13: ContextMenu por teclado, Inspector com fechar/Esc, contraste do ui/04
+Status: vigente (executa D016, D043)
+
+- `ContextMenu`: abre com `Shift+F10` e com a tecla de menu, posicionado sob o elemento em foco ou sob o `aria-activedescendant` dele (a linha focada de uma `DataTable`); foca o primeiro item habilitado; `↑/↓/Home/End` navegam; `Tab` e `Esc` fecham; fechar por teclado ou escolher um item devolve o foco a quem abriu.
+- `Inspector`: props `onClose` e `closeLabel` renderizam o botão de fechar e fecham com `Esc` de qualquer ponto da página (a lista detalhada costuma ter o foco), exceto quando o `Esc` pertence a outro: campo de edição em foco, diálogo modal, menu ou popup aberto.
+- `theme:check` passou a verificar os requisitos de ui/04 §3 no tema `orchestrator` (claro e escuro): texto principal ≥ 7:1 sobre canvas/surface/brand-subtle, `fg-tertiary` ≥ 3:1, foco ≥ 3:1 contra canvas, surface e brand-subtle. Os valores atuais passam sem ajuste.
+- Testes em `context-menu-inspector.test.tsx`. Consequência (D052): levar as mudanças à cópia da lib do projeto Cayshin.
+
+## D094 — Comportamentos da F13 não fixados pela spec
+Status: proposta (aguarda confirmação do usuário)
+
+1. **`Ctrl+1..7`** seguem a ordem dos itens da seção do jogo como o backend os oferece (por capability; sem Plugins/Load Order a numeração encurta). Navegar pelo teclado (atalho ou paleta) leva o foco ao conteúdo (`<main>`); há link "Pular para o conteúdo" no início do shell.
+2. **`Ctrl+I`** abre o seletor de arquivos do jogo ativo de qualquer tela (só se o jogo tem Mods); com arquivos escolhidos, abre Mods para mostrar a fila.
+3. **Teclas de linha**: `Espaço` habilita/desabilita a linha em foco (Mods, Plugins; num separador, recolhe/expande); a seleção continua em `Ctrl+Espaço`. `Delete` pede a remoção da seleção (ou da linha em foco, se ela não está selecionada) sempre pelo DLG-07; nunca remove direto. `Shift+F10`/tecla de menu abrem o menu da linha.
+4. **Atalhos com diálogo aberto**: só `Ctrl+K` e `F5` agem; os demais esperariam atrás do modal.
+5. **Estado "ocupado"** (ui/00 §4): faixa com o nome da operação que detém o lock da instância (`DeployStatus.busy`), em Overview, Mods, Conflicts, Plugins, Load Order e Profiles, para operações longas (deploy, purge, mover staging/arquivos, trocar método, remover mods, aplicar load order, importação — que diz que novas importações entram na fila). Comandos curtos não são anunciados. Os botões que já se desabilitavam com `busy` continuam assim; os demais seguem habilitados e o backend recusa com `instance_busy` (D038) e o toast traduzido — desabilitar cada ação mutante de cada tela exigiria a disponibilidade por ação vinda do backend, que não existe na V1.
+6. **Carregamento**: skeleton só na primeira leitura de uma tela ou lista; releituras (eventos, `F5`) mantêm os dados na tela até a resposta, sem piscar. Spinners pequenos ficam em diálogos, Inspector e botões.
+7. **Multi-seleção de Plugins** aparece com ≥ 2 selecionados (ui/00 §2.6), como em Mods; as duas usam o `ActionBar` da lib.
+8. **"Nenhum resultado"** em tabela filtrada (Mods, Plugins, Conflicts) sempre oferece "Limpar filtros".
+9. **Textos pt-BR**: "profile" virou "perfil" em todo o catálogo (glossário: `Profile` → Perfil); "Backend offline" → "Backend desconectado"; "Auto-sort" → "Ordenação automática". Termos mantidos em inglês por serem do domínio de modding: Deploy, Purge, Mod, Plugin, Load order, Staging, Master, Light, Flags.

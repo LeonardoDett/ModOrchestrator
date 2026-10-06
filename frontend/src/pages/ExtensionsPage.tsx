@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { Puzzle, X } from "lucide-react";
-import { Alert, Badge, Button, DataTable, Inspector, Spinner, Stack, Tag, Typography, type DataTableColumn } from "dettmann-ui";
+import { Puzzle } from "lucide-react";
+import { Alert, Badge, DataTable, Inspector, Stack, Tag, Typography, type DataTableColumn } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { useExtensions } from "../bridge/queries";
 import type { Extension } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useI18n, type Translator } from "../i18n/i18n";
-import { HonestEmpty, PageBody } from "./PageBody";
+import { HonestEmpty, LoadingState, PageBody } from "./PageBody";
 
 /** Label of a capability code (core/11 §1 catalog), by code (D044). */
 export function capabilityLabel(i18n: Translator, cap: string): string {
@@ -42,7 +42,7 @@ export function ExtensionsPage() {
   let body;
   switch (query.status) {
     case "loading":
-      body = <Spinner label={t("common.loading")} />;
+      body = <LoadingState rows={3} />;
       break;
     case "unavailable":
       body = (
@@ -101,11 +101,8 @@ function ExtensionInspector({ extension, onClose }: { extension: Extension; onCl
       title={extension.name}
       description={t("extensions.versionLine", { version: extension.version })}
       className="flex w-[22rem] shrink-0 flex-col overflow-auto rounded-xl border"
-      actions={
-        <Button variant="ghost" size="icon-sm" aria-label={t("common.close")} onClick={onClose}>
-          <X aria-hidden="true" className="h-4 w-4" />
-        </Button>
-      }
+      onClose={onClose}
+      closeLabel={t("common.close")}
     >
       <Stack gap="md">
         <div className="flex gap-2">

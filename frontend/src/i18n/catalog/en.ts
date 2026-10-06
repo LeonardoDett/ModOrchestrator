@@ -440,7 +440,6 @@ export const en = {
   "mods.filter.group.none": "No grouping",
   "mods.filter.group.category": "Group by category",
   "mods.filter.noMatch": "No mod matches the filters.",
-  "mods.filter.clear": "Clear filters",
 
   "mods.multi.label": "Actions for selected mods",
   "mods.multi.selected.one": "{count} selected",
@@ -2071,6 +2070,27 @@ export const en = {
   "error.launch_deploy_failed": "The deploy before launching did not finish; the game was not started.",
   "error.launch_option_unknown": "That launch option does not exist.",
   "error.launch_start_failed": "The game could not be started ({exe}).",
+  // Polimento de UX (F13: ui/00 §4–5)
+  "a11y.skipToContent": "Skip to content",
+  "busy.band": "{operation} in progress. Actions that change this game are unavailable until it finishes.",
+  "busy.band.import": "Import in progress. New imports join the queue; other actions that change this game wait until it finishes.",
+  "busy.holder.deploy": "Deploy",
+  "busy.holder.purge": "Purge",
+  "busy.holder.move_staging": "Moving the staging folder",
+  "busy.holder.move_archives": "Moving the archives folder",
+  "busy.holder.change_method": "Changing the deploy method",
+  "busy.holder.remove": "Removing mods",
+  "busy.holder.apply_load_order": "Applying the load order",
+  "busy.holder.other": "An operation",
+  "shortcuts.import": "Import files into the active game",
+  "shortcuts.workspace": "Go to a screen of the active game (in sidebar order)",
+  "shortcuts.search": "Search in the current screen",
+  "shortcuts.toggleEnabled": "Enable or disable the focused row (Mods, Plugins)",
+  "shortcuts.remove": "Remove the selected mods (asks first)",
+  "shortcuts.contextMenu": "Open the menu of the focused row",
+  "palette.deploy": "Deploy the active game",
+  "palette.import": "Import files into the active game",
+  "filters.clear": "Clear filters",
 } as const;
 
 export type MessageKey = keyof typeof en;

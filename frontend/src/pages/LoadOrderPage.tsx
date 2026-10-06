@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownUp, CheckCircle2, ChevronDown, CircleAlert, GitCompareArrows, History, ListOrdered, Lock, Pin, Undo2, X } from "lucide-react";
+import { ArrowDownUp, CheckCircle2, ChevronDown, CircleAlert, GitCompareArrows, History, ListOrdered, Lock, Pin, Undo2 } from "lucide-react";
 import {
   Alert,
   Button,
@@ -18,7 +18,7 @@ import {
   type DataTableRowMove,
 } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useLoadOrderExplain, useLoadOrderView, useWorkspace } from "../bridge/queries";
+import { useLoadOrderExplain, useLoadOrderView } from "../bridge/queries";
 import type { PluginRow, SortPreview } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
@@ -26,7 +26,8 @@ import { CompareDialog, ExternalLoadOrderDialog, ImportOrderDialog, SortPreviewD
 import { ProblemCell, reasonText, violationText } from "../features/plugins/plugin-labels";
 import { useI18n } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
-import { HonestEmpty, PageBody } from "./PageBody";
+import { BusyBand, HonestEmpty, LoadingState, PageBody, WorkspaceGate } from "./PageBody";
+import { useSettings } from "../app/settings-context";
 
 /**
  * Load Order (ui/telas/load-order.md): the order of the plugins of the active
@@ -35,21 +36,7 @@ import { HonestEmpty, PageBody } from "./PageBody";
  * INV-ORD-06). The backend validates every move (anti-pattern 1).
  */
 export function LoadOrderPage() {
-  const { t } = useI18n();
-  const ws = useWorkspace();
-  if (ws.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
-  if (ws.status === "unavailable") {
-    return (
-      <PageBody>
-        <Alert.Root variant="info">
-          <Alert.Description>{t("app.offlineHint")}</Alert.Description>
-        </Alert.Root>
-      </PageBody>
-    );
-  }
-  if (ws.status === "error") return <PageBody><ErrorAlert title="games.loadError" error={ws.error} onRetry={ws.reload} /></PageBody>;
-  if (!ws.data.active) return null;
-  return <LoadOrderWorkspace key={ws.data.active.id} instance={ws.data.active.id} />;
+  return <WorkspaceGate>{(instance) => <LoadOrderWorkspace instance={instance} />}</WorkspaceGate>;
 }
 
 function LoadOrderWorkspace({ instance }: { instance: string }) {
@@ -60,6 +47,7 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
   const { addToast } = useToast();
   const { route, navigate } = useNavigation();
   const view = useLoadOrderView(instance);
+  const { density } = useSettings();
   const [showInactive, setShowInactive] = useState(true);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [inspected, setInspected] = useState<string | null>(route.plugin ?? null);
@@ -210,6 +198,7 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
             </Menu.Root>
           }
         />
+        <BusyBand />
 
         {state?.supported ? (
           <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface px-3 py-2" role="status">
@@ -277,7 +266,7 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
         ) : null}
 
         {view.status === "error" ? <ErrorAlert title="plugins.loadError" error={view.error} onRetry={view.reload} /> : null}
-        {view.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+        {view.status === "loading" ? <LoadingState /> : null}
         {data && data.rows.every((r) => r.implicit) ? <HonestEmpty icon={ListOrdered} title="plugins.emptyTitle" description="plugins.emptyDescription" /> : null}
 
         {data && !data.rows.every((r) => r.implicit) ? (
@@ -295,6 +284,7 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
                 onSelectedIdsChange={setSelected}
                 onFocusedIdChange={(id) => id && setInspected(id)}
                 onRowActivate={(r) => setInspected(r.name)}
+                density={density}
                 reorderable={canDrag ? (r) => !r.locked : false}
                 onRowsMove={onRowsMove}
                 labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading"), dragHandle: t("loadOrder.dragHandle"), moving: t("loadOrder.moving") }}
@@ -336,11 +326,8 @@ function WhyHere({ instance, name, onClose }: { instance: string; name: string; 
       title={name}
       description={data ? t("loadOrder.why.position", { position: data.position }) : undefined}
       className="flex w-[22rem] shrink-0 flex-col overflow-auto rounded-xl border"
-      actions={
-        <Button variant="ghost" size="icon-sm" aria-label={t("common.close")} onClick={onClose}>
-          <X aria-hidden="true" className="h-4 w-4" />
-        </Button>
-      }
+      onClose={onClose}
+      closeLabel={t("common.close")}
     >
       {ex.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
       {ex.status === "error" ? <ErrorAlert title="plugins.loadError" error={ex.error} onRetry={ex.reload} /> : null}

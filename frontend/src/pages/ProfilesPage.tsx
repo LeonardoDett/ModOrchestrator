@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { CheckCircle2, Copy, GitCompare, History, MoreHorizontal, Plus, RotateCcw, UserRound } from "lucide-react";
-import { Alert, Badge, Button, Card, EmptyState, FeaturedIcon, Menu, Spinner, Stack, Table, Toolbar, Typography, useToast } from "dettmann-ui";
+import { Badge, Button, Card, EmptyState, FeaturedIcon, Menu, Stack, Table, Toolbar, Typography, useToast } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useProfiles, useSnapshots, useWorkspace } from "../bridge/queries";
+import { useProfiles, useSnapshots } from "../bridge/queries";
 import type { ProfileSummary } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
 import { CompareDialog, DeleteProfileDialog, EditProfileDialog, NewProfileDialog, TransferDialog } from "../features/profiles/ProfileDialogs";
 import { useI18n, type MessageKey } from "../i18n/i18n";
-import { PageBody } from "./PageBody";
+import { BusyBand, LoadingState, PageBody, WorkspaceGate } from "./PageBody";
 
 /**
  * Profiles (ui/telas/profiles.md): cards per profile, comparison, transfer
@@ -16,21 +16,7 @@ import { PageBody } from "./PageBody";
  * (local saves/settings) arrive with F7 and V1.x (anti-pattern 18).
  */
 export function ProfilesPage() {
-  const { t } = useI18n();
-  const ws = useWorkspace();
-  if (ws.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
-  if (ws.status === "unavailable") {
-    return (
-      <PageBody>
-        <Alert.Root variant="info">
-          <Alert.Description>{t("app.offlineHint")}</Alert.Description>
-        </Alert.Root>
-      </PageBody>
-    );
-  }
-  if (ws.status === "error") return <PageBody><ErrorAlert title="games.loadError" error={ws.error} onRetry={ws.reload} /></PageBody>;
-  if (!ws.data.active) return null; // Routes sends the user back to Games
-  return <ProfilesWorkspace key={ws.data.active.id} instance={ws.data.active.id} />;
+  return <WorkspaceGate>{(instance) => <ProfilesWorkspace instance={instance} />}</WorkspaceGate>;
 }
 
 function ProfilesWorkspace({ instance }: { instance: string }) {
@@ -96,9 +82,10 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
             </>
           }
         />
+        <BusyBand />
 
         {profiles.status === "error" ? <ErrorAlert title="profiles.loadError" error={profiles.error} onRetry={profiles.reload} /> : null}
-        {profiles.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+        {profiles.status === "loading" ? <LoadingState rows={2} /> : null}
 
         <div role="list" aria-label={t("profiles.listLabel")} className="grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4">
           {list.map((p) => {

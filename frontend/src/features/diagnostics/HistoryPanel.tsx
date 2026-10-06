@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { History as HistoryIcon, RotateCcw, Undo2 } from "lucide-react";
-import { Alert, Badge, Button, DataTable, Inline, Input, Modal, Spinner, Tag, Typography, type DataTableColumn } from "dettmann-ui";
+import { Alert, Badge, Button, DataTable, Inline, Input, Modal, Tag, Typography, type DataTableColumn } from "dettmann-ui";
 import { useSettings } from "../../app/settings-context";
 import { useBackend } from "../../bridge/backend-context";
 import { useHistory, useProfiles } from "../../bridge/queries";
 import type { HistoryEntry } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
-import { HonestEmpty } from "../../pages/PageBody";
+import { HonestEmpty, LoadingState } from "../../pages/PageBody";
 import { useNavigation } from "../../shell/navigation";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
@@ -150,7 +150,7 @@ export function HistoryPanel({ instance }: { instance: string }) {
         </Alert.Root>
       ) : null}
       {history.status === "error" ? <ErrorAlert title="history.loadError" error={history.error} onRetry={history.reload} /> : null}
-      {history.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+      {history.status === "loading" ? <LoadingState /> : null}
       {history.status === "ready" && entries.length === 0 ? <HonestEmpty icon={HistoryIcon} title="history.empty" description="history.noGame" /> : null}
       {entries.length > 0 ? (
         <DataTable

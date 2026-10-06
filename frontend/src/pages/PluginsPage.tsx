@@ -11,7 +11,6 @@ import {
   Input,
   Menu,
   SegmentedControl,
-  Spinner,
   StatusToggle,
   Switch,
   Toolbar,
@@ -19,7 +18,7 @@ import {
   type DataTableColumn,
 } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { usePluginList, usePluginRules, useWorkspace } from "../bridge/queries";
+import { usePluginList, usePluginRules } from "../bridge/queries";
 import type { PluginRow } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
@@ -29,7 +28,8 @@ import { PluginInspector } from "../features/plugins/PluginInspector";
 import { FlagTags, ProblemCell, limitText, originLabel } from "../features/plugins/plugin-labels";
 import { useI18n, type MessageKey } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
-import { HonestEmpty, PageBody } from "./PageBody";
+import { BusyBand, HonestEmpty, LoadingState, NoMatch, PageBody, WorkspaceGate } from "./PageBody";
+import { useSettings } from "../app/settings-context";
 
 type StatusFilter = "all" | "active" | "inactive";
 type FlagFilter = "all" | "master" | "light" | "none";
@@ -45,21 +45,7 @@ const HIDDEN = ["masters", "author", "version", "description"];
  * informative. Every figure comes from the backend (core/08 §9).
  */
 export function PluginsPage() {
-  const { t } = useI18n();
-  const ws = useWorkspace();
-  if (ws.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
-  if (ws.status === "unavailable") {
-    return (
-      <PageBody>
-        <Alert.Root variant="info">
-          <Alert.Description>{t("app.offlineHint")}</Alert.Description>
-        </Alert.Root>
-      </PageBody>
-    );
-  }
-  if (ws.status === "error") return <PageBody><ErrorAlert title="games.loadError" error={ws.error} onRetry={ws.reload} /></PageBody>;
-  if (!ws.data.active) return null; // Routes sends the user back to Games
-  return <PluginsWorkspace key={ws.data.active.id} instance={ws.data.active.id} />;
+  return <WorkspaceGate>{(instance) => <PluginsWorkspace instance={instance} />}</WorkspaceGate>;
 }
 
 function PluginsWorkspace({ instance }: { instance: string }) {
@@ -84,6 +70,15 @@ function PluginsWorkspace({ instance }: { instance: string }) {
   const [dialog, setDialog] = useState<"rules" | "groups" | null>(route.pluginDialog ?? null);
   const [groupFor, setGroupFor] = useState("");
   const [hidden, setHidden] = useState<readonly string[]>(HIDDEN);
+  const { density } = useSettings();
+  const filtered = query.trim() !== "" || status !== "all" || flag !== "all" || origin !== "all" || problemsOnly;
+  const clearFilters = () => {
+    setQuery("");
+    setStatus("all");
+    setFlag("all");
+    setOrigin("all");
+    setProblemsOnly(false);
+  };
 
   useEffect(() => {
     if (route.plugin) setInspected(route.plugin);
@@ -247,6 +242,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
             </Menu.Root>
           }
         />
+        <BusyBand />
 
         {data ? (
           <Typography variant="body-sm" color="fg" role="status">
@@ -273,7 +269,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
         ) : null}
 
         {list.status === "error" ? <ErrorAlert title="plugins.loadError" error={list.error} onRetry={list.reload} /> : null}
-        {list.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+        {list.status === "loading" ? <LoadingState /> : null}
 
         {data && data.rows.every((r) => r.implicit) && data.disabled.length === 0 ? (
           <HonestEmpty icon={Plug} title="plugins.emptyTitle" description="plugins.emptyDescription" />
@@ -283,6 +279,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
           <div className="flex min-h-0 flex-1 gap-4">
             <section aria-label={t("plugins.tableLabel")} className="flex min-h-0 min-w-0 flex-1 flex-col gap-2">
               <FilterBar
+                data-page-search
                 className="rounded-xl border"
                 query={query}
                 onQueryChange={setQuery}
@@ -323,7 +320,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
                   </>
                 }
               />
-              {chosen.length > 0 ? (
+              {chosen.length >= 2 ? (
                 <ActionBar role="toolbar" aria-label={tp("plugins.selection", chosen.length)} className="rounded-xl border sm:justify-start">
                   <Typography variant="body-sm" color="fg" className="mr-auto">
                     {tp("plugins.selection", chosen.length)}
@@ -362,7 +359,13 @@ function PluginsWorkspace({ instance }: { instance: string }) {
                 onSelectedIdsChange={setSelected}
                 onFocusedIdChange={(id) => id && setInspected(id)}
                 onRowActivate={(r) => setInspected(r.name)}
-                empty={<div className="p-6 text-sm text-fg-muted">{t("plugins.noMatch")}</div>}
+                density={density}
+                onRowKeyDown={(event, r) => {
+                  if (event.key !== " " || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+                  event.preventDefault();
+                  if (!r.implicit) setEnabled([r.name], !r.enabled);
+                }}
+                empty={<NoMatch message="plugins.noMatch" onClear={filtered ? clearFilters : undefined} />}
                 labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading") }}
               />
               {showDisabled && data.disabled.length > 0 ? (

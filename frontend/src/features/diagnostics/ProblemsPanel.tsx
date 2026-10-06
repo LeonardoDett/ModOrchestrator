@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, ChevronRight, EyeOff, FileArchive, RefreshCw, Search, ShieldCheck, X } from "lucide-react";
+import { ChevronDown, ChevronRight, EyeOff, FileArchive, RefreshCw, Search, ShieldCheck } from "lucide-react";
 import {
   Alert,
   Badge,
@@ -19,7 +19,7 @@ import { useBackend } from "../../bridge/backend-context";
 import { useProblems } from "../../bridge/queries";
 import type { Diagnostic } from "../../bridge/types";
 import { useI18n } from "../../i18n/i18n";
-import { HonestEmpty } from "../../pages/PageBody";
+import { HonestEmpty, LoadingState } from "../../pages/PageBody";
 import { useNavigation } from "../../shell/navigation";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
@@ -148,7 +148,7 @@ export function ProblemsPanel({ instance }: { instance: string }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <Inline gap="sm" className="w-full">
-        <div className="min-w-[14rem] flex-1">
+        <div className="min-w-[14rem] flex-1" data-page-search>
           <Input.Root value={text} onChange={(value: string) => setText(value)} fullWidth>
             <Input.Box padding="sm">
               <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />
@@ -178,7 +178,7 @@ export function ProblemsPanel({ instance }: { instance: string }) {
         </Alert.Root>
       ) : null}
       {problems.status === "error" ? <ErrorAlert title="diag.loadError" error={problems.error} onRetry={problems.reload} /> : null}
-      {problems.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+      {problems.status === "loading" ? <LoadingState /> : null}
       {data?.partial ? (
         <Alert.Root variant="warning">
           <Alert.Description>{t("diag.partial")}</Alert.Description>
@@ -209,11 +209,8 @@ export function ProblemsPanel({ instance }: { instance: string }) {
               title={diagnosticTitle(i18n, current)}
               description={`${severityLabel(i18n, shownSeverity(current))} · ${moduleLabel(i18n, current.module)}`}
               className="w-[26rem] shrink-0 overflow-auto rounded-xl border"
-              actions={
-                <Button variant="ghost" size="icon-sm" aria-label={t("common.close")} onClick={() => setSelected(null)}>
-                  <X aria-hidden="true" className="h-4 w-4" />
-                </Button>
-              }
+              onClose={() => setSelected(null)}
+              closeLabel={t("common.close")}
             >
               <DiagnosticDetail d={current} onAct={(i) => void act(current, i)} />
             </Inspector>

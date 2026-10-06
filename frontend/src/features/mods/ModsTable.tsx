@@ -68,6 +68,8 @@ interface ModsTableProps {
   onToggleSeparator: (separator: Separator) => void;
   onActivate: (row: ListRow) => void;
   onContextMenu: (row: ListRow) => void;
+  /** Keys on the focused row that the table itself does not use (Space, Delete, Shift+F10). */
+  onRowKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>, row: ListRow) => void;
   /** Whether rows can be dragged now (priority order, nothing hidden). */
   reorderable: boolean;
   onRowsMove: (move: DataTableRowMove) => Promise<unknown>;
@@ -246,6 +248,7 @@ export function ModsTable(props: ModsTableProps) {
       onFocusedIdChange={props.onFocusedChange}
       onRowActivate={props.onActivate}
       onRowContextMenu={(_, row) => props.onContextMenu(row)}
+      onRowKeyDown={props.onRowKeyDown}
       getGroup={props.groupByCategory ? (row) => (row.kind === "mod" ? row.mod.categoryPath.join(" › ") || t("mods.noCategory") : "") : undefined}
       rowClassName={(row) =>
         row.kind === "separator" ? "bg-structure" : row.mod.highlight ? "border-l-2 border-l-tone" : undefined

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { CheckCircle2, FolderOpen, Gamepad2, History, PackagePlus, ScanSearch } from "lucide-react";
-import { Alert, Badge, Button, Card, EmptyState, Spinner, Stack, Typography, useToast } from "dettmann-ui";
+import { Alert, Badge, Button, Card, EmptyState, Stack, Typography, useToast } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useInstanceOverview, useWorkspace } from "../bridge/queries";
 import type { AttentionGroup, InstanceOverview } from "../bridge/types";
@@ -15,7 +15,7 @@ import { useAction } from "../features/games/use-action";
 import { PlayButton } from "../features/launch/PlayButton";
 import { useI18n, type MessageKey } from "../i18n/i18n";
 import { useNavigation, type Route } from "../shell/navigation";
-import { PageBody } from "./PageBody";
+import { BusyBand, LoadingState, PageBody } from "./PageBody";
 
 /**
  * Overview of the active game (ui/telas/overview.md): "is my setup ready to
@@ -28,7 +28,7 @@ import { PageBody } from "./PageBody";
 export function OverviewPage() {
   const { t } = useI18n();
   const ws = useWorkspace();
-  if (ws.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
+  if (ws.status === "loading") return <PageBody><LoadingState /></PageBody>;
   if (ws.status === "unavailable") {
     return (
       <PageBody>
@@ -60,7 +60,7 @@ function OverviewBody({ id }: { id: string }) {
   const store = useStoreLabel();
   const overview = useInstanceOverview(id);
 
-  if (overview.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
+  if (overview.status === "loading") return <PageBody><LoadingState /></PageBody>;
   if (overview.status === "error") return <PageBody><ErrorAlert title="overview.loadError" error={overview.error} onRetry={overview.reload} /></PageBody>;
   if (overview.status !== "ready") return null;
   const v = overview.data;
@@ -88,6 +88,7 @@ function OverviewBody({ id }: { id: string }) {
           </Alert.Root>
         ) : null}
         <ForeignAlert findings={g.foreign} onOpenFolder={() => void run(() => backend.openInstanceFolder(g.id, "game"))} onRecheck={() => overview.reload()} />
+        <BusyBand />
         <DeployOverview />
 
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
@@ -164,9 +165,9 @@ function AttentionLine({ group, onAct, onOpen }: { group: AttentionGroup; onAct:
   return (
     <li className="flex flex-wrap items-center gap-3 px-3 py-2">
       <Icon aria-hidden="true" className={`h-4 w-4 shrink-0 ${look.className}`} />
-      <button type="button" className="min-w-0 flex-1 text-left text-sm text-fg underline-offset-2 hover:underline" onClick={onOpen}>
+      <Button variant="link" size="sm" className="min-w-0 flex-1 justify-start text-left text-sm font-normal text-fg" onClick={onOpen}>
         {diagnosticTitle(i18n, group.first)}
-      </button>
+      </Button>
       {group.count > 1 ? <Badge variant="muted">{i18n.t("overview.more", { count: group.count })}</Badge> : null}
       {action ? (
         <Button size="sm" variant="outline" onClick={() => onAct(0)}>
@@ -188,9 +189,9 @@ function Figure({ label, value, to }: { label: MessageKey; value: string | null;
         {value === null ? (
           <span className="text-fg-muted">{t("overview.unavailable")}</span>
         ) : (
-          <button type="button" className="text-left text-fg underline-offset-2 hover:underline" onClick={() => navigate(to)}>
+          <Button variant="link" size="sm" className="justify-start text-left text-sm font-normal text-fg" onClick={() => navigate(to)}>
             {value}
-          </button>
+          </Button>
         )}
       </dd>
     </>

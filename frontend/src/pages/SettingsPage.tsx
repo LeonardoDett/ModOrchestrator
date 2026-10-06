@@ -12,7 +12,8 @@ import { AppSettingRows, GameSettingsSelect, InstanceSettingRows, RestartBanner,
 import { WorkaroundsTab } from "../features/settings/WorkaroundsTab";
 import { useI18n, type MessageKey } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
-import { PageBody } from "./PageBody";
+import { LoadingState, PageBody } from "./PageBody";
+import { useRefresh } from "../bridge/use-backend-query";
 
 /**
  * Settings (ui/telas/settings-extensions.md, core/13) in the Vortex tab
@@ -37,6 +38,7 @@ export function SettingsPage() {
   const { t } = useI18n();
   const { route } = useNavigation();
   const settings = useSettings();
+  const { refresh } = useRefresh();
   const workspace = useWorkspace();
   const gamesView = useGamesView(false);
   const games: ManagedGame[] = gamesView.status === "ready" ? gamesView.data.managed : [];
@@ -51,7 +53,7 @@ export function SettingsPage() {
     if (route.settingsTab) setTab(route.settingsTab as TabId);
   }, [route.settingsTab]);
 
-  if (settings.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
+  if (settings.status === "loading") return <PageBody><LoadingState /></PageBody>;
   if (settings.status === "unavailable") {
     return (
       <PageBody>
@@ -64,7 +66,7 @@ export function SettingsPage() {
   if (settings.status === "error" && settings.error) {
     return (
       <PageBody>
-        <ErrorAlert title="settings.loadError" error={settings.error} />
+        <ErrorAlert title="settings.loadError" error={settings.error} onRetry={refresh} />
       </PageBody>
     );
   }

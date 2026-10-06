@@ -16,7 +16,7 @@ import {
   type DataTableColumn,
 } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useConflictPairDetail, useConflictPairs, useWorkspace } from "../bridge/queries";
+import { useConflictPairDetail, useConflictPairs } from "../bridge/queries";
 import type { ConflictPair, StaleIntent } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
@@ -25,7 +25,8 @@ import { locationText, modLabel, useConflictText } from "../features/conflicts/c
 import { PairFiles } from "../features/conflicts/PairFiles";
 import { useI18n, type MessageKey } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
-import { HonestEmpty, PageBody } from "./PageBody";
+import { BusyBand, HonestEmpty, LoadingState, NoMatch, PageBody, WorkspaceGate } from "./PageBody";
+import { useSettings } from "../app/settings-context";
 
 type Filter = "all" | "unreviewed" | "rule" | "order" | "override" | "redundant";
 const FILTERS: readonly Filter[] = ["all", "unreviewed", "rule", "order", "override", "redundant"];
@@ -41,21 +42,7 @@ const pairId = (p: Pick<ConflictPair, "a" | "b">) => `${p.a.id}|${p.b.id}`;
  * pair or by file. Divergência aprovada 1 (the Vortex has no such screen).
  */
 export function ConflictsPage() {
-  const { t } = useI18n();
-  const ws = useWorkspace();
-  if (ws.status === "loading") return <PageBody><Spinner label={t("common.loading")} /></PageBody>;
-  if (ws.status === "unavailable") {
-    return (
-      <PageBody>
-        <Alert.Root variant="info">
-          <Alert.Description>{t("app.offlineHint")}</Alert.Description>
-        </Alert.Root>
-      </PageBody>
-    );
-  }
-  if (ws.status === "error") return <PageBody><ErrorAlert title="games.loadError" error={ws.error} onRetry={ws.reload} /></PageBody>;
-  if (!ws.data.active) return null; // Routes sends the user back to Games
-  return <ConflictsWorkspace key={ws.data.active.id} instance={ws.data.active.id} />;
+  return <WorkspaceGate>{(instance) => <ConflictsWorkspace instance={instance} />}</WorkspaceGate>;
 }
 
 function ConflictsWorkspace({ instance }: { instance: string }) {
@@ -66,6 +53,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
   const run = useAction();
   const [includeDisabled, setIncludeDisabled] = useState(false);
   const [search, setSearch] = useState("");
+  const { density } = useSettings();
   const { route } = useNavigation();
   const [filter, setFilter] = useState<Filter>(FILTERS.includes(route.filter as Filter) ? (route.filter as Filter) : "all");
   useEffect(() => {
@@ -151,6 +139,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
             </Button>
           }
         />
+        <BusyBand />
 
         {data ? (
           <div className="flex flex-wrap items-center gap-3">
@@ -209,7 +198,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
         ) : null}
 
         {pairs.status === "error" ? <ErrorAlert title="conflicts.loadError" error={pairs.error} onRetry={reload} /> : null}
-        {pairs.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+        {pairs.status === "loading" ? <LoadingState /> : null}
 
         {data && data.totals.pairs === 0 && !search && !includeDisabled ? (
           <HonestEmpty icon={GitCompareArrows} title="conflicts.emptyTitle" description="conflicts.emptyDescription" />
@@ -219,6 +208,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
           <div className="flex min-h-0 flex-1 gap-4">
             <section aria-label={t("conflicts.pairsLabel")} className="flex min-h-0 w-[42%] min-w-[22rem] flex-col gap-2">
               <FilterBar
+                data-page-search
                 className="rounded-xl border"
                 query={search}
                 onQueryChange={setSearch}
@@ -257,7 +247,8 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
                 onFocusedIdChange={setFocused}
                 onRowActivate={(p) => setFocused(pairId(p))}
                 getGroup={group === "mod" ? (p) => (p.winner === p.a.id ? p.a.name : p.b.name) : undefined}
-                empty={<div className="p-6 text-sm text-fg-muted">{t("conflicts.noMatch")}</div>}
+                density={density}
+                empty={<NoMatch message="conflicts.noMatch" onClear={filter !== "all" || search ? () => { setFilter("all"); setSearch(""); } : undefined} />}
                 labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading") }}
               />
             </section>

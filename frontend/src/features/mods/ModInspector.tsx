@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FolderOpen, Package, RotateCcw, Trash2, X } from "lucide-react";
+import { FolderOpen, Package, RotateCcw, Trash2 } from "lucide-react";
 import { Alert, Button, Inline, Input, Inspector, Spinner, Stack, Tabs, Tag, Typography, TONES } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useCategories, useModDetails, useModHistory } from "../../bridge/queries";
@@ -33,11 +33,8 @@ export function ModInspector({ instance, id, onClose, onRemove, onEditConflicts,
       title={name || t("common.loading")}
       description={details.status === "ready" && details.data.variantLabel ? t("mods.variantOf", { name: details.data.variantOfName ?? "", label: details.data.variantLabel }) : undefined}
       className="flex w-[26rem] shrink-0 flex-col overflow-auto rounded-xl border"
-      actions={
-        <Button variant="ghost" size="icon-sm" aria-label={t("common.close")} onClick={onClose}>
-          <X aria-hidden="true" className="h-4 w-4" />
-        </Button>
-      }
+      onClose={onClose}
+      closeLabel={t("common.close")}
     >
       {details.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
       {details.status === "error" ? <ErrorAlert title="mods.loadError" error={details.error} onRetry={details.reload} /> : null}

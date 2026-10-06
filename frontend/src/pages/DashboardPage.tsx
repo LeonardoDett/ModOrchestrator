@@ -260,15 +260,15 @@ function ActiveGameDashlet() {
           </dd>
           <dt className="text-fg-muted">{t("dashboard.active.mods")}</dt>
           <dd>
-            <button type="button" className="text-left underline-offset-2 hover:underline" onClick={() => navigate({ view: "mods" })}>
+            <Button variant="link" size="sm" className="justify-start text-left" onClick={() => navigate({ view: "mods" })}>
               {g.mods ? t("overview.modsValue", { enabled: g.mods.enabled, total: g.mods.total }) : t("common.empty")}
-            </button>
+            </Button>
           </dd>
           <dt className="text-fg-muted">{t("dashboard.active.conflicts")}</dt>
           <dd>
-            <button type="button" className="text-left underline-offset-2 hover:underline" onClick={() => navigate({ view: "conflicts" })}>
+            <Button variant="link" size="sm" className="justify-start text-left" onClick={() => navigate({ view: "conflicts" })}>
               {g.conflicts ? t("dashboard.active.unreviewed", { count: g.conflicts.unreviewed }) : t("common.empty")}
-            </button>
+            </Button>
           </dd>
         </dl>
         <div className="flex flex-wrap items-center gap-2">

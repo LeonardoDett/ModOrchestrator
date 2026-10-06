@@ -1,6 +1,6 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { ChevronDown, EyeOff, Eye, FolderOpen, Gamepad2, LayoutGrid, List, Plus, Search, TriangleAlert, X } from "lucide-react";
-import { Alert, Badge, Button, Checkbox, EmptyState, FeaturedIcon, Input, Menu, SegmentedControl, Spinner, Stack, Typography } from "dettmann-ui";
+import { Alert, Badge, Button, Checkbox, EmptyState, FeaturedIcon, Input, Menu, SegmentedControl, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useGamesView } from "../bridge/queries";
 import type { DiscoveredGame, GamesView, InstanceFolder, ManagedGame, SupportedGame } from "../bridge/types";
@@ -14,7 +14,7 @@ import { ScanFooter } from "../features/games/ScanFooter";
 import { useAction } from "../features/games/use-action";
 import { useI18n } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
-import { PageBody } from "./PageBody";
+import { LoadingState, PageBody } from "./PageBody";
 
 const LAYOUT_KEY = "mo.games.layout";
 type Layout = "grid" | "list";
@@ -57,7 +57,7 @@ export function GamesPage() {
   let body: ReactNode;
   switch (view.status) {
     case "loading":
-      body = <Spinner label={t("common.loading")} />;
+      body = <LoadingState rows={3} />;
       break;
     case "unavailable":
       body = (
@@ -151,7 +151,7 @@ function GamesToolbar({ layout, onLayout, showHidden, onShowHidden, search, onSe
       <div className="ml-auto flex flex-wrap items-center gap-3">
         <Input.Root value={search} onChange={onSearch}>
           <Input.Box>
-            <Input.Field type="search" aria-label={t("games.search")} placeholder={t("games.search")} />
+            <Input.Field type="search" data-page-search aria-label={t("games.search")} placeholder={t("games.search")} />
           </Input.Box>
         </Input.Root>
         <Checkbox checked={showHidden} onCheckedChange={onShowHidden} label={t("games.showHidden")} />

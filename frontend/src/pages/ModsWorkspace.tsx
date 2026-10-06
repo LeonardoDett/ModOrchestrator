@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
 import { ChevronDown, Eraser, FolderOpen, FolderPlus, FolderTree, History, Info, MoreHorizontal, PackagePlus, Rocket, RotateCcw, Scale, Trash2 } from "lucide-react";
 import {
+  ActionBar,
   Alert,
   Button,
   ButtonGroup,
@@ -12,7 +13,6 @@ import {
   FilterBar,
   Input,
   Menu,
-  Spinner,
   Toolbar,
   Typography,
   useToast,
@@ -38,7 +38,7 @@ import { useDeploy } from "../features/deploy/DeployContext";
 import { ProblemBand } from "../features/diagnostics/ProblemBand";
 import { useI18n } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
-import { PageBody } from "./PageBody";
+import { BusyBand, LoadingState, NoMatch, PageBody } from "./PageBody";
 
 type ConflictFilter = "all" | "any" | "unreviewed" | "fully_overwritten";
 const CONFLICT_FILTERS = ["all", "any", "unreviewed", "fully_overwritten"] as const;
@@ -207,6 +207,26 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const openFolder = (folder: InstanceFolder) => void run(() => backend.openInstanceFolder(instance, folder));
   const moveTo = (entries: EntryRef[], kind: "top" | "bottom") => void move({ entries, anchor: { kind, entry: {} }, mode: "exact" });
 
+  // Row keys (ui/00 §5): Space toggles the focused mod, Delete asks to
+  // remove the selection (or the focused mod), Shift+F10 / the menu key
+  // opens the row menu on the focused row.
+  const onRowKeyDown = (event: React.KeyboardEvent<HTMLDivElement>, row: ListRow) => {
+    if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
+      setContextRow(row);
+      return;
+    }
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    if (event.key === " ") {
+      event.preventDefault();
+      if (row.kind === "separator") onToggleSeparator(row.separator);
+      else if (row.mod.state === "installed" && !row.mod.queued) onToggle(row.mod, !row.mod.enabled);
+    } else if (event.key === "Delete" && row.kind === "mod") {
+      event.preventDefault();
+      const chosen = selected.has(row.id) ? ids : [row.mod.id];
+      if (chosen.length > 0 && !rows.some((r) => chosen.includes(r.id) && r.queued)) setRemoving(chosen);
+    }
+  };
+
   const onRowsMove = async (request: DataTableRowMove) => {
     const req = moveRequestFor(request, visible);
     if (req) await move(req);
@@ -340,6 +360,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
             </>
           }
         />
+        <BusyBand />
 
         <ImportQueuePanel items={items} onDecide={setDeciding} />
 
@@ -359,7 +380,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
 
         {mods.status === "error" ? <ErrorAlert title="mods.loadError" error={mods.error} onRetry={mods.reload} /> : null}
         {order.status === "error" ? <ErrorAlert title="mods.loadError" error={order.error} onRetry={order.reload} /> : null}
-        {mods.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+        {mods.status === "loading" ? <LoadingState /> : null}
 
         {mods.status === "ready" && rows.length === 0 ? (
           <EmptyState.Root className="rounded-xl border border-border bg-surface">
@@ -375,6 +396,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         {mods.status === "ready" && rows.length > 0 ? (
           <>
             <FilterBar
+              data-page-search
               className="rounded-xl border"
               query={query}
               onQueryChange={setQuery}
@@ -439,7 +461,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
             ) : null}
 
             {selected.size >= 2 ? (
-              <div role="toolbar" aria-label={t("mods.multi.label")} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-raised px-3 py-2">
+              <ActionBar role="toolbar" aria-label={t("mods.multi.label")} className="flex-wrap rounded-xl border sm:justify-start">
                 <Typography variant="body-sm" color="fg" className="mr-2">
                   {tp("mods.multi.selected", selected.size)}
                 </Typography>
@@ -468,7 +490,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                 <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>
                   {t("mods.multi.clear")}
                 </Button>
-              </div>
+              </ActionBar>
             ) : null}
 
             <div className="flex min-h-0 flex-1 gap-4">
@@ -485,6 +507,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   onToggleSeparator={onToggleSeparator}
                   onActivate={(row) => (row.kind === "mod" ? setInspected(row.mod.id) : setSeparatorEdit({ separator: row.separator }))}
                   onContextMenu={setContextRow}
+                  onRowKeyDown={onRowKeyDown}
                   reorderable={reorderable}
                   onRowsMove={onRowsMove}
                   categoryLastOnly={lastOnly}
@@ -493,21 +516,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   density={density}
                   groupByCategory={group === "category"}
                   empty={
-                    <div className="flex flex-col items-center gap-2 p-6 text-sm text-fg-muted">
-                      {t("mods.filter.noMatch")}
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setQuery("");
-                          setStatus("all");
-                          setCategory("");
-                          setConflictFilter("all");
-                        }}
-                      >
-                        {t("mods.filter.clear")}
-                      </Button>
-                    </div>
+                    <NoMatch
+                      message="mods.filter.noMatch"
+                      onClear={() => {
+                        setQuery("");
+                        setStatus("all");
+                        setCategory("");
+                        setConflictFilter("all");
+                      }}
+                    />
                   }
                 />
               </ContextMenu>

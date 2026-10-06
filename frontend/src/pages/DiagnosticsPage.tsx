@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Activity, Copy, FolderOpen, Gamepad2, RefreshCw, Search, X } from "lucide-react";
+import { Activity, Copy, FolderOpen, Gamepad2, RefreshCw, Search } from "lucide-react";
 import {
   Alert,
   Button,
@@ -8,7 +8,6 @@ import {
   Inspector,
   LogViewer,
   SegmentedControl,
-  Spinner,
   Tabs,
   Tag,
   Typography,
@@ -29,7 +28,7 @@ import { HistoryPanel } from "../features/diagnostics/HistoryPanel";
 import { ProblemsPanel } from "../features/diagnostics/ProblemsPanel";
 import { useI18n } from "../i18n/i18n";
 import { useNavigation, type DiagnosticsTab } from "../shell/navigation";
-import { HonestEmpty, PageBody } from "./PageBody";
+import { HonestEmpty, LoadingState, PageBody } from "./PageBody";
 
 /**
  * Diagnostics (ui/telas/diagnostics.md): Problems and History of the active
@@ -79,7 +78,7 @@ function OperationsPanel() {
 
   switch (query.status) {
     case "loading":
-      return <Spinner label={t("common.loading")} />;
+      return <LoadingState />;
     case "unavailable":
       return (
         <Alert.Root variant="info">
@@ -102,11 +101,8 @@ function OperationsPanel() {
               title={operationKindLabel(i18n, op.kind)}
               description={op.id}
               className="w-96 shrink-0 overflow-auto rounded-xl border"
-              actions={
-                <Button variant="ghost" size="icon-sm" aria-label={t("common.close")} onClick={() => setSelected(null)}>
-                  <X aria-hidden="true" className="h-4 w-4" />
-                </Button>
-              }
+              onClose={() => setSelected(null)}
+              closeLabel={t("common.close")}
             >
               <OperationDetails operation={op} onViewLog={(id) => navigate({ view: "diagnostics", tab: "log", operation: id })} />
             </Inspector>
@@ -183,7 +179,7 @@ function LogPanel({ operation }: { operation?: string }) {
 
   const toolbar = (
     <Inline gap="sm" className="w-full">
-      <div className="min-w-[14rem] flex-1">
+      <div className="min-w-[14rem] flex-1" data-page-search>
         <Input.Root value={text} onChange={(value: string) => setText(value)} fullWidth>
           <Input.Box padding="sm">
             <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />

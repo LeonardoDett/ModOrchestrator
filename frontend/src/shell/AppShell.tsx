@@ -1,18 +1,23 @@
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { Badge, Sidebar, Typography, type SidebarSection } from "dettmann-ui";
 import { useAppInfo, useProblems, useWorkspace } from "../bridge/queries";
 import { useI18n } from "../i18n/i18n";
 import { AboutDialog, ShortcutsDialog } from "./HelpDialogs";
 import { CommandPalette } from "./CommandPalette";
-import { VIEWS, buildSections, useNavigation } from "./navigation";
+import { VIEWS, buildSections, useNavigation, type Route } from "./navigation";
 import { useGlobalShortcuts } from "./shortcuts";
 import { TitleBar } from "./TitleBar";
 import { TopBar, type ShellDialog } from "./TopBar";
 import { OperationsDrawer } from "../features/operations/OperationsDrawer";
 import { DeployProvider, useDeploy } from "../features/deploy/DeployContext";
 import { useRefresh } from "../bridge/use-backend-query";
+import { useBackend } from "../bridge/backend-context";
+import { useAction } from "../features/games/use-action";
 
 const SIDEBAR_KEY = "mo.sidebar.collapsed";
+
+/** Target of the skip link and of keyboard navigation. */
+const MAIN_ID = "main-content";
 
 /** Sidebar collapse is presentation state (docs-ia/03 rule 1): kept per viewer. */
 function readCollapsed(): boolean {
@@ -50,10 +55,38 @@ function Shell({ children }: { children: ReactNode }) {
   const [operationsOpen, setOperationsOpen] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog | null>(null);
 
+  const backend = useBackend();
+  const run = useAction();
   const deploy = useDeploy();
-  useGlobalShortcuts({ onCommandPalette: () => setDialog("palette"), onRefresh: refresh, onDeploy: () => void deploy.deploy() });
-
   const offered = workspace.status === "ready" ? workspace.data : null;
+  const activeId = offered?.active?.id ?? "";
+
+  // Navigation started from the keyboard (shortcut, palette) moves the focus
+  // to the content, so the next Tab or screen reader read starts there.
+  const navigateFromKeyboard = useCallback(
+    (next: Route) => {
+      navigate(next);
+      requestAnimationFrame(() => document.getElementById(MAIN_ID)?.focus({ preventScroll: true }));
+    },
+    [navigate],
+  );
+  // Ctrl+I: the import of the Mods screen, for the active game (ui/02 F-02).
+  const importFiles = useCallback(async () => {
+    if (!activeId) return;
+    const picked = await run(() => backend.pickImportFiles(activeId, t("mods.import.pickFiles")));
+    if (picked.ok && picked.value.length > 0) navigate({ view: "mods" });
+  }, [activeId, backend, navigate, run, t]);
+  useGlobalShortcuts({
+    onCommandPalette: () => setDialog("palette"),
+    onRefresh: refresh,
+    onDeploy: () => void deploy.deploy(),
+    onImport: activeId && offered?.items.includes("mods") ? () => void importFiles() : undefined,
+    onWorkspace: (index) => {
+      const view = buildSections(offered?.items).find((section) => section.id === "workspace")?.items[index]?.id;
+      if (view) navigateFromKeyboard({ view });
+    },
+  });
+
   // Diagnostics badge: blocking + errors of the active game (ui/00 §2.2).
   const problems = useProblems(offered?.active?.id ?? "");
   const errorCount = problems.status === "ready" && problems.data ? problems.data.counts.blocking + problems.data.counts.errors : 0;
@@ -83,6 +116,16 @@ function Shell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-page">
+      <a
+        href={`#${MAIN_ID}`}
+        className="sr-only z-modal rounded-md bg-raised px-3 py-2 text-sm text-fg focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:ring-2 focus:ring-ring"
+        onClick={(event) => {
+          event.preventDefault();
+          document.getElementById(MAIN_ID)?.focus();
+        }}
+      >
+        {t("a11y.skipToContent")}
+      </a>
       <TitleBar windowControls={customTitleBar} />
       <div className="flex min-h-0 flex-1">
         <Sidebar.Root
@@ -116,13 +159,17 @@ function Shell({ children }: { children: ReactNode }) {
             onOpenDialog={setDialog}
             onOpenLog={() => navigate({ view: "diagnostics", tab: "log" })}
           />
-          <main className="min-h-0 flex-1 overflow-auto">{children}</main>
+          <main id={MAIN_ID} tabIndex={-1} className="min-h-0 flex-1 overflow-auto focus:outline-none">{children}</main>
         </div>
       </div>
       <OperationsDrawer open={operationsOpen} onOpenChange={setOperationsOpen} />
       <CommandPalette
         {...dialogProps("palette")}
-        onNavigate={navigate}
+        onNavigate={navigateFromKeyboard}
+        workspaceItems={offered?.items}
+        canDeploy={Boolean(activeId)}
+        onDeploy={() => void deploy.deploy()}
+        onImport={activeId && offered?.items.includes("mods") ? () => void importFiles() : undefined}
         onOpenOperations={() => setOperationsOpen(true)}
         onOpenDialog={setDialog}
       />

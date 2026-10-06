@@ -74,6 +74,29 @@ for (const [name, selector] of themeBlocks) {
   }
 }
 
+// The Mod Orchestrator product theme has stricter requirements
+// (mod-orchestrator-spec-v2/ui/04-tema-60-30-10.md §3): main text at 7:1,
+// tertiary metadata at 3:1 and a focus ring visible at 3:1 against canvas,
+// surface and the selected-row background.
+for (const name of ["orchestrator light", "orchestrator dark"]) {
+  const block = parseBlock(themeBlocks.find(([label]) => label === name)[1]);
+  const checks = [
+    ["fg on canvas", "fg", "canvas", 7],
+    ["fg on surface", "fg", "surface", 7],
+    ["fg on brand-subtle", "fg", "brand-subtle", 7],
+    ["fg-secondary on structure", "fg-secondary", "structure", 4.5],
+    ["fg-tertiary on surface", "fg-tertiary", "surface", 3],
+    ["focus on canvas", "focus", "canvas", 3],
+    ["focus on surface", "focus", "surface", 3],
+    ["focus on brand-subtle", "focus", "brand-subtle", 3],
+  ];
+  for (const [label, foreground, background, minimum] of checks) {
+    const ratio = contrastRatio(block[foreground], block[background]);
+    if (ratio == null) throw new Error(`${name}: ${label} is not a hex color pair`);
+    if (ratio < minimum) throw new Error(`${name}: ${label} contrast is ${ratio.toFixed(2)} (< ${minimum})`);
+  }
+}
+
 // Every tone of theme/tone.ts must map to semantic roles in tokens.css, or
 // every toned Badge/Alert/Button renders without color.
 const toneSource = fs.readFileSync(path.resolve("src/theme/tone.ts"), "utf8");

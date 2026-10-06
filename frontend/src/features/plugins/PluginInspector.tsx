@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock, LockOpen, Package, Plus, Trash2, X } from "lucide-react";
+import { Lock, LockOpen, Package, Plus, Trash2 } from "lucide-react";
 import { Button, Inline, Input, Inspector, Spinner, Stack, Tag, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { usePluginDetails, usePluginRules } from "../../bridge/queries";
@@ -35,11 +35,8 @@ export function PluginInspector({ instance, name, onClose }: PluginInspectorProp
       title={name}
       description={details.status === "ready" && details.data ? originLabel(i18n, details.data.origin) : undefined}
       className="flex w-[24rem] shrink-0 flex-col overflow-auto rounded-xl border"
-      actions={
-        <Button variant="ghost" size="icon-sm" aria-label={t("common.close")} onClick={onClose}>
-          <X aria-hidden="true" className="h-4 w-4" />
-        </Button>
-      }
+      onClose={onClose}
+      closeLabel={t("common.close")}
     >
       {details.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
       {details.status === "error" ? <ErrorAlert title="plugins.loadError" error={details.error} onRetry={details.reload} /> : null}
