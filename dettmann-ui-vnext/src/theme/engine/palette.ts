@@ -1,4 +1,4 @@
-import { deltaEOK } from "./color/contrast";
+import { deltaEOK, wcagContrast } from "./color/contrast";
 import { CONTRAST_TARGETS, snap, solveLightness, targetMetric, type ContrastTarget } from "./solve";
 import type { ColorIntent, Mode, NormalizedConfig, Oklch } from "./types";
 
@@ -52,13 +52,16 @@ const DARK_FILL_L: [number, number] = [0.65, 0.82];
 const STATE_STEPS: Record<Mode, [number, number]> = { light: [-0.05, -0.09], dark: [0.05, 0.09] };
 /** ΔL mínimo entre hover/pressed e o fill, e entre si, após quantização. */
 const MIN_STATE_DL = 0.03;
+/** Razão WCAG mínima entre estados: perto do preto, ΔL em OKLab sozinho não garante diferença visível. */
+const MIN_STATE_RATIO = 1.12;
 /** Distância mínima (ΔE OKLab) entre um fill e canvas/surface. */
 export const MIN_SURFACE_DELTA_E = 0.08;
 
 /**
  * fill, hover e pressed. Os passos seguem o modo (light escurece, dark clareia); quando o
- * pressed bateria no limite de L, os dois passos invertem. Se a quantização em 8 bits
- * aproximar demais (perto do preto), o passo cresce até ΔL >= 0.03.
+ * pressed bateria no limite de L, os dois passos invertem. Medido nas cores quantizadas,
+ * cada estado precisa diferir do anterior em ΔL >= 0.03 e razão WCAG >= 1.12; senão o passo
+ * cresce (e, sem espaço, a direção inverte).
  */
 export function fillStates(fill: Oklch, mode: Mode): [Oklch, Oklch, Oklch] {
   const [h, p] = STATE_STEPS[mode];
@@ -66,7 +69,7 @@ export function fillStates(fill: Oklch, mode: Mode): [Oklch, Oklch, Oklch] {
     let c = from;
     for (let d = delta; Math.abs(d) <= 1; d += Math.sign(d) * 0.01) {
       c = snap({ ...fill, l: clamp(from.l + d, 0, 1) });
-      if (Math.abs(c.l - from.l) >= MIN_STATE_DL) return { c, ok: true };
+      if (Math.abs(c.l - from.l) >= MIN_STATE_DL && wcagContrast(c, from) >= MIN_STATE_RATIO) return { c, ok: true };
     }
     return { c, ok: false };
   };
@@ -92,8 +95,8 @@ function onCandidates(seed: Oklch): { white: Oklch; black: Oklch } {
  * 2. Se o fill estiver a menos de ΔE 0.08 de algum dos `surfaces`, afasta-se deles em L
  *    (escurece no light, clareia no dark).
  * 3. Se nenhum `on` atinge a meta: light escurece rumo ao quase-branco; dark clareia rumo
- *    ao quase-preto. `darkOn` (warning no light) clareia rumo ao quase-preto, preservando
- *    o piso de L; se isso não bastar, escurece.
+ *    ao quase-preto. `darkOn` (warning no light) clareia rumo ao quase-preto, o que
+ *    preserva o piso de L.
  * O `on` final é o candidato com maior contraste.
  */
 export function solveFill(
@@ -106,18 +109,16 @@ export function solveFill(
   const light = mode === "light";
   const metric = targetMetric(target);
   const worst = (fill: Oklch, on: Oklch) => Math.min(...fillStates(fill, mode).map((s) => metric(on, s)));
-  const distinct = (c: Oklch) => surfaces.every((sf) => deltaEOK(c, sf) >= MIN_SURFACE_DELTA_E);
   const { white, black } = onCandidates(seed);
   const initial = snap(light ? seed : { ...seed, l: clamp(seed.l, DARK_FILL_L[0], DARK_FILL_L[1]) });
   const start = solveLightness(initial, surfaces, MIN_SURFACE_DELTA_E, light ? "darker" : "lighter", deltaEOK).color;
 
   let fill = start;
   if (Math.max(worst(start, white), worst(start, black)) < 1) {
-    const toBlack = !light || darkOn ? solveLightness(start, [black], 1, "lighter", worst) : null;
-    fill =
-      toBlack && toBlack.met && distinct(toBlack.color)
-        ? toBlack.color
-        : solveLightness(start, [white], 1, "darker", worst).color;
+    if (!light || darkOn) {
+      // clarear nunca viola o piso de L do warning; o quase-preto sempre passa perto de L 1
+      fill = solveLightness(start, [black], 1, "lighter", worst).color;
+    } else fill = solveLightness(start, [white], 1, "darker", worst).color;
   }
   const [f, hover, pressed] = fillStates(fill, mode);
   const on = worst(fill, white) >= worst(fill, black) ? white : black;

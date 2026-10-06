@@ -51,6 +51,11 @@ test.each([...edge, ...seeds])("text hierarchy and distinct fills/states for %s"
       expect(ratio("fg-muted"), where).toBeGreaterThan(ratio("fg-subtle"));
       expect(Math.abs(L(roles.fg) - L(roles["fg-muted"])), where).toBeGreaterThanOrEqual(0.06);
       expect(Math.abs(L(roles["fg-muted"]) - L(roles["fg-subtle"])), where).toBeGreaterThanOrEqual(0.06);
+      if (mode === "light") {
+        // piso do warning no light (tolerância de quantização em 8 bits) com `on` escuro
+        expect(L(roles["warning-fill"]), where).toBeGreaterThanOrEqual(0.72 - 0.005);
+        expect(L(roles["on-warning"]), where).toBeLessThan(0.3);
+      }
       for (const x of FILL_INTENTS) {
         const fill = hex(roles[`${x}-fill`]);
         for (const surface of ["canvas", "surface"] as const)
@@ -173,8 +178,26 @@ test("hover and pressed always differ from the fill and from each other", () => 
           expect(Math.abs(h! - f!), where).toBeGreaterThanOrEqual(0.03);
           expect(Math.abs(p! - f!), where).toBeGreaterThanOrEqual(0.03);
           expect(Math.abs(p! - h!), where).toBeGreaterThanOrEqual(0.03);
+          const [fc, hc, pc] = (["fill", "fill-hover", "fill-pressed"] as const).map((s) => hex(roles[`${x}-${s}`]));
+          expect(wcagContrast(hc!, fc!), where).toBeGreaterThanOrEqual(1.12);
+          expect(wcagContrast(pc!, fc!), where).toBeGreaterThanOrEqual(1.12);
+          expect(wcagContrast(pc!, hc!), where).toBeGreaterThanOrEqual(1.12);
         }
       }
+});
+
+test.each([
+  ["#000000", "light"],
+  ["#0a0a0a", "light"],
+  ["#000000", "dark"],
+] as const)("near-black brand %s in %s mode has visibly distinct states", (brand, mode) => {
+  for (const contrast of ["standard", "high"] as const) {
+    const { roles } = buildRoles(normalizeConfig(cfg({ brand, contrast })), mode);
+    const [f, h, p] = (["fill", "fill-hover", "fill-pressed"] as const).map((s) => hex(roles[`brand-${s}`]));
+    expect(wcagContrast(h!, f!)).toBeGreaterThanOrEqual(1.12);
+    expect(wcagContrast(p!, h!)).toBeGreaterThanOrEqual(1.12);
+    expect(contrastReport(roles, contrast).filter((r) => !r.pass)).toEqual([]);
+  }
 });
 
 test("white and black brands produce fills distinct from the surfaces", () => {
@@ -195,7 +218,8 @@ test("light fills that fail are darkened toward the light on-color", () => {
 });
 
 test("warning keeps its light floor with a dark on-color", () => {
-  for (const brand of [...edge, ...seeds.slice(0, 30)])
+  // as sementes aleatórias são cobertas no teste de propriedade de hierarquia
+  for (const brand of edge)
     for (const contrast of ["standard", "high"] as const) {
       const { roles } = buildRoles(normalizeConfig(cfg({ brand, contrast })), "light");
       expect(L(roles["warning-fill"]), brand).toBeGreaterThanOrEqual(0.72 - 0.005);
