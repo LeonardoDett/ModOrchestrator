@@ -2,8 +2,12 @@ import type { MotionLevel, MotionSpec, MotionTune } from "./types";
 
 export const MOTION_LEVELS: readonly MotionLevel[] = ["calm", "responsive", "expressive"];
 
+/**
+ * `calm` é quase criticamente amortecida (ζ ≈ 0.95): repousa em ~400 ms sem overshoot visível
+ * (damping 53, crítico exato, leva ~510 ms pelo critério de repouso de `springToLinear`).
+ */
 export const MOTION_DEFAULTS: Record<MotionLevel, MotionSpec> = {
-  calm: { stiffness: 400, damping: 40, mass: 1, duration: 160, amplitude: 0.45, pressScale: 0.985, stagger: 20 },
+  calm: { stiffness: 700, damping: 50, mass: 1, duration: 160, amplitude: 0.45, pressScale: 0.985, stagger: 20 },
   responsive: { stiffness: 300, damping: 22, mass: 1, duration: 280, amplitude: 1, pressScale: 0.96, stagger: 35 },
   expressive: { stiffness: 260, damping: 14, mass: 1, duration: 420, amplitude: 1.6, pressScale: 0.92, stagger: 50 },
 };

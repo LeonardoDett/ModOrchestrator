@@ -14,6 +14,17 @@ test("spring easing starts at 0 and ends at 1", () => {
 });
 test("critically damped calm spring has no overshoot", () =>
   expect(springToLinear(MOTION_DEFAULTS.calm).overshoot).toBeLessThan(0.005));
+
+test("calm spring settles quickly (<= 450 ms) without overshoot", () => {
+  const { stiffness, damping, mass } = MOTION_DEFAULTS.calm;
+  // quase crítica: razão de amortecimento entre 0.9 e 1.05
+  const zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  expect(zeta).toBeGreaterThanOrEqual(0.9);
+  expect(zeta).toBeLessThanOrEqual(1.05);
+  const spring = springToLinear(MOTION_DEFAULTS.calm);
+  expect(spring.duration).toBeLessThanOrEqual(450);
+  expect(spring.overshoot).toBeLessThan(0.005);
+});
 test("overshoot grows as damping drops", () => {
   const r = springToLinear(MOTION_DEFAULTS.responsive).overshoot,
     e = springToLinear(MOTION_DEFAULTS.expressive).overshoot;
