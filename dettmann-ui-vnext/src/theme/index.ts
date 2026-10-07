@@ -27,3 +27,12 @@ export {
 } from "./engine";
 export { PRESETS, DEFAULT_PRESET, type PresetId } from "./presets";
 export { TONES, type Tone } from "./tone";
+export {
+  resolveEmphasis,
+  intentData,
+  INTENTS,
+  EMPHASES,
+  EMPHASIS_MOTION,
+  type EmphasisInput,
+  type EmphasisResolution,
+} from "./emphasis";
