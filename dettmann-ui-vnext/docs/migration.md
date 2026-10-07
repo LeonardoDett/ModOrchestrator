@@ -29,7 +29,7 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 |---|---|
 | `bg-page` / `text-page` / `ring-offset-page` | `bg-canvas` / `text-canvas` / `ring-offset-canvas` |
 | `bg-muted` | `bg-sunken` |
-| `bg-hover` / `bg-pressed` | `bg-state-hover` / `bg-state-pressed` |
+| `bg-hover` / `bg-pressed` | `bg-state-hover` / `bg-state-pressed` (repouso transparente); `state-layer-hover` / `state-layer-pressed` (repouso opaco) |
 | `ring-ring` / `border-ring` / `bg-ring` | `ring-focus` / `border-focus` / `bg-focus` |
 | `text-fg-inverse` | `text-canvas` |
 | `text-fg-secondary` / `text-fg-tertiary` | `text-fg-muted` / `text-fg-subtle` |
@@ -46,12 +46,12 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 |---|---|
 | `bg-tone` / `-hover` / `-pressed` | `bg-intent-fill` / `-hover` / `-pressed` |
 | `text-on-tone` | `text-on-intent` |
-| `bg-tone-subtle` / `bg-tone-subtle-hover` | `bg-intent-subtle` / `bg-state-hover` |
+| `bg-tone-subtle` / `bg-tone-subtle-hover` | `bg-intent-subtle` / `hover:state-layer-hover` |
 | `border-tone-border` / `border-tone` | `border-intent-border` / `border-intent-fill` |
 | `text-tone-text` / `text-tone` / `stroke-tone` | `text-intent-text` / `text-intent-fill` / `stroke-intent-fill` |
 | `bg-primary` `bg-brand` | `bg-emphasis-fill` |
 | `bg-primary-subtle` `bg-brand-subtle` | `bg-emphasis-subtle` |
-| `bg-primary-subtle-hover` | `bg-emphasis-subtle hover:bg-state-hover` |
+| `bg-primary-subtle-hover` | `bg-emphasis-subtle hover:state-layer-hover` |
 | `text-primary-text` / `border-primary` / `ring-primary` | `text-emphasis-text` / `border-emphasis-border` / `ring-focus` |
 | `bg-secondary` / `bg-secondary-hover` `bg-secondary-pressed` / `text-on-secondary` | `bg-fill-neutral` / `bg-fill-neutral-hover` / `text-fg` |
 | `bg-secondary-subtle` / `text-secondary-text` / `border-secondary(-border)` / `ring-secondary(-border)` | `bg-selected` / `text-fg` / `border-border-strong` / `ring-focus` |

@@ -10,5 +10,5 @@ export interface SurfaceProps extends ComponentPropsWithoutRef<"div"> {
 
 export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(function Surface({ layer="surface", bordered=false, interactive=false, className, children, ...props }, ref) {
   const background = { canvas: "bg-canvas", surface: "bg-surface", raised: "bg-raised", sunken: "bg-sunken", structure: "bg-structure" }[layer];
-  return <div ref={ref} className={cn("relative", background, bordered && "border border-border", interactive && "motion-transition hover:bg-state-hover", className)} {...props}>{children}</div>;
+  return <div ref={ref} className={cn("relative", background, bordered && "border border-border", interactive && "motion-transition hover:state-layer-hover", className)} {...props}>{children}</div>;
 });

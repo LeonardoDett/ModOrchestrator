@@ -34,6 +34,8 @@ interface ThemeConfig {
 
 Components only consume L3 roles through Tailwind utilities (`bg-surface`, `text-fg-muted`, `bg-intent-fill`...). `src/theme/tokens.css` is the Tailwind v4 bridge (`@theme inline`) and also holds the intent contract, state layers and motion utilities.
 
+State layers (`--state-hover/pressed/selected`, a translucent mix of `--state-base`) come in two forms. `bg-state-*` sets `background-color`, so it replaces the rest color: use it only on transparent-rest elements (ghost buttons, menu items). On opaque-rest elements (`bg-surface`, `bg-intent-subtle`, `bg-structure`...) use `state-layer-hover`, `state-layer-pressed` and `state-layer-selected` (`hover:`/`active:` variants work as usual): they paint the layer as a `background-image` that composites over the rest `background-color`.
+
 ## Contrast solver
 
 Each text/fill role is solved to the first value that reaches its target. Secondary text roles are solved from the background side (closest to the surface that still passes), which keeps the hierarchy visible. Rules worth knowing:

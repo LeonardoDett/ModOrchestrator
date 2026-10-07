@@ -123,8 +123,8 @@ export function FileList({
                 role="listitem"
                 aria-selected={selection !== "none" ? selected : undefined}
                 className={cn(
-                  "group flex min-h-14 items-center gap-3 px-3 py-2",
-                  selected ? "bg-emphasis-subtle" : "hover:bg-state-hover",
+                  "group flex min-h-14 items-center gap-3 px-3 py-2 hover:state-layer-hover",
+                  selected && "bg-emphasis-subtle",
                   item.disabled && "opacity-50",
                 )}
               >

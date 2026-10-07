@@ -80,7 +80,7 @@ const itemVariants = defineRecipe({
     },
     /** Current page: primary subtle fill and primary text. */
     current: {
-      true: "bg-emphasis-subtle font-medium text-emphasis-text hover:bg-state-hover",
+      true: "bg-emphasis-subtle font-medium text-emphasis-text hover:state-layer-hover",
       false: "",
     },
     emphasis: {

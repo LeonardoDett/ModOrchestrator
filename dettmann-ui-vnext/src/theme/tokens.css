@@ -19,6 +19,7 @@
 @source inline("{bg,text,border}-on-{emphasis,brand,accent,info,success,warning,danger,intent}");
 @source inline("stroke-intent-fill {hover:,active:,}bg-{intent,emphasis}-fill-{hover,pressed}");
 @source inline("{hover:,active:,}bg-state-{hover,pressed} bg-state-selected {ring,outline}-focus");
+@source inline("{hover:,active:,}state-layer-{hover,pressed} state-layer-selected");
 @source inline("rounded-{control,chip,card,panel,pill} h-control-{sm,md,lg} shadow-{raised,overlay,modal}");
 @source inline("text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
 @import "./../styles/theme/themes.generated.css";
@@ -215,6 +216,24 @@
   --color-state-hover: var(--state-hover);
   --color-state-pressed: var(--state-pressed);
   --color-state-selected: var(--state-selected);
+}
+
+/*
+ * `bg-state-*` substitui o fundo: use só em nós de repouso transparente.
+ * Em nós com fundo opaco (subtle, surface, structure...) use `state-layer-*`,
+ * que pinta a camada como background-image e compõe sobre o background-color
+ * de repouso (ex.: `bg-intent-subtle hover:state-layer-hover`).
+ */
+@utility state-layer-hover {
+  background-image: linear-gradient(var(--state-hover), var(--state-hover));
+}
+
+@utility state-layer-pressed {
+  background-image: linear-gradient(var(--state-pressed), var(--state-pressed));
+}
+
+@utility state-layer-selected {
+  background-image: linear-gradient(var(--state-selected), var(--state-selected));
 }
 
 /* Primitivas L2 (spec 6): espaçamento por densidade, forma, alturas, elevação e tipo. */

@@ -50,8 +50,8 @@ export function resolveEventColor(item: CalendarItem): CalendarEventColor {
 }
 
 const eventSoft =
-  "bg-intent-subtle text-intent-text border border-intent-border hover:bg-state-hover";
-const eventMuted = "border border-border bg-sunken text-fg-muted hover:bg-state-hover";
+  "bg-intent-subtle text-intent-text border border-intent-border hover:state-layer-hover";
+const eventMuted = "border border-border bg-sunken text-fg-muted hover:state-layer-hover";
 
 export function eventIntent(color: CalendarEventColor): Intent | undefined {
   return color === "muted" ? undefined : color === "primary" ? "brand" : color;

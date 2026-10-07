@@ -35,7 +35,7 @@ const yearDayNumberVariants = defineRecipe({
 const yearDayVariants = defineRecipe({
   base: [
     "relative flex aspect-square flex-col items-center justify-center gap-0.5 rounded-control",
-    "motion-transition hover:bg-state-hover",
+    "motion-transition hover:state-layer-hover",
     "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus",
   ].join(" "),
   variants: {

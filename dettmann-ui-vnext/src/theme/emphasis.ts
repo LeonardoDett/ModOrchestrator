@@ -27,7 +27,7 @@ const NEUTRAL: Record<Emphasis, string> = {
 
 const COLORED: Record<Emphasis, string> = {
   high: "bg-intent-fill text-on-intent hover:bg-intent-fill-hover active:bg-intent-fill-pressed",
-  medium: "bg-intent-subtle text-intent-text hover:bg-state-hover",
+  medium: "bg-intent-subtle text-intent-text hover:state-layer-hover active:state-layer-pressed",
   low: "bg-transparent text-intent-text hover:bg-state-hover active:bg-state-pressed",
 };
 

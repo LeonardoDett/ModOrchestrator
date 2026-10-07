@@ -228,13 +228,13 @@ function ListRoot<T>({
 const itemVariants = defineRecipe({
   base: [
     "flex w-full items-center px-3 py-2 text-sm text-left",
-    "cursor-pointer motion-transition",
+    "cursor-pointer motion-transition hover:state-layer-hover",
     "focus-visible:outline-none",
   ].join(" "),
   variants: {
     selected: {
       true: "border-l-2 border-emphasis-border bg-emphasis-subtle text-emphasis-text font-medium",
-      false: "text-fg hover:bg-state-hover",
+      false: "text-fg",
     },
     focused: {
       true: "ring-2 ring-inset ring-focus",
