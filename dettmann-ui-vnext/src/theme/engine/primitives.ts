@@ -4,6 +4,8 @@ import { neutralTone } from "./palette";
 import type { Density, Mode, NormalizedConfig, Shape } from "./types";
 
 const px = (n: number) => (n >= 999 ? "9999px" : `${n}px`);
+/** Tipo, entrelinha e alturas de controle em rem (px / 16): acompanham a escala de fonte do app. */
+const rem = (n: number) => `${n / 16}rem`;
 
 /** Tabela 6.1: [precise, balanced, soft]. */
 const RADIUS: Record<string, Record<Shape, number>> = {
@@ -14,7 +16,7 @@ const RADIUS: Record<string, Record<Shape, number>> = {
   "radius-pill": { precise: 999, balanced: 999, soft: 999 },
 };
 
-/** Tabela 6.2. */
+/** Tabela 6.2 (px; emitidas em rem). */
 const DENSITY_SCALE: Record<Density, number> = { compact: 0.875, comfortable: 1, spacious: 1.125 };
 const CONTROL: Record<string, Record<Density, number>> = {
   "control-sm": { compact: 28, comfortable: 32, spacious: 36 },
@@ -22,7 +24,7 @@ const CONTROL: Record<string, Record<Density, number>> = {
   "control-lg": { compact: 36, comfortable: 40, spacious: 48 },
 };
 
-/** Seção 6.3: [tamanho, entrelinha] em px. */
+/** Seção 6.3: [tamanho, entrelinha] em px (emitidos em rem). */
 const TYPE: Record<string, [number, number]> = {
   caption: [11, 16],
   label: [12, 16],
@@ -52,12 +54,12 @@ export function buildPrimitives(config: NormalizedConfig, mode: Mode): Record<st
   const out: Record<string, string> = {};
   for (const [k, v] of Object.entries(RADIUS)) out[k] = px(v[config.shape]);
   out["density-scale"] = String(DENSITY_SCALE[config.density]);
-  for (const [k, v] of Object.entries(CONTROL)) out[k] = px(v[config.density]);
+  for (const [k, v] of Object.entries(CONTROL)) out[k] = rem(v[config.density]);
   out["font-sans"] = `"${config.font.sans}", ui-sans-serif, system-ui, sans-serif`;
   out["font-mono"] = `"${config.font.mono}", ui-monospace, SFMono-Regular, Consolas, monospace`;
   for (const [role, [size, leading]] of Object.entries(TYPE)) {
-    out[`text-${role}`] = px(size);
-    out[`text-${role}-leading`] = px(leading);
+    out[`text-${role}`] = rem(size);
+    out[`text-${role}-leading`] = rem(leading);
   }
   const rgb = shadowColor(config);
   out["shadow-flat"] = "none";

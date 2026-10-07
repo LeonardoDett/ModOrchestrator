@@ -89,3 +89,9 @@ test("density selectors also cover the root and themed nodes", () => {
   for (const d of ["compact", "comfortable", "spacious"])
     expect(foundations).toContain(`[data-density="${d}"],\n[data-theme][data-density="${d}"],\n:root[data-density="${d}"] {`);
 });
+
+test("density overrides use rem control heights (px / 16)", () => {
+  const heights = [...foundations.matchAll(/--ui-control-(?:sm|md|lg):\s*([^;]+);/g)].map((m) => m[1]!.trim());
+  expect(heights).toHaveLength(9);
+  expect(heights).toEqual(["1.75rem", "2rem", "2.25rem", "2rem", "2.25rem", "2.5rem", "2.25rem", "2.5rem", "3rem"]);
+});

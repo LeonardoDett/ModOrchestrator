@@ -27,27 +27,27 @@
 [data-theme][data-density="compact"],
 :root[data-density="compact"] {
   --ui-density-scale: 0.875;
-  --ui-control-sm: 28px;
-  --ui-control-md: 32px;
-  --ui-control-lg: 36px;
+  --ui-control-sm: 1.75rem;
+  --ui-control-md: 2rem;
+  --ui-control-lg: 2.25rem;
 }
 
 [data-density="comfortable"],
 [data-theme][data-density="comfortable"],
 :root[data-density="comfortable"] {
   --ui-density-scale: 1;
-  --ui-control-sm: 32px;
-  --ui-control-md: 36px;
-  --ui-control-lg: 40px;
+  --ui-control-sm: 2rem;
+  --ui-control-md: 2.25rem;
+  --ui-control-lg: 2.5rem;
 }
 
 [data-density="spacious"],
 [data-theme][data-density="spacious"],
 :root[data-density="spacious"] {
   --ui-density-scale: 1.125;
-  --ui-control-sm: 36px;
-  --ui-control-md: 40px;
-  --ui-control-lg: 48px;
+  --ui-control-sm: 2.25rem;
+  --ui-control-md: 2.5rem;
+  --ui-control-lg: 3rem;
 }
 
 /*

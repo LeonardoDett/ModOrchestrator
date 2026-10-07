@@ -9,7 +9,16 @@ test("shape knob maps to radius table", () => {
   expect(createTheme(cfg).shared["radius-card"]).toBe("12px");
   expect(createTheme({ ...cfg, shape: "soft" }).shared["radius-chip"]).toBe("9999px");
 });
-test("density knob maps to control heights", () => expect(createTheme({ ...cfg, density: "compact" }).shared["control-md"]).toBe("32px"));
+test("density knob maps to control heights", () => expect(createTheme({ ...cfg, density: "compact" }).shared["control-md"]).toBe("2rem"));
+test("type, leading and control sizes are rem (px / 16) so app font scaling applies", () => {
+  const shared = createTheme(cfg).shared;
+  const keys = Object.keys(shared).filter((k) => /^(?:text-|control-)/.test(k));
+  expect(keys.length).toBe(8 * 2 + 3);
+  for (const k of keys) expect(shared[k], k).toMatch(/^\d+(?:\.\d+)?rem$/);
+  expect(shared["text-body"]).toBe("0.8125rem");
+  expect(shared["text-body-leading"]).toBe("1.25rem");
+  expect(shared["control-md"]).toBe("2.25rem");
+});
 test("font knob is honored with fallbacks", () => expect(createTheme(cfg).shared["font-sans"]).toMatch(/^"Plus Jakarta Sans", /));
 test("ceiling flattens expressive in CSS vars", () => {
   const t = createTheme({ ...cfg, motion: "responsive" });
@@ -36,8 +45,8 @@ test("on-brand override propagates to on-emphasis unless overridden", () => {
 });
 test("typography and elevation keys", () => {
   const t = createTheme(cfg);
-  expect(t.shared["text-caption"]).toBe("11px");
-  expect(t.shared["text-caption-leading"]).toBe("16px");
+  expect(t.shared["text-caption"]).toBe("0.6875rem");
+  expect(t.shared["text-caption-leading"]).toBe("1rem");
   expect(t.light["shadow-flat"]).toBe("none");
   expect(t.light["shadow-raised"]).not.toBe(t.dark["shadow-raised"]);
 });
