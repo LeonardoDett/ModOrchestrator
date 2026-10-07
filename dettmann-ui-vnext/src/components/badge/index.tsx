@@ -6,7 +6,7 @@ import { toneData, type Tone } from "../../theme/tone";
 const badgeSoft = "bg-tone-subtle text-tone-text border border-tone-border";
 const badgeSolid = "bg-tone text-on-tone";
 const badgeNeutral = "bg-secondary-subtle text-secondary-text border border-secondary-border";
-const badgeMuted = "bg-muted text-fg-muted";
+const badgeMuted = "bg-sunken text-fg-muted";
 const badgeOutline = "border border-border bg-transparent text-fg";
 
 const badgeTone: Record<string, Tone | undefined> = {
@@ -22,7 +22,7 @@ const badgeVariants = defineRecipe({
     "inline-flex items-center justify-center",
     "font-medium whitespace-nowrap text-xs",
     "rounded-full",
-    "transition-colors duration-fast ease-default",
+    "motion-transition",
   ].join(" "),
   variants: {
     /** Color variant — subtle fill + darker text of the same family */

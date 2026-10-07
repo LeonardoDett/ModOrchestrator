@@ -10,7 +10,7 @@ import { useModalContext } from "./modal.context";
 const modalContentVariants = defineRecipe({
   base: [
     "relative flex flex-col",
-    "bg-raised rounded-xl shadow-xl",
+    "bg-raised rounded-card shadow-modal",
     "max-h-[85vh] overflow-hidden",
   ].join(" "),
   variants: {

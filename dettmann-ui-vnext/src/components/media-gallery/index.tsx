@@ -38,7 +38,7 @@ export function MediaGallery({
           <button
             key={item.id}
             type="button"
-            className="group relative min-w-0 overflow-hidden rounded-lg border border-border bg-sunken text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="group relative min-w-0 overflow-hidden rounded-control border border-border bg-sunken text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
             onClick={() => {
               setIndex(itemIndex);
               setOpen(true);
@@ -48,10 +48,10 @@ export function MediaGallery({
               src={item.src}
               alt={item.alt ?? ""}
               aspect="square"
-              className="w-full transition-transform duration-normal group-hover:scale-[1.02]"
+              className="w-full transition-transform motion-transition group-hover:scale-[1.02]"
             />
             {item.title || renderOverlay ? (
-              <span className="absolute inset-x-0 bottom-0 bg-overlay px-3 py-2 text-xs text-fg-inverse opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="absolute inset-x-0 bottom-0 bg-overlay px-3 py-2 text-xs text-canvas opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
                 {renderOverlay?.(item, itemIndex) ?? item.title}
               </span>
             ) : null}

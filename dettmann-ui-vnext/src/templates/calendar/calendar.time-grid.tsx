@@ -13,7 +13,7 @@ import { isItemHighlighted } from "./internal/filter-highlight";
 import type { CalendarDayData, CalendarItemRenderer } from "./types";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
-const TIME_COLUMN_CLASS = "bg-muted";
+const TIME_COLUMN_CLASS = "bg-sunken";
 
 function useCurrentTime(refreshMs = 60_000) {
   const [now, setNow] = useState<Date | null>(null);
@@ -64,7 +64,7 @@ export function CalendarTimeGrid({ className, mode = "week" }: CalendarTimeGridP
             <span
               className={cn(
                 "inline-flex size-7 items-center justify-center text-sm font-semibold tabular-nums",
-                day.isToday && "rounded-full bg-secondary text-on-secondary shadow-xs"
+                day.isToday && "rounded-full bg-secondary text-on-secondary shadow-raised"
               )}
             >
               {format(day.date, "d", fmtOpts)}
@@ -75,7 +75,7 @@ export function CalendarTimeGrid({ className, mode = "week" }: CalendarTimeGridP
 
       {columns.some((d) => getAllDayItems(d.items).length > 0) ? (
         <div
-          className="grid border-b border-border bg-muted"
+          className="grid border-b border-border bg-sunken"
           style={{
             gridTemplateColumns: `3.5rem repeat(${columns.length}, minmax(0, 1fr))`,
           }}
@@ -161,11 +161,11 @@ function CalendarCurrentTimeIndicator() {
       aria-hidden
     >
       <div className="relative flex -translate-y-1/2 items-center">
-        <span className="shrink-0 rounded bg-danger px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-on-danger shadow-sm">
+        <span className="shrink-0 rounded-control bg-danger px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-on-danger shadow-raised">
           {timeLabel}
         </span>
-        <div className="size-2 shrink-0 rounded-full bg-danger ring-2 ring-page" />
-        <div className="h-0.5 min-w-0 flex-1 bg-danger shadow-sm" />
+        <div className="size-2 shrink-0 rounded-full bg-danger ring-2 ring-canvas" />
+        <div className="h-0.5 min-w-0 flex-1 bg-danger shadow-raised" />
       </div>
     </div>
   );

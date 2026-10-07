@@ -8,11 +8,11 @@ import { Typography } from "../../primitives/typography";
 const addVariants = defineRecipe({
   base: [
     "flex aspect-square w-full min-w-0 flex-col items-center justify-center gap-2 p-4 text-center",
-    "rounded-xl border border-dashed border-border-strong bg-transparent text-fg-subtle",
-    "transition-colors duration-fast ease-default",
-    "hover:bg-hover active:bg-pressed",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-    "disabled:pointer-events-none disabled:bg-muted disabled:text-fg-subtle disabled:border-transparent",
+    "rounded-card border border-dashed border-border-strong bg-transparent text-fg-subtle",
+    "motion-transition",
+    "hover:bg-state-hover active:bg-state-pressed",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent",
   ].join(" "),
 });
 

@@ -50,7 +50,7 @@ export function resolveEventColor(item: CalendarItem): CalendarEventColor {
 
 const eventSoft =
   "bg-tone-subtle text-tone-text border border-tone-border hover:bg-tone-subtle-hover";
-const eventMuted = "border border-border bg-muted text-fg-muted hover:bg-hover";
+const eventMuted = "border border-border bg-sunken text-fg-muted hover:bg-state-hover";
 
 export function eventTone(color: CalendarEventColor): Tone | undefined {
   return color === "muted" ? undefined : color;
@@ -61,7 +61,7 @@ export function eventToneProps(color: CalendarEventColor) {
 }
 
 export const monthEventVariants = defineRecipe({
-  base: "flex w-full items-center justify-between gap-2 truncate rounded-md px-1.5 py-0.5 text-left text-xs font-medium transition-colors duration-fast focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+  base: "flex w-full items-center justify-between gap-2 truncate rounded-control px-1.5 py-0.5 text-left text-xs font-medium motion-transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus",
   variants: {
     color: {
       primary: eventSoft,
@@ -84,9 +84,9 @@ export const monthEventVariants = defineRecipe({
 
 export const timedEventVariants = defineRecipe({
   base: [
-    "flex h-full min-h-0 w-full flex-col rounded-md px-1.5 py-1 text-left text-xs",
-    "transition-colors duration-fast shadow-sm",
-    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+    "flex h-full min-h-0 w-full flex-col rounded-control px-1.5 py-1 text-left text-xs",
+    "motion-transition shadow-raised",
+    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus",
   ].join(" "),
   variants: {
     color: {

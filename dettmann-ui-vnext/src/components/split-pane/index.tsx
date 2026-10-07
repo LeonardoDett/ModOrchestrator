@@ -94,7 +94,7 @@ export function SplitPane({
         aria-valuenow={size}
         tabIndex={0}
         className={cn(
-          "absolute inset-y-0 z-10 w-2 cursor-col-resize bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+          "absolute inset-y-0 z-10 w-2 cursor-col-resize bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus",
           "hover:bg-primary/20",
           side === "left"
             ? "left-[calc(var(--split-size)-4px)]"

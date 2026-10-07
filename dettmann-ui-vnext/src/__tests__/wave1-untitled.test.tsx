@@ -146,6 +146,6 @@ describe("Tabs segmented", () => {
         </Tabs.List>
       </Tabs.Root>
     );
-    expect(screen.getByRole("tablist")).toHaveClass("bg-muted");
+    expect(screen.getByRole("tablist")).toHaveClass("bg-sunken");
   });
 });

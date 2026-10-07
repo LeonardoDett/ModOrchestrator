@@ -188,8 +188,8 @@ function MenuTrigger({ children, className }: MenuTriggerProps) {
 
 const menuContentVariants = defineRecipe({
   base: [
-    "z-popover min-w-40 rounded-xl p-1",
-    "bg-raised border border-border shadow-xl",
+    "z-popover min-w-40 rounded-card p-1",
+    "bg-raised border border-border shadow-modal",
     "outline-none",
   ].join(" "),
 });
@@ -227,9 +227,9 @@ function MenuContent({ children, className, style, ...props }: MenuContentProps)
 
 const menuItemVariants = defineRecipe({
   base: [
-    "flex w-full items-center rounded-md px-3 py-2 text-sm text-left",
+    "flex w-full items-center rounded-control px-3 py-2 text-sm text-left",
     "text-fg cursor-pointer",
-    "outline-none transition-colors duration-fast",
+    "outline-none motion-transition",
   ].join(" "),
   variants: {
     active: {
@@ -238,7 +238,7 @@ const menuItemVariants = defineRecipe({
     },
     disabled: {
       true: "pointer-events-none text-fg-subtle text-fg-muted",
-      false: "hover:bg-hover",
+      false: "hover:bg-state-hover",
     },
   },
   defaultVariants: {

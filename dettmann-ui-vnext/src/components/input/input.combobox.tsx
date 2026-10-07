@@ -41,8 +41,8 @@ const comboboxInputVariants = defineRecipe({
 
 const comboboxPanelVariants = defineRecipe({
   base: [
-    "z-50 w-full rounded-xl",
-    "bg-raised border border-border shadow-xl",
+    "z-50 w-full rounded-card",
+    "bg-raised border border-border shadow-modal",
     "outline-none",
     "overflow-hidden",
   ].join(" "),
@@ -52,12 +52,12 @@ const comboboxOptionVariants = defineRecipe({
   base: [
     "flex items-center px-3 py-2 text-sm",
     "cursor-pointer",
-    "transition-colors duration-fast",
+    "motion-transition",
   ].join(" "),
   variants: {
     active: {
       true: "bg-secondary-subtle",
-      false: "hover:bg-hover",
+      false: "hover:bg-state-hover",
     },
     selected: {
       true: "text-secondary-text font-medium",
@@ -307,7 +307,7 @@ export function InputCombobox({
       {/* Dropdown arrow */}
       <svg
         className={cn(
-          "h-4 w-4 shrink-0 text-fg-muted transition-transform duration-fast pointer-events-none",
+          "h-4 w-4 shrink-0 text-fg-muted transition-transform motion-transition pointer-events-none",
           isOpen && "rotate-180"
         )}
         viewBox="0 0 24 24"

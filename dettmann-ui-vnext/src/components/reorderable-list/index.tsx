@@ -69,7 +69,7 @@ export function ReorderableList<T>({
     <div
       role="list"
       className={cn(
-        "divide-y divide-border overflow-hidden rounded-xl border border-border bg-surface",
+        "divide-y divide-border overflow-hidden rounded-card border border-border bg-surface",
         className,
       )}
       {...props}
@@ -105,8 +105,8 @@ export function ReorderableList<T>({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-md text-fg-muted transition-colors",
-                  "hover:bg-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted transition-colors",
+                  "hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
                   index === 0 && "invisible pointer-events-none",
                 )}
                 aria-label="Move item up"
@@ -119,8 +119,8 @@ export function ReorderableList<T>({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-md text-fg-muted transition-colors",
-                  "hover:bg-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted transition-colors",
+                  "hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
                   index === source.length - 1 && "invisible pointer-events-none",
                 )}
                 aria-label="Move item down"

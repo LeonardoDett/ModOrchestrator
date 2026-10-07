@@ -11,10 +11,10 @@ export const TONES = [
 export type Tone = (typeof TONES)[number];
 
 export const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page";
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas";
 
 export const disabledControl =
-  "disabled:pointer-events-none disabled:bg-muted disabled:text-fg-subtle disabled:border-transparent";
+  "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent";
 
 export const toneSolid =
   "bg-tone text-on-tone hover:bg-tone-hover active:bg-tone-pressed";
@@ -28,10 +28,10 @@ export const toneOutline =
 export const toneGhost = "bg-transparent text-tone-text hover:bg-tone-subtle";
 
 export const neutralOutline =
-  "border border-border-strong bg-transparent text-fg hover:bg-hover active:bg-pressed";
+  "border border-border-strong bg-transparent text-fg hover:bg-state-hover active:bg-state-pressed";
 
 export const neutralGhost =
-  "bg-transparent text-fg hover:bg-hover active:bg-pressed";
+  "bg-transparent text-fg hover:bg-state-hover active:bg-state-pressed";
 
 export function toneData(tone?: Tone): { "data-tone"?: Tone } {
   return tone ? { "data-tone": tone } : {};

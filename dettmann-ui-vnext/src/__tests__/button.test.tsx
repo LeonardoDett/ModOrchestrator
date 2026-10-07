@@ -15,8 +15,8 @@ describe("Button", () => {
     expect(button).toHaveTextContent("Label");
     expect(button).toHaveTextContent("end");
     expect(button).toHaveClass("gap-2");
-    expect(button).toHaveClass("rounded-lg");
-    expect(button).toHaveClass("shadow-xs");
+    expect(button).toHaveClass("rounded-control");
+    expect(button).toHaveClass("shadow-raised");
     expect(button).toHaveClass("font-semibold");
   });
 

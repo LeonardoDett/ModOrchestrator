@@ -4,7 +4,7 @@ import { cn } from "../../utils/cn";
 interface SlotProps extends ComponentPropsWithoutRef<"div"> { children?: ReactNode; }
 
 function Root({ className, children, ...props }: SlotProps) {
-  return <section className={cn("rounded-xl border border-border bg-surface shadow-xs", className)} {...props}>{children}</section>;
+  return <section className={cn("rounded-card border border-border bg-surface shadow-raised", className)} {...props}>{children}</section>;
 }
 function Header({ className, children, ...props }: SlotProps) {
   return <header className={cn("flex min-h-12 items-center justify-between gap-3 border-b border-border px-4 py-3", className)} {...props}>{children}</header>;

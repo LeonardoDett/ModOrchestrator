@@ -3,7 +3,7 @@ import { defineRecipe } from "../core/recipe";
 import { cn } from "../utils/cn";
 
 const skeletonVariants = defineRecipe({
-  base: "animate-pulse rounded-md bg-muted",
+  base: "animate-pulse rounded-control bg-sunken",
 });
 
 interface SkeletonProps extends ComponentPropsWithoutRef<"div"> {}

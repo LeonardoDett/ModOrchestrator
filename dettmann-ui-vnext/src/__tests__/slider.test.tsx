@@ -18,7 +18,7 @@ describe("Slider", () => {
     expect(thumb).toHaveAttribute("aria-valuenow", "40");
     expect(thumb).toHaveAttribute("aria-valuemin", "0");
     expect(thumb).toHaveAttribute("aria-valuemax", "100");
-    expect(thumb).toHaveClass("bg-surface", "border-border-strong", "shadow-xs");
+    expect(thumb).toHaveClass("bg-surface", "border-border-strong", "shadow-raised");
   });
 
   it("moves with arrow keys", async () => {

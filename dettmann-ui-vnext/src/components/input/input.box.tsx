@@ -8,9 +8,9 @@ import { useInputContext } from "./input.context";
 const inputBoxVariants = defineRecipe({
   base: [
     "relative flex items-center",
-    "rounded-lg",
-    "bg-surface border border-border-strong shadow-xs",
-    "transition-colors duration-fast ease-default",
+    "rounded-control",
+    "bg-surface border border-border-strong shadow-raised",
+    "motion-transition",
     "has-[:is(textarea)]:items-start",
   ].join(" "),
   variants: {
@@ -28,7 +28,7 @@ const inputBoxVariants = defineRecipe({
     },
     /** Disabled state */
     disabled: {
-      true: "bg-muted text-fg-subtle shadow-none cursor-not-allowed",
+      true: "bg-sunken text-fg-subtle shadow-none cursor-not-allowed",
       false: "hover:border-fg-muted",
     },
     /** Error / destructive state */
@@ -41,7 +41,7 @@ const inputBoxVariants = defineRecipe({
     {
       error: false,
       focused: true,
-      class: "border-ring ring-2 ring-ring",
+      class: "border-focus ring-2 ring-focus",
     },
     {
       error: true,
@@ -51,7 +51,7 @@ const inputBoxVariants = defineRecipe({
     {
       error: true,
       focused: true,
-      class: "border-danger ring-2 ring-ring",
+      class: "border-danger ring-2 ring-focus",
     },
   ],
   defaultVariants: {

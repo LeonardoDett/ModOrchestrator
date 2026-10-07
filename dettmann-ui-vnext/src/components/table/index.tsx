@@ -21,7 +21,7 @@ function useTableLayout() {
 }
 
 const rootVariants = defineRecipe({
-  base: "overflow-auto rounded-xl border border-border bg-surface",
+  base: "overflow-auto rounded-card border border-border bg-surface",
 });
 
 function TableRoot({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
@@ -50,7 +50,7 @@ const rowVariants = defineRecipe({
   variants: {
     selected: {
       true: "bg-secondary-subtle",
-      false: "hover:bg-hover",
+      false: "hover:bg-state-hover",
     },
     layout: {
       table: "",

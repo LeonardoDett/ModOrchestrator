@@ -116,7 +116,7 @@ const stepVariants = defineRecipe({
       vertical: "flex-row items-start gap-3",
     },
     interactive: {
-      true: "cursor-pointer rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
+      true: "cursor-pointer rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas aria-disabled:cursor-not-allowed aria-disabled:opacity-60",
       false: "",
     },
   },
@@ -212,7 +212,7 @@ function StepperStep({
 const indicatorVariants = defineRecipe({
   base: [
     "relative z-base flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-    "text-sm font-medium border-2 transition-colors duration-fast",
+    "text-sm font-medium border-2 motion-transition",
   ].join(" "),
   variants: {
     status: {

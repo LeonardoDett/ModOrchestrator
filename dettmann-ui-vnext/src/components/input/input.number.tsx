@@ -19,9 +19,9 @@ const inputNumberVariants = defineRecipe({
 });
 
 const stepButton = [
-  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md",
-  "text-fg-muted hover:bg-hover hover:text-fg",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-control",
+  "text-fg-muted hover:bg-state-hover hover:text-fg",
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
   "disabled:pointer-events-none disabled:opacity-50",
 ].join(" ");
 

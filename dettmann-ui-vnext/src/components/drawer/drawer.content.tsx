@@ -10,7 +10,7 @@ import { useDrawerContext } from "./drawer.context";
 const drawerContentVariants = defineRecipe({
   base: [
     "fixed z-modal flex flex-col",
-    "bg-raised shadow-xl rounded-xl",
+    "bg-raised shadow-modal rounded-card",
     "outline-none overflow-hidden",
   ].join(" "),
   variants: {

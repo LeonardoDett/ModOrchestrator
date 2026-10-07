@@ -62,7 +62,7 @@ export function SegmentedControl<T extends string>({
     <div
       role="radiogroup"
       className={cn(
-        "inline-flex rounded-lg border border-border bg-sunken p-1",
+        "inline-flex rounded-control border border-border bg-sunken p-1",
         className,
       )}
       {...props}
@@ -107,11 +107,11 @@ export function SegmentedControl<T extends string>({
               }
             }}
             className={cn(
-              "rounded-md px-3 text-sm font-medium transition-colors duration-fast focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "rounded-control px-3 text-sm font-medium motion-transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
               height,
               active
-                ? "bg-surface text-fg shadow-xs"
-                : "text-fg-muted hover:bg-hover hover:text-fg",
+                ? "bg-surface text-fg shadow-raised"
+                : "text-fg-muted hover:bg-state-hover hover:text-fg",
               option.disabled && "pointer-events-none opacity-50",
             )}
           >

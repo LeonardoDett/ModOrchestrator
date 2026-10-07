@@ -114,7 +114,7 @@ describe("Modal", () => {
       );
 
       expect(screen.getByText("Modal Content")).toBeInTheDocument();
-      expect(screen.getByRole("dialog")).toHaveClass("rounded-xl", "shadow-xl");
+      expect(screen.getByRole("dialog")).toHaveClass("rounded-card", "shadow-modal");
     });
 
     it("applies flex end alignment and gap-2 on Footer by default", () => {

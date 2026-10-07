@@ -25,8 +25,8 @@ import { useDatePickerContext } from "./date-picker.context";
 
 const panelVariants = defineRecipe({
   base: [
-    "z-50 w-72 p-3 rounded-xl",
-    "bg-raised border border-border shadow-xl",
+    "z-50 w-72 p-3 rounded-card",
+    "bg-raised border border-border shadow-modal",
     "outline-none",
   ].join(" "),
 });
@@ -38,9 +38,9 @@ const headerVariants = defineRecipe({
 const navButtonVariants = defineRecipe({
   base: [
     "flex items-center justify-center",
-    "h-8 w-8 rounded-md",
-    "hover:bg-hover transition-colors duration-fast",
-    "disabled:cursor-not-allowed disabled:text-fg-subtle disabled:bg-muted",
+    "h-8 w-8 rounded-control",
+    "hover:bg-state-hover motion-transition",
+    "disabled:cursor-not-allowed disabled:text-fg-subtle disabled:bg-sunken",
   ].join(" "),
 });
 
@@ -73,14 +73,14 @@ const daysGridVariants = defineRecipe({
 
 const dayButtonVariants = defineRecipe({
   base: [
-    "h-8 w-8 flex items-center justify-center rounded-md",
-    "text-sm transition-colors duration-fast",
+    "h-8 w-8 flex items-center justify-center rounded-control",
+    "text-sm motion-transition",
     "disabled:cursor-not-allowed disabled:text-fg-subtle",
   ].join(" "),
   variants: {
     isSelected: {
       true: "bg-secondary text-on-secondary font-medium",
-      false: "hover:bg-hover",
+      false: "hover:bg-state-hover",
     },
     isToday: {
       true: "ring-1 ring-secondary ring-inset",

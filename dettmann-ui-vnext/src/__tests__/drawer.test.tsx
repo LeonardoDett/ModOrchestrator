@@ -35,8 +35,8 @@ describe("Drawer", () => {
 
     const dialog = screen.getByRole("dialog");
     expect(dialog).toHaveClass("left-0");
-    expect(dialog).toHaveClass("rounded-xl");
-    expect(dialog).toHaveClass("shadow-xl");
+    expect(dialog).toHaveClass("rounded-card");
+    expect(dialog).toHaveClass("shadow-modal");
     expect(screen.getByText("Filters")).toBeInTheDocument();
     expect(screen.getByText("Footer")).toHaveClass(
       "flex",

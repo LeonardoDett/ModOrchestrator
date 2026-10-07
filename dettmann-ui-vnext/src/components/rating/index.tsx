@@ -98,8 +98,8 @@ function RatingRoot({
             tabIndex={-1}
             aria-label={`${starValue} of ${max}`}
             className={cn(
-              "rounded-sm p-0.5",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "rounded-control p-0.5",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
               interactive && "cursor-pointer"
             )}
             onClick={() => interactive && setValue(starValue)}

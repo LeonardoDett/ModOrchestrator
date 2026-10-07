@@ -70,8 +70,8 @@ const asideVariants = defineRecipe({
 
 const itemVariants = defineRecipe({
   base: [
-    "flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+    "flex w-full items-center gap-2 rounded-control px-2 py-2 text-left text-sm",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2",
   ].join(" "),
   variants: {
     collapsed: {
@@ -85,7 +85,7 @@ const itemVariants = defineRecipe({
     },
     emphasis: {
       strong: "focus-visible:ring-primary focus-visible:ring-offset-secondary",
-      subtle: "focus-visible:ring-offset-page",
+      subtle: "focus-visible:ring-offset-canvas",
     },
     disabled: {
       true: "",
@@ -103,11 +103,11 @@ const itemVariants = defineRecipe({
       emphasis: "subtle",
       current: false,
       disabled: false,
-      class: "text-fg hover:bg-hover active:bg-pressed",
+      class: "text-fg hover:bg-state-hover active:bg-state-pressed",
     },
     {
       disabled: true,
-      class: "pointer-events-none bg-muted text-fg-subtle",
+      class: "pointer-events-none bg-sunken text-fg-subtle",
     },
   ],
   defaultVariants: {
@@ -303,7 +303,7 @@ function SidebarItems({
               <Accordion.Trigger
                 value={group.id}
                 className={cn(
-                  "rounded-lg px-2 py-2",
+                  "rounded-control px-2 py-2",
                   emphasis === "strong" && strongChromeClass
                 )}
               >

@@ -71,7 +71,7 @@ export function Lightbox({
         <div
           ref={containerRef}
           className={cn(
-            "relative flex max-h-full w-full max-w-6xl flex-col overflow-hidden rounded-xl border border-border bg-raised shadow-2xl",
+            "relative flex max-h-full w-full max-w-6xl flex-col overflow-hidden rounded-card border border-border bg-raised shadow-modal",
             className,
           )}
           role="dialog"
@@ -96,11 +96,11 @@ export function Lightbox({
             </Button>
           </div>
 
-          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-auto bg-page/20 p-6">
+          <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-auto bg-canvas/20 p-6">
             <MediaImage
               src={item.src}
               alt={item.alt ?? ""}
-              className="max-h-[70vh] w-auto rounded-lg object-contain"
+              className="max-h-[70vh] w-auto rounded-control object-contain"
             />
             {items.length > 1 ? (
               <>

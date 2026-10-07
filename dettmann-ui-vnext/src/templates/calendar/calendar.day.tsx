@@ -11,11 +11,11 @@ import { CalendarItems } from "./calendar.items";
 const dayVariants = defineRecipe({
   base: [
     "relative flex min-h-[132px] flex-col border-b border-r border-border p-1.5",
-    "transition-colors duration-fast",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
+    "motion-transition",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-1",
   ].join(" "),
   variants: {
-    isCurrentPeriod: { false: "bg-muted", true: "bg-surface" },
+    isCurrentPeriod: { false: "bg-sunken", true: "bg-surface" },
     isSelected: {
       true: "bg-secondary-subtle ring-1 ring-inset ring-secondary-border",
       false: "",
@@ -35,11 +35,11 @@ const dayNumberVariants = defineRecipe({
   base: "flex size-7 shrink-0 items-center justify-center text-sm tabular-nums",
   variants: {
     isToday: {
-      true: "rounded-full bg-secondary font-semibold text-on-secondary shadow-xs",
-      false: "rounded-md",
+      true: "rounded-full bg-secondary font-semibold text-on-secondary shadow-raised",
+      false: "rounded-control",
     },
     isSelected: {
-      true: "rounded-full bg-secondary font-semibold text-on-secondary shadow-xs",
+      true: "rounded-full bg-secondary font-semibold text-on-secondary shadow-raised",
       false: "",
     },
     isCurrentPeriod: { false: "text-fg-muted", true: "text-fg" },

@@ -11,14 +11,14 @@ const avatarVariants = defineRecipe({
     root: [
       "relative inline-flex h-full w-full items-center justify-center",
       "overflow-hidden rounded-full",
-      "bg-muted",
+      "bg-sunken",
     ].join(" "),
     image: "h-full w-full object-cover",
     fallback: [
       "flex h-full w-full items-center justify-center",
-      "bg-muted text-fg-muted font-medium uppercase",
+      "bg-sunken text-fg-muted font-medium uppercase",
     ].join(" "),
-    status: "absolute rounded-full ring-2 ring-page",
+    status: "absolute rounded-full ring-2 ring-canvas",
   },
   variants: {
     size: {
@@ -57,12 +57,12 @@ const avatarVariants = defineRecipe({
     border: {
       none: {},
       ring: {
-        root: "ring-2 ring-page ring-offset-2 ring-offset-page",
+        root: "ring-2 ring-canvas ring-offset-2 ring-offset-canvas",
       },
     },
     status: {
       online: { status: "bg-success" },
-      offline: { status: "bg-muted" },
+      offline: { status: "bg-sunken" },
       busy: { status: "bg-danger" },
     },
   },
@@ -186,7 +186,7 @@ function AvatarGroup({ children, max = 4, size = "sm", className, ...props }: Av
       {visible.map((child, index) => (
         <span
           key={index}
-          className={cn("relative rounded-full shadow-xs", index > 0 && "-ml-2")}
+          className={cn("relative rounded-full shadow-raised", index > 0 && "-ml-2")}
           style={{ zIndex: index + 1 }}
         >
           {child}
@@ -196,7 +196,7 @@ function AvatarGroup({ children, max = 4, size = "sm", className, ...props }: Av
         <Avatar
           fallback={`+${extra}`}
           size={size}
-          className="relative -ml-2 rounded-full shadow-xs"
+          className="relative -ml-2 rounded-full shadow-raised"
           style={{ zIndex: visible.length + 1 }}
         />
       ) : null}

@@ -156,7 +156,7 @@ const AUTOSCROLL_STEP = 12;
 const EMPTY_SET: ReadonlySet<string> = new Set();
 
 const rootVariants = defineRecipe({
-  base: "relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-surface text-sm",
+  base: "relative flex min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface text-sm",
 });
 
 const rowVariants = defineRecipe({
@@ -164,10 +164,10 @@ const rowVariants = defineRecipe({
   variants: {
     selected: {
       true: "bg-brand-subtle before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-brand",
-      false: "hover:bg-hover",
+      false: "hover:bg-state-hover",
     },
     focused: {
-      true: "outline-2 -outline-offset-2 outline-ring",
+      true: "outline-2 -outline-offset-2 outline-focus",
       false: "",
     },
   },
@@ -582,7 +582,7 @@ export function DataTable<T>({
           key={item.key}
           {...common}
           aria-expanded={!item.collapsed}
-          className={cn(rowVariants({ focused }), "cursor-pointer bg-structure hover:bg-structure-raised")}
+          className={cn(rowVariants({ focused }), "cursor-pointer bg-structure hover:bg-structure")}
           style={{ ...gridStyle, height: rowHeight, ...style }}
           onClick={() => {
             moveFocus(item.key);
@@ -638,7 +638,7 @@ export function DataTable<T>({
                 aria-label={labels?.dragHandle ?? "Drag to reorder"}
                 aria-disabled={movePending || undefined}
                 className={cn(
-                  "flex h-6 w-5 touch-none items-center justify-center rounded text-fg-subtle hover:bg-hover hover:text-fg",
+                  "flex h-6 w-5 touch-none items-center justify-center rounded-control text-fg-subtle hover:bg-state-hover hover:text-fg",
                   movePending ? "cursor-progress" : "cursor-grab active:cursor-grabbing",
                 )}
                 onPointerDown={(event) => startDrag(event, item.key)}
@@ -755,7 +755,7 @@ export function DataTable<T>({
                       onClick={() => setSort(nextSort(sort, column.id))}
                       className={cn(
                         "flex h-full min-w-0 flex-1 items-center gap-1 px-3 hover:text-fg",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus",
                         alignClass[columnAlign(column)],
                       )}
                     >
@@ -787,7 +787,7 @@ export function DataTable<T>({
                       onClick={(event) => event.stopPropagation()}
                       className={cn(
                         "absolute inset-y-1 right-0 w-1.5 cursor-col-resize touch-none rounded-full",
-                        "hover:bg-border-strong focus-visible:bg-ring focus-visible:outline-none",
+                        "hover:bg-border-strong focus-visible:bg-focus focus-visible:outline-none",
                       )}
                     />
                   ) : null}

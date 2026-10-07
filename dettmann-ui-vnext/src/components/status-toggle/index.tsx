@@ -12,12 +12,12 @@ const statusToggleVariants = defineRecipe({
   slots: {
     track: [
       "relative inline-flex shrink-0 items-center rounded-full p-0.5",
-      "transition-colors duration-fast ease-default",
+      "motion-transition",
       focusRing,
     ].join(" "),
     thumb: [
-      "pointer-events-none flex shrink-0 items-center justify-center rounded-full bg-surface shadow-xs",
-      "transition-transform duration-fast ease-default",
+      "pointer-events-none flex shrink-0 items-center justify-center rounded-full bg-surface shadow-raised",
+      "transition-transform motion-transition",
     ].join(" "),
     icon: "",
   },
@@ -25,8 +25,8 @@ const statusToggleVariants = defineRecipe({
     state: {
       on: { track: "bg-tone cursor-pointer", icon: "text-tone-text" },
       off: { track: "bg-border-strong cursor-pointer", icon: "text-fg-muted" },
-      unavailable: { track: "cursor-not-allowed border border-dashed border-border-strong bg-muted", thumb: "bg-muted shadow-none", icon: "text-fg-subtle" },
-      busy: { track: "cursor-progress bg-muted", icon: "animate-spin text-fg-muted" },
+      unavailable: { track: "cursor-not-allowed border border-dashed border-border-strong bg-sunken", thumb: "bg-sunken shadow-none", icon: "text-fg-subtle" },
+      busy: { track: "cursor-progress bg-sunken", icon: "animate-spin text-fg-muted" },
     },
     size: {
       sm: { track: "h-5 w-9", thumb: "h-4 w-4", icon: "h-3 w-3" },

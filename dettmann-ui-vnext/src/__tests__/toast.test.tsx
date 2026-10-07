@@ -31,8 +31,8 @@ describe("Toast", () => {
     expect(alert).toHaveClass("bg-tone-subtle");
     expect(alert).toHaveClass("text-tone-text");
     expect(alert).toHaveAttribute("data-tone", "success");
-    expect(alert).toHaveClass("shadow-xl");
-    expect(alert).toHaveClass("rounded-xl");
+    expect(alert).toHaveClass("shadow-modal");
+    expect(alert).toHaveClass("rounded-card");
   });
 
   it("runs its action once and closes", async () => {

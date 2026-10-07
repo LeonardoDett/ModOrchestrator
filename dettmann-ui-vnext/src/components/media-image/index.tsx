@@ -26,9 +26,9 @@ const fitClasses = {
 
 const radiusClasses = {
   none: "rounded-none",
-  sm: "rounded-sm",
-  md: "rounded-md",
-  lg: "rounded-lg",
+  sm: "rounded-control",
+  md: "rounded-control",
+  lg: "rounded-control",
 } as const;
 
 /** Image primitive with deterministic Tailwind classes and an explicit failure state. */

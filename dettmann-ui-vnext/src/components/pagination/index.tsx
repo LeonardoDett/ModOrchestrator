@@ -23,15 +23,15 @@ const rootVariants = defineRecipe({
 const itemVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center",
-    "h-9 min-w-9 px-3 rounded-lg",
-    "text-sm font-medium transition-colors duration-fast",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-    "disabled:pointer-events-none disabled:bg-muted disabled:text-fg-subtle",
+    "h-9 min-w-9 px-3 rounded-control",
+    "text-sm font-medium motion-transition",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle",
   ].join(" "),
   variants: {
     current: {
       true: "text-secondary-text",
-      false: "text-fg-muted hover:text-fg hover:bg-hover",
+      false: "text-fg-muted hover:text-fg hover:bg-state-hover",
     },
   },
   defaultVariants: {

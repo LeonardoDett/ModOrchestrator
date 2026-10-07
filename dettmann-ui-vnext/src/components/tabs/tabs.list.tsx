@@ -14,7 +14,7 @@ const tabsListVariants = defineRecipe({
     },
     variant: {
       underline: "",
-      segmented: "rounded-lg bg-muted p-1",
+      segmented: "rounded-control bg-sunken p-1",
     },
   },
   compoundVariants: [

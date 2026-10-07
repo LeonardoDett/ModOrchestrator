@@ -9,14 +9,14 @@ const boxVariants = defineRecipe({
     /** Background color variant */
     bg: {
       transparent: "bg-transparent",
-      bg: "bg-page",
+      bg: "bg-canvas",
       surface: "bg-surface",
       primary: "bg-primary",
       secondary: "bg-secondary",
       success: "bg-success",
       warning: "bg-warning",
       danger: "bg-danger",
-      muted: "bg-muted",
+      muted: "bg-sunken",
     },
     /** Text color variant */
     color: {
@@ -65,23 +65,23 @@ const boxVariants = defineRecipe({
     /** Border radius variant */
     radius: {
       none: "rounded-none",
-      xs: "rounded-xs",
-      sm: "rounded-sm",
-      md: "rounded-md",
-      lg: "rounded-lg",
-      xl: "rounded-xl",
-      "2xl": "rounded-2xl",
-      "3xl": "rounded-3xl",
+      xs: "rounded-chip",
+      sm: "rounded-control",
+      md: "rounded-control",
+      lg: "rounded-control",
+      xl: "rounded-card",
+      "2xl": "rounded-panel",
+      "3xl": "rounded-panel",
       full: "rounded-full",
     },
     /** Shadow variant */
     shadow: {
       none: "shadow-none",
-      sm: "shadow-sm",
-      md: "shadow-md",
-      lg: "shadow-lg",
-      xl: "shadow-xl",
-      "2xl": "shadow-2xl",
+      sm: "shadow-raised",
+      md: "shadow-overlay",
+      lg: "shadow-overlay",
+      xl: "shadow-modal",
+      "2xl": "shadow-modal",
     },
     /** Border variant */
     border: {

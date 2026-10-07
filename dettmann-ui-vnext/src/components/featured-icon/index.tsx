@@ -20,7 +20,7 @@ const featuredIconVariants = defineRecipe({
       warning: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
       danger: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
       primary: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
-      neutral: { root: "bg-muted", inner: "bg-surface text-fg-muted" },
+      neutral: { root: "bg-sunken", inner: "bg-surface text-fg-muted" },
     },
     /** Outer padding + inner disc size */
     size: {

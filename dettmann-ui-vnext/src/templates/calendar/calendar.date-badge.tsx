@@ -9,8 +9,8 @@ import { getDateBadgeParts } from "./internal/period-meta";
 
 const badgeVariants = defineRecipe({
   base: [
-    "flex size-14 shrink-0 flex-col items-center justify-center rounded-lg border border-border",
-    "bg-surface shadow-xs",
+    "flex size-14 shrink-0 flex-col items-center justify-center rounded-control border border-border",
+    "bg-surface shadow-raised",
   ].join(" "),
   variants: {
     isToday: {

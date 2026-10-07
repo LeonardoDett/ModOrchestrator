@@ -82,7 +82,7 @@ export function Tag({
         <button
           type="button"
           aria-label={removeLabel}
-          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-fg-muted hover:bg-hover hover:text-fg"
+          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-fg-muted hover:bg-state-hover hover:text-fg"
           onClick={() => onRemove(value)}
         >
           <Icon icon={X} size="xs" />

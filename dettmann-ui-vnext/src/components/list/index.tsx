@@ -51,8 +51,8 @@ const [ListItemScopeProvider, useListItemScope] =
 
 const rootVariants = defineRecipe({
   base: [
-    "overflow-auto rounded-md border border-border bg-surface",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+    "overflow-auto rounded-control border border-border bg-surface",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
   ].join(" "),
 });
 
@@ -228,16 +228,16 @@ function ListRoot<T>({
 const itemVariants = defineRecipe({
   base: [
     "flex w-full items-center px-3 py-2 text-sm text-left",
-    "cursor-pointer transition-colors duration-fast",
+    "cursor-pointer motion-transition",
     "focus-visible:outline-none",
   ].join(" "),
   variants: {
     selected: {
       true: "border-l-2 border-primary bg-primary-subtle text-primary-text font-medium",
-      false: "text-fg hover:bg-hover",
+      false: "text-fg hover:bg-state-hover",
     },
     focused: {
-      true: "ring-2 ring-inset ring-ring",
+      true: "ring-2 ring-inset ring-focus",
       false: "",
     },
     disabled: {

@@ -15,11 +15,11 @@ import type { InputRootOwnedNativeProps } from "./input.owned-props";
 const pinSlotVariants = defineRecipe({
   base: [
     "h-12 w-10 text-center text-md font-semibold",
-    "rounded-lg bg-surface border border-border shadow-xs",
+    "rounded-control bg-surface border border-border shadow-raised",
     "text-fg",
-    "transition-colors duration-fast ease-default",
-    "focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring",
-    "disabled:bg-muted disabled:text-fg-subtle disabled:border-transparent disabled:shadow-none",
+    "motion-transition",
+    "focus:outline-none focus:border-focus focus:ring-2 focus:ring-focus",
+    "disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent disabled:shadow-none",
   ].join(" "),
 });
 

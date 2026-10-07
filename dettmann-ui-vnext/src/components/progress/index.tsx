@@ -4,7 +4,7 @@ import { cn } from "../../utils/cn";
 import { toneData, type Tone } from "../../theme/tone";
 
 const linearVariants = defineRecipe({
-  base: "relative h-2 w-full overflow-hidden rounded-full bg-muted",
+  base: "relative h-2 w-full overflow-hidden rounded-full bg-sunken",
 });
 
 const circleTrackVariants = defineRecipe({
@@ -12,7 +12,7 @@ const circleTrackVariants = defineRecipe({
 });
 
 const circleFillVariants = defineRecipe({
-  base: "stroke-tone transition-[stroke-dashoffset] duration-normal ease-default",
+  base: "stroke-tone transition-[stroke-dashoffset] motion-transition",
 });
 
 interface ProgressRootProps extends ComponentPropsWithoutRef<"div"> {

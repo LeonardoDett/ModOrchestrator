@@ -148,8 +148,8 @@ function PopoverTrigger({ children, className }: PopoverTriggerProps) {
 // Content
 const popoverContentVariants = defineRecipe({
   base: [
-    "z-50 rounded-xl",
-    "bg-raised border border-border shadow-xl",
+    "z-50 rounded-card",
+    "bg-raised border border-border shadow-modal",
     "outline-none",
   ].join(" "),
 });

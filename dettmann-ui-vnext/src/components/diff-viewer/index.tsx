@@ -56,7 +56,7 @@ export function DiffViewer({
   if (!lines.length) {
     return (
       <div
-        className={cn("rounded-xl border border-border bg-surface p-10 text-center text-sm text-fg-muted", className)}
+        className={cn("rounded-card border border-border bg-surface p-10 text-center text-sm text-fg-muted", className)}
         {...props}
       >
         {empty}
@@ -66,7 +66,7 @@ export function DiffViewer({
 
   if (mode === "unified") {
     return (
-      <div className={cn("overflow-auto rounded-xl border border-border bg-sunken", className)} {...props}>
+      <div className={cn("overflow-auto rounded-card border border-border bg-sunken", className)} {...props}>
         <div className="sticky top-0 z-10 border-b border-border bg-surface px-3 py-2 text-xs font-semibold text-fg">
           {rightTitle}
         </div>
@@ -88,7 +88,7 @@ export function DiffViewer({
   }
 
   return (
-    <div className={cn("overflow-auto rounded-xl border border-border bg-sunken", className)} {...props}>
+    <div className={cn("overflow-auto rounded-card border border-border bg-sunken", className)} {...props}>
       <div className="grid grid-cols-2 border-b border-border bg-surface text-xs font-semibold text-fg">
         <div className="border-r border-border px-3 py-2">{leftTitle}</div>
         <div className="px-3 py-2">{rightTitle}</div>

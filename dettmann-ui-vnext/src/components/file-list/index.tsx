@@ -91,7 +91,7 @@ export function FileList({
 
   return (
     <div
-      className={cn("overflow-hidden rounded-xl border border-border bg-surface", className)}
+      className={cn("overflow-hidden rounded-card border border-border bg-surface", className)}
       {...props}
     >
       {selection === "multiple" && items.length ? (
@@ -124,7 +124,7 @@ export function FileList({
                 aria-selected={selection !== "none" ? selected : undefined}
                 className={cn(
                   "group flex min-h-14 items-center gap-3 px-3 py-2",
-                  selected ? "bg-primary-subtle" : "hover:bg-hover",
+                  selected ? "bg-primary-subtle" : "hover:bg-state-hover",
                   item.disabled && "opacity-50",
                 )}
               >
@@ -144,9 +144,9 @@ export function FileList({
                   onClick={() => selection !== "none" && toggle(item.id)}
                   onDoubleClick={() => onOpen?.(item)}
                   onKeyDown={(event) => handleItemKeyDown(event, item)}
-                  className="flex min-w-0 flex-1 items-center gap-3 rounded-md text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="flex min-w-0 flex-1 items-center gap-3 rounded-control text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sunken text-fg-muted">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-sunken text-fg-muted">
                     {item.kind === "folder" ? <Folder aria-hidden="true" /> : <File aria-hidden="true" />}
                   </span>
                   <span className="min-w-0 flex-1">

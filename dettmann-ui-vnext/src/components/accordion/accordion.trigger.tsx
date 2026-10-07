@@ -9,8 +9,8 @@ const accordionTriggerVariants = defineRecipe({
   base: [
     "flex w-full items-center justify-between px-4 py-3",
     "text-sm font-medium text-left",
-    "hover:bg-hover transition-colors",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
+    "hover:bg-state-hover transition-colors",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
   ].join(" "),
 });
 

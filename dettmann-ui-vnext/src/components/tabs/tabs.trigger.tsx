@@ -8,9 +8,9 @@ import { useTabsContext } from "./tabs.context";
 const tabsTriggerVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center whitespace-nowrap px-4 py-2",
-    "text-sm font-medium transition-colors duration-fast",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-    "disabled:pointer-events-none disabled:bg-muted disabled:text-fg-subtle",
+    "text-sm font-medium motion-transition",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle",
   ].join(" "),
   variants: {
     active: {
@@ -23,7 +23,7 @@ const tabsTriggerVariants = defineRecipe({
     },
     variant: {
       underline: "",
-      segmented: "rounded-md",
+      segmented: "rounded-control",
     },
   },
   compoundVariants: [
@@ -45,17 +45,17 @@ const tabsTriggerVariants = defineRecipe({
     {
       variant: "underline",
       active: false,
-      class: "text-fg-muted border-transparent hover:bg-hover hover:text-fg",
+      class: "text-fg-muted border-transparent hover:bg-state-hover hover:text-fg",
     },
     {
       variant: "segmented",
       active: true,
-      class: "bg-secondary-subtle text-secondary-text shadow-xs",
+      class: "bg-secondary-subtle text-secondary-text shadow-raised",
     },
     {
       variant: "segmented",
       active: false,
-      class: "text-fg-muted hover:bg-hover hover:text-fg",
+      class: "text-fg-muted hover:bg-state-hover hover:text-fg",
     },
   ],
   defaultVariants: {

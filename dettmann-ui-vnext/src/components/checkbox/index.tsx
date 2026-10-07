@@ -10,11 +10,11 @@ const checkboxVariants = defineRecipe({
     root: "inline-flex items-center gap-2",
     checkbox: [
       "shrink-0 flex items-center justify-center",
-      "border border-border-strong rounded-md",
+      "border border-border-strong rounded-control",
       "bg-surface",
-      "transition-colors duration-fast ease-default",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-      "disabled:cursor-not-allowed disabled:bg-muted disabled:text-fg-subtle",
+      "motion-transition",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+      "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
       "data-[state=checked]:bg-tone data-[state=checked]:border-tone data-[state=checked]:text-on-tone",
       "data-[state=indeterminate]:bg-tone data-[state=indeterminate]:border-tone data-[state=indeterminate]:text-on-tone",
     ].join(" "),
@@ -135,7 +135,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
         >
           <svg
             className={cn(
-              "h-3 w-3 text-current transition-transform duration-fast",
+              "h-3 w-3 text-current transition-transform motion-transition",
               isChecked || indeterminate ? "scale-100" : "scale-0"
             )}
             viewBox="0 0 24 24"

@@ -63,8 +63,8 @@ export function ContextMenu({items,children,className}:ContextMenuProps){
       onKeyDown={event=>{if(event.defaultPrevented||!isMenuKey(event))return;event.preventDefault();open(keyboardAnchor(event.target as Element))}}
       className={className}
     >{children}</div>
-    {position?createPortal(<div ref={menuRef} className="fixed z-dropdown min-w-52 rounded-lg border border-border bg-raised p-1 shadow-lg" style={{left:position.x,top:position.y}} role="menu" onPointerDown={e=>e.stopPropagation()} onKeyDown={onMenuKeyDown}>
-      {items.map(item=><button key={item.id} type="button" role="menuitem" tabIndex={-1} disabled={item.disabled} onClick={()=>{item.onSelect?.();close(true)}} className={cn("flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",item.destructive?"text-danger-text hover:bg-danger-subtle focus-visible:bg-danger-subtle":"text-fg hover:bg-hover focus-visible:bg-hover",item.disabled&&"pointer-events-none opacity-50")}><span className="min-w-0 flex-1">{item.label}</span>{item.shortcut?<span className="text-xs text-fg-subtle">{item.shortcut}</span>:null}</button>)}
+    {position?createPortal(<div ref={menuRef} className="fixed z-dropdown min-w-52 rounded-control border border-border bg-raised p-1 shadow-overlay" style={{left:position.x,top:position.y}} role="menu" onPointerDown={e=>e.stopPropagation()} onKeyDown={onMenuKeyDown}>
+      {items.map(item=><button key={item.id} type="button" role="menuitem" tabIndex={-1} disabled={item.disabled} onClick={()=>{item.onSelect?.();close(true)}} className={cn("flex w-full items-center gap-3 rounded-control px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",item.destructive?"text-danger-text hover:bg-danger-subtle focus-visible:bg-danger-subtle":"text-fg hover:bg-state-hover focus-visible:bg-state-hover",item.disabled&&"pointer-events-none opacity-50")}><span className="min-w-0 flex-1">{item.label}</span>{item.shortcut?<span className="text-xs text-fg-subtle">{item.shortcut}</span>:null}</button>)}
     </div>,document.body):null}
   </>;
 }

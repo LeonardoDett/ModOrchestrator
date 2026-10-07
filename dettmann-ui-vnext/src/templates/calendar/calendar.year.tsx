@@ -15,7 +15,7 @@ interface CalendarYearProps {
 }
 
 const yearDayNumberVariants = defineRecipe({
-  base: "flex size-5 items-center justify-center rounded-sm text-[10px] leading-none tabular-nums",
+  base: "flex size-5 items-center justify-center rounded-control text-[10px] leading-none tabular-nums",
   variants: {
     isToday: {
       true: "rounded-full bg-secondary font-semibold text-on-secondary",
@@ -34,9 +34,9 @@ const yearDayNumberVariants = defineRecipe({
 
 const yearDayVariants = defineRecipe({
   base: [
-    "relative flex aspect-square flex-col items-center justify-center gap-0.5 rounded-sm",
-    "transition-colors duration-fast hover:bg-hover",
-    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+    "relative flex aspect-square flex-col items-center justify-center gap-0.5 rounded-control",
+    "motion-transition hover:bg-state-hover",
+    "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-focus",
   ].join(" "),
   variants: {
     isHighlighted: {
@@ -123,7 +123,7 @@ export function CalendarYear({ className }: CalendarYearProps) {
   return (
     <div className={cn("grid grid-cols-2 gap-4 p-4 sm:grid-cols-3 lg:grid-cols-4", className)}>
       {months.map(({ monthDate, days: monthDays }) => (
-        <div key={monthDate.getMonth()} className="rounded-lg border border-border p-3">
+        <div key={monthDate.getMonth()} className="rounded-control border border-border p-3">
           <Typography variant="heading-5" className="mb-2 capitalize">
             {format(monthDate, "MMMM", fmtOpts)}
           </Typography>

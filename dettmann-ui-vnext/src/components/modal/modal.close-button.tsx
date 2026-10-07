@@ -8,11 +8,11 @@ import { useModalContext } from "./modal.context";
 const modalCloseButtonVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center",
-    "h-8 w-8 rounded-lg",
+    "h-8 w-8 rounded-control",
     "text-fg-muted hover:text-fg",
-    "hover:bg-hover",
-    "transition-colors duration-fast",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+    "hover:bg-state-hover",
+    "motion-transition",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
   ].join(" "),
 });
 

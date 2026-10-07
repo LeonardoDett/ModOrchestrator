@@ -21,7 +21,7 @@ export function AccordionItem({ children, value, className, ...props }: Accordio
     <div
       data-value={value}
       data-state={isOpen ? "open" : "closed"}
-      className={cn("border border-border rounded-lg overflow-hidden", className)}
+      className={cn("border border-border rounded-control overflow-hidden", className)}
       {...props}
     >
       {children}

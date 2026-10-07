@@ -19,8 +19,8 @@ import { List } from "../../components/list";
 
 const dropzoneVariants = defineRecipe({
   base: [
-    "rounded-xl border border-dashed border-border bg-surface",
-    "transition-colors duration-fast ease-default",
+    "rounded-card border border-dashed border-border bg-surface",
+    "motion-transition",
   ].join(" "),
   variants: {
     dragging: {

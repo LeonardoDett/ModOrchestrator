@@ -24,7 +24,7 @@ interface AlertContextValue {
 const [AlertProvider, useAlertContext] = createStrictContext<AlertContextValue>("Alert");
 
 const rootVariants = defineRecipe({
-  base: "flex w-full flex-col items-start gap-1 rounded-xl p-4 text-sm",
+  base: "flex w-full flex-col items-start gap-1 rounded-card p-4 text-sm",
 });
 
 interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {

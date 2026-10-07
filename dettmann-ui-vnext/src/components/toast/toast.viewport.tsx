@@ -20,7 +20,7 @@ const toastTone: Record<string, Tone | undefined> = {
 const toastVariants = defineRecipe({
   base: [
     "pointer-events-auto flex w-full max-w-sm items-start gap-3",
-    "rounded-xl p-4 shadow-xl",
+    "rounded-card p-4 shadow-modal",
     "animate-in slide-in-from-right-full duration-300",
   ].join(" "),
   variants: {
@@ -73,7 +73,7 @@ function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastIt
               toast.action?.onClick();
               onRemove(toast.id);
             }}
-            className="mt-2 rounded-md border border-current/30 px-2 py-1 text-sm font-medium hover:bg-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="mt-2 rounded-control border border-current/30 px-2 py-1 text-sm font-medium hover:bg-state-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             {toast.action.label}
           </button>
@@ -82,7 +82,7 @@ function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastIt
       <button
         type="button"
         onClick={() => onRemove(toast.id)}
-        className="shrink-0 rounded-md text-fg-muted hover:bg-hover hover:text-fg transition-opacity"
+        className="shrink-0 rounded-control text-fg-muted hover:bg-state-hover hover:text-fg transition-opacity"
         aria-label={closeLabel}
       >
         <svg

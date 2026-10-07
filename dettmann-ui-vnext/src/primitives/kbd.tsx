@@ -6,10 +6,10 @@ const kbdVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center",
     "font-mono font-medium",
-    "bg-muted text-fg",
+    "bg-sunken text-fg",
     "border border-border",
-    "rounded-sm",
-    "shadow-xs",
+    "rounded-control",
+    "shadow-raised",
   ].join(" "),
   variants: {
     /** Size of the keyboard key */

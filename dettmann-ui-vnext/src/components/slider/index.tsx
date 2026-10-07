@@ -205,7 +205,7 @@ function SliderRoot<T extends SliderValue = number>({
 }
 
 const trackVariants = defineRecipe({
-  base: "relative grow rounded-full bg-muted",
+  base: "relative grow rounded-full bg-sunken",
   variants: {
     orientation: {
       horizontal: "h-2 w-full",
@@ -284,8 +284,8 @@ function SliderRange({ className, style, ...props }: SliderRangeProps) {
 
 const thumbVariants = defineRecipe({
   base: [
-    "absolute z-base block rounded-full bg-surface border border-border-strong shadow-xs",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
+    "absolute z-base block rounded-full bg-surface border border-border-strong shadow-raised",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
   ].join(" "),
   variants: {
     orientation: {

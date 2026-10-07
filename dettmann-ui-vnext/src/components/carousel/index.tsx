@@ -69,7 +69,7 @@ export function Carousel({
             aria-label="Previous items"
             variant="secondary"
             size="icon"
-            className="absolute left-2 top-1/2 -translate-y-1/2 shadow-md"
+            className="absolute left-2 top-1/2 -translate-y-1/2 shadow-overlay"
             onClick={() => scroll(-1)}
           >
             <ChevronLeft aria-hidden="true" />
@@ -79,7 +79,7 @@ export function Carousel({
             aria-label="Next items"
             variant="secondary"
             size="icon"
-            className="absolute right-2 top-1/2 -translate-y-1/2 shadow-md"
+            className="absolute right-2 top-1/2 -translate-y-1/2 shadow-overlay"
             onClick={() => scroll(1)}
           >
             <ChevronRight aria-hidden="true" />

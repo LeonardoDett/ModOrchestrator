@@ -149,9 +149,9 @@ function TooltipTrigger({ children, className }: TooltipTriggerProps) {
 // Content
 const tooltipContentVariants = defineRecipe({
   base: [
-    "z-tooltip px-3 py-1.5 rounded-lg",
-    "bg-fg text-page text-sm",
-    "shadow-xs",
+    "z-tooltip px-3 py-1.5 rounded-control",
+    "bg-fg text-canvas text-sm",
+    "shadow-raised",
     "max-w-xs",
   ].join(" "),
 });

@@ -65,7 +65,7 @@ export function DataTableColumnPicker({
                 checked={visible}
                 disabled={locked}
                 onCheckedChange={(checked) => toggle(column.id, checked)}
-                className="rounded-md px-2 py-1 hover:bg-hover"
+                className="rounded-control px-2 py-1 hover:bg-state-hover"
               />
             );
           })}

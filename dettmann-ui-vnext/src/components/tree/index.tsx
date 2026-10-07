@@ -221,10 +221,10 @@ export function Tree<T>({
           >
             <div
               className={cn(
-                "group flex min-h-9 items-center gap-1 rounded-md px-2",
+                "group flex min-h-9 items-center gap-1 rounded-control px-2",
                 selected
                   ? "bg-primary-subtle text-primary-text"
-                  : "text-fg hover:bg-hover",
+                  : "text-fg hover:bg-state-hover",
                 node.disabled && "opacity-50",
               )}
               style={{ paddingLeft: depth * indent + 8 }}
@@ -236,7 +236,7 @@ export function Tree<T>({
                   aria-expanded={open}
                   disabled={node.disabled}
                   onClick={() => toggle(node.id)}
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring hover:bg-hover"
+                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus hover:bg-state-hover"
                 >
                   <ChevronRight
                     aria-hidden="true"
@@ -269,7 +269,7 @@ export function Tree<T>({
                 disabled={node.disabled}
                 onClick={() => onSelect?.(node)}
                 onKeyDown={(event) => handleItemKeyDown(event, current, index)}
-                className="flex min-w-0 flex-1 items-center gap-2 rounded py-1 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex min-w-0 flex-1 items-center gap-2 rounded-control py-1 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
               >
                 <span aria-hidden="true" className="shrink-0 [&>svg]:h-4 [&>svg]:w-4">
                   {icon}

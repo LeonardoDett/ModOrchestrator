@@ -5,24 +5,24 @@ import { Spinner } from "../../primitives/spinner";
 import { toneData, type Tone } from "../../theme/tone";
 
 const buttonSolid =
-  "bg-tone text-on-tone shadow-xs hover:bg-tone-hover active:bg-tone-pressed";
+  "bg-tone text-on-tone shadow-raised hover:bg-tone-hover active:bg-tone-pressed";
 const buttonSoft =
-  "bg-tone-subtle text-tone-text shadow-xs hover:bg-tone-subtle-hover";
+  "bg-tone-subtle text-tone-text shadow-raised hover:bg-tone-subtle-hover";
 const buttonOutlineNeutral =
-  "border border-border-strong bg-transparent text-fg shadow-xs hover:bg-hover active:bg-pressed";
+  "border border-border-strong bg-transparent text-fg shadow-raised hover:bg-state-hover active:bg-state-pressed";
 const buttonOutlineTone =
-  "border border-tone-border bg-transparent text-tone-text shadow-xs hover:bg-tone-subtle";
-const buttonGhostNeutral = "bg-transparent text-fg hover:bg-hover active:bg-pressed";
+  "border border-tone-border bg-transparent text-tone-text shadow-raised hover:bg-tone-subtle";
+const buttonGhostNeutral = "bg-transparent text-fg hover:bg-state-hover active:bg-state-pressed";
 const buttonGhostTone = "bg-transparent text-tone-text hover:bg-tone-subtle";
 
 const buttonVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center gap-2",
     "text-sm font-semibold",
-    "rounded-lg",
-    "transition-colors duration-fast ease-default",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-    "disabled:pointer-events-none disabled:bg-muted disabled:text-fg-subtle disabled:border-transparent disabled:shadow-none",
+    "rounded-control",
+    "motion-transition",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent disabled:shadow-none",
   ].join(" "),
   variants: {
     /** Visual variant */
