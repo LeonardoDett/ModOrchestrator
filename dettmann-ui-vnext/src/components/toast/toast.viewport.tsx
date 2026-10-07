@@ -1,12 +1,23 @@
 "use client";
 
-import { type ComponentPropsWithoutRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Portal } from "../../primitives/portal";
 import type { Toast } from "./toast.context";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
+import { Presence } from "../../motion/presence";
+import type { MotionValues } from "../../motion/read-motion";
+
+/**
+ * Entrada pela camada de movimento: desliza da direita (16px × amp) e aparece. Sob redução
+ * de movimento `animate` descarta o deslocamento e mantém só a opacidade, curta e linear.
+ */
+const toastEnter = (m: MotionValues): Keyframe[] => [
+  { opacity: 0, transform: `translateX(${16 * m.amp}px)` },
+  { opacity: 1, transform: "translateX(0px)" },
+];
 
 /** Superfície de status pelo contrato de intent; `neutral` resolve para selected/fg/border-strong. */
 const toastSurface = "bg-intent-subtle text-intent-text border border-intent-border";
@@ -23,7 +34,6 @@ const toastVariants = defineRecipe({
   base: [
     "pointer-events-auto flex w-full max-w-sm items-start gap-3",
     "rounded-card p-4 shadow-modal",
-    "animate-in slide-in-from-right-full duration-300",
   ].join(" "),
   variants: {
     variant: {
@@ -47,9 +57,13 @@ interface ToastItemProps extends ComponentPropsWithoutRef<"div">, ToastVariants 
   closeLabel: string;
 }
 
-function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastItemProps) {
+const ToastItem = forwardRef<HTMLDivElement, ToastItemProps>(function ToastItem(
+  { toast, onRemove, closeLabel, className, ...props },
+  ref,
+) {
   return (
     <div
+      ref={ref}
       role="alert"
       className={cn(
         toastVariants({ variant: toast.variant }),
@@ -102,7 +116,7 @@ function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastIt
       </button>
     </div>
   );
-}
+});
 
 interface ToastViewportProps {
   toasts: Toast[];
@@ -118,7 +132,9 @@ export function ToastViewport({ toasts, onRemove, closeLabel = "Close" }: ToastV
     <Portal>
       <div className="fixed top-0 right-0 z-toast flex max-h-screen w-full flex-col-reverse p-4 sm:flex-col md:max-w-sm pointer-events-none gap-2">
         {toasts.map((toast) => (
-          <ToastItem key={toast.id} toast={toast} onRemove={onRemove} closeLabel={closeLabel} />
+          <Presence key={toast.id} show enter={toastEnter}>
+            <ToastItem toast={toast} onRemove={onRemove} closeLabel={closeLabel} />
+          </Presence>
         ))}
       </div>
     </Portal>

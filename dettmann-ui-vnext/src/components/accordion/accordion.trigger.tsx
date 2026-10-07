@@ -55,7 +55,7 @@ export function AccordionTrigger({ value, className, children, ...props }: Accor
       {children}
       <svg
         className={cn(
-          "h-4 w-4 shrink-0 transition-transform duration-200",
+          "h-4 w-4 shrink-0 transition-transform duration-(--motion-duration) ease-(--motion-ease)",
           isOpen && "rotate-180"
         )}
         viewBox="0 0 24 24"
