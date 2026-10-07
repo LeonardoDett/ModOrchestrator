@@ -27,6 +27,13 @@ test("brand override propagates to emphasis unless overridden", () => {
   const u = createTheme({ ...cfg, overrides: { light: { "brand-fill": "#abcdef", "emphasis-fill": "#123456" } } });
   expect(u.light["emphasis-fill"]).toBe("#123456");
 });
+test("on-brand override propagates to on-emphasis unless overridden", () => {
+  const t = createTheme({ ...cfg, overrides: { light: { "on-brand": "#FAFAFA" } } });
+  expect(t.light["on-brand"]).toBe("#fafafa");
+  expect(t.light["on-emphasis"]).toBe("#fafafa");
+  const u = createTheme({ ...cfg, overrides: { light: { "on-brand": "#fafafa", "on-emphasis": "#ffffff" } } });
+  expect(u.light["on-emphasis"]).toBe("#ffffff");
+});
 test("typography and elevation keys", () => {
   const t = createTheme(cfg);
   expect(t.shared["text-caption"]).toBe("11px");

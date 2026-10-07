@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useInsertionEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useEffect, useInsertionEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import type { Mode, ThemeConfig } from "./engine";
 import { DEFAULT_PRESET } from "./presets";
 import { THEME_NAME_STORAGE_KEY, THEME_STORAGE_KEY } from "./get-theme-script";
-import { injectTheme, isKnownThemeId, resolveThemeInput } from "./inject";
+import { injectTheme, isKnownThemeId, resolveThemeInput, warnShadowedRegistryIds } from "./inject";
 import { isDev } from "../dev/env";
 import { useBudgetGuard } from "../dev/budget";
 import { useIsomorphicLayoutEffect } from "../utils/use-isomorphic-layout-effect";
@@ -133,6 +133,7 @@ export function ThemeProvider({
   const theme = useMemo(() => resolveThemeInput(selected, themes), [selectedKey, themes]);
 
   useInsertionEffect(() => injectTheme(theme), [theme]);
+  useEffect(() => warnShadowedRegistryIds(themes), [themes]);
 
   useIsomorphicLayoutEffect(() => {
     if (!mounted) return;

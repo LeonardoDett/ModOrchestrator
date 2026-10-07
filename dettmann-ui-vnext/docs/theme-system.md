@@ -21,7 +21,7 @@ interface ThemeConfig {
 }
 ```
 
-`createTheme(config)` is pure and deterministic. Seeds accept `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()`, `hsl()` and `oklch()`; CSS color names are not supported and fail with a `ThemeConfigError` that names the field. Invalid config throws in development and is clamped (with one `console.error` per message) in production.
+`createTheme(config)` is pure and deterministic. Seeds accept `#rgb`, `#rrggbb`, `#rrggbbaa`, `rgb()`, `hsl()` and `oklch()`; CSS color names are not supported and fail with a `ThemeConfigError` that names the field. Invalid config (including an ill-typed input such as `null`) throws in development; in production the provider/scope falls back to the default preset with one `console.error` per message. Only `motion.tune` is clamped to safe limits instead.
 
 ## Layers
 
@@ -77,7 +77,11 @@ The dark stack is intentionally lifted (canvas ~.19, surface ~.225, raised ~.26)
 
 ## Overrides
 
-`overrides.light` / `overrides.dark` replace individual L3 roles (keys are role names). Use them for a specific brand mandate; the contrast report still flags a violation. Prefer a seed or a knob first.
+`overrides.light` / `overrides.dark` replace individual L3 roles (keys are role names). Use them for a specific brand mandate; the contrast report still flags a violation, and in development each violation is logged once per theme with `console.warn` (the override is kept). Prefer a seed or a knob first.
+
+- `brand-*` overrides propagate to the matching `emphasis-*` role, and `on-brand` to `on-emphasis`, unless that role is overridden too.
+- `focus` is not recomputed from overrides: override it explicitly if a brand override changes what the ring sits against.
+- A `themes` registry key equal to a built-in preset id is ignored (the preset wins); development logs a warning once per id.
 
 ## Budget and motion
 

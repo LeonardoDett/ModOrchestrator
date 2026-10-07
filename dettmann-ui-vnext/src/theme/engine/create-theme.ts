@@ -17,7 +17,14 @@ export interface ResolvedTheme {
 const SHARED_PREFIXES = ["radius-", "density-", "control-", "font-", "text-", "motion-"];
 const isShared = (key: string) => SHARED_PREFIXES.some((p) => key.startsWith(p));
 
-/** Aplica overrides; `brand-*` propaga para `emphasis-*` salvo override explícito deste. */
+/** Papel de ênfase espelhado por um papel de marca (`brand-*` → `emphasis-*`, `on-brand` → `on-emphasis`). */
+const emphasisTwin = (role: string): string | undefined =>
+  role === "on-brand" ? "on-emphasis" : role.startsWith("brand-") ? role.replace("brand-", "emphasis-") : undefined;
+
+/**
+ * Aplica overrides; `brand-*` e `on-brand` propagam para `emphasis-*`/`on-emphasis` salvo
+ * override explícito destes. `focus` não é recalculado a partir de overrides.
+ */
 function applyOverrides(roles: Record<string, string>, overrides: RoleOverrides): Set<string> {
   const touched = new Set<string>();
   const set = (role: string, value: string) => {
@@ -26,8 +33,8 @@ function applyOverrides(roles: Record<string, string>, overrides: RoleOverrides)
   };
   for (const [role, value] of Object.entries(overrides)) {
     set(role, value as string);
-    if (role.startsWith("brand-") && !(role.replace("brand-", "emphasis-") in overrides))
-      set(role.replace("brand-", "emphasis-"), value as string);
+    const twin = emphasisTwin(role);
+    if (twin && !(twin in overrides)) set(twin, value as string);
   }
   return touched;
 }

@@ -254,3 +254,51 @@ test("stored mode wins over defaultMode and setMode persists", () => {
   expect(document.documentElement.classList.contains("dark")).toBe(false);
   expect(localStorage.getItem("ui-theme-mode")).toBe("light");
 });
+
+test("override contrast warnings are logged once per theme in dev", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  const cfg = { id: "loud", label: "Loud", brand: "#16824f", overrides: { light: { "on-emphasis": "#777777" } } };
+  render(<ThemeScope theme={cfg}><span /></ThemeScope>);
+  render(<ThemeScope theme={{ ...cfg }}><span /></ThemeScope>);
+  const messages = warn.mock.calls.map((c) => String(c[0]));
+  expect(messages.length).toBeGreaterThan(0);
+  expect(messages.every((m) => m.includes("loud"))).toBe(true);
+  expect(messages.some((m) => /override contrast on-emphasis/.test(m))).toBe(true);
+  expect(new Set(messages).size).toBe(messages.length);
+});
+
+test("override contrast warnings stay silent in production", () => {
+  vi.stubEnv("NODE_ENV", "production");
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  render(<ThemeScope theme={{ id: "quiet", label: "Quiet", brand: "#16824f", overrides: { light: { "on-emphasis": "#777777" } } }}><span /></ThemeScope>);
+  expect(warn).not.toHaveBeenCalled();
+});
+
+test("a registry id equal to a built-in preset id warns once in dev", () => {
+  const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+  const themes = { ember: { id: "ember", label: "Mine", brand: "#336699" }, mine: { id: "mine", label: "Mine", brand: "#336699" } };
+  const { unmount } = render(<ThemeProvider themes={themes}><span /></ThemeProvider>);
+  unmount();
+  render(<ThemeProvider themes={{ ...themes }}><span /></ThemeProvider>);
+  const shadow = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes("ember"));
+  expect(shadow).toHaveLength(1);
+  expect(shadow[0]).toMatch(/preset/);
+  expect(warn.mock.calls.some((c) => String(c[0]).includes('"mine"'))).toBe(false);
+});
+
+test("ill-typed theme input falls back to the default preset in production", () => {
+  vi.stubEnv("NODE_ENV", "production");
+  const error = vi.spyOn(console, "error").mockImplementation(() => {});
+  let container!: HTMLElement;
+  expect(() => {
+    ({ container } = render(<ThemeScope theme={null as never}><span /></ThemeScope>));
+    render(<ThemeScope theme={null as never}><span /></ThemeScope>);
+  }).not.toThrow();
+  expect((container.firstElementChild as HTMLElement).dataset.theme).toBe("forest");
+  expect(error).toHaveBeenCalledTimes(1);
+});
+
+test("ill-typed theme input still throws in dev", () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  expect(() => render(<ThemeScope theme={42 as never}><span /></ThemeScope>)).toThrow();
+});
