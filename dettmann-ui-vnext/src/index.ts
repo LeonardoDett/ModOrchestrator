@@ -1,5 +1,6 @@
 "use client";
 export * from "./theme";
+export * from "./motion";
 export * from "./primitives";
 export * from "./components";
 export * from "./templates";

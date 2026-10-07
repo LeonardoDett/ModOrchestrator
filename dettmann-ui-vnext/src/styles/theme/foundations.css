@@ -67,26 +67,27 @@
  * Redução de movimento: preferência do sistema e setting do app
  * (`:root[data-reduce-motion="true"]`). Deslocamento, rebote e escala somem;
  * o feedback de cor/opacidade permanece, curto e linear. Os seletores têm
- * especificidade maior que `:root` e `[data-motion="..."]` de tokens.css.
+ * especificidade maior que `:root` e `[data-motion="..."]` de tokens.css, e
+ * `!important` vence as `--motion-*` inline de `<MotionScope tune>`.
  */
 @media (prefers-reduced-motion: reduce) {
   :root:root,
   :root [data-motion] {
-    --motion-ease: linear;
-    --motion-amp: 0;
-    --motion-press: 1;
-    --motion-duration: 120ms;
-    --motion-spring-duration: 120ms;
-    --motion-stagger: 0ms;
+    --motion-ease: linear !important;
+    --motion-amp: 0 !important;
+    --motion-press: 1 !important;
+    --motion-duration: 120ms !important;
+    --motion-spring-duration: 120ms !important;
+    --motion-stagger: 0ms !important;
   }
 }
 
 :root[data-reduce-motion="true"],
 :root[data-reduce-motion="true"] [data-motion] {
-  --motion-ease: linear;
-  --motion-amp: 0;
-  --motion-press: 1;
-  --motion-duration: 120ms;
-  --motion-spring-duration: 120ms;
-  --motion-stagger: 0ms;
+  --motion-ease: linear !important;
+  --motion-amp: 0 !important;
+  --motion-press: 1 !important;
+  --motion-duration: 120ms !important;
+  --motion-spring-duration: 120ms !important;
+  --motion-stagger: 0ms !important;
 }

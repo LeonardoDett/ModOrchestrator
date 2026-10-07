@@ -8,6 +8,11 @@ export const MOTION_DEFAULTS: Record<MotionLevel, MotionSpec> = {
   expressive: { stiffness: 260, damping: 14, mass: 1, duration: 420, amplitude: 1.6, pressScale: 0.92, stagger: 50 },
 };
 
+/** Nível efetivo = `min(level, ceiling)` na ordem de `MOTION_LEVELS`. */
+export function clampMotion(level: MotionLevel, ceiling: MotionLevel): MotionLevel {
+  return MOTION_LEVELS[Math.min(MOTION_LEVELS.indexOf(level), MOTION_LEVELS.indexOf(ceiling))]!;
+}
+
 type Pt = [number, number];
 
 const DT = 1 / 600;

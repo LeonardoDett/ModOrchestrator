@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { ThemeProvider, ThemeScope, getThemeScript, useTheme, type UseThemeReturn } from "../theme";
 import { injectTheme } from "../theme/inject";
 import { createTheme } from "../theme/engine";
+import { MotionScope } from "../motion";
 
 function reset() {
   document.querySelectorAll("style[data-dettmann-theme]").forEach((s) => s.remove());
@@ -132,6 +133,20 @@ test("ThemeScope clamps motion by the theme ceiling", () => {
     <ThemeScope theme={{ id: "still", label: "Still", brand: "#336699", motion: "responsive" }} motion="expressive"><span /></ThemeScope>,
   );
   expect((container.firstElementChild as HTMLElement).dataset.motion).toBe("responsive");
+});
+
+test("ThemeScope inherits the level of an enclosing MotionScope, clamped by its ceiling", () => {
+  const { container } = render(
+    <MotionScope level="expressive">
+      <ThemeScope theme="forest"><span /></ThemeScope>
+      <ThemeScope theme={{ id: "still", label: "Still", brand: "#336699", motion: "responsive" }}><span /></ThemeScope>
+      <ThemeScope theme="forest" motion="calm"><span /></ThemeScope>
+    </MotionScope>,
+  );
+  const scopes = container.querySelectorAll<HTMLElement>("[data-theme]");
+  expect(scopes[0]!.dataset.motion).toBe("expressive");
+  expect(scopes[1]!.dataset.motion).toBe("responsive");
+  expect(scopes[2]!.dataset.motion).toBe("calm");
 });
 
 test("getThemeScript output is valid JS that sets data-theme", () => {
