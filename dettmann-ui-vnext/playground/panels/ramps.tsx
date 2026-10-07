@@ -1,5 +1,4 @@
-import { Stack, Typography, type Mode, type ResolvedTheme, type RoleName } from "../../src";
-import { COLOR_INTENTS } from "../../src/theme/engine";
+import { COLOR_INTENTS, Stack, Typography, type Mode, type ResolvedTheme, type RoleName } from "../../src";
 
 const INTENT_LABELS: Record<string, string> = {
   brand: "Marca",

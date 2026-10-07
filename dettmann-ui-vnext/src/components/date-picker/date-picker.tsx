@@ -19,6 +19,7 @@ import {
   FloatingPortal,
   FloatingFocusManager,
 } from "@floating-ui/react";
+import { OverlayScope } from "../../primitives/portal";
 import { format as formatDate } from "date-fns";
 import { useDatePickerContext } from "./date-picker.context";
 import { DatePickerPanel } from "./date-picker.panel";
@@ -75,15 +76,17 @@ export function DatePickerPopover({ children, panel }: DatePickerPopoverProps) {
 
       {isOpen && (
         <FloatingPortal>
-          <FloatingFocusManager context={context} modal={false}>
-            <div
-              ref={refs.setFloating}
-              style={floatingStyles}
-              {...getFloatingProps()}
-            >
-              {panel ?? <DatePickerPanel />}
-            </div>
-          </FloatingFocusManager>
+          <OverlayScope>
+            <FloatingFocusManager context={context} modal={false}>
+              <div
+                ref={refs.setFloating}
+                style={floatingStyles}
+                {...getFloatingProps()}
+              >
+                {panel ?? <DatePickerPanel />}
+              </div>
+            </FloatingFocusManager>
+          </OverlayScope>
         </FloatingPortal>
       )}
     </>

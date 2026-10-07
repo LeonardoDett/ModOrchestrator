@@ -10,14 +10,17 @@ import {
   Switch,
   Tag,
   Typography,
+  MOTION_DEFAULTS,
   MOTION_LEVELS,
+  ROLE_NAMES,
+  parseColor,
+  toHex,
   type MotionLevel,
   type MotionSpec,
   type PresetId,
   type RoleName,
   type ThemeConfig,
 } from "../../src";
-import { MOTION_DEFAULTS, ROLE_NAMES, parseColor, toHex } from "../../src/theme/engine";
 
 export const MOTION_LABELS: Record<MotionLevel, string> = { calm: "Calmo", responsive: "Responsivo", expressive: "Expressivo" };
 

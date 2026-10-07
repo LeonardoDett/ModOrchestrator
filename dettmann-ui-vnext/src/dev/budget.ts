@@ -95,6 +95,14 @@ export function summarizeLayers(samples: Emphasis[]): Record<Emphasis, number> {
   return { low: counts.low / n, medium: counts.medium / n, high: counts.high / n };
 }
 
+/**
+ * Fatia em %, com até uma casa decimal (pt-BR): uma fatia real pequena (ex.: 0,4% de botões
+ * `high` numa tela inteira) não pode aparecer como 0%.
+ */
+export function formatShare(v: number): string {
+  return `${(v * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`;
+}
+
 export function budgetVerdict(
   r: Record<Emphasis, number>,
   tol: { lowMedium?: number; highMax?: number } = {},
@@ -102,7 +110,7 @@ export function budgetVerdict(
   const lowMedium = tol.lowMedium ?? 0.08;
   const highMax = tol.highMax ?? 0.12;
   const messages: string[] = [];
-  const pct = (v: number) => `${Math.round(v * 100)}%`;
+  const pct = formatShare;
   if (Math.abs(r.low - 0.6) > lowMedium + EPS) messages.push(`Base (low) em ${pct(r.low)}; meta 60% ± ${pct(lowMedium)}.`);
   if (Math.abs(r.medium - 0.3) > lowMedium + EPS) messages.push(`Estrutura (medium) em ${pct(r.medium)}; meta 30% ± ${pct(lowMedium)}.`);
   if (r.high > highMax + EPS) messages.push(`Destaque (high) em ${pct(r.high)}; máximo ${pct(highMax)} (meta 10%).`);

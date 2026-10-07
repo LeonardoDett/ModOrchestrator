@@ -22,6 +22,7 @@ import {
   FloatingPortal,
   FloatingFocusManager,
 } from "@floating-ui/react";
+import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { inputValueAsString, useInputContext } from "./input.context";
@@ -322,40 +323,42 @@ export function InputCombobox({
 
       {isOpen && (
         <FloatingPortal>
-          <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
-            <div
-              ref={refs.setFloating}
-              style={{
-                ...floatingStyles,
-                width: refs.reference.current?.getBoundingClientRect().width,
-              }}
-              className={comboboxPanelVariants()}
-              {...getFloatingProps()}
-            >
-              {filteredOptions.length === 0 ? (
-                <div className="px-3 py-2 text-sm text-fg-muted">
-                  {emptyMessage}
-                </div>
-              ) : useVirtual ? (
-                <VirtualList
-                  items={filteredOptions}
-                  itemHeight={itemHeight}
-                  maxHeight={maxHeight}
-                  overscan={5}
-                  getItemKey={(opt) => opt.value}
-                  renderItem={renderOption}
-                />
-              ) : (
-                <div style={{ maxHeight }} className="overflow-auto">
-                  {filteredOptions.map((option, index) => (
-                    <div key={option.value}>
-                      {renderOption(option, index)}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </FloatingFocusManager>
+          <OverlayScope>
+            <FloatingFocusManager context={context} modal={false} initialFocus={-1}>
+              <div
+                ref={refs.setFloating}
+                style={{
+                  ...floatingStyles,
+                  width: refs.reference.current?.getBoundingClientRect().width,
+                }}
+                className={comboboxPanelVariants()}
+                {...getFloatingProps()}
+              >
+                {filteredOptions.length === 0 ? (
+                  <div className="px-3 py-2 text-sm text-fg-muted">
+                    {emptyMessage}
+                  </div>
+                ) : useVirtual ? (
+                  <VirtualList
+                    items={filteredOptions}
+                    itemHeight={itemHeight}
+                    maxHeight={maxHeight}
+                    overscan={5}
+                    getItemKey={(opt) => opt.value}
+                    renderItem={renderOption}
+                  />
+                ) : (
+                  <div style={{ maxHeight }} className="overflow-auto">
+                    {filteredOptions.map((option, index) => (
+                      <div key={option.value}>
+                        {renderOption(option, index)}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </FloatingFocusManager>
+          </OverlayScope>
         </FloatingPortal>
       )}
     </>

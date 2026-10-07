@@ -1,7 +1,34 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useContext, useEffect, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { MotionContext, ThemeScopeContext } from "../theme/theme-context";
+
+const CONTENTS = { display: "contents" } as const;
+
+/**
+ * Reemite o escopo de tema e movimento do ponto de montagem para conteúdo portado (fora da
+ * árvore DOM do `ThemeScope`): um `div` com `display: contents` e `data-theme`,
+ * `data-ui-mode` (só com modo forçado), `data-density` (se o escopo definir) e `data-motion`.
+ * Sem tema nem movimento de contexto, renderiza os filhos sem wrapper. Use em todo overlay
+ * que porta para fora da árvore (`Portal` já usa; `FloatingPortal`/`createPortal` envolvem).
+ */
+export function OverlayScope({ children }: { children: ReactNode }) {
+  const scope = useContext(ThemeScopeContext);
+  const motion = useContext(MotionContext);
+  if (!scope && !motion) return <>{children}</>;
+  return (
+    <div
+      style={CONTENTS}
+      data-theme={scope?.theme.id}
+      data-ui-mode={scope?.forcedMode}
+      data-density={scope?.density}
+      data-motion={motion?.level}
+    >
+      {children}
+    </div>
+  );
+}
 
 type PortalProps = {
   /** Content to render in the portal */
@@ -16,7 +43,9 @@ type PortalProps = {
 
 /**
  * Portal renders children into a DOM node outside the parent component's hierarchy.
- * Useful for modals, tooltips, popovers, and other overlay elements.
+ * Useful for modals, tooltips, popovers, and other overlay elements. Portaled content is
+ * wrapped in `OverlayScope`, so it keeps the theme, forced mode, density and motion level
+ * of the nearest `ThemeScope`/`MotionScope`.
  *
  * @example
  * ```tsx
@@ -66,5 +95,5 @@ export function Portal({
     (containerSelector ? document.querySelector(containerSelector) : null) ??
     document.body;
 
-  return createPortal(children, resolvedContainer);
+  return createPortal(<OverlayScope>{children}</OverlayScope>, resolvedContainer);
 }

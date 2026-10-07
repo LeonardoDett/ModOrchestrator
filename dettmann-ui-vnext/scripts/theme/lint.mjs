@@ -15,10 +15,16 @@ const rawProductColorPatterns = [
   /\b(?:bg|text|border|ring|fill|stroke|outline|from|to|via|divide|shadow|accent|caret|decoration)-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d{2,3}\b/,
   // Literais de cor CSS.
   /\b(?:rgb|rgba|hsl|hsla|oklch|oklab)\(/,
-  // Tokens removidos na v2 (tone/primary/secondary).
-  /\b(?:bg|text|border|ring|stroke|fill|outline)-(?:tone|primary|secondary)(?:-[a-z-]+)?\b/,
   /\bdata-tone\b/,
 ];
+/**
+ * Tokens removidos na v2 (tone/primary/secondary) em qualquer utilitário de cor. Só vale
+ * para strings de classe: o texto de `aria-*`, `title` e `alt` ("Edit border-primary") é
+ * descartado antes (heurística).
+ */
+const removedTokenPattern =
+  /\b(?:bg|text|border|ring|ring-offset|stroke|fill|outline|divide|shadow|from|via|to|accent|caret|decoration|placeholder)-(?:tone|primary|secondary)(?:-[a-z-]+)?\b/;
+const TEXT_ATTRIBUTES = /\b(?:aria-[a-z-]+|title|alt)=(?:"[^"]*"|'[^']*'|\{\s*(?:"[^"]*"|'[^']*'|`[^`]*`)\s*\})/g;
 
 function walk(dir) {
   const result = [];
@@ -40,12 +46,10 @@ for (const file of scopes.flatMap(walk)) {
     }
   }
   const runtimeSource = source.replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "");
-  for (const pattern of rawProductColorPatterns) {
-    if (pattern.test(runtimeSource)) {
-      offenders.push(`${file}: off-contract color ${pattern}`);
-      break;
-    }
-  }
+  const pattern =
+    rawProductColorPatterns.find((p) => p.test(runtimeSource)) ??
+    (removedTokenPattern.test(runtimeSource.replace(TEXT_ATTRIBUTES, "")) ? removedTokenPattern : undefined);
+  if (pattern) offenders.push(`${file}: off-contract color ${pattern}`);
 }
 
 if (offenders.length) {

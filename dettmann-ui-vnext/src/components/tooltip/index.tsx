@@ -24,6 +24,7 @@ import {
   FloatingPortal,
   type Placement,
 } from "@floating-ui/react";
+import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 
@@ -175,16 +176,18 @@ function TooltipContent({
 
   return (
     <FloatingPortal>
-      <div
-        ref={refs.setFloating}
-        role="tooltip"
-        style={{ ...floatingStyles, ...style }}
-        className={cn(tooltipContentVariants(), className)}
-        {...getFloatingProps()}
-        {...props}
-      >
-        {children}
-      </div>
+      <OverlayScope>
+        <div
+          ref={refs.setFloating}
+          role="tooltip"
+          style={{ ...floatingStyles, ...style }}
+          className={cn(tooltipContentVariants(), className)}
+          {...getFloatingProps()}
+          {...props}
+        >
+          {children}
+        </div>
+      </OverlayScope>
     </FloatingPortal>
   );
 }

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Emphasis } from "../theme/engine";
 import { isDev } from "./env";
-import { budgetVerdict, sampleLayers, summarizeLayers } from "./budget";
+import { budgetVerdict, formatShare, sampleLayers, summarizeLayers } from "./budget";
 
 export interface BudgetInspectorProps {
   /** Lado da célula de amostragem em px. Padrão 24. */
@@ -26,7 +26,11 @@ const LAYER_VAR: Record<Emphasis, string> = {
 };
 const LAYERS: Emphasis[] = ["low", "medium", "high"];
 
-function measure(step: number): Measure {
+const UNAVAILABLE = "Medição indisponível neste ambiente";
+
+/** `null` sem layout (`document.elementFromPoint` ausente, ex.: jsdom/SSR): no-op seguro. */
+function measure(step: number): Measure | null {
+  if (typeof document === "undefined" || typeof document.elementFromPoint !== "function") return null;
   const width = window.innerWidth;
   const height = window.innerHeight;
   const points: { x: number; y: number }[] = [];
@@ -49,9 +53,14 @@ function BudgetInspectorImpl({ step = 24, tolerance, defaultOpen = true }: Budge
   const [open, setOpen] = useState(defaultOpen);
   const [heat, setHeat] = useState(false);
   const [result, setResult] = useState<Measure | null>(null);
+  const [unavailable, setUnavailable] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
 
-  const run = useCallback(() => setResult(measure(step)), [step]);
+  const run = useCallback(() => {
+    const next = measure(step);
+    setUnavailable(next === null);
+    setResult(next);
+  }, [step]);
 
   useEffect(() => {
     const id = requestAnimationFrame(run);
@@ -73,7 +82,7 @@ function BudgetInspectorImpl({ step = 24, tolerance, defaultOpen = true }: Budge
   }, [heat, result, step]);
 
   const verdict = result ? budgetVerdict(result.ratios, tolerance) : null;
-  const pct = (v: number) => `${Math.round(v * 100)}%`;
+  const pct = formatShare;
 
   return (
     <div
@@ -96,6 +105,7 @@ function BudgetInspectorImpl({ step = 24, tolerance, defaultOpen = true }: Budge
               </div>
             ))}
           </dl>
+          {unavailable && <p role="status">{UNAVAILABLE}</p>}
           {verdict && (
             <div role="status">
               <p>{verdict.ok ? "Dentro do orçamento" : "Fora do orçamento"}</p>

@@ -25,6 +25,7 @@ import {
   FloatingFocusManager,
   type Placement,
 } from "@floating-ui/react";
+import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 
@@ -173,18 +174,20 @@ function PopoverContent({
 
   return (
     <FloatingPortal>
-      <FloatingFocusManager context={context} modal={false}>
-        <div
-          ref={refs.setFloating}
-          id={popoverId}
-          style={{ ...floatingStyles, ...style }}
-          className={cn(popoverContentVariants(), className)}
-          {...getFloatingProps()}
-          {...props}
-        >
-          {children}
-        </div>
-      </FloatingFocusManager>
+      <OverlayScope>
+        <FloatingFocusManager context={context} modal={false}>
+          <div
+            ref={refs.setFloating}
+            id={popoverId}
+            style={{ ...floatingStyles, ...style }}
+            className={cn(popoverContentVariants(), className)}
+            {...getFloatingProps()}
+            {...props}
+          >
+            {children}
+          </div>
+        </FloatingFocusManager>
+      </OverlayScope>
     </FloatingPortal>
   );
 }

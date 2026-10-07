@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { Badge, Inline, Stack, Table, Typography, type Mode, type ResolvedTheme } from "../../src";
-import { contrastReport, type ContrastKind } from "../../src/theme/engine";
+import { Badge, Inline, Stack, Table, Typography, contrastReport, type ContrastKind, type Mode, type ResolvedTheme } from "../../src";
 
 const KIND_LABELS: Record<ContrastKind, string> = {
   text: "texto",

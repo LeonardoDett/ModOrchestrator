@@ -1,18 +1,11 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./app";
 import { configToCode } from "./panels/export";
 
 describe("playground", () => {
-  let original: typeof document.elementFromPoint;
-  beforeEach(() => {
-    // jsdom não tem layout; o BudgetInspector amostra a tela com elementFromPoint.
-    original = document.elementFromPoint;
-    document.elementFromPoint = () => document.body;
-  });
   afterEach(() => {
-    document.elementFromPoint = original;
     document.head.querySelectorAll("style[data-dettmann-theme]").forEach((s) => s.remove());
   });
 

@@ -5,6 +5,7 @@ export {
   sampleLayers,
   summarizeLayers,
   budgetVerdict,
+  formatShare,
   type BudgetViolation,
   type SampleOptions,
 } from "./budget";

@@ -4,6 +4,7 @@ import { ThemeProvider } from "../theme";
 import {
   BudgetInspector,
   budgetVerdict,
+  formatShare,
   findBudgetViolations,
   sampleLayers,
   summarizeLayers,
@@ -160,5 +161,47 @@ describe("BudgetInspector", () => {
       screen.getByRole("button", { name: "Medir" }).click();
     });
     expect(screen.getByText(/orçamento/i, { selector: "p" })).toBeTruthy();
+  });
+
+  describe("measurement", () => {
+    const original = document.elementFromPoint;
+    afterEach(() => {
+      document.elementFromPoint = original;
+    });
+
+    test("is a safe no-op without document.elementFromPoint", async () => {
+      // @ts-expect-error simula um ambiente sem layout
+      document.elementFromPoint = undefined;
+      render(<BudgetInspector step={400} />);
+      await act(async () => {
+        screen.getByRole("button", { name: "Medir" }).click();
+      });
+      expect(screen.getByText("Medição indisponível neste ambiente")).toBeTruthy();
+      expect(screen.queryByText(/fora do orçamento/i)).toBeNull();
+    });
+
+    test("a child of a high button counts as high", async () => {
+      document.body.innerHTML = `<button data-layer="high"><span id="label">Instalar</span></button><p id="plain"></p>`;
+      const label = document.getElementById("label")!;
+      const plain = document.getElementById("plain")!;
+      // jsdom: 1024×768; step 400 → 3 × 2 = 6 pontos, só o de (200, 200) cai no rótulo do botão
+      document.elementFromPoint = (x, y) => (x < 400 && y < 400 ? label : plain);
+      render(<BudgetInspector step={400} />);
+      await act(async () => {
+        screen.getByRole("button", { name: "Medir" }).click();
+      });
+      const high = screen.getByText("high").nextElementSibling;
+      expect(high?.textContent).toBe(formatShare(1 / 6));
+      expect(high?.textContent).not.toBe("0%");
+    });
+  });
+});
+
+describe("formatShare", () => {
+  test("keeps one decimal so small shares do not read as 0%", () => {
+    expect(formatShare(10 / 2702)).toBe("0,4%");
+    expect(formatShare(0)).toBe("0%");
+    expect(formatShare(0.6)).toBe("60%");
+    expect(formatShare(0.2134)).toBe("21,3%");
   });
 });

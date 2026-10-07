@@ -61,7 +61,7 @@ function ModeColumn({ config, theme, mode }: { config: ThemeConfig; theme: Resol
             {failed === 0 ? `Contraste ${passed}/${rows.length}` : `${failed} pares reprovados`}
           </Badge>
         </Inline>
-        <SampleScreen mode={mode} />
+        <SampleScreen />
         <Panel title="Rampas">
           <Ramps theme={theme} mode={mode} />
         </Panel>

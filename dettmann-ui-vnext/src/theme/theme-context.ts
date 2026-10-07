@@ -15,13 +15,15 @@ export interface ThemeContextValue {
 export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 /**
- * Tema mais próximo (provider ou `ThemeScope`), o registro do consumidor e o modo forçado
- * pelo ancestral mais próximo (se houver), para escopos aninhados.
+ * Tema mais próximo (provider ou `ThemeScope`), o registro do consumidor, o modo forçado e a
+ * densidade do ancestral mais próximo que os define (se houver), para escopos aninhados e
+ * overlays portados.
  */
 export interface ThemeScopeContextValue {
   theme: ResolvedTheme;
   registry: Record<string, ThemeConfig>;
   forcedMode?: Mode;
+  density?: ThemeConfig["density"];
 }
 
 export const ThemeScopeContext = createContext<ThemeScopeContextValue | null>(null);

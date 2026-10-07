@@ -169,6 +169,7 @@ interface RadioItemProps
   /** Card wraps the whole control; use children for extra copy */
   variant?: "default" | "card";
   children?: ReactNode;
+  /** Sobrescreve o intent do grupo; sem ele, o item herda o do `Radio.Group` (padrão `brand`). */
   intent?: Intent;
 }
 
@@ -240,7 +241,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
         disabled={disabled}
         onClick={handleClick}
         className={cn(card(), className)}
-        {...intentData(intent ?? "brand")}
+        {...intentData(intent)}
         {...props}
       >
         {glyph}
@@ -261,7 +262,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
         disabled={disabled}
         onClick={handleClick}
         className={radio()}
-        {...intentData(intent ?? "brand")}
+        {...intentData(intent)}
         {...props}
       >
         <span data-state={state} className={indicator()} />

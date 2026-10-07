@@ -4,6 +4,7 @@ import { Badge } from "../components/badge";
 import { Tag } from "../components/tag";
 import { Alert } from "../components/alert";
 import { Checkbox } from "../components/checkbox";
+import { Radio } from "../components/radio";
 import { Toolbar } from "../components/toolbar";
 import { ActionBar } from "../components/action-bar";
 import { Modal } from "../components/modal";
@@ -97,5 +98,31 @@ describe("structural layers and budget regions", () => {
     expect(screen.getByText("Bar")).toHaveAttribute("data-budget-region", "action-bar");
     expect(screen.getByText("Foot")).toHaveAttribute("data-budget-region", "modal-footer");
     expect(screen.getByText("Act").parentElement).toHaveAttribute("data-budget-region", "page-actions");
+  });
+});
+
+describe("Radio.Group intent", () => {
+  it("items inherit the group intent (only the group defaults to brand)", () => {
+    render(
+      <Radio.Group name="g" intent="danger" defaultValue="a">
+        <Radio.Item value="a" label="A" />
+        <Radio.Item value="b" label="B" variant="card" />
+      </Radio.Group>,
+    );
+    for (const radio of screen.getAllByRole("radio")) {
+      expect(radio.closest("[data-intent]")?.getAttribute("data-intent")).toBe("danger");
+    }
+  });
+
+  it("group without intent defaults to brand; an item intent still wins", () => {
+    render(
+      <Radio.Group name="h" defaultValue="a">
+        <Radio.Item value="a" label="A" />
+        <Radio.Item value="b" label="B" intent="success" />
+      </Radio.Group>,
+    );
+    const [a, b] = screen.getAllByRole("radio");
+    expect(a!.closest("[data-intent]")?.getAttribute("data-intent")).toBe("brand");
+    expect(b!.getAttribute("data-intent")).toBe("success");
   });
 });

@@ -32,6 +32,7 @@ import {
   FloatingFocusManager,
   type Placement,
 } from "@floating-ui/react";
+import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useControllableState } from "../../hooks/use-controllable-state";
@@ -208,19 +209,21 @@ function MenuContent({ children, className, style, ...props }: MenuContentProps)
 
   return (
     <FloatingPortal>
-      <FloatingFocusManager context={context} modal={false}>
-        <div
-          ref={refs.setFloating}
-          id={menuId}
-          role="menu"
-          style={{ ...floatingStyles, ...style }}
-          className={cn(menuContentVariants(), className)}
-          {...getFloatingProps()}
-          {...props}
-        >
-          {children}
-        </div>
-      </FloatingFocusManager>
+      <OverlayScope>
+        <FloatingFocusManager context={context} modal={false}>
+          <div
+            ref={refs.setFloating}
+            id={menuId}
+            role="menu"
+            style={{ ...floatingStyles, ...style }}
+            className={cn(menuContentVariants(), className)}
+            {...getFloatingProps()}
+            {...props}
+          >
+            {children}
+          </div>
+        </FloatingFocusManager>
+      </OverlayScope>
     </FloatingPortal>
   );
 }

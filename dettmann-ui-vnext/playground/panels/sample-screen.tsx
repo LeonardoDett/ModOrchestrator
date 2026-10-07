@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Boxes, Download, FolderOpen, LayoutDashboard, Puzzle, Settings, ScrollText } from "lucide-react";
 import {
   Alert,
@@ -15,7 +15,6 @@ import {
   Toolbar,
   Typography,
   type Intent,
-  type Mode,
 } from "../../src";
 
 const MODS: { name: string; version: string; status: string; intent: Intent; enabled: boolean }[] = [
@@ -57,25 +56,14 @@ const SIDEBAR_LABELS = {
 
 /**
  * Tela representativa: shell com navegação, barra com uma ação `high`, tabela, formulário e
- * diálogo. O `Modal` vai para `document.body` (fora do `ThemeScope`), então enquanto está
- * aberto o `body` recebe o tema/modo desta coluna.
+ * diálogo. O `Modal` é portado para `document.body` e herda tema e modo da coluna pelo
+ * `ThemeScope` (o `Portal` reemite o escopo).
  */
-export function SampleScreen({ mode }: { mode: Mode }) {
+export function SampleScreen() {
   const [open, setOpen] = useState(false);
   const [profile, setProfile] = useState("Principal");
   const [backup, setBackup] = useState(true);
   const [autoSort, setAutoSort] = useState(false);
-
-  useEffect(() => {
-    if (!open) return;
-    const body = document.body;
-    body.setAttribute("data-theme", "playground");
-    body.setAttribute("data-ui-mode", mode);
-    return () => {
-      body.removeAttribute("data-theme");
-      body.removeAttribute("data-ui-mode");
-    };
-  }, [open, mode]);
 
   return (
     <div data-budget-region="sample" className="flex h-[34rem] overflow-hidden rounded-card border border-border bg-canvas">

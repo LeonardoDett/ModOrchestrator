@@ -1,7 +1,7 @@
 export { Box } from "./box";
 export { Typography } from "./typography";
 export { Backdrop } from "./backdrop";
-export { Portal } from "./portal";
+export { Portal, OverlayScope } from "./portal";
 export { VisuallyHidden } from "./visually-hidden";
 export { Spinner } from "./spinner";
 export { Divider } from "./divider";

@@ -47,7 +47,11 @@ export function ThemeScope({ theme: themeProp, mode, density, motion, className,
   }, [theme]);
 
   const forcedMode = mode ?? parent?.forcedMode;
-  const scope = useMemo(() => ({ theme, registry, forcedMode }), [theme, registry, forcedMode]);
+  const scopeDensity = density ?? parent?.density;
+  const scope = useMemo(
+    () => ({ theme, registry, forcedMode, density: scopeDensity }),
+    [theme, registry, forcedMode, scopeDensity],
+  );
   const level = clampMotion(motion ?? parentMotion?.level ?? "calm", theme.config.motion.ceiling);
   const motionValue = useMemo(() => ({ level }), [level]);
   return (
