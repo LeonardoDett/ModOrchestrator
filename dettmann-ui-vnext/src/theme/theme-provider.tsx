@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useInsertionEffect, useLayoutEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useCallback, useInsertionEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import type { Mode, ThemeConfig } from "./engine";
 import { DEFAULT_PRESET } from "./presets";
 import { THEME_NAME_STORAGE_KEY, THEME_STORAGE_KEY } from "./get-theme-script";
 import { injectTheme, isKnownThemeId, resolveThemeInput } from "./inject";
+import { useIsomorphicLayoutEffect } from "../utils/use-isomorphic-layout-effect";
 import { EMPTY_REGISTRY, ThemeContext, ThemeScopeContext, themeInputKey, type ThemeMode } from "./theme-context";
 
 export interface ThemeProviderProps {
@@ -66,8 +67,6 @@ function writeStored(key: string, value: string): void {
     /* storage is optional */
   }
 }
-/** Layout effect no cliente (estado correto antes do paint); effect comum no servidor. */
-const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 const isMode = (value: string | null): value is ThemeMode => value === "light" || value === "dark" || value === "system";
 

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { act, render, screen } from "@testing-library/react";
-import { useState } from "react";
+import { StrictMode, useState } from "react";
 import { ThemeProvider, ThemeScope } from "../theme";
 import { MOTION_DEFAULTS, springToLinear } from "../theme/engine";
 import { MotionScope, Presence, animate, readMotion, useFlip, useMotion, type MotionValues } from "../motion";
@@ -163,6 +163,11 @@ test("MotionScope tune emits CSS vars", () => {
   const scope = screen.getByTestId("probe").closest("[data-motion]") as HTMLElement;
   const style = scope.getAttribute("style")!;
   expect(style).toContain("--motion-ease: linear(");
+  expect(style).toContain("--ui-motion-responsive-ease: linear(");
+  for (const name of ["ease", "spring-duration", "duration", "amp", "press", "stagger"]) {
+    expect(scope.style.getPropertyValue(`--ui-motion-responsive-${name}`)).toBe(scope.style.getPropertyValue(`--motion-${name}`));
+  }
+  expect(scope.style.getPropertyValue("--ui-motion-calm-amp")).toBe("");
   expect(scope.style.getPropertyValue("--motion-amp")).toBe("1.2");
   expect(scope.style.getPropertyValue("--motion-duration")).toBe("300ms");
   expect(scope.style.getPropertyValue("--motion-stagger")).toBe("10ms");
@@ -278,6 +283,54 @@ test("Presence cancels the exit when shown again", async () => {
   expect(screen.getByTestId("box")).toBeInTheDocument();
 });
 
+test("Presence cancels the running animation when unmounted during exit", async () => {
+  const cancel = vi.fn();
+  let resolve!: () => void;
+  proto.animate = vi.fn(
+    () => ({ finished: new Promise<void>((r) => (resolve = r)), cancel }) as unknown as Animation,
+  ) as unknown as AnimateFn;
+  const ui = (show: boolean) => (
+    <Presence show={show}>
+      <div data-testid="box">hi</div>
+    </Presence>
+  );
+  const { rerender, unmount } = render(ui(true));
+  rerender(ui(false));
+  cancel.mockClear();
+  expect(() => unmount()).not.toThrow();
+  expect(cancel).toHaveBeenCalledTimes(1);
+  await act(async () => resolve());
+});
+
+test("Presence under StrictMode enters once visually and still unmounts after exit", async () => {
+  const anims: { frames: Keyframe[]; cancel: ReturnType<typeof vi.fn>; resolve: () => void }[] = [];
+  proto.animate = vi.fn((frames: Keyframe[]) => {
+    let resolve!: () => void;
+    const finished = new Promise<void>((r) => (resolve = r));
+    const entry = { frames, cancel: vi.fn(), resolve };
+    anims.push(entry);
+    return { finished, cancel: entry.cancel } as unknown as Animation;
+  }) as unknown as AnimateFn;
+  const ui = (show: boolean) => (
+    <StrictMode>
+      <Presence show={show}>
+        <div data-testid="box">hi</div>
+      </Presence>
+    </StrictMode>
+  );
+  const { rerender } = render(ui(true));
+  const live = anims.filter((a) => a.cancel.mock.calls.length === 0);
+  expect(live).toHaveLength(1);
+  expect(live[0]!.frames[0]).toMatchObject({ opacity: 0 });
+
+  rerender(ui(false));
+  expect(screen.getByTestId("box")).toBeInTheDocument();
+  const exit = anims[anims.length - 1]!;
+  expect(exit.frames[exit.frames.length - 1]).toMatchObject({ opacity: 0 });
+  await act(async () => exit.resolve());
+  expect(screen.queryByTestId("box")).toBeNull();
+});
+
 test("Presence without WAAPI unmounts immediately", () => {
   const { rerender } = render(
     <Presence show>
@@ -303,15 +356,19 @@ test("Presence keeps the child's own ref working", () => {
   expect(node).toBe(screen.getByTestId("box"));
 });
 
-test("useFlip animates moved items only", () => {
+function setupFlip() {
   const moved: { key: string | null; frames: Keyframe[] }[] = [];
+  const cancels: string[] = [];
+  const env = { scroll: 0 };
   proto.animate = vi.fn(function (this: HTMLElement, frames: Keyframe[]) {
-    moved.push({ key: this.getAttribute("data-k"), frames });
-    return fakeAnimation();
+    const key = this.getAttribute("data-k");
+    moved.push({ key, frames });
+    return { finished: new Promise(() => {}), cancel: () => cancels.push(key!) } as unknown as Animation;
   }) as unknown as AnimateFn;
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
     const i = this.parentElement ? Array.from(this.parentElement.children).indexOf(this) : 0;
-    return { top: i * 10, left: 0, width: 10, height: 10, right: 10, bottom: i * 10 + 10, x: 0, y: i * 10, toJSON() {} } as DOMRect;
+    const top = i * 10 - env.scroll;
+    return { top, left: 0, width: 10, height: 10, right: 10, bottom: top + 10, x: 0, y: top, toJSON() {} } as DOMRect;
   });
 
   let setOrder!: (o: string[]) => void;
@@ -327,13 +384,43 @@ test("useFlip animates moved items only", () => {
       </div>
     );
   }
-  render(<List />);
+  const view = render(<List />);
+  return { moved, cancels, env, view, reorder: (o: string[]) => act(() => setOrder(o)) };
+}
+
+test("useFlip animates moved items only and not on first mount", () => {
+  const { moved, reorder } = setupFlip();
   expect(moved).toHaveLength(0);
-  act(() => setOrder(["b", "a", "c"]));
+  reorder(["b", "a", "c"]);
   expect(moved.map((m) => m.key).sort()).toEqual(["a", "b"]);
   const a = moved.find((m) => m.key === "a")!;
   expect(a.frames[0]).toEqual({ translate: "0px -10px" });
   expect(a.frames[a.frames.length - 1]).toEqual({ translate: "0px 0px" });
+});
+
+test("useFlip measures 'before' fresh, so a scroll between reorders does not animate everything", () => {
+  const { moved, env, reorder } = setupFlip();
+  env.scroll = 200; // layout muda sem mudar deps
+  reorder(["b", "a", "c"]);
+  expect(moved.map((m) => m.key).sort()).toEqual(["a", "b"]);
+  expect(moved.find((m) => m.key === "a")!.frames[0]).toEqual({ translate: "0px -10px" });
+});
+
+test("useFlip handles keys added and removed in the same reorder", () => {
+  const { moved, reorder } = setupFlip();
+  expect(() => reorder(["c", "d", "a"])).not.toThrow();
+  // b removido; d novo não anima; c (20 → 0) e a (0 → 20) animam.
+  expect(moved.map((m) => m.key).sort()).toEqual(["a", "c"]);
+  expect(moved.find((m) => m.key === "c")!.frames[0]).toEqual({ translate: "0px 20px" });
+});
+
+test("useFlip cancels in-flight animations before measuring and on unmount", () => {
+  const { cancels, reorder, view } = setupFlip();
+  reorder(["b", "a", "c"]);
+  reorder(["a", "b", "c"]);
+  expect(cancels.sort()).toEqual(["a", "b"]);
+  view.unmount();
+  expect(cancels.sort()).toEqual(["a", "a", "b", "b"]);
 });
 
 test("motion primitives are exported from the package root", () => {

@@ -2,7 +2,6 @@ import {
   Children,
   cloneElement,
   isValidElement,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -11,6 +10,7 @@ import {
   type Ref,
 } from "react";
 import { mergeRefs } from "../utils/merge-refs";
+import { useIsomorphicLayoutEffect } from "../utils/use-isomorphic-layout-effect";
 import { animate, type KeyframesInput } from "./animate";
 import type { MotionValues } from "./read-motion";
 
@@ -45,7 +45,8 @@ function elementRef(child: ReactElement): Ref<Element> | undefined {
 /**
  * Anima a entrada quando `show` vira `true` (inclusive na montagem) e mantém o filho
  * montado até a animação de saída terminar. Sem WAAPI (ou sem nada para animar sob
- * redução de movimento) desmonta na hora. Voltar a `show` durante a saída cancela a saída.
+ * redução de movimento) desmonta na hora. Voltar a `show` durante a saída cancela a saída;
+ * desmontar o `Presence` cancela a animação em curso.
  */
 export function Presence({ show, enter, exit, children }: PresenceProps) {
   const child = Children.only(children);
@@ -58,7 +59,16 @@ export function Presence({ show, enter, exit, children }: PresenceProps) {
   const keyframes = useRef({ enter, exit });
   keyframes.current = { enter, exit };
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(
+    () => () => {
+      // Desmontagem (inclusive no meio da saída): não deixa animação órfã no nó.
+      running.current?.cancel();
+      running.current = null;
+    },
+    [],
+  );
+
+  useIsomorphicLayoutEffect(() => {
     const el = node.current;
     running.current?.cancel();
     running.current = null;

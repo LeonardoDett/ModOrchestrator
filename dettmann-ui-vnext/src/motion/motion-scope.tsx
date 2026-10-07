@@ -18,7 +18,8 @@ export interface MotionScopeProps {
 /**
  * Define o nível de movimento de uma subárvore. Renderiza um `div` com `display: contents`
  * e `data-motion` = `min(level, teto do tema)`; com `tune`, também as seis `--motion-*`
- * recalculadas (curva da mola via `springToLinear`). Um `MotionScope` aninhado no mesmo
+ * recalculadas (curva da mola via `springToLinear`) e as `--ui-motion-<nível>-*` do nível
+ * efetivo, para que descendentes com `data-motion` desse nível herdem o ajuste. Um `MotionScope` aninhado no mesmo
  * nível herda o `tune` do de fora.
  */
 export function MotionScope({ level: levelProp, tune: tuneProp, children }: MotionScopeProps) {
@@ -38,12 +39,20 @@ export function MotionScope({ level: levelProp, tune: tuneProp, children }: Moti
     if (!tune) return base as CSSProperties;
     const spec = effectiveSpec(ceiling, themeTune, level, tune);
     const spring = springToLinear(spec);
-    base["--motion-ease"] = spring.easing;
-    base["--motion-spring-duration"] = `${spring.duration}ms`;
-    base["--motion-duration"] = `${spec.duration}ms`;
-    base["--motion-amp"] = String(spec.amplitude);
-    base["--motion-press"] = String(spec.pressScale);
-    base["--motion-stagger"] = `${spec.stagger}ms`;
+    const values: Record<string, string> = {
+      ease: spring.easing,
+      "spring-duration": `${spring.duration}ms`,
+      duration: `${spec.duration}ms`,
+      amp: String(spec.amplitude),
+      press: String(spec.pressScale),
+      stagger: `${spec.stagger}ms`,
+    };
+    for (const [name, value] of Object.entries(values)) {
+      // Contexto (lido por readMotion e pelos utilitários CSS) e a fonte por nível, para que
+      // descendentes com `data-motion` do mesmo nível mantenham o ajuste do escopo.
+      base[`--motion-${name}`] = value;
+      base[`--ui-motion-${level}-${name}`] = value;
+    }
     return base as CSSProperties;
   }, [ceiling, themeTune, level, tune]);
 
