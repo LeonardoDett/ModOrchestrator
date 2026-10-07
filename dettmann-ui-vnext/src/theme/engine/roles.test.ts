@@ -5,6 +5,7 @@ import { normalizeConfig } from "./config";
 import { buildIntents } from "./palette";
 import { buildRoles, CONTRAST_PAIRS, contrastReport, ROLE_NAMES } from "./roles";
 import type { ThemeConfig } from "./types";
+import { PRESETS } from "../presets";
 
 /** PRNG determinístico (mulberry32). */
 function mulberry32(seed: number): () => number {
@@ -51,6 +52,9 @@ test.each([...edge, ...seeds])("text hierarchy and distinct fills/states for %s"
       expect(ratio("fg-muted"), where).toBeGreaterThan(ratio("fg-subtle"));
       expect(Math.abs(L(roles.fg) - L(roles["fg-muted"])), where).toBeGreaterThanOrEqual(0.06);
       expect(Math.abs(L(roles["fg-muted"]) - L(roles["fg-subtle"])), where).toBeGreaterThanOrEqual(0.06);
+      // a camada de estrutura (30%) precisa se distinguir da base e dos cartões
+      for (const surface of ["canvas", "surface"] as const)
+        expect(Math.abs(L(roles.structure) - L(roles[surface])), `${where} structure vs ${surface}`).toBeGreaterThanOrEqual(0.03);
       if (mode === "light") {
         // piso do warning no light (tolerância de quantização em 8 bits) com `on` escuro
         expect(L(roles["warning-fill"]), where).toBeGreaterThanOrEqual(0.72 - 0.005);
@@ -225,6 +229,17 @@ test("warning keeps its light floor with a dark on-color", () => {
       expect(L(roles["warning-fill"]), brand).toBeGreaterThanOrEqual(0.72 - 0.005);
       expect(L(roles["on-warning"])).toBeLessThan(0.3);
     }
+});
+
+test("warning stays vivid: fill chroma >= 0.10 for chromatic edge seeds and presets", () => {
+  const chromaticEdge = edge.filter((b) => parseColor(b)!.c > 0.02);
+  const configs = [...chromaticEdge.map((brand) => cfg({ brand })), ...Object.values(PRESETS)];
+  for (const config of configs)
+    for (const contrast of ["standard", "high"] as const)
+      for (const mode of ["light", "dark"] as const) {
+        const { roles } = buildRoles(normalizeConfig({ ...config, contrast }), mode);
+        expect(hex(roles["warning-fill"]).c, `${config.id} ${String(config.brand)} ${contrast} ${mode}`).toBeGreaterThanOrEqual(0.1);
+      }
 });
 
 test("contrastReport fails missing or unparseable roles instead of skipping them", () => {

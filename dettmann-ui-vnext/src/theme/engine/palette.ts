@@ -1,10 +1,11 @@
 import { deltaEOK, wcagContrast } from "./color/contrast";
+import { clampChroma } from "./color/convert";
 import { CONTRAST_TARGETS, snap, solveLightness, targetMetric, type ContrastTarget } from "./solve";
 import type { ColorIntent, Mode, NormalizedConfig, Oklch } from "./types";
 
 export const COLOR_INTENTS: readonly ColorIntent[] = ["brand", "accent", "info", "success", "warning", "danger"];
 export type StatusIntent = Exclude<ColorIntent, "brand" | "accent">;
-export const STATUS_HUES: Record<StatusIntent, number> = { info: 250, success: 150, warning: 80, danger: 27 };
+export const STATUS_HUES: Record<StatusIntent, number> = { info: 250, success: 150, warning: 75, danger: 27 };
 
 /** Distância perceptual mínima entre o fill da marca e o de cada status. */
 export const MIN_STATUS_DELTA_E = 0.08;
@@ -17,6 +18,8 @@ const STATUS_MAX_C = 0.19;
 const STATUS_MIN_L = 0.45;
 const STATUS_MAX_L = 0.85;
 const WARNING_LIGHT_MIN_L = 0.72;
+/** Piso de croma do warning (limitado ao gamut): com marca pouco saturada ele sairia "mostarda barrenta". */
+const WARNING_MIN_C = 0.12;
 /** Deslocamentos de luminosidade-base tentados em cada matiz do giro de status. */
 const L_OFFSETS = [0, -0.05, 0.05, -0.1, 0.1];
 
@@ -155,12 +158,18 @@ export function subtleChroma(seed: Oklch, vibrance: number): number {
   return Math.min(seed.c * 0.25, 0.05) * (0.5 + vibrance);
 }
 
-/** Semente inicial de um status: matiz semântico, croma e luminosidade derivadas da marca. */
+/**
+ * Semente inicial de um status: matiz semântico, croma e luminosidade derivadas da marca.
+ * O warning tem croma mínima 0.12 (dentro do gamut na sua luminosidade).
+ */
 export function statusSeed(status: StatusIntent, brand: Oklch, mode: Mode): Oklch {
   // no dark a faixa do fill já vale aqui, para que os deslocamentos de L do giro tenham efeito
   const base = mode === "dark" ? clamp(brand.l, DARK_FILL_L[0], DARK_FILL_L[1]) : clamp(brand.l, STATUS_MIN_L, STATUS_MAX_L);
   const l = status === "warning" && mode === "light" ? Math.max(base, WARNING_LIGHT_MIN_L) : base;
-  return { l, c: clamp(brand.c, STATUS_MIN_C, STATUS_MAX_C), h: STATUS_HUES[status] };
+  const h = STATUS_HUES[status];
+  const c = clamp(brand.c, STATUS_MIN_C, STATUS_MAX_C);
+  if (status !== "warning") return { l, c, h };
+  return { l, c: Math.max(c, clampChroma({ l, c: WARNING_MIN_C, h }).c), h };
 }
 
 /**
