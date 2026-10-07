@@ -163,7 +163,7 @@ const rowVariants = defineRecipe({
   base: "relative grid items-center border-b border-border-subtle text-fg",
   variants: {
     selected: {
-      true: "bg-brand-subtle before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-brand",
+      true: "bg-emphasis-subtle before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-emphasis-fill",
       false: "hover:bg-state-hover",
     },
     focused: {
@@ -620,7 +620,7 @@ export function DataTable<T>({
           rowVariants({ selected: isSelected, focused }),
           "cursor-default",
           dragged && "opacity-60",
-          dropAt && "after:pointer-events-none after:absolute after:inset-x-0 after:z-10 after:h-0.5 after:bg-brand",
+          dropAt && "after:pointer-events-none after:absolute after:inset-x-0 after:z-10 after:h-0.5 after:bg-emphasis-fill",
           dropAt === "before" && "after:top-0",
           dropAt === "after" && "after:bottom-0",
           rowClassName?.(item.row),
@@ -726,7 +726,7 @@ export function DataTable<T>({
         }}
         {...props}
       >
-        <div ref={headerRef} role="rowgroup" className="sticky top-0 z-10 border-b border-border bg-structure">
+        <div ref={headerRef} role="rowgroup" data-layer="medium" className="sticky top-0 z-10 border-b border-border bg-structure">
           <div role="row" aria-rowindex={1} className="grid" style={gridStyle}>
             {hasHandle ? <div role="columnheader" aria-label={labels?.dragHandle ?? "Drag to reorder"} /> : null}
             {visibleColumns.map((column) => {

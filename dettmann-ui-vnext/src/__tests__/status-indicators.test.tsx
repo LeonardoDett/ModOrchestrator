@@ -48,16 +48,16 @@ describe("StatusToggle (L3)", () => {
 
 describe("Indicator (L4)", () => {
   it("is an image named by its label, with the count visible", () => {
-    render(<Indicator icon={AlertTriangle} tone="warning" count={3} label="3 problems" />);
+    render(<Indicator icon={AlertTriangle} intent="warning" count={3} label="3 problems" />);
     const img = screen.getByRole("img", { name: "3 problems" });
-    expect(img).toHaveAttribute("data-tone", "warning");
+    expect(img).toHaveAttribute("data-intent", "warning");
     expect(img).toHaveTextContent("3");
     expect(img).toHaveAttribute("title", "3 problems");
   });
 
-  it("uses foreground roles for neutral tones", () => {
+  it("uses foreground roles for the neutral intent", () => {
     render(<Indicator icon={AlertTriangle} label="None" />);
-    expect(screen.getByRole("img", { name: "None" })).not.toHaveAttribute("data-tone");
+    expect(screen.getByRole("img", { name: "None" })).not.toHaveAttribute("data-intent");
   });
 });
 
@@ -74,10 +74,10 @@ describe("FileDropzone host picker", () => {
 });
 
 describe("regressions found in F4", () => {
-  it("a solid button without tone paints with the primary tone", async () => {
+  it("a high button without intent paints with the brand intent", async () => {
     const { Button } = await import("../components/button");
-    render(<Button>Install</Button>);
-    expect(screen.getByRole("button", { name: "Install" })).toHaveAttribute("data-tone", "primary");
+    render(<Button emphasis="high">Install</Button>);
+    expect(screen.getByRole("button", { name: "Install" })).toHaveAttribute("data-intent", "brand");
   });
 
 });

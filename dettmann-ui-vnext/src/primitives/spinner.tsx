@@ -1,7 +1,8 @@
 import { type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../core/recipe";
 import { cn } from "../utils/cn";
-import { isTone, toneData, type Tone } from "../theme/tone";
+import { intentData } from "../theme/emphasis";
+import type { Intent } from "../theme/engine";
 
 const spinnerVariants = defineRecipe({
   base: "inline-block animate-spin rounded-full border-current border-r-transparent",
@@ -17,13 +18,6 @@ const spinnerVariants = defineRecipe({
     /** Color variant */
     color: {
       current: "text-current",
-      primary: "text-tone",
-      secondary: "text-tone",
-      success: "text-tone",
-      warning: "text-tone",
-      danger: "text-tone",
-      accent: "text-tone",
-      info: "text-tone",
       muted: "text-fg-subtle",
       fg: "text-fg",
     },
@@ -40,7 +34,8 @@ type SpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "children"> &
   SpinnerVariants & {
     /** Accessible label for screen readers */
     label?: string;
-    tone?: Tone;
+    /** Semantic color: paints with `text-intent-fill` and scopes `data-intent`. */
+    intent?: Intent;
   };
 
 /**
@@ -49,7 +44,7 @@ type SpinnerProps = Omit<ComponentPropsWithoutRef<"span">, "children"> &
  * @example
  * ```tsx
  * <Spinner />
- * <Spinner size="lg" color="primary" />
+ * <Spinner size="lg" intent="brand" />
  * <Spinner size="sm" label="Loading..." />
  *
  * <Button disabled>
@@ -62,17 +57,16 @@ export function Spinner({
   className,
   size,
   color,
-  tone,
+  intent,
   label = "Loading",
   ...props
 }: SpinnerProps) {
-  const resolvedTone = tone ?? (isTone(color) ? color : undefined);
   return (
     <span
       role="status"
       aria-label={label}
-      className={cn(spinnerVariants({ size, color }), className)}
-      {...toneData(resolvedTone)}
+      className={cn(spinnerVariants({ size, color }), intent && "text-intent-fill", className)}
+      {...intentData(intent)}
       {...props}
     >
       <span className="sr-only">{label}</span>

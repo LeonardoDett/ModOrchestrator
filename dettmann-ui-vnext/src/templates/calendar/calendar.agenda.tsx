@@ -46,11 +46,11 @@ export function CalendarAgenda({ className }: CalendarAgendaProps) {
                 {format(day.date, "EEEE, d 'de' MMMM", fmtOpts)}
               </Typography>
               {isToday ? (
-                <Badge variant="outline" size="sm">
+                <Badge emphasis="low" size="sm">
                   {labels.agendaToday}
                 </Badge>
               ) : (
-                <Badge variant="outline" size="sm">
+                <Badge emphasis="low" size="sm">
                   {labels.weekNumber(week)}
                 </Badge>
               )}

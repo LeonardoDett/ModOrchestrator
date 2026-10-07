@@ -1,7 +1,8 @@
 import { type ElementType } from "react";
 import { defineRecipe, type VariantProps } from "../core/recipe";
 import { cn } from "../utils/cn";
-import { isTone, toneData, type Tone } from "../theme/tone";
+import { intentData } from "../theme/emphasis";
+import type { Intent } from "../theme/engine";
 import type { PolymorphicComponentProps } from "../utils/polymorphic";
 
 const typographyVariants = defineRecipe({
@@ -27,13 +28,6 @@ const typographyVariants = defineRecipe({
       inherit: "text-inherit",
       fg: "text-fg",
       "muted-fg": "text-fg-muted",
-      primary: "text-tone-text",
-      secondary: "text-tone-text",
-      success: "text-tone-text",
-      warning: "text-tone-text",
-      danger: "text-tone-text",
-      accent: "text-tone-text",
-      info: "text-tone-text",
     },
     /** Text alignment */
     align: {
@@ -84,7 +78,8 @@ const variantElementMap: Record<NonNullable<TypographyVariants["variant"]>, Elem
 type TypographyOwnProps = TypographyVariants & {
   /** Additional CSS classes */
   className?: string;
-  tone?: Tone;
+  /** Semantic color: paints with `text-intent-text` and scopes `data-intent`. */
+  intent?: Intent;
 };
 
 type TypographyProps<E extends ElementType = "p"> = PolymorphicComponentProps<E, TypographyOwnProps>;
@@ -107,18 +102,17 @@ export function Typography<E extends ElementType = "p">({
   className,
   variant = "body",
   color,
-  tone,
+  intent,
   align,
   wrap,
   truncate,
   ...props
 }: TypographyProps<E>) {
   const Component = as || variantElementMap[variant ?? "body"];
-  const resolvedTone = tone ?? (isTone(color) ? color : undefined);
   return (
     <Component
-      className={cn(typographyVariants({ variant, color, align, wrap, truncate }), className)}
-      {...toneData(resolvedTone)}
+      className={cn(typographyVariants({ variant, color, align, wrap, truncate }), intent && "text-intent-text", className)}
+      {...intentData(intent)}
       {...props}
     />
   );

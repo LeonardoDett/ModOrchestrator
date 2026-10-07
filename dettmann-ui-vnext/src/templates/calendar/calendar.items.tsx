@@ -11,7 +11,7 @@ import { useCalendarConfig } from "./calendar.config-context";
 import { useCalendar, useCalendarActions, useCalendarDay } from "./use-calendar";
 import { isItemHighlighted } from "./internal/filter-highlight";
 import {
-  eventToneProps,
+  eventIntentProps,
   monthEventVariants,
   resolveEventColor,
   timedEventVariants,
@@ -51,7 +51,7 @@ export function CalendarItemStandard({ item, day, layout }: CalendarItemRenderer
           ? timedEventVariants({ color: colorKey, isSelected, isHighlighted })
           : monthEventVariants({ color: colorKey, isSelected, isHighlighted })
       }
-      {...eventToneProps(colorKey)}
+      {...eventIntentProps(colorKey)}
       onClick={(e) => {
         e.stopPropagation();
         actions.selectItem(item.id);

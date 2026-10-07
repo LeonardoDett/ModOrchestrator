@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { EMPHASES, EMPHASIS_MOTION, INTENTS, intentData, resolveEmphasis } from "./emphasis";
+import { EMPHASES, EMPHASIS_MOTION, INTENTS, intentData, resolveEmphasis, restingClassName } from "./emphasis";
 
 test("high without intent resolves to brand + expressive", () =>
   expect(resolveEmphasis({ emphasis: "high" })).toMatchObject({ intent: "brand", motion: "expressive", attrs: { "data-layer": "high" } }));
@@ -23,4 +23,8 @@ test("defaults param is used when input is empty", () =>
 test("intentData emits only explicit intent", () => {
   expect(intentData()).toEqual({});
   expect(intentData("danger")).toEqual({ "data-intent": "danger" });
+});
+test("resting classes drop hover/active states", () => {
+  const resting = restingClassName(resolveEmphasis({ emphasis: "low", intent: "danger" }));
+  expect(resting).toBe("bg-transparent text-intent-text");
 });

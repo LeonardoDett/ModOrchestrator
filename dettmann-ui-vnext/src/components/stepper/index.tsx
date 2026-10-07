@@ -216,8 +216,8 @@ const indicatorVariants = defineRecipe({
   ].join(" "),
   variants: {
     status: {
-      completed: "bg-secondary border-secondary text-on-secondary",
-      current: "bg-secondary border-secondary text-on-secondary",
+      completed: "bg-fill-neutral border-border-strong text-fg",
+      current: "bg-fill-neutral border-border-strong text-fg",
       upcoming: "bg-surface border-border text-fg-muted",
     },
   },
@@ -255,8 +255,8 @@ const labelVariants = defineRecipe({
   base: "text-sm text-center",
   variants: {
     status: {
-      completed: "text-secondary-text font-medium",
-      current: "text-secondary-text font-medium",
+      completed: "text-fg font-medium",
+      current: "text-fg font-medium",
       upcoming: "text-fg-muted",
     },
     orientation: {

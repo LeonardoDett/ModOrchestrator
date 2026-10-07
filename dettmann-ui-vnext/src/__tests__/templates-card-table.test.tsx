@@ -39,7 +39,7 @@ describe("Table", () => {
       </Table.Root>
     );
     const row = screen.getByText("Ada").closest("tr");
-    expect(row).toHaveClass("bg-secondary-subtle");
+    expect(row).toHaveClass("bg-selected");
   });
 });
 
@@ -126,14 +126,14 @@ describe("Sidebar", () => {
     const links = screen.getAllByRole("link", { name: "Home" });
     const current = links.find((link) => link.getAttribute("aria-current") === "page");
     expect(current).toBeTruthy();
-    expect(current).toHaveClass("bg-primary-subtle");
+    expect(current).toHaveClass("bg-emphasis-subtle");
   });
 
   it("uses the solid secondary surface by default", () => {
     const { container } = render(
       <Sidebar.Root items={[{ id: "home", label: "Home", href: "#home" }]} />
     );
-    expect(container.querySelector("aside")).toHaveClass("bg-secondary", "text-on-secondary");
+    expect(container.querySelector("aside")).toHaveClass("bg-fill-neutral", "text-fg");
   });
 
   it("keeps a disabled item out of navigation and shows its badge", () => {
@@ -185,7 +185,7 @@ describe("Sidebar", () => {
       />
     );
     expect(container.querySelector("aside")).toHaveClass(
-      "bg-secondary-subtle",
+      "bg-selected",
       "text-fg"
     );
   });

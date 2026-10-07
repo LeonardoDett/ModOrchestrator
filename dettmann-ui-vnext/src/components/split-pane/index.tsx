@@ -95,11 +95,11 @@ export function SplitPane({
         tabIndex={0}
         className={cn(
           "absolute inset-y-0 z-10 w-2 cursor-col-resize bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus",
-          "hover:bg-primary/20",
+          "hover:bg-emphasis-fill/20",
           side === "left"
             ? "left-[calc(var(--split-size)-4px)]"
             : "right-[calc(var(--split-size)-4px)]",
-          dragging && "bg-primary/30",
+          dragging && "bg-emphasis-fill/30",
         )}
         onKeyDown={onHandleKeyDown}
         onPointerDown={(event) => {

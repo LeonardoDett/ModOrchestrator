@@ -3,14 +3,15 @@ import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { X } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { Icon } from "../../primitives/icon";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const tagVariants = defineRecipe({
   base: [
     "inline-flex items-center gap-1",
     "font-medium whitespace-nowrap text-xs",
     "rounded-full",
-    "border border-secondary-border bg-secondary-subtle text-secondary-text",
+    "border border-intent-border bg-intent-subtle text-intent-text",
   ].join(" "),
   variants: {
     size: {
@@ -46,7 +47,8 @@ interface TagProps
   onRemove?: (value: string) => void;
   /** Accessible name of the dismiss control (localize it). */
   removeLabel?: string;
-  tone?: Tone;
+  /** Significado cromático; padrão `neutral`. */
+  intent?: Intent;
 }
 
 /**
@@ -64,17 +66,16 @@ export function Tag({
   value = "",
   onRemove,
   removeLabel = "Remove",
-  tone,
+  intent = "neutral",
   ...props
 }: TagProps) {
   return (
     <span
       className={cn(
         tagVariants({ size, dismissible: Boolean(onRemove) }),
-        tone && "border-tone-border bg-tone-subtle text-tone-text",
         className
       )}
-      {...toneData(tone)}
+      {...intentData(intent)}
       {...props}
     >
       {children}

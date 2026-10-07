@@ -3,7 +3,8 @@
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const switchVariants = defineRecipe({
   slots: {
@@ -15,7 +16,7 @@ const switchVariants = defineRecipe({
       "motion-transition",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
-      "data-[state=checked]:bg-tone",
+      "data-[state=checked]:bg-intent-fill",
     ].join(" "),
     thumb: [
       "pointer-events-none block shrink-0 rounded-full bg-surface shadow-raised",
@@ -80,7 +81,7 @@ interface SwitchProps
   name?: string;
   /** Value for form submission */
   value?: string;
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -107,7 +108,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
       value,
       size,
       disabled = false,
-      tone,
+      intent,
       id: providedId,
       ...props
     },
@@ -159,7 +160,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
           disabled={disabled}
           onClick={handleClick}
           className={track()}
-          {...toneData(tone ?? "secondary")}
+          {...intentData(intent ?? "brand")}
           {...props}
         >
           <span data-state={state} className={thumb()} />

@@ -51,7 +51,7 @@ export function MediaGallery({
               className="w-full transition-transform duration-(--motion-duration) ease-(--motion-ease) group-hover:scale-[1.02]"
             />
             {item.title || renderOverlay ? (
-              <span className="absolute inset-x-0 bottom-0 bg-overlay px-3 py-2 text-xs text-canvas opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="absolute inset-x-0 bottom-0 bg-overlay px-3 py-2 text-xs text-canvas opacity-0 transition-opacity duration-(--motion-duration) ease-(--motion-ease) group-hover:opacity-100 group-focus-visible:opacity-100">
                 {renderOverlay?.(item, itemIndex) ?? item.title}
               </span>
             ) : null}

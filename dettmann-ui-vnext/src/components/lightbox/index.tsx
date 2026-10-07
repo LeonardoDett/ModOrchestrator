@@ -87,7 +87,7 @@ export function Lightbox({
             </span>
             <Button
               ref={closeRef}
-              variant="ghost"
+              emphasis="low"
               size="icon-sm"
               aria-label="Close image preview"
               onClick={onClose}
@@ -106,7 +106,7 @@ export function Lightbox({
               <>
                 <Button
                   aria-label="Previous image"
-                  variant="secondary"
+                  emphasis="medium"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2"
                   onClick={() =>
@@ -117,7 +117,7 @@ export function Lightbox({
                 </Button>
                 <Button
                   aria-label="Next image"
-                  variant="secondary"
+                  emphasis="medium"
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2"
                   onClick={() => onIndexChange?.((index + 1) % items.length)}

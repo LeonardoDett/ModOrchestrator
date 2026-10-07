@@ -1,20 +1,14 @@
 import { type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { resolveEmphasis, restingClassName } from "../../theme/emphasis";
+import type { Emphasis, Intent } from "../../theme/engine";
 
-const badgeSoft = "bg-tone-subtle text-tone-text border border-tone-border";
-const badgeSolid = "bg-tone text-on-tone";
-const badgeNeutral = "bg-secondary-subtle text-secondary-text border border-secondary-border";
-const badgeMuted = "bg-sunken text-fg-muted";
-const badgeOutline = "border border-border bg-transparent text-fg";
-
-const badgeTone: Record<string, Tone | undefined> = {
-  success: "success",
-  warning: "warning",
-  danger: "danger",
-  secondary: "secondary",
-  info: "info",
+/** Contorno por ênfase; a cor vem da tabela central (badge não é interativo: só classes de repouso). */
+const badgeFrame: Record<Emphasis, string> = {
+  high: "",
+  medium: "border border-intent-border",
+  low: "border border-border",
 };
 
 const badgeVariants = defineRecipe({
@@ -25,17 +19,6 @@ const badgeVariants = defineRecipe({
     "motion-transition",
   ].join(" "),
   variants: {
-    /** Color variant — subtle fill + darker text of the same family */
-    variant: {
-      default: "",
-      secondary: "",
-      muted: "",
-      success: "",
-      warning: "",
-      danger: "",
-      info: "",
-      outline: "",
-    },
     /** Size variant */
     size: {
       sm: "px-1.5 py-0.5 text-xs",
@@ -49,7 +32,6 @@ const badgeVariants = defineRecipe({
     },
   },
   defaultVariants: {
-    variant: "default",
     size: "md",
     dot: false,
   },
@@ -58,7 +40,10 @@ const badgeVariants = defineRecipe({
 type BadgeVariants = VariantProps<typeof badgeVariants>;
 
 interface BadgeProps extends ComponentPropsWithoutRef<"span">, BadgeVariants {
-  tone?: Tone;
+  /** `high` = preenchido, `medium` = tinta suave (padrão), `low` = contorno. */
+  emphasis?: Emphasis;
+  /** Significado cromático; padrão `neutral` (ou `brand` quando `emphasis="high"`). */
+  intent?: Intent;
 }
 
 /**
@@ -67,40 +52,21 @@ interface BadgeProps extends ComponentPropsWithoutRef<"span">, BadgeVariants {
  * @example
  * ```tsx
  * <Badge>New</Badge>
- * <Badge variant="success">Active</Badge>
- * <Badge variant="danger" size="sm">3</Badge>
- * <Badge variant="success" dot /> // Status dot
+ * <Badge intent="success">Active</Badge>
+ * <Badge intent="danger" size="sm">3</Badge>
+ * <Badge intent="success" dot /> // Status dot
  * ```
  */
-export function Badge({
-  children,
-  className,
-  variant = "default",
-  tone,
-  size,
-  dot,
-  ...props
-}: BadgeProps) {
-  const resolved = tone ?? badgeTone[variant ?? "default"];
-  const paint =
-    variant === "outline"
-      ? badgeOutline
-      : variant === "muted"
-        ? badgeMuted
-        : dot
-          ? resolved
-            ? badgeSolid
-            : "bg-fg-subtle"
-          : resolved
-            ? badgeSoft
-            : badgeNeutral;
+export function Badge({ children, className, emphasis, intent, size, dot, ...props }: BadgeProps) {
+  const resolved = resolveEmphasis({ emphasis, intent });
+  const paint = dot
+    ? resolved.intent === "neutral"
+      ? "bg-fg-subtle"
+      : "bg-intent-fill"
+    : cn(restingClassName(resolved), badgeFrame[resolved.emphasis]);
 
   return (
-    <span
-      className={cn(badgeVariants({ variant, size, dot }), paint, className)}
-      {...toneData(variant === "outline" || variant === "muted" ? tone : resolved)}
-      {...props}
-    >
+    <span className={cn(badgeVariants({ size, dot }), paint, className)} {...resolved.attrs} {...props}>
       {!dot && children}
     </span>
   );

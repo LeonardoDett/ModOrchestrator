@@ -49,11 +49,11 @@ const optionVariants = defineRecipe({
   base: "flex items-center px-3 py-2 text-sm cursor-pointer motion-transition",
   variants: {
     active: {
-      true: "bg-secondary-subtle",
+      true: "bg-selected",
       false: "hover:bg-state-hover",
     },
     selected: {
-      true: "text-secondary-text font-medium",
+      true: "text-fg font-medium",
       false: "text-fg",
     },
     disabled: {

@@ -2,13 +2,13 @@ import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { createStrictContext } from "../../utils/create-strict-context";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
-const alertSoft = "bg-tone-subtle text-tone-text border border-tone-border";
-const alertNeutral = "bg-secondary-subtle text-secondary-text border border-secondary-border";
+const alertSurface = "bg-intent-subtle text-intent-text border border-intent-border";
 
-const alertTone: Record<AlertVariant, Tone | undefined> = {
-  default: undefined,
+const alertIntent: Record<AlertVariant, Intent> = {
+  default: "neutral",
   success: "success",
   warning: "warning",
   danger: "danger",
@@ -31,17 +31,18 @@ interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode;
   /** Família de sinal compartilhada com Badge / Toast. `info` é o papel info. */
   variant?: AlertVariant;
-  tone?: Tone;
+  /** Sobrepõe o intent derivado de `variant`. */
+  intent?: Intent;
 }
 
-function AlertRoot({ children, className, variant = "default", tone, ...props }: AlertRootProps) {
-  const resolved = tone ?? alertTone[variant];
+function AlertRoot({ children, className, variant = "default", intent, ...props }: AlertRootProps) {
+  const resolved = intent ?? alertIntent[variant];
   return (
     <AlertProvider value={{ variant }}>
       <div
         role="alert"
-        className={cn(rootVariants(), resolved ? alertSoft : alertNeutral, className)}
-        {...toneData(resolved)}
+        className={cn(rootVariants(), alertSurface, className)}
+        {...intentData(resolved)}
         {...props}
       >
         {children}

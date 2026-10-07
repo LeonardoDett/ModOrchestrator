@@ -1,13 +1,14 @@
 import { type ComponentPropsWithoutRef, type ComponentType } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const indicatorVariants = defineRecipe({
   base: "inline-flex shrink-0 items-center gap-1 whitespace-nowrap font-medium tabular-nums",
   variants: {
     paint: {
-      tone: "text-tone-text",
+      tinted: "text-intent-text",
       neutral: "text-fg-muted",
       subtle: "text-fg-subtle",
     },
@@ -28,8 +29,8 @@ export interface IndicatorProps extends Omit<ComponentPropsWithoutRef<"span">, "
   label: string;
   /** Optional count shown next to the icon. */
   count?: number;
-  /** Semantic tone; "neutral" and "subtle" use foreground roles. */
-  tone?: Tone | "neutral" | "subtle";
+  /** Semantic intent; "neutral" and "subtle" use foreground roles. */
+  intent?: Intent | "subtle";
   size?: "sm" | "md";
 }
 
@@ -40,18 +41,18 @@ export interface IndicatorProps extends Omit<ComponentPropsWithoutRef<"span">, "
  *
  * @example
  * ```tsx
- * <Indicator icon={AlertTriangle} tone="warning" count={3} label="3 problems" />
+ * <Indicator icon={AlertTriangle} intent="warning" count={3} label="3 problems" />
  * ```
  */
-export function Indicator({ icon: Icon, label, count, tone = "neutral", size = "sm", className, title, ...props }: IndicatorProps) {
-  const chromatic = tone !== "neutral" && tone !== "subtle";
+export function Indicator({ icon: Icon, label, count, intent = "neutral", size = "sm", className, title, ...props }: IndicatorProps) {
+  const chromatic = intent !== "neutral" && intent !== "subtle";
   return (
     <span
       role="img"
       aria-label={label}
       title={title ?? label}
-      className={cn(indicatorVariants({ paint: chromatic ? "tone" : tone, size }), className)}
-      {...toneData(chromatic ? tone : undefined)}
+      className={cn(indicatorVariants({ paint: chromatic ? "tinted" : intent, size }), className)}
+      {...intentData(chromatic ? intent : undefined)}
       {...props}
     >
       <Icon aria-hidden="true" className={ICON_SIZE[size]} />

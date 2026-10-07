@@ -3,7 +3,8 @@
 import { Children, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const avatarVariants = defineRecipe({
   slots: {
@@ -61,9 +62,9 @@ const avatarVariants = defineRecipe({
       },
     },
     status: {
-      online: { status: "bg-success" },
+      online: { status: "bg-success-fill" },
       offline: { status: "bg-sunken" },
-      busy: { status: "bg-danger" },
+      busy: { status: "bg-danger-fill" },
     },
   },
   defaultVariants: {
@@ -85,7 +86,7 @@ interface AvatarProps extends ComponentPropsWithoutRef<"span">, AvatarVariants {
   loading?: "eager" | "lazy";
   /** Presence indicator */
   status?: "online" | "offline" | "busy";
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -116,7 +117,7 @@ function AvatarRoot({
   size,
   border,
   status,
-  tone,
+  intent,
   ...props
 }: AvatarProps) {
   const [imageError, setImageError] = useState(false);
@@ -155,8 +156,8 @@ function AvatarRoot({
         )}
         {!showImage && (
           <span
-            className={cn(fallbackClass(), tone && "bg-tone-subtle text-tone-text")}
-            {...toneData(tone)}
+            className={cn(fallbackClass(), intent && "bg-intent-subtle text-intent-text")}
+            {...intentData(intent)}
           >
             {initials}
           </span>

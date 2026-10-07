@@ -22,8 +22,8 @@ const dividerVariants = defineRecipe({
     color: {
       border: "bg-border",
       muted: "bg-sunken",
-      primary: "bg-primary",
-      secondary: "bg-secondary",
+      primary: "bg-emphasis-fill",
+      secondary: "bg-fill-neutral",
     },
   },
   compoundVariants: [

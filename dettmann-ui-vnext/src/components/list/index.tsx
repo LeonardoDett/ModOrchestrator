@@ -233,7 +233,7 @@ const itemVariants = defineRecipe({
   ].join(" "),
   variants: {
     selected: {
-      true: "border-l-2 border-primary bg-primary-subtle text-primary-text font-medium",
+      true: "border-l-2 border-emphasis-border bg-emphasis-subtle text-emphasis-text font-medium",
       false: "text-fg hover:bg-state-hover",
     },
     focused: {

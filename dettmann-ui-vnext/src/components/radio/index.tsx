@@ -10,7 +10,8 @@ import {
 } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 import { useControllableState } from "../../hooks/use-controllable-state";
 
 interface RadioGroupContextValue {
@@ -49,10 +50,10 @@ const radioVariants = defineRecipe({
       "motion-transition",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
-      "data-[state=checked]:border-tone",
+      "data-[state=checked]:border-intent-fill",
     ].join(" "),
     indicator: [
-      "rounded-full bg-tone",
+      "rounded-full bg-intent-fill",
       "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
       "scale-0 data-[state=checked]:scale-100",
     ].join(" "),
@@ -63,7 +64,7 @@ const radioVariants = defineRecipe({
       "hover:border-fg-muted",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
-      "data-[state=checked]:border-tone data-[state=checked]:bg-tone-subtle",
+      "data-[state=checked]:border-intent-fill data-[state=checked]:bg-intent-subtle",
     ].join(" "),
   },
   variants: {
@@ -114,7 +115,7 @@ interface RadioGroupProps extends ComponentPropsWithoutRef<"div">, RadioGroupVar
   onValueChange?: (value: string) => void;
   /** Disable all radio items */
   disabled?: boolean;
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -130,7 +131,7 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGro
     onValueChange,
     disabled,
     orientation,
-    tone,
+    intent,
     ...props
   },
   ref
@@ -147,7 +148,7 @@ const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>(function RadioGro
         ref={ref}
         role="radiogroup"
         className={cn(radioGroupVariants({ orientation }), className)}
-        {...toneData(tone ?? "secondary")}
+        {...intentData(intent ?? "brand")}
         {...props}
       >
         {children}
@@ -168,7 +169,7 @@ interface RadioItemProps
   /** Card wraps the whole control; use children for extra copy */
   variant?: "default" | "card";
   children?: ReactNode;
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -183,7 +184,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
     variant = "default",
     children,
     disabled: itemDisabled,
-    tone,
+    intent,
     id: providedId,
     ...props
   },
@@ -239,7 +240,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
         disabled={disabled}
         onClick={handleClick}
         className={cn(card(), className)}
-        {...toneData(tone ?? "secondary")}
+        {...intentData(intent ?? "brand")}
         {...props}
       >
         {glyph}
@@ -260,7 +261,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
         disabled={disabled}
         onClick={handleClick}
         className={radio()}
-        {...toneData(tone ?? "secondary")}
+        {...intentData(intent ?? "brand")}
         {...props}
       >
         <span data-state={state} className={indicator()} />

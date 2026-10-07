@@ -19,9 +19,9 @@ interface ButtonGroupProps extends ComponentPropsWithoutRef<"div"> {}
  * @example
  * ```tsx
  * <ButtonGroup>
- *   <Button variant="secondary">Left</Button>
- *   <Button variant="secondary">Middle</Button>
- *   <Button variant="secondary">Right</Button>
+ *   <Button>Left</Button>
+ *   <Button>Middle</Button>
+ *   <Button>Right</Button>
  * </ButtonGroup>
  * ```
  */

@@ -11,7 +11,8 @@ import {
 } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 import { useControllableState } from "../../hooks/use-controllable-state";
 import { createStrictContext } from "../../utils/create-strict-context";
 
@@ -82,7 +83,7 @@ interface SliderRootProps<T extends SliderValue = number>
   disabled?: boolean;
   /** Track orientation */
   orientation?: "horizontal" | "vertical";
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -99,7 +100,7 @@ function SliderRoot<T extends SliderValue = number>({
   step = 1,
   disabled = false,
   orientation = "horizontal",
-  tone,
+  intent,
   ...props
 }: SliderRootProps<T>) {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -195,7 +196,7 @@ function SliderRoot<T extends SliderValue = number>({
     >
       <div
         className={cn(rootVariants({ orientation, disabled }), className)}
-        {...toneData(tone ?? "secondary")}
+        {...intentData(intent ?? "brand")}
         {...props}
       >
         {children}
@@ -248,7 +249,7 @@ function SliderTrack({ className, onPointerDown, children, ...props }: SliderTra
 }
 
 const rangeVariants = defineRecipe({
-  base: "absolute rounded-full bg-tone",
+  base: "absolute rounded-full bg-intent-fill",
   variants: {
     orientation: {
       horizontal: "h-full",

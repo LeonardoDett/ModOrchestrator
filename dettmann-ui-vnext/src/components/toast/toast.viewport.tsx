@@ -5,12 +5,14 @@ import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Portal } from "../../primitives/portal";
 import type { Toast } from "./toast.context";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
-const toastSoft = "bg-tone-subtle text-tone-text border border-tone-border";
-const toastNeutral = "bg-secondary-subtle text-secondary-text border border-secondary-border";
+/** Superfície de status pelo contrato de intent; `neutral` resolve para selected/fg/border-strong. */
+const toastSurface = "bg-intent-subtle text-intent-text border border-intent-border";
 
-const toastTone: Record<string, Tone | undefined> = {
+const toastIntent: Record<string, Intent> = {
+  default: "neutral",
   success: "success",
   warning: "warning",
   danger: "danger",
@@ -51,10 +53,10 @@ function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastIt
       role="alert"
       className={cn(
         toastVariants({ variant: toast.variant }),
-        toastTone[toast.variant ?? "default"] ? toastSoft : toastNeutral,
+        toastSurface,
         className
       )}
-      {...toneData(toastTone[toast.variant ?? "default"])}
+      {...intentData(toastIntent[toast.variant ?? "default"])}
       {...props}
     >
       <div className="flex-1">
@@ -82,7 +84,7 @@ function ToastItem({ toast, onRemove, closeLabel, className, ...props }: ToastIt
       <button
         type="button"
         onClick={() => onRemove(toast.id)}
-        className="shrink-0 rounded-control text-fg-muted hover:bg-state-hover hover:text-fg transition-opacity"
+        className="shrink-0 rounded-control text-fg-muted hover:bg-state-hover hover:text-fg transition-opacity duration-(--motion-duration) ease-(--motion-ease)"
         aria-label={closeLabel}
       >
         <svg

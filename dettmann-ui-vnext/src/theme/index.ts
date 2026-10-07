@@ -26,13 +26,13 @@ export {
   type Density,
 } from "./engine";
 export { PRESETS, DEFAULT_PRESET, type PresetId } from "./presets";
-export { TONES, type Tone } from "./tone";
 export {
   resolveEmphasis,
   intentData,
   INTENTS,
   EMPHASES,
   EMPHASIS_MOTION,
+  restingClassName,
   type EmphasisInput,
   type EmphasisResolution,
 } from "./emphasis";

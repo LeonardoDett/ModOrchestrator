@@ -29,11 +29,11 @@ interface ActionBarProps extends ComponentPropsWithoutRef<"div"> {
  * @example
  * ```tsx
  * <ActionBar sticky>
- *   <Button variant="outline">Cancel</Button>
- *   <Button>Save</Button>
+ *   <Button>Cancel</Button>
+ *   <Button emphasis="high">Save</Button>
  * </ActionBar>
  * ```
  */
 export function ActionBar({ className, sticky = false, ...props }: ActionBarProps) {
-  return <div className={cn(barVariants({ sticky }), className)} {...props} />;
+  return <div data-budget-region="action-bar" className={cn(barVariants({ sticky }), className)} {...props} />;
 }

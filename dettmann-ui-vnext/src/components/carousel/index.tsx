@@ -67,7 +67,7 @@ export function Carousel({
           <Button
             disabled={!canLeft}
             aria-label="Previous items"
-            variant="secondary"
+            emphasis="medium"
             size="icon"
             className="absolute left-2 top-1/2 -translate-y-1/2 shadow-overlay"
             onClick={() => scroll(-1)}
@@ -77,7 +77,7 @@ export function Carousel({
           <Button
             disabled={!canRight}
             aria-label="Next items"
-            variant="secondary"
+            emphasis="medium"
             size="icon"
             className="absolute right-2 top-1/2 -translate-y-1/2 shadow-overlay"
             onClick={() => scroll(1)}

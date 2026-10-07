@@ -22,7 +22,7 @@ export function ModalFooter({
   ...props
 }: ModalFooterProps) {
   return (
-    <div className={cn(modalFooterVariants(), className)} {...props}>
+    <div data-budget-region="modal-footer" className={cn(modalFooterVariants(), className)} {...props}>
       {children}
     </div>
   );

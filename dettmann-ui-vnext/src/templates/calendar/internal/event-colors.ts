@@ -1,6 +1,7 @@
 import { defineRecipe } from "../../../core/recipe";
 import type { CalendarItem } from "../types";
-import { toneData, type Tone } from "../../../theme/tone";
+import { intentData } from "../../../theme/emphasis";
+import type { Intent } from "../../../theme/engine";
 
 /** Famílias de cor alinhadas à paleta Untitled UI (blue, pink, green, orange, gray). */
 export type CalendarEventColor = "primary" | "danger" | "success" | "warning" | "muted";
@@ -49,15 +50,15 @@ export function resolveEventColor(item: CalendarItem): CalendarEventColor {
 }
 
 const eventSoft =
-  "bg-tone-subtle text-tone-text border border-tone-border hover:bg-tone-subtle-hover";
+  "bg-intent-subtle text-intent-text border border-intent-border hover:bg-state-hover";
 const eventMuted = "border border-border bg-sunken text-fg-muted hover:bg-state-hover";
 
-export function eventTone(color: CalendarEventColor): Tone | undefined {
-  return color === "muted" ? undefined : color;
+export function eventIntent(color: CalendarEventColor): Intent | undefined {
+  return color === "muted" ? undefined : color === "primary" ? "brand" : color;
 }
 
-export function eventToneProps(color: CalendarEventColor) {
-  return toneData(eventTone(color));
+export function eventIntentProps(color: CalendarEventColor) {
+  return intentData(eventIntent(color));
 }
 
 export const monthEventVariants = defineRecipe({
@@ -71,7 +72,7 @@ export const monthEventVariants = defineRecipe({
       muted: eventMuted,
     },
     isSelected: {
-      true: "ring-1 ring-secondary-border",
+      true: "ring-1 ring-focus",
       false: "",
     },
     isHighlighted: {
@@ -97,7 +98,7 @@ export const timedEventVariants = defineRecipe({
       muted: eventMuted,
     },
     isSelected: {
-      true: "ring-2 ring-secondary-border",
+      true: "ring-2 ring-focus",
       false: "",
     },
     isHighlighted: {
@@ -112,10 +113,10 @@ export const yearEventDotVariants = defineRecipe({
   base: "size-1 rounded-full",
   variants: {
     color: {
-      primary: "bg-tone",
-      danger: "bg-tone",
-      success: "bg-tone",
-      warning: "bg-tone",
+      primary: "bg-intent-fill",
+      danger: "bg-intent-fill",
+      success: "bg-intent-fill",
+      warning: "bg-intent-fill",
       muted: "bg-fg-subtle",
     },
   },

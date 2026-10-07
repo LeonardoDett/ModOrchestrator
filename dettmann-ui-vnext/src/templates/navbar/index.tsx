@@ -10,7 +10,7 @@ import { Menu } from "../../components/menu";
 const rootVariants = defineRecipe({
   base: [
     "flex h-16 w-full items-center gap-4",
-    "border-b border-secondary-border bg-secondary-subtle px-4 text-fg",
+    "border-b border-border-strong bg-selected px-4 text-fg",
   ].join(" "),
 });
 
@@ -21,7 +21,7 @@ interface NavbarRootProps extends ComponentPropsWithoutRef<"header"> {
 
 function NavbarRoot({ brand, actions, children, className, ...props }: NavbarRootProps) {
   return (
-    <header className={cn(rootVariants(), className)} {...props}>
+    <header data-layer="medium" className={cn(rootVariants(), className)} {...props}>
       {brand ? <div className="shrink-0">{brand}</div> : null}
       <div className="flex min-w-0 flex-1 items-center">{children}</div>
       {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
@@ -59,7 +59,7 @@ function NavbarUserMenu({
   return (
     <Menu.Root open={open} onOpenChange={onOpenChange}>
       <Menu.Trigger>
-        <Button type="button" variant="ghost" size="icon" aria-label="User menu">
+        <Button type="button" emphasis="low" size="icon" aria-label="User menu">
           <Avatar src={src} alt={alt} fallback={fallback} size="sm" status={status} />
         </Button>
       </Menu.Trigger>

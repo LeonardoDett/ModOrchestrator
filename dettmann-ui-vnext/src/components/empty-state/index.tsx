@@ -62,7 +62,7 @@ function EmptyStateActions({ className, ...props }: ComponentPropsWithoutRef<"di
  * ```tsx
  * <EmptyState.Root>
  *   <EmptyState.Icon>
- *     <FeaturedIcon icon={Inbox} color="neutral" />
+ *     <FeaturedIcon icon={Inbox} intent="neutral" />
  *   </EmptyState.Icon>
  *   <EmptyState.Title>No items</EmptyState.Title>
  *   <EmptyState.Description>Create the first one to get started.</EmptyState.Description>

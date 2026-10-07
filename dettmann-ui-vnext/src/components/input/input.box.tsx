@@ -46,12 +46,12 @@ const inputBoxVariants = defineRecipe({
     {
       error: true,
       focused: false,
-      class: "border-danger",
+      class: "border-danger-border",
     },
     {
       error: true,
       focused: true,
-      class: "border-danger ring-2 ring-focus",
+      class: "border-danger-border ring-2 ring-focus",
     },
   ],
   defaultVariants: {

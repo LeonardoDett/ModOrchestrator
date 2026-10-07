@@ -3,7 +3,7 @@ import { defineRecipe, type VariantProps } from "../core/recipe";
 import { cn } from "../utils/cn";
 
 const backdropVariants = defineRecipe({
-  base: "fixed inset-0 z-overlay transition-colors",
+  base: "fixed inset-0 z-overlay motion-transition",
   variants: {
     /** Opacity level — uses overlay token alpha so children are unaffected */
     opacity: {

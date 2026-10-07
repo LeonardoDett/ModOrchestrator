@@ -21,7 +21,7 @@ import { ModalCloseButton } from "./modal.close-button";
  *       <p>Dialog content goes here.</p>
  *     </Modal.Body>
  *     <Modal.Footer>
- *       <Button variant="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
+ *       <Button onClick={() => setIsOpen(false)}>Cancel</Button>
  *       <Button>Confirm</Button>
  *     </Modal.Footer>
  *   </Modal.Content>

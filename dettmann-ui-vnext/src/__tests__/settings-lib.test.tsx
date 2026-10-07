@@ -96,7 +96,7 @@ describe("Sidebar currentId", () => {
     );
     const links = screen.getAllByRole("link", { name: "Home" });
     const current = links.find((link) => link.getAttribute("aria-current") === "page");
-    expect(current).toHaveClass("bg-primary-subtle");
+    expect(current).toHaveClass("bg-emphasis-subtle");
   });
 });
 

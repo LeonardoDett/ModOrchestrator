@@ -107,7 +107,8 @@ function RatingRoot({
             <Icon
               icon={Star}
               size="md"
-              color={filled ? "warning" : "muted-fg"}
+              color={filled ? undefined : "muted-fg"}
+              intent={filled ? "warning" : undefined}
               className={filled ? "fill-current" : undefined}
             />
           </button>

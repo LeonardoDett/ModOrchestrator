@@ -28,13 +28,13 @@ export function CalendarHeader({ className }: CalendarHeaderProps) {
         {title}
       </Typography>
       <div className="flex items-center gap-2">
-        <Button type="button" variant="outline" size="sm" onClick={navigation.today}>
+        <Button type="button" emphasis="medium" size="sm" onClick={navigation.today}>
           {labels.today}
         </Button>
         <div className="flex items-center">
           <Button
             type="button"
-            variant="ghost"
+            emphasis="low"
             size="sm"
             onClick={navigation.previous}
             aria-label={labels.previousPeriod}
@@ -43,7 +43,7 @@ export function CalendarHeader({ className }: CalendarHeaderProps) {
           </Button>
           <Button
             type="button"
-            variant="ghost"
+            emphasis="low"
             size="sm"
             onClick={navigation.next}
             aria-label={labels.nextPeriod}

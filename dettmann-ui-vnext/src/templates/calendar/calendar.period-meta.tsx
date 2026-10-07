@@ -31,7 +31,7 @@ export function CalendarPeriodMeta({ className, showWeekBadge = true }: Calendar
           {title}
         </Typography>
         {showWeekBadge && (view === "month" || view === "week") ? (
-          <Badge variant="outline" size="sm">
+          <Badge emphasis="low" size="sm">
             {labels.weekNumber(week)}
           </Badge>
         ) : null}

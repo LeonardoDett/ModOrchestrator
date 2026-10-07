@@ -56,11 +56,11 @@ const comboboxOptionVariants = defineRecipe({
   ].join(" "),
   variants: {
     active: {
-      true: "bg-secondary-subtle",
+      true: "bg-selected",
       false: "hover:bg-state-hover",
     },
     selected: {
-      true: "text-secondary-text font-medium",
+      true: "text-fg font-medium",
       false: "text-fg",
     },
     disabled: {

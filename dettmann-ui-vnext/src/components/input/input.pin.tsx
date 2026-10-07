@@ -135,7 +135,7 @@ export function InputPin({
           onBlur={() => setIsFocused(false)}
           className={cn(
             pinSlotVariants(),
-            Boolean(error) && "border-danger focus:border-danger focus:ring-danger"
+            Boolean(error) && "border-danger-border focus:border-danger-border focus:ring-danger-border"
           )}
         />
       ))}

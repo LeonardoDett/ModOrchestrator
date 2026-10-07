@@ -40,7 +40,7 @@ const tabsTriggerVariants = defineRecipe({
     {
       variant: "underline",
       active: true,
-      class: "text-secondary-text border-secondary",
+      class: "text-fg border-border-strong",
     },
     {
       variant: "underline",
@@ -50,7 +50,7 @@ const tabsTriggerVariants = defineRecipe({
     {
       variant: "segmented",
       active: true,
-      class: "bg-secondary-subtle text-secondary-text shadow-raised",
+      class: "bg-selected text-fg shadow-raised",
     },
     {
       variant: "segmented",

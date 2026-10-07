@@ -2,49 +2,27 @@ import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Spinner } from "../../primitives/spinner";
-import { toneData, type Tone } from "../../theme/tone";
-
-const buttonSolid =
-  "bg-tone text-on-tone shadow-raised hover:bg-tone-hover active:bg-tone-pressed";
-const buttonSoft =
-  "bg-tone-subtle text-tone-text shadow-raised hover:bg-tone-subtle-hover";
-const buttonOutlineNeutral =
-  "border border-border-strong bg-transparent text-fg shadow-raised hover:bg-state-hover active:bg-state-pressed";
-const buttonOutlineTone =
-  "border border-tone-border bg-transparent text-tone-text shadow-raised hover:bg-tone-subtle";
-const buttonGhostNeutral = "bg-transparent text-fg hover:bg-state-hover active:bg-state-pressed";
-const buttonGhostTone = "bg-transparent text-tone-text hover:bg-tone-subtle";
+import { resolveEmphasis } from "../../theme/emphasis";
+import type { Emphasis, Intent, MotionLevel } from "../../theme/engine";
 
 const buttonVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center gap-2",
     "text-sm font-semibold",
     "rounded-control",
-    "motion-transition",
+    "motion-transition motion-press",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
     "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent disabled:shadow-none",
   ].join(" "),
   variants: {
-    /** Visual variant */
-    variant: {
-      primary: buttonSolid,
-      solid: buttonSolid,
-      secondary: buttonSoft,
-      soft: buttonSoft,
-      outline: "",
-      ghost: "",
-      danger: buttonSolid,
-      success: buttonSolid,
-      link: "bg-transparent text-primary-text underline-offset-4 hover:underline",
-    },
-    /** Size variant */
+    /** Size variant: altura pelas primitivas de controle. */
     size: {
-      sm: "px-3 py-1.5 text-xs",
-      md: "px-4 py-2.5 text-sm",
-      lg: "px-5 py-3 text-md",
-      icon: "h-10 w-10 p-0",
-      "icon-sm": "h-8 w-8 p-0",
-      "icon-lg": "h-12 w-12 p-0",
+      sm: "h-control-sm px-3 text-xs",
+      md: "h-control-md px-4 text-sm",
+      lg: "h-control-lg px-5 text-md",
+      icon: "size-control-md p-0",
+      "icon-sm": "size-control-sm p-0",
+      "icon-lg": "size-control-lg p-0",
     },
     /** Full width */
     fullWidth: {
@@ -52,14 +30,7 @@ const buttonVariants = defineRecipe({
       false: "",
     },
   },
-  compoundVariants: [
-    {
-      variant: "link",
-      class: "px-0 py-0 shadow-none",
-    },
-  ],
   defaultVariants: {
-    variant: "primary",
     size: "md",
     fullWidth: false,
   },
@@ -70,8 +41,12 @@ type ButtonVariants = VariantProps<typeof buttonVariants>;
 interface ButtonProps
   extends ComponentPropsWithoutRef<"button">,
     ButtonVariants {
-  /** Papel cromático. Sem valor, outline/ghost ficam neutros, o sólido md/lg herda primary e o sólido sm/icon usa secondary. */
-  tone?: Tone;
+  /** Camada 60/30/10. Padrão `medium`; `high` sem intent resolve para `brand`. */
+  emphasis?: Emphasis;
+  /** Significado cromático. Padrão `neutral` (ou `brand` quando `emphasis="high"`). */
+  intent?: Intent;
+  /** Nível de movimento; padrão derivado da ênfase. */
+  motion?: MotionLevel;
   /** Show loading spinner */
   loading?: boolean;
   /** Loading text (optional) */
@@ -83,14 +58,13 @@ interface ButtonProps
 }
 
 /**
- * Button component with multiple variants and sizes.
+ * Button: aparência resolvida pela tabela central `emphasis × intent`.
  *
  * @example
  * ```tsx
- * <Button>Click me</Button>
- * <Button variant="secondary" size="lg">Large Secondary</Button>
- * <Button variant="outline" loading>Loading...</Button>
- * <Button variant="danger" disabled>Disabled</Button>
+ * <Button>Salvar</Button>
+ * <Button emphasis="high">Implantar</Button>
+ * <Button emphasis="low" intent="danger">Excluir</Button>
  * <Button startIcon={<Icon icon={Plus} size="sm" />}>Adicionar</Button>
  * ```
  */
@@ -99,8 +73,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     {
       children,
       className,
-      variant,
-      tone,
+      emphasis,
+      intent,
+      motion,
       size,
       fullWidth,
       loading = false,
@@ -115,32 +90,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) {
     const isDisabled = disabled || loading;
     const hasIcons = Boolean(startIcon || endIcon);
-    const resolvedSize = size ?? "md";
-    const compactSolid =
-      (resolvedSize === "sm" ||
-        resolvedSize === "icon" ||
-        resolvedSize === "icon-sm" ||
-        resolvedSize === "icon-lg") &&
-      (variant == null || variant === "primary" || variant === "solid");
-    const impliedTone: Tone | undefined =
-      tone ??
-      (variant === "danger"
-        ? "danger"
-        : variant === "success"
-          ? "success"
-          : variant === "secondary" || compactSolid
-            ? "secondary"
-            : variant == null || variant === "primary" || variant === "solid"
-              ? // A solid button paints with bg-tone, which needs a tone:
-                // without it the primary action rendered transparent.
-                "primary"
-              : undefined);
-    const neutral = variant === "outline" || variant === "ghost";
-    const surfaceTone = neutral ? tone : impliedTone;
-    const outlineClass =
-      variant === "outline" ? (tone ? buttonOutlineTone : buttonOutlineNeutral) : undefined;
-    const ghostClass =
-      variant === "ghost" ? (tone ? buttonGhostTone : buttonGhostNeutral) : undefined;
+    const resolved = resolveEmphasis({ emphasis, intent, motion });
 
     return (
       <button
@@ -148,13 +98,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={type}
         disabled={isDisabled}
         className={cn(
-          buttonVariants({ variant, size, fullWidth }),
-          outlineClass,
-          ghostClass,
+          buttonVariants({ size, fullWidth }),
+          resolved.className,
+          resolved.emphasis !== "low" && "shadow-raised",
           hasIcons && "gap-2",
           className
         )}
-        {...toneData(surfaceTone)}
+        {...resolved.attrs}
         {...props}
       >
         {loading && (

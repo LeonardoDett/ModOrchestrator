@@ -65,7 +65,7 @@ export function CalendarPageHeader({
         {showSearch && onSearchClick ? (
           <Button
             type="button"
-            variant="ghost"
+            emphasis="low"
             size="sm"
             aria-label={labels.search}
             onClick={onSearchClick}
@@ -78,19 +78,19 @@ export function CalendarPageHeader({
           <ButtonGroup>
             <Button
               type="button"
-              variant="outline"
+              emphasis="medium"
               size="sm"
               aria-label={labels.previousPeriod}
               onClick={navigation.previous}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button type="button" variant="outline" size="sm" onClick={navigation.today}>
+            <Button type="button" emphasis="medium" size="sm" onClick={navigation.today}>
               {labels.today}
             </Button>
             <Button
               type="button"
-              variant="outline"
+              emphasis="medium"
               size="sm"
               aria-label={labels.nextPeriod}
               onClick={navigation.next}
@@ -122,7 +122,7 @@ export function CalendarPageHeader({
         ) : null}
 
         {showAddEvent && onAddEvent ? (
-          <Button type="button" variant="primary" size="sm" onClick={onAddEvent}>
+          <Button type="button" emphasis="high" size="sm" onClick={onAddEvent}>
             <Plus className="h-4 w-4" />
             {labels.addEvent}
           </Button>

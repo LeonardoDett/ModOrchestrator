@@ -14,7 +14,7 @@ const badgeVariants = defineRecipe({
   ].join(" "),
   variants: {
     isToday: {
-      true: "border-secondary-border",
+      true: "border-border-strong",
       false: "",
     },
   },
@@ -24,7 +24,7 @@ const dayVariants = defineRecipe({
   base: "text-xl font-semibold leading-none tabular-nums",
   variants: {
     isToday: {
-      true: "text-secondary-text",
+      true: "text-fg",
       false: "text-fg",
     },
   },

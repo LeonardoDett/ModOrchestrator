@@ -46,6 +46,7 @@ export function TabsList({ className, ...props }: TabsListProps) {
   return (
     <div
       role="tablist"
+      data-layer="medium"
       aria-orientation={orientation}
       className={cn(tabsListVariants({ orientation, variant }), className)}
       {...props}

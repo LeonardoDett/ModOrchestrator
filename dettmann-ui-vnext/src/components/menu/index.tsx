@@ -233,7 +233,7 @@ const menuItemVariants = defineRecipe({
   ].join(" "),
   variants: {
     active: {
-      true: "bg-secondary-subtle",
+      true: "bg-selected",
       false: "",
     },
     disabled: {

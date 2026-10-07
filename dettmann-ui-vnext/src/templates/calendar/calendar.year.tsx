@@ -7,7 +7,7 @@ import { cn } from "../../utils/cn";
 import { Typography } from "../../primitives/typography";
 import { useCalendar, useCalendarData } from "./use-calendar";
 import { useCalendarConfig } from "./calendar.config-context";
-import { eventToneProps, resolveEventColor, yearEventDotVariants } from "./internal/event-colors";
+import { eventIntentProps, resolveEventColor, yearEventDotVariants } from "./internal/event-colors";
 import type { CalendarDayData } from "./types";
 
 interface CalendarYearProps {
@@ -18,11 +18,11 @@ const yearDayNumberVariants = defineRecipe({
   base: "flex size-5 items-center justify-center rounded-control text-[10px] leading-none tabular-nums",
   variants: {
     isToday: {
-      true: "rounded-full bg-secondary font-semibold text-on-secondary",
+      true: "rounded-full bg-fill-neutral font-semibold text-fg",
       false: "",
     },
     isSelected: {
-      true: "rounded-full bg-secondary-subtle font-medium ring-1 ring-inset ring-secondary-border",
+      true: "rounded-full bg-selected font-medium ring-1 ring-inset ring-focus",
       false: "",
     },
     isCurrentPeriod: {
@@ -90,7 +90,7 @@ function CalendarYearDay({
             <span
               key={item.id}
               className={yearEventDotVariants({ color: resolveEventColor(item) })}
-              {...eventToneProps(resolveEventColor(item))}
+              {...eventIntentProps(resolveEventColor(item))}
             />
           ))}
         </span>

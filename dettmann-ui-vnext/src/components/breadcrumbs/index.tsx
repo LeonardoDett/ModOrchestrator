@@ -23,7 +23,7 @@ const itemVariants = defineRecipe({
   variants: {
     current: {
       true: "font-medium text-fg",
-      false: "text-fg-muted hover:text-primary-text motion-transition",
+      false: "text-fg-muted hover:text-emphasis-text motion-transition",
     },
   },
   defaultVariants: {

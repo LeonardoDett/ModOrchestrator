@@ -17,7 +17,7 @@ const dayVariants = defineRecipe({
   variants: {
     isCurrentPeriod: { false: "bg-sunken", true: "bg-surface" },
     isSelected: {
-      true: "bg-secondary-subtle ring-1 ring-inset ring-secondary-border",
+      true: "bg-selected ring-1 ring-inset ring-focus",
       false: "",
     },
     isHighlighted: { true: "bg-warning-subtle", false: "" },
@@ -35,11 +35,11 @@ const dayNumberVariants = defineRecipe({
   base: "flex size-7 shrink-0 items-center justify-center text-sm tabular-nums",
   variants: {
     isToday: {
-      true: "rounded-full bg-secondary font-semibold text-on-secondary shadow-raised",
+      true: "rounded-full bg-fill-neutral font-semibold text-fg shadow-raised",
       false: "rounded-control",
     },
     isSelected: {
-      true: "rounded-full bg-secondary font-semibold text-on-secondary shadow-raised",
+      true: "rounded-full bg-fill-neutral font-semibold text-fg shadow-raised",
       false: "",
     },
     isCurrentPeriod: { false: "text-fg-muted", true: "text-fg" },
@@ -47,11 +47,11 @@ const dayNumberVariants = defineRecipe({
   compoundVariants: [
     {
       isToday: true,
-      class: "text-on-secondary",
+      class: "text-fg",
     },
     {
       isSelected: true,
-      class: "text-on-secondary",
+      class: "text-fg",
     },
   ],
 });

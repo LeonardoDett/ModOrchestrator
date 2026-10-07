@@ -35,7 +35,8 @@ function TableRoot({ className, children, ...props }: ComponentPropsWithoutRef<"
 function TableHeader({ className, ...props }: ComponentPropsWithoutRef<"thead">) {
   return (
     <thead
-      className={cn("sticky top-0 z-10 bg-secondary-subtle [&_tr]:border-b [&_tr]:border-border", className)}
+      data-layer="medium"
+      className={cn("sticky top-0 z-10 bg-selected [&_tr]:border-b [&_tr]:border-border", className)}
       {...props}
     />
   );
@@ -46,10 +47,10 @@ function TableBody({ className, ...props }: ComponentPropsWithoutRef<"tbody">) {
 }
 
 const rowVariants = defineRecipe({
-  base: "border-b border-border text-sm transition-colors",
+  base: "border-b border-border text-sm motion-transition",
   variants: {
     selected: {
-      true: "bg-secondary-subtle",
+      true: "bg-selected",
       false: "hover:bg-state-hover",
     },
     layout: {

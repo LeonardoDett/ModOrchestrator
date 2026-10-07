@@ -17,8 +17,8 @@ describe("ButtonGroup", () => {
   it("exposes role=group", () => {
     render(
       <ButtonGroup>
-        <Button variant="secondary">A</Button>
-        <Button variant="secondary">B</Button>
+        <Button emphasis="medium">A</Button>
+        <Button emphasis="medium">B</Button>
       </ButtonGroup>
     );
     expect(screen.getByRole("group")).toBeInTheDocument();

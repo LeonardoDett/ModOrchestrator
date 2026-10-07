@@ -24,7 +24,7 @@ const dropzoneVariants = defineRecipe({
   ].join(" "),
   variants: {
     dragging: {
-      true: "border-secondary bg-secondary-subtle",
+      true: "border-border-strong bg-selected",
       false: "",
     },
     disabled: {
@@ -178,7 +178,7 @@ export function FileDropzone({
         onDrop={handleDrop}
         className={dropzoneVariants({ dragging: dragging || Boolean(draggingProp), disabled, size })}
       >
-        <FeaturedIcon icon={Upload} color="neutral" size={size === "compact" ? "md" : "lg"} />
+        <FeaturedIcon icon={Upload} intent="neutral" size={size === "compact" ? "md" : "lg"} />
         <div className="space-y-1">
           <Typography variant="body-sm" className="text-fg font-medium">
             {title}
@@ -189,7 +189,7 @@ export function FileDropzone({
         </div>
         <Button
           type="button"
-          variant="secondary"
+          emphasis="medium"
           size="sm"
           disabled={disabled}
           onClick={() => (onBrowse ? onBrowse() : inputRef.current?.click())}

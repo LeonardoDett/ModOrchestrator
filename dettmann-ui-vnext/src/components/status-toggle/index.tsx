@@ -4,7 +4,11 @@ import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 import { Ban, Check, Loader2, Minus, type LucideIcon } from "lucide-react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { focusRing, toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
+
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas";
 
 export type StatusToggleState = "on" | "off" | "unavailable" | "busy";
 
@@ -23,7 +27,7 @@ const statusToggleVariants = defineRecipe({
   },
   variants: {
     state: {
-      on: { track: "bg-tone cursor-pointer", icon: "text-tone-text" },
+      on: { track: "bg-intent-fill cursor-pointer", icon: "text-intent-text" },
       off: { track: "bg-border-strong cursor-pointer", icon: "text-fg-muted" },
       unavailable: { track: "cursor-not-allowed border border-dashed border-border-strong bg-sunken", thumb: "bg-sunken shadow-none", icon: "text-fg-subtle" },
       busy: { track: "cursor-progress bg-sunken", icon: "animate-spin text-fg-muted" },
@@ -51,8 +55,8 @@ export interface StatusToggleProps
   /** Description of each state, read by assistive tech and shown as title. */
   stateLabels: Record<StatusToggleState, string>;
   size?: "sm" | "md";
-  /** Tone of the "on" track (default primary). */
-  tone?: Tone;
+  /** Intent of the "on" track (default brand). */
+  intent?: Intent;
 }
 
 /**
@@ -67,7 +71,7 @@ export interface StatusToggleProps
  * ```
  */
 export const StatusToggle = forwardRef<HTMLButtonElement, StatusToggleProps>(function StatusToggle(
-  { state, onCheckedChange, label, stateLabels, size = "sm", tone = "primary", className, disabled, title, ...props },
+  { state, onCheckedChange, label, stateLabels, size = "sm", intent = "brand", className, disabled, title, ...props },
   ref,
 ) {
   const descriptionId = useId();
@@ -90,7 +94,7 @@ export const StatusToggle = forwardRef<HTMLButtonElement, StatusToggleProps>(fun
       onClick={() => {
         if (interactive) onCheckedChange?.(state !== "on");
       }}
-      {...toneData(tone)}
+      {...intentData(intent)}
       {...props}
     >
       <span className={cn(thumb(), state === "on" && SHIFT[size])}>

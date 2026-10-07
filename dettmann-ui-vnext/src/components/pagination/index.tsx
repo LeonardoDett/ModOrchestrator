@@ -30,7 +30,7 @@ const itemVariants = defineRecipe({
   ].join(" "),
   variants: {
     current: {
-      true: "text-secondary-text",
+      true: "text-fg",
       false: "text-fg-muted hover:text-fg hover:bg-state-hover",
     },
   },

@@ -59,8 +59,8 @@ const asideVariants = defineRecipe({
       false: "w-64",
     },
     emphasis: {
-      strong: "border-secondary bg-secondary text-on-secondary",
-      subtle: "border-secondary-border bg-secondary-subtle text-fg",
+      strong: "border-border-strong bg-fill-neutral text-fg",
+      subtle: "border-border-strong bg-selected text-fg",
     },
   },
   defaultVariants: {
@@ -80,11 +80,11 @@ const itemVariants = defineRecipe({
     },
     /** Current page: primary subtle fill and primary text. */
     current: {
-      true: "bg-primary-subtle font-medium text-primary-text hover:bg-primary-subtle-hover",
+      true: "bg-emphasis-subtle font-medium text-emphasis-text hover:bg-state-hover",
       false: "",
     },
     emphasis: {
-      strong: "focus-visible:ring-primary focus-visible:ring-offset-secondary",
+      strong: "focus-visible:ring-focus focus-visible:ring-offset-fill-neutral",
       subtle: "focus-visible:ring-offset-canvas",
     },
     disabled: {
@@ -97,7 +97,7 @@ const itemVariants = defineRecipe({
       emphasis: "strong",
       current: false,
       disabled: false,
-      class: "text-on-secondary hover:bg-secondary-hover active:bg-secondary-pressed",
+      class: "text-fg hover:bg-fill-neutral-hover active:bg-fill-neutral-hover",
     },
     {
       emphasis: "subtle",
@@ -119,11 +119,11 @@ const itemVariants = defineRecipe({
 
 /** Beats classes baked into Button, Accordion and Drawer, which assume a neutral surface. */
 const strongChromeClass =
-  "!text-on-secondary hover:!bg-secondary-hover hover:!text-on-secondary active:!bg-secondary-pressed focus-visible:!ring-primary focus-visible:!ring-offset-secondary";
+  "!text-fg hover:!bg-fill-neutral-hover hover:!text-fg active:!bg-fill-neutral-hover focus-visible:!ring-focus focus-visible:!ring-offset-fill-neutral";
 
 const drawerSurfaceClass: Record<SidebarEmphasis, string> = {
-  strong: "!border-secondary !bg-secondary !text-on-secondary",
-  subtle: "!border-secondary-border !bg-secondary-subtle !text-fg",
+  strong: "!border-border-strong !bg-fill-neutral !text-fg",
+  subtle: "!border-border-strong !bg-selected !text-fg",
 };
 
 interface SidebarRootProps extends Omit<ComponentPropsWithoutRef<"div">, "children"> {
@@ -238,7 +238,7 @@ function SidebarSections({
           className={cn(
             "flex items-center gap-2 px-2 pb-1 text-xs font-semibold uppercase tracking-wide",
             index > 0 && "pt-3",
-            emphasis === "strong" ? "text-on-secondary opacity-70" : "text-fg-subtle"
+            emphasis === "strong" ? "text-fg opacity-70" : "text-fg-subtle"
           )}
         >
           {section.icon ? <Icon icon={section.icon} size="xs" color="current" /> : null}
@@ -411,7 +411,7 @@ function SidebarRoot({
     <div className={cn("flex h-full", className)} {...props}>
       <Button
         type="button"
-        variant="ghost"
+        emphasis="low"
         size="icon"
         className="md:hidden"
         aria-label={labels?.openSidebar ?? "Open sidebar"}
@@ -420,7 +420,7 @@ function SidebarRoot({
         <Icon icon={Menu} size="sm" />
       </Button>
 
-      <aside className={cn(asideVariants({ collapsed, emphasis }), "overflow-hidden")}>
+      <aside data-layer="medium" className={cn(asideVariants({ collapsed, emphasis }), "overflow-hidden")}>
         {(collapsed ? collapsedHeader : header) ? (
           <div
             className={cn(
@@ -434,7 +434,7 @@ function SidebarRoot({
         <div className={cn("flex shrink-0 p-2", collapsed ? "justify-center" : "justify-end")}>
           <Button
             type="button"
-            variant="ghost"
+            emphasis="low"
             size="icon-sm"
             aria-label={
               collapsed
@@ -462,14 +462,14 @@ function SidebarRoot({
           side="left"
           className={cn("max-w-xs", drawerSurfaceClass[emphasis])}
         >
-          <Drawer.Header className="!border-secondary-border">
+          <Drawer.Header className="!border-border-strong">
             {header ? <div className="min-w-0 flex-1">{header}</div> : null}
-            <Drawer.Title className={header ? "sr-only" : emphasis === "strong" ? "!text-on-secondary" : undefined}>
+            <Drawer.Title className={header ? "sr-only" : emphasis === "strong" ? "!text-fg" : undefined}>
               {navigationLabel}
             </Drawer.Title>
             <Drawer.CloseButton className={emphasis === "strong" ? strongChromeClass : undefined} />
           </Drawer.Header>
-          <Drawer.Body className={cn("p-0", emphasis === "strong" && "!text-on-secondary")}>
+          <Drawer.Body className={cn("p-0", emphasis === "strong" && "!text-fg")}>
             <SidebarSections
               sections={sections}
               collapsed={false}

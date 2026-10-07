@@ -34,9 +34,9 @@ export interface LogViewerProps extends Omit<ComponentPropsWithoutRef<"div">, "o
   toolbar?: ReactNode;
 }
 
-const levelTone: Record<LogLevel, "secondary" | "info" | "success" | "warning" | "danger"> = {
-  trace: "secondary",
-  debug: "secondary",
+const levelIntent: Record<LogLevel, "neutral" | "info" | "success" | "warning" | "danger"> = {
+  trace: "neutral",
+  debug: "neutral",
   info: "info",
   success: "success",
   warning: "warning",
@@ -121,13 +121,13 @@ export function LogViewer({
               <>
                 <span className="w-20 shrink-0 truncate text-fg-subtle">{entry.timestamp}</span>
                 <span className="w-20 shrink-0">
-                  <Badge size="sm" tone={levelTone[level]}>
+                  <Badge size="sm" intent={levelIntent[level]}>
                     <span className="mr-1 inline-flex align-middle">{levelIcon[level]}</span>
                     {levelLabels?.[level] ?? level}
                   </Badge>
                 </span>
                 {entry.source ? (
-                  <span className="w-28 shrink-0 truncate text-fg-secondary">{entry.source}</span>
+                  <span className="w-28 shrink-0 truncate text-fg-muted">{entry.source}</span>
                 ) : null}
                 <span className="min-w-0 flex-1 break-words text-fg">{entry.message}</span>
                 {entry.metadata ? (

@@ -52,7 +52,7 @@ export function Inspector({ title, description, actions, children, sticky = true
           </div>
           {actions}
           {onClose ? (
-            <Button variant="ghost" size="icon-sm" aria-label={closeLabel} onClick={onClose}>
+            <Button emphasis="low" size="icon-sm" aria-label={closeLabel} onClick={onClose}>
               <X aria-hidden="true" className="h-4 w-4" />
             </Button>
           ) : null}

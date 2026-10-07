@@ -4,22 +4,20 @@ import { type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Icon, type LucideIconComponent } from "../../primitives/icon";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const featuredIconVariants = defineRecipe({
   slots: {
-    /** Outer wash (tone-50) */
+    /** Outer wash (intent subtle) */
     root: "inline-flex items-center justify-center rounded-full",
-    /** Inner disc (tone-100) holding the icon */
+    /** Inner disc (state layer over the wash) holding the icon */
     inner: "inline-flex items-center justify-center rounded-full",
   },
   variants: {
-    /** Color family — two-tone wash matching Untitled UI featured icons */
-    color: {
-      success: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
-      warning: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
-      danger: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
-      primary: { root: "bg-tone-subtle", inner: "bg-tone-subtle-hover text-tone-text" },
+    /** Two-tone wash: tinted intents use the intent contract, neutral uses surface roles. */
+    paint: {
+      tinted: { root: "bg-intent-subtle", inner: "bg-state-hover text-intent-text" },
       neutral: { root: "bg-sunken", inner: "bg-surface text-fg-muted" },
     },
     /** Outer padding + inner disc size */
@@ -39,7 +37,7 @@ const featuredIconVariants = defineRecipe({
     },
   },
   defaultVariants: {
-    color: "success",
+    paint: "tinted",
     size: "lg",
   },
 });
@@ -48,13 +46,13 @@ type FeaturedIconVariants = VariantProps<typeof featuredIconVariants>;
 
 interface FeaturedIconProps
   extends Omit<ComponentPropsWithoutRef<"span">, "color" | "children">,
-    FeaturedIconVariants {
+    Omit<FeaturedIconVariants, "paint"> {
   /** Lucide icon rendered in the inner disc */
   icon: LucideIconComponent;
   /** Accessible label. Decorative when omitted. */
   label?: string;
-  /** Sobrescreve o papel de `color` quando informado. */
-  tone?: Tone;
+  /** Família de cor (padrão `success`); `neutral` usa papéis de superfície. */
+  intent?: Intent;
 }
 
 const sizeToIconSize = {
@@ -74,23 +72,20 @@ const sizeToIconSize = {
  * ```tsx
  * import { CheckCircle } from "lucide-react";
  *
- * <FeaturedIcon icon={CheckCircle} color="success" />
- * <FeaturedIcon icon={AlertTriangle} color="warning" size="md" />
+ * <FeaturedIcon icon={CheckCircle} intent="success" />
+ * <FeaturedIcon icon={AlertTriangle} intent="warning" size="md" />
  * ```
  */
 export function FeaturedIcon({
   icon,
-  color,
-  tone,
+  intent = "success",
   size,
   label,
   className,
   ...props
 }: FeaturedIconProps) {
-  const styles = featuredIconVariants({ color, size });
+  const styles = featuredIconVariants({ paint: intent === "neutral" ? "neutral" : "tinted", size });
   const iconSize = sizeToIconSize[size ?? "lg"];
-  const resolved: Tone | undefined =
-    tone ?? (color && color !== "neutral" ? color : undefined);
 
   return (
     <span
@@ -98,7 +93,7 @@ export function FeaturedIcon({
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
-      {...toneData(resolved)}
+      {...intentData(intent === "neutral" ? undefined : intent)}
       {...props}
     >
       <span className={styles.inner()}>

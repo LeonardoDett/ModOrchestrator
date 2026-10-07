@@ -47,3 +47,11 @@ export function resolveEmphasis(
 export function intentData(intent?: Intent): { "data-intent"?: Intent } {
   return intent === undefined ? {} : { "data-intent": intent };
 }
+
+/** Classes de repouso da resolução (sem `hover:`/`active:`), para superfícies não interativas como Badge. */
+export function restingClassName(resolution: Pick<EmphasisResolution, "className">): string {
+  return resolution.className
+    .split(" ")
+    .filter((c) => !/^(?:hover|active):/.test(c))
+    .join(" ");
+}

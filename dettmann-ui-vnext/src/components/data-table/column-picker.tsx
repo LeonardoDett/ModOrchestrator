@@ -48,7 +48,7 @@ export function DataTableColumnPicker({
         {trigger ? (
           <span className="inline-flex">{trigger}</span>
         ) : (
-          <Button variant="ghost" size="sm" startIcon={<Columns3 aria-hidden="true" className="h-4 w-4" />}>
+          <Button emphasis="low" size="sm" startIcon={<Columns3 aria-hidden="true" className="h-4 w-4" />}>
             {label}
           </Button>
         )}

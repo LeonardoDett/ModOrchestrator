@@ -3,7 +3,8 @@
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const checkboxVariants = defineRecipe({
   slots: {
@@ -15,8 +16,8 @@ const checkboxVariants = defineRecipe({
       "motion-transition",
       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
-      "data-[state=checked]:bg-tone data-[state=checked]:border-tone data-[state=checked]:text-on-tone",
-      "data-[state=indeterminate]:bg-tone data-[state=indeterminate]:border-tone data-[state=indeterminate]:text-on-tone",
+      "data-[state=checked]:bg-intent-fill data-[state=checked]:border-intent-fill data-[state=checked]:text-on-intent",
+      "data-[state=indeterminate]:bg-intent-fill data-[state=indeterminate]:border-intent-fill data-[state=indeterminate]:text-on-intent",
     ].join(" "),
     label: "text-sm text-fg select-none",
   },
@@ -71,7 +72,7 @@ interface CheckboxProps
   name?: string;
   /** Value for form submission */
   value?: string;
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -97,7 +98,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       value,
       size,
       disabled = false,
-      tone,
+      intent,
       id: providedId,
       ...props
     },
@@ -130,7 +131,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
           disabled={disabled}
           onClick={handleClick}
           className={checkbox()}
-          {...toneData(tone ?? "secondary")}
+          {...intentData(intent ?? "brand")}
           {...props}
         >
           <svg

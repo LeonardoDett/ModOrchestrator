@@ -52,7 +52,7 @@ const selectVariants = defineRecipe({
   base: [
     "appearance-none bg-transparent border-none cursor-pointer",
     "text-fg text-sm font-medium",
-    "hover:text-secondary-text transition-colors",
+    "hover:text-fg motion-transition",
     "focus:outline-none focus:ring-0",
     "[&:focus]:outline-none [&:focus]:ring-0",
     "[&>option]:bg-raised [&>option]:text-fg",
@@ -79,11 +79,11 @@ const dayButtonVariants = defineRecipe({
   ].join(" "),
   variants: {
     isSelected: {
-      true: "bg-secondary text-on-secondary font-medium",
+      true: "bg-fill-neutral text-fg font-medium",
       false: "hover:bg-state-hover",
     },
     isToday: {
-      true: "ring-1 ring-secondary ring-inset",
+      true: "ring-1 ring-focus ring-inset",
       false: "",
     },
     isCurrentMonth: {

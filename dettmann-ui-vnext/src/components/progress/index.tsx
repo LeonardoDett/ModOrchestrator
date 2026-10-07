@@ -1,18 +1,19 @@
 import { type ComponentPropsWithoutRef } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { toneData, type Tone } from "../../theme/tone";
+import { intentData } from "../../theme/emphasis";
+import type { Intent } from "../../theme/engine";
 
 const linearVariants = defineRecipe({
   base: "relative h-2 w-full overflow-hidden rounded-full bg-sunken",
 });
 
 const circleTrackVariants = defineRecipe({
-  base: "stroke-muted",
+  base: "stroke-sunken",
 });
 
 const circleFillVariants = defineRecipe({
-  base: "stroke-tone transition-[stroke-dashoffset] duration-(--motion-duration) ease-(--motion-ease)",
+  base: "stroke-intent-fill transition-[stroke-dashoffset] duration-(--motion-duration) ease-(--motion-ease)",
 });
 
 interface ProgressRootProps extends ComponentPropsWithoutRef<"div"> {
@@ -20,7 +21,7 @@ interface ProgressRootProps extends ComponentPropsWithoutRef<"div"> {
   value?: number;
   /** Maximum value */
   max?: number;
-  tone?: Tone;
+  intent?: Intent;
 }
 
 function clampPercent(value: number, max: number) {
@@ -39,7 +40,7 @@ function clampPercent(value: number, max: number) {
 function ProgressRoot({
   value = 0,
   max = 100,
-  tone,
+  intent,
   className,
   ...props
 }: ProgressRootProps) {
@@ -52,11 +53,11 @@ function ProgressRoot({
       aria-valuemax={max}
       aria-valuenow={value}
       className={cn(linearVariants(), className)}
-      {...toneData(tone ?? "secondary")}
+      {...intentData(intent ?? "brand")}
       {...props}
     >
       <div
-        className="h-full rounded-full bg-tone"
+        className="h-full rounded-full bg-intent-fill"
         style={{ width: `${percent}%` }}
       />
     </div>
@@ -72,7 +73,7 @@ interface ProgressCircleProps extends ComponentPropsWithoutRef<"svg"> {
   size?: number;
   /** Stroke width */
   strokeWidth?: number;
-  tone?: Tone;
+  intent?: Intent;
 }
 
 /**
@@ -83,7 +84,7 @@ function ProgressCircle({
   max = 100,
   size = 64,
   strokeWidth = 6,
-  tone,
+  intent,
   className,
   ...props
 }: ProgressCircleProps) {
@@ -102,7 +103,7 @@ function ProgressCircle({
       height={size}
       viewBox={`0 0 ${size} ${size}`}
       className={cn("-rotate-90", className)}
-      {...toneData(tone ?? "secondary")}
+      {...intentData(intent ?? "brand")}
       {...props}
     >
       <circle

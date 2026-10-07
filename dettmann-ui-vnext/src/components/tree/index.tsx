@@ -223,7 +223,7 @@ export function Tree<T>({
               className={cn(
                 "group flex min-h-9 items-center gap-1 rounded-control px-2",
                 selected
-                  ? "bg-primary-subtle text-primary-text"
+                  ? "bg-emphasis-subtle text-emphasis-text"
                   : "text-fg hover:bg-state-hover",
                 node.disabled && "opacity-50",
               )}
@@ -241,7 +241,7 @@ export function Tree<T>({
                   <ChevronRight
                     aria-hidden="true"
                     className={cn(
-                      "h-4 w-4 transition-transform",
+                      "h-4 w-4 transition-transform duration-(--motion-duration) ease-(--motion-ease)",
                       open && "rotate-90",
                     )}
                   />

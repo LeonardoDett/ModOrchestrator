@@ -28,9 +28,9 @@ describe("Toast", () => {
 
     await user.click(screen.getByRole("button", { name: "Notify" }));
     const alert = screen.getByRole("alert");
-    expect(alert).toHaveClass("bg-tone-subtle");
-    expect(alert).toHaveClass("text-tone-text");
-    expect(alert).toHaveAttribute("data-tone", "success");
+    expect(alert).toHaveClass("bg-intent-subtle");
+    expect(alert).toHaveClass("text-intent-text");
+    expect(alert).toHaveAttribute("data-intent", "success");
     expect(alert).toHaveClass("shadow-modal");
     expect(alert).toHaveClass("rounded-card");
   });

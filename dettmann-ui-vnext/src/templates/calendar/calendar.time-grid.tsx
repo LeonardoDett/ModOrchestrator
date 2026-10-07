@@ -64,7 +64,7 @@ export function CalendarTimeGrid({ className, mode = "week" }: CalendarTimeGridP
             <span
               className={cn(
                 "inline-flex size-7 items-center justify-center text-sm font-semibold tabular-nums",
-                day.isToday && "rounded-full bg-secondary text-on-secondary shadow-raised"
+                day.isToday && "rounded-full bg-fill-neutral text-fg shadow-raised"
               )}
             >
               {format(day.date, "d", fmtOpts)}
@@ -161,11 +161,11 @@ function CalendarCurrentTimeIndicator() {
       aria-hidden
     >
       <div className="relative flex -translate-y-1/2 items-center">
-        <span className="shrink-0 rounded-control bg-danger px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-on-danger shadow-raised">
+        <span className="shrink-0 rounded-control bg-danger-fill px-1.5 py-0.5 text-[10px] font-semibold leading-none tabular-nums text-on-danger shadow-raised">
           {timeLabel}
         </span>
-        <div className="size-2 shrink-0 rounded-full bg-danger ring-2 ring-canvas" />
-        <div className="h-0.5 min-w-0 flex-1 bg-danger shadow-raised" />
+        <div className="size-2 shrink-0 rounded-full bg-danger-fill ring-2 ring-canvas" />
+        <div className="h-0.5 min-w-0 flex-1 bg-danger-fill shadow-raised" />
       </div>
     </div>
   );

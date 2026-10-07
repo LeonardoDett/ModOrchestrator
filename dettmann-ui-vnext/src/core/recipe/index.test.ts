@@ -5,13 +5,13 @@ describe("internal recipe engine", () => {
   it("resolves base, variants, defaults and compounds", () => {
     const button = defineRecipe({
       base: "base",
-      variants: { tone: { primary: "primary", danger: "danger" }, size: { sm: "sm", md: "md" } },
-      defaultVariants: { tone: "primary", size: "md" },
-      compoundVariants: [{ tone: "danger", size: "sm", class: "danger-sm" }],
+      variants: { intent: { brand: "brand", danger: "danger" }, size: { sm: "sm", md: "md" } },
+      defaultVariants: { intent: "brand", size: "md" },
+      compoundVariants: [{ intent: "danger", size: "sm", class: "danger-sm" }],
     });
 
-    expect(button()).toContain("base primary md");
-    expect(button({ tone: "danger", size: "sm" })).toContain("danger-sm");
+    expect(button()).toContain("base brand md");
+    expect(button({ intent: "danger", size: "sm" })).toContain("danger-sm");
   });
 
   it("resolves slot variants", () => {

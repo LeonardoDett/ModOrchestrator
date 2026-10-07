@@ -105,7 +105,7 @@ export function ReorderableList<T>({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted transition-colors",
+                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted motion-transition",
                   "hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
                   index === 0 && "invisible pointer-events-none",
                 )}
@@ -119,7 +119,7 @@ export function ReorderableList<T>({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted transition-colors",
+                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted motion-transition",
                   "hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
                   index === source.length - 1 && "invisible pointer-events-none",
                 )}

@@ -31,12 +31,12 @@ export interface ConfirmDialogProps {
 
 const typeConfig: Record<
   ConfirmType,
-  { color: "danger" | "warning" | "primary" | "success"; icon: LucideIconComponent }
+  { intent: "danger" | "warning" | "brand" | "success"; icon: LucideIconComponent }
 > = {
-  danger: { color: "danger", icon: Trash2 },
-  warning: { color: "warning", icon: AlertTriangle },
-  info: { color: "primary", icon: Info },
-  success: { color: "success", icon: Check },
+  danger: { intent: "danger", icon: Trash2 },
+  warning: { intent: "warning", icon: AlertTriangle },
+  info: { intent: "brand", icon: Info },
+  success: { intent: "success", icon: Check },
 };
 
 /**
@@ -63,7 +63,7 @@ export function ConfirmDialog({
     <Modal.Root open={open} onOpenChange={onOpenChange}>
       <Modal.Content size="sm">
         <Modal.Header className="flex-col items-start gap-4 border-b-0">
-          <FeaturedIcon icon={config.icon} color={config.color} size="lg" label={type} />
+          <FeaturedIcon icon={config.icon} intent={config.intent} size="lg" label={type} />
           <div className="space-y-1">
             <Modal.Title>{title}</Modal.Title>
             {description ? (
@@ -74,12 +74,13 @@ export function ConfirmDialog({
           </div>
         </Modal.Header>
         <Modal.Footer>
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+          <Button type="button" emphasis="medium" onClick={() => onOpenChange(false)}>
             {cancelLabel}
           </Button>
           <Button
             type="button"
-            variant={type === "danger" ? "danger" : type === "success" ? "success" : "primary"}
+            emphasis="high"
+            intent={type === "danger" ? "danger" : type === "success" ? "success" : "brand"}
             onClick={handleConfirm}
           >
             {confirmLabel}

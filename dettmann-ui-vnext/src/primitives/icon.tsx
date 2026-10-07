@@ -1,7 +1,8 @@
 import { type ComponentPropsWithoutRef, type ElementType } from "react";
 import { defineRecipe, type VariantProps } from "../core/recipe";
 import { cn } from "../utils/cn";
-import { isTone, toneData, type Tone } from "../theme/tone";
+import { intentData } from "../theme/emphasis";
+import type { Intent } from "../theme/engine";
 import type { LucideIcon } from "lucide-react";
 
 const iconVariants = defineRecipe({
@@ -16,18 +17,11 @@ const iconVariants = defineRecipe({
       xl: "h-8 w-8",
       "2xl": "h-10 w-10",
     },
-    /** Icon color */
+    /** Icon color (neutral roles); use `intent` for semantic color */
     color: {
       current: "text-current",
       fg: "text-fg",
       "muted-fg": "text-fg-muted",
-      primary: "text-tone",
-      secondary: "text-tone",
-      success: "text-tone",
-      warning: "text-tone",
-      danger: "text-tone",
-      accent: "text-tone",
-      info: "text-tone",
     },
   },
   defaultVariants: {
@@ -50,7 +44,8 @@ interface IconProps extends IconVariants {
   label?: string;
   /** Additional CSS classes */
   className?: string;
-  tone?: Tone;
+  /** Semantic color: paints with `text-intent-fill` and scopes `data-intent`. */
+  intent?: Intent;
 }
 
 /** Size to strokeWidth mapping for consistent proportions */
@@ -73,7 +68,7 @@ const sizeToStrokeWidth: Record<NonNullable<IconVariants["size"]>, number> = {
  * import { Home, Settings, X } from "lucide-react";
  *
  * <Icon icon={Home} />
- * <Icon icon={Settings} size="lg" color="primary" />
+ * <Icon icon={Settings} size="lg" intent="brand" />
  * <Icon icon={X} size="sm" label="Close" />
  *
  * // In a button
@@ -88,17 +83,16 @@ export function Icon({
   className,
   size = "md",
   color,
-  tone,
+  intent,
   strokeWidth,
   label,
 }: IconProps) {
   const resolvedStrokeWidth = strokeWidth ?? sizeToStrokeWidth[size ?? "md"];
-  const resolvedTone = tone ?? (isTone(color) ? color : undefined);
 
   return (
     <IconComponent
-      {...toneData(resolvedTone)}
-      className={cn(iconVariants({ size, color }), className)}
+      {...intentData(intent)}
+      className={cn(iconVariants({ size, color }), intent && "text-intent-fill", className)}
       strokeWidth={resolvedStrokeWidth}
       aria-label={label}
       aria-hidden={label ? undefined : true}
