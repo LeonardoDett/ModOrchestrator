@@ -177,10 +177,10 @@ describe("Sidebar", () => {
     expect(named.some((item) => item.getAttribute("aria-label") === "Downloads")).toBe(true);
   });
 
-  it("uses the soft secondary surface when emphasis is subtle", () => {
+  it("uses the soft secondary surface when variant is subtle", () => {
     const { container } = render(
       <Sidebar.Root
-        emphasis="subtle"
+        variant="subtle"
         items={[{ id: "home", label: "Home", href: "#home" }]}
       />
     );
@@ -188,6 +188,11 @@ describe("Sidebar", () => {
       "bg-selected",
       "text-fg"
     );
+  });
+  it("no longer takes a Sidebar-specific emphasis (the shared Emphasis is a different axis)", () => {
+    // @ts-expect-error `emphasis` foi renomeada para `variant`.
+    const props: Parameters<typeof Sidebar.Root>[0] = { items: [], emphasis: "subtle" };
+    expect(props).toBeDefined();
   });
 });
 

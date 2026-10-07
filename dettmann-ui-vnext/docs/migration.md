@@ -29,7 +29,7 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 |---|---|
 | `bg-page` / `text-page` / `ring-offset-page` | `bg-canvas` / `text-canvas` / `ring-offset-canvas` |
 | `bg-muted` | `bg-sunken` |
-| `bg-hover` / `bg-pressed` | `bg-state-hover` / `bg-state-pressed` (repouso transparente); `state-layer-hover` / `state-layer-pressed` (repouso opaco) |
+| `bg-hover` / `bg-pressed` | `bg-state-hover` / `bg-state-pressed` on a transparent rest; `hover:state-layer-hover` / `active:state-layer-pressed` on an opaque rest |
 | `ring-ring` / `border-ring` / `bg-ring` | `ring-focus` / `border-focus` / `bg-focus` |
 | `text-fg-inverse` | `text-canvas` |
 | `text-fg-secondary` / `text-fg-tertiary` | `text-fg-muted` / `text-fg-subtle` |
@@ -66,6 +66,7 @@ Component props:
 | `<Button variant tone>` | `<Button emphasis intent motion>`; default `emphasis="medium"`; `variant="link"` → `emphasis="low"` |
 | `<Badge variant="solid\|soft\|outline" tone>` | `emphasis="high\|medium\|low"` and `intent` |
 | `<Tag tone>` | `<Tag intent>` (Tag has no `emphasis` or `variant`) |
+| `<Sidebar.Root emphasis="strong\|subtle">` | `<Sidebar.Root variant="strong\|subtle">` (renamed: `emphasis` is the shared `low\|medium\|high` axis) |
 
 ## Business rules of the new contract
 

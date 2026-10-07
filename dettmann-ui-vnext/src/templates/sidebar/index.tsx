@@ -48,8 +48,11 @@ export interface SidebarLabels {
   expandSidebar?: string;
 }
 
-/** Solid (`strong`) or soft (`subtle`) fill of the 30% role (`secondary`). */
-export type SidebarEmphasis = "strong" | "subtle";
+/**
+ * Solid (`strong`) or soft (`subtle`) fill of the 30% role. Named `variant` so it does not
+ * collide with the shared `Emphasis` (`low|medium|high`) axis.
+ */
+export type SidebarVariant = "strong" | "subtle";
 
 const asideVariants = defineRecipe({
   base: ["hidden h-full flex-col border-r", "md:flex"].join(" "),
@@ -58,13 +61,13 @@ const asideVariants = defineRecipe({
       true: "w-16",
       false: "w-64",
     },
-    emphasis: {
+    variant: {
       strong: "border-border-strong bg-fill-neutral text-fg",
       subtle: "border-border-strong bg-selected text-fg",
     },
   },
   defaultVariants: {
-    emphasis: "strong",
+    variant: "strong",
   },
 });
 
@@ -83,7 +86,7 @@ const itemVariants = defineRecipe({
       true: "bg-emphasis-subtle font-medium text-emphasis-text hover:state-layer-hover",
       false: "",
     },
-    emphasis: {
+    variant: {
       strong: "focus-visible:ring-focus focus-visible:ring-offset-fill-neutral",
       subtle: "focus-visible:ring-offset-canvas",
     },
@@ -94,13 +97,13 @@ const itemVariants = defineRecipe({
   },
   compoundVariants: [
     {
-      emphasis: "strong",
+      variant: "strong",
       current: false,
       disabled: false,
       class: "text-fg hover:bg-fill-neutral-hover active:bg-fill-neutral-hover",
     },
     {
-      emphasis: "subtle",
+      variant: "subtle",
       current: false,
       disabled: false,
       class: "text-fg hover:bg-state-hover active:bg-state-pressed",
@@ -112,7 +115,7 @@ const itemVariants = defineRecipe({
   ],
   defaultVariants: {
     current: false,
-    emphasis: "strong",
+    variant: "strong",
     disabled: false,
   },
 });
@@ -121,7 +124,7 @@ const itemVariants = defineRecipe({
 const strongChromeClass =
   "!text-fg hover:!bg-fill-neutral-hover hover:!text-fg active:!bg-fill-neutral-hover focus-visible:!ring-focus focus-visible:!ring-offset-fill-neutral";
 
-const drawerSurfaceClass: Record<SidebarEmphasis, string> = {
+const drawerSurfaceClass: Record<SidebarVariant, string> = {
   strong: "!border-border-strong !bg-fill-neutral !text-fg",
   subtle: "!border-border-strong !bg-selected !text-fg",
 };
@@ -141,7 +144,7 @@ interface SidebarRootProps extends Omit<ComponentPropsWithoutRef<"div">, "childr
    * Fill of the 30% role (`secondary`).
    * `strong` is the solid color; `subtle` is the soft color.
    */
-  emphasis?: SidebarEmphasis;
+  variant?: SidebarVariant;
   header?: ReactNode;
   /** Replaces `header` on the collapsed desktop column (for example a mark instead of a wordmark). */
   collapsedHeader?: ReactNode;
@@ -152,12 +155,12 @@ function SidebarLeaf({
   item,
   collapsed,
   current,
-  emphasis,
+  variant,
 }: {
   item: SidebarItem;
   collapsed: boolean;
   current: boolean;
-  emphasis: SidebarEmphasis;
+  variant: SidebarVariant;
 }) {
   const content = (
     <>
@@ -170,7 +173,7 @@ function SidebarLeaf({
   const className = itemVariants({
     collapsed,
     current: item.disabled ? false : current,
-    emphasis,
+    variant,
     disabled: Boolean(item.disabled),
   });
 
@@ -220,13 +223,13 @@ function SidebarSections({
   sections,
   collapsed,
   currentId,
-  emphasis,
+  variant,
   label,
 }: {
   sections: SidebarSection[];
   collapsed: boolean;
   currentId?: string;
-  emphasis: SidebarEmphasis;
+  variant: SidebarVariant;
   label: string;
 }) {
   const start = sections.filter((section) => section.placement !== "end");
@@ -238,7 +241,7 @@ function SidebarSections({
           className={cn(
             "flex items-center gap-2 px-2 pb-1 text-xs font-semibold uppercase tracking-wide",
             index > 0 && "pt-3",
-            emphasis === "strong" ? "text-fg opacity-70" : "text-fg-subtle"
+            variant === "strong" ? "text-fg opacity-70" : "text-fg-subtle"
           )}
         >
           {section.icon ? <Icon icon={section.icon} size="xs" color="current" /> : null}
@@ -247,7 +250,7 @@ function SidebarSections({
       ) : index > 0 ? (
         <div role="none" className="mx-2 my-1 h-px bg-border" />
       ) : null}
-      <SidebarItems items={section.items} collapsed={collapsed} currentId={currentId} emphasis={emphasis} />
+      <SidebarItems items={section.items} collapsed={collapsed} currentId={currentId} variant={variant} />
     </div>
   );
   return (
@@ -264,12 +267,12 @@ function SidebarItems({
   items,
   collapsed,
   currentId,
-  emphasis,
+  variant,
 }: {
   items: SidebarItem[];
   collapsed: boolean;
   currentId?: string;
-  emphasis: SidebarEmphasis;
+  variant: SidebarVariant;
 }) {
   const groups = items.filter((item) => item.children && item.children.length > 0);
   const defaultOpen = groups.map((item) => item.id);
@@ -283,7 +286,7 @@ function SidebarItems({
           item={item}
           collapsed={collapsed}
           current={item.id === currentId}
-          emphasis={emphasis}
+          variant={variant}
         />
       ));
 
@@ -304,7 +307,7 @@ function SidebarItems({
                 value={group.id}
                 className={cn(
                   "rounded-control px-2 py-2",
-                  emphasis === "strong" && strongChromeClass
+                  variant === "strong" && strongChromeClass
                 )}
               >
                 <span className="flex items-center gap-2">
@@ -320,7 +323,7 @@ function SidebarItems({
                       item={child}
                       collapsed={collapsed}
                       current={child.id === currentId}
-                      emphasis={emphasis}
+                      variant={variant}
                     />
                   ))}
                 </div>
@@ -337,13 +340,13 @@ function SidebarNavList({
   sections,
   collapsed,
   currentId,
-  emphasis,
+  variant,
   label,
 }: {
   sections: SidebarSection[];
   collapsed: boolean;
   currentId?: string;
-  emphasis: SidebarEmphasis;
+  variant: SidebarVariant;
   label: string;
 }) {
   const [focusedIndex, setFocusedIndex] = useState(0);
@@ -366,7 +369,7 @@ function SidebarNavList({
         sections={sections}
         collapsed={collapsed}
         currentId={currentId}
-        emphasis={emphasis}
+        variant={variant}
         label={label}
       />
     </div>
@@ -390,7 +393,7 @@ function SidebarRoot({
   header,
   collapsedHeader,
   footer,
-  emphasis = "strong",
+  variant = "strong",
   className,
   ...props
 }: SidebarRootProps) {
@@ -420,7 +423,7 @@ function SidebarRoot({
         <Icon icon={Menu} size="sm" />
       </Button>
 
-      <aside data-layer="medium" className={cn(asideVariants({ collapsed, emphasis }), "overflow-hidden")}>
+      <aside data-layer="medium" className={cn(asideVariants({ collapsed, variant }), "overflow-hidden")}>
         {(collapsed ? collapsedHeader : header) ? (
           <div
             className={cn(
@@ -441,7 +444,7 @@ function SidebarRoot({
                 ? (labels?.expandSidebar ?? "Expand sidebar")
                 : (labels?.collapseSidebar ?? "Collapse sidebar")
             }
-            className={emphasis === "strong" ? strongChromeClass : undefined}
+            className={variant === "strong" ? strongChromeClass : undefined}
             onClick={toggleCollapsed}
           >
             <Icon icon={collapsed ? PanelLeftOpen : PanelLeftClose} size="sm" />
@@ -451,7 +454,7 @@ function SidebarRoot({
           sections={sections}
           collapsed={collapsed}
           currentId={currentId}
-          emphasis={emphasis}
+          variant={variant}
           label={navigationLabel}
         />
         {footer}
@@ -460,21 +463,21 @@ function SidebarRoot({
       <Drawer.Root open={mobileOpen} onOpenChange={setMobileOpen}>
         <Drawer.Content
           side="left"
-          className={cn("max-w-xs", drawerSurfaceClass[emphasis])}
+          className={cn("max-w-xs", drawerSurfaceClass[variant])}
         >
           <Drawer.Header className="!border-border-strong">
             {header ? <div className="min-w-0 flex-1">{header}</div> : null}
-            <Drawer.Title className={header ? "sr-only" : emphasis === "strong" ? "!text-fg" : undefined}>
+            <Drawer.Title className={header ? "sr-only" : variant === "strong" ? "!text-fg" : undefined}>
               {navigationLabel}
             </Drawer.Title>
-            <Drawer.CloseButton className={emphasis === "strong" ? strongChromeClass : undefined} />
+            <Drawer.CloseButton className={variant === "strong" ? strongChromeClass : undefined} />
           </Drawer.Header>
-          <Drawer.Body className={cn("p-0", emphasis === "strong" && "!text-fg")}>
+          <Drawer.Body className={cn("p-0", variant === "strong" && "!text-fg")}>
             <SidebarSections
               sections={sections}
               collapsed={false}
               currentId={currentId}
-              emphasis={emphasis}
+              variant={variant}
               label={navigationLabel}
             />
           </Drawer.Body>
