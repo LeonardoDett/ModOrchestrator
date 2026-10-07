@@ -5,6 +5,8 @@ import type { Mode, ThemeConfig } from "./engine";
 import { DEFAULT_PRESET } from "./presets";
 import { THEME_NAME_STORAGE_KEY, THEME_STORAGE_KEY } from "./get-theme-script";
 import { injectTheme, isKnownThemeId, resolveThemeInput } from "./inject";
+import { isDev } from "../dev/env";
+import { useBudgetGuard } from "../dev/budget";
 import { useIsomorphicLayoutEffect } from "../utils/use-isomorphic-layout-effect";
 import { EMPTY_REGISTRY, ThemeContext, ThemeScopeContext, themeInputKey, type ThemeMode } from "./theme-context";
 
@@ -152,6 +154,8 @@ export function ThemeProvider({
     apply();
     requestAnimationFrame(() => requestAnimationFrame(() => style.remove()));
   }, [mounted, resolvedMode, theme, targetSelector, disableTransitionOnChange]);
+
+  useBudgetGuard(isDev());
 
   const value = useMemo(
     () => ({ mode, resolvedMode, setMode, theme, setTheme }),

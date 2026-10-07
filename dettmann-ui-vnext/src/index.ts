@@ -4,6 +4,7 @@ export * from "./motion";
 export * from "./primitives";
 export * from "./components";
 export * from "./templates";
+export * from "./dev";
 export { cn } from "./utils/cn";
 export { createStrictContext, createOptionalContext } from "./utils/create-strict-context";
 export { mergeRefs, useMergedRef, composeRefs } from "./utils/merge-refs";
