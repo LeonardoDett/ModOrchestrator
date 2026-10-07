@@ -17,7 +17,7 @@ const statusToggleVariants = defineRecipe({
     ].join(" "),
     thumb: [
       "pointer-events-none flex shrink-0 items-center justify-center rounded-full bg-surface shadow-raised",
-      "transition-transform motion-transition",
+      "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
     ].join(" "),
     icon: "",
   },

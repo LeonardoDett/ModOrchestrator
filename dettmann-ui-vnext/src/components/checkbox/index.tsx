@@ -135,7 +135,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
         >
           <svg
             className={cn(
-              "h-3 w-3 text-current transition-transform motion-transition",
+              "h-3 w-3 text-current transition-transform duration-(--motion-duration) ease-(--motion-ease)",
               isChecked || indeterminate ? "scale-100" : "scale-0"
             )}
             viewBox="0 0 24 24"

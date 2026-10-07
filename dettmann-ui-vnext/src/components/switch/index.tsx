@@ -20,7 +20,7 @@ const switchVariants = defineRecipe({
     thumb: [
       "pointer-events-none block shrink-0 rounded-full bg-surface shadow-raised",
       "translate-x-0",
-      "transition-transform motion-transition",
+      "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
     ].join(" "),
     label: "text-sm text-fg select-none",
   },

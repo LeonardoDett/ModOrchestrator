@@ -8,7 +8,7 @@ import { useInputContext } from "./input.context";
 const inputLabelVariants = defineRecipe({
   base: [
     "text-sm font-medium text-fg",
-    "transition-all motion-transition",
+    "transition-all duration-(--motion-duration) ease-(--motion-ease)",
     "pointer-events-none",
   ].join(" "),
   variants: {

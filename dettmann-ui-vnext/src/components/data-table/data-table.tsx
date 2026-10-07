@@ -582,7 +582,7 @@ export function DataTable<T>({
           key={item.key}
           {...common}
           aria-expanded={!item.collapsed}
-          className={cn(rowVariants({ focused }), "cursor-pointer bg-structure hover:bg-structure")}
+          className={cn(rowVariants({ focused }), "cursor-pointer bg-structure hover:bg-state-hover")}
           style={{ ...gridStyle, height: rowHeight, ...style }}
           onClick={() => {
             moveFocus(item.key);

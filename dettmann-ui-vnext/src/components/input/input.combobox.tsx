@@ -307,7 +307,7 @@ export function InputCombobox({
       {/* Dropdown arrow */}
       <svg
         className={cn(
-          "h-4 w-4 shrink-0 text-fg-muted transition-transform motion-transition pointer-events-none",
+          "h-4 w-4 shrink-0 text-fg-muted transition-transform duration-(--motion-duration) ease-(--motion-ease) pointer-events-none",
           isOpen && "rotate-180"
         )}
         viewBox="0 0 24 24"

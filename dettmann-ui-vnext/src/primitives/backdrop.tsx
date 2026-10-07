@@ -23,9 +23,9 @@ const backdropVariants = defineRecipe({
     },
     /** Animation state */
     state: {
-      entering: "animate-in fade-in motion-transition",
+      entering: "animate-in fade-in [animation-duration:var(--motion-duration)]",
       entered: "",
-      exiting: "animate-out fade-out motion-transition",
+      exiting: "animate-out fade-out [animation-duration:var(--motion-duration)]",
       exited: "hidden",
     },
   },

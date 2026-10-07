@@ -12,7 +12,7 @@ const circleTrackVariants = defineRecipe({
 });
 
 const circleFillVariants = defineRecipe({
-  base: "stroke-tone transition-[stroke-dashoffset] motion-transition",
+  base: "stroke-tone transition-[stroke-dashoffset] duration-(--motion-duration) ease-(--motion-ease)",
 });
 
 interface ProgressRootProps extends ComponentPropsWithoutRef<"div"> {

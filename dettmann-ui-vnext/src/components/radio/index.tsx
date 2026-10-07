@@ -53,7 +53,7 @@ const radioVariants = defineRecipe({
     ].join(" "),
     indicator: [
       "rounded-full bg-tone",
-      "transition-transform motion-transition",
+      "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
       "scale-0 data-[state=checked]:scale-100",
     ].join(" "),
     label: "text-sm text-fg select-none",
