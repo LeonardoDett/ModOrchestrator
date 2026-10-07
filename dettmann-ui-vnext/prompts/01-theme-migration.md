@@ -1,6 +1,6 @@
 # Cursor Prompt — Theme migration
 
-Read the full Dettmann UI context and the theme-first skill.
+Read the full Dettmann UI context and the `skills/dettmann-ui-use/SKILL.md` skill.
 
 Migrate the application to the semantic theme contract:
 

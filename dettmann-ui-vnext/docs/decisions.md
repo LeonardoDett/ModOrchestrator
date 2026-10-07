@@ -110,7 +110,7 @@ Root prefixes use zero-specificity `:where(:root)` and `:where(.dark, [data-ui-m
 
 ## D-024 — Component adaptation
 
-`Button` drops `variant`/`tone` for `emphasis`, `intent` and `motion`; `Badge`/`Tag` use `emphasis` and `intent`. Non-color transitions keep their property utility with `duration-(--motion-duration) ease-(--motion-ease)` instead of `motion-transition`. `theme:lint` scans only `components`, `templates` and `primitives` and ignores tests. The jsdom pointer-capture polyfill lives in the test setup.
+`Button` drops `variant`/`tone` for `emphasis`, `intent` and `motion`; `Badge` uses `emphasis` and `intent`; `Tag` only swaps `tone` for `intent` (no `emphasis`, no `variant`). Non-color transitions keep their property utility with `duration-(--motion-duration) ease-(--motion-ease)` instead of `motion-transition`. `theme:lint` scans only `components`, `templates` and `primitives` and ignores tests. The jsdom pointer-capture polyfill lives in the test setup.
 
 ## D-025 — Playground and skills
 

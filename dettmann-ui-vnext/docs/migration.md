@@ -12,7 +12,7 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 
 - `culori`, `themes.css`, `theme-inputs`, `ThemeInputs` (hue/chroma), `tone.ts`, `data-tone`, `toneData()`, `TONES`/`Tone`.
 - The whole `secondary-*` family and the `primary-*` / `brand-*` utilities (replaced by emphasis roles).
-- Button `variant` and `tone`; Badge/Tag `variant` and `tone`.
+- Button `variant` and `tone`; Badge `variant` and `tone`; Tag `tone`.
 
 ## Theme API
 
@@ -64,12 +64,13 @@ Component props:
 |---|---|
 | `tone?: Tone` (Alert, Avatar, Checkbox, FeaturedIcon, Indicator, Progress, Radio, Slider, StatusToggle, Switch, Spinner, Icon, Typography) | `intent?: Intent`; map `primary` → `brand`, `secondary` → `neutral`, others unchanged |
 | `<Button variant tone>` | `<Button emphasis intent motion>`; default `emphasis="medium"`; `variant="link"` → `emphasis="low"` |
-| `<Badge variant="solid\|soft\|outline" tone>` / `<Tag ...>` | `emphasis="high\|medium\|low"` and `intent` |
+| `<Badge variant="solid\|soft\|outline" tone>` | `emphasis="high\|medium\|low"` and `intent` |
+| `<Tag tone>` | `<Tag intent>` (Tag has no `emphasis` or `variant`) |
 
 ## Business rules of the new contract
 
 - At most one `emphasis="high"` per region (`Toolbar`, `ActionBar`, modal footer, page actions); the rest is `medium` (default) or `low`. Dev builds warn.
-- Do not pick colors in a screen: use roles (`bg-surface`, `text-fg-muted`) or `intent=`. `npm run theme:lint` rejects hex, `rgb()`/`hsl()`, raw palette (`bg-red-500`) and the removed utilities.
+- Do not pick colors in a screen: use roles (`bg-surface`, `text-fg-muted`) or `intent=`. `npm run theme:lint` (scans `components`, `templates`, `primitives`; tests ignored) blocks: hex literals, `rgb()`/`rgba()`/`hsl()`/`hsla()`/`oklch()`/`oklab()` literals, `bg/text/border-black|white`, the raw Tailwind palette (`bg-red-500`), `tone`/`primary`/`secondary` color utilities (`bg-tone`, `text-primary-text`...) and `data-tone`. It does not catch the removed neutral tokens (`bg-page`, `bg-muted`, `shadow-md`, `rounded-lg`...): use the grep in the checklist below.
 - Motion comes from emphasis; use `MotionScope`/`motion=` only to deviate.
 
 ## Checking a migrated screen

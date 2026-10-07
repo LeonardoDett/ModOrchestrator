@@ -8,10 +8,9 @@ Read:
 2. `docs/ai-contract.md`
 3. `docs/decisions.md`
 4. `docs/anti-patterns.md`
-5. `.cursor/skills/dettmann-ui/theme-first/SKILL.md`
-6. `.cursor/skills/dettmann-ui/composition/SKILL.md`
-7. `.cursor/skills/dettmann-ui/component-authoring/SKILL.md`
-8. `.cursor/skills/dettmann-ui/ui-review/SKILL.md`
+5. `skills/dettmann-ui-use/SKILL.md`
+6. `skills/dettmann-ui-author/SKILL.md`
+7. `skills/dettmann-ui-improve/SKILL.md`
 
 Review every changed UI file.
 

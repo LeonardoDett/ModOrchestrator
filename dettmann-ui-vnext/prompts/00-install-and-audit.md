@@ -8,9 +8,8 @@ Before writing code, read in order:
 2. `dettmann-ui/docs/ai-contract.md`
 3. `dettmann-ui/docs/decisions.md`
 4. `dettmann-ui/docs/anti-patterns.md`
-5. `.cursor/skills/dettmann-ui/theme-first/SKILL.md`
-6. `.cursor/skills/dettmann-ui/composition/SKILL.md`
-7. `.cursor/skills/dettmann-ui/component-authoring/SKILL.md`
+5. `skills/dettmann-ui-use/SKILL.md`
+6. `skills/dettmann-ui-author/SKILL.md`
 
 Task:
 

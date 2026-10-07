@@ -95,7 +95,7 @@ Levels `calm`, `responsive`, `expressive` come from emphasis and are capped by t
 
 ## Budget
 
-In development, regions marked `data-budget-region` warn when they hold more than one visible `high` element, and `<BudgetInspector />` shows the painted share of low/medium/high against 60/30/10. `npm run theme:lint` blocks raw colors in components.
+In development, regions marked `data-budget-region` warn when they hold more than one visible `high` element, and `<BudgetInspector />` shows the painted share of low/medium/high against 60/30/10. `npm run theme:lint` blocks, in `components`, `templates` and `primitives`: hex and `rgb()`/`hsl()`/`oklch()` literals, `black`/`white` and raw Tailwind palette colors, `tone`/`primary`/`secondary` utilities and `data-tone`. Removed neutral tokens are not linted; use the grep in `docs/migration.md`.
 
 ## Playground
 
