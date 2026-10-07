@@ -30,8 +30,12 @@ Regiões: `Modal.Footer`, `Toolbar`, `ActionBar`, ações do `ResourcePage`
 ## Intent
 
 Valores válidos, só estes: `neutral` (padrão) · `brand` · `accent` · `info` ·
-`success` · `warning` · `danger`. Não existem `primary`, `secondary`, `error`,
-`tone`, `variant="destructive"` (nomes da v1 ou de outras libs) — erro de tipo.
+`success` · `warning` · `danger`. Em `intent` não existem `primary`, `secondary`,
+`error`, `tone`, `variant="destructive"` (nomes da v1 ou de outras libs) — erro de tipo.
+Ainda restam props legadas, pendentes do subprojeto 3: o `variant` do `Alert`
+(`default|info|success|warning|danger`; prefira `intent`, que o sobrepõe) e as
+props `bg`/`color` de `Box` e `color` de `Divider` (aceitam `primary`/`secondary`).
+Não as use em código novo: pinte com `intent`, `Surface` e papéis (`bg-surface`...).
 
 - Status (`info/success/warning/danger`) só para **significado** (estado, risco,
   variação). Nunca para "dar cor" à tela.

@@ -46,7 +46,7 @@ Each text/fill role is solved to the first value that reaches its target. Second
 - Status colors (info, success, warning, danger) follow the brand lightness but are searched over hue +-40, L and C so they stay at deltaE >= 0.08 from the brand and from each other. Base lightness is clamped to .45-.85 (light) and .65-.82 (dark), so very dark or very light brands drift from their own lightness. Warning keeps a chroma floor of .15 (gamut-capped) so it never turns ochre.
 - In light mode a failing fill keeps polarity (darkens toward the light on-color); a seed that already passes is kept as is.
 - Achromatic brands (gray, black, white) produce a valid theme: undefined hue never reaches the CSS as `NaN`.
-- `contrastReport(theme)` lists every pair with its measured ratio; a missing or unparseable role is reported as a failure, not skipped.
+- `contrastReport(roles, contrast)` (roles of one mode, e.g. `theme.light`, and the contrast level, e.g. `theme.config.contrast`) lists every pair with its measured ratio; a missing or unparseable role is reported as a failure, not skipped.
 
 `npm run theme:check` runs these properties for every preset and for randomized brands.
 
