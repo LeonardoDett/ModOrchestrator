@@ -1,0 +1,3 @@
+/* Ponte da lib + as fontes do próprio playground (fora de src/) para o Tailwind. */
+@import "../src/theme/tokens.css";
+@source "./";
