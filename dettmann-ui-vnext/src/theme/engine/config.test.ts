@@ -70,3 +70,14 @@ test.each([`x"]{}*{display:none}[a="`, "", "Mine", "-a", "a b"])("unsafe id %j t
   }
 });
 test("safe id is accepted", () => expect(normalizeConfig({ ...base, id: "mine-2" }).id).toBe("mine-2"));
+
+test.each(["sans", "mono"] as const)("font.%s rejects CSS injection", (key) => {
+  const bad = 'Inter"; } * { display:none } a{"';
+  expect(() => normalizeConfig({ ...base, font: { [key]: bad } })).toThrow(ThemeConfigError);
+  expect(() => normalizeConfig({ ...base, font: { [key]: bad } })).toThrow(new RegExp(`font\.${key}`));
+});
+test("font families with spaces are accepted", () =>
+  expect(normalizeConfig({ ...base, font: { sans: "Plus Jakarta Sans", mono: "JetBrains Mono" } }).font).toEqual({
+    sans: "Plus Jakarta Sans",
+    mono: "JetBrains Mono",
+  }));

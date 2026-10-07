@@ -26,6 +26,9 @@ function show(value: unknown): string {
 
 const THEME_ID = /^[a-z0-9][a-z0-9_-]*$/;
 
+// Família de fonte vai para CSS; sem aspas, chaves ou ponto e vírgula.
+const FONT_FAMILY = /^[\w .-]+$/;
+
 const COLOR_HINT = "a CSS color: hex, rgb(), hsl() or oklch()";
 
 function color(field: string, value: unknown): Oklch {
@@ -93,6 +96,12 @@ export function normalizeConfig(config: ThemeConfig, opts: { mode?: "dev" | "pro
   const vibrance = config.vibrance ?? 0.5;
   if (typeof vibrance !== "number" || !Number.isFinite(vibrance) || vibrance < 0 || vibrance > 1)
     throw new ThemeConfigError("vibrance", vibrance, "a number in [0, 1]");
+  const sans = config.font?.sans ?? "Plus Jakarta Sans";
+  const mono = config.font?.mono ?? "JetBrains Mono";
+  if (typeof sans !== "string" || !FONT_FAMILY.test(sans))
+    throw new ThemeConfigError("font.sans", sans, "a font family name (letters, digits, spaces, '.', '-', '_')");
+  if (typeof mono !== "string" || !FONT_FAMILY.test(mono))
+    throw new ThemeConfigError("font.mono", mono, "a font family name (letters, digits, spaces, '.', '-', '_')");
   return {
     id: config.id,
     label: config.label,
@@ -104,7 +113,7 @@ export function normalizeConfig(config: ThemeConfig, opts: { mode?: "dev" | "pro
     shape: oneOf("shape", config.shape, ["precise", "balanced", "soft"], "balanced"),
     density: oneOf("density", config.density, ["compact", "comfortable", "spacious"], "comfortable"),
     motion: motion(config.motion, mode),
-    font: { sans: config.font?.sans ?? "Plus Jakarta Sans", mono: config.font?.mono ?? "JetBrains Mono" },
+    font: { sans, mono },
     overrides: overrides(config.overrides),
   };
 }
