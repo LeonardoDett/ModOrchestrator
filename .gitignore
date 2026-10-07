@@ -20,5 +20,6 @@ dettmann-ui-v1/coverage/
 dettmann-ui-v1/*.tsbuildinfo
 
 # Local tooling
-.claude/
+.claude/*
+!.claude/skills/
 *.log

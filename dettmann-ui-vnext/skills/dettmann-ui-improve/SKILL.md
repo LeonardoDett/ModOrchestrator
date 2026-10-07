@@ -15,7 +15,7 @@ movimento) estão em `dettmann-ui-use`; regras internas da lib em
 **Somente leitura.** Use Read/Grep/Glob e comandos que não escrevem (`rg`,
 `git diff`, `npm run typecheck`). Proibido: Edit/Write em código, `--fix`,
 `vitest -u`, `theme:build`, formatadores. Se o usuário pedir a correção, isso é
-outra tarefa, depois do relatório.
+outra tarefa, depois do relatório. Mesmo que peçam para corrigir agora, entregue o relatório primeiro.
 
 ## Direção
 
@@ -38,7 +38,8 @@ outra tarefa, depois do relatório.
 ## Heurísticas A — tela (consumidor ou componente da lib)
 
 Buscas (regex estendida: mesma sintaxe na ferramenta Grep, `rg -n` ou
-`grep -rnE`; `ALVO` = arquivos/pasta auditados):
+`grep -rnE`; `ALVO` = arquivos/pasta auditados). Restrinja a `--include='*.tsx' --exclude='*.test.*'`
+e pule fixtures (`skills/**/fixtures`, `__fixtures__`):
 
 ```bash
 grep -rnE '#[0-9a-fA-F]{3,8}\b|\b(rgba?|hsla?|oklch|oklab)\(' ALVO                # 1 cor crua
@@ -59,7 +60,7 @@ grep -rnE 'opacity-(40|50|60)' ALVO                                             
 | # | Achado | Confirme lendo | Correção a citar |
 |---|---|---|---|
 | 1 | Cor crua / paleta Tailwind | não é comentário nem `aria-label` | papel (`bg-surface`, `bg-raised`, `text-fg-muted`, `border-border`) ou `intent=` |
-| 2 | Valor arbitrário (`bg-[#…]`, `rounded-[10px]`, `p-[13px]`, `[animation-duration:…]`), raio/sombra genéricos | — | `rounded-control/chip/card/panel/pill`, `h-control-sm/md/lg`, `shadow-raised/overlay/modal`, ou o slot (`Card.Root`) que já traz a superfície |
+| 2 | Valor arbitrário (`bg-[#…]`, `rounded-[10px]`, `p-[13px]`, `[animation-duration:…]`), raio/sombra genéricos | variantes (`data-[`, `aria-[`, `has-[`, `[&`) e tamanhos de layout intencionais não contam; `rounded-full` é válido para círculos de verdade | `rounded-control/chip/card/panel/pill`, `h-control-sm/md/lg`, `shadow-raised/overlay/modal`, ou o slot (`Card.Root`) que já traz a superfície |
 | 3 | Duração/transição/keyframe manual | — | `motion-transition` / `motion-press`; entrada/saída `Presence`; gesto `animate()`; giro `Spinner` |
 | 4 | Mais de um `emphasis="high"` | mesma `Toolbar`/`ActionBar`/`Modal.Footer`/ações de `ResourcePage`/mesmo container | um `high`; demais `medium` (omitir) ou `low` |
 | 5 | Lista que adiciona/remove itens sem `Presence` | o `.map` renderiza a lista alterada | `<Presence show>` por item |

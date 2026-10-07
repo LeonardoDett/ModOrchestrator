@@ -2,20 +2,18 @@
 
 A long-lived React UI foundation built around **theme-first**, **composition-first** and **logic/UI separation**.
 
-## What changed
+## What is new in v2
 
-The previous package optimized strongly for having many components, but its color system and component styling were still making local decisions. This release changes the architecture so the system's visual intent is decided before components consume it.
+v2 is a breaking release (no aliases). The app keeps using `dettmann-ui-v1` until the migration subproject; see `docs/migration.md`.
 
-### Theme first
+- **Themes from seeds.** One brand color plus personality knobs; a pure TypeScript engine (own OKLCH math, contrast solver) generates light and dark, at build time for presets and at runtime for custom themes.
+- **Emphasis x intent.** `emphasis` (low/medium/high = 60/30/10) says how loud, `intent` says what it means. The `secondary` family is gone.
+- **Motion that follows emphasis.** Three spring levels, tunable as data, honoring reduced motion.
+- **Budget tooling.** Dev-only guards and an inspector measure the 60/30/10 split.
+- **Playground and skills.** A local app for tuning themes and three AI skills.
+- **Defaults.** `balanced` shape, Plus Jakarta Sans + JetBrains Mono, expressive motion ceiling.
 
-- direct semantic light/dark theme definitions;
-- explicit canvas / structure / brand hierarchy;
-- 60/30/10 used as a visual budget;
-- semantic aliases instead of raw color steps;
-- runtime semantic overrides;
-- no generated hue/chroma palette guessing.
-
-### Composition first
+## Composition first
 
 - internal recipe/slot engine;
 - reusable `Stack`, `Inline`, `Surface` primitives;
@@ -23,7 +21,7 @@ The previous package optimized strongly for having many components, but its colo
 - templates separated from business logic;
 - controlled and uncontrolled state where the behavior is meaningful.
 
-### Domain-ready foundations
+## Domain-ready foundations
 
 New generic building blocks cover workflows that need dense, inspectable interfaces:
 
@@ -50,44 +48,77 @@ These remain domain-neutral. The Mod Orchestrator owns mod/conflict/plugin/deplo
 
 The interaction and visual direction borrows from Microsoft's Fluent 2: semantic design tokens, restrained color usage, a 4 px spacing rhythm, whitespace as hierarchy, predictable focus management and accessible interaction states. See `docs/fluent-reference.md`.
 
-## Installation
-
-The package remains importable from the root entry point:
+## Install
 
 ```tsx
-import { ThemeProvider, Button, FileBrowser } from "dettmann-ui";
+import { ThemeProvider, Button } from "dettmann-ui";
 ```
 
-Load the library CSS once:
+Load the library CSS once (Tailwind v4 bridge, includes the generated presets and fonts):
 
 ```css
 @import "dettmann-ui/theme.css";
 ```
 
+`dettmann-ui/styles.css` is the prebuilt `dist/index.css` for consumers without Tailwind.
+
 ## Theme
 
 ```tsx
-<ThemeProvider defaultTheme="forest" defaultMode="dark">
-  {children}
-</ThemeProvider>
+// preset
+<ThemeProvider defaultTheme="orchestrator" defaultMode="dark">{children}</ThemeProvider>
+
+// your own, from a seed
+import { createTheme, type ThemeConfig } from "dettmann-ui";
+const acme: ThemeConfig = { id: "acme", label: "Acme", brand: "#7c3aed", neutral: "cool", shape: "soft" };
+<ThemeProvider theme={acme}>{children}</ThemeProvider>
+
+// a subtree with another theme, mode, density or motion
+<ThemeScope theme="ember" mode="light" density="compact">...</ThemeScope>
 ```
 
-Theme source of truth:
+Presets: `forest` (default), `graphite`, `orchestrator`, `ember`, `ink` (`PRESETS`). Only `brand` is required; `accent`, `neutral`, `vibrance`, `contrast`, `shape`, `density`, `motion`, `font` and per-role `overrides` are optional. `createTheme(config)` is pure and `contrastReport()` lists the measured pairs. Details: `docs/theme-system.md`.
 
-`src/styles/theme/themes.css`
+## Emphasis x intent
 
-Runtime theme overrides are explicit semantic values; color families are complete rather than guessed from a single base color.
+```tsx
+<Button emphasis="high">Deploy</Button>                 {/* brand fill, expressive */}
+<Button>Cancel</Button>                                  {/* medium neutral, responsive */}
+<Button emphasis="low" intent="danger">Remove</Button>   {/* danger text, calm */}
+```
 
-Theme metadata:
+One `high` per region. Structural components are `medium`. Use roles (`bg-surface`, `text-fg-muted`, `bg-intent-fill`), never raw colors. See `docs/architecture.md`.
 
-`src/theme/theme-definitions.ts`
+## Motion
 
-## Cursor workflow
+Levels `calm`, `responsive`, `expressive` come from emphasis and are capped by the theme (`motion: { ceiling, tune }`). Adjust a region with `<MotionScope level tune>` or an element with `motion=`. Primitives: `animate()`, `<Presence>`, `useFlip()`, `useMotion()`. Reduced motion (OS setting or `:root[data-reduce-motion="true"]`) turns movement into short fades.
 
-Start with `.cursor/skills/dettmann-ui/theme-first/SKILL.md`, then `composition/SKILL.md`, then `component-authoring/SKILL.md`.
+## Budget
 
-Use the prompts in `prompts/` when asking Cursor to migrate an application or build the Mod Orchestrator.
+In development, regions marked `data-budget-region` warn when they hold more than one visible `high` element, and `<BudgetInspector />` shows the painted share of low/medium/high against 60/30/10. `npm run theme:lint` blocks raw colors in components.
 
-## Refactor evidence
+## Playground
 
-See `REFACTOR_REPORT.md` for architectural changes and verification performed during this rebuild.
+```bash
+npm run playground
+```
+
+Edit every knob, compare light and dark, inspect ramps and contrast, try the motion levels, and export the config as code.
+
+## Skills
+
+`skills/` holds `dettmann-ui-use` (building screens), `dettmann-ui-author` (changing the library) and `dettmann-ui-improve` (read-only audit). Install them into a project with:
+
+```bash
+npm run skills:install -- <target-folder>
+```
+
+which copies them to `<target>/.claude/skills` and `<target>/.cursor/skills`.
+
+## Scripts
+
+`npm run typecheck`, `npm test -- --run`, `npm run theme` (build + check + lint presets), `npm run build`.
+
+## Reference philosophy
+
+Interaction and visual direction borrow from Microsoft's Fluent 2: semantic tokens, restrained color, a 4 px rhythm, whitespace as hierarchy, predictable focus and accessible states. See `docs/fluent-reference.md`.

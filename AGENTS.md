@@ -9,11 +9,12 @@ Projeto (spec):
 - `mod-orchestrator-spec-v2/skills/consult-ai-docs/SKILL.md` — antes de implementar.
 - `mod-orchestrator-spec-v2/skills/maintain-ai-docs/SKILL.md` — ao mudar contrato/decisão.
 
-UI (dettmann-ui), para qualquer trabalho em `frontend/`:
-- `dettmann-ui-vnext/.cursor/skills/dettmann-ui/theme-first/SKILL.md`
-- `dettmann-ui-vnext/.cursor/skills/dettmann-ui/composition/SKILL.md`
-- `dettmann-ui-vnext/.cursor/skills/dettmann-ui/component-authoring/SKILL.md`
-- `dettmann-ui-vnext/.cursor/skills/dettmann-ui/ui-review/SKILL.md` — antes de concluir uma tela.
+UI (dettmann-ui v2), para qualquer trabalho em `frontend/`:
+- `.claude/skills/dettmann-ui-use/SKILL.md` — construir ou alterar telas.
+- `.claude/skills/dettmann-ui-author/SKILL.md` — criar ou alterar componentes e a própria lib.
+- `.claude/skills/dettmann-ui-improve/SKILL.md` — auditoria somente leitura, antes de concluir uma tela.
+
+O `frontend/` usa `dettmann-ui-v1` até o subprojeto 4 (migração para a v2); as skills acima descrevem a v2.
 
 ## Regras de código
 

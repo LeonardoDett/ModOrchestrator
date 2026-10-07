@@ -790,3 +790,12 @@ Status: proposta (aguarda confirmação do usuário)
 7. **Multi-seleção de Plugins** aparece com ≥ 2 selecionados (ui/00 §2.6), como em Mods; as duas usam o `ActionBar` da lib.
 8. **"Nenhum resultado"** em tabela filtrada (Mods, Plugins, Conflicts) sempre oferece "Limpar filtros".
 9. **Textos pt-BR**: "profile" virou "perfil" em todo o catálogo (glossário: `Profile` → Perfil); "Backend offline" → "Backend desconectado"; "Auto-sort" → "Ordenação automática". Termos mantidos em inglês por serem do domínio de modding: Deploy, Purge, Mod, Plugin, Load order, Staging, Master, Light, Flags.
+
+## D095 — Adoção da dettmann-ui v2 (fundação)
+Status: vigente (executa D016)
+
+1. **v2 com ruptura**: sem camada de aliases para tokens, `data-tone` ou `variant`/`tone` do Button. A fundação (motor de tema por sementes, contrato `emphasis × intent`, movimento, orçamento 60/30/10, playground) vive em `dettmann-ui-vnext/`; decisões detalhadas em `dettmann-ui-vnext/docs/decisions.md` (D-011 em diante).
+2. **App congelado em `dettmann-ui-v1`** até o subprojeto 4 (migração do `frontend/`). Até lá, nenhuma tela usa a v2; as tabelas de substituição estão em `dettmann-ui-vnext/docs/migration.md`.
+3. **Quatro subprojetos**: (1) fundação (motor de temas, contrato de ênfase, primitivas; concluída), (2) ícones animados, (3) revisão dos componentes com personalidade e micro-interações, (4) integração no Mod Orchestrator (migração do `frontend/`).
+4. **Skills novas** `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (instaladas em `.claude/skills` e `.cursor/skills` por `npm run skills:install`) substituem as skills `theme-first`, `composition`, `component-authoring` e `ui-review`; o `AGENTS.md` aponta para elas.
+5. **Escolhas de design do usuário**: forma `balanced` (controle 8, card 12, painel 16 px); movimento `expressive` com intensidade por ênfase (menu responsivo, CTA expressivo); tipografia Plus Jakarta Sans + JetBrains Mono; tema por sementes + botões de personalidade (com `overrides` por papel como válvula de escape); família `secondary` removida (a estrutura vem de neutros tingidos pela marca).

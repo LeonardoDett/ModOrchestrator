@@ -6,6 +6,10 @@
 @import "tailwindcss";
 @source "../";
 @source "../../src/**/*.{ts,tsx}";
+/* A lib não escaneia os próprios docs, skills e playground (fixtures/markdown vazariam classes para dist). */
+@source not "../../docs";
+@source not "../../skills";
+@source not "../../playground";
 /*
  * Safelist da ponte: todo utilitário de papel, intent, estado e primitiva é
  * emitido mesmo sem consumidor em src (o app consome dist/index.css).

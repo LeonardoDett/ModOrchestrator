@@ -1,53 +1,67 @@
-# Dettmann UI vNext — Architecture
+# Dettmann UI v2 — Architecture
 
 ## Goal
 
-Dettmann UI is a long-lived foundation for applications that need both calm SaaS interfaces and information-dense desktop workspaces. It should remain useful across products without importing product business semantics into the library.
+A long-lived React UI foundation for calm SaaS interfaces and information-dense desktop workspaces, with no product business semantics. Design intent is decided once, by the theme and the emphasis contract, and components only consume it.
 
-## Layers
+## Four layers
 
 ```text
-Theme source
-    ↓
-Foundation tokens
-    ↓
-Semantic aliases
-    ↓
-Recipe engine
-    ↓
-Primitives
-    ↓
-Components
-    ↓
-Templates / compositions
-    ↓
-Product screens
+L0  ThemeConfig        brand seed + personality knobs (the only input)
+ ↓  engine (pure TS: OKLCH math, contrast solver)
+L1  Ramps              brand, accent, tinted neutrals, statuses
+L2  Primitives         shape, density, typography, elevation, motion
+L3  Semantic roles     --ui-* variables → Tailwind utilities (bg-surface, text-fg-muted, bg-intent-fill)
+ ↓
+Recipes / primitives → Components → Templates → Product screens
 ```
 
-### Theme source
+The engine (`src/theme/engine`) is shared by the build (`npm run theme:build` renders presets) and the runtime (`ThemeProvider`/`ThemeScope` resolve custom configs). `src/theme/tokens.css` is the Tailwind v4 bridge; its `@source` entries scan only `src`, with `@source not` for the lib's own `docs`, `skills` and `playground` so fixture classes do not leak into `dist/index.css`. Consumers keep auto-detection of their own sources.
 
-`src/styles/theme/themes.css` is the visual source of truth. Themes explicitly define light and dark semantic values. The old hue/chroma generation model was removed because the relationship between roles is a design decision, not something a generic luminance curve can reliably infer.
+## Emphasis contract (60/30/10)
 
-### Foundation tokens
+Two axes, resolved by one table (`src/theme/emphasis.ts`, `resolveEmphasis`):
 
-Spacing follows a 4 px base rhythm, with additional values for interaction targets and alignment. Motion durations and easing live in the same foundation layer, and reduced-motion preferences collapse animation durations globally.
+- `emphasis`: `low` (60%) / `medium` (30%) / `high` (10%): how loudly the element asks for attention.
+- `intent`: `neutral` (default), `brand`, `accent`, `info`, `success`, `warning`, `danger`: what it means.
 
-### Semantic aliases
+`emphasis="high"` without an explicit intent means `brand`. The resolution yields color classes, the default motion level and `data-layer`. Components never pick colors locally.
 
-Components consume concepts such as `surface`, `structure`, `brand`, `fg`, `border` and `ring`. They do not choose raw palette values.
+| emphasis | default motion | data-layer |
+|---|---|---|
+| high | expressive | high |
+| medium | responsive | medium |
+| low | calm | low |
 
-### Recipe engine
+Structural components (Sidebar, Navbar, AppShell, Toolbar, Tabs, table headers) are born `medium`. Only what is marked `high` uses the brand fill.
 
-`src/core/recipe` provides variants, defaults, compound variants and slots without shipping `tailwind-variants` at runtime. `src/core/styles/cn` replaces the tiny `clsx` use case with a local class-value flattener.
+## Budget tooling (dev only, removed in production)
 
-### Composition
+- `data-budget-region` on Toolbar, ActionBar, Modal footer and ResourcePage actions: more than one visible `high` element in a region logs a `console.warn` (`useBudgetGuard`).
+- `<BudgetInspector />` samples the visible DOM by `data-layer` and reports low/medium/high area share against the 60/30/10 target (default tolerance +-8 pp for low and medium, <= 12% for high), with an optional heatmap. `sampleLayers`, `summarizeLayers` and `budgetVerdict` are exported for tests.
+- `npm run theme:lint` forbids hex, `rgb()`/`hsl()` literals, raw Tailwind palette colors and removed v1 utilities in `components`, `templates` and `primitives` (tests ignored).
 
-Composition is structural. Complex interactions should be built from parts that can also be used independently: a toolbar, tree, list, inspector, split pane, command surface or overlay should not require the rest of a product to exist.
+## Motion
 
-### Logic and UI
+Three levels: `calm`, `responsive`, `expressive`. Each is a `MotionSpec` (spring stiffness/damping/mass, duration, amplitude, pressScale, stagger) emitted as CSS variables; the spring is simulated and sampled into a CSS `linear()` easing plus its settle duration.
 
-State and interaction belong at the component boundary or in hooks. Rendering remains declarative. Templates orchestrate components but do not own product data or persistence.
+- Effective level = `min(context level, theme ceiling)`, exposed as `data-motion` so plain CSS inherits it.
+- Fine tuning is data, at three levels: theme (`motion.tune`), region (`<MotionScope level tune>`) and instance (`motion` prop).
+- Primitives: `animate()` (WAAPI), `<Presence>`, `useFlip()`, `useMotion()`, `readMotion()`.
+- Reduced motion is honored both by the media query and by `:root[data-reduce-motion="true"]` (the app setting): displacement, bounce and scale become fade/color with a short duration; state feedback is never removed.
 
-### Domain neutrality
+## Layering inside the package
 
-The library deliberately does not know what a "mod", "conflict", "deployment plan", "plugin" or "load order" is. It supplies generic information-management primitives so the Mod Orchestrator can define those concepts in its own domain layer.
+`theme` (engine, runtime, emphasis) ← `motion` ← `primitives` ← `components` ← `templates`. `dev` (budget) hooks into the provider. Recipes live in `src/core/recipe`; `cn` replaces `clsx`; Floating UI handles anchored positioning; TanStack Virtual handles large lists.
+
+## Composition and logic
+
+Composition is structural: complex surfaces are built from parts usable on their own. State and interaction live at the component boundary or in hooks; templates orchestrate components but own no product data.
+
+## Domain neutrality
+
+The library knows nothing about mods, conflicts, deployment plans, plugins or load order. It supplies tables, trees, lists, inspectors, reorderable lists, dialogs and navigation so products express those concepts in their own domain layer.
+
+## Playground and skills
+
+`npm run playground` is the local Vite app for tuning themes (see README). The three skills in `skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`) are the AI-facing contract; `npm run skills:install -- <target>` copies them to `.claude/skills` and `.cursor/skills` of a project.
