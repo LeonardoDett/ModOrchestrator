@@ -72,7 +72,7 @@ The dark stack is intentionally lifted (canvas ~.19, surface ~.225, raised ~.26)
 
 - A `ThemeConfig` that is not a preset is resolved at runtime and injected into a managed `<style>`. Switching replaces it (no accumulation) and a scope never leaks into another. Pass `themes={{ id: config }}` to register your own ids for `useTheme().setTheme(id)`.
 - A saved theme id that no longer exists falls back to the default; blocked `localStorage` and missing `window` are no-ops. Storage is read with `useSyncExternalStore`, so the first commit is already correct.
-- `ThemeScope` always emits `data-theme` and `data-motion`; `data-ui-mode` appears when the scope or an ancestor forces a mode. Overlays rendered in portals keep the scope (and the motion tune).
+- `ThemeScope` always emits `data-theme` and `data-motion`; `data-ui-mode` appears when the scope or an ancestor forces a mode. `data-density` likewise appears when the scope or an ancestor sets a density (a nested scope re-emits `data-theme`, so it re-emits the density too); `[data-theme][data-density]` outranks the theme rule on the same node, including runtime-injected themes. Overlays rendered in portals keep the scope (and the motion tune).
 - `getThemeScript()` applies mode and theme before first paint.
 
 ## Overrides

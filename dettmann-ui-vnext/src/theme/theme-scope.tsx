@@ -23,7 +23,8 @@ export interface ThemeScopeProps {
  * Subárvore com outro tema, modo, densidade ou movimento. Sempre emite `data-theme`
  * (o próprio ou o herdado) e `data-motion`. `data-ui-mode` sai quando este escopo ou um
  * ancestral força um modo (o próprio vence): um escopo aninhado numa ilha clara sob
- * `.dark` continua claro. `data-density` só quando definido. Configs não-preset são
+ * `.dark` continua claro. `data-density` sai quando este escopo ou um ancestral a define
+ * (reemitida porque o `data-theme` reemitido traria a densidade do tema). Configs não-preset são
  * injetadas como `<style>`. Reprovê `MotionContext` com o nível efetivo (sem o `tune`
  * do escopo de fora: o `data-motion` deste escopo volta às variáveis do seu tema).
  */
@@ -60,7 +61,7 @@ export function ThemeScope({ theme: themeProp, mode, density, motion, className,
         <div
           data-theme={theme.id}
           data-ui-mode={forcedMode}
-          data-density={density}
+          data-density={scopeDensity}
           data-motion={level}
           className={className}
         >

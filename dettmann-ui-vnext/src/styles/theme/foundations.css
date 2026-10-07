@@ -18,22 +18,32 @@
   --ui-container-2xl: 1440px;
 }
 
-/* Densidade (spec 6.2): aplicável à raiz ou a qualquer região. */
-[data-density="compact"] {
+/*
+ * Densidade (spec 6.2): aplicável à raiz ou a qualquer região. Os seletores
+ * compostos (0,2,0) vencem `[data-theme="id"]` no mesmo nó, inclusive o <style>
+ * de temas de runtime, injetado depois deste arquivo.
+ */
+[data-density="compact"],
+[data-theme][data-density="compact"],
+:root[data-density="compact"] {
   --ui-density-scale: 0.875;
   --ui-control-sm: 28px;
   --ui-control-md: 32px;
   --ui-control-lg: 36px;
 }
 
-[data-density="comfortable"] {
+[data-density="comfortable"],
+[data-theme][data-density="comfortable"],
+:root[data-density="comfortable"] {
   --ui-density-scale: 1;
   --ui-control-sm: 32px;
   --ui-control-md: 36px;
   --ui-control-lg: 40px;
 }
 
-[data-density="spacious"] {
+[data-density="spacious"],
+[data-theme][data-density="spacious"],
+:root[data-density="spacious"] {
   --ui-density-scale: 1.125;
   --ui-control-sm: 36px;
   --ui-control-md: 40px;
