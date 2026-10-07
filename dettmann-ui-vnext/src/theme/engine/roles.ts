@@ -124,7 +124,7 @@ function tint(base: Oklch, h: number, c: number): Oklch {
 
 const SURFACE_L: Record<Mode, Record<"canvas" | "surface" | "raised" | "sunken" | "structure", number>> = {
   light: { canvas: 0.975, surface: 0.995, raised: 0.995, sunken: 0.955, structure: 0.935 },
-  dark: { canvas: 0.17, surface: 0.205, raised: 0.24, sunken: 0.145, structure: 0.13 },
+  dark: { canvas: 0.19, surface: 0.225, raised: 0.26, sunken: 0.165, structure: 0.155 },
 };
 
 /** Gera todos os papéis L3 de um modo. `warnings` lista colisões de status não resolvidas. */

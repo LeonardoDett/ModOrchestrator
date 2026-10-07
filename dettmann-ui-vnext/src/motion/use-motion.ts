@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { resolveMotionSpecs, type MotionLevel, type MotionSpec, type MotionTune } from "../theme/engine";
+import { resolveMotionSpecs, springToLinear, type MotionLevel, type MotionSpec, type MotionTune } from "../theme/engine";
 import { MotionContext, ThemeContext, ThemeScopeContext, type MotionContextValue } from "../theme/theme-context";
 
 export interface MotionEnvironment {
@@ -35,6 +35,36 @@ export function effectiveSpec(
 ): MotionSpec {
   const tune: MotionTune = scopeTune ? { ...themeTune, [level]: { ...themeTune[level], ...scopeTune } } : themeTune;
   return resolveMotionSpecs(ceiling, tune)[level];
+}
+
+/**
+ * Variáveis inline de um escopo com `tune`: as seis `--motion-*` de contexto (lidas por
+ * `readMotion` e pelos utilitários CSS) e as `--ui-motion-<nível>-*` do nível efetivo, para
+ * que descendentes com `data-motion` desse nível herdem o ajuste. Usado por `MotionScope` e
+ * pelo `OverlayScope` (conteúdo portado).
+ */
+export function motionTuneVars(
+  ceiling: MotionLevel,
+  themeTune: MotionTune,
+  level: MotionLevel,
+  tune: Partial<MotionSpec>,
+): Record<string, string> {
+  const spec = effectiveSpec(ceiling, themeTune, level, tune);
+  const spring = springToLinear(spec);
+  const values: Record<string, string> = {
+    ease: spring.easing,
+    "spring-duration": `${spring.duration}ms`,
+    duration: `${spec.duration}ms`,
+    amp: String(spec.amplitude),
+    press: String(spec.pressScale),
+    stagger: `${spec.stagger}ms`,
+  };
+  const out: Record<string, string> = {};
+  for (const [name, value] of Object.entries(values)) {
+    out[`--motion-${name}`] = value;
+    out[`--ui-motion-${level}-${name}`] = value;
+  }
+  return out;
 }
 
 /**

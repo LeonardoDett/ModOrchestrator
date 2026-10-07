@@ -12,7 +12,7 @@ test("spring easing starts at 0 and ends at 1", () => {
   expect(easing).toMatch(/^linear\(0(,|\s)/);
   expect(easing).toMatch(/1\)$/);
 });
-test("critically damped calm spring has no overshoot", () =>
+test("near-critically damped calm spring has no visible overshoot", () =>
   expect(springToLinear(MOTION_DEFAULTS.calm).overshoot).toBeLessThan(0.005));
 
 test("calm spring settles quickly (<= 450 ms) without overshoot", () => {

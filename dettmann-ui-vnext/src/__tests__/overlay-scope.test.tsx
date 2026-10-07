@@ -91,4 +91,40 @@ describe("overlays keep the ThemeScope outside the tree", () => {
       expect(scope!.getAttribute("data-motion")).toBe("calm");
     }
   });
+
+  test("the MotionScope tune crosses the portal as inline motion vars", () => {
+    render(
+      <ThemeScope theme="graphite">
+        <MotionScope level="responsive" tune={{ amplitude: 0.5 }}>
+          <Modal.Root open onOpenChange={() => {}}>
+            <Modal.Content>
+              <Modal.Title>Ajuste</Modal.Title>
+            </Modal.Content>
+          </Modal.Root>
+        </MotionScope>
+      </ThemeScope>,
+    );
+    const scope = screen.getByText("Ajuste").closest<HTMLElement>('[data-motion="responsive"]')!;
+    expect(scope.parentElement).toBe(document.body);
+    expect(scope.style.getPropertyValue("--motion-amp")).toBe("0.5");
+    expect(scope.style.getPropertyValue("--ui-motion-responsive-amp")).toBe("0.5");
+    expect(scope.style.getPropertyValue("--motion-ease")).toMatch(/^linear\(/);
+    expect(scope.style.display).toBe("contents");
+  });
+
+  test("without a tune the wrapper carries no motion vars", () => {
+    render(
+      <MotionScope level="responsive">
+        <Modal.Root open onOpenChange={() => {}}>
+          <Modal.Content>
+            <Modal.Title>Sem ajuste</Modal.Title>
+          </Modal.Content>
+        </Modal.Root>
+      </MotionScope>,
+    );
+    const scope = screen.getByText("Sem ajuste").closest<HTMLElement>('[data-motion="responsive"]')!;
+    expect(scope.parentElement).toBe(document.body);
+    expect(scope.style.getPropertyValue("--motion-amp")).toBe("");
+  });
 });
+

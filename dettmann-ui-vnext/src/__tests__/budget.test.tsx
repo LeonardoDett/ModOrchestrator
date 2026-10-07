@@ -194,6 +194,19 @@ describe("BudgetInspector", () => {
       expect(high?.textContent).toBe(formatShare(1 / 6));
       expect(high?.textContent).not.toBe("0%");
     });
+
+    test("a small high share (~0.4%) reads as 0,4%, not 0%", async () => {
+      document.body.innerHTML = `<button data-layer="high"><span id="label">Instalar</span></button><p id="plain"></p>`;
+      const label = document.getElementById("label")!;
+      const plain = document.getElementById("plain")!;
+      // jsdom 1024×768, step 40 → 26 × 19 = 494 pontos; 2 caem no botão (2/494 ≈ 0,405%)
+      document.elementFromPoint = (x, y) => (x < 40 && y < 80 ? label : plain);
+      render(<BudgetInspector step={40} />);
+      await act(async () => {
+        screen.getByRole("button", { name: "Medir" }).click();
+      });
+      expect(screen.getByText("high").nextElementSibling?.textContent).toBe("0,4%");
+    });
   });
 });
 

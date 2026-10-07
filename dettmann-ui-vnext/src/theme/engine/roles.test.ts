@@ -231,14 +231,14 @@ test("warning keeps its light floor with a dark on-color", () => {
     }
 });
 
-test("warning stays vivid: fill chroma >= 0.10 for chromatic edge seeds and presets", () => {
+test("warning stays vivid: fill chroma >= 0.13 for chromatic edge seeds and presets", () => {
   const chromaticEdge = edge.filter((b) => parseColor(b)!.c > 0.02);
   const configs = [...chromaticEdge.map((brand) => cfg({ brand })), ...Object.values(PRESETS)];
   for (const config of configs)
     for (const contrast of ["standard", "high"] as const)
       for (const mode of ["light", "dark"] as const) {
         const { roles } = buildRoles(normalizeConfig({ ...config, contrast }), mode);
-        expect(hex(roles["warning-fill"]).c, `${config.id} ${String(config.brand)} ${contrast} ${mode}`).toBeGreaterThanOrEqual(0.1);
+        expect(hex(roles["warning-fill"]).c, `${config.id} ${String(config.brand)} ${contrast} ${mode}`).toBeGreaterThanOrEqual(0.13);
       }
 });
 

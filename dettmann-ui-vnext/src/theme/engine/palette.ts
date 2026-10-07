@@ -18,8 +18,10 @@ const STATUS_MAX_C = 0.19;
 const STATUS_MIN_L = 0.45;
 const STATUS_MAX_L = 0.85;
 const WARNING_LIGHT_MIN_L = 0.72;
+/** Teto do warning no light: cúspide do gamut no matiz 75° (acima dela a croma máxima despenca). */
+const WARNING_LIGHT_MAX_L = 0.8;
 /** Piso de croma do warning (limitado ao gamut): com marca pouco saturada ele sairia "mostarda barrenta". */
-const WARNING_MIN_C = 0.12;
+const WARNING_MIN_C = 0.15;
 /** Deslocamentos de luminosidade-base tentados em cada matiz do giro de status. */
 const L_OFFSETS = [0, -0.05, 0.05, -0.1, 0.1];
 
@@ -160,12 +162,12 @@ export function subtleChroma(seed: Oklch, vibrance: number): number {
 
 /**
  * Semente inicial de um status: matiz semântico, croma e luminosidade derivadas da marca.
- * O warning tem croma mínima 0.12 (dentro do gamut na sua luminosidade).
+ * O warning tem croma mínima 0.15 (limitada ao gamut) e, no light, L em [.72, .80].
  */
 export function statusSeed(status: StatusIntent, brand: Oklch, mode: Mode): Oklch {
   // no dark a faixa do fill já vale aqui, para que os deslocamentos de L do giro tenham efeito
   const base = mode === "dark" ? clamp(brand.l, DARK_FILL_L[0], DARK_FILL_L[1]) : clamp(brand.l, STATUS_MIN_L, STATUS_MAX_L);
-  const l = status === "warning" && mode === "light" ? Math.max(base, WARNING_LIGHT_MIN_L) : base;
+  const l = status === "warning" && mode === "light" ? clamp(base, WARNING_LIGHT_MIN_L, WARNING_LIGHT_MAX_L) : base;
   const h = STATUS_HUES[status];
   const c = clamp(brand.c, STATUS_MIN_C, STATUS_MAX_C);
   if (status !== "warning") return { l, c, h };
@@ -190,12 +192,12 @@ export function buildIntents(
   const intents = { brand, accent: intentColors(config.accent, config, mode, surfaces) } as Record<ColorIntent, IntentColors>;
   for (const status of Object.keys(STATUS_HUES) as StatusIntent[]) {
     const seed = statusSeed(status, config.brand, mode);
-    // warning no light mantém o piso de L (.72) e resolve o fill rumo ao `on` escuro
+    // warning no light fica em L [.72, .80] e resolve o fill rumo ao `on` escuro
     const warningLight = status === "warning" && mode === "light";
     const targets = CONTRAST_TARGETS[config.contrast];
     // a busca só precisa do fill; os demais papéis saem uma vez, da semente escolhida
     const attempt = (h: number, c: number, l: number) => {
-      const candidate = { l: warningLight ? Math.max(l, WARNING_LIGHT_MIN_L) : l, c, h };
+      const candidate = { l: warningLight ? clamp(l, WARNING_LIGHT_MIN_L, WARNING_LIGHT_MAX_L) : l, c, h };
       const { fill } = solveFill(candidate, mode, targets["on-fill"], surfaces, warningLight);
       return { seed: candidate, delta: deltaEOK(brand.fill, fill) };
     };

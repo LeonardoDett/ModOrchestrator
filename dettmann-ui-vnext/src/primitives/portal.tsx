@@ -1,25 +1,35 @@
 "use client";
 
-import { useContext, useEffect, useState, type ReactNode } from "react";
+import { useContext, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import { MotionContext, ThemeScopeContext } from "../theme/theme-context";
-
-const CONTENTS = { display: "contents" } as const;
+import { ThemeScopeContext } from "../theme/theme-context";
+import { motionTuneVars, useMotionEnvironment } from "../motion/use-motion";
 
 /**
  * Reemite o escopo de tema e movimento do ponto de montagem para conteúdo portado (fora da
  * árvore DOM do `ThemeScope`): um `div` com `display: contents` e `data-theme`,
- * `data-ui-mode` (só com modo forçado), `data-density` (se o escopo definir) e `data-motion`.
+ * `data-ui-mode` (só com modo forçado), `data-density` (se o escopo definir) e `data-motion`;
+ * com `tune` de um `MotionScope`, também as mesmas variáveis `--motion-*` inline dele.
  * Sem tema nem movimento de contexto, renderiza os filhos sem wrapper. Use em todo overlay
  * que porta para fora da árvore (`Portal` já usa; `FloatingPortal`/`createPortal` envolvem).
  */
 export function OverlayScope({ children }: { children: ReactNode }) {
   const scope = useContext(ThemeScopeContext);
-  const motion = useContext(MotionContext);
+  const { ceiling, themeTune, parent: motion } = useMotionEnvironment();
+  const tune = motion?.tune;
+  const level = motion?.level;
+  const style = useMemo(
+    () =>
+      ({
+        display: "contents",
+        ...(tune && level ? motionTuneVars(ceiling, themeTune, level, tune) : {}),
+      }) as CSSProperties,
+    [ceiling, themeTune, level, tune],
+  );
   if (!scope && !motion) return <>{children}</>;
   return (
     <div
-      style={CONTENTS}
+      style={style}
       data-theme={scope?.theme.id}
       data-ui-mode={scope?.forcedMode}
       data-density={scope?.density}

@@ -1,8 +1,8 @@
 import { useMemo, type CSSProperties, type ReactNode } from "react";
 import { isDev } from "../dev/env";
-import { clampMotion, springToLinear, validateMotionSpec, type MotionLevel, type MotionSpec } from "../theme/engine";
+import { clampMotion, validateMotionSpec, type MotionLevel, type MotionSpec } from "../theme/engine";
 import { MotionContext } from "../theme/theme-context";
-import { effectiveSpec, useMotionEnvironment } from "./use-motion";
+import { motionTuneVars, useMotionEnvironment } from "./use-motion";
 
 export interface MotionScopeProps {
   /** Nível pedido; limitado pelo teto do tema mais próximo. Sem ele, herda o nível do escopo de fora (ou `"calm"`). */
@@ -34,27 +34,10 @@ export function MotionScope({ level: levelProp, tune: tuneProp, children }: Moti
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tuneKey, inherited]);
 
-  const style = useMemo<CSSProperties>(() => {
-    const base: Record<string, string> = { display: "contents" };
-    if (!tune) return base as CSSProperties;
-    const spec = effectiveSpec(ceiling, themeTune, level, tune);
-    const spring = springToLinear(spec);
-    const values: Record<string, string> = {
-      ease: spring.easing,
-      "spring-duration": `${spring.duration}ms`,
-      duration: `${spec.duration}ms`,
-      amp: String(spec.amplitude),
-      press: String(spec.pressScale),
-      stagger: `${spec.stagger}ms`,
-    };
-    for (const [name, value] of Object.entries(values)) {
-      // Contexto (lido por readMotion e pelos utilitários CSS) e a fonte por nível, para que
-      // descendentes com `data-motion` do mesmo nível mantenham o ajuste do escopo.
-      base[`--motion-${name}`] = value;
-      base[`--ui-motion-${level}-${name}`] = value;
-    }
-    return base as CSSProperties;
-  }, [ceiling, themeTune, level, tune]);
+  const style = useMemo<CSSProperties>(
+    () => ({ display: "contents", ...(tune ? motionTuneVars(ceiling, themeTune, level, tune) : {}) }) as CSSProperties,
+    [ceiling, themeTune, level, tune],
+  );
 
   const value = useMemo(() => ({ level, tune }), [level, tune]);
   return (
