@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { act, cleanup, render, renderHook, screen } from "@testing-library/react";
+import { ThemeProvider } from "../theme";
 import {
   BudgetInspector,
   budgetVerdict,
@@ -68,6 +69,41 @@ describe("useBudgetGuard", () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
+  test("fires within the max wait under continuous mutations", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    renderHook(() => useBudgetGuard(true));
+    mount();
+    const region = document.querySelector("[data-budget-region]") as HTMLElement;
+    await act(async () => {
+      for (let i = 0; i < 15; i++) {
+        region.className = "c" + i;
+        await vi.advanceTimersByTimeAsync(100);
+      }
+    });
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  test("ThemeProvider warns exactly once in dev", async () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mount();
+    render(<ThemeProvider>x</ThemeProvider>);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300);
+    });
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  test("ThemeProvider never warns in production", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    mount();
+    render(<ThemeProvider>x</ThemeProvider>);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1500);
+    });
+    expect(warn).not.toHaveBeenCalled();
+  });
+
   test("disconnects on unmount", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const { unmount } = renderHook(() => useBudgetGuard(true));
@@ -101,6 +137,8 @@ describe("sampling", () => {
 
   test("verdict passes 62/29/9 and fails 40/30/30", () => {
     expect(budgetVerdict({ low: 0.62, medium: 0.29, high: 0.09 }).ok).toBe(true);
+    expect(budgetVerdict({ low: 0.68, medium: 0.22, high: 0.1 }).ok).toBe(true);
+    expect(budgetVerdict({ low: 0.6, medium: 0.28, high: 0.12 }).ok).toBe(true);
     const bad = budgetVerdict({ low: 0.4, medium: 0.3, high: 0.3 });
     expect(bad.ok).toBe(false);
     expect(bad.messages.length).toBeGreaterThan(0);

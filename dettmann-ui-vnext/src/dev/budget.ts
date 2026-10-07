@@ -28,6 +28,9 @@ export function findBudgetViolations(root: ParentNode): BudgetViolation[] {
 }
 
 const DEBOUNCE_MS = 250;
+const MAX_WAIT_MS = 1000;
+const EPS = 1e-9;
+const WATCHED_ATTRIBUTES = ["class", "style", "hidden", "inert", "aria-hidden", "data-layer", "data-budget-region"];
 
 /** Em dev, avisa no console (uma vez por região) quando uma região excede o orçamento de ênfase alta. */
 export function useBudgetGuard(enabled: boolean): void {
@@ -35,8 +38,10 @@ export function useBudgetGuard(enabled: boolean): void {
     if (!enabled || typeof document === "undefined" || typeof MutationObserver === "undefined") return;
     const warned = new WeakSet<Element>();
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let firstPending = 0;
     const run = () => {
       timer = undefined;
+      firstPending = 0;
       for (const { region, highCount } of findBudgetViolations(document)) {
         if (warned.has(region)) continue;
         warned.add(region);
@@ -44,11 +49,14 @@ export function useBudgetGuard(enabled: boolean): void {
       }
     };
     const schedule = () => {
-      if (timer !== undefined) clearTimeout(timer);
-      timer = setTimeout(run, DEBOUNCE_MS);
+      const now = Date.now();
+      if (timer === undefined) firstPending = now;
+      else clearTimeout(timer);
+      // Debounce com teto: mutações contínuas não adiam a varredura além de MAX_WAIT_MS.
+      timer = setTimeout(run, Math.max(0, Math.min(DEBOUNCE_MS, firstPending + MAX_WAIT_MS - now)));
     };
     const observer = new MutationObserver(schedule);
-    observer.observe(document.body, { subtree: true, childList: true, attributes: true });
+    observer.observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: WATCHED_ATTRIBUTES });
     schedule();
     return () => {
       observer.disconnect();
@@ -95,8 +103,8 @@ export function budgetVerdict(
   const highMax = tol.highMax ?? 0.12;
   const messages: string[] = [];
   const pct = (v: number) => `${Math.round(v * 100)}%`;
-  if (Math.abs(r.low - 0.6) > lowMedium) messages.push(`Base (low) em ${pct(r.low)}; meta 60% ± ${pct(lowMedium)}.`);
-  if (Math.abs(r.medium - 0.3) > lowMedium) messages.push(`Estrutura (medium) em ${pct(r.medium)}; meta 30% ± ${pct(lowMedium)}.`);
-  if (r.high > highMax) messages.push(`Destaque (high) em ${pct(r.high)}; máximo ${pct(highMax)} (meta 10%).`);
+  if (Math.abs(r.low - 0.6) > lowMedium + EPS) messages.push(`Base (low) em ${pct(r.low)}; meta 60% ± ${pct(lowMedium)}.`);
+  if (Math.abs(r.medium - 0.3) > lowMedium + EPS) messages.push(`Estrutura (medium) em ${pct(r.medium)}; meta 30% ± ${pct(lowMedium)}.`);
+  if (r.high > highMax + EPS) messages.push(`Destaque (high) em ${pct(r.high)}; máximo ${pct(highMax)} (meta 10%).`);
   return { ok: messages.length === 0, messages };
 }
