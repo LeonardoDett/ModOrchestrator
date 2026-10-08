@@ -8,7 +8,10 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { ChevronRight, File, Folder, FolderOpen } from "lucide-react";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
+import { FileIcon } from "../../icons/glyphs/file";
+import { FolderIcon } from "../../icons/glyphs/folder";
+import { FolderOpenIcon } from "../../icons/glyphs/folder-open";
 import { cn } from "../../utils/cn";
 import { Checkbox } from "../checkbox";
 import { toggleTreeCheck, treeCheckState } from "./tree.model";
@@ -206,7 +209,7 @@ export function Tree<T>({
         const icon =
           node.icon ??
           renderIcon?.(node, open) ??
-          (hasChildren ? open ? <FolderOpen /> : <Folder /> : <File />);
+          (hasChildren ? open ? <FolderOpenIcon size="lg" /> : <FolderIcon size="lg" /> : <FileIcon size="lg" />);
 
         return (
           <div
@@ -238,10 +241,10 @@ export function Tree<T>({
                   onClick={() => toggle(node.id)}
                   className="flex h-7 w-7 shrink-0 items-center justify-center rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus hover:bg-state-hover"
                 >
-                  <ChevronRight
-                    aria-hidden="true"
+                  <ChevronRightIcon
+                    size="sm"
                     className={cn(
-                      "h-4 w-4 transition-transform duration-(--motion-duration) ease-(--motion-ease)",
+                      "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
                       open && "rotate-90",
                     )}
                   />

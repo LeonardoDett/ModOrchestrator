@@ -8,12 +8,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AlertTriangle, Check, Info, Trash2 } from "lucide-react";
+import { TriangleAlertIcon } from "../../icons/glyphs/triangle-alert";
+import { CheckIcon } from "../../icons/glyphs/check";
+import { InfoIcon } from "../../icons/glyphs/info";
+import { TrashIcon } from "../../icons/glyphs/trash";
 import { Modal } from "../../components/modal";
 import { Button } from "../../components/button";
 import { FeaturedIcon } from "../../components/featured-icon";
 import { Typography } from "../../primitives/typography";
-import type { LucideIconComponent } from "../../primitives/icon";
+import type { IconComponent } from "../../primitives/icon";
 
 export type ConfirmType = "danger" | "warning" | "info" | "success";
 
@@ -31,12 +34,12 @@ export interface ConfirmDialogProps {
 
 const typeConfig: Record<
   ConfirmType,
-  { intent: "danger" | "warning" | "brand" | "success"; icon: LucideIconComponent }
+  { intent: "danger" | "warning" | "brand" | "success"; icon: IconComponent }
 > = {
-  danger: { intent: "danger", icon: Trash2 },
-  warning: { intent: "warning", icon: AlertTriangle },
-  info: { intent: "brand", icon: Info },
-  success: { intent: "success", icon: Check },
+  danger: { intent: "danger", icon: TrashIcon },
+  warning: { intent: "warning", icon: TriangleAlertIcon },
+  info: { intent: "brand", icon: InfoIcon },
+  success: { intent: "success", icon: CheckIcon },
 };
 
 /**

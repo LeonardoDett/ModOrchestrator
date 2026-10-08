@@ -1,6 +1,6 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
-import { X } from "lucide-react";
+import { XIcon } from "../../icons/glyphs/x";
 import { cn } from "../../utils/cn";
 import { Icon } from "../../primitives/icon";
 import { intentData } from "../../theme/emphasis";
@@ -86,7 +86,7 @@ export function Tag({
           className="inline-flex h-4 w-4 items-center justify-center rounded-full text-fg-muted hover:bg-state-hover hover:text-fg"
           onClick={() => onRemove(value)}
         >
-          <Icon icon={X} size="xs" />
+          <Icon icon={XIcon} size="xs" />
         </button>
       ) : null}
     </span>

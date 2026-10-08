@@ -1,7 +1,10 @@
 "use client";
 
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
-import { ChevronFirst, ChevronLast, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronFirstIcon } from "../../icons/glyphs/chevron-first";
+import { ChevronLastIcon } from "../../icons/glyphs/chevron-last";
+import { ChevronLeftIcon } from "../../icons/glyphs/chevron-left";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Icon } from "../../primitives/icon";
@@ -134,7 +137,7 @@ function PaginationPrevious({
       aria-label="Go to previous page"
       {...props}
     >
-      <Icon icon={ChevronLeft} size="sm" />
+      <Icon icon={ChevronLeftIcon} size="sm" />
     </button>
   );
 }
@@ -155,7 +158,7 @@ function PaginationNext({
       aria-label="Go to next page"
       {...props}
     >
-      <Icon icon={ChevronRight} size="sm" />
+      <Icon icon={ChevronRightIcon} size="sm" />
     </button>
   );
 }
@@ -176,7 +179,7 @@ function PaginationFirst({
       aria-label="Go to first page"
       {...props}
     >
-      <Icon icon={ChevronFirst} size="sm" />
+      <Icon icon={ChevronFirstIcon} size="sm" />
     </button>
   );
 }
@@ -197,7 +200,7 @@ function PaginationLast({
       aria-label="Go to last page"
       {...props}
     >
-      <Icon icon={ChevronLast} size="sm" />
+      <Icon icon={ChevronLastIcon} size="sm" />
     </button>
   );
 }

@@ -80,15 +80,15 @@ interface IconProps extends IconVariants {
  *
  * @example
  * ```tsx
- * import { Home, Settings, X } from "lucide-react";
+ * import { HomeIcon, SettingsIcon, XIcon } from "dettmann-ui/icons";
  *
- * <Icon icon={Home} />
- * <Icon icon={Settings} size="lg" intent="brand" />
- * <Icon icon={X} size="sm" label="Close" />
+ * <Icon icon={HomeIcon} />
+ * <Icon icon={SettingsIcon} size="lg" intent="brand" />
+ * <Icon icon={XIcon} size="sm" label="Close" />
  *
  * // In a button
  * <button>
- *   <Icon icon={Home} size="sm" />
+ *   <Icon icon={HomeIcon} size="sm" />
  *   Home
  * </button>
  * ```

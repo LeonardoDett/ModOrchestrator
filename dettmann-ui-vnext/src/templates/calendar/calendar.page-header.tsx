@@ -1,6 +1,9 @@
 "use client";
 
-import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
+import { ChevronLeftIcon } from "../../icons/glyphs/chevron-left";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
+import { PlusIcon } from "../../icons/glyphs/plus";
+import { SearchIcon } from "../../icons/glyphs/search";
 import { type ReactNode } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
@@ -70,7 +73,7 @@ export function CalendarPageHeader({
             aria-label={labels.search}
             onClick={onSearchClick}
           >
-            <Search className="h-4 w-4" />
+            <SearchIcon size="sm" />
           </Button>
         ) : null}
 
@@ -83,7 +86,7 @@ export function CalendarPageHeader({
               aria-label={labels.previousPeriod}
               onClick={navigation.previous}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeftIcon size="sm" />
             </Button>
             <Button type="button" emphasis="medium" size="sm" onClick={navigation.today}>
               {labels.today}
@@ -95,7 +98,7 @@ export function CalendarPageHeader({
               aria-label={labels.nextPeriod}
               onClick={navigation.next}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRightIcon size="sm" />
             </Button>
           </ButtonGroup>
         ) : null}
@@ -118,7 +121,7 @@ export function CalendarPageHeader({
 
         {showAddEvent && onAddEvent ? (
           <Button type="button" emphasis="high" size="sm" onClick={onAddEvent}>
-            <Plus className="h-4 w-4" />
+            <PlusIcon size="sm" />
             {labels.addEvent}
           </Button>
         ) : null}

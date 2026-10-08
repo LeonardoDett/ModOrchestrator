@@ -1,7 +1,12 @@
 "use client";
 
 import { useMemo, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
-import { AlertCircle, CheckCircle2, Info, Search, Terminal, TriangleAlert } from "lucide-react";
+import { Terminal } from "lucide-react";
+import { CircleAlertIcon } from "../../icons/glyphs/circle-alert";
+import { CircleCheckIcon } from "../../icons/glyphs/circle-check";
+import { InfoIcon } from "../../icons/glyphs/info";
+import { SearchIcon } from "../../icons/glyphs/search";
+import { TriangleAlertIcon } from "../../icons/glyphs/triangle-alert";
 import { cn } from "../../utils/cn";
 import { Badge } from "../badge";
 import { Input } from "../input";
@@ -46,10 +51,10 @@ const levelIntent: Record<LogLevel, "neutral" | "info" | "success" | "warning" |
 const levelIcon: Record<LogLevel, ReactNode> = {
   trace: <Terminal aria-hidden="true" className="h-3.5 w-3.5" />,
   debug: <Terminal aria-hidden="true" className="h-3.5 w-3.5" />,
-  info: <Info aria-hidden="true" className="h-3.5 w-3.5" />,
-  success: <CheckCircle2 aria-hidden="true" className="h-3.5 w-3.5" />,
-  warning: <TriangleAlert aria-hidden="true" className="h-3.5 w-3.5" />,
-  error: <AlertCircle aria-hidden="true" className="h-3.5 w-3.5" />,
+  info: <InfoIcon size="sm" className="h-3.5! w-3.5!" />,
+  success: <CircleCheckIcon size="sm" className="h-3.5! w-3.5!" />,
+  warning: <TriangleAlertIcon size="sm" className="h-3.5! w-3.5!" />,
+  error: <CircleAlertIcon size="sm" className="h-3.5! w-3.5!" />,
 };
 
 export function LogViewer({
@@ -102,7 +107,7 @@ export function LogViewer({
             <div className="min-w-[12rem] flex-1">
               <Input.Root value={query} onChange={(value: string) => setQuery(value)} fullWidth>
                 <Input.Box padding="sm">
-                  <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />
+                  <SearchIcon size="sm" className="text-fg-muted" />
                   <Input.Field aria-label={searchLabel} placeholder={searchLabel} />
                 </Input.Box>
               </Input.Root>

@@ -7,7 +7,9 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
-import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { MenuIcon } from "../../icons/glyphs/menu";
+import { PanelLeftCloseIcon } from "../../icons/glyphs/panel-left-close";
+import { PanelLeftOpenIcon } from "../../icons/glyphs/panel-left-open";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Icon, type LucideIconComponent } from "../../primitives/icon";
@@ -420,7 +422,7 @@ function SidebarRoot({
         aria-label={labels?.openSidebar ?? "Open sidebar"}
         onClick={() => setMobileOpen(true)}
       >
-        <Icon icon={Menu} size="sm" />
+        <Icon icon={MenuIcon} size="sm" />
       </Button>
 
       <aside data-layer="medium" className={cn(asideVariants({ collapsed, variant }), "overflow-hidden")}>
@@ -447,7 +449,7 @@ function SidebarRoot({
             className={variant === "strong" ? strongChromeClass : undefined}
             onClick={toggleCollapsed}
           >
-            <Icon icon={collapsed ? PanelLeftOpen : PanelLeftClose} size="sm" />
+            <Icon icon={collapsed ? PanelLeftOpenIcon : PanelLeftCloseIcon} size="sm" />
           </Button>
         </div>
         <SidebarNavList

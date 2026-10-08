@@ -20,7 +20,8 @@ import {
   useInteractions,
   FloatingPortal,
 } from "@floating-ui/react";
-import { Check, ChevronDown } from "lucide-react";
+import { CheckIcon } from "../../icons/glyphs/check";
+import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
 import { OverlayScope } from "../../primitives/portal";
 import { Presence } from "../../motion/presence";
 import type { MotionValues } from "../../motion/read-motion";
@@ -311,7 +312,7 @@ export function InputSelect({
             <span className="text-caption text-fg-muted">{option.description}</span>
           )}
         </span>
-        {isSelected && <Check aria-hidden className="mt-0.5 size-4 shrink-0 text-emphasis-text" />}
+        {isSelected && <CheckIcon size="sm" className="mt-0.5 text-emphasis-text" />}
       </div>
     );
   };
@@ -361,10 +362,10 @@ export function InputSelect({
         <span className={cn("min-w-0 flex-1 truncate", !selected && "text-fg-subtle")}>
           {selected ? selected.label : showPlaceholder ? placeholder : " "}
         </span>
-        <ChevronDown
-          aria-hidden
+        <ChevronDownIcon
+          size="sm"
           className={cn(
-            "size-4 shrink-0 text-fg-muted",
+            "text-fg-muted",
             "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
             isOpen && "rotate-180",
           )}

@@ -8,7 +8,7 @@ import {
   type ComponentPropsWithoutRef,
   type ReactNode,
 } from "react";
-import { Upload } from "lucide-react";
+import { UploadIcon } from "../../icons/glyphs/upload";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Typography } from "../../primitives/typography";
@@ -178,7 +178,7 @@ export function FileDropzone({
         onDrop={handleDrop}
         className={dropzoneVariants({ dragging: dragging || Boolean(draggingProp), disabled, size })}
       >
-        <FeaturedIcon icon={Upload} intent="neutral" size={size === "compact" ? "md" : "lg"} />
+        <FeaturedIcon icon={UploadIcon} intent="neutral" size={size === "compact" ? "md" : "lg"} />
         <div className="space-y-1">
           <Typography variant="body-sm" className="text-fg font-medium">
             {title}

@@ -15,7 +15,12 @@ import {
   type ReactNode,
 } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { ArrowDown, ArrowUp, ArrowUpDown, ChevronDown, ChevronRight, GripVertical } from "lucide-react";
+import { GripVertical } from "lucide-react";
+import { ArrowDownIcon } from "../../icons/glyphs/arrow-down";
+import { ArrowUpIcon } from "../../icons/glyphs/arrow-up";
+import { ArrowUpDownIcon } from "../../icons/glyphs/arrow-up-down";
+import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useControllableState } from "../../hooks/use-controllable-state";
@@ -592,9 +597,9 @@ export function DataTable<T>({
         >
           <div role="gridcell" className="col-span-full flex min-w-0 items-center gap-2 px-3 font-medium">
             {item.collapsed ? (
-              <ChevronRight aria-hidden="true" className="h-4 w-4 shrink-0 text-fg-muted" />
+              <ChevronRightIcon size="sm" className="text-fg-muted" />
             ) : (
-              <ChevronDown aria-hidden="true" className="h-4 w-4 shrink-0 text-fg-muted" />
+              <ChevronDownIcon size="sm" className="text-fg-muted" />
             )}
             <span className="min-w-0 flex-1 truncate">
               {renderGroupHeader
@@ -761,11 +766,11 @@ export function DataTable<T>({
                     >
                       <span className="min-w-0 truncate">{content}</span>
                       {sorted === "asc" ? (
-                        <ArrowUp aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-fg" />
+                        <ArrowUpIcon size="sm" className="h-3.5! w-3.5! text-fg" />
                       ) : sorted === "desc" ? (
-                        <ArrowDown aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-fg" />
+                        <ArrowDownIcon size="sm" className="h-3.5! w-3.5! text-fg" />
                       ) : (
-                        <ArrowUpDown aria-hidden="true" className="h-3.5 w-3.5 shrink-0 opacity-40" />
+                        <ArrowUpDownIcon size="sm" className="h-3.5! w-3.5! opacity-40" />
                       )}
                     </button>
                   ) : (

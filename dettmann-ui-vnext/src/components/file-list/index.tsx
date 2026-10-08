@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, type ComponentPropsWithoutRef, type KeyboardEvent, type ReactNode } from "react";
-import { File, Folder, MoreHorizontal } from "lucide-react";
+import { FileIcon } from "../../icons/glyphs/file";
+import { FolderIcon } from "../../icons/glyphs/folder";
 import { cn } from "../../utils/cn";
 import { Checkbox } from "../checkbox";
 import { Badge } from "../badge";
@@ -147,7 +148,7 @@ export function FileList({
                   className="flex min-w-0 flex-1 items-center gap-3 rounded-control text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-sunken text-fg-muted">
-                    {item.kind === "folder" ? <Folder aria-hidden="true" /> : <File aria-hidden="true" />}
+                    {item.kind === "folder" ? <FolderIcon size="lg" /> : <FileIcon size="lg" />}
                   </span>
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-medium text-fg">

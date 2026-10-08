@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, type ComponentPropsWithoutRef, type KeyboardEvent } from "react";
-import { Minus, Plus } from "lucide-react";
+import { MinusIcon } from "../../icons/glyphs/minus";
+import { PlusIcon } from "../../icons/glyphs/plus";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { inputValueAsString, useInputContext } from "./input.context";
@@ -118,7 +119,7 @@ export function InputNumber({
         disabled={disabled || (min !== undefined && numeric <= min)}
         onClick={() => stepBy(-step)}
       >
-        <Minus aria-hidden="true" className="h-3.5 w-3.5" />
+        <MinusIcon size="sm" className="h-3.5! w-3.5!" />
       </button>
       <input
         {...props}
@@ -152,7 +153,7 @@ export function InputNumber({
         disabled={disabled || (max !== undefined && numeric >= max)}
         onClick={() => stepBy(step)}
       >
-        <Plus aria-hidden="true" className="h-3.5 w-3.5" />
+        <PlusIcon size="sm" className="h-3.5! w-3.5!" />
       </button>
     </div>
   );

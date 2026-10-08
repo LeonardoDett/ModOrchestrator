@@ -6,7 +6,9 @@ import {
   type DragEvent,
   type ReactNode,
 } from "react";
-import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { GripVertical } from "lucide-react";
+import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
+import { ChevronUpIcon } from "../../icons/glyphs/chevron-up";
 import { cn } from "../../utils/cn";
 
 export interface ReorderableListItem<T = unknown> {
@@ -114,7 +116,7 @@ export function ReorderableList<T>({
                 onClick={() => moveBy(item.id, -1)}
                 disabled={index === 0}
               >
-                <ChevronUp aria-hidden="true" className="h-4 w-4" />
+                <ChevronUpIcon size="sm" />
               </button>
               <button
                 type="button"
@@ -128,7 +130,7 @@ export function ReorderableList<T>({
                 onClick={() => moveBy(item.id, 1)}
                 disabled={index === source.length - 1}
               >
-                <ChevronDown aria-hidden="true" className="h-4 w-4" />
+                <ChevronDownIcon size="sm" />
               </button>
             </div>
           ) : null}

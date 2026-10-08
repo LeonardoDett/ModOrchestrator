@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
-import { X } from "lucide-react";
+import { XIcon } from "../../icons/glyphs/x";
 import { cn } from "../../utils/cn";
 import { Button } from "../button";
 
@@ -53,7 +53,7 @@ export function Inspector({ title, description, actions, children, sticky = true
           {actions}
           {onClose ? (
             <Button emphasis="low" size="icon-sm" aria-label={closeLabel} onClick={onClose}>
-              <X aria-hidden="true" className="h-4 w-4" />
+              <XIcon size="sm" />
             </Button>
           ) : null}
         </div>

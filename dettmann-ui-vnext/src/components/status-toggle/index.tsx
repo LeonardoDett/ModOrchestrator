@@ -1,7 +1,10 @@
 "use client";
 
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
-import { Ban, Check, Minus, type LucideIcon } from "lucide-react";
+import { BanIcon } from "../../icons/glyphs/ban";
+import { CheckIcon } from "../../icons/glyphs/check";
+import { MinusIcon } from "../../icons/glyphs/minus";
+import type { IconComponent } from "../../primitives/icon";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Loader } from "../loader";
@@ -34,14 +37,14 @@ const statusToggleVariants = defineRecipe({
       busy: { track: "cursor-progress bg-sunken", icon: "text-fg-muted" },
     },
     size: {
-      sm: { track: "h-5 w-9", thumb: "h-4 w-4", icon: "h-3 w-3" },
-      md: { track: "h-6 w-11", thumb: "h-5 w-5", icon: "h-3.5 w-3.5" },
+      sm: { track: "h-5 w-9", thumb: "h-4 w-4", icon: "h-3! w-3!" },
+      md: { track: "h-6 w-11", thumb: "h-5 w-5", icon: "h-3.5! w-3.5!" },
     },
   },
   defaultVariants: { state: "off", size: "sm" },
 });
 
-const ICONS: Record<Exclude<StatusToggleState, "busy">, LucideIcon> = { on: Check, off: Minus, unavailable: Ban };
+const ICONS: Record<Exclude<StatusToggleState, "busy">, IconComponent> = { on: CheckIcon, off: MinusIcon, unavailable: BanIcon };
 
 const SHIFT: Record<"sm" | "md", string> = { sm: "translate-x-4", md: "translate-x-5" };
 
@@ -102,7 +105,7 @@ export const StatusToggle = forwardRef<HTMLButtonElement, StatusToggleProps>(fun
         {state === "busy" ? (
           <Loader size="xs" label={stateLabels.busy} aria-hidden="true" className={icon()} />
         ) : (
-          Icon && <Icon aria-hidden="true" className={icon()} />
+          Icon && <Icon size="xs" strokeWidth={2} className={icon()} />
         )}
       </span>
       <span id={descriptionId} className="sr-only">

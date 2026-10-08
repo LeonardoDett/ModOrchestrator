@@ -3,7 +3,7 @@
 import { type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { Icon, type LucideIconComponent } from "../../primitives/icon";
+import { Icon, type IconComponent } from "../../primitives/icon";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 
@@ -47,8 +47,8 @@ type FeaturedIconVariants = VariantProps<typeof featuredIconVariants>;
 interface FeaturedIconProps
   extends Omit<ComponentPropsWithoutRef<"span">, "color" | "children">,
     Omit<FeaturedIconVariants, "paint"> {
-  /** Lucide icon rendered in the inner disc */
-  icon: LucideIconComponent;
+  /** Lucide or animated icon rendered in the inner disc */
+  icon: IconComponent;
   /** Accessible label. Decorative when omitted. */
   label?: string;
   /** Família de cor (padrão `success`); `neutral` usa papéis de superfície. */
@@ -70,10 +70,10 @@ const sizeToIconSize = {
  *
  * @example
  * ```tsx
- * import { CheckCircle } from "lucide-react";
+ * import { CircleCheckIcon, TriangleAlertIcon } from "dettmann-ui/icons";
  *
- * <FeaturedIcon icon={CheckCircle} intent="success" />
- * <FeaturedIcon icon={AlertTriangle} intent="warning" size="md" />
+ * <FeaturedIcon icon={CircleCheckIcon} intent="success" />
+ * <FeaturedIcon icon={TriangleAlertIcon} intent="warning" size="md" />
  * ```
  */
 export function FeaturedIcon({

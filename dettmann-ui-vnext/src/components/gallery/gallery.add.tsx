@@ -1,5 +1,5 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
-import { Plus } from "lucide-react";
+import { PlusIcon } from "../../icons/glyphs/plus";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Icon } from "../../primitives/icon";
@@ -44,7 +44,7 @@ export function GalleryAdd({
     <button type={type} className={cn(addVariants(), className)} {...props}>
       {children ?? (
         <>
-          <Icon icon={Plus} size="lg" />
+          <Icon icon={PlusIcon} size="lg" />
           <Typography variant="body-sm" align="center">
             {label}
           </Typography>

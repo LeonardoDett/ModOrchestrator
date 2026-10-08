@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { defineRecipe } from "../../core/recipe";
-import { Check } from "lucide-react";
+import { CheckIcon } from "../../icons/glyphs/check";
 import { cn } from "../../utils/cn";
 import { Icon } from "../../primitives/icon";
 import { Divider } from "../../primitives/divider";
@@ -243,7 +243,7 @@ function StepperStepIndicator({ className, children, ...props }: StepperStepIndi
     >
       {children ??
         (status === "completed" ? (
-          <Icon icon={Check} size="sm" />
+          <Icon icon={CheckIcon} size="sm" />
         ) : (
           index + 1
         ))}

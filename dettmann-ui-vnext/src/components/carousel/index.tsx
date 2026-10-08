@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeftIcon } from "../../icons/glyphs/chevron-left";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
 import { Button } from "../button";
 import { cn } from "../../utils/cn";
 
@@ -72,7 +73,7 @@ export function Carousel({
             className="absolute left-2 top-1/2 -translate-y-1/2 shadow-overlay"
             onClick={() => scroll(-1)}
           >
-            <ChevronLeft aria-hidden="true" />
+            <ChevronLeftIcon size="lg" />
           </Button>
           <Button
             disabled={!canRight}
@@ -82,7 +83,7 @@ export function Carousel({
             className="absolute right-2 top-1/2 -translate-y-1/2 shadow-overlay"
             onClick={() => scroll(1)}
           >
-            <ChevronRight aria-hidden="true" />
+            <ChevronRightIcon size="lg" />
           </Button>
         </>
       ) : null}

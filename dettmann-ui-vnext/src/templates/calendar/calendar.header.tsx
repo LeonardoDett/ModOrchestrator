@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeftIcon } from "../../icons/glyphs/chevron-left";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Button } from "../../components/button";
@@ -39,7 +40,7 @@ export function CalendarHeader({ className }: CalendarHeaderProps) {
             onClick={navigation.previous}
             aria-label={labels.previousPeriod}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeftIcon size="sm" />
           </Button>
           <Button
             type="button"
@@ -48,7 +49,7 @@ export function CalendarHeader({ className }: CalendarHeaderProps) {
             onClick={navigation.next}
             aria-label={labels.nextPeriod}
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRightIcon size="sm" />
           </Button>
         </div>
         {loadStatus === "loading" ? (

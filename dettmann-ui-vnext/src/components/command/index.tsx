@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ComponentPropsWithoutRef, type KeyboardEvent, type ReactNode } from "react";
-import { Search } from "lucide-react";
+import { SearchIcon } from "../../icons/glyphs/search";
 import { cn } from "../../utils/cn";
 import { Input } from "../input";
 
@@ -27,7 +27,7 @@ export function Command<T>({ items, onValueChange, placeholder="Search", emptyMe
     else if (event.key === "Enter") { event.preventDefault(); const item=filtered[active]; if (item && !item.disabled) onValueChange?.(item); }
   };
   return <div ref={ref} onKeyDown={handleKeyDown} className={cn("flex min-h-0 flex-col rounded-card border border-border bg-surface shadow-overlay", className)} {...props}>
-    <div className="border-b border-border p-2"><Input.Root value={query} onChange={(value: string) => setQuery(value)}><Input.Box><Search aria-hidden="true" className="h-4 w-4 text-fg-muted" /><Input.Field aria-label={placeholder} placeholder={placeholder} /></Input.Box></Input.Root></div>
+    <div className="border-b border-border p-2"><Input.Root value={query} onChange={(value: string) => setQuery(value)}><Input.Box><SearchIcon size="sm" className="text-fg-muted" /><Input.Field aria-label={placeholder} placeholder={placeholder} /></Input.Box></Input.Root></div>
     <div role="listbox" className="max-h-80 overflow-auto p-1">
       {filtered.length ? filtered.map((item,index)=><button key={item.id} type="button" role="option" aria-selected={index===active} disabled={item.disabled} onMouseEnter={()=>setActive(index)} onClick={()=>onValueChange?.(item)} className={cn("flex w-full items-start gap-3 rounded-control px-3 py-2 text-left", index===active?"bg-state-hover":"", item.disabled&&"opacity-50")}>{item.icon}<span className="min-w-0 flex-1"><span className="block truncate text-sm font-medium text-fg">{item.label}</span>{item.description?<span className="block truncate text-xs text-fg-muted">{item.description}</span>:null}</span></button>):<div className="p-6 text-center text-sm text-fg-muted">{emptyMessage}</div>}
     </div>
