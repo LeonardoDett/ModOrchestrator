@@ -104,6 +104,7 @@ test("pathLength reaches drawable children nested in fragments and groups", () =
           <path d="M1 1h2" />
           <g>
             <line x1="1" y1="1" x2="2" y2="2" />
+            <polygon points="1,1 2,1 2,2" />
           </g>
         </>
       ),
@@ -113,6 +114,7 @@ test("pathLength reaches drawable children nested in fragments and groups", () =
   const { container } = render(<Nested />);
   expect(container.querySelector("path")!.getAttribute("pathLength")).toBe("1");
   expect(container.querySelector("line")!.getAttribute("pathLength")).toBe("1");
+  expect(container.querySelector("polygon")!.getAttribute("pathLength")).toBe("1");
 });
 
 test("size/intent/label mirror Icon", () => {

@@ -15,6 +15,7 @@ import { ICON_SIZE_CLASS, ICON_STROKE } from "../primitives/icon";
 import { intentData } from "../theme/emphasis";
 import { cn } from "../utils/cn";
 import { useMergedRef } from "../utils/merge-refs";
+import { retainController } from "./controller";
 import { playChoreography } from "./play";
 import { registerIcon } from "./registry";
 import type {
@@ -30,7 +31,7 @@ import type {
 const ROOT = "root";
 const DEFAULT_ORIGIN = "50% 50%";
 const KEBAB = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const DRAWABLE = new Set(["path", "line", "polyline", "circle", "rect", "ellipse"]);
+const DRAWABLE = new Set(["path", "line", "polyline", "polygon", "circle", "rect", "ellipse"]);
 const STROKE_TECHNIQUES = new Set(["draw", "undraw", "trail"]);
 
 /** Nomes que já emitiram o aviso de `loop` sem coreografia (um por nome). */
@@ -62,7 +63,7 @@ function validate(def: IconDefinition): string[] {
   return errors;
 }
 
-/** Clona `path|line|polyline|circle|rect|ellipse` com `pathLength=1`, descendo em fragments e grupos. */
+/** Clona `path|line|polyline|polygon|circle|rect|ellipse` com `pathLength=1`, descendo em fragments e grupos. */
 function withPathLength(node: ReactNode): ReactNode {
   return Children.map(node, (child) => {
     if (!isValidElement(child)) return child;
@@ -185,8 +186,10 @@ export function defineIcon(def: IconDefinition): AnimatedIconComponent {
       };
     }, [state]);
 
-    // Gatilho herdado: a Task 4 instala aqui o controlador delegado por documento.
-    //   useEffect(() => { if (trigger === "auto") return retainController(svgRef.current!.ownerDocument); }, [trigger]);
+    // Gatilho herdado: um controlador delegado por documento (contagem de referências).
+    useEffect(() => {
+      if (trigger === "auto") return retainController(svgRef.current?.ownerDocument);
+    }, [trigger]);
 
     useEffect(() => {
       if (!loop) return;
