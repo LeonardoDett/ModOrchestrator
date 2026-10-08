@@ -12,7 +12,7 @@ import { PanelLeftCloseIcon } from "../../icons/glyphs/panel-left-close";
 import { PanelLeftOpenIcon } from "../../icons/glyphs/panel-left-open";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { Icon, type LucideIconComponent } from "../../primitives/icon";
+import { Icon, type IconComponent } from "../../primitives/icon";
 import { Button } from "../../components/button";
 import { Accordion } from "../../components/accordion";
 import { Drawer } from "../../components/drawer";
@@ -22,7 +22,7 @@ import { useControllableState } from "../../hooks/use-controllable-state";
 export interface SidebarItem {
   id: string;
   label: string;
-  icon?: LucideIconComponent;
+  icon?: IconComponent;
   href?: string;
   onClick?: () => void;
   children?: SidebarItem[];
@@ -37,7 +37,7 @@ export interface SidebarSection {
   id: string;
   /** Section heading; hidden (replaced by a divider) while collapsed. */
   label?: string;
-  icon?: LucideIconComponent;
+  icon?: IconComponent;
   items: SidebarItem[];
   placement?: "start" | "end";
 }

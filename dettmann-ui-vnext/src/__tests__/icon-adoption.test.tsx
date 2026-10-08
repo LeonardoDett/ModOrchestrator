@@ -289,3 +289,12 @@ test("no component imports a lucide glyph that exists in the catalog", () => {
   }
   expect(offenders).toEqual([]);
 });
+
+test("Sidebar items and sections accept a catalog icon", () => {
+  render(
+    <Sidebar.Root
+      sections={[{ id: "s", items: [{ id: "h", label: "Home", icon: CircleCheckIcon }] }]}
+    />,
+  );
+  expect(document.querySelector('[data-animated-icon="circle-check"]')).not.toBeNull();
+});
