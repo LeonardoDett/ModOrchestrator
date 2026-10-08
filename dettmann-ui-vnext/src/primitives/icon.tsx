@@ -1,28 +1,45 @@
-import { type ComponentPropsWithoutRef, type ElementType } from "react";
 import { defineRecipe, type VariantProps } from "../core/recipe";
 import { cn } from "../utils/cn";
 import { intentData } from "../theme/emphasis";
 import type { Intent } from "../theme/engine";
 import type { LucideIcon } from "lucide-react";
+import type { AnimatedIconComponent } from "../icons/types";
+
+export type IconSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+
+/** Classes de tamanho por `size` (compartilhadas com os ícones animados). */
+export const ICON_SIZE_CLASS: Record<IconSize, string> = {
+  xs: "h-3 w-3",
+  sm: "h-4 w-4",
+  md: "h-5 w-5",
+  lg: "h-6 w-6",
+  xl: "h-8 w-8",
+  "2xl": "h-10 w-10",
+};
+
+/** Size to strokeWidth mapping for consistent proportions */
+export const ICON_STROKE: Record<IconSize, number> = {
+  xs: 1.5,
+  sm: 2,
+  md: 2,
+  lg: 2,
+  xl: 1.75,
+  "2xl": 1.5,
+};
+
+const ICON_COLOR_CLASS = {
+  current: "text-current",
+  fg: "text-fg",
+  "muted-fg": "text-fg-muted",
+};
 
 const iconVariants = defineRecipe({
   base: "shrink-0",
   variants: {
     /** Icon size */
-    size: {
-      xs: "h-3 w-3",
-      sm: "h-4 w-4",
-      md: "h-5 w-5",
-      lg: "h-6 w-6",
-      xl: "h-8 w-8",
-      "2xl": "h-10 w-10",
-    },
+    size: ICON_SIZE_CLASS,
     /** Icon color (neutral roles); use `intent` for semantic color */
-    color: {
-      current: "text-current",
-      fg: "text-fg",
-      "muted-fg": "text-fg-muted",
-    },
+    color: ICON_COLOR_CLASS,
   },
   defaultVariants: {
     size: "md",
@@ -35,9 +52,16 @@ type IconVariants = VariantProps<typeof iconVariants>;
 /** Type for Lucide icon components - uses the official LucideIcon type */
 export type LucideIconComponent = LucideIcon;
 
+/** Ícone lucide ou ícone animado próprio (`defineIcon`). */
+export type IconComponent = LucideIcon | AnimatedIconComponent;
+
+function isAnimatedIcon(icon: IconComponent): icon is AnimatedIconComponent {
+  return "definition" in icon;
+}
+
 interface IconProps extends IconVariants {
-  /** The Lucide icon component to render */
-  icon: LucideIconComponent;
+  /** The icon component to render (Lucide or an animated icon from `dettmann-ui/icons`) */
+  icon: IconComponent;
   /** Custom stroke width (overrides default) */
   strokeWidth?: number | string;
   /** Accessible label for the icon */
@@ -48,20 +72,11 @@ interface IconProps extends IconVariants {
   intent?: Intent;
 }
 
-/** Size to strokeWidth mapping for consistent proportions */
-const sizeToStrokeWidth: Record<NonNullable<IconVariants["size"]>, number> = {
-  xs: 1.5,
-  sm: 2,
-  md: 2,
-  lg: 2,
-  xl: 1.75,
-  "2xl": 1.5,
-};
-
 /**
  * Icon is a wrapper for Lucide icons that provides consistent sizing and coloring.
  * All components in the design system should use this instead of importing
- * Lucide icons directly.
+ * Lucide icons directly. Also accepts an animated icon (`defineIcon`), which
+ * renders itself with the same size, intent and label.
  *
  * @example
  * ```tsx
@@ -78,16 +93,22 @@ const sizeToStrokeWidth: Record<NonNullable<IconVariants["size"]>, number> = {
  * </button>
  * ```
  */
-export function Icon({
-  icon: IconComponent,
-  className,
-  size = "md",
-  color,
-  intent,
-  strokeWidth,
-  label,
-}: IconProps) {
-  const resolvedStrokeWidth = strokeWidth ?? sizeToStrokeWidth[size ?? "md"];
+export function Icon({ icon, className, size = "md", color, intent, strokeWidth, label }: IconProps) {
+  const resolvedSize = size ?? "md";
+  if (isAnimatedIcon(icon)) {
+    const Animated = icon;
+    return (
+      <Animated
+        size={resolvedSize}
+        intent={intent}
+        label={label}
+        strokeWidth={strokeWidth}
+        className={cn(ICON_COLOR_CLASS[color ?? "current"], className)}
+      />
+    );
+  }
+  const IconComponent = icon;
+  const resolvedStrokeWidth = strokeWidth ?? ICON_STROKE[resolvedSize];
 
   return (
     <IconComponent

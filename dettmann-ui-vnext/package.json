@@ -12,6 +12,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
     },
+    "./icons": {
+      "types": "./dist/icons/index.d.ts",
+      "import": "./dist/icons/index.mjs"
+    },
     "./theme-script": {
       "types": "./dist/theme/get-theme-script.d.ts",
       "import": "./dist/theme/get-theme-script.mjs"

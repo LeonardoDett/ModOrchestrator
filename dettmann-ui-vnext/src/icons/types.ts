@@ -1,4 +1,7 @@
+import type { ForwardRefExoticComponent, ReactNode, RefAttributes, SVGProps } from "react";
 import type { AnimateOptions, MotionValues } from "../motion";
+import type { IconSize } from "../primitives/icon";
+import type { Intent } from "../theme/engine";
 
 export type IconMode = "action" | "loop";
 
@@ -58,3 +61,44 @@ export interface Technique {
 
 /** Chave `"root"` = ícone inteiro; as demais são ids de partes do glifo. */
 export type Choreography = Partial<Record<string, Technique | readonly Technique[]>>;
+
+/** Definição de um ícone animado (entrada de `defineIcon`). */
+export interface IconDefinition {
+  /** kebab-case, único no catálogo. */
+  name: string;
+  /** Partes do glifo; ordem = ordem de pintura. `"root"` é reservado. */
+  parts: Record<string, ReactNode>;
+  /** `transform-origin` por parte (padrão `"50% 50%"`). */
+  origin?: Record<string, string>;
+  /** Gesto disparado (gatilho herdado, `playKey`); ausente = ícone estático. */
+  action?: Choreography;
+  /** Estado contínuo (prop `loop`). */
+  loop?: Choreography;
+}
+
+/** Controle imperativo registrado por ícone montado (usado pelo controlador delegado). */
+export interface IconHandle {
+  /** Toca o `action`, salvo se já está tocando ou se o `loop` está ativo. */
+  play(): void;
+  isPlaying(): boolean;
+}
+
+export interface AnimatedIconProps extends Omit<SVGProps<SVGSVGElement>, "ref" | "children"> {
+  /** Mesmo mapa de tamanho e `strokeWidth` do `Icon`. Padrão `md`. */
+  size?: IconSize;
+  /** Cor semântica: `text-intent-fill` + `data-intent`. */
+  intent?: Intent;
+  /** Nome acessível (`role="img"`); sem ele o ícone é `aria-hidden`. */
+  label?: string;
+  strokeWidth?: number | string;
+  /** `"auto"` (padrão): reage ao controle pai. `"none"`: só `playKey`/`loop`. */
+  trigger?: "auto" | "none";
+  /** Quando muda (não na montagem), cancela o `action` em curso e toca de novo. */
+  playKey?: unknown;
+  /** Roda a coreografia `loop`; enquanto ativo, gatilhos de `action` são ignorados. */
+  loop?: boolean;
+}
+
+export type AnimatedIconComponent = ForwardRefExoticComponent<AnimatedIconProps & RefAttributes<SVGSVGElement>> & {
+  readonly definition: IconDefinition;
+};

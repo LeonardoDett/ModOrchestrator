@@ -6,7 +6,7 @@ export { VisuallyHidden } from "./visually-hidden";
 export { Spinner } from "./spinner";
 export { Divider } from "./divider";
 export { Kbd } from "./kbd";
-export { Icon, type LucideIconComponent } from "./icon";
+export { Icon, type LucideIconComponent, type IconComponent, type IconSize } from "./icon";
 export { VirtualList } from "./virtual-list";
 export { Grid } from "./grid";
 export { Container } from "./container";
