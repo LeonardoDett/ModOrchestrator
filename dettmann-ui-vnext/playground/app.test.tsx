@@ -1,8 +1,9 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, beforeAll, describe, expect, test } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./app";
 import { configToCode } from "./panels/export";
+import { CATALOG } from "../src/icons/catalog";
 
 describe("playground", () => {
   afterEach(() => {
@@ -56,5 +57,42 @@ describe("playground", () => {
     expect(code).not.toContain("motion");
     expect(code).toContain('mono: "Fira Code"');
     expect(code).not.toContain("sans");
+  });
+});
+
+describe("playground: ícones", () => {
+  beforeAll(() => {
+    // jsdom não tem `Element.prototype.animate`; os ícones disparam animação ao tocar.
+    (Element.prototype as unknown as { animate: unknown }).animate = () => ({ cancel() {}, finished: Promise.resolve(), onfinish: null });
+  });
+  afterEach(() => {
+    document.head.querySelectorAll("style[data-dettmann-theme]").forEach((s) => s.remove());
+  });
+
+  test("icons page lists the whole catalog", () => {
+    render(<App />);
+    expect(screen.getAllByTestId("icon-cell")).toHaveLength(CATALOG.length);
+  });
+
+  test("context switch wraps icons in a high-emphasis button", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(screen.getByRole("radio", { name: "CTA (high)" }));
+    const cells = screen.getAllByTestId("icon-cell");
+    for (const cell of cells) expect(cell.querySelector("button[data-motion=expressive]")).not.toBeNull();
+  });
+
+  test("loader matrix renders 4 variants", () => {
+    render(<App />);
+    expect(screen.getAllByTestId("loader-variant")).toHaveLength(4);
+  });
+
+  test("reduce motion toggles the root attribute and restores it", async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<App />);
+    await user.click(screen.getByRole("switch", { name: "Reduzir movimento" }));
+    expect(document.documentElement.dataset.reduceMotion).toBe("true");
+    unmount();
+    expect(document.documentElement.dataset.reduceMotion).toBeUndefined();
   });
 });

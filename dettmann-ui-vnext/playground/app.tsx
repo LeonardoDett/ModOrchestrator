@@ -23,6 +23,7 @@ import { Ramps } from "./panels/ramps";
 import { ContrastPanel, useContrast } from "./panels/contrast";
 import { SampleScreen } from "./panels/sample-screen";
 import { MotionDemo } from "./panels/motion-demo";
+import { IconsPanel } from "./panels/icons";
 import { ExportPanel } from "./panels/export";
 
 /** Id fixo do tema editado: injetado em runtime, nunca colide com um preset. */
@@ -152,6 +153,9 @@ export default function App() {
                 <MotionDemo />
               </Panel>
             </ThemeScope>
+            <Panel title="Ícones">
+              <IconsPanel config={config} />
+            </Panel>
           </main>
         </div>
         <BudgetInspector />
