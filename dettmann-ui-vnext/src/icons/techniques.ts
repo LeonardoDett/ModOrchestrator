@@ -49,10 +49,10 @@ export function lift(p: { x?: number; y?: number; rotate?: number; delay?: numbe
   }));
 }
 
-/** Desloca na direção e volta. Sem x/y, x = 2. */
+/** Desloca na direção e volta. Sem x/y, x = 1.8 (1.8 × amp 1.6 ≤ 3). */
 export function nudge(p: { x?: number; y?: number; delay?: number; period?: number } = {}): Technique {
   const none = p.x === undefined && p.y === undefined;
-  const x = none ? 2 : (p.x ?? 0);
+  const x = none ? 1.8 : (p.x ?? 0);
   const y = p.y ?? 0;
   const period = p.period ?? 1200;
   return make("nudge", BOTH, { translate: Math.max(Math.abs(x), Math.abs(y)) }, p.delay, (m, ctx) => ({

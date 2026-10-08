@@ -91,7 +91,7 @@ test("spin only supports loop; squash only action", () => {
 
 test("defaults match the spec", () => {
   expect(squash().run(levels.responsive, actionCtx).keyframes[1]).toEqual({ scale: String(1 - 0.12) });
-  expect(nudge().run(levels.responsive, actionCtx).keyframes[1]).toEqual({ translate: "2px 0px" });
+  expect(nudge().run(levels.responsive, actionCtx).keyframes[1]).toEqual({ translate: "1.8px 0px" });
   expect(spin().run(levels.responsive, loopCtx)).toMatchObject({ period: 1000 });
   expect(pulse().run(levels.responsive, loopCtx)).toMatchObject({ period: 1600 });
   expect(draw({ from: "end" }).run(levels.responsive, actionCtx).keyframes[0]).toMatchObject({ strokeDashoffset: -1 });

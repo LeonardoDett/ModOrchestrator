@@ -26,7 +26,8 @@
   "files": [
     "dist",
     "src/theme/tokens.css",
-    "src/styles"
+    "src/styles",
+    "src/icons/NOTICE"
   ],
   "scripts": {
     "theme:build": "tsx scripts/theme/generate.ts",
@@ -36,7 +37,7 @@
     "skills:install": "node scripts/skills/install.mjs",
     "prebuild": "npm run theme",
     "build": "node --max-old-space-size=8192 node_modules/tsup/dist/cli-default.js && npm run build:css",
-    "build:css": "tailwindcss -i ./src/theme/tokens.css -o ./dist/index.css --minify && node -e \"for(const f of require('fs').readdirSync('src/styles/fonts').filter(f=>f.endsWith('.woff2')))require('fs').copyFileSync('src/styles/fonts/'+f,'dist/'+f)\"",
+    "build:css": "tailwindcss -i ./src/theme/tokens.css -o ./dist/index.css --minify && node -e \"require('fs').mkdirSync('dist/icons',{recursive:true});require('fs').copyFileSync('src/icons/NOTICE','dist/icons/NOTICE');for(const f of require('fs').readdirSync('src/styles/fonts').filter(f=>f.endsWith('.woff2')))require('fs').copyFileSync('src/styles/fonts/'+f,'dist/'+f)\"",
     "dev": "tsup --watch",
     "playground": "vite --config playground/vite.config.ts",
     "typecheck": "tsc --noEmit && tsc --noEmit -p playground/tsconfig.json",
