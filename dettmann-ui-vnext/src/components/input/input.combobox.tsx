@@ -25,6 +25,7 @@ import {
 import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
 import { inputValueAsString, useInputContext } from "./input.context";
 import { VirtualList } from "../../primitives/virtual-list";
 import type { InputRootOwnedNativeProps } from "./input.owned-props";
@@ -306,20 +307,14 @@ export function InputCombobox({
       />
 
       {/* Dropdown arrow */}
-      <svg
+      <ChevronDownIcon
+        size="sm"
+        trigger="none"
         className={cn(
-          "h-4 w-4 shrink-0 text-fg-muted transition-transform duration-(--motion-duration) ease-(--motion-ease) pointer-events-none",
+          "shrink-0 text-fg-muted transition-transform duration-(--motion-duration) ease-(--motion-ease) pointer-events-none",
           isOpen && "rotate-180"
         )}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
+      />
 
       {isOpen && (
         <FloatingPortal>

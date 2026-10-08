@@ -5,6 +5,8 @@ import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
+import { CheckIcon } from "../../icons/glyphs/check";
+import { MinusIcon } from "../../icons/glyphs/minus";
 
 const checkboxVariants = defineRecipe({
   slots: {
@@ -119,6 +121,11 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       onCheckedChange?.(!isChecked);
     };
 
+    const markClass = cn(
+      "text-current transition-transform duration-(--motion-duration) ease-(--motion-ease)",
+      isChecked || indeterminate ? "scale-100" : "scale-0"
+    );
+
     return (
       <div className={cn(root(), className)}>
         <button
@@ -134,24 +141,11 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
           {...intentData(intent ?? "brand")}
           {...props}
         >
-          <svg
-            className={cn(
-              "h-3 w-3 text-current transition-transform duration-(--motion-duration) ease-(--motion-ease)",
-              isChecked || indeterminate ? "scale-100" : "scale-0"
-            )}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={3}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {indeterminate ? (
-              <line x1="5" y1="12" x2="19" y2="12" />
-            ) : (
-              <polyline points="20 6 9 17 4 12" />
-            )}
-          </svg>
+          {indeterminate ? (
+            <MinusIcon size="xs" strokeWidth={3} trigger="none" playKey={state} className={markClass} />
+          ) : (
+            <CheckIcon size="xs" strokeWidth={3} trigger="none" playKey={state} className={markClass} />
+          )}
         </button>
         {label && (
           <label htmlFor={id} className={labelClass()}>

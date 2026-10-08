@@ -4,6 +4,7 @@ import { type ComponentPropsWithoutRef } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useModalContext } from "./modal.context";
+import { XIcon } from "../../icons/glyphs/x";
 
 const modalCloseButtonVariants = defineRecipe({
   base: [
@@ -38,18 +39,7 @@ export function ModalCloseButton({
       className={cn(modalCloseButtonVariants(), className)}
       {...props}
     >
-      <svg
-        className="h-4 w-4"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
+      <XIcon size="sm" />
     </button>
   );
 }

@@ -9,6 +9,7 @@ import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 import { Presence } from "../../motion/presence";
 import type { MotionValues } from "../../motion/read-motion";
+import { XIcon } from "../../icons/glyphs/x";
 
 /**
  * Entrada pela camada de movimento: desliza da direita (16px × amp) e aparece. Sob redução
@@ -101,18 +102,7 @@ const ToastItem = forwardRef<HTMLDivElement, ToastItemProps>(function ToastItem(
         className="shrink-0 rounded-control text-fg-muted hover:bg-state-hover hover:text-fg transition-opacity duration-(--motion-duration) ease-(--motion-ease)"
         aria-label={closeLabel}
       >
-        <svg
-          className="h-4 w-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
+        <XIcon size="sm" />
       </button>
     </div>
   );

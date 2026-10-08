@@ -4,6 +4,7 @@ import { useEffect, useRef, type ComponentPropsWithoutRef, type KeyboardEvent } 
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useAccordionContext } from "./accordion.context";
+import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
 
 const accordionTriggerVariants = defineRecipe({
   base: [
@@ -53,20 +54,13 @@ export function AccordionTrigger({ value, className, children, ...props }: Accor
       {...props}
     >
       {children}
-      <svg
+      <ChevronDownIcon
+        size="sm"
         className={cn(
-          "h-4 w-4 shrink-0 transition-transform duration-(--motion-duration) ease-(--motion-ease)",
+          "shrink-0 transition-transform duration-(--motion-duration) ease-(--motion-ease)",
           isOpen && "rotate-180"
         )}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <polyline points="6 9 12 15 18 9" />
-      </svg>
+      />
     </button>
   );
 }

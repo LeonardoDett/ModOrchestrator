@@ -21,6 +21,8 @@ import {
 } from "date-fns";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { ChevronLeftIcon } from "../../icons/glyphs/chevron-left";
+import { ChevronRightIcon } from "../../icons/glyphs/chevron-right";
 import { useDatePickerContext } from "./date-picker.context";
 
 const panelVariants = defineRecipe({
@@ -184,17 +186,7 @@ export function DatePickerPanel({
           onClick={handlePrevMonth}
           aria-label="Previous month"
         >
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
+          <ChevronLeftIcon size="sm" />
         </button>
 
         <div className={monthYearVariants()}>
@@ -230,17 +222,7 @@ export function DatePickerPanel({
           onClick={handleNextMonth}
           aria-label="Next month"
         >
-          <svg
-            className="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
+          <ChevronRightIcon size="sm" />
         </button>
       </div>
 
