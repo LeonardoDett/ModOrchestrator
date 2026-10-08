@@ -3,7 +3,6 @@ export { Typography } from "./typography";
 export { Backdrop } from "./backdrop";
 export { Portal, OverlayScope } from "./portal";
 export { VisuallyHidden } from "./visually-hidden";
-export { Spinner } from "./spinner";
 export { Divider } from "./divider";
 export { Kbd } from "./kbd";
 export { Icon, type LucideIconComponent, type IconComponent, type IconSize } from "./icon";

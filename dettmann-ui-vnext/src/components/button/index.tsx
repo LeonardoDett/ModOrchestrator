@@ -1,7 +1,7 @@
 import { forwardRef, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { Spinner } from "../../primitives/spinner";
+import { Loader } from "../loader";
 import { resolveEmphasis } from "../../theme/emphasis";
 import type { Emphasis, Intent, MotionLevel } from "../../theme/engine";
 
@@ -108,7 +108,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {loading && (
-          <Spinner
+          <Loader
             size={size === "sm" || size === "icon-sm" ? "xs" : "sm"}
             className="shrink-0"
           />

@@ -55,3 +55,4 @@ export * from "./tooltip";
 export * from "./tree";
 export * from "./diff-viewer";
 export * from "./log-viewer";
+export * from "./loader";

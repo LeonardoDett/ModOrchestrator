@@ -1,9 +1,10 @@
 "use client";
 
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
-import { Ban, Check, Loader2, Minus, type LucideIcon } from "lucide-react";
+import { Ban, Check, Minus, type LucideIcon } from "lucide-react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { Loader } from "../loader";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 
@@ -30,7 +31,7 @@ const statusToggleVariants = defineRecipe({
       on: { track: "bg-intent-fill cursor-pointer", icon: "text-intent-text" },
       off: { track: "bg-border-strong cursor-pointer", icon: "text-fg-muted" },
       unavailable: { track: "cursor-not-allowed border border-dashed border-border-strong bg-sunken", thumb: "bg-sunken shadow-none", icon: "text-fg-subtle" },
-      busy: { track: "cursor-progress bg-sunken", icon: "animate-spin text-fg-muted" },
+      busy: { track: "cursor-progress bg-sunken", icon: "text-fg-muted" },
     },
     size: {
       sm: { track: "h-5 w-9", thumb: "h-4 w-4", icon: "h-3 w-3" },
@@ -40,7 +41,7 @@ const statusToggleVariants = defineRecipe({
   defaultVariants: { state: "off", size: "sm" },
 });
 
-const ICONS: Record<StatusToggleState, LucideIcon> = { on: Check, off: Minus, unavailable: Ban, busy: Loader2 };
+const ICONS: Record<Exclude<StatusToggleState, "busy">, LucideIcon> = { on: Check, off: Minus, unavailable: Ban };
 
 const SHIFT: Record<"sm" | "md", string> = { sm: "translate-x-4", md: "translate-x-5" };
 
@@ -77,7 +78,7 @@ export const StatusToggle = forwardRef<HTMLButtonElement, StatusToggleProps>(fun
   const descriptionId = useId();
   const interactive = (state === "on" || state === "off") && !disabled;
   const { track, thumb, icon } = statusToggleVariants({ state, size });
-  const Icon = ICONS[state];
+  const Icon = state === "busy" ? null : ICONS[state];
   return (
     <button
       ref={ref}
@@ -98,7 +99,11 @@ export const StatusToggle = forwardRef<HTMLButtonElement, StatusToggleProps>(fun
       {...props}
     >
       <span className={cn(thumb(), state === "on" && SHIFT[size])}>
-        <Icon aria-hidden="true" className={icon()} />
+        {state === "busy" ? (
+          <Loader size="xs" label={stateLabels.busy} aria-hidden="true" className={icon()} />
+        ) : (
+          Icon && <Icon aria-hidden="true" className={icon()} />
+        )}
       </span>
       <span id={descriptionId} className="sr-only">
         {stateLabels[state]}
