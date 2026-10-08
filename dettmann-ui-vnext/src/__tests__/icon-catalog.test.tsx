@@ -62,7 +62,10 @@ describe.each(entries)("%s", (name, C) => {
 });
 
 test("loop icons declare a loop choreography", () => {
-  for (const n of LOOP_ICONS) if (byName(n)) expect(byName(n)!.definition.loop).toBeDefined();
+  for (const n of LOOP_ICONS) {
+    expect(byName(n), n).toBeDefined();
+    expect(byName(n)!.definition.loop, n).toBeDefined();
+  }
 });
 
 test("every glyph is exported from src/icons/index.ts", () => {

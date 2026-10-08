@@ -42,6 +42,26 @@ import { CircleXIcon } from "./glyphs/circle-x";
 import { CircleHelpIcon } from "./glyphs/circle-help";
 import { BellIcon } from "./glyphs/bell";
 import { BanIcon } from "./glyphs/ban";
+import { RocketIcon } from "./glyphs/rocket";
+import { RefreshIcon } from "./glyphs/refresh";
+import { UndoIcon } from "./glyphs/undo";
+import { HistoryIcon } from "./glyphs/history";
+import { ScanSearchIcon } from "./glyphs/scan-search";
+import { PlayIcon } from "./glyphs/play";
+import { PowerIcon } from "./glyphs/power";
+import { LockIcon } from "./glyphs/lock";
+import { LockOpenIcon } from "./glyphs/lock-open";
+import { EyeIcon } from "./glyphs/eye";
+import { EyeOffIcon } from "./glyphs/eye-off";
+import { PinIcon } from "./glyphs/pin";
+import { PackageIcon } from "./glyphs/package";
+import { PackagePlusIcon } from "./glyphs/package-plus";
+import { SparklesIcon } from "./glyphs/sparkles";
+import { SunIcon } from "./glyphs/sun";
+import { MoonIcon } from "./glyphs/moon";
+import { ClockIcon } from "./glyphs/clock";
+import { GitCompareIcon } from "./glyphs/git-compare";
+import { PuzzleIcon } from "./glyphs/puzzle";
 
 /** Todos os glifos animados da biblioteca (base das propriedades em `icon-catalog.test.tsx`). */
 export const CATALOG: readonly AnimatedIconComponent[] = [
@@ -88,4 +108,24 @@ export const CATALOG: readonly AnimatedIconComponent[] = [
   CircleHelpIcon,
   BellIcon,
   BanIcon,
+  RocketIcon,
+  RefreshIcon,
+  UndoIcon,
+  HistoryIcon,
+  ScanSearchIcon,
+  PlayIcon,
+  PowerIcon,
+  LockIcon,
+  LockOpenIcon,
+  EyeIcon,
+  EyeOffIcon,
+  PinIcon,
+  PackageIcon,
+  PackagePlusIcon,
+  SparklesIcon,
+  SunIcon,
+  MoonIcon,
+  ClockIcon,
+  GitCompareIcon,
+  PuzzleIcon,
 ];
