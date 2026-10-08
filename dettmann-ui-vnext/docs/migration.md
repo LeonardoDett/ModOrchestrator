@@ -68,6 +68,12 @@ Component props:
 | `<Tag tone>` | `<Tag intent>` (Tag has no `emphasis` or `variant`) |
 | `<Sidebar.Root emphasis="strong\|subtle">` | `<Sidebar.Root variant="strong\|subtle">` (renamed: `emphasis` is the shared `low\|medium\|high` axis) |
 
+## Input.Select is no longer native
+
+`Input.Select` keeps its API (`options`, `placeholder`, value/onChange on `Input.Root`), but renders a custom `role="combobox"` button plus a `listbox` instead of `<select>`. Options may now carry `icon` and `description`, and an item `{ label, options: [...] }` renders as a group.
+
+Tests that drove the native element must change: `user.selectOptions(combobox, "x")` becomes `await user.click(combobox); await user.click(screen.getByRole("option", { name: "X" }))`. The Mod Orchestrator frontend has 8 `selectOptions` calls to update in subproject 4. Forms still submit the value through a hidden `<input name>`.
+
 ## Business rules of the new contract
 
 - At most one `emphasis="high"` per region (`Toolbar`, `ActionBar`, modal footer, page actions); the rest is `medium` (default) or `low`. Dev builds warn.

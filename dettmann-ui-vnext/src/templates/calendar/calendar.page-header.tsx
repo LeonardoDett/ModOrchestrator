@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
 import { type ReactNode } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
@@ -107,15 +107,10 @@ export function CalendarPageHeader({
             onChange={(v: string) => navigation.setView(v as CalendarView)}
             className="w-auto min-w-[9.5rem]"
           >
-            <Input.Box padding="sm" className="gap-1 pr-2">
+            <Input.Box padding="sm">
               <Input.Select
                 options={viewOptions}
                 aria-label={labels.viewSwitcherAriaLabel}
-                className="pr-5"
-              />
-              <ChevronDown
-                className="pointer-events-none size-4 shrink-0 text-fg-muted"
-                aria-hidden
               />
             </Input.Box>
           </Input.Root>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Boxes, Download, FolderOpen, LayoutDashboard, Puzzle, Settings, ScrollText } from "lucide-react";
+import { Boxes, Download, FolderOpen, HardDrive, Link2, LayoutDashboard, Puzzle, Settings, ScrollText } from "lucide-react";
 import {
   Alert,
   Badge,
@@ -62,6 +62,7 @@ const SIDEBAR_LABELS = {
 export function SampleScreen() {
   const [open, setOpen] = useState(false);
   const [profile, setProfile] = useState("Principal");
+  const [method, setMethod] = useState("hardlink");
   const [backup, setBackup] = useState(true);
   const [autoSort, setAutoSort] = useState(false);
 
@@ -137,6 +138,24 @@ export function SampleScreen() {
                 <Input.Field />
               </Input.Box>
               <Input.HelperText>Nome exibido na lista de perfis.</Input.HelperText>
+            </Input.Root>
+            <Input.Root fullWidth name="method" value={method} onChange={setMethod}>
+              <Input.Label floating>Método de implantação</Input.Label>
+              <Input.Box>
+                <Input.Select
+                  options={[
+                    { value: "hardlink", label: "Hardlink", icon: <Link2 />, description: "Rápido, sem cópia; exige o mesmo disco" },
+                    { value: "symlink", label: "Symlink", icon: <Link2 />, description: "Funciona entre discos" },
+                    {
+                      label: "Cópia",
+                      options: [
+                        { value: "copy", label: "Copiar arquivos", icon: <HardDrive />, description: "Mais lento, máxima compatibilidade" },
+                        { value: "usvfs", label: "Virtual (USVFS)", disabled: true, description: "Indisponível neste jogo" },
+                      ],
+                    },
+                  ]}
+                />
+              </Input.Box>
             </Input.Root>
             <Checkbox label="Criar backup antes de implantar" checked={backup} onCheckedChange={setBackup} />
             <Switch label="Ordenar automaticamente" checked={autoSort} onCheckedChange={setAutoSort} />

@@ -102,6 +102,11 @@ Monte telas com slots e primitivas: `Card.Root/Header/Title/Body/Footer`,
 `Modal.Root/Content/Header/Title/Body/Footer`, `Stack`, `Inline`, `Surface`,
 `Typography`, `Icon`, `Badge`, `Sidebar`, `Toolbar`, `ResourcePage`.
 
+Escolha de opção: `Input.Select` (custom, comportamento MD3 — não use `<select>` nativo);
+opções aceitam `icon` e `description`, e `{ label, options }` vira grupo. Precisa
+de busca → `Input.Combobox`; várias → `Input.MultiSelect`. Em teste, clique no
+`combobox` e na `option` (não há `selectOptions`).
+
 **Faltou componente** (ex.: card de estatística):
 
 1. Componha **dentro do arquivo da tela**, só com primitivas e papéis

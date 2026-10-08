@@ -232,7 +232,8 @@ describe("Input", () => {
         </Input.Root>
       );
 
-      await user.selectOptions(screen.getByRole("combobox"), "design");
+      await user.click(screen.getByRole("combobox"));
+      await user.click(screen.getByRole("option", { name: "Designer" }));
       expect(onChange).toHaveBeenCalledWith("design");
       expect(onChange.mock.calls[0]?.[0]).not.toHaveProperty("target");
     });

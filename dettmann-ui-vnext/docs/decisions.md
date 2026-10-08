@@ -115,3 +115,8 @@ Root prefixes use zero-specificity `:where(:root)` and `:where(.dark, [data-ui-m
 ## D-025 — Playground and skills
 
 `npm run playground` (Vite, not published) edits every knob, shows light/dark side by side, ramps, measured contrast pairs, a representative screen, the `BudgetInspector`, the three motion levels and exports the config as code. Three skills replace the v1 `.cursor` ones: `dettmann-ui-use` (consumers), `dettmann-ui-author` (library work), `dettmann-ui-improve` (read-only audit). `npm run skills:install -- <target>` copies them to `.claude/skills` and `.cursor/skills`; the Mod Orchestrator versions the installed copies.
+
+## D-026 — Input.Select becomes a custom select (MD3 behaviour)
+
+Replaces the native `<select>` with a `button[role=combobox]` + anchored `listbox` (floating-ui, no new dependency), keeping the `Input.Select` API so migration is a drop-in. Behaviour follows Material Design 3 (anchored menu, scroll to selection, vertical-expand entrance, typeahead, keyboard model above); shape and colors follow the library tokens (balanced shape, `bg-selected` + check for the selection, state layers). Focus stays on the trigger (`aria-activedescendant`). The menu is positioned with `left/top` (`transform: false`) so the entrance `scaleY` cannot displace it. Search stays in `Input.Combobox`, multiple selection in `Input.MultiSelect`. Cost: tests using `selectOptions` must click the trigger and the option instead.
+

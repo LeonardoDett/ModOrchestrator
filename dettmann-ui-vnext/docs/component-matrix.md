@@ -6,7 +6,9 @@
 
 ## Inputs and controls
 
-`Button`, `ButtonGroup`, `Checkbox`, `Radio`, `Switch`, `Slider`, `Input`, `DatePicker`, `SegmentedControl`, `Pagination`
+`Button`, `ButtonGroup`, `Checkbox`, `Radio`, `Switch`, `Slider`, `Input` (Field, Textarea, Select, Combobox, MultiSelect, Pin, Number), `DatePicker`, `SegmentedControl`, `Pagination`
+
+`Input.Select` is a custom select with Material Design 3 behaviour (not a native `<select>`): anchored `listbox` that flips when there is no room, opens scrolled to the selection with a vertical-expand entrance (`Presence`, responsive motion), keyboard (Space/Enter/↑/↓ open; ↑/↓/Home/End move; typeahead open and closed; Enter/Space commit; Esc/Tab close without change), disabled options skipped, hidden input for form submission. Options accept `icon` and `description`; `{ label, options }` items render as groups.
 
 ## Navigation and transient UI
 

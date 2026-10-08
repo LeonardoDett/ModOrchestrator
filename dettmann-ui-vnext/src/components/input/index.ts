@@ -3,7 +3,7 @@ import { InputLabel } from "./input.label";
 import { InputBox } from "./input.box";
 import { InputField } from "./input.field";
 import { InputTextarea } from "./input.textarea";
-import { InputSelect, type SelectOption } from "./input.select";
+import { InputSelect, type SelectOption, type SelectGroup, type SelectItem } from "./input.select";
 import { InputCombobox, type ComboboxOption } from "./input.combobox";
 import { InputMultiSelect } from "./input.multi-select";
 import { InputPin } from "./input.pin";
@@ -47,7 +47,7 @@ export const Input = {
   Field: InputField,
   /** Textarea miolo (same family context as Field) */
   Textarea: InputTextarea,
-  /** Native select dropdown */
+  /** Custom select (MD3 behaviour): keyboard, typeahead, icons, descriptions, groups */
   Select: InputSelect,
   /** Searchable combobox dropdown */
   Combobox: InputCombobox,
@@ -63,4 +63,4 @@ export const Input = {
   Error: InputError,
 };
 
-export type { SelectOption, ComboboxOption };
+export type { SelectOption, SelectGroup, SelectItem, ComboboxOption };
