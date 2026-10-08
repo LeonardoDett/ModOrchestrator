@@ -42,11 +42,24 @@ Violar a letra destas regras é violar o espírito delas.
 7. Acessibilidade: nome acessível, teclado, controlado/não controlado com `useControllableState`, textos embutidos por prop (`removeLabel`…), `className` e props DOM repassadas.
 8. Export em `src/components/index.ts` (ou `templates`/`primitives`), JSDoc com `@example`.
 
+## Ícones animados (`src/icons`)
+
+Glifo novo = um arquivo `src/icons/glyphs/<nome>.tsx` com `defineIcon`; nada de keyframes por glifo.
+
+1. Copie a geometria do Lucide (`node_modules/lucide-react/dist/esm/icons/<nome>.js`, `__iconNode`), viewBox 24, e cite a origem no cabeçalho (`// Geometria adaptada do Lucide <nome> (ISC).`). A licença fica em `src/icons/NOTICE`.
+2. Divida em `parts` (ordem = ordem de pintura) só o que se move; `origin` por parte (`"100% 100%"` = canto) quando o pivô não é o centro. `root` é nome reservado (anima o ícone inteiro).
+3. `action` (e `loop` só se há estado contínuo) usam **só técnicas** de `techniques.ts` (`squash lift nudge rotate spin draw undraw flip trail pulse stagger`). Técnica usada num modo que não suporta lança em dev.
+4. Respeite o limite geométrico com `amp` 1,6: `translate ≤ 3`, `rotate ≤ 30°` (até 180° só em ícone de rotação natural: refresh, undo, settings, sun, moon), `|scale − 1| ≤ 0,25`; `spin`/`flip` isentos. Reduza o valor do glifo, não o teste.
+5. Registre em `src/icons/catalog.ts` (`CATALOG`) e exporte em `src/icons/index.ts`. O teste de catálogo (`icon-catalog.test.tsx`) cobre limites, repouso e redução.
+6. Técnica nova: só em `techniques.ts`, com `extent` e teste em `icon-techniques.test.ts` (amplitude × `amp`, volta ao repouso, `reduced`). Ida-e-volta em duas fases (ida `ease-out`, volta com a mola via `keyframeEasing`); traço e loop nunca usam a mola.
+7. Raiz `dettmann-ui` não reexporta glifos nem técnicas (só `defineIcon`, tipos, `Loader`).
+
 ## Testes obrigatórios
 
 | Mudança | Teste |
 |---|---|
 | Componente | `src/__tests__/<nome>.test.tsx`: `data-layer`/`data-intent`/`data-motion` por ênfase (padrão, `high`→brand), teclado, controlado/não controlado, nome acessível, desabilitado |
+| Ícone/loader | `icon-techniques`, `icon-catalog`, `animated-icon`, `loader`: stub em `Element.prototype.animate` (SVG não é `HTMLElement`); repouso, `amp` por nível, redução |
 | Movimento | stub de `el.animate` (padrão em `motion.test.tsx`): chamado no caso certo; com `data-reduce-motion="true"` não há `transform`/`scale` |
 | Motor (`engine/`) | **teste de propriedade** sobre muitas marcas (padrão `mulberry32` de `roles.test.ts`) que fixa a intenção nova (ex.: matiz do warning numa faixa, light e dark, `standard` e `high`), além de manter contraste |
 | Preset/motor | snapshot de `presets` atualizado **depois** de revisar o diff (`npx vitest run src/theme -u`), nunca às cegas |
@@ -68,6 +81,7 @@ Os cinco verdes antes de dizer "pronto". Rodar só o teste focado não conta.
 ## Contrato mudou? Atualize junto
 
 - Decisão nova ou alterada → `docs/decisions.md` (próximo `D-0NN`); em projeto consumidor como o Mod Orchestrator, também `mod-orchestrator-spec-v2/docs-ia/decisoes.md`.
+- Ícone/técnica/`Loader` → `docs/component-matrix.md`, `docs/migration.md` e decisão (D-027…D-031).
 - Tema/papéis/motor/movimento → `docs/theme-system.md` (e `architecture.md` se mudar camada).
 - Componente novo/prop pública → `docs/component-matrix.md`.
 - Mudou prop, papel, valor válido ou regra → atualize **esta skill e `skills/dettmann-ui-use/SKILL.md`**. Skill desatualizada ensina errado a todo agente.
@@ -85,7 +99,9 @@ Os cinco verdes antes de dizer "pronto". Rodar só o teste focado não conta.
 | "Chamativo = forçar `data-motion=\"expressive\"`" | O nível vem de `emphasis`/prop `motion`/`MotionScope`; intensidade do gesto = keyframes × `amp`. |
 | "O legado do arquivo não é meu" | Se tocou o arquivo, `duration-300`/`animate-in` saem. |
 | "Docs/skills depois" | Fazem parte da mudança. |
+| "Um keyframe só deste ícone" | Técnica nova em `techniques.ts` com teste, ou use as existentes. |
+| "Passou do limite, afrouxo o teste" | Reduza o valor no glifo. |
 
 ## Sinais de PARE
 
-`#`/`rgb(` num componente · editar `themes.generated.css` · prop `variant="primary"` · `opacity-50` p/ desabilitado · `import` de lib de animação · só o teste focado rodou · contrato mudou sem tocar `decisions.md`/skills.
+`#`/`rgb(` num componente · editar `themes.generated.css` · prop `variant="primary"` · `opacity-50` p/ desabilitado · `import` de lib de animação · keyframes dentro de um glifo · só o teste focado rodou · contrato mudou sem tocar `decisions.md`/skills.

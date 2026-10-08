@@ -52,25 +52,31 @@ grep -rnE '\.filter\(|\.splice\(|\.sort\(|\.reverse\(|onReorder|draggable' ALVO 
 grep -rnE 'Presence|useFlip' ALVO                                                # 5/6 (ausência é o achado)
 grep -rnE 'onClick=|onSubmit=|async ' ALVO                                       # 7 ações
 grep -rnE 'loading|disabled|useToast|ConfirmDialog|useConfirm' ALVO              # 7 (ausência é o achado)
-grep -rnE 'Skeleton|Spinner|EmptyState|Alert|isLoading|error' ALVO               # 9 estados
+grep -rnE 'Skeleton|Loader|EmptyState|Alert|isLoading|error' ALVO                # 9 estados
 grep -rnE '<(div|span|li|tr|td)[^>]*onClick|outline-none|tabIndex' ALVO          # 10 teclado
 grep -rnE 'opacity-(40|50|60)' ALVO                                              # 11 desabilitado
+grep -rnE "from ['\"]lucide-react['\"]|Loader2|Spinner|<Icon |trigger=\"none\"" ALVO   # 13/14/16 ícones
+grep -rnE 'loading|syncing|deploying|isPending' ALVO                              # 15 (estado contínuo: ausência de indicador é o achado)
 ```
 
 | # | Achado | Confirme lendo | Correção a citar |
 |---|---|---|---|
 | 1 | Cor crua / paleta Tailwind | não é comentário nem `aria-label` | papel (`bg-surface`, `bg-raised`, `text-fg-muted`, `border-border`) ou `intent=` |
 | 2 | Valor arbitrário (`bg-[#…]`, `rounded-[10px]`, `p-[13px]`, `[animation-duration:…]`), raio/sombra genéricos | variantes (`data-[`, `aria-[`, `has-[`, `[&`) e tamanhos de layout intencionais não contam; `rounded-full` é válido para círculos de verdade | `rounded-control/chip/card/panel/pill`, `h-control-sm/md/lg`, `shadow-raised/overlay/modal`, ou o slot (`Card.Root`) que já traz a superfície |
-| 3 | Duração/transição/keyframe manual | — | `motion-transition` / `motion-press`; entrada/saída `Presence`; gesto `animate()`; giro `Spinner` |
+| 3 | Duração/transição/keyframe manual | — | `motion-transition` / `motion-press`; entrada/saída `Presence`; gesto `animate()`; giro `Loader` |
 | 4 | Mais de um `emphasis="high"` | mesma `Toolbar`/`ActionBar`/`Modal.Footer`/ações de `ResourcePage`/mesmo container | um `high`; demais `medium` (omitir) ou `low` |
 | 5 | Lista que adiciona/remove itens sem `Presence` | o `.map` renderiza a lista alterada | `<Presence show>` por item |
 | 6 | Lista reordenada sem `useFlip` | — | `useFlip(deps)` + `ref={flip(key)}` |
 | 7 | Ação sem feedback | handler assíncrono/destrutivo sem `loading`/`disabled`/toast/confirmação | `Button loading`, `useToast()`, `ConfirmDialog` |
 | 8 | Bloco JSX repetido | mesmo esqueleto (ex.: `Icon` + `Typography` + número) 3+ vezes no arquivo ou em irmãos — leia o arquivo, não há grep confiável | componente existente (`Indicator`, `FeaturedIcon`, `Card`, `Section`…); senão vai para "padrões" |
-| 9 | Estados ausentes | dado de lista/assíncrono sem ramo carregando/vazio/erro | `Skeleton`/`Spinner`, `EmptyState`, `Alert` |
+| 9 | Estados ausentes | dado de lista/assíncrono sem ramo carregando/vazio/erro | `Skeleton`/`Loader`, `EmptyState`, `Alert` |
 | 10 | Lacuna de teclado | `onClick` em elemento não interativo sem `role`+`tabIndex`+`onKeyDown`; `outline-none` sem `focus-visible:ring`; lista/menu sem setas | `Button`, `List`, `Menu`, `useRovingTabindex`, `ring-focus` |
 | 11 | Desabilitado por opacidade | — | `disabled:bg-sunken disabled:text-fg-subtle` |
 | 12 | Primitiva refeita à mão | `<ul>`/`<table>`/`role="dialog"`/cabeçalho de página manual | `List`, `Table`/`DataTable`, `Modal`, `ResourcePage` |
+| 13 | Lucide solto com equivalente no catálogo | o glifo existe em `dettmann-ui/icons` (confira `src/icons/index.ts`) | o ícone próprio (`<Icon icon={Trash2} />` → `<TrashIcon />`, tabela em `docs/migration.md`); sem equivalente, `Icon` |
+| 14 | `Spinner` ou `Loader2` girando à mão | — | `<Loader label=… />` |
+| 15 | Estado contínuo sem indicador | handler/estado `loading`, `syncing`, `deploying` sem `Loader`, `loop` de ícone ou texto de status; `loop` como único indicador sem texto | `<Loader />`, ícone com `loop` + texto de status |
+| 16 | Ação sem feedback em controle com ícone `trigger="none"` | o ícone dentro de `Button`/item não anima no hover/press e não há `playKey` | remover `trigger="none"` ou usar `playKey` na mudança de estado |
 
 ## Heurísticas B — só para a lib
 
@@ -81,7 +87,7 @@ Matriz **componente × critério**: para cada pasta de `src/components` e
 for d in src/components/*/ src/templates/*/; do
   g() { grep -rqE "$1" "$d" || echo "$2 $d"; }
   g 'resolveEmphasis|restingClassName' sem-ênfase
-  g 'loading|Skeleton|Spinner|aria-busy' sem-loading
+  g 'loading|Skeleton|Loader|aria-busy' sem-loading
   g 'empty|EmptyState' sem-vazio
   g 'error|invalid|aria-invalid' sem-erro
   g 'onKeyDown|useRovingTabindex|useFocusTrap|useEscapeKey' sem-teclado
@@ -172,4 +178,5 @@ Escopo: <arquivos/pastas auditados> — somente leitura, nenhum arquivo alterado
 | Citar prop/variante que não existe | Confira nos tipos antes. |
 | P1 com impacto médio e esforço médio | Use a grade de prioridade; não promova por gosto. |
 | Matriz B reportada crua (dezenas de "sem-X") | Filtre por "precisa quando"; o resto é ruído. |
+| Citar `Spinner` ou ícone que não existe no catálogo | Confira `src/icons/index.ts` antes. |
 | Aplicar a correção "porque é uma linha" | Somente leitura. Ofereça depois do relatório. |

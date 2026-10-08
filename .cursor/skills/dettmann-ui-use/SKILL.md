@@ -68,6 +68,24 @@ Não as use em código novo: pinte com `intent`, `Surface` e papéis (`bg-surfac
   `:root[data-reduce-motion="true"]`): primitivas e CSS da lib viram fade curto.
   Não reimplemente a checagem; só use as primitivas.
 
+## Ícones e loaders
+
+- Ícone existe no catálogo (`dettmann-ui/icons`: `TrashIcon`, `CheckIcon`, `RefreshIcon`…) →
+  use o ícone próprio; senão `<Icon icon={X} />` (lucide). Nunca lucide solto.
+- Ícone dentro de um controle (`Button`, item de menu, aba…) já anima sozinho com a
+  ênfase do controle: não escreva hover/press para ele. Só `trigger="none"` desliga.
+- Mudança de estado (copiou, salvou, contagem mudou) → `playKey={valor}`: toca de novo
+  quando muda (não na montagem).
+- Estado contínuo (implantando, sincronizando) → `loop` no ícone narrativo
+  (`<RocketIcon loop />`). Se é o **único** indicador, ponha texto de status ao lado
+  (ou `label`): movimento sozinho não basta.
+- Espera genérica → `<Loader variant="arc|dots|pulse|bars" label="…" />`; `Spinner` não
+  existe mais.
+- Nunca force `data-motion="expressive"` para "animar mais": a intensidade vem da
+  ênfase do controle (`amp`). Para mudar, use a prop `motion` do controle.
+- Raiz `dettmann-ui` exporta só `Loader`, `defineIcon` e tipos; ícones vêm de
+  `dettmann-ui/icons`.
+
 ## Tema
 
 ```tsx
@@ -123,7 +141,7 @@ tela já tem ou deixe a prop vazia.
 
 - hex/`rgb()`/`hsl()` e paleta crua (`bg-red-500`, `text-white`, `bg-[#…]`).
 - Duração/raio/sombra arbitrários (`duration-300`, `rounded-[10px]`).
-- Ícone lucide solto (use `<Icon icon={X} />`).
+- Ícone lucide solto (catálogo `dettmann-ui/icons` primeiro; senão `<Icon icon={X} />`); `Spinner` (use `Loader`).
 - Mais de um `high` por região; status como decoração.
 - Componente genérico paralelo no projeto; props ou valores que os tipos não têm.
 
@@ -133,6 +151,8 @@ tela já tem ou deixe a prop vazia.
 | "`primary`/`destructive` é o padrão de toda lib" | Aqui é `emphasis` × `intent`. |
 | "Precisa de vida, então `expressive`" | Vida = estados e `responsive`; `expressive` é do 10%. |
 | "Um hex rápido para o roxo" | `brand`/`vibrance`/`accent` no `ThemeConfig`. |
+| "Forço `data-motion` para o ícone mexer mais" | A amplitude é `amp` do nível do controle; ajuste a ênfase ou `motion=`. |
+| "O `loop` já mostra que está carregando" | Sem texto de status é só movimento; reduzido vira pulso. Adicione texto. |
 
 ## Checklist de revisão de tela
 
@@ -144,4 +164,5 @@ tela já tem ou deixe a prop vazia.
 - [ ] Overlays: foco preso, `Escape` fecha; menus/árvores/listas com teclado.
 - [ ] Estados loading, vazio, erro, desabilitado e destrutivo explícitos.
 - [ ] Movimento só por primitivas/escopos; nada de `transition` manual.
+- [ ] Ícones do catálogo onde existem; `loop` com texto de status; `Loader` em vez de `Spinner`.
 - [ ] Nenhum componente genérico novo no projeto; typecheck do projeto verde.

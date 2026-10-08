@@ -68,6 +68,28 @@ Component props:
 | `<Tag tone>` | `<Tag intent>` (Tag has no `emphasis` or `variant`) |
 | `<Sidebar.Root emphasis="strong\|subtle">` | `<Sidebar.Root variant="strong\|subtle">` (renamed: `emphasis` is the shared `low\|medium\|high` axis) |
 
+## Spinner becomes Loader
+
+`Spinner` is removed. Use `<Loader />` (`variant` `arc` | `dots` | `pulse` | `bars`, `size` `xs`-`xl`, `intent`, `label`, default `"Loading"`). A `tone` on `Spinner` becomes `intent` on `Loader`.
+
+## Lucide icons become animated icons
+
+When the catalog has the glyph, replace `<Icon icon={Trash2} />` with `<TrashIcon />` (import from `dettmann-ui/icons`). Same `size`, `intent`, `label`; inside a button, menu item or tab it animates with the control by itself (`trigger="auto"`). Glyphs outside the catalog stay `<Icon icon={...} />`. Public props typed `LucideIcon` are now `IconComponent`.
+
+| lucide | catalog |
+|---|---|
+| `X`, `Plus`, `Minus`, `Check`, `Search`, `Filter`, `Upload`, `Menu`, `Info`, `Ban`, `MoreHorizontal`, `Folder`, `FolderOpen`, `File`, `Home`, `Settings` | same name + `Icon` (`XIcon`, `PlusIcon`, `SettingsIcon`...) |
+| `ChevronLeft`, `ChevronRight`, `ChevronUp`, `ChevronDown`, `ChevronFirst`, `ChevronLast` | same name + `Icon` |
+| `ArrowUp`, `ArrowDown`, `ArrowUpDown`, `PanelLeftOpen`, `PanelLeftClose` | same name + `Icon` |
+| `Trash2` | `TrashIcon` |
+| `AlertTriangle`, `TriangleAlert` | `TriangleAlertIcon` |
+| `AlertCircle` | `CircleAlertIcon` |
+| `CheckCircle`, `CheckCircle2` | `CircleCheckIcon` |
+
+No catalog equivalent (keep `Icon`): `Columns3`, `ImageOff`, `Star`, `Terminal`, `GripVertical`. The full catalog is on the playground Icons page.
+
+State changes animate with `playKey`; continuous states with `loop` (and status text next to it). `animateLoop` no longer accepts `easing: "spring"` (only `"linear"`).
+
 ## Input.Select is no longer native
 
 `Input.Select` keeps its API (`options`, `placeholder`, value/onChange on `Input.Root`), but renders a custom `role="combobox"` button plus a `listbox` instead of `<select>`. Options may now carry `icon` and `description`, and an item `{ label, options: [...] }` renders as a group.

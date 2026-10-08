@@ -87,6 +87,11 @@ The dark stack is intentionally lifted (canvas ~.19, surface ~.225, raised ~.26)
 
 See `architecture.md` for the emphasis contract, motion levels and budget tooling.
 
+Motion primitives beyond the basics:
+
+- `animate(el, keyframes, { keyframeEasing: true })`: timing is linear and each keyframe carries its own `easing`, so one animation can mix an `ease-out` phase with the level's spring (`m.ease`) on the return. Duration is still `m.springDuration` unless set.
+- `animateLoop(el, keyframes, { period, delay?, easing? })`: infinite loop; `period` is technique data (not scaled by the level), timing is always linear (`easing` accepts only `"linear"`), with per-keyframe `ease-in-out` for out-and-back loops. Under reduced motion it ignores the keyframes and pulses opacity 1 -> .5 -> 1 over 2 s. Returns `null` without WAAPI.
+
 ## Adding a preset
 
 1. Add a config file under `src/theme/presets/` and register it in `presets/index.ts` (`PresetId` and `PRESETS`).

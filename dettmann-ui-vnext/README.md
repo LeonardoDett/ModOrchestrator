@@ -9,6 +9,7 @@ v2 is a breaking release (no aliases). The app keeps using `dettmann-ui-v1` unti
 - **Themes from seeds.** One brand color plus personality knobs; a pure TypeScript engine (own OKLCH math, contrast solver) generates light and dark, at build time for presets and at runtime for custom themes.
 - **Emphasis x intent.** `emphasis` (low/medium/high = 60/30/10) says how loud, `intent` says what it means. The `secondary` family is gone.
 - **Motion that follows emphasis.** Three spring levels, tunable as data, honoring reduced motion.
+- **Animated icons and loaders.** About 55 icons adapted from Lucide whose parts move with the emphasis level (`dettmann-ui/icons`), and a `Loader` that replaces `Spinner`.
 - **Budget tooling.** Dev-only guards and an inspector measure the 60/30/10 split.
 - **Playground and skills.** A local app for tuning themes and three AI skills.
 - **Defaults.** `balanced` shape, Plus Jakarta Sans + JetBrains Mono, expressive motion ceiling.
@@ -92,6 +93,20 @@ One `high` per region. Structural components are `medium`. Use roles (`bg-surfac
 ## Motion
 
 Levels `calm`, `responsive`, `expressive` come from emphasis and are capped by the theme (`motion: { ceiling, tune }`). Adjust a region with `<MotionScope level tune>` or an element with `motion=`. Primitives: `animate()`, `<Presence>`, `useFlip()`, `useMotion()`. Reduced motion (OS setting or `:root[data-reduce-motion="true"]`) turns movement into short fades.
+
+## Icons and loaders
+
+```tsx
+import { Button, Loader } from "dettmann-ui";
+import { TrashIcon, RocketIcon } from "dettmann-ui/icons";
+
+<Button emphasis="low" intent="danger"><TrashIcon /> Remove</Button>   {/* animates with the button */}
+<TrashIcon playKey={count} />                                          {/* replays when a state changes */}
+<RocketIcon loop /> Deploying…                                         {/* continuous state, with status text */}
+<Loader variant="dots" label="Saving" />
+```
+
+Icons follow the emphasis of the control they live in (`amp` x gesture), honor reduced motion and need no wiring. Outside the catalog use `Icon`. Details: `docs/migration.md`, D-027 to D-031.
 
 ## Budget
 

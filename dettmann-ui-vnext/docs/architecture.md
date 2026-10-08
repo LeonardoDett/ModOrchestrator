@@ -48,7 +48,12 @@ Three levels: `calm`, `responsive`, `expressive`. Each is a `MotionSpec` (spring
 - Effective level = `min(context level, theme ceiling)`, exposed as `data-motion` so plain CSS inherits it.
 - Fine tuning is data, at three levels: theme (`motion.tune`), region (`<MotionScope level tune>`) and instance (`motion` prop).
 - Primitives: `animate()` (WAAPI), `<Presence>`, `useFlip()`, `useMotion()`, `readMotion()`.
+- `animateLoop()` runs infinite loops (fixed `period`, linear timing, reduced motion = slow opacity pulse); `animate(..., { keyframeEasing: true })` lets keyframes carry their own easing (used by the two-phase icon gestures).
 - Reduced motion is honored both by the media query and by `:root[data-reduce-motion="true"]` (the app setting): displacement, bounce and scale become fade/color with a short duration; state feedback is never removed.
+
+## Animated icons
+
+`src/icons` holds `defineIcon` (a glyph = named parts + `action`/`loop` choreographies), the technique vocabulary (`techniques.ts`), the playback engine, a registry and one delegated `document` controller that plays an icon's `action` when its nearest interactive control is hovered, pressed or keyboard-focused. Glyphs and techniques are reachable only through the subpath `dettmann-ui/icons`; the root exports `defineIcon`, the icon types and `Loader`. Intensity is base x `m.amp`; icons write no color, duration or curve of their own (D-027 to D-031).
 
 ## Layering inside the package
 
