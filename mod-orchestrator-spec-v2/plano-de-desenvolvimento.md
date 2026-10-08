@@ -85,7 +85,7 @@ Entregas:
 
 Invariantes: INV-ID-03/04, INV-LIB-04/05, INV-OPS-02.
 Demonstração: arrastar 10 archives reais de Skyrim (wrapper, múltiplas opções, SKSE); matar o processo no meio de um import e reabrir sem lixo.
-Estado: concluída (D062–D068; D066 aguarda confirmação). Os cenários da demonstração têm testes automatizados em `internal/integration` (wrapper, opções com decisão e reinstall, SKSE, duplicado/variante, zip-slip, recuperação após interrupção).
+Estado: concluída (D062–D068; D066 confirmada em 2026-10-08). Os cenários da demonstração têm testes automatizados em `internal/integration` (wrapper, opções com decisão e reinstall, SKSE, duplicado/variante, zip-slip, recuperação após interrupção).
 
 ## F5: Profiles e ordem de mods
 
@@ -98,7 +98,7 @@ Entregas:
 
 Invariantes: INV-ORD-01..04, INV-ORD-06.
 Demonstração: dois profiles com seleções diferentes; regra que move o mínimo e explica; tentativa de ciclo recusada.
-Estado: concluída (D069–D072; D072 aguarda confirmação). Os cenários da demonstração têm testes em `internal/integration/profiles_test.go` (regra que move um só mod, ciclo recusado com o ciclo, movimento recusado com alternativas, desfazer, snapshots e transferência, propriedade INV-ORD-01..03).
+Estado: concluída (D069–D072; D072 confirmada em 2026-10-08). Os cenários da demonstração têm testes em `internal/integration/profiles_test.go` (regra que move um só mod, ciclo recusado com o ciclo, movimento recusado com alternativas, desfazer, snapshots e transferência, propriedade INV-ORD-01..03).
 
 ## F6: Conflitos
 
@@ -111,7 +111,7 @@ Entregas:
 
 Invariantes: INV-CON-01..04.
 Demonstração: dois mods de texturas sobrepostos: escolher vencedor por par e depois um arquivo específico pelo outro.
-Estado: concluída (D073–D075; D075 aguarda confirmação). A demonstração é `TestConflictDemonstration` em `internal/integration/conflicts_test.go`; INV-CON-01..04 têm testes no domínio (`conflict/index_test.go`: equivalência com o cálculo completo, overrides/exclusões obsoletos, redundância, meta de 500 ms com 200.000 Locations) e na integração (ciclo recusado por inteiro, redundante, obsoleto + diagnóstico, recálculo sem cache).
+Estado: concluída (D073–D075; D075 confirmada em 2026-10-08). A demonstração é `TestConflictDemonstration` em `internal/integration/conflicts_test.go`; INV-CON-01..04 têm testes no domínio (`conflict/index_test.go`: equivalência com o cálculo completo, overrides/exclusões obsoletos, redundância, meta de 500 ms com 200.000 Locations) e na integração (ciclo recusado por inteiro, redundante, obsoleto + diagnóstico, recálculo sem cache).
 
 ## F7: Deploy e purge
 
@@ -123,7 +123,7 @@ Entregas:
 
 Invariantes: INV-DEP-01..09, INV-EXT-01.
 Demonstração: deploy de 50 mods reais, jogar; purge; deploy de novo; kill em 20 pontos com reconciliação limpa (automatizado).
-Estado: concluída (D078; D079 aguarda confirmação). Testes: domínio (`deployment/settle_test.go`, `deployplan_test.go`, `deploystate_test.go`), repositórios (`sqlite/deployment_repository_test.go`), integração com filesystem NTFS real (`internal/integration/deploy_test.go`: deploy → deploy vazio → diff → purge → deploy, external change em deploy/purge/auto-deploy, implantação estrangeira, coalescência, arquivo travado, mover staging e trocar método) e o teste de interrupção em processo filho (`deploy_kill_test.go`, 20 pontos aleatórios). Pendente para a demonstração manual: deploy de 50 mods reais e jogar.
+Estado: concluída (D078; D079 confirmada em 2026-10-08). Testes: domínio (`deployment/settle_test.go`, `deployplan_test.go`, `deploystate_test.go`), repositórios (`sqlite/deployment_repository_test.go`), integração com filesystem NTFS real (`internal/integration/deploy_test.go`: deploy → deploy vazio → diff → purge → deploy, external change em deploy/purge/auto-deploy, implantação estrangeira, coalescência, arquivo travado, mover staging e trocar método) e o teste de interrupção em processo filho (`deploy_kill_test.go`, 20 pontos aleatórios). Pendente para a demonstração manual: deploy de 50 mods reais e jogar.
 
 ## F8: Alterações externas e arquivos gerados
 
@@ -132,7 +132,7 @@ Docs: core/09, VORTEX-08, DLG-15.
 Entregas: classificação completa, diálogo com ação por linha, captura para mod, "deixar não gerenciado", scan ao focar, monitor do arquivo de load order (preparado para F11).
 Invariantes: INV-EXT-02/03.
 Demonstração: editar um plugin no xEdit via hardlink; gerar saída do Nemesis e capturá-la.
-Estado: implementada (D080; D081 aguarda confirmação). Testes: domínio (`externalchange`, resoluções em `deployplan`, `set_aside` em `deployment`), repositório (`sqlite/external_repository_test.go`), integração em NTFS real (`internal/integration/external_test.go`: edição por hardlink mantida, original reposto pela loja revertido, saídas de ferramentas capturadas ou deixadas não gerenciadas e preservadas em deploy e purge, ausente restaurado/aceito/auto-restaurado, cópia salva/revertida, decisão inválida recusada, varredura ao focar, captura interrompida concluída) e UI (`pages/Deploy.test.tsx`). O monitor do `plugins.txt` fica com a F11 (o tipo `load_order` já existe no domínio). Pendente: demonstração manual com xEdit e Nemesis.
+Estado: implementada (D080; D081 confirmada em 2026-10-08). Testes: domínio (`externalchange`, resoluções em `deployplan`, `set_aside` em `deployment`), repositório (`sqlite/external_repository_test.go`), integração em NTFS real (`internal/integration/external_test.go`: edição por hardlink mantida, original reposto pela loja revertido, saídas de ferramentas capturadas ou deixadas não gerenciadas e preservadas em deploy e purge, ausente restaurado/aceito/auto-restaurado, cópia salva/revertida, decisão inválida recusada, varredura ao focar, captura interrompida concluída) e UI (`pages/Deploy.test.tsx`). O monitor do `plugins.txt` fica com a F11 (o tipo `load_order` já existe no domínio). Pendente: demonstração manual com xEdit e Nemesis.
 
 ## F9: Dependências, diagnósticos, notificações e histórico
 
@@ -141,7 +141,7 @@ Docs: core/06, core/10, ui/telas/diagnostics.md, ui/telas/dashboard.md (dashlet 
 Entregas: registro de HealthChecks com o catálogo V1 (exceto plugins), supressão, notificações (toast/sino/desktop, agregação), histórico com filtros e reversão, pacote de diagnóstico, tela Diagnostics completa, faixas de problemas nas telas.
 Invariantes: INV-OPS-06.
 Demonstração: mod com requisito desabilitado → diagnóstico → "Habilitar" resolve; incompatíveis bloqueiam deploy.
-Estado: implementada (D082, D083; D084 aguarda confirmação). Testes: domínio (`health/rules_test.go`), adapter (`skyrimse/health_test.go`), repositórios (`sqlite/diagnostics_repository_test.go`), pacote (`supportbundle/writer_test.go`), processos (`system`), integração (`internal/integration/diagnostics_test.go`: requisito desabilitado resolvido pela ação, incompatíveis bloqueando deploy/status/operação, supressão e reativação, notificação única e agregada, reversões do histórico e filtro por mod, INV-OPS-06), UI (`pages/Diagnostics.test.tsx`) e lib (`toast.test.tsx`). Pendente: demonstração manual no app com dados reais.
+Estado: implementada (D082, D083; D084 confirmada em 2026-10-08). Testes: domínio (`health/rules_test.go`), adapter (`skyrimse/health_test.go`), repositórios (`sqlite/diagnostics_repository_test.go`), pacote (`supportbundle/writer_test.go`), processos (`system`), integração (`internal/integration/diagnostics_test.go`: requisito desabilitado resolvido pela ação, incompatíveis bloqueando deploy/status/operação, supressão e reativação, notificação única e agregada, reversões do histórico e filtro por mod, INV-OPS-06), UI (`pages/Diagnostics.test.tsx`) e lib (`toast.test.tsx`). Pendente: demonstração manual no app com dados reais.
 
 ## F10: FOMOD completo
 
@@ -158,7 +158,7 @@ Docs: core/08, core/12 §5–9, ui/telas/plugins.md, ui/telas/load-order.md, DLG
 Entregas: inventário, leitura de cabeçalho com cache, PluginState/LoadOrder por profile, restrições do adapter, sort nativo com prévia, auto-sort, regras, grupos (lista), IndexLock, serialização `plugins.txt` no pós-deploy, triagem de alteração externa, diagnósticos de plugins, telas Plugins e Load Order.
 Invariantes: INV-PLG-01..03.
 Demonstração: 200 plugins reais; master faltando resolvido pelo Inspector; `plugins.txt` alterado por fora gera triagem.
-Estado: implementada (D088; D089 aguarda confirmação). Testes: domínio (`plugin/loadorder_test.go`: propriedade INV-PLG-01 com 300 rodadas, sort/settle/place/merge, regra contra master recusada, grupos transitivos; `health/plugins_test.go`), adapter (`skyrimse/plugins_test.go`: cabeçalho TES4, ESL ⇒ `FE:xxx`, `plugins.txt` lido de volta idêntico, BSA sem plugin), repositório (`sqlite/plugin_repository_test.go`), integração em disco real (`internal/integration/plugins_test.go`: plugin de mod entra ativo e no lugar certo, deploy escreve `plugins.txt` (INV-PLG-02), sort em ordem válida não muda nada, master faltando resolvido pela ação do diagnóstico, `plugins.txt` alterado por fora detectado pelo monitor, não sobrescrito por deploy nem apply (INV-PLG-03), importar e restaurar, arquivo pré-existente vai para triagem, regras/grupos/locks/movimento recusado com alternativa, 200 plugins em 20 mods) e UI (`pages/Plugins.test.tsx`). Pendente: demonstração manual com 200 plugins reais e o jogo aceitando o `plugins.txt` escrito.
+Estado: implementada (D088; D089 confirmada em 2026-10-08). Testes: domínio (`plugin/loadorder_test.go`: propriedade INV-PLG-01 com 300 rodadas, sort/settle/place/merge, regra contra master recusada, grupos transitivos; `health/plugins_test.go`), adapter (`skyrimse/plugins_test.go`: cabeçalho TES4, ESL ⇒ `FE:xxx`, `plugins.txt` lido de volta idêntico, BSA sem plugin), repositório (`sqlite/plugin_repository_test.go`), integração em disco real (`internal/integration/plugins_test.go`: plugin de mod entra ativo e no lugar certo, deploy escreve `plugins.txt` (INV-PLG-02), sort em ordem válida não muda nada, master faltando resolvido pela ação do diagnóstico, `plugins.txt` alterado por fora detectado pelo monitor, não sobrescrito por deploy nem apply (INV-PLG-03), importar e restaurar, arquivo pré-existente vai para triagem, regras/grupos/locks/movimento recusado com alternativa, 200 plugins em 20 mods) e UI (`pages/Plugins.test.tsx`). Pendente: demonstração manual com 200 plugins reais e o jogo aceitando o `plugins.txt` escrito.
 
 ## F12: Settings, Dashboard, Overview e Launch
 
@@ -167,7 +167,7 @@ Docs: core/13, ui/telas/settings-extensions.md, ui/telas/dashboard.md, ui/telas/
 Entregas: todas as abas de Settings V1, Extensions (lista de embutidos), Dashboard com dashlets e personalização, Overview completa, Play com pré-lançamento e detecção de jogo em execução, backups/restauração do banco (core/14 §3–4).
 Demonstração: da instalação do app até jogar Skyrim com mods usando só a UI.
 
-Estado: implementada (D090, D092; D091 aguarda confirmação). Testes: domínio (`settings`: lista, catálogo), aplicação (`settings`: somente leitura, por operação, padrão derivado, reinício; `backups`: automático só com mudança, retenção, falha, restauração), infraestrutura (`sqlite/backup_test.go`: backup online, validação, restauração pendente aplicada antes de abrir), adapter (`skyrimse/launch_test.go`), integração em disco real (`launch_test.go`: Play implanta antes e lança, confirmação sem auto-deploy, opção SKSE, bloqueio por outro gerenciador, transições do processo; `overview_test.go`; `TestMoveArchiveStore`; `TestCleanTemp`), lib (`input-number.test.tsx`) e UI (`pages/F12.test.tsx`: abas V1 sem reservadas, settings por jogo, modo avançado e stepper, aviso de reinício, DLG-27, Extensions, Play e DLG-26, Overview, Dashboard). Revisão visual no `wails dev` (claro/escuro). Pendente: demonstração manual da instalação até jogar Skyrim real.
+Estado: implementada (D090, D092; D091 confirmada em 2026-10-08). Testes: domínio (`settings`: lista, catálogo), aplicação (`settings`: somente leitura, por operação, padrão derivado, reinício; `backups`: automático só com mudança, retenção, falha, restauração), infraestrutura (`sqlite/backup_test.go`: backup online, validação, restauração pendente aplicada antes de abrir), adapter (`skyrimse/launch_test.go`), integração em disco real (`launch_test.go`: Play implanta antes e lança, confirmação sem auto-deploy, opção SKSE, bloqueio por outro gerenciador, transições do processo; `overview_test.go`; `TestMoveArchiveStore`; `TestCleanTemp`), lib (`input-number.test.tsx`) e UI (`pages/F12.test.tsx`: abas V1 sem reservadas, settings por jogo, modo avançado e stepper, aviso de reinício, DLG-27, Extensions, Play e DLG-26, Overview, Dashboard). Revisão visual no `wails dev` (claro/escuro). Pendente: demonstração manual da instalação até jogar Skyrim real.
 
 ## F13: Polimento de UX
 

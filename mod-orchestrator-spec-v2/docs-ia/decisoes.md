@@ -449,7 +449,7 @@ Status: vigente (detalha D038, core/00 §5)
 O lock por instância saiu do serviço `games` para `application/instancelock`, compartilhado por todos os serviços mutantes (INV-OPS-02). `ImportFiles`/`ImportFolder` criam uma operação `pending` por item (visível no drawer e na fila) e a fila adquire o lock enquanto tiver itens; importar de novo com a fila ativa **acrescenta** à fila (a exceção de D038), qualquer outra operação mutante na instância recebe `instance_busy`, e importar enquanto outra operação (não-fila) detém o lock também recebe `instance_busy`. Um item pode ser cancelado enquanto `pending` ou até `extract`/`plan_install` (inclusive esperando decisão); depois disso, `operation_not_cancellable`. Cancelar um item não afeta os demais.
 
 ## D066 — Comportamentos da biblioteca não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **Habilitar ao instalar** (`automation.enableOnInstall`, escopo instância): o mod novo entra habilitado só no **profile ativo**; nos demais entra desabilitado, no fim da ModOrder (paridade Vortex, que habilita no profile atual).
 2. **Mod `imported`** (sem Installation) não tem ModEntry nem posição na ModOrder; ganha ambos ao instalar. INV-ORD-02 fala de "mod instalado".
@@ -509,7 +509,7 @@ Motivo de não usar drag-and-drop HTML5 (`ReorderableList`): o app abre a janela
 Consequência (D052): levar a mudança à cópia da lib do projeto Cayshin.
 
 ## D072 — Comportamentos da F5 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **Arrastar e separadores** só aparecem com Prioridade **crescente**, sem agrupamento e sem filtro (ui/telas/mods.md §5.2 não diz se a ordem decrescente conta); fora disso uma nota explica e oferece "Mostrar ordem de prioridade".
 2. **DLG-11 como modal compacto**, não popover: depois de soltar (ou de um comando de menu) não há âncora estável numa lista virtualizada.
@@ -538,7 +538,7 @@ Status: vigente (executa D016; ui/03 L5)
 `Tree` ganhou `checkedIds`/`onCheckedIdsChange`, `renderEnd` e `labels`, todos opcionais (o uso existente não muda). A seleção guarda só folhas: pasta marcada = todas as folhas; parcial = `aria-checked="mixed"`; folhas desabilitadas nunca mudam por marcação de pasta. Lógica em `tree.model.ts` (`toggleTreeCheck`, `treeCheckState`, `treeLeafIds`), com testes. `FileBrowser` não foi usado: lista de arquivos separada da árvore não permite o select por nó. Consequência (D052): levar à cópia da lib do projeto Cayshin.
 
 ## D075 — Comportamentos da F6 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **Lista de pares é par a par**: uma Location com 3+ fornecedores aparece em cada par envolvido; "vencedor" do par é quem implanta mais Locations dele. A forma em grupo "B vence A, C" (ui/telas/conflicts.md §3) fica para quando houver demanda; o detalhe de cada arquivo já lista todos os fornecedores.
 2. **"Decidido por" do par** junta as resoluções por arquivo ignorando as redundantes: uma só → ela; várias → "misto"; só redundantes → "redundante".
@@ -596,7 +596,7 @@ Status: vigente (detalha D033–D036, core/04 §4–§11, core/14 §5)
 Alternativas rejeitadas: desfazer o journal na recuperação (precisa saber o estado anterior de cada Location e contraria D035); adotar qualquer arquivo que coincida com a origem sem consultar o journal (não recupera backups nem restaurações em andamento); fingerprint dos arquivos (o status teria de recalcular todos os vencedores a cada leitura).
 
 ## D079 — Comportamentos da F7 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **Decisões da F7**: external changes e Locations bloqueadas só têm "deixar intocado nesta execução" (o "Ignorar agora" de core/09 §4); as demais ações da triagem chegam com a F8 (DLG-15). Grupos de `method_fallback` são aceitos ou deixados de fora. Fechar o diálogo cancela a operação sem escrever nada.
 2. **Status depois de deixar algo intocado**: o manifesto grava `partial:<fp>` e as external changes vistas ficam contadas em memória ⇒ `blocked`/`external_changes` até o próximo scan. Reiniciar o app esquece a contagem (o observado nunca é persistido); "Verificar implantação" recalcula.
@@ -625,7 +625,7 @@ Status: vigente (detalha D008, D046, core/09 §2–5)
 Alternativas rejeitadas: captura como operação separada com journal de deploy próprio (exigiria registrar a Installation antes de os arquivos existirem na staging); reverter edição por hardlink extraindo um único arquivo do archive (o caminho no archive depende do installer, FOMOD incluso); apagar o arquivo encontrado ao reverter `replaced` (viola INV-DEP-01).
 
 ## D081 — Comportamentos da F8 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **Arquivos novos (`unexpected`) não param o deploy** nem deixam o status `blocked`: têm contagem própria (`newFiles`) no popover de status e no Overview, com "Revisar alterações", e entram no DLG-15 quando um deploy para por outro motivo. Só alterações em arquivos gerenciados exigem decisão (INV-EXT-01 trata dos caminhos que a operação toca). Do contrário, cada execução do Nemesis bloquearia o auto-deploy.
 2. **"Aplicar decisões" fora de um deploy roda um deploy**, que também aplica o que mais estiver pendente no desejado, porque o motor de deploy é o único que escreve no jogo.
@@ -656,7 +656,7 @@ Status: vigente (executa D016; ui/03 L7)
 `Toast` ganhou `action?: { label, onClick }`: botão dentro do toast que executa e fecha o toast (teste em `toast.test.tsx`). Usado pelo "Também habilitar: X, Y" de core/06 §6 e ui/02. Consequência (D052): levar a mudança à cópia da lib do projeto Cayshin.
 
 ## D084 — Comportamentos da F9 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **Requisitos** só são avaliados enquanto o mod que requer está habilitado; alvo removido ou ainda não instalado é `missing` (erro com "Importar…"), não regra órfã; órfã é a regra cujo mod de origem (ou um lado de ordem/incompatibilidade) foi removido. Regras desativadas não são avaliadas, nem como órfãs.
 2. **`method_unavailable`** é erro **sem** `blocks`: o deploy da F7 já oferece fallback de método como decisão do plano (D078/D079), e bloquear contradiria isso. O catálogo de core/10 diz "Bloqueia: deploy".
@@ -679,7 +679,7 @@ Status: proposta (aguarda confirmação do usuário)
 19. **Dependências ao habilitar**: o toast "Também habilitar" segue requisitos `requires` de forma transitiva (recomendações nunca); ao desabilitar, um aviso lista os habilitados que dependem do mod. Nada é bloqueado nem habilitado sem pedido.
 
 ## D085 — Colisão de destino no plano FOMOD: fase, depois prioridade
-Status: proposta (aguarda confirmação do usuário; emenda core/03 §2)
+Status: vigente (confirmada pelo usuário em 2026-10-08; emenda core/03 §2)
 
 core/03 §2 dizia "o de maior `priority` vence; empate → o último declarado". Os FOMODs reais e a suíte "FOMOD Compliance Tests" usada pelo instalador do Vortex (casos `test_steps_ignore_required_priority`, `test_conditionals_ignore_priority`, `test_conditionals_ignore_required_priority`) mostram outra precedência: as instruções são aplicadas em **fases** — `requiredInstallFiles`, depois as opções dos passos visíveis, depois `conditionalFileInstalls` — e uma fase posterior vence a anterior qualquer que seja a prioridade. A prioridade só desempata **dentro** da fase; empate de prioridade → o último declarado (na ordem de exibição) vence.
 
@@ -688,7 +688,7 @@ Motivo: FOMODs reais usam `conditionalFileInstalls` para substituir arquivos obr
 Consequências: `fomod.Resolve` ordena por (fase, prioridade, declaração); teste `TestResolvePhasesPriorityAndFlags`. INV-LIB-02 continua garantido (um arquivo por destino).
 
 ## D086 — Comportamentos da F10 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário; emenda D066 item 8)
+Status: vigente (confirmada pelo usuário em 2026-10-08; emenda D066 item 8)
 
 1. **Estado de plugin nas condições antes da F11**: um arquivo citado por `fileDependency` está presente se um mod habilitado do profile ativo o fornece no target de plugins (estado desejado) ou se existe nesse target (observado). Presente é `Active`, exceto quando o profile registra o plugin como desabilitado (`PluginsEnabled`), que é `Inactive`. A F11 troca isso pelo PluginState completo.
 2. **Padrões de um grupo não visitado**: opções `Required` (travadas) e `Recommended`; em grupo de escolha única só a primeira recomendada. `SelectExactlyOne` e `SelectAtLeastOne` sem nenhuma marcada recebem a primeira opção utilizável (paridade Vortex). `NotUsable` nunca fica marcada, nem vinda de escolha gravada.
@@ -726,7 +726,7 @@ Status: vigente (detalha core/08, core/12 §5–7, D029, D040, D041; INV-PLG-01.
 Alternativas rejeitadas: hash SHA-256 como chave do cache (custo de ler arquivos inteiros a cada consulta); arranjo só calculado na leitura, sem persistir (estados padrão de plugins novos mudariam com a setting e "Desfazer" não teria base); escrever `plugins.txt` pelo adapter (anti-pattern 24); quebrar ciclo escolhendo uma aresta (D028).
 
 ## D089 — Comportamentos da F11 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **`load_order_external_change` não bloqueia o deploy**: core/08 §8 diz "blocking do deploy até triagem"; core/10 §1.1 diz warning que bloqueia o apply da load order. Segue core/10: o deploy implanta os arquivos e o `post` não escreve o `plugins.txt` (INV-PLG-03 mantido); a escrita fica recusada até a triagem e o diagnóstico leva a ela. Bloquear o deploy inteiro pararia o auto-deploy cada vez que o launcher reescreve o arquivo (mesmo motivo de D081 item 1).
 2. **Primeira escrita sobre um `plugins.txt` que o gerenciador nunca escreveu** e cujo conteúdo difere do que seria escrito é tratada como alteração externa (triagem: importar ou restaurar). Assim a ordem que o usuário já tinha antes de gerenciar o jogo não se perde.
@@ -753,7 +753,7 @@ Status: vigente (detalha core/13, core/14 §3–4, core/11 §6, core/04 §9, D04
 Alternativas rejeitadas: `VACUUM INTO` (a API de backup online é a que core/14 pede e copia o WAL junto); restaurar com `NewRestore` no banco aberto (serviços com estado em memória exigiriam reinício de qualquer forma, e uma escrita concorrente poderia se misturar); launch segurando o lock da instância (bloquearia o deploy que ele mesmo dispara); publicar a transição de processo sem persistir (D020).
 
 ## D091 — Comportamentos da F12 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **`app.updateCheck` e `app.updateChannel`** existem no catálogo com o default, mas não aparecem em Settings › Aplicação até o mecanismo de atualização existir (F15, `plano-de-publicacao.md`): um switch que não faz nada seria botão quebrado (anti-pattern 18).
 2. **`mods.useSuggestedStaging` desligado**: o assistente (DLG-01) deixa a staging em branco, com "Usar a sugerida" e "Alterar…", e não avança sem ela; as outras pastas continuam sugeridas.
@@ -779,7 +779,7 @@ Status: vigente (executa D016, D043)
 - Testes em `context-menu-inspector.test.tsx`. Consequência (D052): levar as mudanças à cópia da lib do projeto Cayshin.
 
 ## D094 — Comportamentos da F13 não fixados pela spec
-Status: proposta (aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-08)
 
 1. **`Ctrl+1..7`** seguem a ordem dos itens da seção do jogo como o backend os oferece (por capability; sem Plugins/Load Order a numeração encurta). Navegar pelo teclado (atalho ou paleta) leva o foco ao conteúdo (`<main>`); há link "Pular para o conteúdo" no início do shell.
 2. **`Ctrl+I`** abre o seletor de arquivos do jogo ativo de qualquer tela (só se o jogo tem Mods); com arquivos escolhidos, abre Mods para mostrar a fila.
