@@ -21,6 +21,27 @@ import { SettingsIcon } from "./glyphs/settings";
 import { HomeIcon } from "./glyphs/home";
 import { PanelLeftOpenIcon } from "./glyphs/panel-left-open";
 import { PanelLeftCloseIcon } from "./glyphs/panel-left-close";
+import { FolderIcon } from "./glyphs/folder";
+import { FolderOpenIcon } from "./glyphs/folder-open";
+import { FolderPlusIcon } from "./glyphs/folder-plus";
+import { FileIcon } from "./glyphs/file";
+import { FileSearchIcon } from "./glyphs/file-search";
+import { FileArchiveIcon } from "./glyphs/file-archive";
+import { UploadIcon } from "./glyphs/upload";
+import { DownloadIcon } from "./glyphs/download";
+import { CopyIcon } from "./glyphs/copy";
+import { TrashIcon } from "./glyphs/trash";
+import { LayersIcon } from "./glyphs/layers";
+import { ListOrderedIcon } from "./glyphs/list-ordered";
+import { DatabaseBackupIcon } from "./glyphs/database-backup";
+import { InfoIcon } from "./glyphs/info";
+import { CircleCheckIcon } from "./glyphs/circle-check";
+import { CircleAlertIcon } from "./glyphs/circle-alert";
+import { TriangleAlertIcon } from "./glyphs/triangle-alert";
+import { CircleXIcon } from "./glyphs/circle-x";
+import { CircleHelpIcon } from "./glyphs/circle-help";
+import { BellIcon } from "./glyphs/bell";
+import { BanIcon } from "./glyphs/ban";
 
 /** Todos os glifos animados da biblioteca (base das propriedades em `icon-catalog.test.tsx`). */
 export const CATALOG: readonly AnimatedIconComponent[] = [
@@ -46,4 +67,25 @@ export const CATALOG: readonly AnimatedIconComponent[] = [
   HomeIcon,
   PanelLeftOpenIcon,
   PanelLeftCloseIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  FolderPlusIcon,
+  FileIcon,
+  FileSearchIcon,
+  FileArchiveIcon,
+  UploadIcon,
+  DownloadIcon,
+  CopyIcon,
+  TrashIcon,
+  LayersIcon,
+  ListOrderedIcon,
+  DatabaseBackupIcon,
+  InfoIcon,
+  CircleCheckIcon,
+  CircleAlertIcon,
+  TriangleAlertIcon,
+  CircleXIcon,
+  CircleHelpIcon,
+  BellIcon,
+  BanIcon,
 ];
