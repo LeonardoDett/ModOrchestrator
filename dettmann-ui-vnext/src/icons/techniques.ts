@@ -124,7 +124,7 @@ export function draw(p: { from?: "start" | "end"; delay?: number; period?: numbe
     if (ctx.mode === "loop") return { keyframes: loopEased([start, end]), period, easing: "linear" };
     return {
       keyframes: [{ ...start, easing: "ease-out" }, end],
-      options: { spring: false, keyframeEasing: true },
+      options: { spring: false, keyframeEasing: true, fill: "backwards" },
       reduced: REDUCED_PULSE,
     };
   });

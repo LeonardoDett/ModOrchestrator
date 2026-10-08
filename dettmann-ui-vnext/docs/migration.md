@@ -70,7 +70,7 @@ Component props:
 
 ## Spinner becomes Loader
 
-`Spinner` is removed. Use `<Loader />` (`variant` `arc` | `dots` | `pulse` | `bars`, `size` `xs`-`xl`, `intent`, `label`, default `"Loading"`). A `tone` on `Spinner` becomes `intent` on `Loader`.
+`Spinner` is removed. Use `<Loader />` (`variant` `arc` | `dots` | `pulse` | `bars`, `size` `xs`-`xl`, `intent`, `label`, default `"Loading"`). A `tone` on `Spinner` becomes `intent` on `Loader`. The `color` prop (`current` | `muted` | `fg`) is gone: map it to `className` (`text-fg-subtle` for `muted`, `text-fg` for `fg`; `current` is the default) or to `intent`.
 
 ## Lucide icons become animated icons
 
@@ -85,6 +85,8 @@ When the catalog has the glyph, replace `<Icon icon={Trash2} />` with `<TrashIco
 | `AlertTriangle`, `TriangleAlert` | `TriangleAlertIcon` |
 | `AlertCircle` | `CircleAlertIcon` |
 | `CheckCircle`, `CheckCircle2` | `CircleCheckIcon` |
+
+`Upload` maps to `UploadIcon`, which changes shape: it is Lucide's `cloud-upload`, not the old tray-and-arrow glyph.
 
 No catalog equivalent (keep `Icon`): `Columns3`, `ImageOff`, `Star`, `Terminal`, `GripVertical`. The full catalog is on the playground Icons page.
 

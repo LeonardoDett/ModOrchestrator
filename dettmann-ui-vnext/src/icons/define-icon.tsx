@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { isDev } from "../dev/env";
+import { useReducedMotion } from "../motion/use-reduced-motion";
 import { ICON_SIZE_CLASS, ICON_STROKE } from "../primitives/icon";
 import { intentData } from "../theme/emphasis";
 import { cn } from "../utils/cn";
@@ -174,6 +175,7 @@ export function defineIcon(def: IconDefinition): AnimatedIconComponent {
     const stateRef = useRef<IconState | null>(null);
     if (!stateRef.current) stateRef.current = createIconState(() => svgRef.current, action);
     const state = stateRef.current;
+    const reducedMotion = useReducedMotion();
 
     // Montagem: registro do handle (lido pelo controlador delegado) e limpeza do action.
     useEffect(() => {
@@ -207,7 +209,7 @@ export function defineIcon(def: IconDefinition): AnimatedIconComponent {
         state.looping = false;
         for (const a of anims) a.cancel();
       };
-    }, [loop, state]);
+    }, [loop, state, reducedMotion]);
 
     useEffect(() => {
       if (Object.is(lastPlayKey.current, playKey)) return;

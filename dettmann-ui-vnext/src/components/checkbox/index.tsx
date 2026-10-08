@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
+import { forwardRef, useId, useState, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { intentData } from "../../theme/emphasis";
@@ -116,6 +116,11 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
 
     const state = indeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked";
 
+    // Só as transições PARA marcado redesenham o traço; desmarcar não incrementa (sem redesenho).
+    const marked = Boolean(isChecked || indeterminate);
+    const [draws, setDraws] = useState({ marked, count: 0 });
+    if (draws.marked !== marked) setDraws({ marked, count: marked ? draws.count + 1 : draws.count });
+
     const handleClick = () => {
       if (disabled) return;
       onCheckedChange?.(!isChecked);
@@ -142,9 +147,9 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
           {...props}
         >
           {indeterminate ? (
-            <MinusIcon size="xs" strokeWidth={3} trigger="none" playKey={state} className={markClass} />
+            <MinusIcon size="xs" strokeWidth={3} trigger="none" playKey={draws.count} className={markClass} />
           ) : (
-            <CheckIcon size="xs" strokeWidth={3} trigger="none" playKey={state} className={markClass} />
+            <CheckIcon size="xs" strokeWidth={3} trigger="none" playKey={draws.count} className={markClass} />
           )}
         </button>
         {label && (

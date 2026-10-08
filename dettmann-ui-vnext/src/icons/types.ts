@@ -28,7 +28,7 @@ export interface Extent {
 export interface TechniqueRun {
   keyframes: Keyframe[];
   /** Só action. */
-  options?: Pick<AnimateOptions, "durationFactor" | "spring" | "keyframeEasing">;
+  options?: Pick<AnimateOptions, "durationFactor" | "spring" | "keyframeEasing" | "fill">;
   /** Obrigatório em loop (ms de um ciclo). */
   period?: number;
   /** Só loop; o timing é sempre linear (curva por keyframe). */

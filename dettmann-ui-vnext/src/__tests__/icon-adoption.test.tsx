@@ -114,7 +114,7 @@ test("Combobox arrow renders the catalog icon", () => {
   expect(container.querySelector('[data-animated-icon="chevron-down"]')).not.toBeNull();
 });
 
-test("Checkbox draws the check when it becomes checked, not on mount", () => {
+test("Checkbox draws the check when it becomes checked, not on mount nor on uncheck", () => {
   function Controlled() {
     const [c, setC] = useState(false);
     return <Checkbox checked={c} onCheckedChange={setC} aria-label="c" />;
@@ -124,7 +124,15 @@ test("Checkbox draws the check when it becomes checked, not on mount", () => {
   act(() => {
     fireEvent.click(screen.getByRole("checkbox"));
   });
-  expect(spy.mock.calls.length).toBeGreaterThanOrEqual(1);
+  expect(spy).toHaveBeenCalledTimes(1);
+  const target = spy.mock.contexts[0] as Element;
+  expect(target.getAttribute("data-part")).toBe("check");
+  const frames = spy.mock.calls[0]![0] as Keyframe[];
+  expect(frames.every((f) => "strokeDashoffset" in f)).toBe(true);
+  act(() => {
+    fireEvent.click(screen.getByRole("checkbox"));
+  });
+  expect(spy).toHaveBeenCalledTimes(1);
 });
 
 // Sem @types/node no projeto: especificador não literal, tipado localmente.

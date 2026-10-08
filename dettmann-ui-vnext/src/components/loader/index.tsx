@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ComponentPropsWithoutRef, type CSSProperties } from "react";
-import { animateLoop, readMotion, type MotionValues } from "../../motion";
+import { animateLoop, readMotion, useReducedMotion, type MotionValues } from "../../motion";
 import { ICON_STROKE } from "../../primitives/icon";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
@@ -18,6 +18,8 @@ export interface LoaderProps extends Omit<ComponentPropsWithoutRef<"span">, "chi
   intent?: Intent;
   /** Texto para leitores de tela. */
   label?: string;
+  /** Só ornamento (o pai já anuncia o estado): sem `role=status`, `label` nem texto, `aria-hidden`. */
+  decorative?: boolean;
 }
 
 const SIZE: Record<LoaderSize, string> = {
@@ -123,10 +125,12 @@ export function Loader({
   size = "md",
   intent,
   label = "Loading",
+  decorative = false,
   className,
   ...props
 }: LoaderProps) {
   const rootRef = useRef<HTMLSpanElement>(null);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -138,13 +142,14 @@ export function Loader({
     return () => {
       for (const a of animations) a?.cancel();
     };
-  }, [variant]);
+  }, [variant, reducedMotion]);
 
   return (
     <span
       ref={rootRef}
-      role="status"
-      aria-label={label}
+      role={decorative ? undefined : "status"}
+      aria-label={decorative ? undefined : label}
+      aria-hidden={decorative ? true : undefined}
       {...intentData(intent)}
       className={cn("inline-flex shrink-0", SIZE[size], intent && "text-intent-fill", className)}
       {...props}
@@ -162,7 +167,7 @@ export function Loader({
       >
         <Shapes variant={variant} />
       </svg>
-      <span className="sr-only">{label}</span>
+      {!decorative && <span className="sr-only">{label}</span>}
     </span>
   );
 }

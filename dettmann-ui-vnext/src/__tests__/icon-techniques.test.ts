@@ -168,3 +168,7 @@ test.each(withName(LOOP.filter((t) => t.kind !== "spin")))("%s loop eases each s
   const frames = t.run(levels.expressive, loopCtx).keyframes;
   for (const f of frames.slice(0, -1)) expect(f.easing).toBe("ease-in-out");
 });
+
+test("draw in action holds the start frame during its delay (fill backwards, no flash)", () => {
+  expect(draw({ delay: 80 }).run(levels.responsive, actionCtx).options).toMatchObject({ fill: "backwards" });
+});

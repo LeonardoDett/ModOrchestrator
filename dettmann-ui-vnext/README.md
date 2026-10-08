@@ -9,7 +9,7 @@ v2 is a breaking release (no aliases). The app keeps using `dettmann-ui-v1` unti
 - **Themes from seeds.** One brand color plus personality knobs; a pure TypeScript engine (own OKLCH math, contrast solver) generates light and dark, at build time for presets and at runtime for custom themes.
 - **Emphasis x intent.** `emphasis` (low/medium/high = 60/30/10) says how loud, `intent` says what it means. The `secondary` family is gone.
 - **Motion that follows emphasis.** Three spring levels, tunable as data, honoring reduced motion.
-- **Animated icons and loaders.** About 55 icons adapted from Lucide whose parts move with the emphasis level (`dettmann-ui/icons`), and a `Loader` that replaces `Spinner`.
+- **Animated icons and loaders.** 63 icons adapted from Lucide whose parts move with the emphasis level (`dettmann-ui/icons`), and a `Loader` that replaces `Spinner`.
 - **Budget tooling.** Dev-only guards and an inspector measure the 60/30/10 split.
 - **Playground and skills.** A local app for tuning themes and three AI skills.
 - **Defaults.** `balanced` shape, Plus Jakarta Sans + JetBrains Mono, expressive motion ceiling.

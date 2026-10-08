@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import { renderToString } from "react-dom/server";
 import { REDUCED_LOOP } from "../motion";
 import { Button } from "../components/button";
@@ -121,4 +121,35 @@ test("the old spinner is no longer exported; Loader is", () => {
 test("renderToString works", () => {
   const html = renderToString(<Loader variant="pulse" />);
   expect(html).toContain('role="status"');
+});
+
+test("loop reacts to reduced motion turned on and off after it started", async () => {
+  render(<Loader />);
+  const first = spy.mock.calls.length;
+  expect(first).toBeGreaterThan(0);
+  await act(async () => {
+    document.documentElement.dataset.reduceMotion = "true";
+    await Promise.resolve();
+  });
+  expect(cancels.slice(0, first).every((c) => c.mock.calls.length > 0)).toBe(true);
+  const reducedCalls = spy.mock.calls.slice(first);
+  expect(reducedCalls.length).toBeGreaterThan(0);
+  for (const call of reducedCalls) expect(call[0]).toEqual(REDUCED_LOOP.keyframes);
+  const second = spy.mock.calls.length;
+  await act(async () => {
+    document.documentElement.dataset.reduceMotion = "false";
+    await Promise.resolve();
+  });
+  const restored = spy.mock.calls.slice(second);
+  expect(restored.length).toBeGreaterThan(0);
+  for (const call of restored) expect(call[0]).not.toEqual(REDUCED_LOOP.keyframes);
+});
+
+test("decorative loader has no status role, label or text and is hidden", () => {
+  const { container } = render(<Loader decorative label="Busy" />);
+  expect(screen.queryByRole("status")).toBeNull();
+  const el = container.firstElementChild!;
+  expect(el.getAttribute("aria-hidden")).toBe("true");
+  expect(el.hasAttribute("aria-label")).toBe(false);
+  expect(el).not.toHaveTextContent("Busy");
 });

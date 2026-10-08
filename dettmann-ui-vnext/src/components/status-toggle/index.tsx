@@ -4,7 +4,7 @@ import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 import { BanIcon } from "../../icons/glyphs/ban";
 import { CheckIcon } from "../../icons/glyphs/check";
 import { MinusIcon } from "../../icons/glyphs/minus";
-import type { IconComponent } from "../../primitives/icon";
+import type { AnimatedIconComponent } from "../../icons/types";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Loader } from "../loader";
@@ -44,7 +44,7 @@ const statusToggleVariants = defineRecipe({
   defaultVariants: { state: "off", size: "sm" },
 });
 
-const ICONS: Record<Exclude<StatusToggleState, "busy">, IconComponent> = { on: CheckIcon, off: MinusIcon, unavailable: BanIcon };
+const ICONS: Record<Exclude<StatusToggleState, "busy">, AnimatedIconComponent> = { on: CheckIcon, off: MinusIcon, unavailable: BanIcon };
 
 const SHIFT: Record<"sm" | "md", string> = { sm: "translate-x-4", md: "translate-x-5" };
 
@@ -103,7 +103,7 @@ export const StatusToggle = forwardRef<HTMLButtonElement, StatusToggleProps>(fun
     >
       <span className={cn(thumb(), state === "on" && SHIFT[size])}>
         {state === "busy" ? (
-          <Loader size="xs" label={stateLabels.busy} aria-hidden="true" className={icon()} />
+          <Loader size="xs" decorative className={icon()} />
         ) : (
           Icon && <Icon size="xs" strokeWidth={2} className={icon()} />
         )}

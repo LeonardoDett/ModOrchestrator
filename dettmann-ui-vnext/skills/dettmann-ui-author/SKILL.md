@@ -50,7 +50,7 @@ Glifo novo = um arquivo `src/icons/glyphs/<nome>.tsx` com `defineIcon`; nada de 
 2. Divida em `parts` (ordem = ordem de pintura) só o que se move; `origin` por parte (`"100% 100%"` = canto) quando o pivô não é o centro. `root` é nome reservado (anima o ícone inteiro).
 3. `action` (e `loop` só se há estado contínuo) usam **só técnicas** de `techniques.ts` (`squash lift nudge rotate spin draw undraw flip trail pulse stagger`). Técnica usada num modo que não suporta lança em dev.
 4. Respeite o limite geométrico com `amp` 1,6: `translate ≤ 3`, `rotate ≤ 30°` (até 180° só em ícone de rotação natural: refresh, undo, settings, sun, moon), `|scale − 1| ≤ 0,25`; `spin`/`flip` isentos. Reduza o valor do glifo, não o teste.
-5. Registre em `src/icons/catalog.ts` (`CATALOG`) e exporte em `src/icons/index.ts`. O teste de catálogo (`icon-catalog.test.tsx`) cobre limites, repouso e redução.
+5. Registre em `src/icons/catalog.ts` (`CATALOG`) e exporte em `src/icons/index.ts`. O teste de catálogo (`icon-catalog.test.tsx`) cobre limites, partes e cor; repouso e redução ficam em `icon-techniques.test.ts`.
 6. Técnica nova: só em `techniques.ts`, com `extent` e teste em `icon-techniques.test.ts` (amplitude × `amp`, volta ao repouso, `reduced`). Ida-e-volta em duas fases (ida `ease-out`, volta com a mola via `keyframeEasing`); traço e loop nunca usam a mola.
 7. Raiz `dettmann-ui` não reexporta glifos nem técnicas (só `defineIcon`, tipos, `Loader`).
 

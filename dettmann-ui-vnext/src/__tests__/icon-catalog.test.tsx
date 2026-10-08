@@ -51,10 +51,11 @@ describe.each(entries)("%s", (name, C) => {
   });
 
   test("respects geometric limits at amp 1.6", () => {
-    const limit = ROTATION_ICONS.includes(name) ? 180 : 30;
     for (const t of [...techniquesOf(C.definition.action), ...techniquesOf(C.definition.loop)]) {
       if (t.exempt) continue;
       expect(t.extent.translate * 1.6).toBeLessThanOrEqual(3);
+      // 180° só para a técnica `rotate` dos ícones de rotação natural; as demais seguem 30°.
+      const limit = t.kind === "rotate" && ROTATION_ICONS.includes(name) ? 180 : 30;
       expect(t.extent.rotate * 1.6).toBeLessThanOrEqual(limit);
       expect(t.extent.scale * 1.6).toBeLessThanOrEqual(0.25);
     }

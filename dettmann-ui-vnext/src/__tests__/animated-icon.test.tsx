@@ -345,3 +345,24 @@ test("root exports defineIcon but not techniques", () => {
   expect(root).not.toHaveProperty("squash");
   expect(root).not.toHaveProperty("draw");
 });
+
+test("loop reacts to reduced motion turned on and off after it started", async () => {
+  render(<Demo loop />);
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy.mock.calls[0]![0]).not.toEqual(REDUCED_LOOP.keyframes);
+  await act(async () => {
+    document.documentElement.dataset.reduceMotion = "true";
+    await Promise.resolve();
+  });
+  expect(fakes[0]!.cancel).toHaveBeenCalled();
+  expect(spy).toHaveBeenCalledTimes(2);
+  expect(spy.mock.calls[1]![0]).toEqual(REDUCED_LOOP.keyframes);
+  expect(spy.mock.calls[1]![1]).toMatchObject({ duration: REDUCED_LOOP.duration, iterations: Infinity });
+  await act(async () => {
+    document.documentElement.dataset.reduceMotion = "false";
+    await Promise.resolve();
+  });
+  expect(fakes[1]!.cancel).toHaveBeenCalled();
+  expect(spy).toHaveBeenCalledTimes(3);
+  expect(spy.mock.calls[2]![0]).not.toEqual(REDUCED_LOOP.keyframes);
+});

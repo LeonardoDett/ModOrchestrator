@@ -122,7 +122,7 @@ Replaces the native `<select>` with a `button[role=combobox]` + anchored `listbo
 
 ## D-027 — Own animated icons from Lucide, curated catalog
 
-Glyph geometry is adapted from Lucide 0.468 (ISC; `src/icons/NOTICE` ships in the package) into a curated catalog of about 55 icons, each split into named parts with a choreography (`defineIcon`). The catalog lives at the subpath `dettmann-ui/icons`; the root `dettmann-ui` exports only `defineIcon`, the icon types and `Loader`, so techniques and glyphs never bloat the barrel. `Icon` stays as the wrapper for Lucide glyphs outside the catalog. `defineIcon` validates in dev (the part name `root` is reserved, referenced parts must exist, a technique used in a mode it does not support throws); an invalid definition renders static in production.
+Glyph geometry is adapted from Lucide 0.468 (ISC; `src/icons/NOTICE` ships in the package) into a curated catalog of 63 icons, each split into named parts with a choreography (`defineIcon`). The catalog lives at the subpath `dettmann-ui/icons`; the root `dettmann-ui` exports only `defineIcon`, the icon types and `Loader`, so techniques and glyphs never bloat the barrel. `Icon` stays as the wrapper for Lucide glyphs outside the catalog. `defineIcon` validates in dev (the part name `root` is reserved, referenced parts must exist, a technique used in a mode it does not support throws); an invalid definition renders static in production.
 
 ## D-028 — Trigger inherited by a delegated controller
 

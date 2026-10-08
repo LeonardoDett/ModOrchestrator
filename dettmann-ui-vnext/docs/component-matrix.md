@@ -6,7 +6,7 @@
 
 ## Animated icons and loaders
 
-`Loader` (`arc`, `dots`, `pulse`, `bars`; replaces `Spinner`) is exported from the root. About 55 animated icons (`TrashIcon`, `CheckIcon`, `RefreshIcon`...) come from the subpath `dettmann-ui/icons`, together with the techniques (`squash`, `lift`, `nudge`, `rotate`, `spin`, `draw`, `undraw`, `flip`, `trail`, `pulse`, `stagger`); the root exports only `defineIcon` and the icon types. Props: `size`, `intent`, `label`, `strokeWidth`, `trigger` (`auto` | `none`), `playKey`, `loop`. `Icon` remains for Lucide glyphs outside the catalog.
+`Loader` (`arc`, `dots`, `pulse`, `bars`; replaces `Spinner`) is exported from the root. 63 animated icons (`TrashIcon`, `CheckIcon`, `RefreshIcon`...) come from the subpath `dettmann-ui/icons`, together with the techniques (`squash`, `lift`, `nudge`, `rotate`, `spin`, `draw`, `undraw`, `flip`, `trail`, `pulse`, `stagger`); the root exports only `defineIcon` and the icon types. Props: `size`, `intent`, `label`, `strokeWidth`, `trigger` (`auto` | `none`), `playKey`, `loop`. `Icon` remains for Lucide glyphs outside the catalog.
 
 ## Inputs and controls
 

@@ -75,7 +75,7 @@ Não as use em código novo: pinte com `intent`, `Surface` e papéis (`bg-surfac
 - Ícone dentro de um controle (`Button`, item de menu, aba…) já anima sozinho com a
   ênfase do controle: não escreva hover/press para ele. Só `trigger="none"` desliga.
 - Mudança de estado (copiou, salvou, contagem mudou) → `playKey={valor}`: toca de novo
-  quando muda (não na montagem).
+  quando muda (não na montagem); mudanças de `playKey` são ignoradas enquanto `loop` está ativo.
 - Estado contínuo (implantando, sincronizando) → `loop` no ícone narrativo
   (`<RocketIcon loop />`). Se é o **único** indicador, ponha texto de status ao lado
   (ou `label`): movimento sozinho não basta.
