@@ -6,8 +6,11 @@ export interface LoopOptions {
   /** ms de um ciclo completo (dado da técnica, não do tema). */
   period: number;
   delay?: number;
-  /** `"linear"` (padrão) ou `"spring"` (curva `--motion-ease` do contexto). */
-  easing?: "linear" | "spring";
+  /**
+   * Curva do timing: sempre `"linear"`. Gestos de ida-e-volta põem `easing` em cada keyframe
+   * (ex.: `"ease-in-out"`); a mola `--motion-ease` não serve a loops (extrapola a cada ciclo).
+   */
+  easing?: "linear";
 }
 
 /** Alternativa de loop sob redução de movimento: pulso lento de opacidade, sem deslocamento. */
@@ -37,7 +40,7 @@ export function animateLoop(el: Element, keyframes: KeyframesInput, opts: LoopOp
   } else {
     frames = typeof keyframes === "function" ? keyframes(m) : keyframes;
     timing.duration = opts.period;
-    timing.easing = opts.easing === "spring" ? m.ease : "linear";
+    timing.easing = "linear";
   }
   if (opts.delay !== undefined) timing.delay = opts.delay;
   try {

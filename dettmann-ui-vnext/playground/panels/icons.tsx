@@ -154,7 +154,8 @@ export function IconsPanel({ config }: { config: ThemeConfig }) {
           </Button>
           <Badge size="sm">{CATALOG.length} ícones</Badge>
         </Inline>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] gap-3">
+        {/* Classe arbitrária só do playground não é gerada (`@source not "../../playground"`): colunas via style. */}
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(8.5rem, 1fr))" }}>
           {CATALOG.map((Glyph) => (
             <IconCell key={Glyph.definition.name} Glyph={Glyph} context={context} loop={loop} playKey={playKey} />
           ))}

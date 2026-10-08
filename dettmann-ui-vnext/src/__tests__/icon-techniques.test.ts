@@ -3,8 +3,9 @@ import type { MotionValues } from "../motion";
 import { draw, flip, lift, nudge, pulse, rotate, spin, squash, stagger, trail, undraw } from "../icons/techniques";
 import type { Technique, TechniqueContext } from "../icons/types";
 
+const SPRING = "linear(0, 0.6 8%, 1.2 17%, 1)";
 const mv = (amp: number): MotionValues => ({
-  ease: "linear",
+  ease: SPRING,
   duration: 160,
   springDuration: 400,
   amp,
@@ -90,8 +91,8 @@ test("spin only supports loop; squash only action", () => {
 });
 
 test("defaults match the spec", () => {
-  expect(squash().run(levels.responsive, actionCtx).keyframes[1]).toEqual({ scale: String(1 - 0.12) });
-  expect(nudge().run(levels.responsive, actionCtx).keyframes[1]).toEqual({ translate: "1.8px 0px" });
+  expect(squash().run(levels.responsive, actionCtx).keyframes[1]).toMatchObject({ scale: String(1 - 0.12) });
+  expect(nudge().run(levels.responsive, actionCtx).keyframes[1]).toMatchObject({ translate: "1.8px 0px" });
   expect(spin().run(levels.responsive, loopCtx)).toMatchObject({ period: 1000 });
   expect(pulse().run(levels.responsive, loopCtx)).toMatchObject({ period: 1600 });
   expect(draw({ from: "end" }).run(levels.responsive, actionCtx).keyframes[0]).toMatchObject({ strokeDashoffset: -1 });
@@ -112,4 +113,58 @@ test("stagger assigns increasing index", () => {
   const c = stagger(["a", "b", "c"], nudge());
   expect([c.a, c.b, c.c].map((t) => (t as Technique).index)).toEqual([0, 1, 2]);
   expect((c.b as Technique).kind).toBe("nudge");
+});
+
+// R16: ida-e-volta em duas fases; a mola só no retorno (overshoot sobre o repouso, sem extrapolar o gesto).
+const OUT_AND_BACK = withName(ACTION.filter((t) => ["squash", "lift", "nudge", "rotate", "flip", "undraw"].includes(t.kind)));
+
+test.each(OUT_AND_BACK)("%s action runs in two phases with per-keyframe easing", (_n, t) => {
+  const m = levels.expressive;
+  const run = t.run(m, actionCtx);
+  const [first, peak, last] = run.keyframes;
+  expect(run.keyframes).toHaveLength(3);
+  expect(run.options?.keyframeEasing).toBe(true);
+  expect(first).toMatchObject({ offset: 0, easing: "ease-out" });
+  expect(peak!.offset).toBeGreaterThan(0);
+  expect(peak!.offset).toBeLessThan(0.5);
+  expect(last!.offset).toBe(1);
+  expect(isRest(last!)).toBe(true);
+  if (t.kind === "undraw") {
+    expect(peak!.easing).toBe("ease-in-out");
+    expect(run.options).toMatchObject({ spring: false, durationFactor: 2 });
+    expect(peak!.offset).toBeCloseTo((m.duration * 0.45) / (m.duration * 2));
+  } else {
+    expect(peak!.easing).toBe(m.ease);
+    const out = m.duration * 0.45;
+    const total = out + m.springDuration;
+    expect(peak!.offset).toBeCloseTo(out / total);
+    expect(run.options).toMatchObject({ spring: true });
+    expect(run.options!.durationFactor).toBeCloseTo(total / m.springDuration);
+  }
+});
+
+test.each(["draw", "undraw", "trail"] as const)("%s never uses the spring curve (no dash overshoot)", (kind) => {
+  for (const t of ALL.filter((x) => x.kind === kind)) {
+    for (const ctx of t.modes.map((mode) => ({ mode, index: 0 }))) {
+      const run = t.run(levels.expressive, ctx);
+      for (const f of run.keyframes) expect(f.easing).not.toBe(SPRING);
+    }
+  }
+});
+
+test.each(["draw", "trail"] as const)("%s action is a single eased segment without spring duration", (kind) => {
+  const run = ALL.find((x) => x.kind === kind)!.run(levels.expressive, actionCtx);
+  expect(run.options).toMatchObject({ spring: false, keyframeEasing: true });
+  expect(run.keyframes[0]!.easing).toBe("ease-out");
+});
+
+test.each(withName(LOOP))("%s loop never asks for the spring curve", (_n, t) => {
+  const run = t.run(levels.expressive, loopCtx);
+  expect(run.easing ?? "linear").toBe("linear");
+  for (const f of run.keyframes) expect(f.easing).not.toBe(SPRING);
+});
+
+test.each(withName(LOOP.filter((t) => t.kind !== "spin")))("%s loop eases each segment (ease-in-out)", (_n, t) => {
+  const frames = t.run(levels.expressive, loopCtx).keyframes;
+  for (const f of frames.slice(0, -1)) expect(f.easing).toBe("ease-in-out");
 });

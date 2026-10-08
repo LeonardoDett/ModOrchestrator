@@ -85,6 +85,20 @@ test("dots amplitude follows amp (expressive > calm)", () => {
   expect(peak("1.6")).toBeGreaterThan(peak("0.45"));
 });
 
+test.each(["dots", "pulse"] as const)("%s: linear timing with ease-in-out per keyframe (no spring)", (variant) => {
+  render(
+    <div style={{ "--motion-ease": "linear(0, 1.2 17%, 1)" } as React.CSSProperties}>
+      <Loader variant={variant} />
+    </div>,
+  );
+  expect(spy.mock.calls.length).toBeGreaterThan(0);
+  for (const call of spy.mock.calls) {
+    expect(call[1]).toMatchObject({ easing: "linear" });
+    const frames = call[0] as Keyframe[];
+    for (const f of frames.slice(0, -1)) expect(f.easing).toBe("ease-in-out");
+  }
+});
+
 test("reduced motion: only opacity pulse", () => {
   document.documentElement.dataset.reduceMotion = "true";
   render(<Loader variant="bars" />);

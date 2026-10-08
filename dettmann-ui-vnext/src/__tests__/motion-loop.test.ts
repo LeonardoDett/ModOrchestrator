@@ -28,10 +28,12 @@ test("animateLoop runs forever with the given period and linear easing by defaul
   expect(spy.mock.calls[0]![1]).toMatchObject({ duration: 1000, iterations: Infinity, easing: "linear", delay: 40 });
 });
 
-test("easing 'spring' uses --motion-ease of the context", () => {
+test("timing stays linear (never --motion-ease) and per-keyframe easings pass through", () => {
   const { el, spy } = stubbed("--motion-ease: cubic-bezier(0.1, 0.2, 0.3, 0.4)");
-  animateLoop(el, [{ opacity: 0 }, { opacity: 1 }], { period: 800, easing: "spring" });
-  expect(spy.mock.calls[0]![1]).toMatchObject({ easing: "cubic-bezier(0.1, 0.2, 0.3, 0.4)" });
+  const frames: Keyframe[] = [{ opacity: 0, easing: "ease-in-out" }, { opacity: 1, easing: "ease-in-out" }, { opacity: 0 }];
+  animateLoop(el, frames, { period: 800 });
+  expect(spy.mock.calls[0]![0]).toEqual(frames);
+  expect(spy.mock.calls[0]![1]).toMatchObject({ easing: "linear" });
 });
 
 test("keyframes as function receive MotionValues (amp)", () => {

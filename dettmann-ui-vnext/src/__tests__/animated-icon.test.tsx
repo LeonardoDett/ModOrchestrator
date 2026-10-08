@@ -147,9 +147,12 @@ test("playKey change plays action once and not on mount", () => {
   // draw: strokeDashoffset; nudge: translate. Delay vem da técnica (0 aqui).
   expect(spy.mock.calls[0]![1]).toMatchObject({ delay: 0 });
   expect(spy.mock.calls[1]![0]).toEqual([
-    { strokeDasharray: "1", strokeDashoffset: 1 },
+    { strokeDasharray: "1", strokeDashoffset: 1, easing: "ease-out" },
     { strokeDasharray: "1", strokeDashoffset: 0 },
   ]);
+  // keyframeEasing chega ao animate(): timing linear, curva nos keyframes.
+  expect(spy.mock.calls[0]![1]).toMatchObject({ easing: "linear" });
+  expect(spy.mock.calls[1]![1]).toMatchObject({ easing: "linear" });
 });
 
 test("StrictMode: no play on mount and a single live loop", () => {

@@ -185,6 +185,9 @@ Fora deste ciclo: morph de silhueta e glifo embaralhado.
 **Ênfase → intensidade** (sem token novo):
 - magnitude = valor-base × `m.amp` (`calm` 0,45 · `responsive` 1 · `expressive` 1,6);
 - duração e curva do `action` = `m.springDuration` e `m.ease` do nível (o overshoot vem da mola);
+  gestos de ida-e-volta rodam em duas fases (R16): ida `ease-out` em `m.duration · 0,45`, volta com
+  `m.ease` em `m.springDuration`, timing linear (`keyframeEasing`) — o overshoot cai sobre o repouso;
+  traços (`draw`/`undraw`/`trail`) não usam mola (o offset não pode ultrapassar);
 - nível = `data-motion` mais próximo (Button `high` → `expressive`, item `low` → `calm`,
   ícone sem contexto → `calm`);
 - `draw` não escala por `amp` (é conteúdo, não gesto); o nível muda só o tempo.
@@ -207,7 +210,8 @@ animateLoop(el, keyframes, { period, delay?, easing? }): Animation | null
 
 - iterações infinitas; `period` em ms é dado da técnica (ex.: `spin` 1000, `pulse` 1600),
   **não** escalado pelo nível — a ênfase muda a amplitude, não a cadência;
-- easing padrão `linear` para rotação contínua, `m.ease` só quando a técnica pede;
+- timing sempre `linear`; loops de ida-e-volta põem `ease-in-out` em cada keyframe. A mola
+  `m.ease` não é usada em loop (extrapolaria a cada ciclo; R16);
 - **redução de movimento**: descarta os keyframes e roda um pulso de opacidade lento
   (1 → 0,5 → 1, 2000 ms, infinito). O estado continua perceptível; nada se desloca;
 - sem WAAPI (jsdom/SSR): `null`.

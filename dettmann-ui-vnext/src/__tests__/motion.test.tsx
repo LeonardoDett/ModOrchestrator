@@ -94,6 +94,29 @@ test("animate uses spring duration by default and plain duration with spring: fa
   expect(spy.mock.calls[1]![1]).toMatchObject({ duration: MOTION_DEFAULTS.calm.duration * 2, easing: calm.easing });
 });
 
+test("keyframeEasing: linear timing, per-keyframe easings kept, duration unchanged", () => {
+  const el = document.createElement("div");
+  document.body.append(el);
+  const spy = vi.fn((..._args: unknown[]) => ({}) as Animation);
+  (el as unknown as { animate: unknown }).animate = spy;
+  const calm = springToLinear(MOTION_DEFAULTS.calm);
+  const frames: Keyframe[] = [
+    { opacity: 0, offset: 0, easing: "ease-out" },
+    { opacity: 1, offset: 0.2, easing: calm.easing },
+    { opacity: 0, offset: 1 },
+  ];
+  animate(el, frames, { keyframeEasing: true, durationFactor: 1.5 });
+  expect(spy.mock.calls[0]![0]).toEqual(frames);
+  expect(spy.mock.calls[0]![1]).toMatchObject({ duration: calm.duration * 1.5, easing: "linear" });
+  animate(el, frames, { keyframeEasing: true, spring: false, durationFactor: 2 });
+  expect(spy.mock.calls[1]![1]).toMatchObject({ duration: MOTION_DEFAULTS.calm.duration * 2, easing: "linear" });
+  // Sob redução de movimento nada muda: 120 ms, linear, offsets/easings preservados.
+  document.documentElement.dataset.reduceMotion = "true";
+  animate(el, frames, { keyframeEasing: true, durationFactor: 1.5 });
+  expect(spy.mock.calls[2]![0]).toEqual(frames);
+  expect(spy.mock.calls[2]![1]).toMatchObject({ duration: 120, easing: "linear" });
+});
+
 test("animate passes MotionValues to keyframe functions", () => {
   const el = document.createElement("div");
   const spy = vi.fn((..._args: unknown[]) => ({}) as Animation);

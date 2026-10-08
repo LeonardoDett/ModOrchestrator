@@ -8,6 +8,33 @@ const LOOP: readonly IconMode[] = ["loop"];
 
 const xy = (x: number, y: number) => `${x}px ${y}px`;
 
+/** Fração de `m.duration` gasta na ida de um gesto de ida-e-volta. */
+const OUT_SHARE = 0.45;
+
+/**
+ * Ida-e-volta em duas fases (R16): ida `ease-out` em `m.duration · 0.45`, volta com a mola `m.ease`
+ * em `m.springDuration`, de modo que o overshoot caia sobre o repouso e não extrapole o gesto inteiro.
+ * O timing é linear (`keyframeEasing`); a duração total é `ida + springDuration`.
+ */
+function outAndBack(m: MotionValues, rest: Keyframe, peak: Keyframe): TechniqueRun {
+  const out = m.duration * OUT_SHARE;
+  const total = out + m.springDuration;
+  return {
+    keyframes: [
+      { ...rest, offset: 0, easing: "ease-out" },
+      { ...peak, offset: out / total, easing: m.ease },
+      { ...rest, offset: 1 },
+    ],
+    options: { spring: true, durationFactor: total / m.springDuration, keyframeEasing: true },
+  };
+}
+
+/** Curva de cada segmento de loop (o timing de `animateLoop` é linear). */
+const LOOP_EASE = "ease-in-out";
+/** Marca cada keyframe, exceto o último, com `LOOP_EASE`. */
+const loopEased = (frames: Keyframe[]): Keyframe[] =>
+  frames.map((f, i) => (i < frames.length - 1 ? { ...f, easing: LOOP_EASE } : f));
+
 function make(
   kind: TechniqueKind,
   modes: readonly IconMode[],
@@ -26,12 +53,12 @@ function make(
   };
 }
 
-/** Encolhe e volta (o overshoot vem da mola). */
+/** Encolhe e volta (o overshoot vem da mola, no retorno ao repouso). */
 export function squash(p: { amount?: number; delay?: number } = {}): Technique {
   const amount = p.amount ?? 0.12;
-  return make("squash", ACTION, { scale: amount }, p.delay, (m) => ({
-    keyframes: [{ scale: "1" }, { scale: String(1 - amount * m.amp) }, { scale: "1" }],
-  }));
+  return make("squash", ACTION, { scale: amount }, p.delay, (m) =>
+    outAndBack(m, { scale: "1" }, { scale: String(1 - amount * m.amp) }),
+  );
 }
 
 /** A parte desloca e/ou gira e volta. */
@@ -40,13 +67,13 @@ export function lift(p: { x?: number; y?: number; rotate?: number; delay?: numbe
   const y = p.y ?? 0;
   const deg = p.rotate ?? 0;
   const extent = { translate: Math.max(Math.abs(x), Math.abs(y)), rotate: Math.abs(deg) };
-  return make("lift", ACTION, extent, p.delay, (m) => ({
-    keyframes: [
+  return make("lift", ACTION, extent, p.delay, (m) =>
+    outAndBack(
+      m,
       { translate: "0px 0px", rotate: "0deg" },
       { translate: xy(x * m.amp, y * m.amp), rotate: `${deg * m.amp}deg` },
-      { translate: "0px 0px", rotate: "0deg" },
-    ],
-  }));
+    ),
+  );
 }
 
 /** Desloca na direção e volta. Sem x/y, x = 1.8 (1.8 × amp 1.6 ≤ 3). */
@@ -55,17 +82,19 @@ export function nudge(p: { x?: number; y?: number; delay?: number; period?: numb
   const x = none ? 1.8 : (p.x ?? 0);
   const y = p.y ?? 0;
   const period = p.period ?? 1200;
-  return make("nudge", BOTH, { translate: Math.max(Math.abs(x), Math.abs(y)) }, p.delay, (m, ctx) => ({
-    keyframes: [{ translate: "0px 0px" }, { translate: xy(x * m.amp, y * m.amp) }, { translate: "0px 0px" }],
-    ...(ctx.mode === "loop" ? { period, easing: "spring" as const } : {}),
-  }));
+  return make("nudge", BOTH, { translate: Math.max(Math.abs(x), Math.abs(y)) }, p.delay, (m, ctx) => {
+    const rest = { translate: "0px 0px" };
+    const peak = { translate: xy(x * m.amp, y * m.amp) };
+    if (ctx.mode === "action") return outAndBack(m, rest, peak);
+    return { keyframes: loopEased([rest, peak, rest]), period, easing: "linear" };
+  });
 }
 
 /** Gira N graus e volta. */
 export function rotate(p: { deg: number; delay?: number }): Technique {
-  return make("rotate", ACTION, { rotate: Math.abs(p.deg) }, p.delay, (m) => ({
-    keyframes: [{ rotate: "0deg" }, { rotate: `${p.deg * m.amp}deg` }, { rotate: "0deg" }],
-  }));
+  return make("rotate", ACTION, { rotate: Math.abs(p.deg) }, p.delay, (m) =>
+    outAndBack(m, { rotate: "0deg" }, { rotate: `${p.deg * m.amp}deg` }),
+  );
 }
 
 /** Rotação contínua (isenta do limite geométrico). */
@@ -82,27 +111,38 @@ export function spin(p: { turns?: number; period?: number } = {}): Technique {
   );
 }
 
-/** Traço desenhado (`pathLength=1`). Não escala por `amp`: é conteúdo, não gesto. */
+/**
+ * Traço desenhado (`pathLength=1`). Não escala por `amp`: é conteúdo, não gesto. Sem mola: o
+ * overshoot levaria o offset além do alvo (falha visível no traço); um segmento `ease-out` em `m.duration`.
+ */
 export function draw(p: { from?: "start" | "end"; delay?: number; period?: number } = {}): Technique {
   const from = p.from === "end" ? -1 : 1;
   const period = p.period ?? 1400;
-  return make("draw", BOTH, {}, p.delay, (_m, ctx) => ({
-    keyframes: [
-      { strokeDasharray: "1", strokeDashoffset: from },
-      { strokeDasharray: "1", strokeDashoffset: 0 },
-    ],
-    ...(ctx.mode === "loop" ? { period, easing: "linear" as const } : { reduced: REDUCED_PULSE }),
-  }));
+  return make("draw", BOTH, {}, p.delay, (_m, ctx) => {
+    const start: Keyframe = { strokeDasharray: "1", strokeDashoffset: from };
+    const end: Keyframe = { strokeDasharray: "1", strokeDashoffset: 0 };
+    if (ctx.mode === "loop") return { keyframes: loopEased([start, end]), period, easing: "linear" };
+    return {
+      keyframes: [{ ...start, easing: "ease-out" }, end],
+      options: { spring: false, keyframeEasing: true },
+      reduced: REDUCED_PULSE,
+    };
+  });
 }
 
-/** Traço apagado e redesenhado de volta. */
+/**
+ * Traço apagado e redesenhado de volta. Duas fases como `outAndBack`, mas sem mola (o traço não
+ * pode ultrapassar): ida `ease-out` em `m.duration · 0.45`, volta `ease-in-out`, total `2 · m.duration`.
+ */
 export function undraw(p: { delay?: number } = {}): Technique {
+  const factor = 2;
   return make("undraw", ACTION, {}, p.delay, () => ({
     keyframes: [
-      { strokeDasharray: "1", strokeDashoffset: 0 },
-      { strokeDasharray: "1", strokeDashoffset: 1 },
-      { strokeDasharray: "1", strokeDashoffset: 0 },
+      { strokeDasharray: "1", strokeDashoffset: 0, offset: 0, easing: "ease-out" },
+      { strokeDasharray: "1", strokeDashoffset: 1, offset: OUT_SHARE / factor, easing: "ease-in-out" },
+      { strokeDasharray: "1", strokeDashoffset: 0, offset: 1 },
     ],
+    options: { spring: false, durationFactor: factor, keyframeEasing: true },
     reduced: REDUCED_PULSE,
   }));
 }
@@ -119,29 +159,37 @@ export function flip(p: { deg?: number; axis?: "x" | "y" } = {}): Technique {
     ACTION,
     { rotate: deg },
     undefined,
-    (m) => ({
-      keyframes: [
+    (m) =>
+      outAndBack(
+        m,
         { transform: `perspective(48px) ${fn}(0deg)` },
         { transform: `perspective(48px) ${fn}(${deg * m.amp}deg)` },
-        { transform: `perspective(48px) ${fn}(0deg)` },
-      ],
-    }),
+      ),
     true,
   );
 }
 
-/** Linhas de velocidade surgem e somem; aplicada à parte que contém as linhas `trail-*`. */
+/**
+ * Linhas de velocidade surgem e somem; aplicada à parte que contém as linhas `trail-*`. Sem mola
+ * (o traço não pode ultrapassar): segmentos `ease-out` em `m.duration`.
+ */
 export function trail(p: { length?: number; delay?: number; period?: number } = {}): Technique {
   const length = p.length ?? 1;
   const period = p.period ?? 1200;
-  return make("trail", BOTH, {}, p.delay, (m, ctx) => ({
-    keyframes: [
-      { opacity: 1, strokeDasharray: "1", strokeDashoffset: 0 },
-      { opacity: 0.3, strokeDasharray: "1", strokeDashoffset: -length * 0.5 * m.amp },
-      { opacity: 1, strokeDasharray: "1", strokeDashoffset: 0 },
-    ],
-    ...(ctx.mode === "loop" ? { period, easing: "linear" as const } : { reduced: REDUCED_PULSE }),
-  }));
+  return make("trail", BOTH, {}, p.delay, (m, ctx) => {
+    const rest: Keyframe = { opacity: 1, strokeDasharray: "1", strokeDashoffset: 0 };
+    const peak: Keyframe = { opacity: 0.3, strokeDasharray: "1", strokeDashoffset: -length * 0.5 * m.amp };
+    if (ctx.mode === "loop") return { keyframes: loopEased([rest, peak, rest]), period, easing: "linear" };
+    return {
+      keyframes: [
+        { ...rest, easing: "ease-out" },
+        { ...peak, easing: "ease-out" },
+        rest,
+      ],
+      options: { spring: false, keyframeEasing: true },
+      reduced: REDUCED_PULSE,
+    };
+  });
 }
 
 /** Escala e opacidade respirando. */
@@ -149,13 +197,13 @@ export function pulse(p: { amount?: number; period?: number } = {}): Technique {
   const amount = p.amount ?? 0.12;
   const period = p.period ?? 1600;
   return make("pulse", LOOP, { scale: amount }, undefined, (m) => ({
-    keyframes: [
+    keyframes: loopEased([
       { scale: "1", opacity: 1 },
       { scale: String(1 + amount * m.amp), opacity: 0.75 },
       { scale: "1", opacity: 1 },
-    ],
+    ]),
     period,
-    easing: "spring",
+    easing: "linear",
   }));
 }
 

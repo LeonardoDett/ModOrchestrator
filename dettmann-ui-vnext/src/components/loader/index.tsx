@@ -33,6 +33,9 @@ const STROKE: Record<LoaderSize, number> = ICON_STROKE;
 /** Períodos por variante: dado da técnica, não do tema. */
 const PERIOD = { arc: 1000, dots: 900, pulse: 1600, bars: 1000 } as const;
 
+/** Curva de cada segmento dos loops de ida-e-volta (o timing de `animateLoop` é linear). */
+const EASE = "ease-in-out";
+
 const ORIGIN: CSSProperties = { transformBox: "fill-box", transformOrigin: "center" };
 const DOT_X = [5, 12, 19] as const;
 const BAR_X = [4.5, 9.5, 14.5, 19.5] as const;
@@ -52,8 +55,8 @@ const LOOPS: Record<LoaderVariant, Loop> = {
     animateLoop(
       el,
       (v) => [
-        { transform: "translateY(0px)" },
-        { transform: `translateY(${-3 * v.amp}px)` },
+        { transform: "translateY(0px)", easing: EASE },
+        { transform: `translateY(${-3 * v.amp}px)`, easing: EASE },
         { transform: "translateY(0px)" },
       ],
       { period: PERIOD.dots, delay: i * m.stagger },
@@ -67,12 +70,12 @@ const LOOPS: Record<LoaderVariant, Loop> = {
         // Dois círculos em contrafase: preenchimento -> anel (crossfade).
         const [from, to] = i === 0 ? [1, 0.2] : [0.2, 1];
         return [
-          { transform: "scale(1)", opacity: from },
-          { transform: peak, opacity: to },
+          { transform: "scale(1)", opacity: from, easing: EASE },
+          { transform: peak, opacity: to, easing: EASE },
           { transform: "scale(1)", opacity: from },
         ];
       },
-      { period: PERIOD.pulse, easing: "spring" },
+      { period: PERIOD.pulse },
     ),
   ],
   bars: (el, i, m) => [

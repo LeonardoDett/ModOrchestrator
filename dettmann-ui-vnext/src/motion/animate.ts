@@ -4,8 +4,14 @@ import { readMotion, type MotionValues } from "./read-motion";
 export interface AnimateOptions {
   /** Multiplica a duração escolhida (spring ou plana). Padrão 1. */
   durationFactor?: number;
-  /** `true` (padrão): duração até o repouso da mola; `false`: `--motion-duration`. A curva é sempre `--motion-ease`. */
+  /** `true` (padrão): duração até o repouso da mola; `false`: `--motion-duration`. A curva é `--motion-ease` (salvo `keyframeEasing`). */
   spring?: boolean;
+  /**
+   * `true`: a curva do timing é `linear` e valem os `easing` de cada keyframe (ex.: ida `ease-out`,
+   * volta com `--motion-ease`, para o overshoot da mola cair sobre o repouso). A duração não muda.
+   * Sem efeito sob redução de movimento.
+   */
+  keyframeEasing?: boolean;
   delay?: number;
   iterations?: number;
   direction?: PlaybackDirection;
@@ -40,7 +46,8 @@ function reduceKeyframes(frames: Keyframe[]): Keyframe[] {
  * Wrapper fino de WAAPI que lê o contexto de movimento do elemento (`readMotion`).
  * `keyframes` pode ser função dos `MotionValues` (ex.: escalar deslocamentos por `amp`).
  * Sob redução de movimento: só opacidade/cor (sem `transform/translate/rotate/scale`),
- * 120 ms, curva linear e no máximo 1 iteração. Sem `el.animate` (jsdom, SSR), ou quando
+ * 120 ms, curva linear e no máximo 1 iteração. Com `keyframeEasing`, o timing é linear e a curva
+ * vem dos keyframes. Sem `el.animate` (jsdom, SSR), ou quando
  * nada sobra para animar, devolve `null`. Keyframes que a WAAPI rejeita lançam em dev e
  * devolvem `null` em produção.
  */
@@ -57,7 +64,7 @@ export function animate(el: Element, keyframes: KeyframesInput, opts: AnimateOpt
   } else {
     const base = opts.spring === false ? m.duration : m.springDuration;
     timing.duration = base * (opts.durationFactor ?? 1);
-    timing.easing = m.ease;
+    timing.easing = opts.keyframeEasing ? "linear" : m.ease;
   }
   if (opts.delay !== undefined) timing.delay = opts.delay;
   if (opts.iterations !== undefined) timing.iterations = m.reduced ? Math.min(opts.iterations, 1) : opts.iterations;
