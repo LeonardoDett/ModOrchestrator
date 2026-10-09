@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Input, Modal, Spinner, Stack, Table, Typography } from "dettmann-ui";
+import { Alert, Badge, Button, Input, Modal, Loader, Stack, Table, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import type { DeployPlan, DeployStatus, ExternalDecision } from "../../bridge/types";
@@ -55,7 +55,7 @@ function ChangesSection({ plan, decided, onReview }: { plan: DeployPlan; decided
         {decided !== null ? tp("deploy.decision.reviewDecided", decided) : t("deploy.decision.reviewUndecided")}
       </Typography>
       <div>
-        <Button size="sm" variant="outline" onClick={onReview}>
+        <Button size="sm" onClick={onReview}>
           {t("deploy.decision.reviewOpen")}
         </Button>
       </div>
@@ -71,7 +71,7 @@ function UntouchedList({ plan }: { plan: DeployPlan }) {
     <Stack gap="sm">
       <Typography variant="heading-6">{t("deploy.decision.untouchedTitle")}</Typography>
       <Typography variant="body-sm" color="muted-fg">{t("deploy.decision.untouchedHelp")}</Typography>
-      <div className="max-h-56 overflow-auto rounded-lg border border-border">
+      <div className="max-h-56 overflow-auto rounded-control border border-border">
         <Table.Root>
           <Table.Header>
             <Table.Row>
@@ -85,7 +85,7 @@ function UntouchedList({ plan }: { plan: DeployPlan }) {
               <Table.Row key={`b:${locationText(b.location)}`}>
                 <Table.Cell className="font-mono text-xs">{locationText(b.location)}</Table.Cell>
                 <Table.Cell>
-                  <Badge tone="danger">{t(`deploy.blocked.${b.reason}` as MessageKey)}</Badge>
+                  <Badge intent="danger">{t(`deploy.blocked.${b.reason}` as MessageKey)}</Badge>
                 </Table.Cell>
                 <Table.Cell />
               </Table.Row>
@@ -167,12 +167,12 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
             error ? (
               <ErrorAlert title="deploy.plan.loadError" error={error} />
             ) : (
-              <Spinner label={t("common.loading")} />
+              <Loader label={t("common.loading")} />
             )
           ) : (
             <Stack gap="lg">
               {plan.empty ? (
-                <Alert.Root variant="success">
+                <Alert.Root intent="success">
                   <Alert.Description>{t("deploy.plan.empty")}</Alert.Description>
                 </Alert.Root>
               ) : (
@@ -205,7 +205,7 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
               <ChangesSection plan={plan} decided={decisions ? decisions.length : null} onReview={() => setReviewing(true)} />
               <UntouchedList plan={plan} />
               {error ? (
-                <Alert.Root variant="danger">
+                <Alert.Root intent="danger">
                   <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
                 </Alert.Root>
               ) : null}
@@ -213,11 +213,11 @@ export function DeployPlanDialog({ instance, plan: waiting, onClose }: { instanc
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={() => void close()}>
+          <Button disabled={busy} onClick={() => void close()}>
             {t(deciding ? "deploy.decision.cancel" : "common.close")}
           </Button>
           {deciding || (plan && !plan.empty) ? (
-            <Button disabled={busy || !plan} onClick={() => void apply()}>
+            <Button emphasis="high" disabled={busy || !plan} onClick={() => void apply()}>
               {t(deciding ? "deploy.decision.apply" : "deploy.action.deploy")}
             </Button>
           ) : null}
@@ -273,25 +273,25 @@ export function PurgeDialog({ instance, onClose }: { instance: string; onClose: 
                 {tp("deploy.purge.counts", plan.summary.remove, { restored: plan.summary.restoreBackup })}
               </Typography>
             ) : error ? null : (
-              <Spinner label={t("common.loading")} />
+              <Loader label={t("common.loading")} />
             )}
             {plan && plan.changeCount + plan.newFileCount > 0 ? (
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Description>{tp("deploy.purge.untouched", plan.changeCount + plan.newFileCount)}</Alert.Description>
               </Alert.Root>
             ) : null}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button tone="danger" disabled={busy} onClick={() => void purge()}>
+          <Button emphasis="high" intent="danger" disabled={busy} onClick={() => void purge()}>
             {t("deploy.action.purge")}
           </Button>
         </Modal.Footer>
@@ -312,7 +312,7 @@ export function DeployFailuresDialog({ status, onRetry, onClose }: { status: Dep
         <Modal.Body>
           <Stack gap="md">
             <Typography variant="body-sm">{tp("deploy.failures.explain", status.failures.length)}</Typography>
-            <div className="max-h-72 overflow-auto rounded-lg border border-border">
+            <div className="max-h-72 overflow-auto rounded-control border border-border">
               <Table.Root>
                 <Table.Header>
                   <Table.Row>
@@ -333,10 +333,10 @@ export function DeployFailuresDialog({ status, onRetry, onClose }: { status: Dep
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
-          <Button
+          <Button emphasis="high"
             onClick={() => {
               onClose();
               void onRetry();

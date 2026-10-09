@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ChevronDown, FolderOpen, Loader2, OctagonX, Play, Square, TriangleAlert, UploadCloud } from "lucide-react";
-import { Button, Menu } from "dettmann-ui";
+import { OctagonX, Square } from "lucide-react";
+import { ChevronDownIcon, FolderOpenIcon, PlayIcon, TriangleAlertIcon, UploadIcon } from "dettmann-ui/icons";
+import { Button, Icon, Loader, Menu } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useLaunchCheck, useWorkspace } from "../../bridge/queries";
 import type { LaunchCheck, LaunchRequest } from "../../bridge/types";
@@ -65,17 +66,17 @@ export function PlayButton() {
   const disabled = c.state === "running" || c.state === "busy" || c.state === "unavailable";
   const icon =
     c.state === "running" ? (
-      <Square aria-hidden="true" className="h-3.5 w-3.5" />
+      <Icon icon={Square} size="sm" />
     ) : c.state === "busy" ? (
-      <Loader2 aria-hidden="true" className="h-3.5 w-3.5 animate-spin" />
+      <Loader decorative size="xs" />
     ) : c.state === "blocked" ? (
-      <OctagonX aria-hidden="true" className="h-3.5 w-3.5" />
+      <Icon icon={OctagonX} size="sm" />
     ) : c.state === "warnings" ? (
-      <TriangleAlert aria-hidden="true" className="h-3.5 w-3.5" />
+      <TriangleAlertIcon size="sm" />
     ) : c.state === "deploy" ? (
-      <UploadCloud aria-hidden="true" className="h-3.5 w-3.5" />
+      <UploadIcon size="sm" />
     ) : (
-      <Play aria-hidden="true" className="h-3.5 w-3.5" />
+      <PlayIcon size="sm" />
     );
   const hint = stateHint(i18n, c);
   const others = c.options.filter((o) => !o.default);
@@ -84,8 +85,8 @@ export function PlayButton() {
     <div className="flex items-center">
       <Button
         size="sm"
-        tone={c.state === "blocked" ? "danger" : c.state === "warnings" ? "warning" : "primary"}
-        variant={c.state === "running" ? "outline" : undefined}
+        intent={c.state === "blocked" ? "danger" : c.state === "warnings" ? "warning" : "brand"}
+        emphasis={c.state === "running" ? "medium" : "high"}
         disabled={disabled}
         startIcon={icon}
         title={hint}
@@ -97,19 +98,19 @@ export function PlayButton() {
       </Button>
       <Menu.Root placement="bottom-end">
         <Menu.Trigger>
-          <Button size="sm" variant="outline" className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
-            <ChevronDown aria-hidden="true" className="h-3.5 w-3.5" />
+          <Button size="sm" className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
+            <ChevronDownIcon size="sm" />
           </Button>
         </Menu.Trigger>
         <Menu.Content>
           {others.map((o) => (
             <Menu.Item key={o.id} label={launchOptionLabel(i18n, o.id)} disabled={disabled} onSelect={() => play(o.id)}>
-              <Play aria-hidden="true" className="h-4 w-4" />
+              <PlayIcon size="sm" />
               {launchOptionLabel(i18n, o.id)}
             </Menu.Item>
           ))}
           <Menu.Item label={t("launch.openGameFolder")} onSelect={() => void run(() => backend.openInstanceFolder(instance, "game"))}>
-            <FolderOpen aria-hidden="true" className="h-4 w-4" />
+            <FolderOpenIcon size="sm" />
             {t("launch.openGameFolder")}
           </Menu.Item>
         </Menu.Content>

@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Activity, CheckCircle2, Circle, Gamepad2, Lock, Pin, Settings2, Sparkles } from "lucide-react";
-import { Alert, Badge, Button, Card, ReorderableList, Spinner, Stack, Switch, Typography } from "dettmann-ui";
+import { Activity, Circle, Gamepad2, Settings2 } from "lucide-react";
+import { CircleCheckIcon, LockIcon, PinIcon, SparklesIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Card, ReorderableList, Loader, Stack, Switch, Typography, Icon } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { useBackend } from "../bridge/backend-context";
 import { useActiveGameStatus, useAppInfo, useDashboardLayout, useFirstSteps, useOperations, useRecentGames } from "../bridge/queries";
@@ -49,13 +50,13 @@ export function DashboardPage() {
         <div className="flex items-center gap-2">
           <div className="flex-1" />
           {layout.status === "ready" ? (
-            <Button size="sm" variant={editing ? "primary" : "outline"} startIcon={<Settings2 aria-hidden="true" className="h-4 w-4" />} aria-pressed={editing} onClick={() => setEditing((e) => !e)}>
+            <Button size="sm" emphasis={editing ? "high" : "medium"} startIcon={<Icon icon={Settings2} size="sm" />} aria-pressed={editing} onClick={() => setEditing((e) => !e)}>
               {t(editing ? "dashboard.customizeDone" : "dashboard.customize")}
             </Button>
           ) : null}
         </div>
         {interrupted > 0 ? (
-          <Alert.Root variant="warning">
+          <Alert.Root intent="warning">
             <Alert.Title>{t("operations.interruptedTitle")}</Alert.Title>
             <Alert.Description>{tp("operations.interruptedDescription", interrupted)}</Alert.Description>
           </Alert.Root>
@@ -114,10 +115,10 @@ function DashletCard({ title, children, actions }: { title: string; children: Re
 /** Common states of a dashlet query: loading, offline, error. */
 function QueryState({ status, error, onRetry, title }: { status: string; error?: unknown; onRetry: () => void; title: MessageKey }) {
   const { t } = useI18n();
-  if (status === "loading") return <Spinner label={t("common.loading")} />;
+  if (status === "loading") return <Loader label={t("common.loading")} />;
   if (status === "unavailable") {
     return (
-      <Alert.Root variant="info">
+      <Alert.Root intent="info">
         <Alert.Description>{t("app.offlineHint")}</Alert.Description>
       </Alert.Root>
     );
@@ -154,14 +155,14 @@ function CustomizeList({ dashlets }: { dashlets: Dashlet[] }) {
               <div className="flex flex-1 items-center gap-3">
                 <span className="flex-1 text-sm text-fg">{label}</span>
                 {d.locked ? (
-                  <Badge variant="muted" className="gap-1">
-                    <Lock aria-hidden="true" className="h-3 w-3" />
+                  <Badge emphasis="low" className="gap-1">
+                    <LockIcon size="xs" />
                     {t("dashboard.locked")}
                   </Badge>
                 ) : null}
                 {d.id === "first_steps" && d.pinned ? (
-                  <Badge variant="outline" className="gap-1">
-                    <Pin aria-hidden="true" className="h-3 w-3" />
+                  <Badge emphasis="low" className="gap-1">
+                    <PinIcon size="xs" />
                     {t("dashboard.pinned")}
                   </Badge>
                 ) : null}
@@ -182,7 +183,7 @@ function CustomizeList({ dashlets }: { dashlets: Dashlet[] }) {
   );
 }
 
-const STEP_ICON = { done: CheckCircle2, todo: Circle };
+const STEP_ICON = { done: CircleCheckIcon, todo: Circle };
 
 /** "Primeiros passos" (ui/02 F-01): manage a game → import a mod → deploy → play. */
 function FirstStepsDashlet() {
@@ -201,17 +202,17 @@ function FirstStepsDashlet() {
       {steps.status === "ready" ? (
         <ol className="space-y-2">
           {steps.data.steps.map((s, i) => {
-            const Icon = s.done ? STEP_ICON.done : STEP_ICON.todo;
+            const GlyphIcon = s.done ? STEP_ICON.done : STEP_ICON.todo;
             const reachable = s.id === "manage_game" || Boolean(deploy.instance);
             return (
               <li key={s.id} className="flex items-center gap-3">
-                <Icon aria-hidden="true" className={`h-4 w-4 shrink-0 ${s.done ? "text-success-text" : "text-fg-subtle"}`} />
+                <Icon icon={GlyphIcon} size="sm" className={`shrink-0 ${s.done ? "text-success-text" : "text-fg-subtle"}`} />
                 <Typography variant="body-sm" className={`flex-1 ${s.done ? "text-fg-muted line-through" : ""}`}>
                   {i + 1}. {t(`dashboard.step.${s.id}` as MessageKey)}
                   <span className="sr-only"> — {t(s.done ? "dashboard.step.done" : "dashboard.step.todo")}</span>
                 </Typography>
                 {!s.done && reachable ? (
-                  <Button size="sm" variant="outline" onClick={go[s.id]}>
+                  <Button size="sm" onClick={go[s.id]}>
                     {t(`dashboard.step.${s.id}.action` as MessageKey)}
                   </Button>
                 ) : null}
@@ -260,25 +261,25 @@ function ActiveGameDashlet() {
           </dd>
           <dt className="text-fg-muted">{t("dashboard.active.mods")}</dt>
           <dd>
-            <Button variant="link" size="sm" className="justify-start text-left" onClick={() => navigate({ view: "mods" })}>
+            <Button emphasis="low" size="sm" className="justify-start text-left" onClick={() => navigate({ view: "mods" })}>
               {g.mods ? t("overview.modsValue", { enabled: g.mods.enabled, total: g.mods.total }) : t("common.empty")}
             </Button>
           </dd>
           <dt className="text-fg-muted">{t("dashboard.active.conflicts")}</dt>
           <dd>
-            <Button variant="link" size="sm" className="justify-start text-left" onClick={() => navigate({ view: "conflicts" })}>
+            <Button emphasis="low" size="sm" className="justify-start text-left" onClick={() => navigate({ view: "conflicts" })}>
               {g.conflicts ? t("dashboard.active.unreviewed", { count: g.conflicts.unreviewed }) : t("common.empty")}
             </Button>
           </dd>
         </dl>
         <div className="flex flex-wrap items-center gap-2">
           {g.status && (g.status.kind === "pending" || g.status.kind === "never_deployed") ? (
-            <Button size="sm" variant="outline" onClick={() => void deploy.deploy()}>
+            <Button size="sm" onClick={() => void deploy.deploy()}>
               {t("deploy.deploy")}
             </Button>
           ) : null}
           <PlayButton />
-          <Button size="sm" variant="ghost" onClick={() => navigate({ view: "overview" })}>
+          <Button size="sm" emphasis="low" onClick={() => navigate({ view: "overview" })}>
             {t("dashboard.openOverview")}
           </Button>
         </div>
@@ -301,10 +302,10 @@ function RecentGamesDashlet() {
   else if (q.data.length === 0) body = <HonestEmpty icon={Gamepad2} title="dashboard.noGameTitle" description="dashboard.noGameDescription" />;
   else
     body = (
-      <ul className="divide-y divide-border rounded-lg border border-border">
+      <ul className="divide-y divide-border rounded-control border border-border">
         {q.data.map((r) => (
           <li key={r.instance.id} className="flex flex-wrap items-center gap-3 px-3 py-2">
-            <Gamepad2 aria-hidden="true" className="h-4 w-4 shrink-0 text-fg-muted" />
+            <Icon icon={Gamepad2} size="sm" className="shrink-0 text-fg-muted" />
             <div className="min-w-0 flex-1">
               <Typography variant="body-sm" className="font-medium">
                 {r.instance.name}
@@ -314,15 +315,15 @@ function RecentGamesDashlet() {
               </Typography>
             </div>
             {r.instance.active ? (
-              <Badge tone="success">{t("games.active")}</Badge>
+              <Badge intent="success">{t("games.active")}</Badge>
             ) : (
-              <Button size="sm" variant="outline" onClick={() => void run(() => backend.setActiveInstance(r.instance.id))}>
+              <Button size="sm" onClick={() => void run(() => backend.setActiveInstance(r.instance.id))}>
                 {t("games.activate")}
               </Button>
             )}
             <Button
               size="sm"
-              variant="ghost"
+              emphasis="low"
               onClick={() => void run(() => (r.instance.active ? Promise.resolve() : backend.setActiveInstance(r.instance.id))).then(() => navigate({ view: "overview" }))}
             >
               {t("dashboard.openOverview")}
@@ -346,7 +347,7 @@ function RecentOperationsDashlet() {
     <DashletCard
       title={t("dashboard.recentOperations")}
       actions={
-        <Button variant="ghost" size="sm" onClick={() => navigate({ view: "diagnostics", tab: "history" })}>
+        <Button emphasis="low" size="sm" onClick={() => navigate({ view: "diagnostics", tab: "history" })}>
           {t("dashboard.openHistory")}
         </Button>
       }
@@ -374,7 +375,7 @@ function WhatsNewDashlet() {
         <ul className="space-y-1.5">
           {NEWS.map((k) => (
             <li key={k} className="flex gap-2 text-sm text-fg">
-              <Sparkles aria-hidden="true" className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-text" />
+              <SparklesIcon size="sm" className="mt-0.5 shrink-0 text-brand-text" />
               <span>{t(k)}</span>
             </li>
           ))}

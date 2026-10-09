@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Ban } from "lucide-react";
-import { Alert, Badge, Button, Input, Modal, Spinner, Stack, Table, Typography } from "dettmann-ui";
+import { BanIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Input, Modal, Loader, Stack, Table, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { toUIError, type UIError } from "../../bridge/errors";
 import { useConflictPairDetail, useModConflicts, useRuleCycle } from "../../bridge/queries";
@@ -70,7 +70,7 @@ function DecisionPreviewDialog({ preview, error, onCancel, onConfirm }: { previe
         <Modal.Body>
           <Stack gap="sm">
             {cycle ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{t("mods.rules.cycle", { cycle })}</Alert.Description>
               </Alert.Root>
             ) : (
@@ -85,10 +85,10 @@ function DecisionPreviewDialog({ preview, error, onCancel, onConfirm }: { previe
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onCancel}>
+          <Button onClick={onCancel}>
             {t(cycle ? "common.close" : "common.cancel")}
           </Button>
-          {!cycle && !error ? <Button onClick={onConfirm}>{t("conflicts.preview.confirm")}</Button> : null}
+          {!cycle && !error ? <Button emphasis="high" onClick={onConfirm}>{t("conflicts.preview.confirm")}</Button> : null}
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>
@@ -155,7 +155,7 @@ function ConflictEditor({ instance, mod, onClose, onFiles }: { instance: string;
           <Modal.Title>{t("conflicts.editor.title", { name: data?.mod.name ?? "" })}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="min-h-0 overflow-auto">
-          {conflicts.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+          {conflicts.status === "loading" ? <Loader label={t("common.loading")} /> : null}
           {conflicts.status === "error" ? <ErrorAlert title="conflicts.loadError" error={conflicts.error} onRetry={conflicts.reload} /> : null}
           {data && data.opponents.length === 0 ? (
             <Typography variant="body-sm" color="muted-fg">
@@ -179,7 +179,7 @@ function ConflictEditor({ instance, mod, onClose, onFiles }: { instance: string;
                     <Table.Cell className="text-fg">
                       <span className="flex flex-wrap items-center gap-2">
                         {modLabel(t, o.opponent)}
-                        {o.needsReview ? <Badge tone="info">{t("conflicts.unreviewed")}</Badge> : null}
+                        {o.needsReview ? <Badge intent="info">{t("conflicts.unreviewed")}</Badge> : null}
                       </span>
                     </Table.Cell>
                     <Table.Cell className="tabular-nums">
@@ -196,7 +196,7 @@ function ConflictEditor({ instance, mod, onClose, onFiles }: { instance: string;
                       </Input.Root>
                     </Table.Cell>
                     <Table.Cell className="text-right">
-                      <Button size="sm" variant="ghost" onClick={() => onFiles(mod, o.opponent.id)}>
+                      <Button size="sm" emphasis="low" onClick={() => onFiles(mod, o.opponent.id)}>
                         {t("conflicts.editor.filesLink")}
                       </Button>
                     </Table.Cell>
@@ -207,10 +207,10 @@ function ConflictEditor({ instance, mod, onClose, onFiles }: { instance: string;
           ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={changed.length === 0} onClick={save}>
+          <Button emphasis="high" disabled={changed.length === 0} onClick={save}>
             {t("common.save")}
           </Button>
         </Modal.Footer>
@@ -245,7 +245,7 @@ function FileWinners({ instance, a, b, focus, onClose }: { instance: string; a: 
           <Modal.Title>{pair ? t("conflicts.files.title", { a: pair.a.name, b: pair.b.name }) : t("common.loading")}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="flex min-h-0 flex-1 flex-col">
-          {detail.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+          {detail.status === "loading" ? <Loader label={t("common.loading")} /> : null}
           {detail.status === "error" ? <ErrorAlert title="conflicts.loadError" error={detail.error} onRetry={detail.reload} /> : null}
           {detail.status === "ready" ? (
             detail.data.files.length === 0 ? (
@@ -258,7 +258,7 @@ function FileWinners({ instance, a, b, focus, onClose }: { instance: string; a: 
           ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onClose}>{t("common.close")}</Button>
+          <Button emphasis="high" onClick={onClose}>{t("common.close")}</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>
@@ -283,7 +283,7 @@ export function CycleDialog({ instance, open, onClose }: { instance: string; ope
           <Modal.Title>{t("conflicts.cycle.title")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {cycle.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+          {cycle.status === "loading" ? <Loader label={t("common.loading")} /> : null}
           {cycle.status === "error" ? <ErrorAlert title="conflicts.loadError" error={cycle.error} onRetry={cycle.reload} /> : null}
           {cycle.status === "ready" && !data ? (
             <Typography variant="body-sm" color="muted-fg">
@@ -302,7 +302,7 @@ export function CycleDialog({ instance, open, onClose }: { instance: string; ope
                       <Table.Cell className="text-fg">{t("mods.rule.wins", { a: r.winner.name, b: r.loser.name })}</Table.Cell>
                       <Table.Cell>{t(`mods.rule.source.${r.source}` as MessageKey)}</Table.Cell>
                       <Table.Cell className="text-right">
-                        <Button size="sm" variant="outline" startIcon={<Ban aria-hidden="true" />} onClick={() => void run(() => backend.setRuleDisabled(instance, r.id, true))}>
+                        <Button size="sm" startIcon={<BanIcon size="sm" />} onClick={() => void run(() => backend.setRuleDisabled(instance, r.id, true))}>
                           {t("mods.rules.disable")}
                         </Button>
                       </Table.Cell>
@@ -314,7 +314,7 @@ export function CycleDialog({ instance, open, onClose }: { instance: string; ope
           ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onClose}>{t("common.close")}</Button>
+          <Button emphasis="high" onClick={onClose}>{t("common.close")}</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>

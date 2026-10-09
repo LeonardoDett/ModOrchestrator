@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
-import { Alert, Button, Checkbox, Input, Modal, Spinner, Stack, Typography } from "dettmann-ui";
+import { PlusIcon, TrashIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, Input, Modal, Loader, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import { useCategories } from "../../bridge/queries";
@@ -54,31 +54,31 @@ export function RemoveModsDialog({ instance, ids, onClose }: { instance: string;
                 </ul>
                 <Checkbox checked={withArchives} onCheckedChange={setWithArchives} label={t("mods.remove.withArchives")} />
                 {withArchives && preview.sharedArchives.length > 0 ? (
-                  <Alert.Root variant="info">
+                  <Alert.Root intent="info">
                     <Alert.Description>{t("mods.remove.sharedArchives", { names: preview.sharedArchives.join(", ") })}</Alert.Description>
                   </Alert.Root>
                 ) : null}
                 {preview.orphanRules > 0 ? (
-                  <Alert.Root variant="warning">
+                  <Alert.Root intent="warning">
                     <Alert.Description>{tp("mods.remove.orphanRules", preview.orphanRules)}</Alert.Description>
                   </Alert.Root>
                 ) : null}
               </>
             ) : error ? null : (
-              <Spinner label={t("common.loading")} />
+              <Loader label={t("common.loading")} />
             )}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button tone="danger" disabled={busy || !preview} loading={busy} startIcon={<Trash2 aria-hidden="true" />} onClick={() => void remove()}>
+          <Button emphasis="high" intent="danger" disabled={busy || !preview} loading={busy} startIcon={<TrashIcon size="sm" />} onClick={() => void remove()}>
             {t("mods.action.remove")}
           </Button>
         </Modal.Footer>
@@ -118,23 +118,23 @@ export function CategoriesDialog({ instance, open, onClose }: { instance: string
         <Modal.Body>
           <Stack gap="md">
             {categories.status === "error" ? <ErrorAlert title="mods.loadError" error={categories.error} onRetry={categories.reload} /> : null}
-            <ul className="max-h-[40vh] overflow-auto rounded-lg border border-border text-sm">
+            <ul className="max-h-[40vh] overflow-auto rounded-control border border-border text-sm">
               {options.map((o) => {
                 const c = list.find((x) => x.id === o.value)!;
                 return (
                   <li key={o.value} className="flex items-center gap-2 border-b border-border-subtle px-3 py-1.5 last:border-b-0">
                     <span className="min-w-0 flex-1 truncate text-fg">{o.label}</span>
-                    <Button size="sm" variant="ghost" onClick={() => setEditing({ ...c })}>
+                    <Button size="sm" emphasis="low" onClick={() => setEditing({ ...c })}>
                       {t("common.edit")}
                     </Button>
                     <Button
                       size="icon-sm"
-                      variant="ghost"
-                      tone="danger"
+                      emphasis="low"
+                      intent="danger"
                       aria-label={t("mods.categories.delete", { name: c.name })}
                       onClick={() => void run(() => backend.deleteCategory(instance, c.id))}
                     >
-                      <Trash2 aria-hidden="true" className="h-4 w-4" />
+                      <TrashIcon size="sm" />
                     </Button>
                   </li>
                 );
@@ -142,7 +142,7 @@ export function CategoriesDialog({ instance, open, onClose }: { instance: string
               {options.length === 0 ? <li className="px-3 py-2 text-fg-muted">{t("mods.categories.empty")}</li> : null}
             </ul>
             {editing ? (
-              <Stack gap="sm" className="rounded-lg border border-border p-3">
+              <Stack gap="sm" className="rounded-control border border-border p-3">
                 <Input.Root fullWidth value={editing.name} onChange={(v: string) => setEditing({ ...editing, name: v })} error={error ? errorMessage(i18n, error) : false}>
                   <Input.Label>{t("mods.categories.name")}</Input.Label>
                   <Input.Box>
@@ -155,17 +155,17 @@ export function CategoriesDialog({ instance, open, onClose }: { instance: string
                   <Input.Select options={[{ value: "", label: t("mods.categories.topLevel") }, ...options.filter((o) => o.value !== editing.id)]} />
                 </Input.Root>
                 <div className="flex justify-end gap-2">
-                  <Button size="sm" variant="outline" onClick={() => setEditing(null)}>
+                  <Button size="sm" onClick={() => setEditing(null)}>
                     {t("common.cancel")}
                   </Button>
-                  <Button size="sm" disabled={!editing.name.trim()} onClick={() => void save()}>
+                  <Button emphasis="high" size="sm" disabled={!editing.name.trim()} onClick={() => void save()}>
                     {t("common.save")}
                   </Button>
                 </div>
               </Stack>
             ) : (
               <div>
-                <Button size="sm" variant="outline" startIcon={<Plus aria-hidden="true" />} onClick={() => setEditing({ id: "", name: "", parent: "", order: 0 })}>
+                <Button size="sm" startIcon={<PlusIcon size="sm" />} onClick={() => setEditing({ id: "", name: "", parent: "", order: 0 })}>
                   {t("mods.categories.add")}
                 </Button>
               </div>
@@ -176,7 +176,7 @@ export function CategoriesDialog({ instance, open, onClose }: { instance: string
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onClose}>{t("common.close")}</Button>
+          <Button emphasis="high" onClick={onClose}>{t("common.close")}</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>

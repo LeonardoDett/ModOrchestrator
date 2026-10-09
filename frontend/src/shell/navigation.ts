@@ -1,18 +1,7 @@
+import { type IconComponent } from "dettmann-ui";
 import { createContext, useContext } from "react";
-import {
-  Activity,
-  Gamepad2,
-  GitCompareArrows,
-  House,
-  Layers,
-  LayoutDashboard,
-  ListOrdered,
-  Package,
-  Plug,
-  Puzzle,
-  Settings,
-  type LucideIcon,
-} from "lucide-react";
+import { Activity, Gamepad2, GitCompareArrows, LayoutDashboard, Plug } from "lucide-react";
+import { HomeIcon, LayersIcon, ListOrderedIcon, PackageIcon, PuzzleIcon, SettingsIcon } from "dettmann-ui/icons";
 import type { WorkspaceItemId } from "../bridge/types";
 import type { MessageKey } from "../i18n/i18n";
 
@@ -60,7 +49,7 @@ export interface Route {
 export interface NavEntry {
   id: ViewId;
   label: MessageKey;
-  icon: LucideIcon;
+  icon: IconComponent;
 }
 
 export interface NavSection {
@@ -72,14 +61,14 @@ export interface NavSection {
 export const VIEWS: Record<ViewId, NavEntry> = {
   dashboard: { id: "dashboard", label: "nav.dashboard", icon: LayoutDashboard },
   games: { id: "games", label: "nav.games", icon: Gamepad2 },
-  extensions: { id: "extensions", label: "nav.extensions", icon: Puzzle },
-  settings: { id: "settings", label: "nav.settings", icon: Settings },
-  overview: { id: "overview", label: "nav.overview", icon: House },
-  mods: { id: "mods", label: "nav.mods", icon: Package },
+  extensions: { id: "extensions", label: "nav.extensions", icon: PuzzleIcon },
+  settings: { id: "settings", label: "nav.settings", icon: SettingsIcon },
+  overview: { id: "overview", label: "nav.overview", icon: HomeIcon },
+  mods: { id: "mods", label: "nav.mods", icon: PackageIcon },
   plugins: { id: "plugins", label: "nav.plugins", icon: Plug },
-  load_order: { id: "load_order", label: "nav.loadOrder", icon: ListOrdered },
+  load_order: { id: "load_order", label: "nav.loadOrder", icon: ListOrderedIcon },
   conflicts: { id: "conflicts", label: "nav.conflicts", icon: GitCompareArrows },
-  profiles: { id: "profiles", label: "nav.profiles", icon: Layers },
+  profiles: { id: "profiles", label: "nav.profiles", icon: LayersIcon },
   diagnostics: { id: "diagnostics", label: "nav.diagnostics", icon: Activity },
 };
 

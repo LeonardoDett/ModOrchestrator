@@ -13,7 +13,7 @@ ANTES DE ESCREVER CÓDIGO (aplique a skill consult-ai-docs):
 4. A seção da fase atual em plano-de-desenvolvimento.md.
 5. Todos os documentos core/ e ui/ listados no prompt da fase (prompts/01-fases.md).
 6. Referências Vortex/MO2 citadas nesses documentos, se a tarefa envolver fluxo ou layout.
-7. Para frontend/: skills da dettmann-ui v1 em `dettmann-ui-v1/.cursor/skills/dettmann-ui/` (theme-first, composition, component-authoring) e, antes de concluir, ui-review (v2: ver D095; muda no subprojeto 4).
+7. Para frontend/: skill `dettmann-ui-use` (`.claude/skills/`; `dettmann-ui-author` se faltar componente na lib) e, antes de concluir, `dettmann-ui-improve` (D095, D107).
 
 ANTES DE IMPLEMENTAR, escreva um resumo curto:
 - estados alterados e suas fontes de verdade;

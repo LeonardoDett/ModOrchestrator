@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FolderOpen, Plus, Trash2 } from "lucide-react";
+import { FolderOpenIcon, PlusIcon, TrashIcon } from "dettmann-ui/icons";
 import { Alert, Button, Input, Modal, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { problemMessage, toUIError, type UIError } from "../../bridge/errors";
@@ -119,8 +119,8 @@ export function GenericGameDialog({ open, onOpenChange, onContinue }: Props) {
               <div>
                 <Button
                   size="sm"
-                  variant="outline"
-                  startIcon={<FolderOpen aria-hidden="true" className="h-4 w-4" />}
+                 
+                  startIcon={<FolderOpenIcon size="sm" />}
                   onClick={async () => {
                     try {
                       const path = await backend.pickFolder(t("wizard.pickFolder"));
@@ -158,20 +158,20 @@ export function GenericGameDialog({ open, onOpenChange, onContinue }: Props) {
                   </Input.Root>
                   <Button
                     size="icon-sm"
-                    variant="ghost"
+                    emphasis="low"
                     aria-label={t("generic.removeTarget")}
                     disabled={rows.length === 1}
                     onClick={() => setRows((rs) => rs.filter((r) => r.key !== row.key))}
                   >
-                    <Trash2 aria-hidden="true" className="h-4 w-4" />
+                    <TrashIcon size="sm" />
                   </Button>
                 </div>
               ))}
               <div>
                 <Button
                   size="sm"
-                  variant="outline"
-                  startIcon={<Plus aria-hidden="true" className="h-4 w-4" />}
+                 
+                  startIcon={<PlusIcon size="sm" />}
                   onClick={() => {
                     setRows((rs) => [...rs, { key: nextKey, id: "", path: "" }]);
                     setNextKey((k) => k + 1);
@@ -191,7 +191,7 @@ export function GenericGameDialog({ open, onOpenChange, onContinue }: Props) {
             </Input.Root>
 
             {problems.map((p, i) => (
-              <Alert.Root key={`${p.code}-${i}`} variant="danger">
+              <Alert.Root key={`${p.code}-${i}`} intent="danger">
                 <Alert.Description>{problemMessage(i18n, p, "error")}</Alert.Description>
               </Alert.Root>
             ))}
@@ -199,10 +199,10 @@ export function GenericGameDialog({ open, onOpenChange, onContinue }: Props) {
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={() => close(false)}>
+          <Button disabled={busy} onClick={() => close(false)}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !root.trim() || !name.trim()} loading={busy} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={busy || !root.trim() || !name.trim()} loading={busy} onClick={() => void submit()}>
             {t("common.next")}
           </Button>
         </Modal.Footer>

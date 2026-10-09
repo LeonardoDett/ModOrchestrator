@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Ban, Plus, RotateCcw, Trash2, Undo2 } from "lucide-react";
-import { Alert, Badge, Button, Checkbox, Input, Modal, Radio, Spinner, Stack, Table, Tag, TONES, Typography } from "dettmann-ui";
+import { BanIcon, PlusIcon, TrashIcon, UndoIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Checkbox, Input, Modal, Radio, Loader, Stack, Table, Tag, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import { useModRules, useOrderHistory } from "../../bridge/queries";
 import type { EntryRef, ModOrder, ModRow, MoveRequest, MoveResult, Rule, RuleKind, RulePreview, Separator } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
+import { highlightIntent, highlightOptions } from "./mod-labels";
 
 export function DialogError({ error }: { error: UIError | null }) {
   const i18n = useI18n();
   if (!error) return null;
   return (
-    <Alert.Root variant="danger">
+    <Alert.Root intent="danger">
       <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
     </Alert.Root>
   );
@@ -111,13 +112,13 @@ function MoveRefusedDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer className="flex-wrap">
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button variant="outline" tone="danger" onClick={() => void apply("remove_rules")}>
+          <Button intent="danger" onClick={() => void apply("remove_rules")}>
             {tp("mods.refused.removeRules", result.violated.length)}
           </Button>
-          <Button disabled={!result.hasNearest} onClick={() => void apply("nearest")}>
+          <Button emphasis="high" disabled={!result.hasNearest} onClick={() => void apply("nearest")}>
             {result.hasNearest ? t("mods.refused.nearest", { priority: result.nearestPriority ?? "" }) : t("mods.refused.noNearest")}
           </Button>
         </Modal.Footer>
@@ -206,10 +207,10 @@ export function MoveToDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={!valid} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={!valid} onClick={() => void submit()}>
             {t("mods.moveTo.submit")}
           </Button>
         </Modal.Footer>
@@ -218,7 +219,7 @@ export function MoveToDialog({
   );
 }
 
-/** Create or edit a separator: label and colour (a theme tone, ui/04 §2). */
+/** Create or edit a separator: label and colour (a theme intent, ui/04 §2). */
 export function SeparatorDialog({
   instance,
   editing,
@@ -229,7 +230,8 @@ export function SeparatorDialog({
   editing: { separator?: Separator; before?: EntryRef } | null;
   onClose: () => void;
 }) {
-  const { t } = useI18n();
+  const i18n = useI18n();
+  const { t } = i18n;
   const backend = useBackend();
   const run = useAction();
   const [label, setLabel] = useState("");
@@ -237,7 +239,7 @@ export function SeparatorDialog({
   const [error, setError] = useState<UIError | null>(null);
   useEffect(() => {
     setLabel(editing?.separator?.label ?? "");
-    setColor(editing?.separator?.color ?? "");
+    setColor(highlightIntent(editing?.separator?.color) ?? "");
     setError(null);
   }, [editing]);
   if (!editing) return null;
@@ -269,16 +271,16 @@ export function SeparatorDialog({
             </Input.Root>
             <Input.Root fullWidth value={color} onChange={setColor}>
               <Input.Label>{t("mods.separator.color")}</Input.Label>
-              <Input.Select options={[{ value: "", label: t("mods.highlight.none") }, ...TONES.map((tone) => ({ value: tone, label: t(`mods.highlight.${tone}`) }))]} />
+              <Input.Select options={highlightOptions(i18n)} />
             </Input.Root>
             <DialogError error={error} />
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={!label.trim()} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={!label.trim()} onClick={() => void submit()}>
             {t("common.save")}
           </Button>
         </Modal.Footer>
@@ -370,7 +372,7 @@ export function RulesDialog({
         </Modal.Header>
         <Modal.Body>
           <Stack gap="md">
-            <section aria-labelledby="rules-new" className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-3">
+            <section aria-labelledby="rules-new" className="flex flex-col gap-3 rounded-card border border-border bg-surface p-3">
               <Typography id="rules-new" variant="heading-6" color="fg">
                 {t("mods.rules.new")}
               </Typography>
@@ -390,14 +392,14 @@ export function RulesDialog({
               </div>
               {kind === "wins" && a && b ? (
                 cycle ? (
-                  <Alert.Root variant="danger">
+                  <Alert.Root intent="danger">
                     <Alert.Title>{t("mods.rules.cycleTitle")}</Alert.Title>
                     <Alert.Description>{t("mods.rules.cycle", { cycle })}</Alert.Description>
                   </Alert.Root>
                 ) : preview ? (
                   <RuleMoves preview={preview} />
                 ) : (
-                  <Spinner label={t("common.loading")} />
+                  <Loader label={t("common.loading")} />
                 )
               ) : (
                 <Typography variant="body-sm" color="muted-fg">
@@ -405,7 +407,7 @@ export function RulesDialog({
                 </Typography>
               )}
               <div className="flex justify-end">
-                <Button startIcon={<Plus aria-hidden="true" />} disabled={!a || !b || a === b || Boolean(cycle)} onClick={() => void create()}>
+                <Button emphasis="high" startIcon={<PlusIcon size="sm" />} disabled={!a || !b || a === b || Boolean(cycle)} onClick={() => void create()}>
                   {t("mods.rules.create")}
                 </Button>
               </div>
@@ -414,7 +416,7 @@ export function RulesDialog({
             {focusMod ? (
               <Checkbox checked={onlyFocus} onCheckedChange={setOnlyFocus} label={t("mods.rules.onlyMod", { name: mods.find((m) => m.id === focusMod)?.name ?? "" })} />
             ) : null}
-            {rules.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+            {rules.status === "loading" ? <Loader label={t("common.loading")} /> : null}
             {rules.status === "ready" && list.length === 0 ? (
               <Typography variant="body-sm" color="muted-fg">
                 {t("mods.rules.empty")}
@@ -429,17 +431,17 @@ export function RulesDialog({
                       <Table.Cell>
                         <span className="flex flex-wrap gap-1">
                           {r.source !== "user" ? <Tag size="sm">{t(`mods.rule.source.${r.source}` as MessageKey)}</Tag> : null}
-                          {r.disabled ? <Badge variant="outline">{t("mods.rules.disabled")}</Badge> : null}
-                          {r.orphan ? <Badge tone="warning">{t("mods.rules.orphan")}</Badge> : null}
+                          {r.disabled ? <Badge emphasis="low">{t("mods.rules.disabled")}</Badge> : null}
+                          {r.orphan ? <Badge intent="warning">{t("mods.rules.orphan")}</Badge> : null}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="text-right">
                         {r.source === "user" ? (
                           <Button
                             size="sm"
-                            variant="ghost"
-                            tone="danger"
-                            startIcon={<Trash2 aria-hidden="true" />}
+                            emphasis="low"
+                            intent="danger"
+                            startIcon={<TrashIcon size="sm" />}
                             onClick={() => void act(() => backend.removeRule(instance, r.id))}
                           >
                             {t("mods.rules.remove")}
@@ -447,8 +449,8 @@ export function RulesDialog({
                         ) : (
                           <Button
                             size="sm"
-                            variant="ghost"
-                            startIcon={r.disabled ? <RotateCcw aria-hidden="true" /> : <Ban aria-hidden="true" />}
+                            emphasis="low"
+                            startIcon={r.disabled ? <UndoIcon size="sm" /> : <BanIcon size="sm" />}
                             onClick={() => void act(() => backend.setRuleDisabled(instance, r.id, !r.disabled))}
                           >
                             {t(r.disabled ? "mods.rules.enable" : "mods.rules.disable")}
@@ -463,7 +465,7 @@ export function RulesDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
         </Modal.Footer>
@@ -489,7 +491,7 @@ export function OrderHistoryDialog({ instance, open, onClose }: { instance: stri
           <Modal.Title>{t("mods.orderHistory.title")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {history.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+          {history.status === "loading" ? <Loader label={t("common.loading")} /> : null}
           {history.status === "ready" && history.data.length === 0 ? (
             <Typography variant="body-sm" color="muted-fg">
               {t("mods.orderHistory.empty")}
@@ -505,14 +507,14 @@ export function OrderHistoryDialog({ instance, open, onClose }: { instance: stri
                     <Table.Cell>{tp("mods.orderHistory.moved", c.moved)}</Table.Cell>
                     <Table.Cell className="text-right">
                       {c.reverted ? (
-                        <Badge variant="outline">{t("mods.orderHistory.reverted")}</Badge>
+                        <Badge emphasis="low">{t("mods.orderHistory.reverted")}</Badge>
                       ) : (
                         <Button
                           size="sm"
-                          variant="outline"
+                         
                           disabled={!c.revertible}
                           title={c.revertible ? undefined : t("mods.orderHistory.notRevertible")}
-                          startIcon={<Undo2 aria-hidden="true" />}
+                          startIcon={<UndoIcon size="sm" />}
                           onClick={() => void run(() => backend.revertOrderChange(instance, c.id), { success: "mods.orderHistory.revertedToast" }).then(() => history.reload())}
                         >
                           {t("mods.orderHistory.revert")}
@@ -526,7 +528,7 @@ export function OrderHistoryDialog({ instance, open, onClose }: { instance: stri
           ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
         </Modal.Footer>

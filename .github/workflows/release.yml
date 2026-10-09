@@ -54,7 +54,7 @@ jobs:
       - run: go vet ./...
       - run: go test ./...
       - name: dettmann-ui build
-        working-directory: dettmann-ui-v1
+        working-directory: dettmann-ui-vnext
         run: |
           npm ci
           npm run build

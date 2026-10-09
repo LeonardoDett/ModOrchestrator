@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCheck, CircleDot, GitCompareArrows, RefreshCw, Trash2 } from "lucide-react";
+import { CircleDot, GitCompareArrows } from "lucide-react";
+import { CheckCheckIcon, RefreshIcon, TrashIcon } from "dettmann-ui/icons";
 import {
   Alert,
   Badge,
@@ -9,7 +10,7 @@ import {
   FilterBar,
   Indicator,
   SegmentedControl,
-  Spinner,
+  Loader,
   Stack,
   Toolbar,
   Typography,
@@ -97,7 +98,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
             <span aria-hidden="true" className="text-fg-muted">▸</span>
             <span className="sr-only">{t("conflicts.wins")}</span>
             <span className="truncate">{loser(p).name}</span>
-            {p.potential ? <Badge variant="outline">{t("conflicts.potential")}</Badge> : null}
+            {p.potential ? <Badge emphasis="low">{t("conflicts.potential")}</Badge> : null}
           </span>
         ),
       },
@@ -109,9 +110,9 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
         width: 130,
         cell: (p) =>
           p.needsReview ? (
-            <Indicator icon={CircleDot} tone="info" label={t("conflicts.unreviewed")} />
+            <Indicator icon={CircleDot} intent="info" label={t("conflicts.unreviewed")} />
           ) : p.reviewed ? (
-            <Indicator icon={CheckCheck} tone="subtle" label={t("conflicts.reviewed")} />
+            <Indicator icon={CheckCheckIcon} intent="subtle" label={t("conflicts.reviewed")} />
           ) : null,
       },
     ];
@@ -127,14 +128,14 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
         <Toolbar
           start={
             <>
-              <Button variant="outline" startIcon={<CheckCheck aria-hidden="true" />} disabled={selectedPairs.length === 0} onClick={() => markReviewed(selectedPairs)}>
+              <Button startIcon={<CheckCheckIcon size="sm" />} disabled={selectedPairs.length === 0} onClick={() => markReviewed(selectedPairs)}>
                 {t("conflicts.markSelected")}
               </Button>
               <Checkbox checked={includeDisabled} onCheckedChange={setIncludeDisabled} label={t("conflicts.showDisabled")} />
             </>
           }
           end={
-            <Button variant="ghost" startIcon={<RefreshCw aria-hidden="true" />} onClick={reload}>
+            <Button emphasis="low" startIcon={<RefreshIcon size="sm" />} onClick={reload}>
               {t("conflicts.recalculate")}
             </Button>
           }
@@ -153,7 +154,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
             </Typography>
             {pending > 0 ? (
               <span className="flex items-center gap-2 text-xs text-fg-muted" role="status">
-                <Spinner size="sm" label={tp("conflicts.hashing", pending)} />
+                <Loader size="sm" label={tp("conflicts.hashing", pending)} />
                 {tp("conflicts.hashing", pending)}
               </span>
             ) : null}
@@ -161,7 +162,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
         ) : null}
 
         {data && data.stale.length > 0 ? (
-          <Alert.Root variant="warning">
+          <Alert.Root intent="warning">
             <Alert.Title>{tp("conflicts.stale.title", data.stale.length)}</Alert.Title>
             <Alert.Description>
               <ul className="mt-1 flex flex-col gap-1">
@@ -173,8 +174,8 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
                     </span>
                     <Button
                       size="sm"
-                      variant="ghost"
-                      startIcon={<Trash2 aria-hidden="true" />}
+                      emphasis="low"
+                      startIcon={<TrashIcon size="sm" />}
                       onClick={() =>
                         void run(() =>
                           s.kind === "override"
@@ -186,7 +187,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
                       {t("conflicts.stale.remove")}
                     </Button>
                     {s.kind === "override" && s.rivals.length >= 2 ? (
-                      <Button size="sm" variant="ghost" onClick={() => setRechoose(s)}>
+                      <Button size="sm" emphasis="low" onClick={() => setRechoose(s)}>
                         {t("conflicts.stale.rechoose")}
                       </Button>
                     ) : null}
@@ -209,7 +210,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
             <section aria-label={t("conflicts.pairsLabel")} className="flex min-h-0 w-[42%] min-w-[22rem] flex-col gap-2">
               <FilterBar
                 data-page-search
-                className="rounded-xl border"
+                className="rounded-card border"
                 query={search}
                 onQueryChange={setSearch}
                 queryPlaceholder={t("conflicts.search")}
@@ -252,7 +253,7 @@ function ConflictsWorkspace({ instance }: { instance: string }) {
                 labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading") }}
               />
             </section>
-            <section aria-label={t("conflicts.detailLabel")} className="flex min-h-0 min-w-0 flex-1 flex-col rounded-xl border border-border bg-surface p-4">
+            <section aria-label={t("conflicts.detailLabel")} className="flex min-h-0 min-w-0 flex-1 flex-col rounded-card border border-border bg-surface p-4">
               {current ? (
                 <PairDetail key={pairId(current)} instance={instance} pair={current} includeDisabled={includeDisabled} onReviewed={() => markReviewed([current])} />
               ) : (
@@ -304,22 +305,22 @@ function PairDetail({ instance, pair, includeDisabled, onReviewed }: { instance:
         </Typography>
       </Stack>
       <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant={ruleWinner === pair.a.id ? "solid" : "outline"} disabled={ruleWinner === pair.a.id} onClick={() => choose(pair.a.id, pair.b.id)}>
+        <Button size="sm" emphasis={ruleWinner === pair.a.id ? "high" : "medium"} disabled={ruleWinner === pair.a.id} onClick={() => choose(pair.a.id, pair.b.id)}>
           {t("conflicts.action.wins", { winner: pair.a.name, loser: pair.b.name })}
         </Button>
-        <Button size="sm" variant={ruleWinner === pair.b.id ? "solid" : "outline"} disabled={ruleWinner === pair.b.id} onClick={() => choose(pair.b.id, pair.a.id)}>
+        <Button size="sm" emphasis={ruleWinner === pair.b.id ? "high" : "medium"} disabled={ruleWinner === pair.b.id} onClick={() => choose(pair.b.id, pair.a.id)}>
           {t("conflicts.action.wins", { winner: pair.b.name, loser: pair.a.name })}
         </Button>
         {pair.rule && !pair.rule.disabled ? (
-          <Button size="sm" variant="ghost" tone="danger" onClick={() => void decide([{ mod: pair.a.id, opponent: pair.b.id, choice: "order" }])}>
+          <Button size="sm" emphasis="low" intent="danger" onClick={() => void decide([{ mod: pair.a.id, opponent: pair.b.id, choice: "order" }])}>
             {t("conflicts.action.removeRule")}
           </Button>
         ) : null}
-        <Button size="sm" variant="ghost" startIcon={<CheckCheck aria-hidden="true" />} disabled={!pair.needsReview} onClick={onReviewed}>
+        <Button size="sm" emphasis="low" startIcon={<CheckCheckIcon size="sm" />} disabled={!pair.needsReview} onClick={onReviewed}>
           {t("conflicts.action.markReviewed")}
         </Button>
       </div>
-      {detail.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+      {detail.status === "loading" ? <Loader label={t("common.loading")} /> : null}
       {detail.status === "error" ? <ErrorAlert title="conflicts.loadError" error={detail.error} onRetry={detail.reload} /> : null}
       {detail.status === "ready" ? <PairFiles instance={instance} files={detail.data.files} /> : null}
       {dialog}

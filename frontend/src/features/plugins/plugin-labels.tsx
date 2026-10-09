@@ -1,4 +1,4 @@
-import { Lock, Pin } from "lucide-react";
+import { LockIcon, PinIcon } from "dettmann-ui/icons";
 import { Indicator, Tag } from "dettmann-ui";
 import type { PluginLimit, PluginReason, PluginRow } from "../../bridge/types";
 import type { MessageKey, Translator } from "../../i18n/i18n";
@@ -33,8 +33,8 @@ export function FlagTags({ row, i18n }: { row: PluginRow; i18n: Translator }) {
           {flagLabel(i18n, f)}
         </Tag>
       ))}
-      {row.implicit ? <Indicator icon={Pin} tone="subtle" label={i18n.t("plugins.implicit")} /> : null}
-      {row.locked && !row.implicit ? <Indicator icon={Lock} tone="subtle" label={i18n.t("plugins.locked")} /> : null}
+      {row.implicit ? <Indicator icon={PinIcon} intent="subtle" label={i18n.t("plugins.implicit")} /> : null}
+      {row.locked && !row.implicit ? <Indicator icon={LockIcon} intent="subtle" label={i18n.t("plugins.locked")} /> : null}
     </span>
   );
 }
@@ -46,7 +46,7 @@ export function ProblemCell({ row, i18n }: { row: PluginRow; i18n: Translator })
   const title = diagnosticTitle(i18n, { code: row.problem, params: { plugin: row.name } });
   return (
     <span title={title}>
-      <Indicator icon={look.icon} tone={look.tone} count={row.problems} label={i18n.tp("plugins.problems", row.problems, { title })} />
+      <Indicator icon={look.icon} intent={look.intent} count={row.problems} label={i18n.tp("plugins.problems", row.problems, { title })} />
     </span>
   );
 }

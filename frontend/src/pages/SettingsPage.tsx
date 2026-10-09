@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { FolderOpen, RotateCcw, ScrollText } from "lucide-react";
-import { Alert, Button, Spinner, Stack, Switch, Tabs, Typography, useToast } from "dettmann-ui";
+import { ScrollText } from "lucide-react";
+import { FolderOpenIcon, UndoIcon } from "dettmann-ui/icons";
+import { Alert, Button, Loader, Stack, Switch, Tabs, Typography, useToast, Icon } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { useBackend } from "../bridge/backend-context";
 import { useGamesView, useInstanceSettings, useSuppressions, useWorkspace } from "../bridge/queries";
@@ -58,7 +59,7 @@ export function SettingsPage() {
   if (settings.status === "unavailable") {
     return (
       <PageBody>
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("settings.offline")}</Alert.Description>
         </Alert.Root>
       </PageBody>
@@ -130,7 +131,7 @@ function InstanceSection({ id, title, instance, keys, children }: { id: string; 
     <SettingsSection id={id} title={title}>
       {settings.status === "loading" ? (
         <div className="px-4 py-3">
-          <Spinner label={t("common.loading")} />
+          <Loader label={t("common.loading")} />
         </div>
       ) : null}
       {settings.status === "error" ? (
@@ -204,7 +205,7 @@ function SuppressedLine() {
   if (suppressions.status !== "ready") return null;
   return (
     <SettingLine label={t("settings.suppressed.title")} description={tp("settings.suppressed.description", count)}>
-      <Button size="sm" variant="outline" disabled={count === 0} startIcon={<RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void reset()}>
+      <Button size="sm" disabled={count === 0} startIcon={<UndoIcon size="sm" />} onClick={() => void reset()}>
         {t("settings.suppressed.reset")}
       </Button>
     </SettingLine>
@@ -235,11 +236,11 @@ function DashboardSection() {
       actions={
         <div className="flex gap-2">
           {!setting.isDefault ? (
-            <Button size="sm" variant="ghost" startIcon={<RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void settings.reset(setting.key)}>
+            <Button size="sm" emphasis="low" startIcon={<UndoIcon size="sm" />} onClick={() => void settings.reset(setting.key)}>
               {t("settings.reset")}
             </Button>
           ) : null}
-          <Button size="sm" variant="outline" onClick={() => navigate({ view: "dashboard", customize: true })}>
+          <Button size="sm" onClick={() => navigate({ view: "dashboard", customize: true })}>
             {t("dashboard.customize")}
           </Button>
         </div>
@@ -279,7 +280,7 @@ function ApplicationTab() {
         {dataDir ? (
           <SettingLine {...settingLabel(i18n, "app.dataDir")}>
             <span className="max-w-xs break-all font-mono text-xs text-fg">{dataDir.value}</span>
-            <Button size="sm" variant="ghost" startIcon={<FolderOpen aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.openDataFolder())}>
+            <Button size="sm" emphasis="low" startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openDataFolder())}>
               {t("settings.open")}
             </Button>
           </SettingLine>
@@ -289,7 +290,7 @@ function ApplicationTab() {
         id="log"
         title={t("settings.section.log")}
         actions={
-          <Button size="sm" variant="ghost" startIcon={<ScrollText aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.openLogFolder())}>
+          <Button size="sm" emphasis="low" startIcon={<Icon icon={ScrollText} size="sm" />} onClick={() => void run(() => backend.openLogFolder())}>
             {t("settings.openLogFolder")}
           </Button>
         }
@@ -318,7 +319,7 @@ function ModsTab({ games, instance, onInstance }: { games: readonly ManagedGame[
           <DeployInstanceSection instance={instance} />
         </>
       ) : (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("settings.perGame.none")}</Alert.Description>
         </Alert.Root>
       )}

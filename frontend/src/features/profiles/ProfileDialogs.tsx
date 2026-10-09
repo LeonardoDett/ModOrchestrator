@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { ArrowRightLeft, Trash2 } from "lucide-react";
-import { Alert, Button, Checkbox, DiffViewer, Input, Modal, Spinner, Stack, Typography, type DiffLine } from "dettmann-ui";
+import { ArrowRightLeft } from "lucide-react";
+import { TrashIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, DiffViewer, Input, Modal, Loader, Stack, Typography, type DiffLine, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import type { ProfileComparison, ProfileSummary } from "../../bridge/types";
@@ -11,7 +12,7 @@ function DialogError({ error }: { error: UIError | null }) {
   const i18n = useI18n();
   if (!error) return null;
   return (
-    <Alert.Root variant="danger">
+    <Alert.Root intent="danger">
       <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
     </Alert.Root>
   );
@@ -87,10 +88,10 @@ export function NewProfileDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !name.trim()} loading={busy} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={busy || !name.trim()} loading={busy} onClick={() => void submit()}>
             {t(cloning ? "profiles.action.clone" : "profiles.action.create")}
           </Button>
         </Modal.Footer>
@@ -151,10 +152,10 @@ export function EditProfileDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button onClick={() => void submit()}>{t("common.save")}</Button>
+          <Button emphasis="high" onClick={() => void submit()}>{t("common.save")}</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>
@@ -229,7 +230,7 @@ export function TransferDialog({
               <Checkbox checked={order} onCheckedChange={setOrder} label={t("profiles.transfer.order")} />
             </Stack>
             {from && to && from === to ? (
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Description>{t("profiles.transfer.same")}</Alert.Description>
               </Alert.Root>
             ) : diff ? (
@@ -238,7 +239,7 @@ export function TransferDialog({
                 {order ? ` · ${tp("profiles.transfer.willMove", diff.priorityChanged.length)}` : ""}
               </Typography>
             ) : from && to ? (
-              <Spinner label={t("common.loading")} />
+              <Loader label={t("common.loading")} />
             ) : null}
             <Typography variant="body-sm" color="muted-fg">
               {t("profiles.transfer.snapshotNote")}
@@ -247,10 +248,10 @@ export function TransferDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !from || !to || from === to} loading={busy} startIcon={<ArrowRightLeft aria-hidden="true" />} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={busy || !from || !to || from === to} loading={busy} startIcon={<Icon icon={ArrowRightLeft} size="sm" />} onClick={() => void submit()}>
             {t("profiles.action.transfer")}
           </Button>
         </Modal.Footer>
@@ -336,7 +337,7 @@ export function CompareDialog({
               </Input.Root>
             </div>
             <DialogError error={error} />
-            {a && b && a !== b && !diff && !error ? <Spinner label={t("common.loading")} /> : null}
+            {a && b && a !== b && !diff && !error ? <Loader label={t("common.loading")} /> : null}
             {diff ? (
               <>
                 <section aria-label={t("profiles.compare.mods")} className="flex flex-col gap-2">
@@ -366,10 +367,10 @@ export function CompareDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
-          <Button disabled={!diff} startIcon={<ArrowRightLeft aria-hidden="true" />} onClick={() => onTransfer(a, b)}>
+          <Button emphasis="high" disabled={!diff} startIcon={<Icon icon={ArrowRightLeft} size="sm" />} onClick={() => onTransfer(a, b)}>
             {t("profiles.compare.transfer", { name: diff?.b.name ?? "" })}
           </Button>
         </Modal.Footer>
@@ -406,7 +407,7 @@ export function DeleteProfileDialog({ profile, onClose }: { profile: ProfileSumm
               {t("profiles.delete.description")}
             </Typography>
             {profile.snapshots > 0 ? (
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Description>{tp("profiles.delete.snapshots", profile.snapshots)}</Alert.Description>
               </Alert.Root>
             ) : null}
@@ -414,10 +415,10 @@ export function DeleteProfileDialog({ profile, onClose }: { profile: ProfileSumm
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button tone="danger" disabled={busy} loading={busy} startIcon={<Trash2 aria-hidden="true" />} onClick={() => void submit()}>
+          <Button emphasis="high" intent="danger" disabled={busy} loading={busy} startIcon={<TrashIcon size="sm" />} onClick={() => void submit()}>
             {t("profiles.action.delete")}
           </Button>
         </Modal.Footer>

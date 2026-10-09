@@ -30,10 +30,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      # The frontend consumes the local dettmann-ui v1 build (file:
-      # dependency; frozen on v1 until the migration, D095).
+      # The frontend consumes the local dettmann-ui v2 build (file:
+      # dependency, D095/D107).
       - name: dettmann-ui build
-        working-directory: dettmann-ui-v1
+        working-directory: dettmann-ui-vnext
         run: |
           npm ci
           npm run build

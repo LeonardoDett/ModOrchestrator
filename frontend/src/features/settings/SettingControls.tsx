@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
-import { RefreshCw, RotateCcw } from "lucide-react";
-import { Alert, Badge, Button, Input, Spinner, Stack, Switch, Typography } from "dettmann-ui";
+import { RefreshIcon, UndoIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Input, Loader, Stack, Switch, Typography } from "dettmann-ui";
 import { useSettings } from "../../app/settings-context";
 import { useBackend } from "../../bridge/backend-context";
 import type { UIError } from "../../bridge/errors";
@@ -19,7 +19,7 @@ import { useAction } from "../games/use-action";
  */
 export function SettingsSection({ id, title, description, children, actions }: { id: string; title: string; description?: string; children: ReactNode; actions?: ReactNode }) {
   return (
-    <section aria-labelledby={`settings-${id}`} className="rounded-xl border border-border bg-surface">
+    <section aria-labelledby={`settings-${id}`} className="rounded-card border border-border bg-surface">
       <div className="flex flex-wrap items-start gap-3 border-b border-border px-4 py-3">
         <div className="min-w-0 flex-1">
           <Typography id={`settings-${id}`} variant="heading-6" color="fg">
@@ -122,15 +122,15 @@ export function SettingRow({ setting, save, reset }: { setting: Setting; save: (
         description={description}
         badge={
           <>
-            {setting.restartRequired ? <Badge variant="muted">{t("settings.restartBadge")}</Badge> : null}
-            {setting.advanced ? <Badge variant="outline">{t("settings.advancedBadge")}</Badge> : null}
+            {setting.restartRequired ? <Badge emphasis="low">{t("settings.restartBadge")}</Badge> : null}
+            {setting.advanced ? <Badge emphasis="low">{t("settings.advancedBadge")}</Badge> : null}
           </>
         }
       >
-        {pending ? <Spinner size="sm" label={t("common.loading")} /> : null}
+        {pending ? <Loader size="sm" label={t("common.loading")} /> : null}
         {setting.type !== "bool" && !setting.isDefault ? (
-          <Button size="icon-sm" variant="ghost" aria-label={t("settings.reset")} title={t("settings.reset")} disabled={pending} onClick={() => void apply(reset)}>
-            <RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />
+          <Button size="icon-sm" emphasis="low" aria-label={t("settings.reset")} title={t("settings.reset")} disabled={pending} onClick={() => void apply(reset)}>
+            <UndoIcon size="sm" />
           </Button>
         ) : null}
         {control}
@@ -195,7 +195,7 @@ export function InstanceSettingRows({ instance, settings, keys, onSaved }: { ins
 export function GameSettingsSelect({ games, value, onChange }: { games: readonly ManagedGame[]; value: string; onChange: (id: string) => void }) {
   const { t } = useI18n();
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-structure px-4 py-3">
+    <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-structure px-4 py-3">
       <Input.Root name="settings-game" value={value} onChange={(v: string) => onChange(v)} className="w-72">
         <Input.Label>{t("settings.perGame.label")}</Input.Label>
         <Input.Box>
@@ -222,14 +222,14 @@ export function RestartBanner() {
   if (state.status !== "ready" || (state.data.settings.length === 0 && !state.data.restore)) return null;
   const names = state.data.settings.map((k) => settingLabel(i18n, k).label).join(", ");
   return (
-    <Alert.Root variant="warning">
+    <Alert.Root intent="warning">
       <Alert.Title>{t("settings.restart.title")}</Alert.Title>
       <Alert.Description>
         <Stack gap="xs">
           {state.data.settings.length > 0 ? <span>{t("settings.restart.settings", { names })}</span> : null}
           {state.data.restore ? <span>{t("settings.restart.restore")}</span> : null}
           <div>
-            <Button size="sm" startIcon={<RefreshCw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.restartApp())}>
+            <Button emphasis="high" size="sm" startIcon={<RefreshIcon size="sm" />} onClick={() => void run(() => backend.restartApp())}>
               {t("settings.restart.now")}
             </Button>
           </div>

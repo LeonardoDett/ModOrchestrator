@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, LoadOrderView, PluginDetails, PluginList, PluginRow } from "../bridge/types";
+import { chooseOption } from "../test/select";
 
 const row = (name: string, position: number, extra: Partial<PluginRow> = {}): PluginRow => ({
   name,
@@ -165,7 +166,7 @@ describe("Load Order screen (F11)", () => {
     await user.click(await screen.findByRole("button", { name: "Review" }));
     const dialog = await screen.findByRole("dialog");
     expect(calls).not.toContain("apply");
-    await user.selectOptions(within(dialog).getByRole("combobox", { name: "Action" }), "import_load_order");
+    await chooseOption(user, within(dialog).getByRole("combobox", { name: "Action" }), "Import the external order into the profile");
     await user.click(within(dialog).getByRole("button", { name: "Apply decision" }));
     expect(calls).toContain("resolve:import_load_order");
   });

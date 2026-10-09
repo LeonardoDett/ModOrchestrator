@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, LogEntry, LogFilter, Operation, OperationEvent, Setting } from "../bridge/types";
+import { chooseOption } from "../test/select";
 
 const setting = (key: string, value: string, options: string[], def = options[0]!): Setting => ({
   key,
@@ -137,7 +138,7 @@ describe("App shell", () => {
     render(<App backend={fake.backend} />);
     await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
     const select = await screen.findByRole("combobox", { name: "Language" });
-    await user.selectOptions(select, "pt-BR");
+    await chooseOption(user, select, "Português (Brasil)");
     expect(fake.backend.setAppSetting).toHaveBeenCalledWith("ui.language", "pt-BR");
     expect(await screen.findByRole("heading", { level: 1, name: "Configurações" })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe("pt-BR");
@@ -152,7 +153,7 @@ describe("App shell", () => {
     render(<App backend={fake.backend} />);
     await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
     await user.click(await screen.findByRole("tab", { name: "Theme" }));
-    await user.selectOptions(await screen.findByRole("combobox", { name: "Table density" }), "bogus");
+    await chooseOption(user, await screen.findByRole("combobox", { name: "Table density" }), "bogus");
     expect(await screen.findByText("Could not save the setting")).toBeInTheDocument();
     expect(screen.getByText("The value bogus is not valid for theme.density.")).toBeInTheDocument();
   });

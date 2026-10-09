@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { FileSearch, Rocket, ScanSearch, Wrench } from "lucide-react";
-import { Alert, Badge, Button, Stack, Typography, useToast } from "dettmann-ui";
+import { Wrench } from "lucide-react";
+import { FileSearchIcon, RocketIcon, ScanSearchIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Stack, Typography, useToast, Icon, Loader } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
@@ -22,7 +23,7 @@ export function DeployOverview() {
   const [verifying, setVerifying] = useState(false);
   if (!status) return null;
   const look = statusLook(status);
-  const Icon = look.icon;
+  const StateIcon = look.icon;
   const busy = Boolean(status.busy);
 
   const verify = async () => {
@@ -39,30 +40,30 @@ export function DeployOverview() {
   return (
     <Stack gap="sm">
       {status.kind === "unknown" && status.reason === "journal_pending" ? (
-        <Alert.Root variant="danger">
+        <Alert.Root intent="danger">
           <Alert.Title>{t("deploy.interrupted.title")}</Alert.Title>
           <Alert.Description>{t("deploy.interrupted.description")}</Alert.Description>
           <div className="pt-2">
-            <Button size="sm" startIcon={<Wrench aria-hidden="true" />} disabled={busy} onClick={() => void reconcile()}>
+            <Button emphasis="high" size="sm" startIcon={<Icon icon={Wrench} size="sm" />} disabled={busy} onClick={() => void reconcile()}>
               {t("deploy.action.reconcile")}
             </Button>
           </div>
         </Alert.Root>
       ) : null}
       {status.externalChanges > 0 || status.newFiles > 0 ? (
-        <Alert.Root variant="warning">
+        <Alert.Root intent="warning">
           {status.externalChanges > 0 ? <Alert.Description>{tp("deploy.externalChanges", status.externalChanges)}</Alert.Description> : null}
           {status.newFiles > 0 ? <Alert.Description>{tp("deploy.newFiles", status.newFiles)}</Alert.Description> : null}
           <div className="pt-2">
-            <Button size="sm" variant="outline" startIcon={<FileSearch aria-hidden="true" />} disabled={busy} onClick={openReview}>
+            <Button size="sm" startIcon={<FileSearchIcon size="sm" />} disabled={busy} onClick={openReview}>
               {t("deploy.action.review")}
             </Button>
           </div>
         </Alert.Root>
       ) : null}
-      <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3">
-        <Badge tone={look.tone} variant={look.tone ? undefined : "muted"} className="gap-1">
-          <Icon aria-hidden="true" className={look.spin ? "h-3 w-3 animate-spin" : "h-3 w-3"} />
+      <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-surface px-4 py-3">
+        <Badge intent={look.intent} emphasis={look.intent ? undefined : "low"} className="gap-1">
+          {StateIcon ? <Icon icon={StateIcon} size="xs" /> : <Loader decorative size="xs" />}
           {t(look.label)}
         </Badge>
         <Typography variant="body-sm" color="muted-fg">
@@ -76,16 +77,16 @@ export function DeployOverview() {
         </Typography>
         <div className="flex-1" />
         {status.kind === "failed" && status.failures.length > 0 ? (
-          <Button size="sm" variant="outline" onClick={openFailures}>
+          <Button size="sm" onClick={openFailures}>
             {t("deploy.action.failures")}
           </Button>
         ) : null}
-        <Button size="sm" variant="outline" startIcon={<ScanSearch aria-hidden="true" />} disabled={verifying || busy || status.entries === 0} onClick={() => void verify()}>
+        <Button size="sm" startIcon={<ScanSearchIcon size="sm" />} disabled={verifying || busy || status.entries === 0} onClick={() => void verify()}>
           {t("deploy.action.verify")}
         </Button>
-        <Button
+        <Button emphasis="high"
           size="sm"
-          startIcon={<Rocket aria-hidden="true" />}
+          startIcon={<RocketIcon size="sm" />}
           disabled={busy || status.kind === "in_sync" || status.kind === "unknown" || status.foreign.length > 0}
           onClick={() => void deploy()}
         >

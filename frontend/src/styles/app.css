@@ -19,18 +19,11 @@ body {
 .wails-drop-target-active {
   outline: 2px dashed var(--ui-brand);
   outline-offset: 4px;
-  border-radius: 0.75rem;
+  border-radius: var(--ui-radius-card);
 }
 
-/* ui.reduceMotion (core/13): animations and transitions become instant. */
-:root[data-reduce-motion="true"] *,
-:root[data-reduce-motion="true"] *::before,
-:root[data-reduce-motion="true"] *::after {
-  animation-duration: 0.01ms !important;
-  animation-iteration-count: 1 !important;
-  transition-duration: 0.01ms !important;
-  scroll-behavior: auto !important;
-}
+/* ui.reduceMotion (core/13) sets :root[data-reduce-motion]; dettmann-ui
+   turns its motion into a short fade from that attribute. */
 
 /* ui.compactHeaders (core/13): shorter page top bar. */
 :root[data-compact-headers="true"] [data-slot="topbar"] {

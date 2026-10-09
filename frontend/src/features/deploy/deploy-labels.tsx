@@ -1,6 +1,6 @@
-import type { LucideIcon } from "lucide-react";
-import { AlertTriangle, CheckCircle2, CircleDashed, Clock, Loader2, OctagonX, XCircle } from "lucide-react";
-import type { Tone } from "dettmann-ui";
+import { CircleDashed, OctagonX } from "lucide-react";
+import { CircleCheckIcon, CircleXIcon, ClockIcon, TriangleAlertIcon } from "dettmann-ui/icons";
+import type { IconComponent, Intent } from "dettmann-ui";
 import type { DeployStatus, DeployStatusKind, FileLocation } from "../../bridge/types";
 import type { MessageKey } from "../../i18n/i18n";
 
@@ -9,22 +9,22 @@ import type { MessageKey } from "../../i18n/i18n";
  * always icon + label, never color alone (D043). No decision is taken here.
  */
 export interface StatusLook {
-  tone: Tone | undefined;
-  icon: LucideIcon;
+  intent: Intent | undefined;
+  /** Absent while a deploy or purge holds the instance: the look is a loader. */
+  icon?: IconComponent;
   label: MessageKey;
-  spin?: boolean;
 }
 
 const LOOKS: Record<DeployStatusKind, StatusLook> = {
-  in_sync: { tone: "success", icon: CheckCircle2, label: "deploy.status.in_sync" },
-  pending: { tone: "info", icon: Clock, label: "deploy.status.pending" },
-  never_deployed: { tone: undefined, icon: CircleDashed, label: "deploy.status.never_deployed" },
-  blocked: { tone: "danger", icon: OctagonX, label: "deploy.status.blocked" },
-  failed: { tone: "danger", icon: XCircle, label: "deploy.status.failed" },
-  unknown: { tone: "warning", icon: AlertTriangle, label: "deploy.status.unknown" },
+  in_sync: { intent: "success", icon: CircleCheckIcon, label: "deploy.status.in_sync" },
+  pending: { intent: "info", icon: ClockIcon, label: "deploy.status.pending" },
+  never_deployed: { intent: undefined, icon: CircleDashed, label: "deploy.status.never_deployed" },
+  blocked: { intent: "danger", icon: OctagonX, label: "deploy.status.blocked" },
+  failed: { intent: "danger", icon: CircleXIcon, label: "deploy.status.failed" },
+  unknown: { intent: "warning", icon: TriangleAlertIcon, label: "deploy.status.unknown" },
 };
 
-const BUSY_LOOK: StatusLook = { tone: "primary", icon: Loader2, label: "deploy.status.busy", spin: true };
+const BUSY_LOOK: StatusLook = { intent: "brand", label: "deploy.status.busy" };
 
 /** The look of a status; a deploy or purge holding the instance wins. */
 export function statusLook(s: DeployStatus): StatusLook {

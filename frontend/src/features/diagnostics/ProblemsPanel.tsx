@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, ChevronRight, EyeOff, FileArchive, RefreshCw, Search, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
+import { ChevronDownIcon, ChevronRightIcon, EyeOffIcon, FileArchiveIcon, RefreshIcon, SearchIcon } from "dettmann-ui/icons";
 import {
   Alert,
   Badge,
@@ -8,11 +9,12 @@ import {
   Inline,
   Input,
   Inspector,
-  Spinner,
+  Loader,
   Stack,
   Typography,
   useToast,
   type DataTableColumn,
+  Icon,
 } from "dettmann-ui";
 import { useSettings } from "../../app/settings-context";
 import { useBackend } from "../../bridge/backend-context";
@@ -102,10 +104,10 @@ export function ProblemsPanel({ instance }: { instance: string }) {
         width: 140,
         cell: (d) => {
           const s = shownSeverity(d);
-          const Icon = SEVERITY_LOOK[s].icon;
+          const StateIcon = SEVERITY_LOOK[s].icon;
           return (
             <Inline gap="xs">
-              <Icon aria-hidden="true" className={`h-4 w-4 ${SEVERITY_LOOK[s].className}`} />
+              <Icon icon={StateIcon} size="sm" className={`${SEVERITY_LOOK[s].className}`} />
               <span>{severityLabel(i18n, s)}</span>
             </Inline>
           );
@@ -120,7 +122,7 @@ export function ProblemsPanel({ instance }: { instance: string }) {
           <Inline gap="xs" wrap={false} className="min-w-0">
             <span className="truncate">{diagnosticTitle(i18n, d)}</span>
             {d.new ? (
-              <Badge tone="primary" size="sm">
+              <Badge intent="brand" size="sm">
                 {t("diag.new")}
               </Badge>
             ) : null}
@@ -151,7 +153,7 @@ export function ProblemsPanel({ instance }: { instance: string }) {
         <div className="min-w-[14rem] flex-1" data-page-search>
           <Input.Root value={text} onChange={(value: string) => setText(value)} fullWidth>
             <Input.Box padding="sm">
-              <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />
+              <SearchIcon size="sm" className="text-fg-muted" />
               <Input.Field aria-label={t("diag.search")} placeholder={t("diag.search")} />
             </Input.Box>
           </Input.Root>
@@ -164,23 +166,23 @@ export function ProblemsPanel({ instance }: { instance: string }) {
           </Input.Root>
         </div>
         <div className="flex-1" />
-        <Button size="sm" variant="outline" startIcon={checking ? <Spinner size="sm" label={t("common.loading")} /> : <RefreshCw aria-hidden="true" className="h-4 w-4" />} disabled={checking || !backend.connected} onClick={() => void checkNow()}>
+        <Button size="sm" startIcon={checking ? <Loader size="sm" label={t("common.loading")} /> : <RefreshIcon size="sm" />} disabled={checking || !backend.connected} onClick={() => void checkNow()}>
           {t("diag.checkNow")}
         </Button>
-        <Button size="sm" variant="outline" startIcon={<FileArchive aria-hidden="true" className="h-4 w-4" />} disabled={!backend.connected} onClick={() => void exportBundle()}>
+        <Button size="sm" startIcon={<FileArchiveIcon size="sm" />} disabled={!backend.connected} onClick={() => void exportBundle()}>
           {t("diag.exportBundle")}
         </Button>
       </Inline>
 
       {problems.status === "unavailable" ? (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       ) : null}
       {problems.status === "error" ? <ErrorAlert title="diag.loadError" error={problems.error} onRetry={problems.reload} /> : null}
       {problems.status === "loading" ? <LoadingState /> : null}
       {data?.partial ? (
-        <Alert.Root variant="warning">
+        <Alert.Root intent="warning">
           <Alert.Description>{t("diag.partial")}</Alert.Description>
         </Alert.Root>
       ) : null}
@@ -208,7 +210,7 @@ export function ProblemsPanel({ instance }: { instance: string }) {
               sticky={false}
               title={diagnosticTitle(i18n, current)}
               description={`${severityLabel(i18n, shownSeverity(current))} · ${moduleLabel(i18n, current.module)}`}
-              className="w-[26rem] shrink-0 overflow-auto rounded-xl border"
+              className="w-[26rem] shrink-0 overflow-auto rounded-card border"
               onClose={() => setSelected(null)}
               closeLabel={t("common.close")}
             >
@@ -219,12 +221,12 @@ export function ProblemsPanel({ instance }: { instance: string }) {
       ) : null}
 
       {data && data.suppressed.length > 0 ? (
-        <section className="rounded-xl border border-border bg-surface">
+        <section className="rounded-card border border-border bg-surface">
           <Button
-            variant="ghost"
+            emphasis="low"
             className="w-full justify-start"
             aria-expanded={showSuppressed}
-            startIcon={showSuppressed ? <ChevronDown aria-hidden="true" className="h-4 w-4" /> : <ChevronRight aria-hidden="true" className="h-4 w-4" />}
+            startIcon={showSuppressed ? <ChevronDownIcon size="sm" /> : <ChevronRightIcon size="sm" />}
             onClick={() => setShowSuppressed((v) => !v)}
           >
             {tp("diag.suppressed", data.suppressed.length)}
@@ -233,14 +235,14 @@ export function ProblemsPanel({ instance }: { instance: string }) {
             <ul className="divide-y divide-border border-t border-border">
               {data.suppressed.map((d) => (
                 <li key={d.key} className="flex items-center gap-3 px-4 py-2">
-                  <EyeOff aria-hidden="true" className="h-4 w-4 shrink-0 text-fg-muted" />
+                  <EyeOffIcon size="sm" className="shrink-0 text-fg-muted" />
                   <Typography variant="body-sm" className="min-w-0 flex-1 truncate">
                     {diagnosticTitle(i18n, d)}
                   </Typography>
-                  <Button size="sm" variant="ghost" onClick={() => void run(() => backend.unsuppressDiagnostic(d.key, ""))}>
+                  <Button size="sm" emphasis="low" onClick={() => void run(() => backend.unsuppressDiagnostic(d.key, ""))}>
                     {t("diag.reactivate")}
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={() => void run(() => backend.unsuppressDiagnostic("", d.code))}>
+                  <Button size="sm" emphasis="low" onClick={() => void run(() => backend.unsuppressDiagnostic("", d.code))}>
                     {t("diag.reactivateType")}
                   </Button>
                 </li>
@@ -289,7 +291,7 @@ export function DiagnosticDetail({ d, onAct }: { d: Diagnostic; onAct: (index: n
           <Typography variant="label">{t("diag.actions")}</Typography>
           <Inline gap="xs">
             {d.actions.map((a, i) => (
-              <Button key={`${a.id}-${i}`} size="sm" variant={i === 0 ? "primary" : "outline"} onClick={() => onAct(i)}>
+              <Button key={`${a.id}-${i}`} size="sm" emphasis={i === 0 ? "high" : "medium"} onClick={() => onAct(i)}>
                 {actionLabel(i18n, a)}
               </Button>
             ))}
@@ -302,10 +304,10 @@ export function DiagnosticDetail({ d, onAct }: { d: Diagnostic; onAct: (index: n
         </Typography>
       ) : (
         <Inline gap="xs">
-          <Button size="sm" variant="ghost" startIcon={<EyeOff aria-hidden="true" className="h-4 w-4" />} onClick={() => void run(() => backend.suppressDiagnostic(d.instance, d.key, false))}>
+          <Button size="sm" emphasis="low" startIcon={<EyeOffIcon size="sm" />} onClick={() => void run(() => backend.suppressDiagnostic(d.instance, d.key, false))}>
             {t("diag.ignoreThis")}
           </Button>
-          <Button size="sm" variant="ghost" onClick={() => void run(() => backend.suppressDiagnostic(d.instance, d.key, true))}>
+          <Button size="sm" emphasis="low" onClick={() => void run(() => backend.suppressDiagnostic(d.instance, d.key, true))}>
             {t("diag.ignoreType")}
           </Button>
         </Inline>

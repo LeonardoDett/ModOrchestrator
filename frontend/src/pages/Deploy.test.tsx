@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, DeployChange, DeployPlan, DeployStatus, ExternalChanges } from "../bridge/types";
+import { chooseOption } from "../test/select";
 
 const STATUS: DeployStatus = {
   instance: "i1",
@@ -138,12 +139,12 @@ describe("Deploy (F7)", () => {
     // DLG-15 opens over the plan: external changes are what it waits for.
     const changes = await screen.findByRole("dialog", { name: "External changes" });
     expect(within(changes).getByText("data:Alpha.esp")).toBeInTheDocument();
-    expect(within(changes).getByRole("combobox", { name: "Action for data:Alpha.esp" })).toHaveValue("revert");
+    expect(within(changes).getByRole("combobox", { name: "Action for data:Alpha.esp" })).toHaveTextContent("Revert");
     await user.click(within(changes).getByRole("button", { name: "Apply decisions" }));
     // The plan still has a method fallback to decide.
     const plan = await screen.findByRole("dialog", { name: "Deploy plan" });
     expect(within(plan).getByText("1 decision chosen.")).toBeInTheDocument();
-    await user.selectOptions(within(plan).getByRole("combobox"), "accept");
+    await chooseOption(user, within(plan).getByRole("combobox"), /^Use .* for them$/);
     await user.click(within(plan).getByRole("button", { name: "Apply" }));
     expect(calls).toContain("resolve:op1:root|symlink|copy");
     expect(calls).toContain(`decisions:${JSON.stringify([{ location: { target: "data", path: "Alpha.esp" }, action: "revert" }])}`);
@@ -181,10 +182,10 @@ describe("External changes (F8, DLG-15)", () => {
     await user.click(await screen.findByRole("button", { name: "Review changes" }));
     const dialog = await screen.findByRole("dialog", { name: "External changes" });
     const hkx = within(dialog).getByRole("combobox", { name: "Action for data:meshes/actors/character/behaviors/a.hkx" });
-    expect(hkx).toHaveValue("");
-    expect(within(dialog).getByRole("combobox", { name: "Action for data:Nemesis.log" })).toHaveValue("leave_unmanaged");
+    expect(hkx).toHaveTextContent("Choose…");
+    expect(within(dialog).getByRole("combobox", { name: "Action for data:Nemesis.log" })).toHaveTextContent("Leave unmanaged");
     expect(within(dialog).getByText("2 rows without a decision stay as they are.")).toBeInTheDocument();
-    await user.selectOptions(within(dialog).getByRole("combobox", { name: "Apply to all: New" }), "capture");
+    await chooseOption(user, within(dialog).getByRole("combobox", { name: "Apply to all: New" }), "Capture into a mod");
     // Capturing asks where to; the suggested new mod is prefilled.
     expect(within(dialog).getByRole("heading", { name: "Capture destination" })).toBeInTheDocument();
     const name = within(dialog).getByRole("textbox", { name: "Name of the new mod" });

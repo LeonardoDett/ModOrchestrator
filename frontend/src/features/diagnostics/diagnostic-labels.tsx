@@ -1,4 +1,6 @@
-import { CircleAlert, Info, OctagonX, TriangleAlert, XCircle, type LucideIcon } from "lucide-react";
+import { type IconComponent } from "dettmann-ui";
+import { OctagonX } from "lucide-react";
+import { CircleAlertIcon, CircleXIcon, InfoIcon, TriangleAlertIcon } from "dettmann-ui/icons";
 import type { Diagnostic, DiagnosticAction, DiagnosticEvidence, DiagnosticModule, HistoryEntry } from "../../bridge/types";
 import type { MessageKey, Translator } from "../../i18n/i18n";
 
@@ -9,12 +11,12 @@ export function shownSeverity(d: Pick<Diagnostic, "severity" | "blocking">): Sho
   return d.blocking ? "blocking" : d.severity;
 }
 
-/** Icon + tone per severity (ui/03 §5): status is never shown by colour alone. */
-export const SEVERITY_LOOK: Record<ShownSeverity, { icon: LucideIcon; tone: "danger" | "warning" | "info"; className: string }> = {
-  blocking: { icon: OctagonX, tone: "danger", className: "text-danger-text" },
-  error: { icon: XCircle, tone: "danger", className: "text-danger-text" },
-  warning: { icon: TriangleAlert, tone: "warning", className: "text-warning-text" },
-  info: { icon: Info, tone: "info", className: "text-info-text" },
+/** Icon + intent per severity (ui/03 §5): status is never shown by colour alone. */
+export const SEVERITY_LOOK: Record<ShownSeverity, { icon: IconComponent; intent: "danger" | "warning" | "info"; className: string }> = {
+  blocking: { icon: OctagonX, intent: "danger", className: "text-danger-text" },
+  error: { icon: CircleXIcon, intent: "danger", className: "text-danger-text" },
+  warning: { icon: TriangleAlertIcon, intent: "warning", className: "text-warning-text" },
+  info: { icon: InfoIcon, intent: "info", className: "text-info-text" },
 };
 
 export const SEVERITY_ORDER: readonly ShownSeverity[] = ["blocking", "error", "warning", "info"];
@@ -66,4 +68,4 @@ export function historyText(i18n: Translator, e: Pick<HistoryEntry, "type" | "pa
   return i18n.has(key) ? i18n.t(key, { name: "", winnerName: "", modName: "", count: "", moved: "", pairs: "", ...e.params }) : e.type;
 }
 
-export const NOTIFICATION_ICON: LucideIcon = CircleAlert;
+export const NOTIFICATION_ICON: IconComponent = CircleAlertIcon;

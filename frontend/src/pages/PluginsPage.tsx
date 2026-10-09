@@ -1,22 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownUp, ChevronDown, FolderOpen, Group, ListChecks, Lock, LockOpen, Plug, Power, PowerOff } from "lucide-react";
-import {
-  ActionBar,
-  Alert,
-  Button,
-  Checkbox,
-  DataTable,
-  DataTableColumnPicker,
-  FilterBar,
-  Input,
-  Menu,
-  SegmentedControl,
-  StatusToggle,
-  Switch,
-  Toolbar,
-  Typography,
-  type DataTableColumn,
-} from "dettmann-ui";
+import { ArrowDownUp, Group, ListChecks, Plug, PowerOff } from "lucide-react";
+import { ChevronDownIcon, FolderOpenIcon, LockIcon, LockOpenIcon, PowerIcon } from "dettmann-ui/icons";
+import { ActionBar, Alert, Button, Checkbox, DataTable, DataTableColumnPicker, FilterBar, Input, Menu, SegmentedControl, StatusToggle, Switch, Toolbar, Typography, type DataTableColumn, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { usePluginList, usePluginRules } from "../bridge/queries";
 import type { PluginRow } from "../bridge/types";
@@ -162,7 +147,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
           r.mod ? (
             <Button
               size="sm"
-              variant="ghost"
+              emphasis="low"
               className="max-w-full truncate"
               onClick={(e) => {
                 e.stopPropagation();
@@ -202,8 +187,8 @@ function PluginsWorkspace({ instance }: { instance: string }) {
           start={
             <>
               <Button
-                variant="outline"
-                startIcon={<ArrowDownUp aria-hidden="true" />}
+               
+                startIcon={<Icon icon={ArrowDownUp} size="sm" />}
                 disabled={!data || data.cycle.length > 0}
                 onClick={() =>
                   void run(() => backend.sortPlugins(instance)).then((r) => {
@@ -214,16 +199,16 @@ function PluginsWorkspace({ instance }: { instance: string }) {
                 {t("plugins.action.sort")}
               </Button>
               <Switch checked={data?.autoSort ?? false} disabled={!data} onCheckedChange={(on) => void run(() => backend.setAutoSort(instance, on))} label={t("plugins.autoSort")} />
-              <Button variant="ghost" startIcon={<ListChecks aria-hidden="true" />} onClick={() => setDialog("rules")}>
+              <Button emphasis="low" startIcon={<Icon icon={ListChecks} size="sm" />} onClick={() => setDialog("rules")}>
                 {t("plugins.action.rules")}
               </Button>
-              <Button variant="ghost" startIcon={<Group aria-hidden="true" />} onClick={() => setDialog("groups")}>
+              <Button emphasis="low" startIcon={<Icon icon={Group} size="sm" />} onClick={() => setDialog("groups")}>
                 {t("plugins.action.groups")}
               </Button>
-              <Button variant="ghost" startIcon={<Power aria-hidden="true" />} disabled={!data} onClick={() => data && setEnabled(data.rows.filter((r) => !r.implicit && !r.enabled).map((r) => r.name), true)}>
+              <Button emphasis="low" startIcon={<PowerIcon size="sm" />} disabled={!data} onClick={() => data && setEnabled(data.rows.filter((r) => !r.implicit && !r.enabled).map((r) => r.name), true)}>
                 {t("plugins.action.enableAll")}
               </Button>
-              <Button variant="ghost" startIcon={<PowerOff aria-hidden="true" />} disabled={!data} onClick={() => data && setEnabled(data.rows.filter((r) => !r.implicit && r.enabled).map((r) => r.name), false)}>
+              <Button emphasis="low" startIcon={<Icon icon={PowerOff} size="sm" />} disabled={!data} onClick={() => data && setEnabled(data.rows.filter((r) => !r.implicit && r.enabled).map((r) => r.name), false)}>
                 {t("plugins.action.disableAll")}
               </Button>
             </>
@@ -231,7 +216,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
           end={
             <Menu.Root placement="bottom-end">
               <Menu.Trigger>
-                <Button variant="ghost" startIcon={<FolderOpen aria-hidden="true" />} endIcon={<ChevronDown aria-hidden="true" />}>
+                <Button emphasis="low" startIcon={<FolderOpenIcon size="sm" />} endIcon={<ChevronDownIcon size="sm" />}>
                   {t("plugins.action.open")}
                 </Button>
               </Menu.Trigger>
@@ -251,11 +236,11 @@ function PluginsWorkspace({ instance }: { instance: string }) {
         ) : null}
 
         {data?.external ? (
-          <Alert.Root variant="warning">
+          <Alert.Root intent="warning">
             <Alert.Description>
               <span className="flex flex-wrap items-center gap-2">
                 {t("diag.code.load_order_external_change")}
-                <Button size="sm" variant="outline" onClick={() => navigate({ view: "load_order", review: true })}>
+                <Button size="sm" onClick={() => navigate({ view: "load_order", review: true })}>
                   {t("loadOrder.review.open")}
                 </Button>
               </span>
@@ -263,7 +248,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
           </Alert.Root>
         ) : null}
         {data && data.cycle.length > 0 ? (
-          <Alert.Root variant="danger">
+          <Alert.Root intent="danger">
             <Alert.Description>{t("plugins.cycle", { plugins: data.cycle.join(" → ") })}</Alert.Description>
           </Alert.Root>
         ) : null}
@@ -280,7 +265,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
             <section aria-label={t("plugins.tableLabel")} className="flex min-h-0 min-w-0 flex-1 flex-col gap-2">
               <FilterBar
                 data-page-search
-                className="rounded-xl border"
+                className="rounded-card border"
                 query={query}
                 onQueryChange={setQuery}
                 queryPlaceholder={t("plugins.search")}
@@ -321,15 +306,15 @@ function PluginsWorkspace({ instance }: { instance: string }) {
                 }
               />
               {chosen.length >= 2 ? (
-                <ActionBar role="toolbar" aria-label={tp("plugins.selection", chosen.length)} className="rounded-xl border sm:justify-start">
+                <ActionBar role="toolbar" aria-label={tp("plugins.selection", chosen.length)} className="rounded-card border sm:justify-start">
                   <Typography variant="body-sm" color="fg" className="mr-auto">
                     {tp("plugins.selection", chosen.length)}
                   </Typography>
                   <div className="flex flex-wrap items-center gap-2">
-                    <Button size="sm" variant="outline" onClick={() => setEnabled(chosen, true)}>
+                    <Button size="sm" onClick={() => setEnabled(chosen, true)}>
                       {t("plugins.action.activate")}
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => setEnabled(chosen, false)}>
+                    <Button size="sm" onClick={() => setEnabled(chosen, false)}>
                       {t("plugins.action.deactivate")}
                     </Button>
                     <Input.Root value={groupFor} onChange={(g: string) => {
@@ -338,10 +323,10 @@ function PluginsWorkspace({ instance }: { instance: string }) {
                     }}>
                       <Input.Select aria-label={t("plugins.action.setGroup")} placeholder={t("plugins.action.setGroup")} options={groups.map((g) => ({ value: g.name, label: g.default ? t("plugins.group.default") : g.name }))} />
                     </Input.Root>
-                    <Button size="sm" variant="outline" startIcon={<Lock aria-hidden="true" />} onClick={() => void run(() => backend.setIndexLock(instance, chosen, true))}>
+                    <Button size="sm" startIcon={<LockIcon size="sm" />} onClick={() => void run(() => backend.setIndexLock(instance, chosen, true))}>
                       {t("plugins.action.lock")}
                     </Button>
-                    <Button size="sm" variant="outline" startIcon={<LockOpen aria-hidden="true" />} onClick={() => void run(() => backend.setIndexLock(instance, chosen, false))}>
+                    <Button size="sm" startIcon={<LockOpenIcon size="sm" />} onClick={() => void run(() => backend.setIndexLock(instance, chosen, false))}>
                       {t("plugins.action.unlock")}
                     </Button>
                   </div>
@@ -369,7 +354,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
                 labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading") }}
               />
               {showDisabled && data.disabled.length > 0 ? (
-                <section aria-label={t("plugins.disabledTitle")} className="rounded-xl border border-border bg-surface p-3">
+                <section aria-label={t("plugins.disabledTitle")} className="rounded-card border border-border bg-surface p-3">
                   <Typography variant="heading-6" color="fg">
                     {t("plugins.disabledTitle")}
                   </Typography>

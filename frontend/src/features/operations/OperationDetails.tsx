@@ -1,5 +1,5 @@
 import { ScrollText } from "lucide-react";
-import { Alert, Button, Inline, Progress, Stack, Typography } from "dettmann-ui";
+import { Alert, Button, Inline, Progress, Stack, Typography, Icon } from "dettmann-ui";
 import { errorMessage } from "../../bridge/errors";
 import type { Operation } from "../../bridge/types";
 import { useI18n } from "../../i18n/i18n";
@@ -70,7 +70,7 @@ export function OperationDetails({ operation: op, compact = false, onViewLog }: 
       ) : null}
 
       {op.error ? (
-        <Alert.Root variant="danger">
+        <Alert.Root intent="danger">
           <Alert.Title>{t("operations.error")}</Alert.Title>
           <Alert.Description>
             <Stack gap="xs">
@@ -86,7 +86,7 @@ export function OperationDetails({ operation: op, compact = false, onViewLog }: 
 
       {onViewLog ? (
         <div>
-          <Button size="sm" variant="ghost" startIcon={<ScrollText aria-hidden="true" className="h-4 w-4" />} onClick={() => onViewLog(op.id)}>
+          <Button size="sm" emphasis="low" startIcon={<Icon icon={ScrollText} size="sm" />} onClick={() => onViewLog(op.id)}>
             {t("operations.viewLog")}
           </Button>
         </div>

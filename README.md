@@ -44,10 +44,10 @@ Decisões estruturais: `mod-orchestrator-spec-v2/docs-ia/decisoes.md` (D017–D0
 
 Pré-requisitos: Go 1.27+, Node 24+, Wails CLI v2, WebView2 (Windows).
 
-1. Compilar a dettmann-ui que o `frontend/` usa (v1 até a migração, D095; uma vez, e a cada mudança nela):
+1. Compilar a dettmann-ui que o `frontend/` usa (v2, D095/D107; uma vez, e a cada mudança nela):
 
    ```bash
-   cd dettmann-ui-v1 && npm install && npm run build
+   cd dettmann-ui-vnext && npm install && npm run build
    ```
 
    O build gera JS, CSS e `.d.ts` (a etapa de tipos roda com 8 GB de heap). `npm run theme`

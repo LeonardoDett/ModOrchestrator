@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { History as HistoryIcon, RotateCcw, Undo2 } from "lucide-react";
+import { HistoryIcon, UndoIcon } from "dettmann-ui/icons";
 import { Alert, Badge, Button, DataTable, Inline, Input, Modal, Tag, Typography, type DataTableColumn } from "dettmann-ui";
 import { useSettings } from "../../app/settings-context";
 import { useBackend } from "../../bridge/backend-context";
@@ -71,7 +71,7 @@ export function HistoryPanel({ instance }: { instance: string }) {
         id: "who",
         label: t("history.who"),
         width: 120,
-        cell: (e) => (e.origin === "user" ? t("history.origin.user") : <Badge variant="muted">{t(`history.origin.${e.origin}` as MessageKey)}</Badge>),
+        cell: (e) => (e.origin === "user" ? t("history.origin.user") : <Badge emphasis="low">{t(`history.origin.${e.origin}` as MessageKey)}</Badge>),
       },
       {
         id: "action",
@@ -80,7 +80,7 @@ export function HistoryPanel({ instance }: { instance: string }) {
         width: 380,
         cell: (e) => (
           <Inline gap="xs" wrap={false} className="min-w-0">
-            {e.revertOf ? <Undo2 aria-label={t("history.revertOf")} className="h-4 w-4 shrink-0 text-fg-muted" /> : null}
+            {e.revertOf ? <UndoIcon size="sm" label={t("history.revertOf")} className="shrink-0 text-fg-muted" /> : null}
             <span className="truncate">{historyText(i18n, e)}</span>
           </Inline>
         ),
@@ -100,9 +100,9 @@ export function HistoryPanel({ instance }: { instance: string }) {
         width: 130,
         cell: (e) =>
           e.revertedBy ? (
-            <Badge variant="muted">{t("history.reverted")}</Badge>
+            <Badge emphasis="low">{t("history.reverted")}</Badge>
           ) : e.reversible ? (
-            <Button size="sm" variant="ghost" startIcon={<RotateCcw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => askRevert(e)}>
+            <Button size="sm" emphasis="low" startIcon={<UndoIcon size="sm" />} onClick={() => askRevert(e)}>
               {t("history.revert")}
             </Button>
           ) : null,
@@ -145,7 +145,7 @@ export function HistoryPanel({ instance }: { instance: string }) {
         ) : null}
       </Inline>
       {history.status === "unavailable" ? (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       ) : null}
@@ -165,7 +165,7 @@ export function HistoryPanel({ instance }: { instance: string }) {
       ) : null}
       {entries.length >= limit ? (
         <div>
-          <Button size="sm" variant="ghost" onClick={() => setLimit((l) => l + PAGE)}>
+          <Button size="sm" emphasis="low" onClick={() => setLimit((l) => l + PAGE)}>
             {t("history.loadMore")}
           </Button>
         </div>
@@ -180,10 +180,10 @@ export function HistoryPanel({ instance }: { instance: string }) {
               <Typography variant="body-sm">{t("history.confirmDescription", { count: confirming.items })}</Typography>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="outline" onClick={() => setConfirming(null)}>
+              <Button onClick={() => setConfirming(null)}>
                 {t("common.cancel")}
               </Button>
-              <Button startIcon={<RotateCcw aria-hidden="true" />} onClick={() => void revert(confirming)}>
+              <Button emphasis="high" startIcon={<UndoIcon size="sm" />} onClick={() => void revert(confirming)}>
                 {t("history.revert")}
               </Button>
             </Modal.Footer>

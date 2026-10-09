@@ -1,4 +1,4 @@
-import { Alert, Button, Inline, Stack } from "dettmann-ui";
+import { Alert, Button, Inline, Stack, Icon } from "dettmann-ui";
 import { useProblems } from "../../bridge/queries";
 import type { Diagnostic, DiagnosticModule } from "../../bridge/types";
 import { useI18n } from "../../i18n/i18n";
@@ -42,7 +42,7 @@ export function ProblemBand({ modules, exclude = [] }: ProblemBandProps) {
       ))}
       {shown.length > MAX_SHOWN ? (
         <div>
-          <Button size="sm" variant="ghost" onClick={() => navigate({ view: "diagnostics", tab: "problems" })}>
+          <Button size="sm" emphasis="low" onClick={() => navigate({ view: "diagnostics", tab: "problems" })}>
             {tp("diag.band.more", shown.length - MAX_SHOWN)} · {t("diag.seeAll")}
           </Button>
         </div>
@@ -54,20 +54,20 @@ export function ProblemBand({ modules, exclude = [] }: ProblemBandProps) {
 function BandItem({ d, onAct }: { d: Diagnostic; onAct: (index: number) => void }) {
   const i18n = useI18n();
   const look = SEVERITY_LOOK[shownSeverity(d)];
-  const Icon = look.icon;
+  const StateIcon = look.icon;
   const impact = diagnosticImpact(i18n, d);
   return (
-    <Alert.Root variant={look.tone}>
+    <Alert.Root intent={look.intent}>
       <Alert.Title>
         <Inline gap="xs" align="center">
-          <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />
+          <Icon icon={StateIcon} size="sm" className="shrink-0" />
           <span>{diagnosticTitle(i18n, d)}</span>
         </Inline>
       </Alert.Title>
       {impact ? <Alert.Description>{impact}</Alert.Description> : null}
       <Inline gap="xs" className="mt-2">
         {d.actions.slice(0, 2).map((a, i) => (
-          <Button key={`${a.id}-${i}`} size="sm" variant={i === 0 ? "outline" : "ghost"} onClick={() => onAct(i)}>
+          <Button key={`${a.id}-${i}`} size="sm" emphasis={i === 0 ? "medium" : "low"} onClick={() => onAct(i)}>
             {actionLabel(i18n, a)}
           </Button>
         ))}

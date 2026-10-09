@@ -1,4 +1,4 @@
-import { Copy } from "lucide-react";
+import { CopyIcon } from "dettmann-ui/icons";
 import { Alert, Button, Inline, Stack, Typography, useToast } from "dettmann-ui";
 import { errorMessage, type UIError } from "../../bridge/errors";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
@@ -28,7 +28,7 @@ export function ErrorAlert({ title, error, onRetry }: ErrorAlertProps) {
   const i18n = useI18n();
   const copy = useCopy();
   return (
-    <Alert.Root variant="danger">
+    <Alert.Root intent="danger">
       <Alert.Title>{i18n.t(title)}</Alert.Title>
       <Alert.Description>
         <Stack gap="sm">
@@ -37,12 +37,12 @@ export function ErrorAlert({ title, error, onRetry }: ErrorAlertProps) {
           {onRetry || error.detail ? (
             <Inline gap="sm">
               {onRetry ? (
-                <Button size="sm" variant="outline" onClick={onRetry}>
+                <Button size="sm" onClick={onRetry}>
                   {i18n.t("common.retry")}
                 </Button>
               ) : null}
               {error.detail ? (
-                <Button size="sm" variant="ghost" startIcon={<Copy aria-hidden="true" className="h-4 w-4" />} onClick={() => copy(error.detail!)}>
+                <Button size="sm" emphasis="low" startIcon={<CopyIcon size="sm" />} onClick={() => copy(error.detail!)}>
                   {i18n.t("common.copy")}
                 </Button>
               ) : null}
@@ -59,7 +59,7 @@ export function TechnicalDetails({ text }: { text: string }) {
   return (
     <details className="text-xs">
       <summary className="cursor-pointer text-fg-muted">{t("common.details")}</summary>
-      <Typography variant="code" className="mt-1 block whitespace-pre-wrap break-all rounded-md bg-sunken p-2 text-xs">
+      <Typography variant="code" className="mt-1 block whitespace-pre-wrap break-all rounded-control bg-sunken p-2 text-xs">
         {text}
       </Typography>
     </details>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { FolderOpen, Package, RotateCcw, Trash2 } from "lucide-react";
-import { Alert, Button, Inline, Input, Inspector, Spinner, Stack, Tabs, Tag, Typography, TONES } from "dettmann-ui";
+import { FolderOpenIcon, PackageIcon, TrashIcon, UndoIcon } from "dettmann-ui/icons";
+import { Alert, Button, Inline, Input, Inspector, Loader, Stack, Tabs, Tag, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useCategories, useModDetails, useModHistory } from "../../bridge/queries";
 import type { FileLocation, ModDetails, ModHistoryEntry } from "../../bridge/types";
@@ -9,7 +9,7 @@ import { useSettings } from "../../app/settings-context";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
-import { categoryOptions, contentLabel, formatSize, installerLabel } from "./mod-labels";
+import { categoryOptions, contentLabel, formatSize, highlightIntent, highlightOptions, installerLabel } from "./mod-labels";
 
 interface ModInspectorProps {
   instance: string;
@@ -32,11 +32,11 @@ export function ModInspector({ instance, id, onClose, onRemove, onEditConflicts,
       aria-label={name || t("common.loading")}
       title={name || t("common.loading")}
       description={details.status === "ready" && details.data.variantLabel ? t("mods.variantOf", { name: details.data.variantOfName ?? "", label: details.data.variantLabel }) : undefined}
-      className="flex w-[26rem] shrink-0 flex-col overflow-auto rounded-xl border"
+      className="flex w-[26rem] shrink-0 flex-col overflow-auto rounded-card border"
       onClose={onClose}
       closeLabel={t("common.close")}
     >
-      {details.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+      {details.status === "loading" ? <Loader label={t("common.loading")} /> : null}
       {details.status === "error" ? <ErrorAlert title="mods.loadError" error={details.error} onRetry={details.reload} /> : null}
       {details.status === "ready" ? (
         <Tabs.Root value={tab} onValueChange={setTab}>
@@ -92,12 +92,12 @@ function Overview({ instance, mod, onRemove }: { instance: string; mod: ModDetai
   const { get } = useSettings();
   const advanced = get("ui.advancedMode")?.value === "true";
   const categories = useCategories(instance);
-  const [form, setForm] = useState({ name: mod.name, version: mod.version, author: mod.author, notes: mod.notes, highlight: mod.highlight ?? "" });
+  const [form, setForm] = useState({ name: mod.name, version: mod.version, author: mod.author, notes: mod.notes, highlight: highlightIntent(mod.highlight) ?? "" });
   useEffect(() => {
-    setForm({ name: mod.name, version: mod.version, author: mod.author, notes: mod.notes, highlight: mod.highlight ?? "" });
+    setForm({ name: mod.name, version: mod.version, author: mod.author, notes: mod.notes, highlight: highlightIntent(mod.highlight) ?? "" });
   }, [mod.id, mod.name, mod.version, mod.author, mod.notes, mod.highlight]);
   const dirty =
-    form.name !== mod.name || form.version !== mod.version || form.author !== mod.author || form.notes !== mod.notes || form.highlight !== (mod.highlight ?? "");
+    form.name !== mod.name || form.version !== mod.version || form.author !== mod.author || form.notes !== mod.notes || form.highlight !== (highlightIntent(mod.highlight) ?? "");
   const busy = mod.state === "installing" || mod.queued;
 
   const save = () =>
@@ -114,29 +114,29 @@ function Overview({ instance, mod, onRemove }: { instance: string; mod: ModDetai
       { success: "mods.saved" },
     );
 
-  const highlightOptions = [{ value: "", label: t("mods.highlight.none") }, ...TONES.map((tone) => ({ value: tone, label: t(`mods.highlight.${tone}`) }))];
+  const highlightChoices = highlightOptions(i18n);
 
   return (
     <Stack gap="md">
       <Inline gap="sm" className="flex-wrap">
         {mod.state === "installed" ? (
-          <Button size="sm" variant="outline" disabled={busy} onClick={() => void run(() => backend.setModsEnabled(instance, [mod.id], !mod.enabled))}>
+          <Button size="sm" disabled={busy} onClick={() => void run(() => backend.setModsEnabled(instance, [mod.id], !mod.enabled))}>
             {mod.enabled ? t("mods.action.disable") : t("mods.action.enable")}
           </Button>
         ) : (
-          <Button size="sm" disabled={busy || !mod.archive?.retained} startIcon={<Package aria-hidden="true" />} onClick={() => void run(() => backend.installMods(instance, [mod.id]))}>
+          <Button emphasis="high" size="sm" disabled={busy || !mod.archive?.retained} startIcon={<PackageIcon size="sm" />} onClick={() => void run(() => backend.installMods(instance, [mod.id]))}>
             {t("mods.action.install")}
           </Button>
         )}
         {mod.state === "installed" ? (
-          <Button size="sm" variant="outline" disabled={busy || !mod.archive?.retained} title={!mod.archive?.retained ? t("error.reinstall_archive_missing") : undefined} startIcon={<RotateCcw aria-hidden="true" />} onClick={() => void run(() => backend.reinstallMods(instance, [mod.id]))}>
+          <Button size="sm" disabled={busy || !mod.archive?.retained} title={!mod.archive?.retained ? t("error.reinstall_archive_missing") : undefined} startIcon={<UndoIcon size="sm" />} onClick={() => void run(() => backend.reinstallMods(instance, [mod.id]))}>
             {t("mods.action.reinstall")}
           </Button>
         ) : null}
-        <Button size="sm" variant="outline" disabled={busy} startIcon={<FolderOpen aria-hidden="true" />} onClick={() => void run(() => backend.openModFolder(mod.id))}>
+        <Button size="sm" disabled={busy} startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openModFolder(mod.id))}>
           {t("mods.action.openFolder")}
         </Button>
-        <Button size="sm" variant="ghost" tone="danger" disabled={busy} startIcon={<Trash2 aria-hidden="true" />} onClick={() => onRemove([mod.id])}>
+        <Button size="sm" emphasis="low" intent="danger" disabled={busy} startIcon={<TrashIcon size="sm" />} onClick={() => onRemove([mod.id])}>
           {t("mods.action.remove")}
         </Button>
       </Inline>
@@ -167,14 +167,14 @@ function Overview({ instance, mod, onRemove }: { instance: string; mod: ModDetai
       </Input.Root>
       <Input.Root fullWidth value={form.highlight} onChange={(v: string) => setForm({ ...form, highlight: v })}>
         <Input.Label>{t("mods.field.highlight")}</Input.Label>
-        <Input.Select options={highlightOptions} />
+        <Input.Select options={highlightChoices} />
       </Input.Root>
       <Input.Root fullWidth value={form.notes} onChange={(v: string) => setForm({ ...form, notes: v })}>
         <Input.Label>{t("mods.field.notes")}</Input.Label>
         <Input.Textarea rows={4} />
       </Input.Root>
       <Inline gap="sm" className="justify-end">
-        <Button size="sm" disabled={!dirty || busy} onClick={save}>
+        <Button emphasis="high" size="sm" disabled={!dirty || busy} onClick={save}>
           {t("common.save")}
         </Button>
       </Inline>
@@ -230,7 +230,7 @@ function Installation({ instance, mod }: { instance: string; mod: ModDetails }) 
         </dl>
       ) : null}
       {mod.archive && !mod.archive.retained ? (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("mods.archive.notRetained")}</Alert.Description>
         </Alert.Root>
       ) : null}
@@ -250,11 +250,11 @@ function Installation({ instance, mod }: { instance: string; mod: ModDetails }) 
       )}
       {mod.archive?.retained ? (
         <Inline gap="sm">
-          <Button size="sm" variant="outline" startIcon={<FolderOpen aria-hidden="true" />} onClick={() => void run(() => backend.openModArchive(mod.id))}>
+          <Button size="sm" startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openModArchive(mod.id))}>
             {t("mods.action.openArchive")}
           </Button>
           {mod.state === "installed" ? (
-            <Button size="sm" variant="outline" disabled={mod.queued} onClick={() => void run(() => backend.reinstallMods(instance, [mod.id]))}>
+            <Button size="sm" disabled={mod.queued} onClick={() => void run(() => backend.reinstallMods(instance, [mod.id]))}>
               {t("mods.action.reinstall")}
             </Button>
           ) : null}
@@ -275,7 +275,7 @@ function History({ id }: { id: string }) {
   const { t } = i18n;
   const history = useModHistory(id);
   if (history.status === "error") return <ErrorAlert title="mods.loadError" error={history.error} onRetry={history.reload} />;
-  if (history.status !== "ready") return <Spinner label={t("common.loading")} />;
+  if (history.status !== "ready") return <Loader label={t("common.loading")} />;
   if (history.data.length === 0) return <Typography variant="body-sm" color="muted-fg">{t("mods.history.empty")}</Typography>;
   return (
     <ol className="flex flex-col gap-2 text-sm">

@@ -1,4 +1,4 @@
-import { Button, Spinner, Typography } from "dettmann-ui";
+import { Button, Loader, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useOperations } from "../../bridge/queries";
 import { useI18n } from "../../i18n/i18n";
@@ -24,13 +24,13 @@ export function ScanFooter() {
   return (
     <div
       role="status"
-      className="sticky bottom-0 mt-6 flex items-center gap-4 rounded-xl border border-border bg-raised px-4 py-3 shadow-lg"
+      className="sticky bottom-0 mt-6 flex items-center gap-4 rounded-card border border-border bg-raised px-4 py-3 shadow-overlay"
     >
-      <Spinner size="sm" label={t("games.scan.running")} />
+      <Loader size="sm" label={t("games.scan.running")} />
       <Typography variant="body-sm" color="fg" className="flex-1">
         {visited > 0 ? tp("games.scan.progress", visited) : t("games.scan.running")}
       </Typography>
-      <Button size="sm" variant="outline" onClick={() => void run(() => backend.cancelOperation(scan.id), { quiet: true })}>
+      <Button size="sm" onClick={() => void run(() => backend.cancelOperation(scan.id), { quiet: true })}>
         {t("common.cancel")}
       </Button>
     </div>

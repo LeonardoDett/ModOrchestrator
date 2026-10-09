@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { AlertTriangle, ArchiveRestore, DatabaseZap, FileText, FolderOpen, Power, RotateCcw } from "lucide-react";
-import { Accordion, Alert, Badge, Button, Card, FeaturedIcon, Modal, Radio, Spinner, Stack, Typography } from "dettmann-ui";
+import { ArchiveRestore, DatabaseZap, FileText } from "lucide-react";
+import { FolderOpenIcon, PowerIcon, TriangleAlertIcon, UndoIcon } from "dettmann-ui/icons";
+import { Accordion, Alert, Badge, Button, Card, FeaturedIcon, Modal, Radio, Loader, Stack, Typography, Icon } from "dettmann-ui";
 import type { Backend, RecoveryBackup, StartupRecovery } from "../../bridge/types";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
@@ -49,12 +50,12 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
   const valid = backups?.filter((b) => b.valid) ?? [];
 
   return (
-    <main className="flex min-h-screen justify-center bg-page p-6 text-fg">
+    <main className="flex min-h-screen justify-center bg-canvas p-6 text-fg">
       {/* my-auto centers without clipping the top when the window is short. */}
       <Card.Root className="my-auto w-full max-w-2xl">
         <Card.Header>
           <Stack gap="sm">
-            <FeaturedIcon icon={DatabaseZap} color="warning" className="self-start" />
+            <FeaturedIcon icon={DatabaseZap} intent="warning" className="self-start" />
             {/* The page's only heading of level 1: the window shows nothing else. */}
             <Typography variant="heading-4" as="h1" color="fg">
               {t(`recovery.title.${reason}` as MessageKey)}
@@ -66,7 +67,7 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
         </Card.Header>
         <Card.Body>
           <Stack gap="lg">
-            <Alert.Root variant="info">
+            <Alert.Root intent="info">
               <Alert.Description>{t("recovery.safe")}</Alert.Description>
             </Alert.Root>
 
@@ -75,9 +76,9 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
                 <Typography variant="heading-6" id="recovery-backups">
                   {t("recovery.backups.title")}
                 </Typography>
-                {backups === null && !loadError ? <Spinner label={t("common.loading")} /> : null}
+                {backups === null && !loadError ? <Loader label={t("common.loading")} /> : null}
                 {loadError ? (
-                  <Alert.Root variant="danger">
+                  <Alert.Root intent="danger">
                     <Alert.Description>{errorMessage(i18n, loadError)}</Alert.Description>
                   </Alert.Root>
                 ) : null}
@@ -88,12 +89,12 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
                 ) : null}
                 {backups && backups.length > 0 ? (
                   <Radio.Group name="recovery-backup" value={chosen} onValueChange={setChosen} aria-label={t("recovery.backups.title")}>
-                    <ul className="max-h-64 divide-y divide-border overflow-y-auto rounded-lg border border-border">
+                    <ul className="max-h-64 divide-y divide-border overflow-y-auto rounded-control border border-border">
                       {backups.map((b) => (
                         <li key={b.id} className="flex items-center gap-3 px-3 py-2">
                           <Radio.Item value={b.id} label={i18n.formatAbsolute(b.at)} disabled={!b.valid || busy} />
-                          <Badge variant="outline">{t(`settings.backups.kind.${b.kind}` as MessageKey)}</Badge>
-                          {!b.valid ? <Badge tone="danger">{t("recovery.backups.invalid")}</Badge> : null}
+                          <Badge emphasis="low">{t(`settings.backups.kind.${b.kind}` as MessageKey)}</Badge>
+                          {!b.valid ? <Badge intent="danger">{t("recovery.backups.invalid")}</Badge> : null}
                           <span className="flex-1" />
                           <Typography variant="caption" color="muted-fg">
                             {formatBytes(b.size)}
@@ -107,8 +108,8 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
                   {t("recovery.backups.consequence")}
                 </Typography>
                 <div>
-                  <Button
-                    startIcon={<ArchiveRestore aria-hidden="true" />}
+                  <Button emphasis="high"
+                    startIcon={<Icon icon={ArchiveRestore} size="sm" />}
                     disabled={busy || !chosen || valid.length === 0}
                     onClick={() => void act(() => backend.recoveryRestore(chosen))}
                   >
@@ -119,7 +120,7 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
             </section>
 
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
@@ -130,16 +131,16 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
                   {t("recovery.other.title")}
                 </Typography>
                 <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" startIcon={<FolderOpen aria-hidden="true" />} onClick={() => void backend.recoveryOpenFolder("backups").catch(() => {})}>
+                  <Button startIcon={<FolderOpenIcon size="sm" />} onClick={() => void backend.recoveryOpenFolder("backups").catch(() => {})}>
                     {t("recovery.other.openBackups")}
                   </Button>
-                  <Button variant="outline" startIcon={<FileText aria-hidden="true" />} onClick={() => void backend.recoveryOpenFolder("logs").catch(() => {})}>
+                  <Button startIcon={<Icon icon={FileText} size="sm" />} onClick={() => void backend.recoveryOpenFolder("logs").catch(() => {})}>
                     {t("recovery.other.openLogs")}
                   </Button>
-                  <Button variant="outline" tone="danger" startIcon={<RotateCcw aria-hidden="true" />} disabled={busy} onClick={() => setConfirmFresh(true)}>
+                  <Button intent="danger" startIcon={<UndoIcon size="sm" />} disabled={busy} onClick={() => setConfirmFresh(true)}>
                     {t("recovery.fresh.action")}
                   </Button>
-                  <Button variant="ghost" startIcon={<Power aria-hidden="true" />} disabled={busy} onClick={() => void backend.recoveryQuit()}>
+                  <Button emphasis="low" startIcon={<PowerIcon size="sm" />} disabled={busy} onClick={() => void backend.recoveryQuit()}>
                     {t("recovery.other.quit")}
                   </Button>
                 </div>
@@ -170,10 +171,10 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
               <Modal.Title>{t("recovery.fresh.title")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Title>
                   <span className="inline-flex items-center gap-1">
-                    <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+                    <TriangleAlertIcon size="sm" />
                     {t("settings.backups.consequencesTitle")}
                   </span>
                 </Alert.Title>
@@ -187,10 +188,10 @@ export function RecoveryScreen({ backend, recovery }: { backend: Backend; recove
               </Alert.Root>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="outline" disabled={busy} onClick={() => setConfirmFresh(false)}>
+              <Button disabled={busy} onClick={() => setConfirmFresh(false)}>
                 {t("common.cancel")}
               </Button>
-              <Button tone="danger" disabled={busy} onClick={() => void act(() => backend.recoveryStartFresh())}>
+              <Button emphasis="high" intent="danger" disabled={busy} onClick={() => void act(() => backend.recoveryStartFresh())}>
                 {t("recovery.fresh.confirm")}
               </Button>
             </Modal.Footer>

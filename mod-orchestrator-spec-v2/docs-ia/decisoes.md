@@ -792,7 +792,7 @@ Status: vigente (confirmada pelo usuário em 2026-10-08)
 9. **Textos pt-BR**: "profile" virou "perfil" em todo o catálogo (glossário: `Profile` → Perfil); "Backend offline" → "Backend desconectado"; "Auto-sort" → "Ordenação automática". Termos mantidos em inglês por serem do domínio de modding: Deploy, Purge, Mod, Plugin, Load order, Staging, Master, Light, Flags.
 
 ## D095 — Adoção da dettmann-ui v2 (fundação)
-Status: vigente (executa D016)
+Status: emendada por D107 (itens 2 e 4: o app migrou para a v2)
 
 1. **v2 com ruptura**: sem camada de aliases para tokens, `data-tone` ou `variant`/`tone` do Button. A fundação (motor de tema por sementes, contrato `emphasis × intent`, movimento, orçamento 60/30/10, playground) vive em `dettmann-ui-vnext/`; decisões detalhadas em `dettmann-ui-vnext/docs/decisions.md` (D-011 em diante).
 2. **App congelado em `dettmann-ui-v1`** até o subprojeto 4 (migração do `frontend/`). Até lá, nenhuma tela usa a v2; as tabelas de substituição estão em `dettmann-ui-vnext/docs/migration.md`.
@@ -919,7 +919,7 @@ Status: vigente (executa D077 itens 1, 2, 4 e 5 e o `plano-de-publicacao.md` eta
 2. **Versão única**: tag `vX.Y.Z[-pre]` = `wails.json` › `info.productVersion` (sem a parte de prerelease, que o recurso de versão do Windows não tem) = seção `## [X.Y.Z...]` do `CHANGELOG.md`. `go run ./tools/release version <tag>` falha o build se divergirem.
 3. **Notas de versão**: `CHANGELOG.md` no formato Keep a Changelog, em inglês, escrito para o jogador. A seção da versão é o corpo da GitHub Release e, por isso, o "o que há de novo" do atualizador (D104).
 4. **Avisos de terceiros** sem ferramenta externa: `tools/release notices` lista os módulos Go linkados no executável do Windows (`go list -deps`) e os pacotes npm de produção do frontend, com o texto da licença, e **falha** com licença fora da lista compatível com GPL-3.0 (D076) ou não reconhecida.
-5. **CI**: o job de frontend passa a compilar a `dettmann-ui-v1`, que é a que o `frontend/` consome (D095); antes compilava a `dettmann-ui-vnext`.
+5. **CI**: o job de frontend passa a compilar a `dettmann-ui-v1`, que é a que o `frontend/` consome (D095); antes compilava a `dettmann-ui-vnext`. (Revertido por D107: CI e release voltam a compilar a `dettmann-ui-vnext`.)
 
 ## D106 — Itens "(verificar)" do adapter Skyrim SE na F15
 Status: proposta (registro de lacuna; aguarda confirmação do usuário sobre a correção)
@@ -927,3 +927,17 @@ Status: proposta (registro de lacuna; aguarda confirmação do usuário sobre a 
 Confirmados em fonte primária e atualizados no core/12: a pasta de dados da variante Epic é `Skyrim Special Edition EPIC` (libloadorder `src/game_settings.rs`; SKSE64 `skse_version.h`), e o Skyrim SE não usa `loadorder.txt` (libloadorder usa o método "asterisk", só `plugins.txt`). Continua pendente o registro da GOG Galaxy para o pacote Anniversary Edition (`1801825368`), que só uma instalação real responde.
 
 Lacuna encontrada: o adapter escolhe a pasta do `plugins.txt` pela loja em que a instalação foi descoberta. Uma instalação GOG ou Epic achada só pelo registro ou localizada manualmente usa a pasta da Steam, e o jogo não lê a load order escrita. libloadorder decide pelos arquivos da raiz (`Galaxy64.dll` ⇒ GOG, `EOSSDK-Win64-Shipping.dll` ⇒ Epic). Proposta: o adapter detectar a variante pelos mesmos arquivos quando a loja não for `gog` nem `epic`, guardando-a na instância. Não foi feito na F15 porque muda o contrato `LoadOrderFile` (hoje sem acesso a disco) e o dado da instância.
+
+## D107 — App migrado para a dettmann-ui v2 (subprojeto 4 da D095)
+Status: vigente (emenda D095 itens 2 e 4 e D105 item 5)
+
+1. **Dependência**: `frontend/package.json` aponta para `file:../dettmann-ui-vnext`. CI e `release.yml` compilam a `dettmann-ui-vnext`; o README também. A `dettmann-ui-v1/` fica só como referência, sem consumidor.
+2. **Substituições mecânicas** pelas tabelas de `dettmann-ui-vnext/docs/migration.md`: `variant`/`tone` → `emphasis`/`intent`; tokens neutros (`bg-page` → `bg-canvas`, `ring-ring` → `ring-focus`, `hover:bg-hover` → `hover:bg-state-hover`, `shadow-lg` → `shadow-overlay`); raios pelo tamanho em px da forma `balanced` (`rounded-xl` → `rounded-card`, `rounded-lg`/`rounded-md` → `rounded-control`, `rounded` → `rounded-chip`).
+3. **Ícones**: glifo com equivalente no catálogo vira o ícone animado de `dettmann-ui/icons` (inclui `RotateCcw`/`Undo2` → `UndoIcon`, `RefreshCw` → `RefreshIcon`, `UploadCloud` → `UploadIcon`); os demais passam por `<Icon icon={X} />`, nunca lucide solto. O tamanho vai pela prop `size` (o `cn` da v2 não resolve conflito de classes, então `h-4 w-4` não sobrepõe o tamanho padrão); ícone em `startIcon`/`endIcon` usa `size="sm"`. Tipos públicos `LucideIcon` viram `IconComponent`.
+4. **Estados contínuos**: `Loader2` com `animate-spin` vira `<Loader decorative>` quando o texto ao lado já anuncia o estado, ou `<Loader label>` quando é o único indicador (passo de operação em execução).
+5. **Redução de movimento**: o app só escreve `:root[data-reduce-motion]` (core/13); a regra CSS própria que zerava animações saiu do `app.css`, porque a lib transforma o movimento em fade curto a partir do mesmo atributo.
+6. **Testes**: o `Input.Select` deixou de ser `<select>` nativo; os testes escolhem a opção pelo rótulo com `chooseOption` (`frontend/src/test/select.ts`) e verificam o valor exibido com `toHaveTextContent`. `testTimeout` do Vitest subiu para 15 s, porque renderizar o app inteiro passa de 5 s com todos os arquivos em paralelo.
+7. **Dev**: `<BudgetInspector />` montado na raiz só no servidor de desenvolvimento (fora de testes e builds); `server.fs.allow` do Vite inclui `../dettmann-ui-vnext` para servir as fontes da lib.
+8. **Skills**: o `frontend/` passa a seguir `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (AGENTS.md, protocolo, consult-ai-docs e ui/03 atualizados); `theme-first`, `composition`, `component-authoring` e `ui-review` da v1 deixam de valer para o app.
+
+Fora de escopo (subprojeto 3 e polimento): redesenho das telas, micro-interações (`playKey`, `Presence`, `useFlip`) e ajuste do orçamento 60/30/10. Medição inicial no Dashboard sem jogo, tema escuro: low 80%, medium 20%, high 0% (meta 60/30/10 ± 8 p.p.).

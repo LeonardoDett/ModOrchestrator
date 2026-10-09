@@ -1,10 +1,10 @@
 # Componentes e padrões (dettmann-ui)
 
-Referências: D016, D022, D043; skills da lib em `dettmann-ui-v1/.cursor/skills/dettmann-ui/` (theme-first, composition, component-authoring, ui-review) (v2: ver D095; muda no subprojeto 4); `dettmann-ui-vnext/docs/component-matrix.md`.
+Referências: D016, D022, D043; skills da lib v2 em `.claude/skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`; D095, D107); `dettmann-ui-vnext/docs/component-matrix.md`.
 
 ## 1. Regra
 
-Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (component-authoring) com testes e documentação da lib, e o app só consome. Componentes com semântica de domínio (ex.: "linha de mod com prioridade") são **composições** no app (`frontend/src/features/<tela>/`), feitas só de peças da lib, sem estilos próprios além de layout (anti-pattern 17).
+Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (`dettmann-ui-author`) com testes e documentação da lib, e o app só consome. Componentes com semântica de domínio (ex.: "linha de mod com prioridade") são **composições** no app (`frontend/src/features/<tela>/`), feitas só de peças da lib, sem estilos próprios além de layout (anti-pattern 17).
 
 ## 2. Mapeamento de necessidades → dettmann-ui
 
@@ -80,4 +80,4 @@ Mostrar o suficiente para o usuário avançado sem transformar cada célula em l
 
 ## 7. Revisão
 
-Antes de concluir qualquer tela, aplicar a skill `ui-review` da lib e os critérios de aceite do documento da tela.
+Antes de concluir qualquer tela, aplicar a skill `dettmann-ui-improve` da lib (auditoria) e os critérios de aceite do documento da tela.

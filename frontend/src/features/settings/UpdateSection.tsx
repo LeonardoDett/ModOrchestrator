@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Download, RefreshCw } from "lucide-react";
-import { Alert, Badge, Button, Modal, Progress, Spinner, Stack, Typography } from "dettmann-ui";
+import { DownloadIcon, RefreshIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Modal, Progress, Loader, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, type UIError } from "../../bridge/errors";
 import { useUpdateStatus } from "../../bridge/queries";
@@ -31,13 +31,13 @@ export function UpdateSection() {
       <AppSettingRows keys={["app.updateCheck", "app.updateChannel"]} />
       {st ? (
         <SettingLine label={t("settings.updates.installed", { version: st.installed })} description={statusLine(i18n, st)}>
-          {st.checking ? <Spinner label={t("settings.updates.checking")} /> : null}
+          {st.checking ? <Loader label={t("settings.updates.checking")} /> : null}
           <Button
             size="sm"
-            variant="outline"
+           
             disabled={!st.enabled || st.checking || st.installing || st.launched}
             title={!st.enabled ? t("settings.updates.disabledHint") : undefined}
-            startIcon={<RefreshCw aria-hidden="true" className="h-3.5 w-3.5" />}
+            startIcon={<RefreshIcon size="sm" />}
             onClick={() => void run(() => backend.checkForUpdate())}
           >
             {t("settings.updates.check")}
@@ -47,10 +47,10 @@ export function UpdateSection() {
       {st?.offer ? (
         <SettingLine
           label={t("settings.updates.available", { version: st.offer.version })}
-          badge={<Badge tone="primary" size="sm">{t("settings.updates.new")}</Badge>}
+          badge={<Badge intent="brand" size="sm">{t("settings.updates.new")}</Badge>}
           description={st.offer.published ? t("settings.updates.published", { date: i18n.formatDateTime(st.offer.published) }) : undefined}
         >
-          <Button size="sm" startIcon={<Download aria-hidden="true" className="h-3.5 w-3.5" />} disabled={!st.enabled || st.launched} onClick={() => setOpen(true)}>
+          <Button emphasis="high" size="sm" startIcon={<DownloadIcon size="sm" />} disabled={!st.enabled || st.launched} onClick={() => setOpen(true)}>
             {t("settings.updates.review")}
           </Button>
         </SettingLine>
@@ -100,7 +100,7 @@ function UpdateDialog({ status, offer, onClose }: { status: UpdateStatus; offer:
             <Typography variant="body-sm" color="muted-fg">
               {t("settings.updates.dialogIntro", { installed: status.installed, size: offer.size > 0 ? formatBytes(offer.size) : "?" })}
             </Typography>
-            <section aria-label={t("settings.updates.notes")} className="max-h-[45vh] overflow-auto rounded-lg border border-border bg-sunken px-4 py-3">
+            <section aria-label={t("settings.updates.notes")} className="max-h-[45vh] overflow-auto rounded-control border border-border bg-sunken px-4 py-3">
               <Stack gap="md">
                 {offer.notes.map((n) => (
                   <Stack key={n.version} gap="xs">
@@ -112,7 +112,7 @@ function UpdateDialog({ status, offer, onClose }: { status: UpdateStatus; offer:
                 ))}
               </Stack>
             </section>
-            <Alert.Root variant="info">
+            <Alert.Root intent="info">
               <Alert.Description>{t("settings.updates.closeNotice")}</Alert.Description>
             </Alert.Root>
             {status.installing ? (
@@ -121,27 +121,27 @@ function UpdateDialog({ status, offer, onClose }: { status: UpdateStatus; offer:
                 {status.total > 0 ? (
                   <Progress.Root value={status.done} max={status.total} aria-label={t("settings.updates.downloading")} />
                 ) : (
-                  <Spinner label={t("settings.updates.downloading")} />
+                  <Loader label={t("settings.updates.downloading")} />
                 )}
               </Stack>
             ) : null}
             {status.launched ? (
-              <Alert.Root variant="success">
+              <Alert.Root intent="success">
                 <Alert.Description>{t("settings.updates.launched")}</Alert.Description>
               </Alert.Root>
             ) : null}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy} startIcon={<Download aria-hidden="true" className="h-4 w-4" />} onClick={() => void install()}>
+          <Button emphasis="high" disabled={busy} startIcon={<DownloadIcon size="sm" />} onClick={() => void install()}>
             {t("settings.updates.install")}
           </Button>
         </Modal.Footer>

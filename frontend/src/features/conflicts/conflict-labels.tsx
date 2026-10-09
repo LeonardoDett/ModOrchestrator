@@ -1,14 +1,15 @@
-import { ArrowDown, ArrowUp, ArrowUpDown, CircleDot, Equal, EyeOff } from "lucide-react";
+import { CircleDot, Equal } from "lucide-react";
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, EyeOffIcon } from "dettmann-ui/icons";
 import { Indicator } from "dettmann-ui";
 import type { ConflictDecision, ConflictIndicator, ConflictMod, ConflictResolution, FileLocation } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 
 /** Icons of the per-mod indicator (core/05 §5.2); never color alone (D043). */
 const INDICATOR_ICON = {
-  wins_all: ArrowUp,
-  loses_all: ArrowDown,
-  mixed: ArrowUpDown,
-  fully_overwritten: EyeOff,
+  wins_all: ArrowUpIcon,
+  loses_all: ArrowDownIcon,
+  mixed: ArrowUpDownIcon,
+  fully_overwritten: EyeOffIcon,
   redundant_only: Equal,
 } as const;
 
@@ -20,7 +21,7 @@ export function ConflictIndicatorCell({ value, onOpen }: { value: ConflictIndica
   return (
     <button
       type="button"
-      className="flex items-center gap-1.5 rounded px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring hover:bg-hover"
+      className="flex items-center gap-1.5 rounded-chip px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus hover:bg-state-hover"
       aria-label={t("conflicts.openEditor", { label })}
       title={label}
       onClick={(e) => {
@@ -30,10 +31,10 @@ export function ConflictIndicatorCell({ value, onOpen }: { value: ConflictIndica
     >
       <Indicator
         icon={INDICATOR_ICON[value.indicator]}
-        tone={value.indicator === "fully_overwritten" ? "warning" : value.indicator === "redundant_only" ? "subtle" : "neutral"}
+        intent={value.indicator === "fully_overwritten" ? "warning" : value.indicator === "redundant_only" ? "subtle" : "neutral"}
         label={label}
       />
-      {value.unreviewed > 0 ? <Indicator icon={CircleDot} tone="info" label={tp("conflicts.unreviewedPairs", value.unreviewed)} /> : null}
+      {value.unreviewed > 0 ? <Indicator icon={CircleDot} intent="info" label={tp("conflicts.unreviewedPairs", value.unreviewed)} /> : null}
     </button>
   );
 }

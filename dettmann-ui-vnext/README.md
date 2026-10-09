@@ -4,7 +4,7 @@ A long-lived React UI foundation built around **theme-first**, **composition-fir
 
 ## What is new in v2
 
-v2 is a breaking release (no aliases). The app keeps using `dettmann-ui-v1` until the migration subproject; see `docs/migration.md`.
+v2 is a breaking release (no aliases). The Mod Orchestrator `frontend/` consumes v2 since the migration subproject (app decision D107); see `docs/migration.md`.
 
 - **Themes from seeds.** One brand color plus personality knobs; a pure TypeScript engine (own OKLCH math, contrast solver) generates light and dark, at build time for presets and at runtime for custom themes.
 - **Emphasis x intent.** `emphasis` (low/medium/high = 60/30/10) says how loud, `intent` says what it means. The `secondary` family is gone.

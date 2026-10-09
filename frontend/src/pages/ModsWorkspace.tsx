@@ -1,25 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
-import { ChevronDown, Eraser, FolderOpen, FolderPlus, FolderTree, History, Info, MoreHorizontal, PackagePlus, Rocket, RotateCcw, Scale, Trash2 } from "lucide-react";
-import {
-  ActionBar,
-  Alert,
-  Button,
-  ButtonGroup,
-  ContextMenu,
-  DataTableColumnPicker,
-  EmptyState,
-  FeaturedIcon,
-  FileDropzone,
-  FilterBar,
-  Input,
-  Menu,
-  Toolbar,
-  Typography,
-  useToast,
-  type ContextMenuItem,
-  type DataTableRowMove,
-  type DataTableSort,
-} from "dettmann-ui";
+import { Eraser, FolderTree, Scale } from "lucide-react";
+import { ChevronDownIcon, FolderOpenIcon, FolderPlusIcon, HistoryIcon, InfoIcon, MoreHorizontalIcon, PackagePlusIcon, RocketIcon, TrashIcon, UndoIcon } from "dettmann-ui/icons";
+import { ActionBar, Alert, Button, ButtonGroup, ContextMenu, DataTableColumnPicker, EmptyState, FeaturedIcon, FileDropzone, FilterBar, Input, Menu, Toolbar, Typography, useToast, type ContextMenuItem, type DataTableRowMove, type DataTableSort, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useCategories, useConflictIndicators, useImportQueue, useModList, useModOrder, useRuleCycle } from "../bridge/queries";
 import type { ConflictIndicator, EntryRef, FileLocation, InstanceFolder, ModRow, QueueItem, Separator } from "../bridge/types";
@@ -281,7 +263,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       onBrowse={importFiles}
       showSelection={false}
       actions={
-        <Button type="button" variant="ghost" size="sm" startIcon={<FolderPlus aria-hidden="true" />} onClick={importFolder}>
+        <Button type="button" emphasis="low" size="sm" startIcon={<FolderPlusIcon size="sm" />} onClick={importFolder}>
           {t("mods.import.folder")}
         </Button>
       }
@@ -297,13 +279,13 @@ export function ModsWorkspace({ instance }: { instance: string }) {
           start={
             <>
               <ButtonGroup>
-                <Button startIcon={<PackagePlus aria-hidden="true" />} onClick={importFiles}>
+                <Button emphasis="high" startIcon={<PackagePlusIcon size="sm" />} onClick={importFiles}>
                   {t("mods.import.file")}
                 </Button>
                 <Menu.Root>
                   <Menu.Trigger>
-                    <Button aria-label={t("mods.import.more")} size="icon">
-                      <ChevronDown aria-hidden="true" className="h-4 w-4" />
+                    <Button emphasis="high" aria-label={t("mods.import.more")} size="icon">
+                      <ChevronDownIcon size="sm" />
                     </Button>
                   </Menu.Trigger>
                   <Menu.Content>
@@ -312,15 +294,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                 </Menu.Root>
               </ButtonGroup>
               <DeployButtons />
-              <Button variant="outline" startIcon={<Scale aria-hidden="true" />} onClick={() => setRulesFor({ mod: null })}>
+              <Button startIcon={<Icon icon={Scale} size="sm" />} onClick={() => setRulesFor({ mod: null })}>
                 {t("mods.toolbar.rules")}
               </Button>
-              <Button variant="outline" startIcon={<FolderTree aria-hidden="true" />} onClick={() => setCategoriesOpen(true)}>
+              <Button startIcon={<Icon icon={FolderTree} size="sm" />} onClick={() => setCategoriesOpen(true)}>
                 {t("mods.toolbar.categories")}
               </Button>
               <Button
-                variant="outline"
-                startIcon={<History aria-hidden="true" />}
+               
+                startIcon={<HistoryIcon size="sm" />}
                 onClick={() =>
                   navigate({ view: "diagnostics", tab: "history", mod: inspectedRow ? { id: inspectedRow.id, name: inspectedRow.name } : undefined })
                 }
@@ -333,7 +315,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
             <>
               <Menu.Root>
                 <Menu.Trigger>
-                  <Button variant="outline" startIcon={<FolderOpen aria-hidden="true" />}>
+                  <Button startIcon={<FolderOpenIcon size="sm" />}>
                     {t("mods.toolbar.open")}
                   </Button>
                 </Menu.Trigger>
@@ -348,8 +330,8 @@ export function ModsWorkspace({ instance }: { instance: string }) {
               </Menu.Root>
               <Menu.Root placement="bottom-end">
                 <Menu.Trigger>
-                  <Button variant="ghost" size="icon" aria-label={t("mods.toolbar.more")}>
-                    <MoreHorizontal aria-hidden="true" className="h-4 w-4" />
+                  <Button emphasis="low" size="icon" aria-label={t("mods.toolbar.more")}>
+                    <MoreHorizontalIcon size="sm" />
                   </Button>
                 </Menu.Trigger>
                 <Menu.Content>
@@ -367,12 +349,12 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         <ProblemBand modules={["rules", "library", "game"]} exclude={["rule_cycle"]} />
 
         {cycle.status === "ready" && cycle.data ? (
-          <Alert.Root variant="danger">
+          <Alert.Root intent="danger">
             <Alert.Title>{t("conflicts.cycle.bannerTitle")}</Alert.Title>
             <Alert.Description>
               {t("conflicts.cycle.banner", { cycle: [...cycle.data.mods, cycle.data.mods[0]!].map((m) => m.name).join(" → ") })}
             </Alert.Description>
-            <Button size="sm" variant="outline" onClick={() => setCycleOpen(true)}>
+            <Button size="sm" onClick={() => setCycleOpen(true)}>
               {t("conflicts.cycle.open")}
             </Button>
           </Alert.Root>
@@ -383,9 +365,9 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         {mods.status === "loading" ? <LoadingState /> : null}
 
         {mods.status === "ready" && rows.length === 0 ? (
-          <EmptyState.Root className="rounded-xl border border-border bg-surface">
+          <EmptyState.Root className="rounded-card border border-border bg-surface">
             <EmptyState.Icon>
-              <FeaturedIcon icon={PackagePlus} color="neutral" />
+              <FeaturedIcon icon={PackagePlusIcon} intent="neutral" />
             </EmptyState.Icon>
             <EmptyState.Title>{t("mods.emptyTitle")}</EmptyState.Title>
             <EmptyState.Description>{t("mods.emptyDescription")}</EmptyState.Description>
@@ -397,7 +379,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
           <>
             <FilterBar
               data-page-search
-              className="rounded-xl border"
+              className="rounded-card border"
               query={query}
               onQueryChange={setQuery}
               queryPlaceholder={t("mods.filter.search")}
@@ -441,11 +423,11 @@ export function ModsWorkspace({ instance }: { instance: string }) {
 
             {!reorderable && modOrder ? (
               <div role="note" className="flex items-center gap-2 px-1 text-sm text-fg-muted">
-                <Info aria-hidden="true" className="h-4 w-4 shrink-0" />
+                <InfoIcon size="sm" className="shrink-0" />
                 <span>{t(byPriority ? "mods.reorder.filtered" : "mods.reorder.notByPriority")}</span>
                 <Button
                   size="sm"
-                  variant="ghost"
+                  emphasis="low"
                   onClick={() => {
                     setSort(PRIORITY_SORT);
                     setGroup("none");
@@ -461,17 +443,17 @@ export function ModsWorkspace({ instance }: { instance: string }) {
             ) : null}
 
             {selected.size >= 2 ? (
-              <ActionBar role="toolbar" aria-label={t("mods.multi.label")} className="flex-wrap rounded-xl border sm:justify-start">
+              <ActionBar role="toolbar" aria-label={t("mods.multi.label")} className="flex-wrap rounded-card border sm:justify-start">
                 <Typography variant="body-sm" color="fg" className="mr-2">
                   {tp("mods.multi.selected", selected.size)}
                 </Typography>
-                <Button size="sm" variant="outline" onClick={() => void run(() => backend.setModsEnabled(instance, installedIds(selectedRows), true))}>
+                <Button size="sm" onClick={() => void run(() => backend.setModsEnabled(instance, installedIds(selectedRows), true))}>
                   {t("mods.action.enable")}
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => void run(() => backend.setModsEnabled(instance, installedIds(selectedRows), false))}>
+                <Button size="sm" onClick={() => void run(() => backend.setModsEnabled(instance, installedIds(selectedRows), false))}>
                   {t("mods.action.disable")}
                 </Button>
-                <Button size="sm" variant="outline" disabled={selectedEntries.length === 0} onClick={() => setMovingTo(selectedEntries)}>
+                <Button size="sm" disabled={selectedEntries.length === 0} onClick={() => setMovingTo(selectedEntries)}>
                   {t("mods.action.moveTo")}
                 </Button>
                 <Input.Root value="" onChange={(v: string) => void run(() => backend.setModsCategory(instance, ids, v === "\u0000none" ? "" : v))}>
@@ -481,13 +463,13 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                     options={[{ value: "\u0000none", label: t("mods.noCategory") }, ...(categories.status === "ready" ? categoryOptions(categories.data) : [])]}
                   />
                 </Input.Root>
-                <Button size="sm" variant="outline" startIcon={<RotateCcw aria-hidden="true" />} onClick={() => void run(() => backend.reinstallMods(instance, installedIds(selectedRows)))}>
+                <Button size="sm" startIcon={<UndoIcon size="sm" />} onClick={() => void run(() => backend.reinstallMods(instance, installedIds(selectedRows)))}>
                   {t("mods.action.reinstall")}
                 </Button>
-                <Button size="sm" variant="outline" tone="danger" startIcon={<Trash2 aria-hidden="true" />} disabled={ids.length === 0} onClick={() => setRemoving(ids)}>
+                <Button size="sm" intent="danger" startIcon={<TrashIcon size="sm" />} disabled={ids.length === 0} onClick={() => setRemoving(ids)}>
                   {t("mods.action.remove")}
                 </Button>
-                <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>
+                <Button size="sm" emphasis="low" onClick={() => setSelected(new Set())}>
                   {t("mods.multi.clear")}
                 </Button>
               </ActionBar>
@@ -582,19 +564,19 @@ function DeployButtons() {
           : "";
   return (
     <ButtonGroup>
-      <Button variant="outline" startIcon={<Rocket aria-hidden="true" />} disabled={deployReason !== ""} title={deployReason || undefined} onClick={() => void deploy()}>
+      <Button startIcon={<RocketIcon size="sm" />} disabled={deployReason !== ""} title={deployReason || undefined} onClick={() => void deploy()}>
         {t("deploy.action.deploy")}
       </Button>
       <Menu.Root>
         <Menu.Trigger>
-          <Button variant="outline" size="icon" aria-label={t("deploy.action.more")}>
-            <ChevronDown aria-hidden="true" className="h-4 w-4" />
+          <Button size="icon" aria-label={t("deploy.action.more")}>
+            <ChevronDownIcon size="sm" />
           </Button>
         </Menu.Trigger>
         <Menu.Content>
           <Menu.Item onSelect={openPreview}>{t("deploy.action.preview")}</Menu.Item>
           <Menu.Item disabled={busy || status.entries === 0} onSelect={openPurge}>
-            <Eraser aria-hidden="true" className="h-4 w-4" />
+            <Icon icon={Eraser} size="sm" />
             {t("deploy.action.purge")}
           </Menu.Item>
         </Menu.Content>

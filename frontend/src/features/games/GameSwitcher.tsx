@@ -1,5 +1,6 @@
-import { Check, ChevronDown, Gamepad2 } from "lucide-react";
-import { Button, Menu, Typography } from "dettmann-ui";
+import { Gamepad2 } from "lucide-react";
+import { CheckIcon, ChevronDownIcon } from "dettmann-ui/icons";
+import { Button, Menu, Typography, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useWorkspace } from "../../bridge/queries";
 import { useI18n } from "../../i18n/i18n";
@@ -20,7 +21,7 @@ export function GameSwitcher() {
   if (ws.status !== "ready" || !ws.data.active) {
     return (
       <>
-        <Gamepad2 aria-hidden="true" className="h-4 w-4 text-fg-subtle" />
+        <Icon icon={Gamepad2} size="sm" className="text-fg-subtle" />
         <Typography variant="body-sm" color="muted-fg">
           {t("titlebar.noGame")}
         </Typography>
@@ -31,7 +32,7 @@ export function GameSwitcher() {
   return (
     <Menu.Root>
       <Menu.Trigger>
-        <Button size="sm" variant="ghost" startIcon={<Gamepad2 aria-hidden="true" className="h-4 w-4" />} endIcon={<ChevronDown aria-hidden="true" className="h-4 w-4" />} aria-label={t("titlebar.switchGame", { name: active.name })}>
+        <Button size="sm" emphasis="low" startIcon={<Icon icon={Gamepad2} size="sm" />} endIcon={<ChevronDownIcon size="sm" />} aria-label={t("titlebar.switchGame", { name: active.name })}>
           {active.name}
         </Button>
       </Menu.Trigger>
@@ -39,7 +40,7 @@ export function GameSwitcher() {
         {instances.map((inst) => (
           <Menu.Item key={inst.id} label={inst.name} onSelect={() => void run(() => backend.setActiveInstance(inst.id))}>
             <span className="flex items-center gap-2">
-              <Check aria-hidden="true" className={`h-4 w-4 ${inst.id === active.id ? "" : "invisible"}`} />
+              <CheckIcon size="sm" className={`${inst.id === active.id ? "" : "invisible"}`} />
               <span>{inst.name}</span>
               {inst.gameName && inst.gameName !== inst.name ? <span className="text-xs text-fg-muted">{inst.gameName}</span> : null}
             </span>

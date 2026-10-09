@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Modal, Spinner } from "dettmann-ui";
+import { Modal, Loader } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { toUIError, type UIError } from "../../bridge/errors";
 import type { ExternalChanges, ExternalDecision } from "../../bridge/types";
@@ -41,7 +41,7 @@ export function ReviewChangesDialog({ instance, onClose }: { instance: string; o
           <Modal.Header>
             <Modal.Title>{t("external.title")}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{loadError ? <ErrorAlert title="external.loadError" error={loadError} /> : <Spinner label={t("common.loading")} />}</Modal.Body>
+          <Modal.Body>{loadError ? <ErrorAlert title="external.loadError" error={loadError} /> : <Loader label={t("common.loading")} />}</Modal.Body>
         </Modal.Content>
       </Modal.Root>
     );

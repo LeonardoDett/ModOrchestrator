@@ -12,7 +12,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "dettmann-ui": "file:../dettmann-ui-v1",
+    "dettmann-ui": "file:../dettmann-ui-vnext",
     "lucide-react": "^0.468.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Bell, CheckCheck, Trash2, X } from "lucide-react";
-import { Badge, Button, Inline, Popover, Stack, Typography } from "dettmann-ui";
+import { BellIcon, CheckCheckIcon, TrashIcon, XIcon } from "dettmann-ui/icons";
+import { Badge, Button, Inline, Popover, Stack, Typography, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage } from "../../bridge/errors";
 import { useNotifications } from "../../bridge/queries";
@@ -96,13 +96,13 @@ export function NotificationBell({ onOpenOperations }: NotificationBellProps) {
     <Popover.Root placement="bottom-end">
       <Popover.Trigger>
         <Button
-          variant="ghost"
+          emphasis="low"
           size="sm"
           aria-label={unread > 0 ? `${t("topbar.notifications")}: ${tp("topbar.notificationsUnread", unread)}` : t("topbar.notifications")}
-          startIcon={<Bell aria-hidden="true" className="h-4 w-4" />}
+          startIcon={<BellIcon size="sm" />}
         >
           {unread > 0 ? (
-            <Badge tone="primary" size="sm" aria-hidden="true">
+            <Badge intent="brand" size="sm" aria-hidden="true">
               {unread}
             </Badge>
           ) : null}
@@ -113,11 +113,11 @@ export function NotificationBell({ onOpenOperations }: NotificationBellProps) {
           <Typography variant="heading-6" className="flex-1">
             {t("notif.title")}
           </Typography>
-          <Button size="sm" variant="ghost" disabled={unread === 0} startIcon={<CheckCheck aria-hidden="true" className="h-4 w-4" />} onClick={() => void run(() => backend.markNotificationsRead([]))}>
+          <Button size="sm" emphasis="low" disabled={unread === 0} startIcon={<CheckCheckIcon size="sm" />} onClick={() => void run(() => backend.markNotificationsRead([]))}>
             {t("notif.markAllRead")}
           </Button>
-          <Button size="icon-sm" variant="ghost" aria-label={t("notif.dismissAll")} disabled={items.length === 0} onClick={() => void run(() => backend.dismissNotifications([]))}>
-            <Trash2 aria-hidden="true" className="h-4 w-4" />
+          <Button size="icon-sm" emphasis="low" aria-label={t("notif.dismissAll")} disabled={items.length === 0} onClick={() => void run(() => backend.dismissNotifications([]))}>
+            <TrashIcon size="sm" />
           </Button>
         </div>
         {items.length === 0 ? (
@@ -129,10 +129,10 @@ export function NotificationBell({ onOpenOperations }: NotificationBellProps) {
             {items.map((n) => {
               const text = notificationText(i18n, n);
               const look = lookOf(n);
-              const Icon = look?.icon ?? Bell;
+              const StateIcon = look?.icon ?? BellIcon;
               return (
                 <li key={n.id} className="flex items-start gap-3 px-4 py-3">
-                  <Icon aria-hidden="true" className={`mt-0.5 h-4 w-4 shrink-0 ${look?.className ?? "text-fg-muted"}`} />
+                  <Icon icon={StateIcon} size="sm" className={`mt-0.5 shrink-0 ${look?.className ?? "text-fg-muted"}`} />
                   <Stack gap="xs" className="min-w-0 flex-1">
                     <Typography variant="body-sm" className={n.state === "unread" ? "font-semibold" : undefined}>
                       {text.title}
@@ -147,22 +147,22 @@ export function NotificationBell({ onOpenOperations }: NotificationBellProps) {
                         <time dateTime={n.updatedAt}>{i18n.formatDateTime(n.updatedAt)}</time>
                       </Typography>
                       {n.state === "unread" ? (
-                        <Badge tone="primary" size="sm">
+                        <Badge intent="brand" size="sm">
                           {t("notif.unread")}
                         </Badge>
                       ) : null}
                       {n.params.auto === "true" ? (
-                        <Badge variant="muted" size="sm">
+                        <Badge emphasis="low" size="sm">
                           {t("notif.auto")}
                         </Badge>
                       ) : null}
                     </Inline>
                   </Stack>
-                  <Button size="sm" variant="outline" onClick={() => open(n)}>
+                  <Button size="sm" onClick={() => open(n)}>
                     {t("notif.open")}
                   </Button>
-                  <Button size="icon-sm" variant="ghost" aria-label={t("notif.dismiss")} onClick={() => void run(() => backend.dismissNotifications([n.id]))}>
-                    <X aria-hidden="true" className="h-4 w-4" />
+                  <Button size="icon-sm" emphasis="low" aria-label={t("notif.dismiss")} onClick={() => void run(() => backend.dismissNotifications([n.id]))}>
+                    <XIcon size="sm" />
                   </Button>
                 </li>
               );

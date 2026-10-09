@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { CheckCircle2, Copy, GitCompare, History, MoreHorizontal, Plus, RotateCcw, UserRound } from "lucide-react";
-import { Badge, Button, Card, EmptyState, FeaturedIcon, Menu, Stack, Table, Toolbar, Typography, useToast } from "dettmann-ui";
+import { UserRound } from "lucide-react";
+import { CircleCheckIcon, CopyIcon, GitCompareIcon, HistoryIcon, MoreHorizontalIcon, PlusIcon, UndoIcon } from "dettmann-ui/icons";
+import { Badge, Button, Card, EmptyState, FeaturedIcon, Menu, Stack, Table, Toolbar, Typography, useToast, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useProfiles, useSnapshots } from "../bridge/queries";
 import type { ProfileSummary } from "../bridge/types";
@@ -60,20 +61,20 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
         <Toolbar
           start={
             <>
-              <Button startIcon={<Plus aria-hidden="true" />} onClick={() => setCreating("")}>
+              <Button emphasis="high" startIcon={<PlusIcon size="sm" />} onClick={() => setCreating("")}>
                 {t("profiles.toolbar.new")}
               </Button>
               <Button
-                variant="outline"
-                startIcon={<GitCompare aria-hidden="true" />}
+               
+                startIcon={<GitCompareIcon size="sm" />}
                 disabled={list.length < 2}
                 onClick={() => setCompare({ a: active?.id ?? "", b: otherThan(active?.id ?? "") })}
               >
                 {t("profiles.toolbar.compare")}
               </Button>
               <Button
-                variant="outline"
-                startIcon={<History aria-hidden="true" />}
+               
+                startIcon={<HistoryIcon size="sm" />}
                 disabled={!selected}
                 onClick={() => selected && void run(() => backend.createSnapshot(selected.id), { success: "profiles.snapshot.created" })}
               >
@@ -108,9 +109,9 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
               >
                 <Card.Header>
                   <div className="flex items-center gap-2">
-                    {p.active ? <CheckCircle2 aria-hidden="true" className="h-4 w-4 shrink-0 text-brand-text" /> : <UserRound aria-hidden="true" className="h-4 w-4 shrink-0 text-fg-muted" />}
+                    {p.active ? <CircleCheckIcon size="sm" className="shrink-0 text-brand-text" /> : <Icon icon={UserRound} size="sm" className="shrink-0 text-fg-muted" />}
                     <Card.Title className="min-w-0 flex-1 truncate">{p.name}</Card.Title>
-                    {p.active ? <Badge tone="primary">{t("profiles.active")}</Badge> : null}
+                    {p.active ? <Badge intent="brand">{t("profiles.active")}</Badge> : null}
                   </div>
                 </Card.Header>
                 <Card.Body>
@@ -129,17 +130,17 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
                   </Stack>
                 </Card.Body>
                 <Card.Footer className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                  <Button size="sm" disabled={p.active} onClick={() => void run(() => backend.activateProfile(p.id), { success: "profiles.activated" })}>
+                  <Button emphasis="high" size="sm" disabled={p.active} onClick={() => void run(() => backend.activateProfile(p.id), { success: "profiles.activated" })}>
                     {t("profiles.action.activate")}
                   </Button>
-                  <Button size="sm" variant="outline" startIcon={<Copy aria-hidden="true" />} onClick={() => setCreating(p.id)}>
+                  <Button size="sm" startIcon={<CopyIcon size="sm" />} onClick={() => setCreating(p.id)}>
                     {t("profiles.action.clone")}
                   </Button>
                   <div className="flex-1" />
                   <Menu.Root placement="bottom-end">
                     <Menu.Trigger>
-                      <Button size="icon-sm" variant="ghost" aria-label={t("profiles.more", { name: p.name })}>
-                        <MoreHorizontal aria-hidden="true" className="h-4 w-4" />
+                      <Button size="icon-sm" emphasis="low" aria-label={t("profiles.more", { name: p.name })}>
+                        <MoreHorizontalIcon size="sm" />
                       </Button>
                     </Menu.Trigger>
                     <Menu.Content>
@@ -171,9 +172,9 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
               {t("profiles.snapshots.title", { name: selected.name })}
             </Typography>
             {snapshots.status === "ready" && snapshots.data.length === 0 ? (
-              <EmptyState.Root className="rounded-xl border border-border bg-surface">
+              <EmptyState.Root className="rounded-card border border-border bg-surface">
                 <EmptyState.Icon>
-                  <FeaturedIcon icon={History} color="neutral" />
+                  <FeaturedIcon icon={HistoryIcon} intent="neutral" />
                 </EmptyState.Icon>
                 <EmptyState.Title>{t("profiles.snapshots.emptyTitle")}</EmptyState.Title>
                 <EmptyState.Description>{t("profiles.snapshots.emptyDescription")}</EmptyState.Description>
@@ -199,7 +200,7 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
                       <Table.Cell>{t(`profiles.snapshot.reason.${s.reason}` as MessageKey)}</Table.Cell>
                       <Table.Cell>{tp("profiles.snapshots.enabled", s.enabled)}</Table.Cell>
                       <Table.Cell className="text-right">
-                        <Button size="sm" variant="outline" startIcon={<RotateCcw aria-hidden="true" />} onClick={() => void restore(s.id)}>
+                        <Button size="sm" startIcon={<UndoIcon size="sm" />} onClick={() => void restore(s.id)}>
                           {t("profiles.snapshots.restore")}
                         </Button>
                       </Table.Cell>

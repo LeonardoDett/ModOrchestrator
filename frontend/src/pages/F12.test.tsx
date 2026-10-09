@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, Dashlet, DeployStatus, Diagnostic, InstanceOverview, LaunchCheck, ManagedGame, Setting, UpdateStatus } from "../bridge/types";
+import { chooseOption } from "../test/select";
 
 const GAME: ManagedGame = {
   id: "i1", gameId: "skyrimse", gameName: "Skyrim Special Edition", custom: false, name: "Skyrim", adapter: "skyrimse",
@@ -108,7 +109,7 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     const game = await screen.findByRole("combobox", { name: "Game" });
     const toggle = await screen.findByRole("switch", { name: "Deploy mods when enabled" });
     expect(toggle).toHaveAttribute("aria-checked", "true");
-    await user.selectOptions(game, "i2");
+    await chooseOption(user, game, "Skyrim 2");
     expect(await screen.findByRole("switch", { name: "Deploy mods when enabled" })).toHaveAttribute("aria-checked", "false");
     await user.click(screen.getByRole("switch", { name: "Deploy mods when enabled" }));
     expect(calls).toContain("setInstance:i2:automation.deployOnChange=true");

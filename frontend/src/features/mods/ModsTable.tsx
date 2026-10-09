@@ -1,21 +1,12 @@
 import { useMemo } from "react";
-import { ChevronDown, ChevronRight, GitBranch, Palette, StickyNote } from "lucide-react";
-import {
-  DataTable,
-  Indicator,
-  StatusToggle,
-  Tag,
-  TONES,
-  type DataTableColumn,
-  type DataTableRowMove,
-  type DataTableSort,
-  type Tone,
-} from "dettmann-ui";
+import { GitBranch, Palette, StickyNote } from "lucide-react";
+import { ChevronDownIcon, ChevronRightIcon } from "dettmann-ui/icons";
+import { DataTable, Indicator, StatusToggle, Tag, type DataTableColumn, type DataTableRowMove, type DataTableSort, Icon } from "dettmann-ui";
 import type { ConflictIndicator, ModRow, Separator } from "../../bridge/types";
 import { ConflictIndicatorCell } from "../conflicts/conflict-labels";
 import type { Density } from "../../app/settings-context";
 import { useI18n } from "../../i18n/i18n";
-import { categoryText, contentLabel, formatSize, toggleLabels, toggleState } from "./mod-labels";
+import { categoryText, contentLabel, formatSize, highlightIntent, toggleLabels, toggleState } from "./mod-labels";
 import type { ListRow } from "./mod-order";
 
 /** Columns shown by default (ui/telas/mods.md §5.1, without the F9 ones). */
@@ -140,15 +131,15 @@ export function useModColumns(
                 type="button"
                 aria-expanded={!row.separator.collapsed}
                 aria-label={t(row.separator.collapsed ? "mods.separator.expand" : "mods.separator.collapse", { name: row.separator.label })}
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-fg-muted hover:bg-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-chip text-fg-muted hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
                 onClick={(e) => {
                   e.stopPropagation();
                   onToggleSeparator(row.separator);
                 }}
               >
-                {row.separator.collapsed ? <ChevronRight aria-hidden="true" className="h-4 w-4" /> : <ChevronDown aria-hidden="true" className="h-4 w-4" />}
+                {row.separator.collapsed ? <ChevronRightIcon size="sm" /> : <ChevronDownIcon size="sm" />}
               </button>
-              {row.separator.color ? <Indicator icon={Palette} tone={asTone(row.separator.color)} label={t("mods.separator.colored")} /> : null}
+              {row.separator.color ? <Indicator icon={Palette} intent={highlightIntent(row.separator.color)} label={t("mods.separator.colored")} /> : null}
               <span className="truncate">{row.separator.label}</span>
               <span className="shrink-0 text-xs font-normal text-fg-muted">
                 {tp("mods.separator.count", row.separator.total, { enabled: row.separator.enabled })}
@@ -156,10 +147,10 @@ export function useModColumns(
             </span>
           ) : (
             <span className={`flex min-w-0 items-center gap-2 ${row.mod.state !== "installed" ? "italic text-fg-muted" : row.mod.enabled ? "" : "text-fg-muted"}`}>
-              {row.mod.highlight ? <Indicator icon={Palette} tone={asTone(row.mod.highlight)} label={t("mods.highlighted")} /> : null}
+              {row.mod.highlight ? <Indicator icon={Palette} intent={highlightIntent(row.mod.highlight)} label={t("mods.highlighted")} /> : null}
               <span className="truncate">{row.mod.name}</span>
               {row.mod.variantLabel ? <Tag size="sm">{row.mod.variantLabel}</Tag> : null}
-              {row.mod.hasNotes ? <Indicator icon={StickyNote} tone="subtle" label={t("mods.hasNotes")} /> : null}
+              {row.mod.hasNotes ? <Indicator icon={StickyNote} intent="subtle" label={t("mods.hasNotes")} /> : null}
             </span>
           ),
       },
@@ -215,7 +206,7 @@ export function useModColumns(
         cell: mod((row) =>
           row.variantLabel ? (
             <span className="flex items-center gap-1">
-              <GitBranch aria-hidden="true" className="h-3.5 w-3.5 text-fg-muted" />
+              <Icon icon={GitBranch} size="sm" className="text-fg-muted" />
               {row.variantLabel}
             </span>
           ) : (
@@ -251,7 +242,7 @@ export function ModsTable(props: ModsTableProps) {
       onRowKeyDown={props.onRowKeyDown}
       getGroup={props.groupByCategory ? (row) => (row.kind === "mod" ? row.mod.categoryPath.join(" › ") || t("mods.noCategory") : "") : undefined}
       rowClassName={(row) =>
-        row.kind === "separator" ? "bg-structure" : row.mod.highlight ? "border-l-2 border-l-tone" : undefined
+        row.kind === "separator" ? "bg-structure" : row.mod.highlight ? "border-l-2 border-l-emphasis-border" : undefined
       }
       reorderable={props.reorderable ? (row) => row.kind === "separator" || row.priority != null : false}
       onRowsMove={props.onRowsMove}
@@ -259,9 +250,4 @@ export function ModsTable(props: ModsTableProps) {
       labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading"), dragHandle: t("mods.dragHandle"), moving: t("mods.moving") }}
     />
   );
-}
-
-/** Highlight colours are tones of the theme palette (ui/04 §2). */
-export function asTone(value?: string): Tone | undefined {
-  return (TONES as readonly string[]).includes(value ?? "") ? (value as Tone) : undefined;
 }

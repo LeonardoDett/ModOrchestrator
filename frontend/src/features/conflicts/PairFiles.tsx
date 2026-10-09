@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Equal, RotateCcw } from "lucide-react";
+import { Equal } from "lucide-react";
+import { UndoIcon } from "dettmann-ui/icons";
 import { Button, Indicator, Input, Tree, Typography, type TreeNode } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import type { ConflictFile, FileLocation } from "../../bridge/types";
@@ -100,7 +101,7 @@ export function PairFiles({ instance, files, focus }: PairFilesProps) {
     const redundant = file.resolution === "redundant";
     return (
       <>
-        {redundant ? <Indicator icon={Equal} tone="subtle" label={t("conflicts.resolution.redundant")} /> : null}
+        {redundant ? <Indicator icon={Equal} intent="subtle" label={t("conflicts.resolution.redundant")} /> : null}
         <span className={`w-28 truncate text-xs ${redundant ? "text-fg-subtle" : "text-fg-muted"}`}>{text.resolution(file.resolution)}</span>
         <Input.Root value={file.winner} onChange={(v: string) => v !== file.winner && void choose(v, [file])}>
           <Input.Select
@@ -110,13 +111,13 @@ export function PairFiles({ instance, files, focus }: PairFilesProps) {
         </Input.Root>
         <Button
           size="icon-sm"
-          variant="ghost"
+          emphasis="low"
           aria-label={t("conflicts.resetOne", { path: locationText(file.location) })}
           title={t("conflicts.reset")}
           disabled={!file.override}
           onClick={() => void reset([file])}
         >
-          <RotateCcw aria-hidden="true" className="h-4 w-4" />
+          <UndoIcon size="sm" />
         </Button>
       </>
     );
@@ -137,7 +138,7 @@ export function PairFiles({ instance, files, focus }: PairFilesProps) {
                 options={[...common].reverse().map((p) => ({ value: p.id, label: modLabel(t, p) }))}
               />
             </Input.Root>
-            <Button
+            <Button emphasis="high"
               size="sm"
               disabled={!common.some((p) => p.id === batchWinner)}
               onClick={async () => {
@@ -147,13 +148,13 @@ export function PairFiles({ instance, files, focus }: PairFilesProps) {
             >
               {t("conflicts.batch.apply")}
             </Button>
-            <Button size="sm" variant="outline" disabled={!chosen.some((f) => f.override)} onClick={() => void reset(chosen.filter((f) => f.override))}>
+            <Button size="sm" disabled={!chosen.some((f) => f.override)} onClick={() => void reset(chosen.filter((f) => f.override))}>
               {t("conflicts.reset")}
             </Button>
           </>
         ) : null}
       </div>
-      <div className="min-h-0 flex-1 overflow-auto rounded-lg border border-border">
+      <div className="min-h-0 flex-1 overflow-auto rounded-control border border-border">
         <Tree
           aria-label={t("conflicts.filesLabel")}
           nodes={nodes}
@@ -186,7 +187,7 @@ function Compare({ file, language }: { file: ConflictFile; language: string }) {
       ? "conflicts.compare.different"
       : "conflicts.compare.unknown";
   return (
-    <section aria-label={t("conflicts.compare.title", { path: locationText(file.location) })} className="rounded-lg border border-border bg-structure p-3 text-sm">
+    <section aria-label={t("conflicts.compare.title", { path: locationText(file.location) })} className="rounded-control border border-border bg-structure p-3 text-sm">
       <Typography variant="body-sm" color="fg" className="mb-2 font-medium">
         {t("conflicts.compare.title", { path: locationText(file.location) })} · {t(verdict)}
       </Typography>

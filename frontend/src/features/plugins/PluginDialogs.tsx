@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
-import { Alert, Button, Checkbox, DiffViewer, Input, Modal, Spinner, Stack, Table, Tag, Typography, type DiffLine } from "dettmann-ui";
+import { PlusIcon, TrashIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, DiffViewer, Input, Modal, Loader, Stack, Table, Tag, Typography, type DiffLine } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { usePluginRules } from "../../bridge/queries";
 import type { LoadOrderDiff, PluginGroup, SortPreview } from "../../bridge/types";
@@ -51,12 +51,12 @@ export function PluginRulesDialog({ instance, open, onClose }: { instance: strin
                 <Input.Label>{t("plugins.rulesDialog.after")}</Input.Label>
                 <Input.Select placeholder={t("plugins.rulesDialog.pick")} options={options.filter((o) => o.value !== plugin)} />
               </Input.Root>
-              <Button startIcon={<Plus aria-hidden="true" />} disabled={!plugin || !after} onClick={() => void add()}>
+              <Button emphasis="high" startIcon={<PlusIcon size="sm" />} disabled={!plugin || !after} onClick={() => void add()}>
                 {t("plugins.rule.add")}
               </Button>
             </div>
             <DialogError error={error} />
-            {rules.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+            {rules.status === "loading" ? <Loader label={t("common.loading")} /> : null}
             {rules.status === "error" ? <ErrorAlert title="plugins.loadError" error={rules.error} onRetry={rules.reload} /> : null}
             {data && data.rules.length === 0 ? (
               <Typography variant="body-sm" color="muted-fg">
@@ -89,12 +89,12 @@ export function PluginRulesDialog({ instance, open, onClose }: { instance: strin
                       <Table.Cell className="text-right">
                         <Button
                           size="icon-sm"
-                          variant="ghost"
+                          emphasis="low"
                           aria-label={t("plugins.rule.remove")}
                           disabled={r.source !== "user"}
                           onClick={() => void run(() => backend.removePluginRule(instance, r.id))}
                         >
-                          <Trash2 aria-hidden="true" className="h-4 w-4" />
+                          <TrashIcon size="sm" />
                         </Button>
                       </Table.Cell>
                     </Table.Row>
@@ -105,7 +105,7 @@ export function PluginRulesDialog({ instance, open, onClose }: { instance: strin
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
         </Modal.Footer>
@@ -155,17 +155,17 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
                   <Input.Field onKeyDown={(e) => e.key === "Enter" && name.trim() && void create()} />
                 </Input.Box>
               </Input.Root>
-              <Button startIcon={<Plus aria-hidden="true" />} disabled={!name.trim()} onClick={() => void create()}>
+              <Button emphasis="high" startIcon={<PlusIcon size="sm" />} disabled={!name.trim()} onClick={() => void create()}>
                 {t("plugins.groupsDialog.create")}
               </Button>
             </div>
             {/* A cycle is refused by the backend and shown here, inline (ui/telas/plugins.md §6). */}
             <DialogError error={error} />
-            {rules.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+            {rules.status === "loading" ? <Loader label={t("common.loading")} /> : null}
             {rules.status === "error" ? <ErrorAlert title="plugins.loadError" error={rules.error} onRetry={rules.reload} /> : null}
             <ul className="flex flex-col gap-3">
               {groups.map((g) => (
-                <li key={g.name} className="rounded-lg border border-border bg-surface p-3">
+                <li key={g.name} className="rounded-control border border-border bg-surface p-3">
                   <div className="flex items-center gap-2">
                     <Typography variant="body-sm" color="fg" className="flex-1 font-medium">
                       {label(g.name)}
@@ -174,8 +174,8 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
                       {t("plugins.groupsDialog.members", { count: g.plugins.length })}
                     </Typography>
                     {!g.default ? (
-                      <Button size="icon-sm" variant="ghost" aria-label={t("plugins.groupsDialog.delete", { name: g.name })} onClick={() => void run(() => backend.deletePluginGroup(instance, g.name))}>
-                        <Trash2 aria-hidden="true" className="h-4 w-4" />
+                      <Button size="icon-sm" emphasis="low" aria-label={t("plugins.groupsDialog.delete", { name: g.name })} onClick={() => void run(() => backend.deletePluginGroup(instance, g.name))}>
+                        <TrashIcon size="sm" />
                       </Button>
                     ) : null}
                   </div>
@@ -200,7 +200,7 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
         </Modal.Footer>
@@ -248,10 +248,10 @@ export function SortPreviewDialog({ preview, onConfirm, onClose }: { preview: So
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button onClick={onConfirm}>{t("loadOrder.preview.apply")}</Button>
+          <Button emphasis="high" onClick={onConfirm}>{t("loadOrder.preview.apply")}</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>
@@ -297,7 +297,7 @@ export function CompareDialog({ instance, open, onClose }: { instance: string; o
         </Modal.Header>
         <Modal.Body className="min-h-0 overflow-auto">
           {error ? <ErrorAlert title="plugins.loadError" error={error} /> : null}
-          {!diff && !error ? <Spinner label={t("common.loading")} /> : null}
+          {!diff && !error ? <Loader label={t("common.loading")} /> : null}
           {diff ? (
             <DiffViewer
               lines={diffLines(diff)}
@@ -308,7 +308,7 @@ export function CompareDialog({ instance, open, onClose }: { instance: string; o
           ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.close")}
           </Button>
         </Modal.Footer>
@@ -344,7 +344,7 @@ export function ExternalLoadOrderDialog({ instance, open, onClose }: { instance:
         </Modal.Header>
         <Modal.Body className="min-h-0 overflow-auto">
           <Stack gap="md">
-            <Alert.Root variant="warning">
+            <Alert.Root intent="warning">
               <Alert.Description>{t("loadOrder.review.description")}</Alert.Description>
             </Alert.Root>
             <Input.Root value={choice} onChange={(v: string) => setChoice(v as typeof choice)}>
@@ -363,10 +363,10 @@ export function ExternalLoadOrderDialog({ instance, open, onClose }: { instance:
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={onClose}>
+          <Button onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button onClick={() => void apply()}>{t("loadOrder.review.apply")}</Button>
+          <Button emphasis="high" onClick={() => void apply()}>{t("loadOrder.review.apply")}</Button>
         </Modal.Footer>
       </Modal.Content>
     </Modal.Root>
@@ -412,17 +412,17 @@ export function ImportOrderDialog({ instance, open, onClose }: { instance: strin
             </Typography>
             <DialogError error={error} />
             {moved !== null ? (
-              <Alert.Root variant="success">
+              <Alert.Root intent="success">
                 <Alert.Description>{tp("loadOrder.import.done", moved)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={close}>
+          <Button onClick={close}>
             {t("common.close")}
           </Button>
-          <Button disabled={!text.trim()} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={!text.trim()} onClick={() => void submit()}>
             {t("loadOrder.import.apply")}
           </Button>
         </Modal.Footer>

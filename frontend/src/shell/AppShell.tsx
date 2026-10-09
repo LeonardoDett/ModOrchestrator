@@ -100,7 +100,7 @@ function Shell({ children }: { children: ReactNode }) {
       icon: entry.icon,
       badge:
         entry.id === "diagnostics" && errorCount > 0 ? (
-          <Badge tone="danger" size="sm" aria-label={tp("topbar.problemsCount", errorCount)}>
+          <Badge intent="danger" size="sm" aria-label={tp("topbar.problemsCount", errorCount)}>
             {errorCount}
           </Badge>
         ) : undefined,
@@ -115,10 +115,10 @@ function Shell({ children }: { children: ReactNode }) {
   });
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-page">
+    <div className="flex h-screen flex-col overflow-hidden bg-canvas">
       <a
         href={`#${MAIN_ID}`}
-        className="sr-only z-modal rounded-md bg-raised px-3 py-2 text-sm text-fg focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:ring-2 focus:ring-ring"
+        className="sr-only z-modal rounded-control bg-raised px-3 py-2 text-sm text-fg focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:ring-2 focus:ring-focus"
         onClick={(event) => {
           event.preventDefault();
           document.getElementById(MAIN_ID)?.focus();
@@ -131,7 +131,7 @@ function Shell({ children }: { children: ReactNode }) {
         <Sidebar.Root
           sections={sections}
           currentId={route.view}
-          emphasis="subtle"
+          variant="subtle"
           collapsed={collapsed}
           onCollapsedChange={(next) => {
             setCollapsed(next);

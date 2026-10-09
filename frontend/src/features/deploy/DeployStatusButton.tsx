@@ -1,5 +1,6 @@
-import { Eye, FileSearch, RefreshCw, Rocket, Wrench } from "lucide-react";
-import { Badge, Button, Popover, Stack, Typography } from "dettmann-ui";
+import { Wrench } from "lucide-react";
+import { EyeIcon, FileSearchIcon, RefreshIcon, RocketIcon } from "dettmann-ui/icons";
+import { Badge, Button, Popover, Stack, Typography, Icon, Loader } from "dettmann-ui";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useDeploy } from "./DeployContext";
 import { statusLook } from "./deploy-labels";
@@ -15,7 +16,7 @@ export function DeployStatusButton() {
   const { status, deploy, reconcile, openPreview, openFailures, openReview } = useDeploy();
   if (!status) return null;
   const look = statusLook(status);
-  const Icon = look.icon;
+  const StateIcon = look.icon;
   const switched = status.appliedProfile && status.appliedProfile.id !== status.activeProfile.id && status.entries > 0;
   const reasonKey = `deploy.reason.${status.reason}`;
   const busy = Boolean(status.busy);
@@ -24,9 +25,9 @@ export function DeployStatusButton() {
   return (
     <Popover.Root placement="bottom-start">
       <Popover.Trigger>
-        <Button variant="ghost" size="sm" aria-label={`${t("deploy.statusLabel")}: ${t(look.label)}`}>
-          <Badge tone={look.tone} variant={look.tone ? undefined : "muted"} className="gap-1">
-            <Icon aria-hidden="true" className={look.spin ? "h-3 w-3 animate-spin" : "h-3 w-3"} />
+        <Button emphasis="low" size="sm" aria-label={`${t("deploy.statusLabel")}: ${t(look.label)}`}>
+          <Badge intent={look.intent} emphasis={look.intent ? undefined : "low"} className="gap-1">
+            {StateIcon ? <Icon icon={StateIcon} size="xs" /> : <Loader decorative size="xs" />}
             {t(look.label)}
           </Badge>
           {switched ? (
@@ -61,27 +62,27 @@ export function DeployStatusButton() {
           </dl>
           <div className="flex flex-wrap gap-2 pt-1">
             {status.kind === "unknown" && status.reason === "journal_pending" ? (
-              <Button size="sm" startIcon={<Wrench aria-hidden="true" />} disabled={busy} onClick={() => void reconcile()}>
+              <Button emphasis="high" size="sm" startIcon={<Icon icon={Wrench} size="sm" />} disabled={busy} onClick={() => void reconcile()}>
                 {t("deploy.action.reconcile")}
               </Button>
             ) : null}
             {canDeploy ? (
-              <Button size="sm" startIcon={<Rocket aria-hidden="true" />} onClick={() => void deploy()}>
+              <Button emphasis="high" size="sm" startIcon={<RocketIcon size="sm" />} onClick={() => void deploy()}>
                 {t("deploy.action.deploy")}
               </Button>
             ) : null}
             {status.externalChanges > 0 || status.newFiles > 0 ? (
-              <Button size="sm" variant="outline" startIcon={<FileSearch aria-hidden="true" />} disabled={busy} onClick={openReview}>
+              <Button size="sm" startIcon={<FileSearchIcon size="sm" />} disabled={busy} onClick={openReview}>
                 {t("deploy.action.review")}
               </Button>
             ) : null}
             {status.kind === "failed" && status.failures.length > 0 ? (
-              <Button size="sm" variant="outline" startIcon={<RefreshCw aria-hidden="true" />} onClick={openFailures}>
+              <Button size="sm" startIcon={<RefreshIcon size="sm" />} onClick={openFailures}>
                 {t("deploy.action.failures")}
               </Button>
             ) : null}
             {status.kind !== "unknown" ? (
-              <Button size="sm" variant="outline" startIcon={<Eye aria-hidden="true" />} disabled={busy} onClick={openPreview}>
+              <Button size="sm" startIcon={<EyeIcon size="sm" />} disabled={busy} onClick={openPreview}>
                 {t("deploy.action.preview")}
               </Button>
             ) : null}

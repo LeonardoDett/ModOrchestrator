@@ -1,44 +1,45 @@
-import { AlertTriangle, Ban, CheckCircle2, Circle, CircleDashed, Clock, Loader2, XCircle, type LucideIcon } from "lucide-react";
-import { Badge, type Tone } from "dettmann-ui";
+import { Circle, CircleDashed } from "lucide-react";
+import { BanIcon, CircleCheckIcon, CircleXIcon, ClockIcon, TriangleAlertIcon } from "dettmann-ui/icons";
+import { Badge, Icon, Loader, type Intent, type IconComponent } from "dettmann-ui";
 import type { OperationStatus, StepStatus } from "../../bridge/types";
 import { useI18n, type Translator } from "../../i18n/i18n";
 
 /**
  * Status visuals of ui/03 §5: always icon + label, never color alone (D043).
  */
-const STATUS: Record<OperationStatus, { tone?: Tone; muted?: boolean; icon: LucideIcon; spin?: boolean }> = {
-  pending: { tone: "info", icon: Clock },
-  running: { tone: "primary", icon: Loader2, spin: true },
-  succeeded: { tone: "success", icon: CheckCircle2 },
-  failed: { tone: "danger", icon: XCircle },
-  cancelled: { muted: true, icon: Ban },
-  interrupted: { tone: "warning", icon: AlertTriangle },
+const STATUS: Record<OperationStatus, { intent?: Intent; muted?: boolean; icon?: IconComponent }> = {
+  pending: { intent: "info", icon: ClockIcon },
+  running: { intent: "brand" },
+  succeeded: { intent: "success", icon: CircleCheckIcon },
+  failed: { intent: "danger", icon: CircleXIcon },
+  cancelled: { muted: true, icon: BanIcon },
+  interrupted: { intent: "warning", icon: TriangleAlertIcon },
 };
 
 export function OperationStatusBadge({ status }: { status: OperationStatus }) {
   const { t } = useI18n();
   const visual = STATUS[status];
-  const Icon = visual.icon;
+  const StateIcon = visual.icon;
   return (
-    <Badge tone={visual.tone} variant={visual.muted ? "muted" : undefined} className="gap-1">
-      <Icon aria-hidden="true" className={visual.spin ? "h-3 w-3 animate-spin" : "h-3 w-3"} />
+    <Badge intent={visual.intent} emphasis={visual.muted ? "low" : undefined} className="gap-1">
+      {StateIcon ? <Icon icon={StateIcon} size="xs" /> : <Loader decorative size="xs" />}
       {t(`operation.status.${status}`)}
     </Badge>
   );
 }
 
-const STEP_ICON: Record<StepStatus, { icon: LucideIcon; className: string }> = {
+const STEP_ICON: Record<Exclude<StepStatus, "running">, { icon: IconComponent; className: string }> = {
   pending: { icon: Circle, className: "text-fg-subtle" },
-  running: { icon: Loader2, className: "animate-spin text-brand-text" },
-  completed: { icon: CheckCircle2, className: "text-success-text" },
-  failed: { icon: XCircle, className: "text-danger-text" },
+  completed: { icon: CircleCheckIcon, className: "text-success-text" },
+  failed: { icon: CircleXIcon, className: "text-danger-text" },
   skipped: { icon: CircleDashed, className: "text-fg-subtle" },
 };
 
 export function StepStatusIcon({ status }: { status: StepStatus }) {
   const { t } = useI18n();
-  const { icon: Icon, className } = STEP_ICON[status];
-  return <Icon role="img" aria-label={t(`operation.stepStatus.${status}`)} className={`h-4 w-4 shrink-0 ${className}`} />;
+  if (status === "running") return <Loader size="sm" intent="brand" label={t("operation.stepStatus.running")} className="shrink-0" />;
+  const { icon: StepIcon, className } = STEP_ICON[status];
+  return <Icon icon={StepIcon} size="sm" label={t(`operation.stepStatus.${status}`)} className={`shrink-0 ${className}`} />;
 }
 
 /**

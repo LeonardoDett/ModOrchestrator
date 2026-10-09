@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Lock, LockOpen, Package, Plus, Trash2 } from "lucide-react";
-import { Button, Inline, Input, Inspector, Spinner, Stack, Tag, Typography } from "dettmann-ui";
+import { LockIcon, LockOpenIcon, PackageIcon, PlusIcon, TrashIcon } from "dettmann-ui/icons";
+import { Button, Inline, Input, Inspector, Loader, Stack, Tag, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { usePluginDetails, usePluginRules } from "../../bridge/queries";
 import type { PluginDetails } from "../../bridge/types";
@@ -34,11 +34,11 @@ export function PluginInspector({ instance, name, onClose }: PluginInspectorProp
       aria-label={name}
       title={name}
       description={details.status === "ready" && details.data ? originLabel(i18n, details.data.origin) : undefined}
-      className="flex w-[24rem] shrink-0 flex-col overflow-auto rounded-xl border"
+      className="flex w-[24rem] shrink-0 flex-col overflow-auto rounded-card border"
       onClose={onClose}
       closeLabel={t("common.close")}
     >
-      {details.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+      {details.status === "loading" ? <Loader label={t("common.loading")} /> : null}
       {details.status === "error" ? <ErrorAlert title="plugins.loadError" error={details.error} onRetry={details.reload} /> : null}
       {details.status === "ready" && details.data ? <Body instance={instance} p={details.data} /> : null}
     </Inspector>
@@ -75,11 +75,11 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
         <Section title="plugins.inspector.problems">
           <ul className="flex flex-col gap-2">
             {p.diagnostics.map((d) => (
-              <li key={d.key} className="rounded-lg border border-border bg-surface p-2 text-sm">
+              <li key={d.key} className="rounded-control border border-border bg-surface p-2 text-sm">
                 <span className="text-fg">{diagnosticTitle(i18n, d)}</span>
                 <Inline gap="xs" className="mt-1 flex-wrap">
                   {d.actions.map((a, i) => (
-                    <Button key={`${a.id}:${i}`} size="sm" variant="outline" onClick={() => void act(d, i)}>
+                    <Button key={`${a.id}:${i}`} size="sm" onClick={() => void act(d, i)}>
                       {actionLabel(i18n, a)}
                     </Button>
                   ))}
@@ -118,7 +118,7 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
           <>
             <dt className="text-fg-muted">{t("plugins.column.mod")}</dt>
             <dd>
-              <Button size="sm" variant="ghost" startIcon={<Package aria-hidden="true" />} onClick={() => navigate({ view: "mods", focusMod: p.mod })}>
+              <Button size="sm" emphasis="low" startIcon={<PackageIcon size="sm" />} onClick={() => navigate({ view: "mods", focusMod: p.mod })}>
                 {p.modName}
               </Button>
             </dd>
@@ -149,17 +149,17 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
                 <Tag size="sm">{t(m.present ? (m.active ? "plugins.master.active" : "plugins.master.inactive") : "plugins.master.missing")}</Tag>
                 {m.present && !m.before ? <Tag size="sm">{t("plugins.master.after")}</Tag> : null}
                 {m.present && !m.active ? (
-                  <Button size="sm" variant="outline" onClick={() => void run(() => backend.setPluginsEnabled(instance, [m.name], true))}>
+                  <Button size="sm" onClick={() => void run(() => backend.setPluginsEnabled(instance, [m.name], true))}>
                     {t("plugins.action.activate")}
                   </Button>
                 ) : null}
                 {!m.present && m.disabled && m.mod ? (
-                  <Button size="sm" variant="outline" onClick={() => void run(() => backend.setModsEnabled(instance, [m.mod], true))}>
+                  <Button size="sm" onClick={() => void run(() => backend.setModsEnabled(instance, [m.mod], true))}>
                     {t("plugins.action.enableMod", { mod: m.modName })}
                   </Button>
                 ) : null}
                 {m.mod ? (
-                  <Button size="sm" variant="ghost" onClick={() => navigate({ view: "mods", focusMod: m.mod })}>
+                  <Button size="sm" emphasis="low" onClick={() => navigate({ view: "mods", focusMod: m.mod })}>
                     {t("plugins.action.showMod")}
                   </Button>
                 ) : null}
@@ -193,12 +193,12 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
               {r.orphan ? <Tag size="sm">{t("plugins.rule.orphan")}</Tag> : null}
               <Button
                 size="icon-sm"
-                variant="ghost"
+                emphasis="low"
                 aria-label={t("plugins.rule.remove")}
                 disabled={r.source !== "user"}
                 onClick={() => void run(() => backend.removePluginRule(instance, r.id))}
               >
-                <Trash2 aria-hidden="true" className="h-4 w-4" />
+                <TrashIcon size="sm" />
               </Button>
             </li>
           ))}
@@ -213,8 +213,8 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
           </Input.Root>
           <Button
             size="sm"
-            variant="outline"
-            startIcon={<Plus aria-hidden="true" />}
+           
+            startIcon={<PlusIcon size="sm" />}
             disabled={!after}
             onClick={() =>
               void run(() => backend.createPluginRule(instance, p.name, after)).then((r) => {
@@ -237,9 +237,9 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
         <div>
           <Button
             size="sm"
-            variant="outline"
+           
             disabled={p.implicit}
-            startIcon={p.locked ? <LockOpen aria-hidden="true" /> : <Lock aria-hidden="true" />}
+            startIcon={p.locked ? <LockOpenIcon size="sm" /> : <LockIcon size="sm" />}
             onClick={() => void run(() => backend.setIndexLock(instance, [p.name], !p.locked))}
           >
             {t(p.implicit ? "plugins.implicitFixed" : p.locked ? "plugins.action.unlock" : "plugins.action.lock")}

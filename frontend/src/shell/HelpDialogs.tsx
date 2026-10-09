@@ -29,7 +29,7 @@ export function ShortcutsDialog({ open, onOpenChange }: DialogProps) {
           </dl>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button onClick={() => onOpenChange(false)}>
             {t("common.close")}
           </Button>
         </Modal.Footer>
@@ -75,7 +75,7 @@ export function AboutDialog({ open, onOpenChange }: DialogProps) {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button onClick={() => onOpenChange(false)}>
             {t("common.close")}
           </Button>
         </Modal.Footer>

@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
-import { Ellipsis, Info, type LucideIcon } from "lucide-react";
-import { Button, Card, Menu, Popover, Typography } from "dettmann-ui";
+import { InfoIcon, MoreHorizontalIcon } from "dettmann-ui/icons";
+import { Button, Card, Menu, Popover, Typography, Icon, type IconComponent } from "dettmann-ui";
 import { useI18n } from "../../i18n/i18n";
 
 export interface TileAction {
   id: string;
   label: string;
-  icon?: LucideIcon;
+  icon?: IconComponent;
   disabled?: boolean;
   onSelect: () => void;
 }
@@ -18,7 +18,7 @@ interface GameTileProps {
   /** Short facts under the title (store, version). */
   meta: string[];
   badges?: ReactNode;
-  primary?: { label: string; onClick: () => void; variant?: "primary" | "outline" };
+  primary?: { label: string; onClick: () => void; emphasis?: "high" | "medium" };
   menu: TileAction[];
   /** Content of the details popover (GameInfoPopover in Vortex). */
   details?: ReactNode;
@@ -35,15 +35,15 @@ export function GameTile({ layout, title, subtitle, meta, badges, primary, menu,
   const actions = (
     <div className="flex shrink-0 items-center gap-1">
       {primary ? (
-        <Button size="sm" variant={primary.variant ?? "primary"} onClick={primary.onClick}>
+        <Button size="sm" emphasis={primary.emphasis ?? "high"} onClick={primary.onClick}>
           {primary.label}
         </Button>
       ) : null}
       {details ? (
         <Popover.Root placement="bottom-end">
           <Popover.Trigger>
-            <Button size="icon-sm" variant="ghost" aria-label={t("games.details", { name: title })}>
-              <Info aria-hidden="true" className="h-4 w-4" />
+            <Button size="icon-sm" emphasis="low" aria-label={t("games.details", { name: title })}>
+              <InfoIcon size="sm" />
             </Button>
           </Popover.Trigger>
           <Popover.Content className="w-[26rem] max-w-[90vw]">{details}</Popover.Content>
@@ -52,15 +52,15 @@ export function GameTile({ layout, title, subtitle, meta, badges, primary, menu,
       {menu.length > 0 ? (
         <Menu.Root placement="bottom-end">
           <Menu.Trigger>
-            <Button size="icon-sm" variant="ghost" aria-label={t("games.moreActions", { name: title })}>
-              <Ellipsis aria-hidden="true" className="h-4 w-4" />
+            <Button size="icon-sm" emphasis="low" aria-label={t("games.moreActions", { name: title })}>
+              <MoreHorizontalIcon size="sm" />
             </Button>
           </Menu.Trigger>
           <Menu.Content>
             {menu.map((action) => (
               <Menu.Item key={action.id} disabled={action.disabled} onSelect={action.onSelect}>
                 <span className="flex items-center gap-2">
-                  {action.icon ? <action.icon aria-hidden="true" className="h-4 w-4" /> : null}
+                  {action.icon ? <Icon icon={action.icon} size="sm" /> : null}
                   {action.label}
                 </span>
               </Menu.Item>

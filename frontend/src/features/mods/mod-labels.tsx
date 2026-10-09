@@ -1,4 +1,4 @@
-import type { StatusToggleState } from "dettmann-ui";
+import type { Intent, StatusToggleState } from "dettmann-ui";
 import type { Category, ModRow } from "../../bridge/types";
 import type { Translator } from "../../i18n/i18n";
 
@@ -82,4 +82,25 @@ export function categoryOptions(categories: readonly Category[]): { value: strin
 export function categoryText(row: ModRow, lastOnly: boolean): string {
   if (row.categoryPath.length === 0) return "";
   return lastOnly ? row.categoryPath[row.categoryPath.length - 1]! : row.categoryPath.join(" › ");
+}
+
+/**
+ * Highlight colours of mods and separators are intents of the theme
+ * palette (ui/04 §2). Values saved before the dettmann-ui v2 migration use
+ * the v1 tone names; they are read as the intent that replaced them
+ * (primary → brand, secondary → neutral) and saved with the new name the
+ * next time the user edits them.
+ */
+export const HIGHLIGHTS = ["brand", "neutral", "accent", "info", "success", "warning", "danger"] as const satisfies readonly Intent[];
+
+const LEGACY_HIGHLIGHT: Record<string, Intent> = { primary: "brand", secondary: "neutral" };
+
+export function highlightIntent(value?: string): Intent | undefined {
+  if (!value) return undefined;
+  if (value in LEGACY_HIGHLIGHT) return LEGACY_HIGHLIGHT[value];
+  return (HIGHLIGHTS as readonly string[]).includes(value) ? (value as Intent) : undefined;
+}
+
+export function highlightOptions(i18n: Translator): { value: string; label: string }[] {
+  return [{ value: "", label: i18n.t("mods.highlight.none") }, ...HIGHLIGHTS.map((h) => ({ value: h, label: i18n.t(`mods.highlight.${h}`) }))];
 }

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { CheckCircle2, FolderOpen, Gamepad2, History, PackagePlus, ScanSearch } from "lucide-react";
-import { Alert, Badge, Button, Card, EmptyState, Stack, Typography, useToast } from "dettmann-ui";
+import { Gamepad2 } from "lucide-react";
+import { CircleCheckIcon, FolderOpenIcon, HistoryIcon, PackagePlusIcon, ScanSearchIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Card, EmptyState, Stack, Typography, useToast, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useInstanceOverview, useWorkspace } from "../bridge/queries";
 import type { AttentionGroup, InstanceOverview } from "../bridge/types";
@@ -32,7 +33,7 @@ export function OverviewPage() {
   if (ws.status === "unavailable") {
     return (
       <PageBody>
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       </PageBody>
@@ -46,7 +47,7 @@ export function OverviewPage() {
 function NoActiveGame() {
   const { t } = useI18n();
   return (
-    <EmptyState.Root className="rounded-xl border border-border bg-surface">
+    <EmptyState.Root className="rounded-card border border-border bg-surface">
       <EmptyState.Title>{t("overview.noGameTitle")}</EmptyState.Title>
       <EmptyState.Description>{t("overview.noGameDescription")}</EmptyState.Description>
     </EmptyState.Root>
@@ -70,7 +71,7 @@ function OverviewBody({ id }: { id: string }) {
     <PageBody>
       <Stack gap="lg">
         <div className="flex flex-wrap items-center gap-3">
-          <Gamepad2 aria-hidden="true" className="h-8 w-8 text-brand-text" />
+          <Icon icon={Gamepad2} size="xl" className="text-brand-text" />
           <Stack gap="xs" className="min-w-0 flex-1">
             <Typography variant="heading-4" color="fg">
               {g.name}
@@ -83,7 +84,7 @@ function OverviewBody({ id }: { id: string }) {
         </div>
 
         {g.rootMissing ? (
-          <Alert.Root variant="danger">
+          <Alert.Root intent="danger">
             <Alert.Description>{t("overview.rootMissing")}</Alert.Description>
           </Alert.Root>
         ) : null}
@@ -129,7 +130,7 @@ function AttentionCard({ overview }: { overview: InstanceOverview }) {
     <OverviewCard
       title={t("dashboard.attention")}
       actions={
-        <Button size="sm" variant="ghost" onClick={() => navigate({ view: "diagnostics", tab: "problems" })}>
+        <Button size="sm" emphasis="low" onClick={() => navigate({ view: "diagnostics", tab: "problems" })}>
           {t("diag.seeAll")}
         </Button>
       }
@@ -137,11 +138,11 @@ function AttentionCard({ overview }: { overview: InstanceOverview }) {
       <Stack gap="sm">
         {groups.length === 0 ? (
           <div className="flex items-center gap-2">
-            <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-success-text" />
+            <CircleCheckIcon size="sm" className="text-success-text" />
             <Typography variant="body-sm">{t("overview.nothingNeeded")}</Typography>
           </div>
         ) : (
-          <ul className="divide-y divide-border rounded-lg border border-border">
+          <ul className="divide-y divide-border rounded-control border border-border">
             {groups.map((gr) => (
               <AttentionLine key={gr.code} group={gr} onAct={(i) => void act(gr.first, i)} onOpen={() => navigate({ view: "diagnostics", tab: "problems", diagnostic: gr.count > 1 ? gr.code : gr.first.key })} />
             ))}
@@ -160,17 +161,17 @@ function AttentionCard({ overview }: { overview: InstanceOverview }) {
 function AttentionLine({ group, onAct, onOpen }: { group: AttentionGroup; onAct: (index: number) => void; onOpen: () => void }) {
   const i18n = useI18n();
   const look = SEVERITY_LOOK[shownSeverity(group.first)];
-  const Icon = look.icon;
+  const GlyphIcon = look.icon;
   const action = group.first.actions[0];
   return (
     <li className="flex flex-wrap items-center gap-3 px-3 py-2">
-      <Icon aria-hidden="true" className={`h-4 w-4 shrink-0 ${look.className}`} />
-      <Button variant="link" size="sm" className="min-w-0 flex-1 justify-start text-left text-sm font-normal text-fg" onClick={onOpen}>
+      <Icon icon={GlyphIcon} size="sm" className={`shrink-0 ${look.className}`} />
+      <Button emphasis="low" size="sm" className="min-w-0 flex-1 justify-start text-left text-sm font-normal text-fg" onClick={onOpen}>
         {diagnosticTitle(i18n, group.first)}
       </Button>
-      {group.count > 1 ? <Badge variant="muted">{i18n.t("overview.more", { count: group.count })}</Badge> : null}
+      {group.count > 1 ? <Badge emphasis="low">{i18n.t("overview.more", { count: group.count })}</Badge> : null}
       {action ? (
-        <Button size="sm" variant="outline" onClick={() => onAct(0)}>
+        <Button size="sm" onClick={() => onAct(0)}>
           {actionLabel(i18n, action)}
         </Button>
       ) : null}
@@ -189,7 +190,7 @@ function Figure({ label, value, to }: { label: MessageKey; value: string | null;
         {value === null ? (
           <span className="text-fg-muted">{t("overview.unavailable")}</span>
         ) : (
-          <Button variant="link" size="sm" className="justify-start text-left text-sm font-normal text-fg" onClick={() => navigate(to)}>
+          <Button emphasis="low" size="sm" className="justify-start text-left text-sm font-normal text-fg" onClick={() => navigate(to)}>
             {value}
           </Button>
         )}
@@ -238,16 +239,16 @@ function ShortcutsCard({ instance }: { instance: string }) {
   return (
     <OverviewCard title={t("overview.shortcuts")}>
       <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="outline" startIcon={<PackagePlus aria-hidden="true" className="h-4 w-4" />} onClick={() => void run(() => backend.pickImportFiles(instance, t("mods.import.pickFiles")))}>
+        <Button size="sm" startIcon={<PackagePlusIcon size="sm" />} onClick={() => void run(() => backend.pickImportFiles(instance, t("mods.import.pickFiles")))}>
           {t("overview.importMod")}
         </Button>
-        <Button size="sm" variant="outline" startIcon={<FolderOpen aria-hidden="true" className="h-4 w-4" />} onClick={() => void run(() => backend.openInstanceFolder(instance, "game"))}>
+        <Button size="sm" startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openInstanceFolder(instance, "game"))}>
           {t("overview.openGameFolder")}
         </Button>
-        <Button size="sm" variant="outline" startIcon={<FolderOpen aria-hidden="true" className="h-4 w-4" />} onClick={() => void run(() => backend.openInstanceFolder(instance, "staging"))}>
+        <Button size="sm" startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openInstanceFolder(instance, "staging"))}>
           {t("overview.openStaging")}
         </Button>
-        <Button size="sm" variant="outline" startIcon={<ScanSearch aria-hidden="true" className="h-4 w-4" />} onClick={() => void verify()}>
+        <Button size="sm" startIcon={<ScanSearchIcon size="sm" />} onClick={() => void verify()}>
           {t("deploy.action.verify")}
         </Button>
       </div>
@@ -263,7 +264,7 @@ function ActivityCard({ overview }: { overview: InstanceOverview }) {
     <OverviewCard
       title={t("overview.activity", { count: overview.recent.length })}
       actions={
-        <Button size="sm" variant="ghost" startIcon={<History aria-hidden="true" className="h-4 w-4" />} onClick={() => navigate({ view: "diagnostics", tab: "history" })}>
+        <Button size="sm" emphasis="low" startIcon={<HistoryIcon size="sm" />} onClick={() => navigate({ view: "diagnostics", tab: "history" })}>
           {t("dashboard.openHistory")}
         </Button>
       }

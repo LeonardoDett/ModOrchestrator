@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Activity, Copy, FolderOpen, Gamepad2, RefreshCw, Search } from "lucide-react";
+import { Activity, Gamepad2 } from "lucide-react";
+import { CopyIcon, FolderOpenIcon, RefreshIcon, SearchIcon } from "dettmann-ui/icons";
 import {
   Alert,
   Button,
@@ -81,7 +82,7 @@ function OperationsPanel() {
       return <LoadingState />;
     case "unavailable":
       return (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       );
@@ -100,7 +101,7 @@ function OperationsPanel() {
               sticky={false}
               title={operationKindLabel(i18n, op.kind)}
               description={op.id}
-              className="w-96 shrink-0 overflow-auto rounded-xl border"
+              className="w-96 shrink-0 overflow-auto rounded-card border"
               onClose={() => setSelected(null)}
               closeLabel={t("common.close")}
             >
@@ -182,7 +183,7 @@ function LogPanel({ operation }: { operation?: string }) {
       <div className="min-w-[14rem] flex-1" data-page-search>
         <Input.Root value={text} onChange={(value: string) => setText(value)} fullWidth>
           <Input.Box padding="sm">
-            <Search aria-hidden="true" className="h-4 w-4 text-fg-muted" />
+            <SearchIcon size="sm" className="text-fg-muted" />
             <Input.Field aria-label={t("log.search")} placeholder={t("log.search")} />
           </Input.Box>
         </Input.Root>
@@ -194,19 +195,19 @@ function LogPanel({ operation }: { operation?: string }) {
         </Tag>
       ) : null}
       <div className="flex-1" />
-      <Button size="sm" variant="ghost" startIcon={<RefreshCw aria-hidden="true" className="h-4 w-4" />} onClick={query.reload} disabled={!backend.connected}>
+      <Button size="sm" emphasis="low" startIcon={<RefreshIcon size="sm" />} onClick={query.reload} disabled={!backend.connected}>
         {t("common.refresh")}
       </Button>
       <Button
         size="sm"
-        variant="ghost"
-        startIcon={<Copy aria-hidden="true" className="h-4 w-4" />}
+        emphasis="low"
+        startIcon={<CopyIcon size="sm" />}
         disabled={entries.length === 0}
         onClick={() => copy(entries.map(formatEntry).join("\n"))}
       >
         {t("log.copy")}
       </Button>
-      <Button size="sm" variant="outline" startIcon={<FolderOpen aria-hidden="true" className="h-4 w-4" />} onClick={openFolder} disabled={!backend.connected}>
+      <Button size="sm" startIcon={<FolderOpenIcon size="sm" />} onClick={openFolder} disabled={!backend.connected}>
         {t("log.openFolder")}
       </Button>
     </Inline>
@@ -215,7 +216,7 @@ function LogPanel({ operation }: { operation?: string }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
       {query.status === "unavailable" ? (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       ) : null}

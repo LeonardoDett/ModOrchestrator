@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FolderOpen } from "lucide-react";
+import { FolderOpenIcon } from "dettmann-ui/icons";
 import { Alert, Button, Input, Modal, Radio, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
@@ -54,10 +54,10 @@ export function RenameDialog({ game, onClose }: DialogProps) {
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !name.trim() || name.trim() === game.name} loading={busy} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={busy || !name.trim() || name.trim() === game.name} loading={busy} onClick={() => void submit()}>
             {t("rename.submit")}
           </Button>
         </Modal.Footer>
@@ -101,7 +101,7 @@ export function RelocateDialog({ game, onClose }: DialogProps) {
               {t("relocate.intro")}
             </Typography>
             {game.deployed ? (
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Description>{t("relocate.deployed")}</Alert.Description>
                 <PurgeFirst instance={game.id} />
               </Alert.Root>
@@ -115,8 +115,8 @@ export function RelocateDialog({ game, onClose }: DialogProps) {
             <div>
               <Button
                 size="sm"
-                variant="outline"
-                startIcon={<FolderOpen aria-hidden="true" className="h-4 w-4" />}
+               
+                startIcon={<FolderOpenIcon size="sm" />}
                 onClick={async () => {
                   try {
                     const path = await backend.pickFolder(t("wizard.pickFolder"));
@@ -133,10 +133,10 @@ export function RelocateDialog({ game, onClose }: DialogProps) {
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !root.trim() || root.trim() === game.root} loading={busy} onClick={() => void submit()}>
+          <Button emphasis="high" disabled={busy || !root.trim() || root.trim() === game.root} loading={busy} onClick={() => void submit()}>
             {t("relocate.submit")}
           </Button>
         </Modal.Footer>
@@ -187,7 +187,7 @@ export function UnmanageDialog({ game, onClose }: DialogProps) {
               {t("unmanage.intro")}
             </Typography>
             {game.deployed ? (
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Description>{t("unmanage.deployed")}</Alert.Description>
                 <PurgeFirst instance={game.id} />
               </Alert.Root>
@@ -217,11 +217,12 @@ export function UnmanageDialog({ game, onClose }: DialogProps) {
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
           <Button
-            variant="danger"
+            emphasis="high"
+            intent="danger"
             loading={busy}
             disabled={busy || game.deployed || (deleteFiles && confirm.trim() !== game.name.trim())}
             onClick={() => void submit()}
@@ -244,7 +245,7 @@ function PurgeFirst({ instance }: { instance: string }) {
     <div className="pt-2">
       <Button
         size="sm"
-        variant="outline"
+       
         disabled={started}
         onClick={() => {
           setStarted(true);

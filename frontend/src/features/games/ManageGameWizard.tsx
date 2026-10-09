@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CircleCheck, FolderOpen } from "lucide-react";
-import { Alert, Button, Input, Modal, Radio, Spinner, Stack, Stepper, Typography } from "dettmann-ui";
+import { CircleCheckIcon, FolderOpenIcon } from "dettmann-ui/icons";
+import { Alert, Button, Input, Modal, Radio, Loader, Stack, Stepper, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { problemMessage, toUIError, type UIError } from "../../bridge/errors";
 import type { GameFolders, GameSetup, Problem, SetupVerification, TargetSpec } from "../../bridge/types";
@@ -209,9 +209,9 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
                 </Input.Root>
                 <div>
                   <Button
-                    variant="outline"
+                   
                     size="sm"
-                    startIcon={<FolderOpen aria-hidden="true" className="h-4 w-4" />}
+                    startIcon={<FolderOpenIcon size="sm" />}
                     onClick={async () => {
                       const path = await pick();
                       if (path) {
@@ -224,7 +224,7 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
                   </Button>
                 </div>
                 {rootValid ? (
-                  <Alert.Root variant="success">
+                  <Alert.Root intent="success">
                     <Alert.Description>
                       {t("wizard.installation.valid")}
                       {start.store ? ` · ${storeLabel(start.store)}` : ""}
@@ -264,11 +264,11 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
                         </dd>
                         <dd className="flex gap-2">
                           {key === "staging" && !folders.staging && folders.suggestedStaging ? (
-                            <Button size="sm" variant="ghost" onClick={() => setFolders({ ...folders, staging: folders.suggestedStaging ?? "" })}>
+                            <Button size="sm" emphasis="low" onClick={() => setFolders({ ...folders, staging: folders.suggestedStaging ?? "" })}>
                               {t("wizard.folders.suggest")}
                             </Button>
                           ) : null}
-                          <Button size="sm" variant="outline" onClick={() => void changeFolder(key)}>
+                          <Button size="sm" onClick={() => void changeFolder(key)}>
                             {t("wizard.change")}
                           </Button>
                         </dd>
@@ -276,26 +276,26 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
                     ))}
                   </dl>
                 ) : (
-                  <Spinner label={t("common.loading")} />
+                  <Loader label={t("common.loading")} />
                 )}
               </Stack>
             ) : null}
 
             {step === 2 ? (
               <Stack gap="md">
-                {busy && !verification ? <Spinner label={t("wizard.verifying")} /> : null}
+                {busy && !verification ? <Loader label={t("wizard.verifying")} /> : null}
                 {verification ? <VerificationView v={verification} method={method} onMethod={setMethod} /> : null}
               </Stack>
             ) : null}
 
             {step === 3 ? (
               <Stack gap="md">
-                {busy ? <Spinner label={t("wizard.finishing")} /> : null}
+                {busy ? <Loader label={t("wizard.finishing")} /> : null}
                 {done ? (
-                  <Alert.Root variant="success">
+                  <Alert.Root intent="success">
                     <Alert.Title>
                       <span className="inline-flex items-center gap-2">
-                        <CircleCheck aria-hidden="true" className="h-4 w-4" />
+                        <CircleCheckIcon size="sm" />
                         {t("wizard.done.title", { name })}
                       </span>
                     </Alert.Title>
@@ -311,10 +311,10 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
         <Modal.Footer>
           {done ? (
             <>
-              <Button variant="outline" onClick={onClose}>
+              <Button onClick={onClose}>
                 {t("common.close")}
               </Button>
-              <Button
+              <Button emphasis="high"
                 onClick={() => {
                   onClose();
                   navigate({ view: "overview" });
@@ -325,31 +325,31 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
             </>
           ) : (
             <>
-              <Button variant="outline" disabled={busy} onClick={onClose}>
+              <Button disabled={busy} onClick={onClose}>
                 {t("common.cancel")}
               </Button>
               {step > 0 && !(generic && step === 1) ? (
-                <Button variant="outline" disabled={busy} onClick={() => setStep((s) => Math.max(0, s - 1) as StepIndex)}>
+                <Button disabled={busy} onClick={() => setStep((s) => Math.max(0, s - 1) as StepIndex)}>
                   {t("common.back")}
                 </Button>
               ) : null}
               {step === 0 ? (
-                <Button disabled={!rootValid || !name.trim() || busy} onClick={() => void goFolders()}>
+                <Button emphasis="high" disabled={!rootValid || !name.trim() || busy} onClick={() => void goFolders()}>
                   {t("common.next")}
                 </Button>
               ) : null}
               {step === 1 ? (
-                <Button disabled={!folders || !folders.staging || busy} onClick={() => void goVerification()}>
+                <Button emphasis="high" disabled={!folders || !folders.staging || busy} onClick={() => void goVerification()}>
                   {t("common.next")}
                 </Button>
               ) : null}
               {step === 2 ? (
-                <Button disabled={!canFinish} onClick={() => void manage()}>
+                <Button emphasis="high" disabled={!canFinish} onClick={() => void manage()}>
                   {t("wizard.manage")}
                 </Button>
               ) : null}
               {step === 3 && error ? (
-                <Button onClick={() => setStep(2)}>{t("common.back")}</Button>
+                <Button emphasis="high" onClick={() => setStep(2)}>{t("common.back")}</Button>
               ) : null}
             </>
           )}
@@ -365,12 +365,12 @@ function VerificationView({ v, method, onMethod }: { v: SetupVerification; metho
   return (
     <Stack gap="md">
       {v.problems.map((p, i) => (
-        <Alert.Root key={`${p.code}-${i}`} variant="danger">
+        <Alert.Root key={`${p.code}-${i}`} intent="danger">
           <Alert.Description>{problemMessage(i18n, p, "error")}</Alert.Description>
         </Alert.Root>
       ))}
       {v.warnings.map((p, i) => (
-        <Alert.Root key={`${p.code}-${i}`} variant="warning">
+        <Alert.Root key={`${p.code}-${i}`} intent="warning">
           <Alert.Description>{problemMessage(i18n, p, "warning")}</Alert.Description>
         </Alert.Root>
       ))}

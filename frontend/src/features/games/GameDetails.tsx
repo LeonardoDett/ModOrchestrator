@@ -59,7 +59,7 @@ export function ManagedDetails({ game }: { game: ManagedGame }) {
           </Typography>
           <div className="flex flex-wrap gap-1.5">
             {game.modTypes.map((mt) => (
-              <Badge key={mt.id} variant="outline">
+              <Badge key={mt.id} emphasis="low">
                 {mt.name} → {mt.target}
               </Badge>
             ))}
@@ -73,7 +73,7 @@ export function ManagedDetails({ game }: { game: ManagedGame }) {
           </Typography>
           <div className="flex flex-wrap gap-1.5">
             {game.capabilities.map((c) => (
-              <Badge key={c} variant="muted">
+              <Badge key={c} emphasis="low">
                 {c}
               </Badge>
             ))}

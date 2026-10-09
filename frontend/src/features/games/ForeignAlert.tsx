@@ -1,4 +1,4 @@
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlertIcon } from "dettmann-ui/icons";
 import { Alert, Button, Inline, Stack } from "dettmann-ui";
 import type { ForeignFinding } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
@@ -35,10 +35,10 @@ export function ForeignAlert({ findings, onOpenFolder, onRecheck }: ForeignAlert
   const label = useFindingLabel();
   if (findings.length === 0) return null;
   return (
-    <Alert.Root variant="warning">
+    <Alert.Root intent="warning">
       <Alert.Title>
         <span className="inline-flex items-center gap-2">
-          <TriangleAlert aria-hidden="true" className="h-4 w-4" />
+          <TriangleAlertIcon size="sm" />
           {t("foreign.title")}
         </span>
       </Alert.Title>
@@ -53,12 +53,12 @@ export function ForeignAlert({ findings, onOpenFolder, onRecheck }: ForeignAlert
           {onOpenFolder || onRecheck ? (
             <Inline gap="sm">
               {onOpenFolder ? (
-                <Button size="sm" variant="outline" onClick={onOpenFolder}>
+                <Button size="sm" onClick={onOpenFolder}>
                   {t("foreign.openFolder")}
                 </Button>
               ) : null}
               {onRecheck ? (
-                <Button size="sm" variant="outline" onClick={onRecheck}>
+                <Button size="sm" onClick={onRecheck}>
                   {t("foreign.recheck")}
                 </Button>
               ) : null}

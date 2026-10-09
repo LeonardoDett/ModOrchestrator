@@ -4,6 +4,7 @@ import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, ConflictFile, ConflictPair, ConflictPairs, PairDecision } from "../bridge/types";
 import { buildFileTree } from "../features/conflicts/PairFiles";
+import { chooseOption } from "../test/select";
 
 const A = { id: "a", name: "Texture A", priority: 1, enabled: true };
 const B = { id: "b", name: "Texture B", priority: 2, enabled: true };
@@ -81,7 +82,7 @@ describe("Conflicts screen (F6)", () => {
     expect(await screen.findByText("Texture B wins Texture A in 2 of 2 files")).toBeInTheDocument();
     expect(screen.getByText("Decided by: priority (Texture B #2 > Texture A #1)")).toBeInTheDocument();
     const select = await screen.findByRole("combobox", { name: "Winner of data: textures/sky.dds" });
-    await user.selectOptions(select, "a");
+    await chooseOption(user, select, /Texture A/);
     expect(calls).toContain("override:a:textures/sky.dds");
     // No rule exists just because the mods conflict (D004).
     expect(calls.some((c) => c.startsWith("rule"))).toBe(false);

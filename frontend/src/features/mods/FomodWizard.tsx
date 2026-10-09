@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { History, ImageOff } from "lucide-react";
-import { Alert, Button, Checkbox, Lightbox, MediaImage, Modal, Radio, Stack, Stepper, Tag, Typography } from "dettmann-ui";
+import { ImageOff } from "lucide-react";
+import { HistoryIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, Lightbox, MediaImage, Modal, Radio, Stack, Stepper, Tag, Typography, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import type { FomodGroup, FomodOption, FomodSelection, FomodView, FomodWarning, ImportAnswer, QueueItem } from "../../bridge/types";
@@ -47,10 +48,10 @@ function FomodImage({ load, image, alt, onOpen, className }: { load: (image: str
     };
   }, [load, image]);
   if (!src) return null;
-  const img = <MediaImage src={src} alt={alt} fit="contain" radius="md" className={className} fallback={<ImageOff aria-hidden="true" className="h-6 w-6 text-fg-muted" />} />;
+  const img = <MediaImage src={src} alt={alt} fit="contain" radius="md" className={className} fallback={<Icon icon={ImageOff} size="lg" className="text-fg-muted" />} />;
   if (!onOpen) return img;
   return (
-    <button type="button" className="block w-full rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring" aria-label={t("mods.fomod.enlarge", { name: alt })} onClick={() => onOpen(src)}>
+    <button type="button" className="block w-full rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" aria-label={t("mods.fomod.enlarge", { name: alt })} onClick={() => onOpen(src)}>
       {img}
     </button>
   );
@@ -180,11 +181,11 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
         <Modal.Body className="min-h-0 flex-1">
           <Stack gap="md" className="h-full">
             {decision.previous.length > 0 ? (
-              <Alert.Root variant="info">
+              <Alert.Root intent="info">
                 <Alert.Description>
                   <span className="flex flex-wrap items-center justify-between gap-2">
                     {t("mods.fomod.previousLoaded")}
-                    <Button size="sm" variant="outline" startIcon={<History aria-hidden="true" />} disabled={busy} onClick={usePrevious}>
+                    <Button size="sm" startIcon={<HistoryIcon size="sm" />} disabled={busy} onClick={usePrevious}>
                       {t("mods.fomod.usePrevious")}
                     </Button>
                   </span>
@@ -192,12 +193,12 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
               </Alert.Root>
             ) : null}
             {decision.warnings.map((w, i) => (
-              <Alert.Root key={i} variant="warning">
+              <Alert.Root key={i} intent="warning">
                 <Alert.Description>{fomodWarning(i18n, w)}</Alert.Description>
               </Alert.Root>
             ))}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
@@ -276,18 +277,18 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={cancel}>
+          <Button disabled={busy} onClick={cancel}>
             {t("mods.decision.cancelImport")}
           </Button>
-          <Button variant="outline" disabled={busy || position === 0} onClick={back}>
+          <Button disabled={busy || position === 0} onClick={back}>
             {t("mods.fomod.back")}
           </Button>
           {current === SUMMARY ? (
-            <Button disabled={busy || !summary} loading={busy} onClick={install} title={view?.planError ? t(`error.${view.planError}` as MessageKey, { name: item.label }) : undefined}>
+            <Button emphasis="high" disabled={busy || !summary} loading={busy} onClick={install} title={view?.planError ? t(`error.${view.planError}` as MessageKey, { name: item.label }) : undefined}>
               {t("mods.decision.install")}
             </Button>
           ) : (
-            <Button disabled={busy || !view} onClick={next}>
+            <Button emphasis="high" disabled={busy || !view} onClick={next}>
               {t("mods.fomod.next")}
             </Button>
           )}
@@ -373,7 +374,7 @@ function GroupField({
         )}
       </div>
       {problem ? (
-        <Alert.Root variant="danger" className="mt-2">
+        <Alert.Root intent="danger" className="mt-2">
           <Alert.Description>{t(`mods.fomod.problem.${problem}` as MessageKey)}</Alert.Description>
         </Alert.Root>
       ) : null}
@@ -388,7 +389,7 @@ function Summary({ view, requirements, onRequirement }: { view: FomodView; requi
   const s = view.summary;
   if (!s) {
     return (
-      <Alert.Root variant="danger">
+      <Alert.Root intent="danger">
         <Alert.Description>{t(`mods.fomod.planError.${view.planError ?? "installer_failed"}` as MessageKey)}</Alert.Description>
       </Alert.Root>
     );
@@ -418,7 +419,7 @@ function Summary({ view, requirements, onRequirement }: { view: FomodView; requi
           </Typography>
           <Stack gap="xs">
             {s.warnings.map((w, i) => (
-              <Alert.Root key={i} variant="warning">
+              <Alert.Root key={i} intent="warning">
                 <Alert.Description>{fomodWarning(i18n, w)}</Alert.Description>
               </Alert.Root>
             ))}

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Puzzle } from "lucide-react";
+import { PuzzleIcon } from "dettmann-ui/icons";
 import { Alert, Badge, DataTable, Inspector, Stack, Tag, Typography, type DataTableColumn } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { useExtensions } from "../bridge/queries";
@@ -33,8 +33,8 @@ export function ExtensionsPage() {
       { id: "name", label: t("extensions.column.name"), cell: (e) => e.name, width: 180, grow: true },
       { id: "version", label: t("extensions.column.version"), cell: (e) => e.version, width: 110 },
       { id: "games", label: t("extensions.column.games"), cell: (e) => e.games.map((g) => g.name).join(", "), width: 260, grow: true },
-      { id: "type", label: t("extensions.column.type"), cell: (e) => <Badge variant="outline">{t(e.builtIn ? "extensions.builtIn" : "extensions.external")}</Badge>, width: 130 },
-      { id: "state", label: t("extensions.column.state"), cell: (e) => <Badge tone={e.active ? "success" : undefined}>{t(e.active ? "extensions.active" : "extensions.inactive")}</Badge>, width: 110 },
+      { id: "type", label: t("extensions.column.type"), cell: (e) => <Badge emphasis="low">{t(e.builtIn ? "extensions.builtIn" : "extensions.external")}</Badge>, width: 130 },
+      { id: "state", label: t("extensions.column.state"), cell: (e) => <Badge intent={e.active ? "success" : undefined}>{t(e.active ? "extensions.active" : "extensions.inactive")}</Badge>, width: 110 },
     ],
     [t],
   );
@@ -46,7 +46,7 @@ export function ExtensionsPage() {
       break;
     case "unavailable":
       body = (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       );
@@ -58,7 +58,7 @@ export function ExtensionsPage() {
       const current = query.data.find((e) => e.name === selected) ?? null;
       body =
         query.data.length === 0 ? (
-          <HonestEmpty icon={Puzzle} title="extensions.emptyTitle" description="extensions.emptyDescription" />
+          <HonestEmpty icon={PuzzleIcon} title="extensions.emptyTitle" description="extensions.emptyDescription" />
         ) : (
           <div className="flex min-h-0 flex-1 gap-4">
             <DataTable
@@ -82,7 +82,7 @@ export function ExtensionsPage() {
   return (
     <PageBody fill>
       <Stack gap="md" className="min-h-0 flex-1">
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("extensions.thirdPartyLater")}</Alert.Description>
         </Alert.Root>
         {body}
@@ -100,14 +100,14 @@ function ExtensionInspector({ extension, onClose }: { extension: Extension; onCl
       aria-label={extension.name}
       title={extension.name}
       description={t("extensions.versionLine", { version: extension.version })}
-      className="flex w-[22rem] shrink-0 flex-col overflow-auto rounded-xl border"
+      className="flex w-[22rem] shrink-0 flex-col overflow-auto rounded-card border"
       onClose={onClose}
       closeLabel={t("common.close")}
     >
       <Stack gap="md">
         <div className="flex gap-2">
-          <Badge variant="outline">{t(extension.builtIn ? "extensions.builtIn" : "extensions.external")}</Badge>
-          <Badge tone={extension.active ? "success" : undefined}>{t(extension.active ? "extensions.active" : "extensions.inactive")}</Badge>
+          <Badge emphasis="low">{t(extension.builtIn ? "extensions.builtIn" : "extensions.external")}</Badge>
+          <Badge intent={extension.active ? "success" : undefined}>{t(extension.active ? "extensions.active" : "extensions.inactive")}</Badge>
         </div>
         {extension.games.map((g) => (
           <Stack key={g.id} gap="xs" as="section" aria-label={g.name}>

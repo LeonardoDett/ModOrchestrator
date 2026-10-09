@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Button, Modal, Stack, Typography } from "dettmann-ui";
+import { Alert, Button, Modal, Stack, Typography, Icon } from "dettmann-ui";
 import type { ActionResult } from "../games/use-action";
 import type { Diagnostic, LaunchCheck, LaunchRequest } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
@@ -63,13 +63,13 @@ export function PrelaunchDialog({
               </>
             ) : null}
             {!blocked && check.deployNeeded ? (
-              <Alert.Root variant="info">
+              <Alert.Root intent="info">
                 <Alert.Title>{t("launch.dialog.deployNeeded")}</Alert.Title>
                 <Alert.Description>{deployText}</Alert.Description>
               </Alert.Root>
             ) : null}
             {!blocked && check.deployProblem ? (
-              <Alert.Root variant="warning">
+              <Alert.Root intent="warning">
                 <Alert.Title>{t("launch.dialog.deployProblem")}</Alert.Title>
                 <Alert.Description>{deployText}</Alert.Description>
               </Alert.Root>
@@ -83,23 +83,23 @@ export function PrelaunchDialog({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
           {blocked ? null : (
             <>
               {check.deployNeeded ? (
-                <Button variant="outline" disabled={busy} onClick={() => void go({ deploy: false, confirmed: true })}>
+                <Button disabled={busy} onClick={() => void go({ deploy: false, confirmed: true })}>
                   {t("launch.dialog.playWithoutDeploy")}
                 </Button>
               ) : null}
               {problems && !check.deployNeeded ? (
-                <Button tone="warning" disabled={busy} onClick={() => void go({ deploy: false, confirmed: true })}>
+                <Button emphasis="high" intent="warning" disabled={busy} onClick={() => void go({ deploy: false, confirmed: true })}>
                   {t("launch.dialog.playAnyway")}
                 </Button>
               ) : null}
               {check.deployNeeded ? (
-                <Button disabled={busy} onClick={() => void go({ deploy: true, confirmed: problems })}>
+                <Button emphasis="high" disabled={busy} onClick={() => void go({ deploy: true, confirmed: problems })}>
                   {t(problems ? "launch.dialog.deployAndPlayAnyway" : "launch.dialog.deployAndPlay")}
                 </Button>
               ) : null}
@@ -115,18 +115,18 @@ function ProblemList({ items }: { items: Diagnostic[] }) {
   const i18n = useI18n();
   const act = useDiagnosticAction();
   return (
-    <ul className="divide-y divide-border rounded-lg border border-border">
+    <ul className="divide-y divide-border rounded-control border border-border">
       {items.map((d) => {
         const look = SEVERITY_LOOK[shownSeverity(d)];
-        const Icon = look.icon;
+        const StateIcon = look.icon;
         return (
           <li key={d.key} className="flex flex-wrap items-center gap-3 px-3 py-2">
-            <Icon aria-hidden="true" className={`h-4 w-4 shrink-0 ${look.className}`} />
+            <Icon icon={StateIcon} size="sm" className={`shrink-0 ${look.className}`} />
             <Typography variant="body-sm" className="min-w-0 flex-1">
               {diagnosticTitle(i18n, d)}
             </Typography>
             {d.actions.slice(0, 2).map((a, i) => (
-              <Button key={a.id} size="sm" variant="outline" onClick={() => void act(d, i)}>
+              <Button key={a.id} size="sm" onClick={() => void act(d, i)}>
                 {actionLabel(i18n, a)}
               </Button>
             ))}

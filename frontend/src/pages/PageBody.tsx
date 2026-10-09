@@ -1,7 +1,5 @@
 import { Fragment, type ReactNode } from "react";
-import type { LucideIcon } from "lucide-react";
-import { Loader2 } from "lucide-react";
-import { Alert, Button, EmptyState, FeaturedIcon, Skeleton, Stack } from "dettmann-ui";
+import { Alert, Button, EmptyState, FeaturedIcon, Loader, Skeleton, Stack, type IconComponent } from "dettmann-ui";
 import { useWorkspace } from "../bridge/queries";
 import { useDeploy } from "../features/deploy/DeployContext";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
@@ -17,7 +15,7 @@ export function PageBody({ children, fill = false }: { children: ReactNode; fill
 }
 
 interface HonestEmptyProps {
-  icon: LucideIcon;
+  icon: IconComponent;
   title: MessageKey;
   description: MessageKey;
   children?: ReactNode;
@@ -27,9 +25,9 @@ interface HonestEmptyProps {
 export function HonestEmpty({ icon, title, description, children }: HonestEmptyProps) {
   const { t } = useI18n();
   return (
-    <EmptyState.Root className="rounded-xl border border-border bg-surface">
+    <EmptyState.Root className="rounded-card border border-border bg-surface">
       <EmptyState.Icon>
-        <FeaturedIcon icon={icon} color="neutral" />
+        <FeaturedIcon icon={icon} intent="neutral" />
       </EmptyState.Icon>
       <EmptyState.Title>{t(title)}</EmptyState.Title>
       <EmptyState.Description>{t(description)}</EmptyState.Description>
@@ -46,7 +44,7 @@ export function LoadingState({ rows = 6 }: { rows?: number }) {
   const { t } = useI18n();
   return (
     <div role="status" aria-label={t("common.loading")} className="flex flex-col gap-2">
-      <Skeleton className="h-9 w-full rounded-lg" />
+      <Skeleton className="h-9 w-full rounded-control" />
       {Array.from({ length: rows }, (_, i) => (
         <Skeleton key={i} className="h-7 w-full" />
       ))}
@@ -58,7 +56,7 @@ export function LoadingState({ rows = 6 }: { rows?: number }) {
 export function OfflineNotice() {
   const { t } = useI18n();
   return (
-    <Alert.Root variant="info">
+    <Alert.Root intent="info">
       <Alert.Description>{t("app.offlineHint")}</Alert.Description>
     </Alert.Root>
   );
@@ -71,7 +69,7 @@ export function NoMatch({ message, onClear }: { message: MessageKey; onClear?: (
     <Stack gap="sm" className="items-center p-6 text-sm text-fg-muted">
       {t(message)}
       {onClear ? (
-        <Button size="sm" variant="outline" onClick={onClear}>
+        <Button size="sm" onClick={onClear}>
           {t("filters.clear")}
         </Button>
       ) : null}
@@ -112,8 +110,8 @@ export function BusyBand() {
       ? t("busy.band.import")
       : t("busy.band", { operation: t((HOLDERS as readonly string[]).includes(holder) ? (`busy.holder.${holder}` as MessageKey) : "busy.holder.other") });
   return (
-    <div role="status" className="flex items-center gap-2 rounded-lg border border-border bg-sunken px-3 py-2 text-sm text-fg">
-      <Loader2 aria-hidden="true" className="h-4 w-4 shrink-0 animate-spin text-brand-text motion-reduce:animate-none" />
+    <div role="status" className="flex items-center gap-2 rounded-control border border-border bg-sunken px-3 py-2 text-sm text-fg">
+      <Loader decorative size="sm" intent="brand" className="shrink-0" />
       <span>{text}</span>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { ChevronDown, EyeOff, Eye, FolderOpen, Gamepad2, LayoutGrid, List, Plus, Search, TriangleAlert, X } from "lucide-react";
-import { Alert, Badge, Button, Checkbox, EmptyState, FeaturedIcon, Input, Menu, SegmentedControl, Stack, Typography } from "dettmann-ui";
+import { Gamepad2, LayoutGrid, List } from "lucide-react";
+import { ChevronDownIcon, EyeIcon, EyeOffIcon, FolderOpenIcon, PlusIcon, SearchIcon, TriangleAlertIcon, XIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Checkbox, EmptyState, FeaturedIcon, Input, Menu, SegmentedControl, Stack, Typography, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useGamesView } from "../bridge/queries";
 import type { DiscoveredGame, GamesView, InstanceFolder, ManagedGame, SupportedGame } from "../bridge/types";
@@ -61,7 +62,7 @@ export function GamesPage() {
       break;
     case "unavailable":
       body = (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       );
@@ -136,7 +137,7 @@ function GamesToolbar({ layout, onLayout, showHidden, onShowHidden, search, onSe
     <div className="flex flex-wrap items-center gap-3">
       <Menu.Root>
         <Menu.Trigger>
-          <Button variant="primary" loading={scanning} startIcon={<Search aria-hidden="true" className="h-4 w-4" />} endIcon={<ChevronDown aria-hidden="true" className="h-4 w-4" />}>
+          <Button emphasis="high" loading={scanning} startIcon={<SearchIcon size="sm" />} endIcon={<ChevronDownIcon size="sm" />}>
             {t("games.scan")}
           </Button>
         </Menu.Trigger>
@@ -145,7 +146,7 @@ function GamesToolbar({ layout, onLayout, showHidden, onShowHidden, search, onSe
           <Menu.Item onSelect={() => void scan("full")}>{t("games.scan.full")}</Menu.Item>
         </Menu.Content>
       </Menu.Root>
-      <Button variant="outline" startIcon={<Plus aria-hidden="true" className="h-4 w-4" />} onClick={onGeneric}>
+      <Button startIcon={<PlusIcon size="sm" />} onClick={onGeneric}>
         {t("games.addGeneric")}
       </Button>
       <div className="ml-auto flex flex-wrap items-center gap-3">
@@ -161,8 +162,8 @@ function GamesToolbar({ layout, onLayout, showHidden, onShowHidden, search, onSe
           value={layout}
           onChange={onLayout}
           options={[
-            { value: "grid", label: <LayoutGrid aria-label={t("games.layout.grid")} className="h-4 w-4" /> },
-            { value: "list", label: <List aria-label={t("games.layout.list")} className="h-4 w-4" /> },
+            { value: "grid", label: <Icon icon={LayoutGrid} size="sm" label={t("games.layout.grid")} /> },
+            { value: "list", label: <Icon icon={List} size="sm" label={t("games.layout.list")} /> },
           ]}
         />
       </div>
@@ -198,14 +199,14 @@ function GamesBody({ data, layout, search, onManage, onGeneric, onRename, onRelo
   return (
     <Stack gap="xl">
       {nothingFound ? (
-        <EmptyState.Root className="rounded-xl border border-border bg-surface">
+        <EmptyState.Root className="rounded-card border border-border bg-surface">
           <EmptyState.Icon>
-            <FeaturedIcon icon={Gamepad2} color="neutral" />
+            <FeaturedIcon icon={Gamepad2} intent="neutral" />
           </EmptyState.Icon>
           <EmptyState.Title>{t("games.noneFoundTitle")}</EmptyState.Title>
           <EmptyState.Description>{t("games.noneFoundDescription")}</EmptyState.Description>
           <EmptyState.Actions>
-            <Button variant="outline" onClick={onGeneric}>
+            <Button onClick={onGeneric}>
               {t("games.addGeneric")}
             </Button>
           </EmptyState.Actions>
@@ -265,21 +266,21 @@ function StatusBadges({ game }: { game: ManagedGame }) {
   const { t } = useI18n();
   return (
     <>
-      {game.active ? <Badge variant="success">{t("games.status.active")}</Badge> : null}
+      {game.active ? <Badge intent="success">{t("games.status.active")}</Badge> : null}
       {game.foreign.length > 0 ? (
-        <Badge variant="warning">
-          <TriangleAlert aria-hidden="true" className="mr-1 inline h-3 w-3" />
+        <Badge intent="warning">
+          <TriangleAlertIcon size="xs" className="mr-1 inline" />
           {t("games.status.foreign")}
         </Badge>
       ) : null}
       {game.rootMissing ? (
-        <Badge variant="danger">
-          <X aria-hidden="true" className="mr-1 inline h-3 w-3" />
+        <Badge intent="danger">
+          <XIcon size="xs" className="mr-1 inline" />
           {t("games.status.rootMissing")}
         </Badge>
       ) : null}
-      {game.unavailable ? <Badge variant="muted">{t("games.status.unavailable")}</Badge> : null}
-      {game.hidden ? <Badge variant="muted">{t("games.status.hidden")}</Badge> : null}
+      {game.unavailable ? <Badge emphasis="low">{t("games.status.unavailable")}</Badge> : null}
+      {game.hidden ? <Badge emphasis="low">{t("games.status.hidden")}</Badge> : null}
     </>
   );
 }
@@ -304,16 +305,16 @@ function ManagedTile({ game, layout, onOpenWorkspace, onActivate, onAnother, onR
 
   const menu: TileAction[] = [
     { id: "workspace", label: t("games.action.openWorkspace"), onSelect: onOpenWorkspace },
-    { id: "open-game", label: t("games.action.openGameFolder"), icon: FolderOpen, onSelect: () => open("game") },
-    { id: "open-staging", label: t("games.action.openStaging"), icon: FolderOpen, onSelect: () => open("staging") },
-    { id: "open-archives", label: t("games.action.openArchives"), icon: FolderOpen, onSelect: () => open("archives") },
+    { id: "open-game", label: t("games.action.openGameFolder"), icon: FolderOpenIcon, onSelect: () => open("game") },
+    { id: "open-staging", label: t("games.action.openStaging"), icon: FolderOpenIcon, onSelect: () => open("staging") },
+    { id: "open-archives", label: t("games.action.openArchives"), icon: FolderOpenIcon, onSelect: () => open("archives") },
     { id: "relocate", label: t("games.action.relocate"), onSelect: onRelocate },
     { id: "rename", label: t("games.action.rename"), onSelect: onRename },
     { id: "another", label: t("games.action.another"), onSelect: onAnother },
     {
       id: "hide",
       label: game.hidden ? t("games.action.show") : t("games.action.hide"),
-      icon: game.hidden ? Eye : EyeOff,
+      icon: game.hidden ? EyeIcon : EyeOffIcon,
       onSelect: () => void run(() => backend.hideInstance(game.id, !game.hidden)),
     },
     { id: "unmanage", label: t("games.action.unmanage"), onSelect: onUnmanage },
@@ -326,7 +327,7 @@ function ManagedTile({ game, layout, onOpenWorkspace, onActivate, onAnother, onR
       subtitle={game.custom ? t("games.generic") : game.name === game.gameName ? undefined : game.gameName}
       meta={[store(game.store), game.version ?? ""].filter(Boolean)}
       badges={<StatusBadges game={game} />}
-      primary={game.active ? { label: t("games.action.openWorkspace"), onClick: onOpenWorkspace, variant: "outline" } : { label: t("games.action.activate"), onClick: onActivate }}
+      primary={game.active ? { label: t("games.action.openWorkspace"), onClick: onOpenWorkspace, emphasis: "medium" } : { label: t("games.action.activate"), onClick: onActivate }}
       menu={menu}
       details={<ManagedDetails game={game} />}
       dimmed={game.hidden}
@@ -345,7 +346,7 @@ function DiscoveredTile({ game, layout, onManage }: { game: DiscoveredGame; layo
       title={game.gameName}
       subtitle={game.root}
       meta={[store(game.store), game.version ?? ""].filter(Boolean)}
-      badges={game.hidden ? <Badge variant="muted">{t("games.status.hidden")}</Badge> : null}
+      badges={game.hidden ? <Badge emphasis="low">{t("games.status.hidden")}</Badge> : null}
       primary={{
         label: t("games.action.manage"),
         onClick: () => onManage({ gameId: game.gameId, gameName: game.gameName, root: game.root, store: game.store, version: game.version }),
@@ -354,7 +355,7 @@ function DiscoveredTile({ game, layout, onManage }: { game: DiscoveredGame; layo
         {
           id: "hide",
           label: game.hidden ? t("games.action.show") : t("games.action.hide"),
-          icon: game.hidden ? Eye : EyeOff,
+          icon: game.hidden ? EyeIcon : EyeOffIcon,
           onSelect: () => void run(() => backend.hideGame(game.gameId, !game.hidden)),
         },
       ]}
@@ -374,13 +375,13 @@ function SupportedTile({ game, layout, onLocate }: { game: SupportedGame; layout
       title={game.gameName}
       subtitle={t("games.notFound")}
       meta={[]}
-      badges={game.hidden ? <Badge variant="muted">{t("games.status.hidden")}</Badge> : null}
-      primary={{ label: t("games.action.locate"), onClick: () => onLocate({ gameId: game.gameId, gameName: game.gameName }), variant: "outline" }}
+      badges={game.hidden ? <Badge emphasis="low">{t("games.status.hidden")}</Badge> : null}
+      primary={{ label: t("games.action.locate"), onClick: () => onLocate({ gameId: game.gameId, gameName: game.gameName }), emphasis: "medium" }}
       menu={[
         {
           id: "hide",
           label: game.hidden ? t("games.action.show") : t("games.action.hide"),
-          icon: game.hidden ? Eye : EyeOff,
+          icon: game.hidden ? EyeIcon : EyeOffIcon,
           onSelect: () => void run(() => backend.hideGame(game.gameId, !game.hidden)),
         },
       ]}

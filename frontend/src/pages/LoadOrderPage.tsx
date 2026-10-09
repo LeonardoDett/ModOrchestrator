@@ -1,22 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownUp, CheckCircle2, ChevronDown, CircleAlert, GitCompareArrows, History, ListOrdered, Lock, Pin, Undo2 } from "lucide-react";
-import {
-  Alert,
-  Button,
-  Checkbox,
-  DataTable,
-  Indicator,
-  Inspector,
-  Menu,
-  Spinner,
-  Stack,
-  Switch,
-  Toolbar,
-  Typography,
-  useToast,
-  type DataTableColumn,
-  type DataTableRowMove,
-} from "dettmann-ui";
+import { ArrowDownUp, GitCompareArrows } from "lucide-react";
+import { ChevronDownIcon, CircleAlertIcon, CircleCheckIcon, HistoryIcon, ListOrderedIcon, LockIcon, PinIcon, UndoIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, DataTable, Indicator, Inspector, Menu, Loader, Stack, Switch, Toolbar, Typography, useToast, type DataTableColumn, type DataTableRowMove, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useLoadOrderExplain, useLoadOrderView } from "../bridge/queries";
 import type { PluginRow, SortPreview } from "../bridge/types";
@@ -132,9 +117,9 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
         width: 64,
         cell: (r) =>
           r.implicit ? (
-            <Indicator icon={Pin} tone="subtle" label={t("plugins.implicitFixed")} />
+            <Indicator icon={PinIcon} intent="subtle" label={t("plugins.implicitFixed")} />
           ) : r.locked ? (
-            <Indicator icon={Lock} tone="subtle" label={t("plugins.locked")} />
+            <Indicator icon={LockIcon} intent="subtle" label={t("plugins.locked")} />
           ) : null,
       },
       { id: "rules", label: t("loadOrder.column.rules"), width: 72, numeric: true, align: "end", cell: (r) => (r.rules > 0 ? r.rules : "") },
@@ -150,22 +135,22 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
         <Toolbar
           start={
             <>
-              <Button variant="outline" startIcon={<ArrowDownUp aria-hidden="true" />} disabled={!data || blocked} onClick={() => void sort()}>
+              <Button startIcon={<Icon icon={ArrowDownUp} size="sm" />} disabled={!data || blocked} onClick={() => void sort()}>
                 {t("plugins.action.sort")}
               </Button>
               <Switch checked={data?.autoSort ?? false} disabled={!data} onCheckedChange={(on) => void run(() => backend.setAutoSort(instance, on))} label={t("plugins.autoSort")} />
-              <Button variant="ghost" startIcon={<Undo2 aria-hidden="true" />} disabled={!data?.canUndoSort} onClick={() => void run(() => backend.undoLastSort(instance))}>
+              <Button emphasis="low" startIcon={<UndoIcon size="sm" />} disabled={!data?.canUndoSort} onClick={() => void run(() => backend.undoLastSort(instance))}>
                 {t("loadOrder.action.undoSort")}
               </Button>
               <Button
-                variant="ghost"
-                startIcon={<History aria-hidden="true" />}
+                emphasis="low"
+                startIcon={<HistoryIcon size="sm" />}
                 disabled={!state?.canRestorePrevious}
                 onClick={() => void run(() => backend.restorePreviousLoadOrder(instance), { success: "loadOrder.restored" })}
               >
                 {t("loadOrder.action.restorePrevious")}
               </Button>
-              <Button variant="ghost" startIcon={<GitCompareArrows aria-hidden="true" />} disabled={!state?.supported} onClick={() => setDialog("compare")}>
+              <Button emphasis="low" startIcon={<Icon icon={GitCompareArrows} size="sm" />} disabled={!state?.supported} onClick={() => setDialog("compare")}>
                 {t("loadOrder.action.compare")}
               </Button>
             </>
@@ -173,7 +158,7 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
           end={
             <Menu.Root placement="bottom-end">
               <Menu.Trigger>
-                <Button variant="ghost" endIcon={<ChevronDown aria-hidden="true" />}>
+                <Button emphasis="low" endIcon={<ChevronDownIcon size="sm" />}>
                   {t("loadOrder.action.export")}
                 </Button>
               </Menu.Trigger>
@@ -201,31 +186,31 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
         <BusyBand />
 
         {state?.supported ? (
-          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-surface px-3 py-2" role="status">
+          <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-surface px-3 py-2" role="status">
             {state.external ? (
               <>
-                <Indicator icon={CircleAlert} tone="warning" label={t("diag.code.load_order_external_change")} />
+                <Indicator icon={CircleAlertIcon} intent="warning" label={t("diag.code.load_order_external_change")} />
                 <Typography variant="body-sm" color="fg">
                   {t("diag.code.load_order_external_change")}
                 </Typography>
-                <Button size="sm" variant="outline" onClick={() => setDialog("review")}>
+                <Button size="sm" onClick={() => setDialog("review")}>
                   {t("loadOrder.review.open")}
                 </Button>
               </>
             ) : state.applied ? (
               <>
-                <Indicator icon={CheckCircle2} tone="success" label={t("loadOrder.state.applied")} />
+                <Indicator icon={CircleCheckIcon} intent="success" label={t("loadOrder.state.applied")} />
                 <Typography variant="body-sm" color="fg">
                   {t("loadOrder.state.applied")}
                 </Typography>
               </>
             ) : (
               <>
-                <Indicator icon={CircleAlert} tone="info" label={t("loadOrder.state.differs")} />
+                <Indicator icon={CircleAlertIcon} intent="info" label={t("loadOrder.state.differs")} />
                 <Typography variant="body-sm" color="fg">
                   {state.fileExists ? tp("loadOrder.state.differences", state.differences) : t("loadOrder.state.noFile")}
                 </Typography>
-                <Button size="sm" variant="outline" onClick={() => void run(() => backend.applyLoadOrder(instance), { success: "loadOrder.applied" })}>
+                <Button size="sm" onClick={() => void run(() => backend.applyLoadOrder(instance), { success: "loadOrder.applied" })}>
                   {t("loadOrder.action.apply")}
                 </Button>
               </>
@@ -238,12 +223,12 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
         </Typography>
 
         {blocked ? (
-          <Alert.Root variant="danger">
+          <Alert.Root intent="danger">
             <Alert.Description>{t("plugins.cycle", { plugins: data!.cycle.join(" → ") })}</Alert.Description>
           </Alert.Root>
         ) : null}
         {refusal ? (
-          <Alert.Root variant="warning">
+          <Alert.Root intent="warning">
             <Alert.Title>{t("loadOrder.move.refused")}</Alert.Title>
             <Alert.Description>
               <ul className="mt-1 list-disc pl-5">
@@ -253,11 +238,11 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
               </ul>
               <span className="mt-2 flex gap-2">
                 {refusal.retry ? (
-                  <Button size="sm" variant="outline" onClick={refusal.retry}>
+                  <Button size="sm" onClick={refusal.retry}>
                     {t("loadOrder.move.nearest")}
                   </Button>
                 ) : null}
-                <Button size="sm" variant="ghost" onClick={() => setRefusal(null)}>
+                <Button size="sm" emphasis="low" onClick={() => setRefusal(null)}>
                   {t("common.close")}
                 </Button>
               </span>
@@ -267,7 +252,7 @@ function LoadOrderWorkspace({ instance }: { instance: string }) {
 
         {view.status === "error" ? <ErrorAlert title="plugins.loadError" error={view.error} onRetry={view.reload} /> : null}
         {view.status === "loading" ? <LoadingState /> : null}
-        {data && data.rows.every((r) => r.implicit) ? <HonestEmpty icon={ListOrdered} title="plugins.emptyTitle" description="plugins.emptyDescription" /> : null}
+        {data && data.rows.every((r) => r.implicit) ? <HonestEmpty icon={ListOrderedIcon} title="plugins.emptyTitle" description="plugins.emptyDescription" /> : null}
 
         {data && !data.rows.every((r) => r.implicit) ? (
           <div className="flex min-h-0 flex-1 gap-4">
@@ -325,11 +310,11 @@ function WhyHere({ instance, name, onClose }: { instance: string; name: string; 
       aria-label={name}
       title={name}
       description={data ? t("loadOrder.why.position", { position: data.position }) : undefined}
-      className="flex w-[22rem] shrink-0 flex-col overflow-auto rounded-xl border"
+      className="flex w-[22rem] shrink-0 flex-col overflow-auto rounded-card border"
       onClose={onClose}
       closeLabel={t("common.close")}
     >
-      {ex.status === "loading" ? <Spinner label={t("common.loading")} /> : null}
+      {ex.status === "loading" ? <Loader label={t("common.loading")} /> : null}
       {ex.status === "error" ? <ErrorAlert title="plugins.loadError" error={ex.error} onRetry={ex.reload} /> : null}
       {data ? (
         <Stack gap="md">
@@ -365,7 +350,7 @@ function WhyHere({ instance, name, onClose }: { instance: string; name: string; 
           ) : null}
           {!data.fixed ? (
             <div>
-              <Button size="sm" variant="outline" startIcon={<Lock aria-hidden="true" />} onClick={() => void run(() => backend.setIndexLock(instance, [name], !data.locked))}>
+              <Button size="sm" startIcon={<LockIcon size="sm" />} onClick={() => void run(() => backend.setIndexLock(instance, [name], !data.locked))}>
                 {t(data.locked ? "plugins.action.unlock" : "plugins.action.lock")}
               </Button>
             </div>

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FolderOpen } from "lucide-react";
+import { FolderOpenIcon } from "dettmann-ui/icons";
 import { Alert, Badge, Button, Input, Modal, Stack, Table, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, type UIError } from "../../bridge/errors";
@@ -107,7 +107,7 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
               {t("external.help")}
             </Typography>
             {changes.length === 0 ? (
-              <Alert.Root variant="success">
+              <Alert.Root intent="success">
                 <Alert.Description>{t("external.empty")}</Alert.Description>
               </Alert.Root>
             ) : null}
@@ -138,7 +138,7 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
                         </Input.Root>
                       ) : null}
                     </div>
-                    <div className="max-h-72 overflow-auto rounded-lg border border-border">
+                    <div className="max-h-72 overflow-auto rounded-control border border-border">
                       <Table.Root aria-label={groupLabel}>
                         <Table.Header>
                           <Table.Row>
@@ -157,7 +157,7 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
                               <Table.Row key={k}>
                                 <Table.Cell className="font-mono text-xs break-all">{path}</Table.Cell>
                                 <Table.Cell className="text-sm">
-                                  {c.modName ?? (c.mod ? c.mod : <Badge variant="muted">{t("external.unmanaged")}</Badge>)}
+                                  {c.modName ?? (c.mod ? c.mod : <Badge emphasis="low">{t("external.unmanaged")}</Badge>)}
                                 </Table.Cell>
                                 <Table.Cell className="text-xs tabular-nums text-fg-muted">
                                   {c.before ? `${facts(i18n, c.before)} → ` : null}
@@ -178,12 +178,12 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
                                   {c.kind === "unexpected" || c.kind === "permission" ? (
                                     <Button
                                       size="sm"
-                                      variant="ghost"
+                                      emphasis="low"
                                       aria-label={t("external.openFolderFor", { path })}
                                       title={t("external.openFolder")}
                                       onClick={() => void run(() => backend.openLocationFolder(instance, c.location), { quiet: true })}
                                     >
-                                      <FolderOpen aria-hidden="true" className="h-4 w-4" />
+                                      <FolderOpenIcon size="sm" />
                                     </Button>
                                   ) : null}
                                 </Table.Cell>
@@ -203,7 +203,7 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
               </Typography>
             ) : null}
             {capturing ? (
-              <section aria-label={t("external.capture.title")} className="rounded-lg border border-border bg-sunken p-3">
+              <section aria-label={t("external.capture.title")} className="rounded-control border border-border bg-sunken p-3">
                 <Stack gap="sm">
                   <Typography variant="heading-6">{t("external.capture.title")}</Typography>
                   <Typography variant="caption" color="muted-fg">
@@ -241,7 +241,7 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
               </section>
             ) : null}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
@@ -253,10 +253,10 @@ export function ExternalChangesDialog({ instance, changes, changeCount, newFileC
               {tp("external.undecided", undecided)}
             </Typography>
           ) : null}
-          <Button variant="outline" disabled={busy} onClick={onCancel}>
+          <Button disabled={busy} onClick={onCancel}>
             {t(mode === "deploy" ? "deploy.decision.cancel" : "common.close")}
           </Button>
-          <Button disabled={busy || changes.length === 0 || !captureReady || (mode === "review" && undecided === changes.length)} onClick={apply}>
+          <Button emphasis="high" disabled={busy || changes.length === 0 || !captureReady || (mode === "review" && undecided === changes.length)} onClick={apply}>
             {t("external.apply")}
           </Button>
         </Modal.Footer>

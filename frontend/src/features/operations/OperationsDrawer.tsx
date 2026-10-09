@@ -1,5 +1,5 @@
 import { Activity } from "lucide-react";
-import { Alert, Button, Drawer, EmptyState, FeaturedIcon, Spinner, Stack, Typography } from "dettmann-ui";
+import { Alert, Button, Drawer, EmptyState, FeaturedIcon, Loader, Stack, Typography } from "dettmann-ui";
 import { useOperations } from "../../bridge/queries";
 import type { Operation } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
@@ -32,7 +32,7 @@ export function OperationsDrawer({ open, onOpenChange }: OperationsDrawerProps) 
           <DrawerContent onViewLog={(id) => go({ view: "diagnostics", tab: "log", operation: id })} />
         </Drawer.Body>
         <Drawer.Footer>
-          <Button variant="outline" onClick={() => go({ view: "diagnostics", tab: "operations" })}>
+          <Button onClick={() => go({ view: "diagnostics", tab: "operations" })}>
             {t("operations.openDiagnostics")}
           </Button>
         </Drawer.Footer>
@@ -46,10 +46,10 @@ function DrawerContent({ onViewLog }: { onViewLog: (id: string) => void }) {
   const query = useOperations(30);
   switch (query.status) {
     case "loading":
-      return <Spinner label={t("common.loading")} />;
+      return <Loader label={t("common.loading")} />;
     case "unavailable":
       return (
-        <Alert.Root variant="info">
+        <Alert.Root intent="info">
           <Alert.Description>{t("app.offlineHint")}</Alert.Description>
         </Alert.Root>
       );
@@ -60,7 +60,7 @@ function DrawerContent({ onViewLog }: { onViewLog: (id: string) => void }) {
         return (
           <EmptyState.Root>
             <EmptyState.Icon>
-              <FeaturedIcon icon={Activity} color="neutral" />
+              <FeaturedIcon icon={Activity} intent="neutral" />
             </EmptyState.Icon>
             <EmptyState.Title>{t("operations.emptyTitle")}</EmptyState.Title>
             <EmptyState.Description>{t("operations.emptyDescription")}</EmptyState.Description>
@@ -89,7 +89,7 @@ function OperationGroup({ title, operations, onViewLog }: { title: MessageKey; o
       </Typography>
       <ul className="flex flex-col gap-2">
         {operations.map((op) => (
-          <li key={op.id} className="rounded-lg border border-border bg-surface p-3">
+          <li key={op.id} className="rounded-control border border-border bg-surface p-3">
             <OperationDetails operation={op} compact onViewLog={onViewLog} />
           </li>
         ))}

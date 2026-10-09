@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { AlertTriangle, ArchiveRestore, DatabaseBackup, FileWarning, FolderOpen, RefreshCw, ScanSearch, Trash2, Wrench } from "lucide-react";
-import { Alert, Badge, Button, Modal, Radio, Spinner, Stack, Typography, useToast } from "dettmann-ui";
+import { ArchiveRestore, FileWarning, Wrench } from "lucide-react";
+import { DatabaseBackupIcon, FolderOpenIcon, RefreshIcon, ScanSearchIcon, TrashIcon, TriangleAlertIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Modal, Radio, Loader, Stack, Typography, useToast, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, type UIError } from "../../bridge/errors";
 import { useBackupStatus, useDeployStatus, useWorkarounds } from "../../bridge/queries";
@@ -47,20 +48,20 @@ export function WorkaroundsTab({ games, instance, onInstance }: { games: readonl
 
       <SettingsSection id="workarounds-maintenance" title={t("settings.workarounds.maintenance")}>
         <SettingLine label={t("settings.workarounds.cleanTemp.label")} description={t("settings.workarounds.cleanTemp.description")}>
-          <Button size="sm" variant="outline" startIcon={<Trash2 aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void cleanTemp()}>
+          <Button size="sm" startIcon={<TrashIcon size="sm" />} onClick={() => void cleanTemp()}>
             {t("settings.workarounds.cleanTemp.action")}
           </Button>
         </SettingLine>
         {anyPlugins ? (
           <SettingLine label={t("settings.workarounds.headerCache.label")} description={t("settings.workarounds.headerCache.description")}>
-            <Button size="sm" variant="outline" startIcon={<RefreshCw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.rebuildPluginHeaderCache(), { success: "settings.workarounds.headerCache.done" })}>
+            <Button size="sm" startIcon={<RefreshIcon size="sm" />} onClick={() => void run(() => backend.rebuildPluginHeaderCache(), { success: "settings.workarounds.headerCache.done" })}>
               {t("settings.workarounds.headerCache.action")}
             </Button>
           </SettingLine>
         ) : null}
         <SettingLine label={t("settings.workarounds.longPaths.label")} description={t("settings.workarounds.longPaths.description")}>
           {facts.status === "ready" ? (
-            <Badge tone={facts.data.longPaths === "enabled" ? "success" : facts.data.longPaths === "disabled" ? "warning" : undefined} variant={facts.data.longPaths === "unknown" ? "muted" : undefined}>
+            <Badge intent={facts.data.longPaths === "enabled" ? "success" : facts.data.longPaths === "disabled" ? "warning" : undefined} emphasis={facts.data.longPaths === "unknown" ? "low" : undefined}>
               {t(`settings.workarounds.longPaths.${facts.data.longPaths}` as MessageKey)}
             </Badge>
           ) : null}
@@ -78,7 +79,7 @@ function DatabaseSection({ status }: { status: ReturnType<typeof useBackupStatus
   const [dialog, setDialog] = useState<"list" | "file" | null>(null);
 
   let body;
-  if (status.status === "loading") body = <Spinner label={t("common.loading")} />;
+  if (status.status === "loading") body = <Loader label={t("common.loading")} />;
   else if (status.status === "error") body = <ErrorAlert title="settings.workarounds.loadError" error={status.error} onRetry={status.reload} />;
   else if (status.status === "unavailable") body = null;
   else {
@@ -87,7 +88,7 @@ function DatabaseSection({ status }: { status: ReturnType<typeof useBackupStatus
       <>
         {s.failure ? (
           <div className="px-4 pt-3">
-            <Alert.Root variant="warning">
+            <Alert.Root intent="warning">
               <Alert.Title>{t("settings.backups.failedTitle")}</Alert.Title>
               <Alert.Description>{t("settings.backups.failed", { when: i18n.formatDateTime(s.failure.at), kind: t(`settings.backups.kind.${s.failure.kind}` as MessageKey) })}</Alert.Description>
             </Alert.Root>
@@ -95,16 +96,16 @@ function DatabaseSection({ status }: { status: ReturnType<typeof useBackupStatus
         ) : null}
         {s.restorePending ? (
           <div className="px-4 pt-3">
-            <Alert.Root variant="info">
+            <Alert.Root intent="info">
               <Alert.Title>{t("settings.backups.pendingTitle")}</Alert.Title>
               <Alert.Description>
                 <Stack gap="xs">
                   <span>{t("settings.backups.pending", { backup: s.restorePending })}</span>
                   <div className="flex gap-2">
-                    <Button size="sm" startIcon={<RefreshCw aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.restartApp())}>
+                    <Button emphasis="high" size="sm" startIcon={<RefreshIcon size="sm" />} onClick={() => void run(() => backend.restartApp())}>
                       {t("settings.restart.now")}
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => void run(() => backend.cancelRestore())}>
+                    <Button size="sm" onClick={() => void run(() => backend.cancelRestore())}>
                       {t("settings.backups.cancelRestore")}
                     </Button>
                   </div>
@@ -140,16 +141,16 @@ function DatabaseSection({ status }: { status: ReturnType<typeof useBackupStatus
       description={t("settings.backups.description")}
       actions={
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" startIcon={<DatabaseBackup aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.createBackup(), { success: "settings.backups.created" })}>
+          <Button emphasis="high" size="sm" startIcon={<DatabaseBackupIcon size="sm" />} onClick={() => void run(() => backend.createBackup(), { success: "settings.backups.created" })}>
             {t("settings.backups.create")}
           </Button>
-          <Button size="sm" variant="outline" startIcon={<ArchiveRestore aria-hidden="true" className="h-3.5 w-3.5" />} disabled={status.status !== "ready" || status.data.backups.length === 0} onClick={() => setDialog("list")}>
+          <Button size="sm" startIcon={<Icon icon={ArchiveRestore} size="sm" />} disabled={status.status !== "ready" || status.data.backups.length === 0} onClick={() => setDialog("list")}>
             {t("settings.backups.restore")}
           </Button>
-          <Button size="sm" variant="outline" startIcon={<FileWarning aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => setDialog("file")}>
+          <Button size="sm" startIcon={<Icon icon={FileWarning} size="sm" />} onClick={() => setDialog("file")}>
             {t("settings.backups.restoreFile")}
           </Button>
-          <Button size="sm" variant="ghost" startIcon={<FolderOpen aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.openBackupsFolder())}>
+          <Button size="sm" emphasis="low" startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openBackupsFolder())}>
             {t("settings.backups.openFolder")}
           </Button>
         </div>
@@ -198,7 +199,7 @@ function RestoreDialog({ mode, status, onClose }: { mode: "list" | "file"; statu
           <Stack gap="md">
             {mode === "list" ? (
               <Radio.Group name="backup" value={chosen} onValueChange={setChosen} aria-label={t("settings.backups.list")}>
-                <ul className="max-h-72 divide-y divide-border overflow-y-auto rounded-lg border border-border">
+                <ul className="max-h-72 divide-y divide-border overflow-y-auto rounded-control border border-border">
                   {status.backups.map((b) => (
                     <BackupRow key={b.id} backup={b} />
                   ))}
@@ -206,22 +207,22 @@ function RestoreDialog({ mode, status, onClose }: { mode: "list" | "file"; statu
               </Radio.Group>
             ) : (
               <Stack gap="sm">
-                <Alert.Root variant="danger">
+                <Alert.Root intent="danger">
                   <Alert.Title>{t("settings.backups.fileWarningTitle")}</Alert.Title>
                   <Alert.Description>{t("settings.backups.fileWarning")}</Alert.Description>
                 </Alert.Root>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" startIcon={<FolderOpen aria-hidden="true" />} onClick={() => void pickFile()}>
+                  <Button startIcon={<FolderOpenIcon size="sm" />} onClick={() => void pickFile()}>
                     {t("settings.backups.chooseFile")}
                   </Button>
                   <span className="min-w-0 break-all font-mono text-xs text-fg">{chosen || t("settings.backups.noFile")}</span>
                 </div>
               </Stack>
             )}
-            <Alert.Root variant="warning">
+            <Alert.Root intent="warning">
               <Alert.Title>
                 <span className="inline-flex items-center gap-1">
-                  <AlertTriangle aria-hidden="true" className="h-4 w-4" />
+                  <TriangleAlertIcon size="sm" />
                   {t("settings.backups.consequencesTitle")}
                 </span>
               </Alert.Title>
@@ -234,17 +235,17 @@ function RestoreDialog({ mode, status, onClose }: { mode: "list" | "file"; statu
               </Alert.Description>
             </Alert.Root>
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button tone="danger" disabled={busy || !chosen} onClick={() => void restore()}>
+          <Button emphasis="high" intent="danger" disabled={busy || !chosen} onClick={() => void restore()}>
             {t("settings.backups.restoreConfirm")}
           </Button>
         </Modal.Footer>
@@ -259,7 +260,7 @@ function BackupRow({ backup }: { backup: Backup }) {
   return (
     <li className="flex items-center gap-3 px-3 py-2">
       <Radio.Item value={backup.id} label={i18n.formatAbsolute(backup.at)} />
-      <Badge variant="outline">{t(`settings.backups.kind.${backup.kind}` as MessageKey)}</Badge>
+      <Badge emphasis="low">{t(`settings.backups.kind.${backup.kind}` as MessageKey)}</Badge>
       <span className="flex-1" />
       <Typography variant="caption" color="muted-fg">
         {formatBytes(backup.size)}
@@ -288,13 +289,13 @@ function DeploymentChecks({ instance }: { instance: string }) {
   return (
     <SettingsSection id="workarounds-deploy" title={t("settings.workarounds.deployment")}>
       <SettingLine label={t("settings.workarounds.verify.label")} description={t("settings.workarounds.verify.description")}>
-        <Button size="sm" variant="outline" startIcon={<ScanSearch aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void verify()}>
+        <Button size="sm" startIcon={<ScanSearchIcon size="sm" />} onClick={() => void verify()}>
           {t("settings.workarounds.verify.action")}
         </Button>
       </SettingLine>
       {interrupted ? (
         <SettingLine label={t("settings.workarounds.reconcile.label")} description={t("settings.workarounds.reconcile.description")}>
-          <Button size="sm" startIcon={<Wrench aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.reconcileDeploy(instance))}>
+          <Button emphasis="high" size="sm" startIcon={<Icon icon={Wrench} size="sm" />} onClick={() => void run(() => backend.reconcileDeploy(instance))}>
             {t("settings.workarounds.reconcile.action")}
           </Button>
         </SettingLine>

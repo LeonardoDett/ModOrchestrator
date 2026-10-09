@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { ThemeProvider, ToastProvider } from "dettmann-ui";
+import { BudgetInspector, ThemeProvider, ToastProvider } from "dettmann-ui";
 import { BackendProvider } from "../bridge/backend-context";
 import { RefreshContext } from "../bridge/use-backend-query";
 import type { Backend } from "../bridge/types";
@@ -14,6 +14,9 @@ function LocalizedToasts({ children }: { children: React.ReactNode }) {
   const { t } = useI18n();
   return <ToastProvider closeLabel={t("common.close")}>{children}</ToastProvider>;
 }
+
+/** 60/30/10 budget overlay of dettmann-ui, only in `wails dev`/`vite` (not in tests or builds). */
+const SHOW_BUDGET = import.meta.env.DEV && import.meta.env.MODE !== "test";
 
 export function App({ backend }: { backend: Backend }) {
   const [route, setRoute] = useState<Route>(DEFAULT_ROUTE);
@@ -37,6 +40,7 @@ export function App({ backend }: { backend: Backend }) {
           </SettingsProvider>
         </RefreshContext.Provider>
       </BackendProvider>
+      {SHOW_BUDGET ? <BudgetInspector /> : null}
     </ThemeProvider>
   );
 }

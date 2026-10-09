@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
-import { Minus, Square, X } from "lucide-react";
-import { Button } from "dettmann-ui";
+import { Square } from "lucide-react";
+import { MinusIcon, XIcon } from "dettmann-ui/icons";
+import { Button, Icon } from "dettmann-ui";
 import logo from "../assets/logo.png";
 import { useBackend } from "../bridge/backend-context";
 import { GameSwitcher } from "../features/games/GameSwitcher";
@@ -39,20 +40,20 @@ export function TitleBar({ windowControls }: { windowControls: boolean }) {
       <div data-slot="tools" className="h-full flex-1" />
       {controls ? (
         <div className="flex h-full items-center" style={noDrag}>
-          <Button variant="ghost" size="icon-sm" aria-label={t("titlebar.minimize")} className="h-10 w-11 rounded-none" onClick={controls.minimise}>
-            <Minus aria-hidden="true" className="h-4 w-4" />
+          <Button emphasis="low" size="icon-sm" aria-label={t("titlebar.minimize")} className="h-10 w-11 rounded-none" onClick={controls.minimise}>
+            <MinusIcon size="sm" />
           </Button>
-          <Button variant="ghost" size="icon-sm" aria-label={t("titlebar.maximize")} className="h-10 w-11 rounded-none" onClick={controls.toggleMaximise}>
-            <Square aria-hidden="true" className="h-3.5 w-3.5" />
+          <Button emphasis="low" size="icon-sm" aria-label={t("titlebar.maximize")} className="h-10 w-11 rounded-none" onClick={controls.toggleMaximise}>
+            <Icon icon={Square} size="sm" />
           </Button>
           <Button
-            variant="ghost"
+            emphasis="low"
             size="icon-sm"
             aria-label={t("titlebar.close")}
-            className="h-10 w-11 rounded-none hover:bg-danger hover:text-on-danger"
+            className="h-10 w-11 rounded-none hover:bg-danger-fill hover:text-on-danger"
             onClick={controls.quit}
           >
-            <X aria-hidden="true" className="h-4 w-4" />
+            <XIcon size="sm" />
           </Button>
         </div>
       ) : null}

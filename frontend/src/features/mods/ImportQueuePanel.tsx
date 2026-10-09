@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Folder, X } from "lucide-react";
+import { FolderIcon, TriangleAlertIcon, XIcon } from "dettmann-ui/icons";
 import { Alert, Button, Input, Modal, Radio, Stack, Tree, Typography, type TreeNode } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, type UIError } from "../../bridge/errors";
@@ -17,19 +17,19 @@ export function ImportQueuePanel({ items, onDecide }: { items: readonly QueueIte
   const run = useAction();
   if (items.length === 0) return null;
   return (
-    <section aria-labelledby="import-queue" className="rounded-xl border border-border bg-surface p-3">
+    <section aria-labelledby="import-queue" className="rounded-card border border-border bg-surface p-3">
       <Typography id="import-queue" variant="heading-6" color="fg" className="mb-2">
         {tp("mods.queue.title", items.length)}
       </Typography>
       <ul className="flex max-h-48 flex-col gap-1 overflow-auto">
         {items.map((item) => (
-          <li key={item.operationId} className="flex items-center gap-3 rounded-md px-2 py-1 text-sm hover:bg-hover">
+          <li key={item.operationId} className="flex items-center gap-3 rounded-control px-2 py-1 text-sm hover:bg-state-hover">
             <OperationStatusBadge status={item.status} />
             <span className="min-w-0 flex-1 truncate text-fg" title={item.label}>
               {item.label}
             </span>
             {item.decision ? (
-              <Button size="sm" tone="warning" startIcon={<AlertTriangle aria-hidden="true" />} onClick={() => onDecide(item)}>
+              <Button emphasis="high" size="sm" intent="warning" startIcon={<TriangleAlertIcon size="sm" />} onClick={() => onDecide(item)}>
                 {t("mods.queue.decide")}
               </Button>
             ) : item.step ? (
@@ -37,13 +37,13 @@ export function ImportQueuePanel({ items, onDecide }: { items: readonly QueueIte
             ) : null}
             <Button
               size="icon-sm"
-              variant="ghost"
+              emphasis="low"
               disabled={!item.cancellable}
               title={item.cancellable ? undefined : t("error.operation_not_cancellable")}
               aria-label={t("mods.queue.cancel", { name: item.label })}
               onClick={() => void run(() => backend.cancelImport(item.operationId))}
             >
-              <X aria-hidden="true" className="h-4 w-4" />
+              <XIcon size="sm" />
             </Button>
           </li>
         ))}
@@ -156,38 +156,38 @@ export function ImportDecisionDialog({ item, onClose }: { item: QueueItem | null
             {isRoot ? (
               <>
                 {decision.kind !== "root_ambiguous" ? (
-                  <Alert.Root variant="warning">
+                  <Alert.Root intent="warning">
                     <Alert.Description>{t(`mods.decision.${decision.kind}.warning` as MessageKey)}</Alert.Description>
                   </Alert.Root>
                 ) : null}
                 <Typography variant="body-sm" color="fg">
                   {t("mods.decision.chosenRoot", { root: root || t("mods.installation.archiveRoot") })}
                 </Typography>
-                <div className="max-h-[45vh] overflow-auto rounded-lg border border-border p-2">
+                <div className="max-h-[45vh] overflow-auto rounded-control border border-border p-2">
                   <Tree
                     aria-label={t("mods.decision.tree")}
                     nodes={[{ id: "\u0000root", label: t("mods.installation.archiveRoot"), data: "", children: nodes }]}
                     defaultExpanded={new Set(["\u0000root", ...decision.candidates.flatMap((c) => c.split("/").map((_, i, a) => a.slice(0, i + 1).join("/")))])}
                     selectedId={root === "" ? "\u0000root" : root}
                     onSelect={(node) => setRoot((node.data as string) ?? "")}
-                    renderIcon={() => <Folder aria-hidden="true" className="h-4 w-4 text-fg-muted" />}
+                    renderIcon={() => <FolderIcon size="sm" className="text-fg-muted" />}
                   />
                 </div>
               </>
             ) : null}
 
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={() => void answer({ choice: "cancel" })}>
+          <Button disabled={busy} onClick={() => void answer({ choice: "cancel" })}>
             {t("mods.decision.cancelImport")}
           </Button>
-          <Button disabled={busy || (choice === "variant" && !label.trim())} loading={busy} onClick={confirm}>
+          <Button emphasis="high" disabled={busy || (choice === "variant" && !label.trim())} loading={busy} onClick={confirm}>
             {t(isRoot ? "mods.decision.install" : decision.kind === "suspicious_ratio" ? "mods.decision.continue" : "mods.decision.confirm")}
           </Button>
         </Modal.Footer>

@@ -4,6 +4,7 @@ import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, ModOrder, ModRow, MoveRequest, ProfileSummary } from "../bridge/types";
 import { moveRequestFor, orderedRows } from "../features/mods/mod-order";
+import { chooseOption } from "../test/select";
 
 const mod = (id: string, name: string, over: Partial<ModRow> = {}): ModRow => ({
   id,
@@ -156,7 +157,7 @@ describe("Profiles (F5)", () => {
     const { state, backend } = world();
     render(<App backend={backend} />);
     const select = await screen.findByRole("combobox", { name: "Active profile" });
-    await user.selectOptions(select, "Survival");
+    await chooseOption(user, select, "Survival");
     await waitFor(() => expect(state.calls).toContain("activate:p2"));
   });
 

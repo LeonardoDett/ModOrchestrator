@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ArrowDown, ArrowUp, Equal, EyeOff } from "lucide-react";
-import { Button, Indicator, Input, Spinner, Stack, Typography } from "dettmann-ui";
+import { Equal } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, EyeOffIcon } from "dettmann-ui/icons";
+import { Button, Indicator, Input, Loader, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useModConflictFiles, useModConflicts } from "../../bridge/queries";
 import type { ConflictFileState, ConflictOpponent, FileLocation } from "../../bridge/types";
@@ -16,7 +17,7 @@ export function InspectorConflicts({ instance, mod, onEdit }: { instance: string
   const text = useConflictText();
   const data = useModConflicts(instance, mod);
   if (data.status === "error") return <ErrorAlert title="conflicts.loadError" error={data.error} onRetry={data.reload} />;
-  if (data.status !== "ready") return <Spinner label={t("common.loading")} />;
+  if (data.status !== "ready") return <Loader label={t("common.loading")} />;
   const { opponents, indicator } = data.data;
   if (opponents.length === 0) {
     return (
@@ -36,7 +37,7 @@ export function InspectorConflicts({ instance, mod, onEdit }: { instance: string
         <Typography variant="body-sm" color="fg">
           {t(`conflicts.indicator.${indicator}` as MessageKey)}
         </Typography>
-        <Button size="sm" variant="outline" onClick={onEdit}>
+        <Button size="sm" onClick={onEdit}>
           {t("mods.action.editConflicts")}
         </Button>
       </div>
@@ -63,7 +64,7 @@ export function InspectorConflicts({ instance, mod, onEdit }: { instance: string
   );
 }
 
-const STATE_ICON = { wins: ArrowUp, loses: ArrowDown, redundant: Equal, hidden: EyeOff } as const;
+const STATE_ICON = { wins: ArrowUpIcon, loses: ArrowDownIcon, redundant: Equal, hidden: EyeOffIcon } as const;
 
 /**
  * Inspector › Arquivos: the footprint with a mark per file (vence / perde
@@ -99,7 +100,7 @@ export function InspectorFiles({
           <Typography variant="caption" color="muted-fg">
             {tp("mods.files.count", files.data.total)}
           </Typography>
-          <ul className="max-h-[50vh] overflow-auto rounded-lg border border-border text-xs">
+          <ul className="max-h-[50vh] overflow-auto rounded-control border border-border text-xs">
             {files.data.files.map((f) => {
               const rival = f.winner?.id ?? f.opponents[0]?.id;
               return (
@@ -113,7 +114,7 @@ export function InspectorFiles({
                     {f.state !== "none" ? (
                       <Indicator
                         icon={STATE_ICON[f.state]}
-                        tone={f.state === "loses" ? "warning" : "subtle"}
+                        intent={f.state === "loses" ? "warning" : "subtle"}
                         label={mark(f.state, f.winner?.name)}
                       />
                     ) : null}
@@ -121,13 +122,13 @@ export function InspectorFiles({
                     {f.overridden ? <span className="text-fg-muted">· {t("conflicts.resolution.override")}</span> : null}
                     <span className="ml-auto flex gap-1">
                       {rival && f.state !== "hidden" ? (
-                        <Button size="sm" variant="ghost" onClick={() => onChooseWinner({ a: mod, b: rival, focus: f.location })}>
+                        <Button size="sm" emphasis="low" onClick={() => onChooseWinner({ a: mod, b: rival, focus: f.location })}>
                           {t("conflicts.chooseWinner")}
                         </Button>
                       ) : null}
                       <Button
                         size="sm"
-                        variant="ghost"
+                        emphasis="low"
                         onClick={() => void run(() => backend.setFileExclusions(instance, mod, [f.location], f.state !== "hidden"))}
                       >
                         {t(f.state === "hidden" ? "conflicts.showFile" : "conflicts.hideFile")}
@@ -142,7 +143,7 @@ export function InspectorFiles({
       ) : files.status === "error" ? (
         <ErrorAlert title="mods.loadError" error={files.error} onRetry={files.reload} />
       ) : (
-        <Spinner label={t("common.loading")} />
+        <Loader label={t("common.loading")} />
       )}
     </Stack>
   );

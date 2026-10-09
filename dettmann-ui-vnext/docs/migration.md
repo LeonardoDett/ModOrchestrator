@@ -1,6 +1,6 @@
 # Migration: dettmann-ui v1 → v2
 
-v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `frontend/` stays on `dettmann-ui-v1` until subproject 4 (migration); these tables are the input for that work. All substitutions are mechanical class/prop changes; the sections below follow the order in which they were applied inside the library.
+v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `frontend/` was migrated with these tables in subproject 4 (app decision D107). All substitutions are mechanical class/prop changes; the sections below follow the order in which they were applied inside the library.
 
 ## What stays
 
@@ -96,7 +96,7 @@ State changes animate with `playKey`; continuous states with `loop` (and status 
 
 `Input.Select` keeps its API (`options`, `placeholder`, value/onChange on `Input.Root`), but renders a custom `role="combobox"` button plus a `listbox` instead of `<select>`. Options may now carry `icon` and `description`, and an item `{ label, options: [...] }` renders as a group.
 
-Tests that drove the native element must change: `user.selectOptions(combobox, "x")` becomes `await user.click(combobox); await user.click(screen.getByRole("option", { name: "X" }))`. The Mod Orchestrator frontend has 8 `selectOptions` calls to update in subproject 4. Forms still submit the value through a hidden `<input name>`.
+Tests that drove the native element must change: `user.selectOptions(combobox, "x")` becomes `await user.click(combobox); await user.click(screen.getByRole("option", { name: "X" }))`. The Mod Orchestrator frontend does it through `chooseOption` (`frontend/src/test/select.ts`), and `toHaveValue` on the trigger became `toHaveTextContent(label)`. Forms still submit the value through a hidden `<input name>`.
 
 ## Business rules of the new contract
 

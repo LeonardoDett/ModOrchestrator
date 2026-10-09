@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { FolderInput, FolderOpen, Sparkles } from "lucide-react";
-import { Alert, Badge, Button, Input, Modal, Spinner, Stack, Typography } from "dettmann-ui";
+import { FolderInput } from "lucide-react";
+import { FolderOpenIcon, SparklesIcon } from "dettmann-ui/icons";
+import { Alert, Badge, Button, Input, Modal, Loader, Stack, Typography, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import { useDeployMethods, useInstanceDetails } from "../../bridge/queries";
@@ -24,7 +25,7 @@ export function GameFoldersSection({ instance }: { instance: string }) {
   const details = useInstanceDetails(instance);
   const [moving, setMoving] = useState<"staging" | "archives" | null>(null);
 
-  if (details.status === "loading") return <Spinner label={t("common.loading")} />;
+  if (details.status === "loading") return <Loader label={t("common.loading")} />;
   if (details.status === "error") return <ErrorAlert title="games.loadError" error={details.error} onRetry={details.reload} />;
   if (details.status !== "ready") return null;
   const g = details.data;
@@ -38,10 +39,10 @@ export function GameFoldersSection({ instance }: { instance: string }) {
       {rows.map((r) => (
         <SettingLine key={r.which} label={t(r.label)} description={t(r.help)}>
           <span className="max-w-xs break-all font-mono text-xs text-fg">{r.path}</span>
-          <Button size="sm" variant="ghost" startIcon={<FolderOpen aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => void run(() => backend.openInstanceFolder(instance, r.which))}>
+          <Button size="sm" emphasis="low" startIcon={<FolderOpenIcon size="sm" />} onClick={() => void run(() => backend.openInstanceFolder(instance, r.which))}>
             {t("settings.open")}
           </Button>
-          <Button size="sm" variant="outline" startIcon={<FolderInput aria-hidden="true" className="h-3.5 w-3.5" />} onClick={() => setMoving(r.which)}>
+          <Button size="sm" startIcon={<Icon icon={FolderInput} size="sm" />} onClick={() => setMoving(r.which)}>
             {t("settings.mods.moveStaging")}
           </Button>
         </SettingLine>
@@ -58,7 +59,7 @@ export function DeployMethodSection({ instance, children }: { instance: string; 
   const methods = useDeployMethods(instance);
   const [method, setMethod] = useState<DeployMethod | null>(null);
 
-  if (methods.status === "loading") return <Spinner label={t("common.loading")} />;
+  if (methods.status === "loading") return <Loader label={t("common.loading")} />;
   if (methods.status === "error") return <ErrorAlert title="settings.loadError" error={methods.error} onRetry={methods.reload} />;
   if (methods.status !== "ready") return null;
 
@@ -71,13 +72,13 @@ export function DeployMethodSection({ instance, children }: { instance: string; 
           description={m.available ? t(`settings.mods.methodAbout.${m.method}` as MessageKey) : t(`deploy.methodReason.${m.reason ?? "unknown"}` as MessageKey)}
         >
           {m.preferred ? (
-            <Badge tone="success">{t("settings.mods.inUse")}</Badge>
+            <Badge intent="success">{t("settings.mods.inUse")}</Badge>
           ) : m.available ? (
-            <Button size="sm" variant="outline" onClick={() => setMethod(m)}>
+            <Button size="sm" onClick={() => setMethod(m)}>
               {t("settings.mods.useMethod")}
             </Button>
           ) : (
-            <Badge variant="muted">{t("settings.mods.unavailable")}</Badge>
+            <Badge emphasis="low">{t("settings.mods.unavailable")}</Badge>
           )}
         </SettingLine>
       ))}
@@ -107,10 +108,10 @@ function FolderField({ label, value, onChange, onBrowse, onSuggest }: { label: s
         <Input.Box className="flex-1">
           <Input.Field />
         </Input.Box>
-        <Button variant="ghost" startIcon={<Sparkles aria-hidden="true" />} onClick={onSuggest}>
+        <Button emphasis="low" startIcon={<SparklesIcon size="sm" />} onClick={onSuggest}>
           {t("settings.suggest")}
         </Button>
-        <Button variant="outline" startIcon={<FolderOpen aria-hidden="true" />} onClick={onBrowse}>
+        <Button startIcon={<FolderOpenIcon size="sm" />} onClick={onBrowse}>
           {t("wizard.browse")}
         </Button>
       </div>
@@ -175,29 +176,29 @@ function MoveStagingDialog({ instance, game, onClose }: { instance: string; game
                 </Typography>
                 {preview.deployed ? <Typography variant="body-sm" color="muted-fg">{t("settings.mods.moveDeployed")}</Typography> : null}
                 {!preview.hardlinkAfter ? (
-                  <Alert.Root variant="warning">
+                  <Alert.Root intent="warning">
                     <Alert.Description>{t("settings.mods.moveNoHardlink")}</Alert.Description>
                   </Alert.Root>
                 ) : null}
               </Stack>
             ) : null}
             {problem ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{t(problem as MessageKey, { folder: preview?.to ?? "", reason: preview?.reason ?? "" })}</Alert.Description>
               </Alert.Root>
             ) : null}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !preview || Boolean(preview.problem)} onClick={() => void move()}>
+          <Button emphasis="high" disabled={busy || !preview || Boolean(preview.problem)} onClick={() => void move()}>
             {t("settings.mods.move")}
           </Button>
         </Modal.Footer>
@@ -259,22 +260,22 @@ function MoveArchivesDialog({ instance, game, onClose }: { instance: string; gam
               </Stack>
             ) : null}
             {problem ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{t(problem as MessageKey, { folder: preview?.to ?? "", reason: preview?.reason ?? "" })}</Alert.Description>
               </Alert.Root>
             ) : null}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy || !preview || Boolean(preview.problem)} onClick={() => void move()}>
+          <Button emphasis="high" disabled={busy || !preview || Boolean(preview.problem)} onClick={() => void move()}>
             {t("settings.mods.move")}
           </Button>
         </Modal.Footer>
@@ -308,22 +309,22 @@ function ChangeMethodDialog({ instance, method, onClose }: { instance: string; m
           <Stack gap="md">
             <Typography variant="body-sm">{t("settings.mods.methodExplain")}</Typography>
             {method.method === "copy" ? (
-              <Alert.Root variant="info">
+              <Alert.Root intent="info">
                 <Alert.Description>{t("settings.mods.methodCopyNote")}</Alert.Description>
               </Alert.Root>
             ) : null}
             {error ? (
-              <Alert.Root variant="danger">
+              <Alert.Root intent="danger">
                 <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
               </Alert.Root>
             ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline" disabled={busy} onClick={onClose}>
+          <Button disabled={busy} onClick={onClose}>
             {t("common.cancel")}
           </Button>
-          <Button disabled={busy} onClick={() => void change()}>
+          <Button emphasis="high" disabled={busy} onClick={() => void change()}>
             {t("settings.mods.useMethod")}
           </Button>
         </Modal.Footer>
