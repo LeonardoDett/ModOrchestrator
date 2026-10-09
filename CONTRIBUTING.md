@@ -6,6 +6,8 @@ Obrigado pelo interesse. O Mod Orchestrator é open source sob a [GPL-3.0-or-lat
 
 Ao abrir um PR, você concorda que a contribuição é licenciada sob a mesma licença do projeto (GPL-3.0-or-later). Não há CLA. Só envie código que você escreveu ou que tenha licença compatível com GPL-3.0, com a atribuição original preservada.
 
+**Exceção: a `dettmann-ui`.** O que você contribuir nas pastas `dettmann-ui-v1/` e `dettmann-ui-vnext/` é licenciado sob a GPL-3.0-or-later **e também** sob a [licença MIT](https://opensource.org/license/mit), com você como titular do copyright. A `dettmann-ui` é uma biblioteca de UI que o autor do projeto também usa fora do Mod Orchestrator, e a licença MIT nas contribuições permite isso. O Mod Orchestrator continua inteiro sob a GPL-3.0-or-later. Se não quiser licenciar sob MIT, não altere essas pastas no seu PR.
+
 ## Compilar e testar
 
 Pré-requisitos e passo a passo em [README.md › Desenvolvimento](README.md#desenvolvimento). Tudo o que é necessário está no repositório, incluindo a `dettmann-ui` (`dettmann-ui-vnext/`).

@@ -68,4 +68,4 @@ defina `MODORCHESTRATOR_DATA_DIR`.
 
 Contribuições por PR são bem-vindas: veja [CONTRIBUTING.md](CONTRIBUTING.md). Publicação e assinatura dos executáveis: `mod-orchestrator-spec-v2/plano-de-publicacao.md`.
 
-Licença: [GPL-3.0-or-later](LICENSE), incluindo a `dettmann-ui` (D076).
+Licença: [GPL-3.0-or-later](LICENSE), incluindo a `dettmann-ui` (D076). Contribuições à `dettmann-ui` também são licenciadas sob MIT (D096; ver [CONTRIBUTING.md](CONTRIBUTING.md)).

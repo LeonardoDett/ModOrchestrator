@@ -548,7 +548,7 @@ Status: vigente (confirmada pelo usuário em 2026-10-08)
 6. **Indicador "totalmente sobrescrito"** conta arquivos ocultados como não fornecidos: um mod que perde o que sobra e ocultou o resto é totalmente sobrescrito.
 
 ## D076 — Licença GPL-3.0-or-later e modelo de contribuição
-Status: vigente
+Status: vigente (emendada por D096: contribuições à `dettmann-ui`)
 
 Escolhido pelo usuário em 2026-10-01. O projeto é open source sob **GPL-3.0-or-later** (`LICENSE` na raiz), incluindo a `dettmann-ui` (`dettmann-ui-vnext/`), que continua versionada no mesmo repositório (D052). Contribuições entram por PR sob a mesma licença (inbound = outbound, termos do GitHub); não há CLA. O app é gratuito; não existe sistema de chave/ativação.
 
@@ -799,3 +799,17 @@ Status: vigente (executa D016)
 3. **Quatro subprojetos**: (1) fundação (motor de temas, contrato de ênfase, primitivas; concluída), (2) ícones animados, (3) revisão dos componentes com personalidade e micro-interações, (4) integração no Mod Orchestrator (migração do `frontend/`).
 4. **Skills novas** `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (instaladas em `.claude/skills` e `.cursor/skills` por `npm run skills:install`) valem para o trabalho em `dettmann-ui-vnext/`. O `frontend/` continua com as skills v1 (`theme-first`, `composition`, `component-authoring`, `ui-review`, em `dettmann-ui-v1/.cursor/skills/dettmann-ui/`) até o subprojeto 4, quando as novas as substituem (inclusive os caminhos citados na D016); o `AGENTS.md` roteia por pasta.
 5. **Escolhas de design do usuário**: forma `balanced` (controle 8, card 12, painel 16 px); movimento `expressive` com intensidade por ênfase (menu responsivo, CTA expressivo); tipografia Plus Jakarta Sans + JetBrains Mono; tema por sementes + botões de personalidade (com `overrides` por papel como válvula de escape); família `secondary` removida (a estrutura vem de neutros tingidos pela marca).
+
+## D096 — Contribuições à dettmann-ui licenciadas também sob MIT
+Status: vigente (emenda D076)
+
+Escolhido pelo usuário em 2026-10-08. O projeto continua inteiro sob **GPL-3.0-or-later** (D076), mas contribuições de terceiros nas pastas `dettmann-ui-v1/` e `dettmann-ui-vnext/` entram sob GPL-3.0-or-later **e** MIT (cláusula em `CONTRIBUTING.md`). Motivo: o autor quer reutilizar a `dettmann-ui` como base de projetos comerciais separados, possivelmente fechados. O código que ele mesmo escreveu já pode ser usado assim por ser o titular; o código de outras pessoas recebido só sob GPL impediria esse uso.
+
+Consequências:
+- Não há CLA; a cláusula vale ao abrir o PR (inbound declarado no `CONTRIBUTING.md`). Quem não aceitar MIT não altera essas pastas.
+- Revisão de PR: mudança em `dettmann-ui-*` só entra se o autor do PR for o autor do código (ou o código tiver licença compatível com MIT, com a atribuição preservada).
+- A licença de distribuição da `dettmann-ui` não muda: dentro do Mod Orchestrator ela continua GPL-3.0-or-later.
+
+Alternativas rejeitadas: CLA no repositório todo (afasta contribuidores; o Vortex, referência do projeto, é GPL-3.0 sem CLA); lib fechada ou só com código compilado (impede compilar e contribuir só com o repositório, contrariando D076); MPL-2.0 ou MIT na lib inteira (o usuário preferiu uma licença única para o projeto).
+
+Proteção do nome: nenhuma licença protege o nome "Mod Orchestrator"; isso depende de registro de marca (INPI), fora do repositório.
