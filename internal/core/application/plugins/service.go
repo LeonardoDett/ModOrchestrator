@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"maps"
 	"strconv"
+	"strings"
 	"sync"
 
 	"modorchestrator/internal/core/application/games"
@@ -161,6 +162,10 @@ type Service struct {
 	mu sync.Mutex
 	// installations caches immutable installations by id.
 	installations map[mod.InstallationID]*mod.Installation
+	// roots caches the files of an installation at the top of the plugin
+	// target, the only ones the inventory reads (F14: scanning every file
+	// of every mod after each deploy cost seconds at 500,000 files).
+	roots map[mod.InstallationID][]mod.File
 	// seen is the last observation of each load order file (monitor).
 	seen map[game.InstanceID]fileSeen
 	bg   *background
@@ -171,7 +176,7 @@ func NewService(d Deps) *Service {
 	if d.Locks == nil {
 		d.Locks = instancelock.New()
 	}
-	s := &Service{Deps: d, installations: map[mod.InstallationID]*mod.Installation{}, seen: map[game.InstanceID]fileSeen{}}
+	s := &Service{Deps: d, installations: map[mod.InstallationID]*mod.Installation{}, roots: map[mod.InstallationID][]mod.File{}, seen: map[game.InstanceID]fileSeen{}}
 	s.bg = newBackground(s)
 	return s
 }
@@ -237,6 +242,31 @@ func (s *Service) installation(ctx context.Context, id mod.InstallationID) (*mod
 	s.installations[id] = inst
 	s.mu.Unlock()
 	return inst, nil
+}
+
+// rootFiles returns the files of an installation at the top of target.
+// Installations never change, so the answer is kept.
+func (s *Service) rootFiles(ctx context.Context, id mod.InstallationID, target game.TargetID) ([]mod.File, error) {
+	s.mu.Lock()
+	files, ok := s.roots[id]
+	s.mu.Unlock()
+	if ok {
+		return files, nil
+	}
+	inst, err := s.installation(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	files = []mod.File{}
+	for _, f := range inst.Files {
+		if f.Dest.Target == target && !strings.Contains(f.Dest.Path.String(), "/") {
+			files = append(files, f)
+		}
+	}
+	s.mu.Lock()
+	s.roots[id] = files
+	s.mu.Unlock()
+	return files, nil
 }
 
 // Close stops the background work (monitor and coalesced sync).

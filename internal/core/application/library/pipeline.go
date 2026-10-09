@@ -668,10 +668,14 @@ func (p *pipeline) stage(ctx context.Context) error {
 		return err
 	}
 	used := map[string]string{}
+	made := map[string]bool{} // one MkdirAll per folder, not per file (F14)
 	for i, f := range p.plan.Files {
 		dst := game.JoinPath(p.staged, f.Dest.String())
-		if err := p.s.FS.MkdirAll(ctx, parentDir(dst)); err != nil {
-			return err
+		if parent := parentDir(dst); !made[parent] {
+			if err := p.s.FS.MkdirAll(ctx, parent); err != nil {
+				return err
+			}
+			made[parent] = true
 		}
 		if first, dup := used[f.Source.Key()]; dup {
 			if err := p.s.FS.Copy(ctx, first, dst); err != nil {

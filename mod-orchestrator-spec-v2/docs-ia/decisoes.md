@@ -829,3 +829,39 @@ Status: vigente (emenda D062)
 O app usa uma cópia do v2.4.1 em `third_party/rardecode` com as duas correções em `decode_reader.go` (descritas em `PATCHES.md`), ligada por `replace` no `go.mod`; o import continua `github.com/nwaples/rardecode/v2`. A licença BSD-2 e a atribuição acompanham a cópia (D076). Teste de regressão: fixture sintética `rar5-wrap.rar`, que falha com o upstream e com cada correção isolada.
 
 Motivo: sem a correção, archives RAR grandes (comuns em mods de texturas) não importam, e não existe versão corrigida publicada. Custo aceito: manter a cópia até o upstream corrigir; a correção deve ser proposta ao upstream e a cópia removida quando houver release equivalente. Alternativas rejeitadas: fork publicado em outro repositório (mais um repositório para manter, mesmo efeito); 7-Zip/unRAR externo (rejeitado em D062).
+
+## D099 — Hardening da F14: caminhos, archives e erros de arquivo
+Status: vigente (executa INV-ID-02, INV-ID-04, D039; emenda D062)
+
+Achados dos testes da F14 e o que passou a valer:
+
+1. **UTF-8 inválido é recusado** por `relpath.Parse`: o Windows troca cada byte inválido por U+FFFD, então dois nomes diferentes viravam o mesmo arquivo. A checagem de "vazio" passou a ser feita depois da normalização (antes, `" /"` era recusado e `" "` aceito).
+2. **ZIP sem a flag UTF-8** tem os nomes decodificados em CP437 (padrão do APPNOTE, apêndice D) com `golang.org/x/text/encoding/charmap`; o módulo já estava no grafo como dependência indireta e passa a direta (nenhum módulo novo). RAR e 7z já trazem Unicode.
+3. **`Key` dobra mais que o NTFS**: `strings.ToLower` junta alguns caracteres que o NTFS mantém distintos (`İ`/`i`, `K` Kelvin/`k`, `Å` Angstrom/`å`). Aceito: dois arquivos assim contam como uma Location (um conflito a mais), nunca o contrário. O fuzz com o Windows como oráculo (`FuzzRelpathOnWindows`) verifica a direção perigosa: mesmo arquivo no disco implica mesma `Key`.
+4. **Origem que não pode ser lida** (arquivo em uso por outro programa, como um antivírus, ou sem permissão) falha o import com `import_source_unreadable` (`reason` = `file_locked` ou `permission_denied`), em vez de `import_unsupported_format`.
+5. **Falha do passo `post` não esconde `deploy_failed`**: quando Locations já falharam, o resultado da operação é `deploy_failed` com o motivo, e a load order acompanha o próximo deploy. Erros do SO em `Stat`, `ReadDir`, `Open` e `WriteFile` passam a ser classificados (permissão, arquivo travado, disco cheio, caminho longo), como já eram nas escritas.
+6. **Mover staging ou ArchiveStore interrompido** antes de o marcador ser escrito deixava a pasta de destino vazia; o registro da mudança guarda se a operação criou a pasta (`created`) e a recuperação a remove se estiver vazia.
+7. **Eventos de operação** são gravados com `instance_id` pelo mesmo escritor do unit of work (antes ficavam vazios, ao contrário do backfill da migration 0007). Sem efeito visível: o histórico esconde `operation.*`.
+
+## D100 — Tela de recuperação do banco (core/14 §2, §5)
+Status: proposta (implementada na F14; aguarda confirmação do usuário)
+
+O app encerrava sem janela (`log.Fatalf`) quando o banco estava danificado, era de uma versão mais nova ou uma migration falhava. A spec pede a tela de recuperação, mas não a desenha; esta é a forma adotada:
+
+- **Fechamento anormal**: o arquivo `<dataDir>/state.session` existe enquanto o app roda e é apagado no fechamento normal. Encontrado na inicialização, roda `PRAGMA integrity_check` (1,9 s num banco de 535 MB com 2.000 mods e 500 mil arquivos implantados; não roda depois de um fechamento normal).
+- **Falha ao usar o banco** vira `StartupFailure` com `reason`: `corrupt` (não é banco, página danificada, integrity_check falhou), `newer_schema`, `migration_failed` (a migration é desfeita e o banco fica na versão anterior; há backup pré-migration) ou `startup_failed` (qualquer outra). A janela abre só a tela de recuperação; o idioma vem do SO (não há settings sem banco) e o tema é o padrão.
+- **Ações**: restaurar um backup validado (recomendada: o banco atual vai para a pasta de backups como `damaged`, e a cópia é aplicada na inicialização seguinte como uma restauração normal, com as instâncias "não verificadas"); começar do zero (o banco vai para backups como `damaged`; nada fora da pasta de dados é tocado); abrir as pastas de backups e de logs; fechar. Backups `damaged` aparecem na lista como inválidos e a retenção guarda os 3 últimos. A poda de backups remove também os `-wal`/`-shm` que a validação deixa ao lado.
+- **Lacuna registrada**: redescobrir mods pelas pastas da staging e "Adotar" uma implantação depois de perder o banco (core/14 §5 e §6, core/04 §11) não existem. A tela diz, ao começar do zero, que jogos e mods precisam ser adicionados de novo e que arquivos implantados antes bloqueiam um novo deploy até serem removidos (`foreign_deployment`, nada é apagado). Fica para uma fase própria.
+
+## D101 — Desempenho da F14
+Status: vigente
+
+Medido com 2.000 mods, 500 mil arquivos e 3.000 plugins (relatório em `docs-ia/07-relatorio-f14.md`). Correções, sem mudar comportamento:
+
+- **Marcas do journal**: cada lote de 256 ações era gravado com uma transação por ação, e cada transação faz `fsync` (`synchronous=FULL`). Agora um lote é uma transação. A recuperação não muda: entre uma escrita no disco e sua marca sempre houve uma janela, e a reconciliação observa o disco (D078).
+- **Manifesto**: `Owns`/`Backup` faziam busca linear (o plano ficava quadrático); agora há um índice por tipo e Location, e a ordenação monta cada chave uma vez. O serviço de deploy guarda o último manifesto lido de cada instância e o reusa enquanto o cabeçalho gravado (operação, fingerprint, profile, entradas, data) for o mesmo; todo save o descarta e guarda o manifesto recém-gravado.
+- **Inventário de plugins**: depois de cada deploy lia o manifesto inteiro e percorria todos os arquivos de todos os mods; agora pergunta ao repositório só pelos plugins não gerenciados que encontra no disco (`OwnsLink`) e guarda, por Installation (imutável), os arquivos do topo do target de plugins.
+- **Stat no Windows**: um handle só (atributos, tamanho, datas e identidade) em vez de um stat mais uma segunda abertura; links simbólicos e arquivos que não abrem seguem o caminho antigo, e um teste compara os dois.
+- **Stage do import**: uma criação de pasta por pasta, não por arquivo.
+
+Efeito na escala completa: deploy sem mudanças de 25,4 s para 7,7 s, com 1 mod a mais ou a menos de 26,6/23,6 s para 9,2 s, purge de 117 s para 83 s. O que resta no deploy incremental é o scan completo de core/04 §5, cuja mudança depende de decisão do usuário (relatório §6).

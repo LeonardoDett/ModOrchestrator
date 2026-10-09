@@ -30,6 +30,15 @@ func New() OS { return OS{} }
 
 func (OS) Stat(_ context.Context, path string) (ports.FileInfo, error) {
 	p := longPath(path)
+	if info, ok, err := statFast(p); ok {
+		return info, err
+	}
+	return statSlow(p)
+}
+
+// statSlow is Stat through the portable API, plus the identity: links and
+// files that cannot be opened go this way.
+func statSlow(p string) (ports.FileInfo, error) {
 	fi, err := os.Lstat(p)
 	if errors.Is(err, fs.ErrNotExist) {
 		return ports.FileInfo{}, nil

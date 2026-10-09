@@ -1952,7 +1952,7 @@ export const ptBR: Record<MessageKey, string> = {
   "recovery.fresh.title": "Começar do zero?",
   "recovery.fresh.kept": "O banco danificado fica guardado na pasta de backups, para suporte.",
   "recovery.fresh.folders": "Nenhum arquivo é apagado: staging, archives e o jogo ficam como estão.",
-  "recovery.fresh.setup": "Jogos, perfis, regras e ordens começam vazios. Gerencie seus jogos de novo; arquivos implantados antes são oferecidos para adoção.",
+  "recovery.fresh.setup": "Jogos, mods, perfis, regras e ordens começam vazios: você adiciona seus jogos e importa seus mods de novo. Arquivos implantados antes ficam no jogo e bloqueiam um novo deploy nele até serem removidos.",
   "recovery.fresh.confirm": "Começar do zero e reiniciar",
   "recovery.detail": "Detalhes técnicos",
   "recovery.dataDir": "Pasta de dados: {path}",

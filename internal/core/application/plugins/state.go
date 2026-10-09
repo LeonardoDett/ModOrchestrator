@@ -11,7 +11,6 @@ import (
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/conflict"
-	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/health"
 	"modorchestrator/internal/core/domain/mod"
@@ -163,18 +162,15 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 		if !ok {
 			continue
 		}
-		inst, err := s.installation(ctx, m.Installation)
+		roots, err := s.rootFiles(ctx, m.Installation, target)
 		if errors.Is(err, ports.ErrNotFound) {
 			continue // staging problem, reported elsewhere
 		}
 		if err != nil {
 			return err
 		}
-		reduced := &mod.Installation{ID: inst.ID, Mod: inst.Mod, Instance: inst.Instance}
-		for _, f := range inst.Files {
-			if f.Dest.Target != target || strings.Contains(f.Dest.Path.String(), "/") {
-				continue
-			}
+		reduced := &mod.Installation{ID: m.Installation, Mod: mid, Instance: st.inst.ID}
+		for _, f := range roots {
 			if st.profile.IsEnabled(mid) {
 				st.rootFiles = append(st.rootFiles, f.Dest.Path.String())
 			}
@@ -263,12 +259,6 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 		}
 	}
 	// Plugins on disk that the manager does not own.
-	var manifest *deployment.Manifest
-	if m, err := s.Manifests.Current(ctx, st.inst.ID); err == nil {
-		manifest = m
-	} else if !errors.Is(err, ports.ErrNotFound) {
-		return err
-	}
 	dir := ""
 	for _, t := range st.inst.Targets {
 		if t.ID == target {
@@ -296,10 +286,12 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 			if inMods[rel.Key()] {
 				continue // the desired state replaces it
 			}
-			if manifest != nil {
-				if _, ours := manifest.Owns(loc); ours {
-					continue // deployed by us and no longer desired
-				}
+			ours, err := s.Manifests.OwnsLink(ctx, st.inst.ID, loc)
+			if err != nil {
+				return err
+			}
+			if ours {
+				continue // deployed by us and no longer desired
 			}
 			p := plugin.Plugin{Name: plugin.Name(e.Name), Location: loc, Origin: plugin.OriginUnmanaged}
 			s.header(ctx, st, &p, game.JoinPath(dir, e.Name))

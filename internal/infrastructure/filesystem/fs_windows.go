@@ -50,6 +50,45 @@ func longPath(path string) string {
 	return `\\?\` + clean
 }
 
+// statFast reads everything Stat returns through one handle (attributes,
+// size, times, file index), instead of a stat plus a second open for the
+// identity: deploy scans observe every location (F14). It does not handle
+// reparse points (symlinks keep the full path, which reads the link) nor
+// files it cannot open; ok is false for those.
+func statFast(path string) (info ports.FileInfo, ok bool, err error) {
+	p, err := windows.UTF16PtrFromString(path)
+	if err != nil {
+		return ports.FileInfo{}, false, nil
+	}
+	h, err := windows.CreateFile(p, 0, windows.FILE_SHARE_READ|windows.FILE_SHARE_WRITE|windows.FILE_SHARE_DELETE,
+		nil, windows.OPEN_EXISTING, windows.FILE_FLAG_BACKUP_SEMANTICS|windows.FILE_FLAG_OPEN_REPARSE_POINT, 0)
+	if errors.Is(err, windows.ERROR_FILE_NOT_FOUND) || errors.Is(err, windows.ERROR_PATH_NOT_FOUND) {
+		return ports.FileInfo{}, true, nil
+	}
+	if err != nil {
+		return ports.FileInfo{}, false, nil
+	}
+	defer windows.CloseHandle(h)
+	var d windows.ByHandleFileInformation
+	if err := windows.GetFileInformationByHandle(h, &d); err != nil || d.FileAttributes&windows.FILE_ATTRIBUTE_REPARSE_POINT != 0 {
+		return ports.FileInfo{}, false, nil
+	}
+	info = ports.FileInfo{
+		Exists:  true,
+		IsDir:   d.FileAttributes&windows.FILE_ATTRIBUTE_DIRECTORY != 0,
+		Size:    int64(d.FileSizeHigh)<<32 | int64(d.FileSizeLow),
+		ModTime: time.Unix(0, d.LastWriteTime.Nanoseconds()),
+		Created: time.Unix(0, d.CreationTime.Nanoseconds()),
+	}
+	if info.IsDir {
+		info.Size = 0
+	} else {
+		index := uint64(d.FileIndexHigh)<<32 | uint64(d.FileIndexLow)
+		info.FileID = strconv.FormatUint(uint64(d.VolumeSerialNumber), 16) + ":" + strconv.FormatUint(index, 16)
+	}
+	return info, true, nil
+}
+
 // fileID is volume serial + file index: the identity of hardlinked files.
 func fileID(path string) string {
 	p, err := windows.UTF16PtrFromString(path)

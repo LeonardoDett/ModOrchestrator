@@ -127,6 +127,9 @@ type Manifest struct {
 	Operation   operation.ID
 	AppliedAt   time.Time
 	entries     []Entry
+	// index finds an entry by kind and location: Owns and Backup are asked
+	// once per location of a plan (F14: linear search was quadratic).
+	index map[string]int
 }
 
 // NewManifest records a verified deploy (INV-DEP-05: only verified entries
@@ -147,21 +150,34 @@ func build(instance game.InstanceID, prof ProfileID, fp Fingerprint, op operatio
 	if instance == "" || op == "" {
 		return nil, fmt.Errorf("%w: manifest needs instance and operation", ErrInvalid)
 	}
+	// Each key is built once: the sort compared freshly built strings,
+	// which dominated loading a manifest of 500,000 entries (F14).
+	type keyed struct {
+		order, key string
+		e          Entry
+	}
+	all := make([]keyed, len(entries))
 	seen := make(map[string]struct{}, len(entries))
-	for _, e := range entries {
+	for i, e := range entries {
 		if err := e.validate(); err != nil {
 			return nil, err
 		}
-		if _, dup := seen[e.key()]; dup {
+		loc := e.Location.Key()
+		k := keyed{order: loc + "|" + string(e.Kind), key: string(e.Kind) + "|" + loc, e: e}
+		if _, dup := seen[k.key]; dup {
 			return nil, fmt.Errorf("%w: %s %s recorded twice", ErrInvalid, e.Kind, e.Location)
 		}
-		seen[e.key()] = struct{}{}
+		seen[k.key] = struct{}{}
+		all[i] = k
 	}
-	sorted := slices.Clone(entries)
-	slices.SortFunc(sorted, func(a, b Entry) int {
-		return strings.Compare(a.Location.Key()+"|"+string(a.Kind), b.Location.Key()+"|"+string(b.Kind))
-	})
-	return &Manifest{Instance: instance, Profile: prof, Fingerprint: fp, Operation: op, AppliedAt: at, entries: sorted}, nil
+	slices.SortFunc(all, func(a, b keyed) int { return strings.Compare(a.order, b.order) })
+	sorted := make([]Entry, len(all))
+	index := make(map[string]int, len(all))
+	for i, k := range all {
+		sorted[i] = k.e
+		index[k.key] = i
+	}
+	return &Manifest{Instance: instance, Profile: prof, Fingerprint: fp, Operation: op, AppliedAt: at, entries: sorted, index: index}, nil
 }
 
 // Purged reports whether this manifest records a complete purge.
@@ -233,8 +249,8 @@ func (m *Manifest) Dirs() []Entry {
 }
 
 func (m *Manifest) find(kind EntryKind, loc game.Location) (Entry, bool) {
-	i := slices.IndexFunc(m.entries, func(e Entry) bool { return e.Kind == kind && e.Location.Key() == loc.Key() })
-	if i < 0 {
+	i, ok := m.index[string(kind)+"|"+loc.Key()]
+	if !ok {
 		return Entry{}, false
 	}
 	return m.entries[i], true

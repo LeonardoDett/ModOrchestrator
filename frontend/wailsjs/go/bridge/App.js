@@ -638,10 +638,6 @@ export function SetSeparatorBlockEnabled(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetSeparatorBlockEnabled'](arg1, arg2, arg3);
 }
 
-export function Shutdown(arg1) {
-  return window['go']['bridge']['App']['Shutdown'](arg1);
-}
-
 export function SortPlugins(arg1) {
   return window['go']['bridge']['App']['SortPlugins'](arg1);
 }

@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"syscall"
 	"time"
+
+	"modorchestrator/internal/core/application/ports"
 )
 
 // The application targets Windows (D039); these keep the package buildable
@@ -15,6 +17,8 @@ import (
 func longPath(path string) string { return path }
 
 func fileID(string) string { return "" }
+
+func statFast(string) (ports.FileInfo, bool, error) { return ports.FileInfo{}, false, nil }
 
 func volumeOf(path string) (string, error) { return filepath.VolumeName(path), nil }
 

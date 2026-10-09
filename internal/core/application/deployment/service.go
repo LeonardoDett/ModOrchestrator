@@ -79,7 +79,8 @@ const (
 	subjectInstance = "instance"
 	holderDeploy    = "deploy"
 	holderPurge     = "purge"
-	holderMove      = "move_staging"
+	holderMove      = "move_staging"
+
 	holderMoveArchives = "move_archives"
 	holderMethod    = "change_method"
 )
@@ -146,6 +147,10 @@ type Service struct {
 	// needsDecision marks instances whose auto-deploy stopped before a
 	// decision (status blocked until a plan without decisions runs).
 	needsDecision map[game.InstanceID]bool
+	// manifests keeps the last manifest read of each instance; a read
+	// whose header still matches reuses it (F14: decoding 500,000 entries
+	// on every deploy). Every save drops it.
+	manifests map[game.InstanceID]*deployment.Manifest
 	// changes is the number of external changes to managed files the last
 	// scan saw; newFiles the number of generated files.
 	changes  map[game.InstanceID]int
@@ -177,7 +182,7 @@ type probeResult struct {
 // NewService wires the engine.
 func NewService(d Deps) *Service {
 	return &Service{
-		Deps: d, decisions: map[game.InstanceID]*waiting{}, needsDecision: map[game.InstanceID]bool{},
+		Deps: d, decisions: map[game.InstanceID]*waiting{}, needsDecision: map[game.InstanceID]bool{}, manifests: map[game.InstanceID]*deployment.Manifest{},
 		changes: map[game.InstanceID]int{}, newFiles: map[game.InstanceID]int{}, found: map[game.InstanceID]*found{}, failures: map[game.InstanceID][]Failure{}, lastStatus: map[game.InstanceID]string{},
 		installations: map[mod.InstallationID]*mod.Installation{}, symlinkProbe: map[string]probeResult{},
 		cancelFns: map[game.InstanceID]context.CancelFunc{},

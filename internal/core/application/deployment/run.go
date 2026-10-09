@@ -332,6 +332,7 @@ func (s *Service) settleJournal(ctx context.Context, inst game.Instance, j *depl
 	if err := s.writeMarkers(ctx, inst, m); err != nil {
 		return err
 	}
+	s.forgetManifest(inst.ID)
 	return s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
 		if err := tx.Manifests().Save(ctx, m, prev); err != nil {
 			return err
@@ -358,11 +359,57 @@ func (s *Service) manifestOf(instance game.InstanceID, prof deployment.ProfileID
 }
 
 func (s *Service) current(ctx context.Context, instance game.InstanceID) (*deployment.Manifest, error) {
+	h, err := s.Manifests.Header(ctx, instance)
+	if errors.Is(err, ports.ErrNotFound) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	s.mu.Lock()
+	cached := s.manifests[instance]
+	s.mu.Unlock()
+	if cached != nil && sameHeader(cached.Header(), h) {
+		return cached, nil // immutable: entries are copied on access
+	}
 	m, err := s.Manifests.Current(ctx, instance)
 	if errors.Is(err, ports.ErrNotFound) {
 		return nil, nil
 	}
-	return m, err
+	if err != nil {
+		return nil, err
+	}
+	s.mu.Lock()
+	s.manifests[instance] = m
+	s.mu.Unlock()
+	return m, nil
+}
+
+func sameHeader(a, b deployment.Header) bool {
+	return a.Operation == b.Operation && a.Fingerprint == b.Fingerprint && a.Profile == b.Profile &&
+		a.Entries == b.Entries && a.AppliedAt.Equal(b.AppliedAt)
+}
+
+// forgetManifest drops the cached manifest before a save replaces it.
+func (s *Service) forgetManifest(instance game.InstanceID) {
+	s.mu.Lock()
+	delete(s.manifests, instance)
+	s.mu.Unlock()
+}
+
+// rememberManifest keeps the manifest just saved, so the next deploy does
+// not decode it again; the stored header decides (times are stored with
+// less precision than they are made).
+func (s *Service) rememberManifest(ctx context.Context, m *deployment.Manifest) {
+	h, err := s.Manifests.Header(ctx, m.Instance)
+	if err != nil || h.Operation != m.Operation || h.Fingerprint != m.Fingerprint || h.Profile != m.Profile || h.Entries != m.Header().Entries {
+		return
+	}
+	stored := *m // entries and index are shared and never changed
+	stored.AppliedAt = h.AppliedAt
+	s.mu.Lock()
+	s.manifests[m.Instance] = &stored
+	s.mu.Unlock()
 }
 
 // preflight checks the global preconditions of core/04 §4.
@@ -652,7 +699,8 @@ func (s *Service) commitStep(ctx context.Context, r *run, entries []deployment.E
 	case len(r.failures) > r.raced:
 		evType = EventFailed
 	}
-	return s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
+	s.forgetManifest(r.inst.ID)
+	err = s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
 		if err := tx.Manifests().Save(ctx, m, r.stored); err != nil {
 			return err
 		}
@@ -664,6 +712,10 @@ func (s *Service) commitStep(ctx context.Context, r *run, entries []deployment.E
 		tx.Emit(s.newEvent(evType, r.inst.ID, r.t.ID(), payload))
 		return nil
 	})
+	if err == nil {
+		s.rememberManifest(ctx, m)
+	}
+	return err
 }
 
 // deploymentMarker is the content of <target>/.modorchestrator-deployment.json

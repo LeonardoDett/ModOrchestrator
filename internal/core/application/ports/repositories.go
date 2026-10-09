@@ -111,6 +111,9 @@ type Manifests interface {
 	Current(ctx context.Context, instance game.InstanceID) (*deployment.Manifest, error)
 	// Header reads the manifest without its entries (status queries).
 	Header(ctx context.Context, instance game.InstanceID) (deployment.Header, error)
+	// OwnsLink answers Manifest.Owns for one location without reading the
+	// whole manifest (the plugin inventory asks for a few files).
+	OwnsLink(ctx context.Context, instance game.InstanceID, loc game.Location) (bool, error)
 	// Save stores m. prev is the manifest it replaces (nil when none): the
 	// store may write only the entries that differ.
 	Save(ctx context.Context, m, prev *deployment.Manifest) error

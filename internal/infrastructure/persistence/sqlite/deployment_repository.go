@@ -99,6 +99,13 @@ func (r entryRecord) entry() (deployment.Entry, error) {
 
 func entryKey(e deployment.Entry) string { return string(e.Kind) + "|" + e.Location.Key() }
 
+func (r *ManifestRepository) OwnsLink(ctx context.Context, instance game.InstanceID, loc game.Location) (bool, error) {
+	var n int
+	err := r.db.QueryRowContext(ctx, `SELECT COUNT(*) FROM deployment_entries WHERE instance_id = ? AND kind = ? AND location_key = ?`,
+		string(instance), string(deployment.KindLink), loc.Key()).Scan(&n)
+	return n > 0, err
+}
+
 func (r *ManifestRepository) Header(ctx context.Context, instance game.InstanceID) (deployment.Header, error) {
 	var (
 		h                        deployment.Header
@@ -385,14 +392,19 @@ func (r *JournalRepository) Pending(ctx context.Context, instance game.InstanceI
 	return deployment.RestoreJournal(j, states)
 }
 
+// Mark records a batch of action states in one transaction: one sync per
+// batch, not one per file (F14: a sync per action made deploys
+// I/O-bound).
 func (r *JournalRepository) Mark(ctx context.Context, instance game.InstanceID, states map[int]deployment.ActionState) error {
-	for i, s := range states {
-		if _, err := r.db.ExecContext(ctx, `UPDATE deployment_journal_actions SET state = ? WHERE instance_id = ? AND idx = ?`,
-			string(s), string(instance), i); err != nil {
-			return err
+	return inTx(ctx, r.db, func(q querier) error {
+		for i, s := range states {
+			if _, err := q.ExecContext(ctx, `UPDATE deployment_journal_actions SET state = ? WHERE instance_id = ? AND idx = ?`,
+				string(s), string(instance), i); err != nil {
+				return err
+			}
 		}
-	}
-	return nil
+		return nil
+	})
 }
 
 func (r *JournalRepository) Delete(ctx context.Context, instance game.InstanceID) error {

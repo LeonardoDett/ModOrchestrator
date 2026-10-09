@@ -12,3 +12,21 @@ type querier interface {
 	QueryContext(ctx context.Context, query string, args ...any) (*sql.Rows, error)
 	QueryRowContext(ctx context.Context, query string, args ...any) *sql.Row
 }
+
+// inTx runs fn in a transaction of its own when q is the database, or in
+// the caller's transaction when q already is one.
+func inTx(ctx context.Context, q querier, fn func(q querier) error) error {
+	db, ok := q.(*sql.DB)
+	if !ok {
+		return fn(q)
+	}
+	tx, err := db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if err := fn(tx); err != nil {
+		return err
+	}
+	return tx.Commit()
+}

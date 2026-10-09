@@ -1955,7 +1955,7 @@ export const en = {
   "recovery.fresh.title": "Start from scratch?",
   "recovery.fresh.kept": "The damaged database is kept in the backups folder, for support.",
   "recovery.fresh.folders": "No file is deleted: staging, archives and the game stay as they are.",
-  "recovery.fresh.setup": "Games, profiles, rules and orders start empty. Manage your games again; files deployed before are offered for adoption.",
+  "recovery.fresh.setup": "Games, mods, profiles, rules and orders start empty: you add your games and import your mods again. Files deployed before stay in the game and block a new deploy there until they are removed.",
   "recovery.fresh.confirm": "Start from scratch and restart",
   "recovery.detail": "Technical details",
   "recovery.dataDir": "Data folder: {path}",
