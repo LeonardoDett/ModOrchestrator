@@ -738,7 +738,11 @@ func (s *Service) post(ctx context.Context, r *run) error {
 	// leaves the file as it is (the game ignores missing plugins).
 	if r.kind == KindDeploy && s.LoadOrder != nil && !r.cancelled {
 		if err := s.LoadOrder.AfterDeploy(ctx, r.inst.ID, r.t.ID()); err != nil {
-			return err
+			// Locations already failed: that is the outcome the user acts
+			// on, and the load order follows the next deploy (F14).
+			if len(real) == 0 {
+				return fileError(err)
+			}
 		}
 	}
 	after := s.statusKey(ctx, r.inst.ID)

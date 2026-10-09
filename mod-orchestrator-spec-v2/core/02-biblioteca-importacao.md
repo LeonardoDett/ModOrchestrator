@@ -112,7 +112,7 @@ Editáveis: nome, versão, autor, categoria, notas (texto longo), destaque (cor 
 
 ## 11. Erros (códigos estáveis)
 
-`import_unsupported_format`, `archive_corrupt`, `archive_unsafe_path`, `archive_too_large`, `archive_suspicious_ratio`, `disk_full`, `staging_unavailable`, `instance_busy`, `installer_unsupported`, `installer_failed`, `no_installable_files`, `reinstall_archive_missing`, `mod_busy`, `operation_not_cancellable`, `decision_not_pending`, `category_invalid`, `mod_type_unknown`, `import_source_missing` (F4). `archive_corrupt` usa `reason`: `damaged`, `empty`, `encrypted` (D062). `archive_suspicious_ratio` não é erro: é a decisão `suspicious_ratio` (continuar/cancelar).
+`import_unsupported_format`, `archive_corrupt`, `archive_unsafe_path`, `archive_too_large`, `archive_suspicious_ratio`, `disk_full`, `staging_unavailable`, `instance_busy`, `installer_unsupported`, `installer_failed`, `no_installable_files`, `reinstall_archive_missing`, `mod_busy`, `operation_not_cancellable`, `decision_not_pending`, `category_invalid`, `mod_type_unknown`, `import_source_missing` (F4), `import_source_unreadable` (F14, D099: `reason` = `file_locked` ou `permission_denied`). `archive_corrupt` usa `reason`: `damaged`, `empty`, `encrypted` (D062). `archive_suspicious_ratio` não é erro: é a decisão `suspicious_ratio` (continuar/cancelar).
 
 ## 12. Eventos
 

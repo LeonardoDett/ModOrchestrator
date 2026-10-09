@@ -135,7 +135,12 @@ func (p *pipeline) validate(ctx context.Context) error {
 		}
 		p.size = info.Size
 		format, err := p.s.Extractor.Detect(ctx, p.source)
-		if err != nil {
+		switch {
+		case errors.Is(err, ports.ErrFileLocked):
+			return fail(CodeSourceUnreadable, err, "name", p.originalName, "reason", "file_locked")
+		case errors.Is(err, ports.ErrPermission):
+			return fail(CodeSourceUnreadable, err, "name", p.originalName, "reason", "permission_denied")
+		case err != nil:
 			return fail(CodeUnsupportedFormat, err, "name", p.originalName)
 		}
 		p.format = format

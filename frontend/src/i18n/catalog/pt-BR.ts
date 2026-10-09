@@ -639,6 +639,9 @@ export const ptBR: Record<MessageKey, string> = {
   "error.category_invalid": "Essa categoria não é válida.",
   "error.mod_type_unknown": "Este jogo não tem o tipo de mod {type}.",
   "error.import_source_missing": "{name} não existe mais.",
+  "error.import_source_unreadable": "Não foi possível ler {name}.",
+  "error.import_source_unreadable.file_locked": "{name} está em uso por outro programa (uma verificação do antivírus, por exemplo). Tente de novo em instantes.",
+  "error.import_source_unreadable.permission_denied": "Você não tem permissão para ler {name}.",
   // Perfis e ordem de mods (F5: core/05 §1–4, core/07, ui/telas/profiles.md)
   "topbar.profile": "Perfil ativo",
   "profiles.loadError": "Não foi possível carregar os perfis.",

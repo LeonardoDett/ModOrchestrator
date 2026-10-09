@@ -48,6 +48,9 @@ const (
 	CodeModTypeUnknown    = "mod_type_unknown"
 	CodeNameEmpty         = "name_empty"
 	CodeSourceMissing     = "import_source_missing"
+	// CodeSourceUnreadable: the file exists but cannot be read now; reason
+	// file_locked (another program holds it) or permission_denied (F14).
+	CodeSourceUnreadable = "import_source_unreadable"
 	CodeModNotFound       = "mod_not_found"
 	// FOMOD (core/03 §8).
 	CodeFomodInvalidXML       = "fomod_invalid_xml"

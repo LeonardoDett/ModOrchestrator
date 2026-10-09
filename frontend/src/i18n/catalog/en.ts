@@ -642,6 +642,9 @@ export const en = {
   "error.category_invalid": "That category is not valid.",
   "error.mod_type_unknown": "This game has no mod type {type}.",
   "error.import_source_missing": "{name} no longer exists.",
+  "error.import_source_unreadable": "{name} could not be read.",
+  "error.import_source_unreadable.file_locked": "{name} is in use by another program (an antivirus scan, for example). Try again in a moment.",
+  "error.import_source_unreadable.permission_denied": "You do not have permission to read {name}.",
   // Profiles and mod order (F5: core/05 §1–4, core/07, ui/telas/profiles.md)
   "topbar.profile": "Active profile",
   "profiles.loadError": "The profiles could not be loaded.",

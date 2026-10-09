@@ -58,14 +58,16 @@ func (Extractor) Detect(_ context.Context, path string) (string, error) {
 	p := filesystem.LongPath(path)
 	fi, err := os.Stat(p)
 	if err != nil {
-		return "", err
+		return "", sourceError(err)
 	}
 	if fi.IsDir() {
 		return ports.FormatFolder, nil
 	}
 	f, err := os.Open(p)
 	if err != nil {
-		return "", err
+		// Held by another program (an antivirus scan) or not readable: a
+		// reason the user can act on, not "unsupported format" (F14).
+		return "", sourceError(err)
 	}
 	defer f.Close()
 	head := make([]byte, 8)
@@ -342,6 +344,17 @@ func safeTarget(root, raw string) (string, error) {
 		return "", fmt.Errorf("%w: %s", ports.ErrArchiveUnsafe, raw)
 	}
 	return target, nil
+}
+
+// sourceError keeps the cause of an unreadable source in the port's terms.
+func sourceError(err error) error {
+	if kind := filesystem.FailureKind(err); kind != nil {
+		return fmt.Errorf("%w: %w", kind, err)
+	}
+	if errors.Is(err, fs.ErrPermission) {
+		return fmt.Errorf("%w: %w", ports.ErrPermission, err)
+	}
+	return err
 }
 
 // classify maps library errors to the port errors.

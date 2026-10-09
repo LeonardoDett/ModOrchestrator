@@ -35,7 +35,7 @@ func (OS) Stat(_ context.Context, path string) (ports.FileInfo, error) {
 		return ports.FileInfo{}, nil
 	}
 	if err != nil {
-		return ports.FileInfo{}, err
+		return ports.FileInfo{}, classify(err)
 	}
 	info := ports.FileInfo{Exists: true, IsDir: fi.IsDir(), Size: fi.Size(), ModTime: fi.ModTime(), Created: createdAt(fi)}
 	if fi.Mode()&os.ModeSymlink != 0 {
@@ -54,7 +54,7 @@ func (OS) Stat(_ context.Context, path string) (ports.FileInfo, error) {
 func (OS) ReadDir(_ context.Context, path string) ([]ports.DirEntry, error) {
 	entries, err := os.ReadDir(longPath(path))
 	if err != nil {
-		return nil, err
+		return nil, classify(err)
 	}
 	out := make([]ports.DirEntry, len(entries))
 	for i, e := range entries {
@@ -64,7 +64,11 @@ func (OS) ReadDir(_ context.Context, path string) ([]ports.DirEntry, error) {
 }
 
 func (OS) Open(_ context.Context, path string) (io.ReadCloser, error) {
-	return os.Open(longPath(path))
+	f, err := os.Open(longPath(path))
+	if err != nil {
+		return nil, classify(err)
+	}
+	return f, nil
 }
 
 func (OS) MkdirAll(_ context.Context, path string) error {
@@ -96,11 +100,11 @@ func (OS) WriteFile(_ context.Context, path string, data []byte) error {
 	}
 	tmp := filepath.Join(dir, ".mo-tmp-"+hex.EncodeToString(nonce[:]))
 	if err := os.WriteFile(longPath(tmp), data, 0o644); err != nil {
-		return err
+		return classify(err)
 	}
 	if err := os.Rename(longPath(tmp), longPath(path)); err != nil {
 		_ = os.Remove(longPath(tmp))
-		return err
+		return classify(err)
 	}
 	return nil
 }
@@ -208,6 +212,10 @@ func nearestExisting(path string) string {
 		p = parent
 	}
 }
+
+// FailureKind maps a platform error to the port's failure kind (file
+// locked, disk full, path too long, permission), nil when none applies.
+func FailureKind(err error) error { return failureKind(err) }
 
 // LongPath returns path in the form the OS accepts beyond MAX_PATH (D039),
 // for other infrastructure packages that open files directly.

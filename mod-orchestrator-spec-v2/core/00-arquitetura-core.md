@@ -121,6 +121,7 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `category_invalid` | categoria inexistente ou árvore inválida | `category` |
 | `mod_type_unknown` | tipo de mod que a definição não declara | `type` |
 | `import_source_missing` | arquivo/pasta a importar sumiu | `name` |
+| `import_source_unreadable` | arquivo a importar existe mas não pode ser lido agora (D099) | `name`, `reason` (`file_locked`, `permission_denied`) |
 | `profile_name_taken`, `profile_is_active`, `profile_last`, `profile_not_found`, `snapshot_not_found` | ciclo de vida de profiles (core/07 §8) | `name`, `profile`, `snapshot` |
 | `order_violates_rules`, `rule_would_create_cycle`, `rule_duplicate`, `rule_self_reference`, `rule_not_removable`, `rule_not_found`, `mod_not_found`, `separator_not_found` | ordem e regras (core/05 §7, D069) | `cycle` (nomes, "A → B → A"), `count` |
 | `order_history_stale`, `order_nothing_to_undo` | reverter/desfazer mudança de ordem (D070) | — |

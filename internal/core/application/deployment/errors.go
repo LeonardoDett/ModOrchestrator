@@ -55,7 +55,8 @@ const (
 	CodeFolderForeign    = "folder_foreign"
 	CodeNoJournal        = "nothing_to_reconcile"
 	CodeMethodSame       = "method_unchanged"
-	CodeStagingSame      = "staging_unchanged"
+	CodeStagingSame      = "staging_unchanged"
+
 	CodeArchivesSame     = "archives_unchanged"
 	CodeInstanceNotFound = "not_found"
 	// CodeDecisionInvalid: an action not offered for the change (core/09
@@ -90,6 +91,17 @@ func fileErrorCode(err error) string {
 		return CodePermission
 	}
 	return CodeIOError
+}
+
+// fileError gives a filesystem failure its stable code (permission, file
+// locked...) instead of "internal"; other errors pass unchanged.
+func fileError(err error) error {
+	for _, kind := range []error{ports.ErrFileLocked, ports.ErrDiskFull, ports.ErrPathTooLong, ports.ErrPermission} {
+		if errors.Is(err, kind) {
+			return fail(fileErrorCode(err), err)
+		}
+	}
+	return err
 }
 
 // opError turns any error into the structured error of the operation.
