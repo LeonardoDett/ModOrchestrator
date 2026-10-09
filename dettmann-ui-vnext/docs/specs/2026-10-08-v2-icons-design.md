@@ -3,7 +3,7 @@
 Status: aprovado e implementado (2026-10-08).
 Subprojeto 2 de 4 da reformulação da dettmann-ui v2 (roadmap: seção 2 de
 `2026-10-06-v2-foundation-design.md`). Depende da fundação (subprojeto 1, concluída).
-Referência visual: `referencia-icones-animados.md` (vídeos em `IconesAnimados/`).
+Referência visual: `referencia-icones-animados.md` (os vídeos de origem foram removidos em 2026-10-09).
 
 ## 1. Objetivo
 

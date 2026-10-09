@@ -1,6 +1,6 @@
 # Referência: ícones animados (insumo para o subprojeto 2)
 
-Fonte: vídeos em `IconesAnimados/` (dois arquivos idênticos + um terceiro), analisados
+Fonte: vídeos de exemplo (dois arquivos idênticos + um terceiro; removidos do repositório em 2026-10-09), analisados
 quadro a quadro em 2026-10-06. Autor das peças: Sunil Talekar (via Pinterest). Uso apenas
 como referência de linguagem; nenhum asset será copiado.
 
