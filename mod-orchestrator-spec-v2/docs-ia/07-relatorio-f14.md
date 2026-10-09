@@ -61,17 +61,17 @@ Achados: UTF-8 inválido aceito (dois nomes viravam um arquivo), checagem de vaz
 | Abertura < 3 s com 1.000 mods | 2,5 s com 2.000 mods (inicialização 65 ms + primeira leitura da tela Mods, que monta o índice de conflitos) | atende |
 | Recalcular conflitos após habilitar 1 mod < 500 ms com 200 mil Locations | 312–319 ms com ~455 mil Locations | atende |
 | Deploy inicial de 100 mil hardlinks < 60 s | 32 s medidos com 400 mods (98 mil entradas); 3.256 links/s na escala completa | atende |
-| Deploy incremental de 1 mod < 2 s | 2,3–2,7 s com 100 mil arquivos; 7,7–9,2 s com 500 mil | **não atende** (ver §6) |
+| Deploy incremental de 1 mod < 2 s | com D102: 0,6–0,8 s com 100 mil arquivos; 3,1–4,6 s com 500 mil | atende até 100 mil; **não atende** com 500 mil (ver §6) |
 | 2.000 mods / 500 mil arquivos / 3.000 plugins sem degradação perceptível | lista de mods 71 ms; lista de plugins 81 ms (2 s na primeira leitura, com os cabeçalhos frios); prévia do sort 87 ms | atende, salvo o deploy incremental |
 
 Outros números da escala completa: import 476 s (1.049 arquivos/s, com o antivírus examinando cada arquivo criado), purge 83 s, "Verificar implantação" 9,3 s, `integrity_check` 1,2 s.
 
 Antes e depois das correções de D101 (escala completa):
 
-| Medida | 1ª rodada | Final |
-|---|---|---|
-| Deploy sem mudanças | 25,4 s | 7,7 s |
-| Deploy desabilitando/habilitando 1 mod | 26,6 / 23,6 s | 9,2 / 9,2 s |
+| Medida | 1ª rodada | D101 | D101 + D102 |
+|---|---|---|---|
+| Deploy sem mudanças | 25,4 s | 7,7 s | 3,1 s |
+| Deploy desabilitando/habilitando 1 mod | 26,6 / 23,6 s | 9,2 / 9,2 s | 4,6 / 4,6 s |
 | Deploy inicial | 190 s | 151 s |
 | Purge | 117 s | 83 s |
 | Import | 507 s | 476 s |
@@ -80,7 +80,7 @@ Com 15 mil arquivos (60 mods): deploy sem mudanças de 10,5 s para 0,2 s, purge 
 
 ## 6. Pendências
 
-1. **Deploy incremental com 500 mil arquivos** (decisão do usuário). O custo restante é o scan completo antes de cada deploy (core/04 §5 `scan` e §7: observar cada Location do manifesto e do desejado, e procurar arquivos novos nas pastas): 5 s de 9 s com 500 mil arquivos. Para ficar abaixo de 2 s nessa escala, o deploy incremental teria de observar só as Locations que vai tocar (o que INV-EXT-01 exige) e deixar o resto para o scan ao focar a janela e para "Verificar implantação". Isso muda core/04 e precisa de decisão.
+1. **Deploy incremental com 500 mil arquivos**. Com D102 (o deploy observa só o que toca, escolhido pelo usuário), fica em 0,6–0,8 s com 100 mil arquivos e 3,1–4,6 s com 500 mil. O que resta é trabalho em memória proporcional ao tamanho do jogo: calcular o estado desejado a partir dos vencedores dos conflitos (1,2 s), montar o plano sobre todas as Locations (1,1 s), comparar o manifesto inteiro ao gravar (0,9 s) e o inventário de plugins depois do deploy (0,8–1,1 s). Ficar abaixo de 2 s nessa escala pede um plano incremental (só as Locations alteradas), o que é trabalho para uma fase própria.
 2. **Tamanho dos backups**. O banco da escala completa tem 535 MB, metade em páginas livres deixadas pelo journal do deploy inicial; a API de backup copia o arquivo inteiro, e a retenção de core/14 §3 (24 + 7 automáticos, 3 pré-migration, 1 de inicialização) pode passar de 15 GB. Candidatos: `VACUUM INTO` no backup (cópia compacta e consistente) ou `auto_vacuum` incremental.
 3. **Redescobrir mods e "Adotar"** depois de perder o banco (core/14 §5–6, core/04 §11): não existem (D100).
 4. **Volumes reais**: a máquina tem um único volume; "outro volume" e FAT32 foram simulados no adapter de filesystem (o Windows real recusa o hardlink com `ERROR_NOT_SAME_DEVICE`, reproduzido). Falta rodar uma vez com um segundo disco.

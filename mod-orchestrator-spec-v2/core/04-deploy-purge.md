@@ -63,7 +63,7 @@ Resumo do plano (mostrado no diálogo de plano, e usado pela topbar): contagens 
 Steps: `preflight` → `scan` → `plan` → `await_decision`? → `journal` → `apply` → `verify` → `commit` → `post`.
 
 1. `preflight`: lock da instância; precondições globais; verifica espaço em disco para cópias/backups.
-2. `scan`: observa as Locations relevantes (stat + identidade; hash só quando necessário para `copy` ou para confirmar `modified`).
+2. `scan`: observa as Locations relevantes (stat + identidade; hash só quando necessário para `copy` ou para confirmar `modified`). Deploy incremental (D102): sobre um manifesto verificado, observa só o que vai tocar (Locations desejadas que ainda não são o link registrado, links que deixam de ser desejados, as divergências que o último scan encontrou e as Locations com decisão nesta execução) e as pastas acima das novas; os demais links são tomados como o manifesto os registrou, e arquivos novos não são procurados. Purge, reconciliação, mudança de pasta/método, revisão de alterações, primeiro deploy e manifesto restaurado (não verificado) fazem o scan completo.
 3. `plan`: calcula como no §4.
 4. `await_decision`: se houver decisões, a operação para e a UI abre o diálogo correspondente (plano / external changes). **Auto-deploy nunca chega aqui: ele termina antes com status `blocked` e diagnóstico (INV-DEP-06).** Decisões tomadas viram ações concretas no plano.
 5. `journal`: grava o plano no DeploymentJournal (INV-DEP-03).
@@ -108,7 +108,7 @@ Quando o sistema propõe purge: antes de parar de gerenciar um jogo, antes de mo
 | `failed` | último deploy terminou com falhas | "Falhou" + detalhes |
 | `unknown` | journal sem reconciliação, ou banco restaurado sem scan | "Verificar" + Reconciliar |
 
-`in_sync` é otimista quanto ao observado: o scan completo roda antes de cada deploy, ao focar a janela (Locations do manifesto, com limite de custo), e sob demanda ("Verificar implantação").
+`in_sync` é otimista quanto ao observado: o scan completo roda ao focar a janela (Locations do manifesto, com limite de custo) e sob demanda ("Verificar implantação"); o deploy incremental observa só o que toca (D102, §5).
 
 ## 8. Auto-deploy (D036)
 

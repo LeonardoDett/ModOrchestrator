@@ -57,6 +57,10 @@ type run struct {
 	// unexpected are the generated files the scan found (core/09); they
 	// never stop the run by themselves (D080).
 	unexpected []externalchange.Change
+	// only, when set, is the set of locations this run observed: an
+	// incremental deploy observes what it will touch (D102), and the rest
+	// is left to the focus scan and "Verificar implantação".
+	only map[string]bool
 	// resolve carries the decided external changes into the plan.
 	resolve map[string]deployplan.Resolution
 	// pre are decisions given when the run started (review outside a
@@ -215,7 +219,9 @@ func (s *Service) pipeline(ctx context.Context, r *run) error {
 	if err := s.step(ctx, r, StepScan, func() error { return s.scanStep(ctx, r) }); err != nil {
 		return err
 	}
-	s.markVerified(ctx, r.inst.ID)
+	if r.only == nil {
+		s.markVerified(ctx, r.inst.ID)
+	}
 	if err := s.step(ctx, r, StepPlan, func() error { return s.planStep(ctx, r) }); err != nil {
 		return err
 	}
@@ -489,11 +495,19 @@ func (s *Service) scanStep(ctx context.Context, r *run) error {
 		}
 		r.desired = d
 	}
-	sc, err := s.scan(ctx, r.inst, r.desired, r.applied)
+	r.only = nil
+	if s.incremental(ctx, r) {
+		r.only = s.touched(r)
+	}
+	sc, err := s.scan(ctx, r.inst, r.desired, r.applied, r.only)
 	if err != nil {
 		return err
 	}
 	r.scanned = sc
+	if r.only != nil {
+		r.unexpected = nil // new files are the focus scan's (D102)
+		return nil
+	}
 	wanted := make(map[string]bool, len(r.desired.Files))
 	for _, f := range r.desired.Files {
 		wanted[f.Location.Key()] = true
@@ -540,7 +554,7 @@ func (s *Service) planStep(ctx context.Context, r *run) error {
 	s.enrich(ctx, r.inst, r.in, r.applied, r.plan.Changes)
 	s.mu.Lock()
 	s.changes[r.inst.ID] = len(r.plan.Changes)
-	s.newFiles[r.inst.ID] = len(r.unexpected)
+	s.newFiles[r.inst.ID] = s.newFileCount(r)
 	s.mu.Unlock()
 	if extra := r.plan.Summary.ExtraBytes; extra > 0 {
 		for _, t := range r.inst.Targets {
@@ -783,8 +797,18 @@ func (s *Service) post(ctx context.Context, r *run) error {
 		delete(s.failures, r.inst.ID)
 	}
 	s.changes[r.inst.ID] = len(r.plan.Changes) + r.raced + r.untouched
-	s.newFiles[r.inst.ID] = len(r.unexpected)
-	delete(s.found, r.inst.ID) // the run saw everything again
+	s.newFiles[r.inst.ID] = s.newFileCount(r)
+	if r.only == nil {
+		delete(s.found, r.inst.ID) // the run saw everything again
+	} else if f := s.found[r.inst.ID]; f != nil {
+		// Every change the last scan knew was observed again by this run
+		// (touched includes them); what remains is in the plan.
+		next := &found{managed: map[string]externalchange.Change{}, unexpected: f.unexpected, cursor: f.cursor}
+		for _, c := range r.plan.Changes {
+			next.managed[c.Location.Key()] = c
+		}
+		s.found[r.inst.ID] = next
+	}
 	s.mu.Unlock()
 	// The load order follows the deployed plugins (core/08 §7); a purge
 	// leaves the file as it is (the game ignores missing plugins).

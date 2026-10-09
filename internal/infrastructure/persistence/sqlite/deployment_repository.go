@@ -218,12 +218,14 @@ func (r *ManifestRepository) Save(ctx context.Context, m, prev *deployment.Manif
 	return nil
 }
 
+// sameEntry compares the stored fields directly: a save compares every
+// entry of the manifest with its previous version (F14).
 func sameEntry(a, b deployment.Entry) bool {
-	ra, rb := toEntryRecord(a), toEntryRecord(b)
-	return ra.Target == rb.Target && ra.Path == rb.Path && ra.Mod == rb.Mod && ra.Installation == rb.Installation &&
-		ra.Source == rb.Source && ra.Method == rb.Method && ra.BackupPath == rb.BackupPath &&
-		ra.Evidence.FileID == rb.Evidence.FileID && ra.Evidence.LinkTarget == rb.Evidence.LinkTarget &&
-		ra.Evidence.Size == rb.Evidence.Size && ra.Evidence.ModTime.Equal(rb.Evidence.ModTime) && ra.Evidence.Hash == rb.Evidence.Hash
+	ea, eb := a.Evidence, b.Evidence
+	return a.Location.Target == b.Location.Target && a.Location.Path.String() == b.Location.Path.String() &&
+		a.Mod == b.Mod && a.Installation == b.Installation && a.Source.String() == b.Source.String() &&
+		a.Method == b.Method && a.BackupPath.String() == b.BackupPath.String() &&
+		ea.FileID == eb.FileID && ea.LinkTarget == eb.LinkTarget && ea.Size == eb.Size && ea.ModTime.Equal(eb.ModTime) && ea.Hash == eb.Hash
 }
 
 type loadOrderRecord struct {

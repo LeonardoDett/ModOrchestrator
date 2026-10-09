@@ -865,3 +865,24 @@ Medido com 2.000 mods, 500 mil arquivos e 3.000 plugins (relatório em `docs-ia/
 - **Stage do import**: uma criação de pasta por pasta, não por arquivo.
 
 Efeito na escala completa: deploy sem mudanças de 25,4 s para 7,7 s, com 1 mod a mais ou a menos de 26,6/23,6 s para 9,2 s, purge de 117 s para 83 s. O que resta no deploy incremental é o scan completo de core/04 §5, cuja mudança depende de decisão do usuário (relatório §6).
+
+## D102 — Deploy incremental observa só o que toca
+Status: vigente (escolhida pelo usuário em 2026-10-09; emenda core/04 §5 e §7)
+
+Com 500 mil arquivos, o scan completo antes de cada deploy custava 5 dos 9 s de um deploy incremental (relatório da F14, §6), contra a meta de 2 s de `00-visao-e-escopo.md`. Agora, sobre um manifesto **verificado**, o deploy observa só:
+
+- Locations desejadas que ainda não são o link registrado (mod, Installation, origem e método iguais);
+- links registrados que deixam de ser desejados;
+- as divergências que o último scan (foco da janela ou "Verificar implantação") encontrou;
+- as Locations com decisão ou "deixar como está" nesta execução;
+- as pastas acima das Locations desejadas entre essas.
+
+Os demais links entram no plano como o manifesto os registrou, e arquivos novos (core/09 §3) não são procurados: a contagem do último scan continua no status. INV-EXT-01 continua valendo, porque toda Location em que o deploy vai escrever é observada antes.
+
+Fazem o scan completo: purge, reconciliação de journal, operações de manutenção (mover staging, trocar método), revisão de alterações fora de um deploy (pode capturar arquivos gerados), primeiro deploy (sem manifesto ou depois de purge) e manifesto restaurado de backup e ainda não verificado. Só o scan completo marca o manifesto como verificado.
+
+Consequência aceita: uma divergência numa Location que o deploy não toca (arquivo apagado ou trocado por outra ferramenta) só aparece no próximo scan ao focar a janela ou em "Verificar implantação", e então entra no próximo deploy. `deploy.autoRestoreMissing` também depende de o scan ter visto o arquivo ausente.
+
+Efeito medido: 0,6–0,8 s com 100 mil arquivos (antes 2,3–2,7 s) e 3,1–4,6 s com 500 mil (antes 7,7–9,2 s). Com 500 mil a meta ainda não é atingida: resta trabalho em memória proporcional ao jogo (estado desejado, plano, comparação do manifesto ao gravar, inventário de plugins), registrado no relatório da F14.
+
+Alternativa rejeitada: manter o scan completo e rever a meta. Teste: `TestIncrementalDeployObservesOnlyWhatItTouches`.

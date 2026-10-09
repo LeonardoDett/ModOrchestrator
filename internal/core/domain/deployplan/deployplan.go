@@ -439,16 +439,25 @@ func (p *Plan) planDirs(in Input, want map[string]DesiredFile, creating map[stri
 	if in.Applied == nil || !in.CleanDirs {
 		return
 	}
+	// Folder keys are prefixes of the location key ("target|a/b/c" needs
+	// "target|a" and "target|a/b"): no paths are parsed (F14, 500,000
+	// desired files).
 	needed := map[string]bool{}
-	for _, f := range want {
-		for _, dir := range ancestors(f.Location) {
-			needed[dir.Key()] = true
+	need := func(k string) {
+		for i := len(k) - 1; i > 0; i-- {
+			if k[i] == '/' {
+				if needed[k[:i]] {
+					return // and every folder above it
+				}
+				needed[k[:i]] = true
+			}
 		}
 	}
+	for k := range want {
+		need(k)
+	}
 	for _, loc := range p.Skipped {
-		for _, dir := range ancestors(loc) {
-			needed[dir.Key()] = true
-		}
+		need(loc.Key())
 	}
 	for _, dir := range in.Applied.Dirs() {
 		if !needed[dir.Location.Key()] && !made[dir.Location.Key()] {
@@ -474,6 +483,9 @@ func PurgeInput(in Input) Input {
 	in.AcceptedFallbacks = nil
 	return in
 }
+
+// SameFile reports whether the link e already is the desired file d.
+func SameFile(d DesiredFile, e deployment.Entry) bool { return sameFile(d, e) }
 
 func sameFile(d DesiredFile, e deployment.Entry) bool {
 	return d.Mod == e.Mod && d.Installation == e.Installation && d.Source.Key() == e.Source.Key() && d.Method == e.Method

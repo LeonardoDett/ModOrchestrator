@@ -38,8 +38,12 @@ func changeAt(v []deploysvc.ChangeView, path string) (deploysvc.ChangeView, bool
 }
 
 // decide runs a manual deploy, waits at await_decision and answers.
+// decide finds the changes as the app does (the focus scan or "Verificar
+// implantação": a deploy observes only what it touches, D102), then deploys
+// and answers its decision dialog.
 func (e *env) decide(ds ...deploysvc.DecisionInput) (deploysvc.PlanView, *operation.Operation) {
 	e.t.Helper()
+	e.verify()
 	op, err := e.dep.Deploy(ctx, e.inst.ID)
 	if err != nil {
 		e.t.Fatal(err)
@@ -269,6 +273,7 @@ func TestMissingFileDecisions(t *testing.T) {
 
 	e.setInstance("deploy.autoRestoreMissing", "true")
 	_ = os.Remove(e.data("Alpha.esp"))
+	e.verify() // the focus scan sees it; a deploy observes only what it touches (D102)
 	if o := e.deploy(deploysvc.KindDeploy); o.Status != operation.StatusSucceeded {
 		t.Fatalf("auto restore: %+v", o.Error)
 	}
@@ -283,6 +288,7 @@ func TestMissingFileDecisions(t *testing.T) {
 	}
 	// Auto-deploy never restores on its own.
 	_ = os.Remove(e.data("Alpha.esp"))
+	e.verify()
 	id, err := e.dep.AutoDeploy(ctx, e.inst.ID)
 	if err != nil {
 		t.Fatal(err)
@@ -404,5 +410,60 @@ func TestInterruptedCaptureIsFinished(t *testing.T) {
 	}
 	if o := e.deploy(deploysvc.KindDeploy); o.Status != operation.StatusSucceeded || fileID(t, e.data("meshes/charlie/b.nif")) != fileID(t, e.staged("capmod", "meshes/charlie/b.nif")) {
 		t.Fatalf("the next deploy links the captured files: %+v", o.Error)
+	}
+}
+
+// D102: a deploy over a verified manifest observes only the locations it
+// touches. A divergence elsewhere waits for the focus scan or "Verificar
+// implantação"; one in a touched location is still found before anything
+// is written there (INV-EXT-01).
+func TestIncrementalDeployObservesOnlyWhatItTouches(t *testing.T) {
+	e := newEnvWith(t, envOptions{method: game.MethodHardlink})
+	ids := e.installFiles(deployMods, "Alpha", "Charlie")
+	e.deploy(deploysvc.KindDeploy)
+
+	// Untouched by the next deploy: Charlie's mesh is replaced outside.
+	_ = os.Remove(e.data("meshes/charlie/c.nif"))
+	e.write(e.data("meshes/charlie/c.nif"), "someone else's")
+	// Touched by it: Alpha leaves, and its plugin was replaced outside.
+	_ = os.Remove(e.data("Alpha.esp"))
+	e.write(e.data("Alpha.esp"), "edited elsewhere")
+	if err := e.prof.SetModsEnabled(ctx, e.inst.ID, ids[:1], false); err != nil {
+		t.Fatal(err)
+	}
+	op, err := e.dep.Deploy(ctx, e.inst.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	v := e.waitDeployDecision(op)
+	if _, ok := changeAt(v.Changes, "Alpha.esp"); !ok {
+		t.Fatalf("the touched location is observed: %+v", v.Changes)
+	}
+	if _, ok := changeAt(v.Changes, "meshes/charlie/c.nif"); ok || len(v.Changes) != 1 {
+		t.Fatalf("the untouched location is not: %+v", v.Changes)
+	}
+	if err := e.dep.CancelDecision(e.inst.ID, op); err != nil {
+		t.Fatal(err)
+	}
+	e.dep.Wait()
+
+	// The full scan finds both, and the next deploy brings both to the
+	// dialog.
+	if c := e.verify(); c.ChangeCount != 2 {
+		t.Fatalf("verify finds both: %+v", c.Changes)
+	}
+	op, err = e.dep.Deploy(ctx, e.inst.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if v := e.waitDeployDecision(op); len(v.Changes) != 2 {
+		t.Fatalf("both wait for a decision: %+v", v.Changes)
+	}
+	if err := e.dep.CancelDecision(e.inst.ID, op); err != nil {
+		t.Fatal(err)
+	}
+	e.dep.Wait()
+	if readFile(t, e.data("meshes/charlie/c.nif")) != "someone else's" || readFile(t, e.data("Alpha.esp")) != "edited elsewhere" {
+		t.Fatal("nothing is written without a decision (INV-EXT-02)")
 	}
 }

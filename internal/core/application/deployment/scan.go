@@ -6,6 +6,7 @@ import (
 
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/deployplan"
+	"modorchestrator/internal/core/domain/externalchange"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/relpath"
 )
@@ -41,11 +42,13 @@ type scanned struct {
 	blocked map[game.TargetID]bool
 }
 
-// scan observes every location of the desired and applied states, the
+// scan observes the locations of the desired and applied states, the
 // folders new files need, and whether each target can be written
 // (core/04 §5 `scan`; hashes are not read: identity, size and time
-// decide).
-func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Desired, applied *deployment.Manifest) (scanned, error) {
+// decide). With only set (incremental deploy, D102) it observes those
+// locations and the folders above the desired ones among them; every other
+// link is taken as the manifest recorded it.
+func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Desired, applied *deployment.Manifest, only map[string]bool) (scanned, error) {
 	out := scanned{files: map[string]deployment.Observation{}, dirs: map[string]deployment.Observation{}, blocked: map[game.TargetID]bool{}}
 	for _, t := range inst.Targets {
 		if obs := s.observe(ctx, t.Path); !obs.Exists || !obs.IsDir {
@@ -54,18 +57,29 @@ func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Des
 	}
 	locs := map[string]game.Location{}
 	dirs := map[string]game.Location{}
+	assumed := map[string]deployment.Observation{}
 	for _, f := range d.Files {
-		locs[f.Location.Key()] = f.Location
+		k := f.Location.Key()
+		if only != nil && !only[k] {
+			continue
+		}
+		locs[k] = f.Location
 		for _, a := range deployplan.Ancestors(f.Location) {
 			dirs[a.Key()] = a
 		}
 	}
 	if applied != nil {
 		for _, e := range applied.Entries() {
-			if e.Kind == deployment.KindDir {
-				dirs[e.Location.Key()] = e.Location
-			} else {
-				locs[e.Location.Key()] = e.Location
+			k := e.Location.Key()
+			switch {
+			case e.Kind == deployment.KindDir:
+				if only == nil {
+					dirs[k] = e.Location
+				}
+			case only == nil || only[k]:
+				locs[k] = e.Location
+			case e.Kind == deployment.KindLink:
+				assumed[k] = assumedObservation(e)
 			}
 		}
 	}
@@ -73,11 +87,84 @@ func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Des
 	if err != nil {
 		return out, err
 	}
+	for k, obs := range assumed {
+		files[k] = obs
+	}
 	out.files = files
 	if out.dirs, err = s.observeAll(ctx, inst, dirs, out.blocked); err != nil {
 		return out, err
 	}
 	return out, nil
+}
+
+// assumedObservation is what an untouched link looks like when it is as
+// the manifest recorded it.
+func assumedObservation(e deployment.Entry) deployment.Observation {
+	return deployment.Observation{Exists: true, Evidence: e.Evidence}
+}
+
+// incremental reports whether a deploy may observe only what it touches
+// (D102): a normal deploy over a verified manifest. Purge, reconciliation,
+// maintenance runs, the review of changes (it may capture generated
+// files, which only the full scan finds), a first deploy and a manifest
+// restored from a backup (not verified) scan everything.
+func (s *Service) incremental(ctx context.Context, r *run) bool {
+	return r.kind == KindDeploy && !r.reconcile && !r.inline && len(r.pre) == 0 && r.applied != nil && !r.applied.Purged() &&
+		s.verified(ctx, r.inst.ID)
+}
+
+// touched lists the locations an incremental deploy observes: every
+// desired location that is not already the recorded link, every link that
+// is no longer desired, the changes the last scan found, and the locations
+// with a decision or a skip in this run. A link whose recorded evidence
+// would not pass as itself is observed too.
+func (s *Service) touched(r *run) map[string]bool {
+	out := map[string]bool{}
+	s.mu.Lock()
+	if f := s.found[r.inst.ID]; f != nil {
+		for k := range f.managed {
+			out[k] = true
+		}
+	}
+	s.mu.Unlock()
+	for k := range r.resolve {
+		out[k] = true
+	}
+	for k := range r.skip {
+		out[k] = true
+	}
+	want := make(map[string]bool, len(r.desired.Files))
+	for _, f := range r.desired.Files {
+		k := f.Location.Key()
+		want[k] = true
+		link, ok := r.applied.Owns(f.Location)
+		if !ok || !deployplan.SameFile(f, link) {
+			out[k] = true
+			continue
+		}
+		if _, changed := externalchange.Classify(link, assumedObservation(link)); changed {
+			out[k] = true
+		}
+	}
+	for _, e := range r.applied.Entries() {
+		if k := e.Location.Key(); e.Kind != deployment.KindDir && !want[k] {
+			out[k] = true
+		}
+	}
+	return out
+}
+
+// newFileCount is the count of generated files the status shows after a
+// run: an incremental run did not look for them and keeps what the last
+// scan found. Called with s.mu held.
+func (s *Service) newFileCount(r *run) int {
+	if r.only == nil {
+		return len(r.unexpected)
+	}
+	if f := s.found[r.inst.ID]; f != nil {
+		return len(f.unexpected)
+	}
+	return s.newFiles[r.inst.ID]
 }
 
 func (s *Service) observeAll(ctx context.Context, inst game.Instance, locs map[string]game.Location, blocked map[game.TargetID]bool) (map[string]deployment.Observation, error) {

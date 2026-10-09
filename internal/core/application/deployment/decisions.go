@@ -251,7 +251,7 @@ func (s *Service) Preview(ctx context.Context, instance game.InstanceID, purge b
 	s.enrich(ctx, r.inst, r.in, r.applied, r.plan.Changes)
 	s.mu.Lock()
 	s.changes[instance] = len(r.plan.Changes)
-	s.newFiles[instance] = len(r.unexpected)
+	s.newFiles[instance] = s.newFileCount(r)
 	s.mu.Unlock()
 	v := PlanView{Instance: instance, Kind: r.kind, Summary: r.plan.Summary, Empty: r.plan.Empty(),
 		ChangeCount: len(r.plan.Changes), BlockedCount: len(r.plan.Blocked), NewFileCount: len(r.unexpected)}
