@@ -844,7 +844,7 @@ Achados dos testes da F14 e o que passou a valer:
 7. **Eventos de operação** são gravados com `instance_id` pelo mesmo escritor do unit of work (antes ficavam vazios, ao contrário do backfill da migration 0007). Sem efeito visível: o histórico esconde `operation.*`.
 
 ## D100 — Tela de recuperação do banco (core/14 §2, §5)
-Status: proposta (implementada na F14; aguarda confirmação do usuário)
+Status: vigente (confirmada pelo usuário em 2026-10-09)
 
 O app encerrava sem janela (`log.Fatalf`) quando o banco estava danificado, era de uma versão mais nova ou uma migration falhava. A spec pede a tela de recuperação, mas não a desenha; esta é a forma adotada:
 

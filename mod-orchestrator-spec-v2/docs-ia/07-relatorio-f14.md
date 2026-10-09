@@ -1,6 +1,6 @@
 # Relatório da F14: hardening e desempenho
 
-Data: 2026-10-08. Máquina: Windows 11, SSD NVMe, NTFS, antivírus do Windows ativo (como o usuário típico). Todos os testes rodam no stack real: SQLite em disco, NTFS, extrator, motor de deploy com hardlinks. Decisões: D099 (achados de robustez), D100 (tela de recuperação, proposta), D101 (desempenho).
+Data: 2026-10-08. Máquina: Windows 11, SSD NVMe, NTFS, antivírus do Windows ativo (como o usuário típico). Todos os testes rodam no stack real: SQLite em disco, NTFS, extrator, motor de deploy com hardlinks. Decisões: D099 (achados de robustez), D100 (tela de recuperação), D101 (desempenho).
 
 ## 1. Bateria de interrupções
 

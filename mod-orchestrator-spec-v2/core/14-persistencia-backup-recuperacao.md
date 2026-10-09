@@ -55,7 +55,7 @@ Como ficou (F12, D090): arquivos `state-<UTC>-<tipo>.db` (`auto`, `manual`, `pre
 | Banco corrompido | integrity_check falha | tela de recuperação: restaurar último backup bom; última opção: "começar do zero preservando staging" (mods são redescobertos pelas pastas + marcadores, sem regras/ordem) |
 | Banco perdido com jogo implantado | marcador do target existe, manifesto não | `foreign_deployment` com ação "Adotar" (core/04 §11) |
 
-Como ficou (F14, D100, proposta): fechamento anormal detectado pelo marcador `<dataDir>/state.session`; banco danificado, mais novo ou com migration que falhou abre só a tela de recuperação (restaurar backup validado, começar do zero com o banco guardado como `damaged`, abrir pastas, fechar). Redescobrir mods pela staging e "Adotar" uma implantação após banco perdido ainda não existem: hoje o marcador do target gera `foreign_deployment` (bloqueante, nada é apagado).
+Como ficou (F14, D100): fechamento anormal detectado pelo marcador `<dataDir>/state.session`; banco danificado, mais novo ou com migration que falhou abre só a tela de recuperação (restaurar backup validado, começar do zero com o banco guardado como `damaged`, abrir pastas, fechar). Redescobrir mods pela staging e "Adotar" uma implantação após banco perdido ainda não existem: hoje o marcador do target gera `foreign_deployment` (bloqueante, nada é apagado).
 
 ## 6. Critérios de aceite
 
