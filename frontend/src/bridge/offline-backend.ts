@@ -162,6 +162,13 @@ export function createOfflineBackend(): Backend {
     importLoadOrder: unavailable,
     resolveLoadOrderChange: unavailable,
     restartState: unavailable,
+    // Outside the desktop shell there is no database to recover.
+    startupRecovery: async () => ({ active: false, reason: "", detail: "", language: "", dataDir: "", backupsDir: "" }),
+    recoveryBackups: unavailable,
+    recoveryRestore: unavailable,
+    recoveryStartFresh: unavailable,
+    recoveryOpenFolder: unavailable,
+    recoveryQuit: unavailable,
     restartApp: unavailable,
     openDataFolder: unavailable,
     openBackupsFolder: unavailable,

@@ -284,6 +284,16 @@ export interface Backend {
   restorePreviousLoadOrder(instance: string): Promise<string>;
   importLoadOrder(instance: string, text: string): Promise<SortResult>;
   resolveLoadOrderChange(instance: string, action: "import_load_order" | "restore_load_order"): Promise<string>;
+  // Recovery screen (core/14 §5): the only calls that work when the
+  // database could not be used.
+  startupRecovery(): Promise<StartupRecovery>;
+  recoveryBackups(): Promise<RecoveryBackup[]>;
+  /** Prepares the backup for the next start and restarts. */
+  recoveryRestore(id: string): Promise<void>;
+  /** Sets the database aside and restarts with an empty one. */
+  recoveryStartFresh(): Promise<void>;
+  recoveryOpenFolder(which: "backups" | "logs"): Promise<void>;
+  recoveryQuit(): Promise<void>;
   // Settings, Workarounds and Extensions (F12, core/13, core/14 §3–4)
   restartState(): Promise<RestartState>;
   restartApp(): Promise<void>;
@@ -321,7 +331,27 @@ export interface RestartState {
   restore: boolean;
 }
 
-export type BackupKind = "auto" | "manual" | "pre_migration" | "startup" | "pre_restore";
+export type BackupKind = "auto" | "manual" | "pre_migration" | "startup" | "pre_restore" | "damaged";
+
+/** Why the database could not be used at startup (core/14 §2, §5). */
+export type RecoveryReason = "corrupt" | "newer_schema" | "migration_failed" | "startup_failed";
+
+/** The startup state: active means the recovery screen replaces the shell. */
+export interface StartupRecovery {
+  active: boolean;
+  reason: RecoveryReason | "";
+  /** Technical message for support. */
+  detail: string;
+  language: string;
+  dataDir: string;
+  backupsDir: string;
+}
+
+/** A backup the recovery screen offers, validated by the backend. */
+export interface RecoveryBackup extends Backup {
+  schema: number;
+  valid: boolean;
+}
 
 export interface Backup {
   id: string;

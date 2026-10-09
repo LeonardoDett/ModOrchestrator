@@ -113,16 +113,25 @@ func New(ctx context.Context) (c *Container, err error) {
 	} else if restored {
 		logger.Info("database restored from backup")
 	}
+	// The session marker exists while the app runs: found at startup, the
+	// previous run did not close normally (core/14 §2).
+	abnormal := false
+	if _, serr := os.Stat(paths.Session); serr == nil {
+		abnormal = true
+		logger.Warn("previous run did not close normally")
+	}
 	db, err := sqlite.OpenUnmigrated(ctx, paths.Database)
 	if err != nil {
 		logger.Error("open database", logging.KeyError, err.Error())
 		logFile.Close()
-		return nil, err
+		return nil, startupFailure(paths, err)
 	}
 	defer func() {
 		if err != nil {
+			logger.Error("startup", logging.KeyError, err.Error())
 			db.Close()
 			logFile.Close()
+			err = startupFailure(paths, err)
 		}
 	}()
 	fsys := filesystem.New()
@@ -143,6 +152,11 @@ func New(ctx context.Context) (c *Container, err error) {
 	if err = sqlite.Migrate(ctx, db); err != nil {
 		logger.Error("migrate database", logging.KeyError, err.Error())
 		return nil, err
+	}
+	if abnormal {
+		if err = sqlite.CheckIntegrity(ctx, db); err != nil {
+			return nil, err
+		}
 	}
 	version, err := sqlite.SchemaVersion(ctx, db)
 	if err != nil {
@@ -427,6 +441,9 @@ func New(ctx context.Context) (c *Container, err error) {
 			logger.Error("startup backup", logging.KeyError, err.Error())
 		}
 	}()
+	if werr := os.WriteFile(paths.Session, []byte(strconv.Itoa(os.Getpid())), 0o644); werr != nil {
+		logger.Warn("session marker", logging.KeyError, werr.Error())
+	}
 	longPaths, longPathsKnown := system.Preferences{}.LongPaths()
 	logger.Info("startup", "dataDir", paths.Root, "schemaVersion", version, "interruptedOperations", len(interrupted), "interruptedDeploys", len(interruptedDeploys))
 
@@ -478,6 +495,10 @@ func (c *Container) Close() error {
 	c.Backups.Close()
 	c.Logger.Info("shutdown")
 	err := c.db.Close()
+	// A normal close: the next start skips the integrity check.
+	if err == nil {
+		_ = os.Remove(c.Paths.Session)
+	}
 	if lerr := c.logFile.Close(); err == nil {
 		err = lerr
 	}

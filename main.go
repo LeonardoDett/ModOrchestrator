@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"errors"
 	"log"
 	"os"
 	"time"
@@ -24,6 +25,13 @@ func main() {
 	// release the database (a pending restore replaces it, core/14 §4).
 	bootstrap.WaitForRestart(os.Args[1:], 15*time.Second)
 	container, err := bootstrap.New(context.Background())
+	var failure *bootstrap.StartupFailure
+	if errors.As(err, &failure) {
+		// The database cannot be used: the window opens on the recovery
+		// screen only (core/14 §5).
+		runRecovery(bridge.NewRecoveryApp(bootstrap.NewRecovery(failure)))
+		return
+	}
 	if err != nil {
 		log.Fatalf("startup failed: %v", err)
 	}
@@ -55,6 +63,25 @@ func main() {
 		OnStartup:   app.Startup,
 		OnShutdown:  app.Shutdown,
 		Bind:        []any{app},
+	})
+	if err != nil {
+		log.Fatalf("wails: %v", err)
+	}
+}
+
+// runRecovery opens the window with the recovery binding: same assets, the
+// UI asks StartupRecovery first and shows only the recovery screen.
+func runRecovery(app *bridge.App) {
+	err := wails.Run(&options.App{
+		Title:            "Mod Orchestrator",
+		Width:            960,
+		Height:           680,
+		MinWidth:         720,
+		MinHeight:        520,
+		AssetServer:      &assetserver.Options{Assets: assets},
+		BackgroundColour: &options.RGBA{R: 13, G: 19, B: 17, A: 255},
+		OnStartup:        app.Startup,
+		Bind:             []any{app},
 	})
 	if err != nil {
 		log.Fatalf("wails: %v", err)

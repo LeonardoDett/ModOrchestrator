@@ -25,6 +25,9 @@ type Paths struct {
 	// is the validated copy a restore puts in place at the next start.
 	Backups        string
 	RestorePending string
+	// Session exists while the app runs; found at startup, the previous
+	// run did not close normally (core/14 §2).
+	Session string
 }
 
 // Resolve returns the data paths, creating the root directory if needed.
@@ -53,5 +56,6 @@ func Resolve() (Paths, error) {
 		// Next to the database: the rename that applies it stays in the
 		// same folder and volume.
 		RestorePending: filepath.Join(root, "state.restore-pending.db"),
+		Session:        filepath.Join(root, "state.session"),
 	}, nil
 }

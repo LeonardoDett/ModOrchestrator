@@ -23,8 +23,10 @@ var Version = "0.0.0-dev"
 
 // App is bound to the Wails frontend.
 type App struct {
-	ctx         context.Context
-	c           *bootstrap.Container
+	ctx context.Context
+	c   *bootstrap.Container
+	// rec is set instead of c when the database could not be used.
+	rec         *bootstrap.Recovery
 	unsubscribe func()
 	emit        func(ctx context.Context, name string, data ...any)
 }
@@ -39,6 +41,9 @@ func NewApp(c *bootstrap.Container) *App {
 // Startup is called by Wails when the window is ready.
 func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
+	if a.c == nil {
+		return // recovery screen only
+	}
 	a.unsubscribe = a.c.Events.Subscribe(func(e event.Event) {
 		// Operation events and the delivery signals of diagnostics and
 		// notifications tell the UI to read again (D021); the UI never

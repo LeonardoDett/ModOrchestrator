@@ -110,7 +110,7 @@ func migrateTo(ctx context.Context, db *sql.DB, to int) error {
 		return fmt.Errorf("sqlite: read schema version: %w", err)
 	}
 	if current > len(ms) {
-		return fmt.Errorf("sqlite: database schema v%d is newer than this build (v%d)", current, len(ms))
+		return fmt.Errorf("%w: v%d, this build v%d", ErrNewerSchema, current, len(ms))
 	}
 	if to == 0 || to > len(ms) {
 		to = len(ms)
@@ -122,7 +122,7 @@ func migrateTo(ctx context.Context, db *sql.DB, to int) error {
 		}
 		if _, err := tx.ExecContext(ctx, m.sql); err != nil {
 			tx.Rollback()
-			return fmt.Errorf("sqlite: apply %s: %w", m.name, err)
+			return fmt.Errorf("%w: apply %s: %w", ErrMigration, m.name, err)
 		}
 		if _, err := tx.ExecContext(ctx, `INSERT INTO schema_migrations(version, name) VALUES (?, ?)`, m.version, m.name); err != nil {
 			tx.Rollback()

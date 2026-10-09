@@ -34,9 +34,12 @@ const (
 	// KindPreRestore is the copy of the current state made before a
 	// restore ("antes, faz backup do estado atual", core/14 §4).
 	KindPreRestore Kind = "pre_restore"
+	// KindDamaged is a database the recovery screen set aside (core/14
+	// §5): kept for support, never restorable while it fails validation.
+	KindDamaged Kind = "damaged"
 )
 
-var kinds = []Kind{KindAuto, KindManual, KindPreMigration, KindStartup, KindPreRestore}
+var kinds = []Kind{KindAuto, KindManual, KindPreMigration, KindStartup, KindPreRestore, KindDamaged}
 
 // Error codes (core/00 §6).
 const (
@@ -106,7 +109,7 @@ const (
 	retainAutoDays = 7
 )
 
-var retainCount = map[Kind]int{KindPreMigration: 3, KindStartup: 1, KindPreRestore: 3}
+var retainCount = map[Kind]int{KindPreMigration: 3, KindStartup: 1, KindPreRestore: 3, KindDamaged: 3}
 
 // Deps are the ports of the service.
 type Deps struct {
@@ -261,6 +264,13 @@ func (s *Service) prune(ctx context.Context) {
 	}
 	for _, b := range Expired(list, s.Clock.Now()) {
 		_ = s.FS.Remove(ctx, game.JoinPath(s.Dir, b.ID))
+		// Reading a backup (validation) leaves SQLite's WAL index files
+		// next to it; they go with it.
+		for _, suffix := range []string{"-wal", "-shm"} {
+			if info, err := s.FS.Stat(ctx, game.JoinPath(s.Dir, b.ID+suffix)); err == nil && info.Exists {
+				_ = s.FS.Remove(ctx, game.JoinPath(s.Dir, b.ID+suffix))
+			}
+		}
 	}
 }
 

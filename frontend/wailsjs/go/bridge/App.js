@@ -450,6 +450,26 @@ export function ReconcileDeploy(arg1) {
   return window['go']['bridge']['App']['ReconcileDeploy'](arg1);
 }
 
+export function RecoveryBackups() {
+  return window['go']['bridge']['App']['RecoveryBackups']();
+}
+
+export function RecoveryOpenFolder(arg1) {
+  return window['go']['bridge']['App']['RecoveryOpenFolder'](arg1);
+}
+
+export function RecoveryQuit() {
+  return window['go']['bridge']['App']['RecoveryQuit']();
+}
+
+export function RecoveryRestore(arg1) {
+  return window['go']['bridge']['App']['RecoveryRestore'](arg1);
+}
+
+export function RecoveryStartFresh() {
+  return window['go']['bridge']['App']['RecoveryStartFresh']();
+}
+
 export function ReinstallMods(arg1, arg2) {
   return window['go']['bridge']['App']['ReinstallMods'](arg1, arg2);
 }
@@ -618,12 +638,20 @@ export function SetSeparatorBlockEnabled(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetSeparatorBlockEnabled'](arg1, arg2, arg3);
 }
 
+export function Shutdown(arg1) {
+  return window['go']['bridge']['App']['Shutdown'](arg1);
+}
+
 export function SortPlugins(arg1) {
   return window['go']['bridge']['App']['SortPlugins'](arg1);
 }
 
 export function SortPreview(arg1) {
   return window['go']['bridge']['App']['SortPreview'](arg1);
+}
+
+export function StartupRecovery() {
+  return window['go']['bridge']['App']['StartupRecovery']();
 }
 
 export function SuggestGameFolders(arg1, arg2, arg3) {

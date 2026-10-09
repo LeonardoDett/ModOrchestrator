@@ -4139,6 +4139,50 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class RecoveryBackupDTO {
+	    id: string;
+	    kind: string;
+	    at: string;
+	    size: number;
+	    schema: number;
+	    valid: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new RecoveryBackupDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.kind = source["kind"];
+	        this.at = source["at"];
+	        this.size = source["size"];
+	        this.schema = source["schema"];
+	        this.valid = source["valid"];
+	    }
+	}
+	export class RecoveryDTO {
+	    active: boolean;
+	    reason: string;
+	    detail: string;
+	    language: string;
+	    dataDir: string;
+	    backupsDir: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new RecoveryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.active = source["active"];
+	        this.reason = source["reason"];
+	        this.detail = source["detail"];
+	        this.language = source["language"];
+	        this.dataDir = source["dataDir"];
+	        this.backupsDir = source["backupsDir"];
+	    }
+	}
 	export class RemovalPreviewDTO {
 	    mods: DuplicateModDTO[];
 	    orphanRules: number;
