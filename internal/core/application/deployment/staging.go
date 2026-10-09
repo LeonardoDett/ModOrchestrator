@@ -25,6 +25,9 @@ type moveRecord struct {
 	To   string `json:"to"`
 	// Folder is "archives" for a move of the ArchiveStore ("" = staging).
 	Folder string `json:"folder,omitempty"`
+	// Created: "to" did not exist; an interruption before its marker was
+	// written leaves an empty folder that recovery removes (F14).
+	Created bool `json:"created,omitempty"`
 }
 
 // StagingPreview is what DLG-18 shows before moving the staging.
@@ -297,7 +300,7 @@ func (s *Service) moveStaging(ctx context.Context, t *operations.Tracker, inst g
 	if err := t.BeginStep(ctx, StepCopy); err != nil {
 		return err
 	}
-	if err := s.recordMove(ctx, inst.ID, &moveRecord{From: inst.Staging, To: to}); err != nil {
+	if err := s.recordMove(ctx, inst.ID, &moveRecord{From: inst.Staging, To: to, Created: !s.observe(ctx, to).Exists}); err != nil {
 		return err
 	}
 	if err := s.FS.MkdirAll(ctx, to); err != nil {
@@ -495,6 +498,9 @@ func (s *Service) Recover(ctx context.Context) error {
 			s.discardManaged(ctx, folderOf(rec), inst.ID, rec.From)
 		default:
 			s.discardManaged(ctx, folderOf(rec), inst.ID, rec.To)
+			if rec.Created {
+				_ = s.FS.RemoveEmptyDir(ctx, rec.To)
+			}
 		}
 		if err := s.recordMove(ctx, game.InstanceID(id), nil); err != nil {
 			return err
@@ -585,7 +591,7 @@ func (s *Service) moveFolder(ctx context.Context, t *operations.Tracker, inst ga
 		return err
 	}
 	from := f.get(inst)
-	if err := s.recordMove(ctx, inst.ID, &moveRecord{From: from, To: to, Folder: f.name}); err != nil {
+	if err := s.recordMove(ctx, inst.ID, &moveRecord{From: from, To: to, Folder: f.name, Created: !s.observe(ctx, to).Exists}); err != nil {
 		return err
 	}
 	if err := s.FS.MkdirAll(ctx, to); err != nil {

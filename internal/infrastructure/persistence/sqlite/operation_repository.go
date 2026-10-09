@@ -106,26 +106,11 @@ func (r *OperationRepository) Save(ctx context.Context, op *operation.Operation,
 		return nil, fmt.Errorf("upsert operation: %w", err)
 	}
 
-	stored := make([]event.Event, len(events))
-	for i, e := range events {
-		payload, err := encodePayload(e.Payload)
-		if err != nil {
-			return nil, err
-		}
-		res, err := tx.ExecContext(ctx, `
-			INSERT INTO events (id, type, occurred_at, operation_id, subject_kind, subject_id, payload_json)
-			VALUES (?, ?, ?, ?, ?, ?, ?)`,
-			e.ID, string(e.Type), formatTime(e.OccurredAt), nullString(e.OperationID), e.Subject.Kind, e.Subject.ID, payload,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("append event: %w", err)
-		}
-		seq, err := res.LastInsertId()
-		if err != nil {
-			return nil, err
-		}
-		e.Sequence = seq
-		stored[i] = e
+	// The same writer as the unit of work: operation events also record
+	// the instance they are about (history by game, migration 0007).
+	stored, err := appendEvents(ctx, tx, events)
+	if err != nil {
+		return nil, err
 	}
 	if err := tx.Commit(); err != nil {
 		return nil, err

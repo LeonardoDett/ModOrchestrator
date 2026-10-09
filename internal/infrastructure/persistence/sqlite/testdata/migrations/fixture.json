@@ -1,0 +1,6844 @@
+{
+ "active_profiles": [
+  {
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "profile_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   }
+  }
+ ],
+ "app_state": [
+  {
+   "key": {
+    "k": "s",
+    "v": "games.activeInstance"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.258137700Z"
+   },
+   "value": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   }
+  },
+  {
+   "key": {
+    "k": "s",
+    "v": "games.lastUsed.01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.259705000Z"
+   },
+   "value": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.259705Z"
+   }
+  },
+  {
+   "key": {
+    "k": "s",
+    "v": "library.categoriesSeeded.01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.322368200Z"
+   },
+   "value": {
+    "k": "s",
+    "v": "true"
+   }
+  },
+  {
+   "key": {
+    "k": "s",
+    "v": "deployment.baseline.01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.348959800Z"
+   },
+   "value": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.3474437Z"
+   }
+  }
+ ],
+ "applied_load_orders": [
+  {
+   "body_json": {
+    "k": "s",
+    "v": "{\"profile\":\"01a11e27-3098-7f86-960a-f4f8964e8619\",\"order\":[\"Skyrim.esm\",\"Alpha.esp\",\"Stray.esp\"],\"enabled\":[\"Skyrim.esm\",\"Alpha.esp\"],\"fileHash\":\"5f3331cf400f17ad16cd5ade1fa7bc9e7636c9303343a4470543d14afbc7b075\",\"prevOrder\":[\"Skyrim.esm\",\"Alpha.esp\"],\"prevEnabled\":[\"Skyrim.esm\",\"Alpha.esp\"],\"operation\":\"01a11e27-3126-79d1-a8a0-8d7115b5f3ab\",\"appliedAt\":\"2026-10-09T00:54:07.4246609Z\"}"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   }
+  }
+ ],
+ "archives": [
+  {
+   "hash": {
+    "k": "s",
+    "v": "8c8320166f80a70a08af050d64f250535b34c5fd6780a6e8eb22c719256c7985"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "imported_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.278527000Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "zip"
+   },
+   "original_name": {
+    "k": "s",
+    "v": "Alpha.zip"
+   },
+   "size": {
+    "k": "i",
+    "v": "293"
+   },
+   "stored": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e/Alpha.zip"
+   }
+  },
+  {
+   "hash": {
+    "k": "s",
+    "v": "f6215b567e16dd2088e6c8b512be593c901b4e3126d1fca72b3d40722408dfab"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "imported_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.303778500Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "zip"
+   },
+   "original_name": {
+    "k": "s",
+    "v": "Bravo.zip"
+   },
+   "size": {
+    "k": "i",
+    "v": "300"
+   },
+   "stored": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d/Bravo.zip"
+   }
+  }
+ ],
+ "categories": [
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7fb8-bbbf-43c567daea12"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Bug Fixes"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "0"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-79bb-b217-94171ec4aa19"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Patches"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "1"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7edd-b0cd-8027bacf2033"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "User Interface"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "2"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-718e-acce-4d0402e8a254"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Gameplay"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "3"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7224-a398-1e566a650557"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Combat"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-718e-acce-4d0402e8a254"
+   },
+   "position": {
+    "k": "i",
+    "v": "4"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7cec-9b3a-ab681c21bcd0"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Magic"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-718e-acce-4d0402e8a254"
+   },
+   "position": {
+    "k": "i",
+    "v": "5"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7a5e-8521-b89fc168adf7"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Immersion"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "6"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7a99-9b89-32798b555eaf"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Quests and Adventures"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "7"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-74b7-9244-46a7894bc295"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Locations"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "8"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7aa8-9b8f-7bfd89e3e344"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Followers and Companions"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "9"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7294-a1bd-27bd15623f13"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "NPC"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "10"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-75d2-84b3-d80d5057d81c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Creatures"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "11"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-74d2-bef9-22153e9f8b23"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Items"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "12"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7678-9887-8b1d366b7966"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Armour"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-74d2-bef9-22153e9f8b23"
+   },
+   "position": {
+    "k": "i",
+    "v": "13"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7564-b907-812867a21fe9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Weapons"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-74d2-bef9-22153e9f8b23"
+   },
+   "position": {
+    "k": "i",
+    "v": "14"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7815-8a75-ea00861bbbc9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Clothing and Accessories"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-74d2-bef9-22153e9f8b23"
+   },
+   "position": {
+    "k": "i",
+    "v": "15"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-729e-b3b2-54f4121cf630"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Body, Face and Hair"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "16"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7b59-8750-4594612b8d1c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Animation"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "17"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-730f-ad9b-8e9c9bc5276f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Audio"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "18"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7586-9297-b902fd9d271c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Visuals and Graphics"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "19"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7a30-93a0-a102bb1a119a"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Models and Textures"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-7586-9297-b902fd9d271c"
+   },
+   "position": {
+    "k": "i",
+    "v": "20"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-73c0-9b6a-9cf422d76529"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "ENB Presets"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-7586-9297-b902fd9d271c"
+   },
+   "position": {
+    "k": "i",
+    "v": "21"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7584-a969-5b6ccfa82a60"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Lighting and Weather"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-7586-9297-b902fd9d271c"
+   },
+   "position": {
+    "k": "i",
+    "v": "22"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7a8b-aabd-e3dee9aa17cc"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Overhauls"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "23"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7ed1-aeb5-bcb198f83148"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Utilities"
+   },
+   "parent": {
+    "k": "s"
+   },
+   "position": {
+    "k": "i",
+    "v": "24"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30da-7787-ac2b-a2043da8fbc1"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "SKSE Plugins"
+   },
+   "parent": {
+    "k": "s",
+    "v": "01a11e27-30da-7ed1-aeb5-bcb198f83148"
+   },
+   "position": {
+    "k": "i",
+    "v": "25"
+   }
+  }
+ ],
+ "deployment_entries": [
+  {
+   "backup_path": {
+    "k": "s"
+   },
+   "evidence_json": {
+    "k": "s",
+    "v": "{\"fileId\":\"d2cbd939:a0000001d0f37\",\"size\":12,\"modTime\":\"2026-10-09T00:54:07.286244Z\"}"
+   },
+   "installation_id": {
+    "k": "s",
+    "v": "01a11e27-30bc-7c0f-9a2b-db89f8448691"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "link"
+   },
+   "location_key": {
+    "k": "s",
+    "v": "data|alpha.esp"
+   },
+   "method": {
+    "k": "s",
+    "v": "hardlink"
+   },
+   "mod_id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7f04-b544-56687e95cc59"
+   },
+   "path": {
+    "k": "s",
+    "v": "Alpha.esp"
+   },
+   "source": {
+    "k": "s",
+    "v": "Alpha.esp"
+   },
+   "target": {
+    "k": "s",
+    "v": "data"
+   }
+  },
+  {
+   "backup_path": {
+    "k": "s"
+   },
+   "evidence_json": {
+    "k": "s",
+    "v": "{\"fileId\":\"d2cbd939:e0000001d1206\",\"size\":1,\"modTime\":\"2026-10-09T00:54:07.3117883Z\"}"
+   },
+   "installation_id": {
+    "k": "s",
+    "v": "01a11e27-30d5-7b39-ae5e-6a5f96f04a86"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "link"
+   },
+   "location_key": {
+    "k": "s",
+    "v": "data|meshes/bravo/b.nif"
+   },
+   "method": {
+    "k": "s",
+    "v": "hardlink"
+   },
+   "mod_id": {
+    "k": "s",
+    "v": "01a11e27-30c7-7d24-8976-a28198459ebb"
+   },
+   "path": {
+    "k": "s",
+    "v": "meshes/bravo/b.nif"
+   },
+   "source": {
+    "k": "s",
+    "v": "meshes/bravo/b.nif"
+   },
+   "target": {
+    "k": "s",
+    "v": "data"
+   }
+  },
+  {
+   "backup_path": {
+    "k": "s"
+   },
+   "evidence_json": {
+    "k": "s",
+    "v": "{\"modTime\":\"0001-01-01T00:00:00Z\"}"
+   },
+   "installation_id": {
+    "k": "s"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "dir"
+   },
+   "location_key": {
+    "k": "s",
+    "v": "data|meshes/bravo"
+   },
+   "method": {
+    "k": "s"
+   },
+   "mod_id": {
+    "k": "s"
+   },
+   "path": {
+    "k": "s",
+    "v": "meshes/bravo"
+   },
+   "source": {
+    "k": "s"
+   },
+   "target": {
+    "k": "s",
+    "v": "data"
+   }
+  },
+  {
+   "backup_path": {
+    "k": "s"
+   },
+   "evidence_json": {
+    "k": "s",
+    "v": "{\"modTime\":\"0001-01-01T00:00:00Z\"}"
+   },
+   "installation_id": {
+    "k": "s"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "dir"
+   },
+   "location_key": {
+    "k": "s",
+    "v": "data|meshes"
+   },
+   "method": {
+    "k": "s"
+   },
+   "mod_id": {
+    "k": "s"
+   },
+   "path": {
+    "k": "s",
+    "v": "meshes"
+   },
+   "source": {
+    "k": "s"
+   },
+   "target": {
+    "k": "s",
+    "v": "data"
+   }
+  },
+  {
+   "backup_path": {
+    "k": "s"
+   },
+   "evidence_json": {
+    "k": "s",
+    "v": "{\"fileId\":\"d2cbd939:130000001d0dde\",\"size\":5,\"modTime\":\"2026-10-09T00:54:07.2852393Z\"}"
+   },
+   "installation_id": {
+    "k": "s",
+    "v": "01a11e27-30bc-7c0f-9a2b-db89f8448691"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "link"
+   },
+   "location_key": {
+    "k": "s",
+    "v": "data|textures/shared.dds"
+   },
+   "method": {
+    "k": "s",
+    "v": "hardlink"
+   },
+   "mod_id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7f04-b544-56687e95cc59"
+   },
+   "path": {
+    "k": "s",
+    "v": "textures/shared.dds"
+   },
+   "source": {
+    "k": "s",
+    "v": "textures/shared.dds"
+   },
+   "target": {
+    "k": "s",
+    "v": "data"
+   }
+  },
+  {
+   "backup_path": {
+    "k": "s"
+   },
+   "evidence_json": {
+    "k": "s",
+    "v": "{\"modTime\":\"0001-01-01T00:00:00Z\"}"
+   },
+   "installation_id": {
+    "k": "s"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "dir"
+   },
+   "location_key": {
+    "k": "s",
+    "v": "data|textures"
+   },
+   "method": {
+    "k": "s"
+   },
+   "mod_id": {
+    "k": "s"
+   },
+   "path": {
+    "k": "s",
+    "v": "textures"
+   },
+   "source": {
+    "k": "s"
+   },
+   "target": {
+    "k": "s",
+    "v": "data"
+   }
+  }
+ ],
+ "deployment_manifests": [
+  {
+   "applied_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.417622100Z"
+   },
+   "entry_count": {
+    "k": "i",
+    "v": "6"
+   },
+   "fingerprint": {
+    "k": "s",
+    "v": "sha256:f13a4c8f371806faaaac96a7200345a756ca70c17325716e9ec19afece861c10"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "profile_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   }
+  }
+ ],
+ "diagnostic_presence": [
+  {
+   "code": {
+    "k": "s",
+    "v": "plugin_header_unreadable"
+   },
+   "first_seen": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "key": {
+    "k": "s",
+    "v": "plugin_header_unreadable#72c7401a0ceaf9c0"
+   },
+   "severity": {
+    "k": "s",
+    "v": "warning"
+   }
+  },
+  {
+   "code": {
+    "k": "s",
+    "v": "plugin_header_unreadable"
+   },
+   "first_seen": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "key": {
+    "k": "s",
+    "v": "plugin_header_unreadable#7f54ad6f98682fb4"
+   },
+   "severity": {
+    "k": "s",
+    "v": "warning"
+   }
+  },
+  {
+   "code": {
+    "k": "s",
+    "v": "plugin_header_unreadable"
+   },
+   "first_seen": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "key": {
+    "k": "s",
+    "v": "plugin_header_unreadable#d87435a970e79fbe"
+   },
+   "severity": {
+    "k": "s",
+    "v": "warning"
+   }
+  },
+  {
+   "code": {
+    "k": "s",
+    "v": "conflicts_unreviewed"
+   },
+   "first_seen": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "key": {
+    "k": "s",
+    "v": "conflicts_unreviewed#a9b29f35835628ff"
+   },
+   "severity": {
+    "k": "s",
+    "v": "info"
+   }
+  },
+  {
+   "code": {
+    "k": "s",
+    "v": "deploy_pending"
+   },
+   "first_seen": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "key": {
+    "k": "s",
+    "v": "deploy_pending#b5bbb15df77e2725"
+   },
+   "severity": {
+    "k": "s",
+    "v": "info"
+   }
+  }
+ ],
+ "diagnostic_suppressions": [
+  {
+   "code": {
+    "k": "s"
+   },
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.397065800Z"
+   },
+   "key": {
+    "k": "s",
+    "v": "plugin_header_unreadable#72c7401a0ceaf9c0"
+   }
+  }
+ ],
+ "events": [
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-308c-7a6d-b74b-42787a3d67c6"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.244615200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"pending\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "1"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-308c-7a30-bedb-b30363b38446"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.244615200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "2"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-308d-7ecc-9649-ad672ad420e8"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.245643800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\",\"step\":\"validate\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "3"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3094-7458-a841-f80eba89f381"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.252898800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\",\"step\":\"validate\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "4"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3095-73ff-b639-188792d156e1"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.253994300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\",\"step\":\"folders\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "5"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3097-789d-9d6b-588979c8defb"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.255549700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\",\"step\":\"folders\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "6"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3098-7b02-8d0f-e84ebcd8958c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.256554000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\",\"step\":\"register\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "7"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309b-7ea4-9c84-8f2f39648dc4"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.259705000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"running\",\"step\":\"register\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "8"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309b-7e15-bd98-be7626987859"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.259705000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"games.manage\",\"status\":\"succeeded\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "9"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.succeeded"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309e-750e-a34f-3e5a4ca467dd"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.262974900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"pending\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "10"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309f-721d-94e0-2a199dd20f10"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.263984000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"pending\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "11"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309f-74ed-9bb0-e3c7131e12bb"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.263984000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "12"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30a0-7d13-bf95-3d9f0e28d77b"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.264987400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"validate\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "13"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30a7-7284-ab0a-132afb72c91d"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.271499500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"validate\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "14"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30a8-7c5b-b820-e9cc64b591e4"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.272501300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"hash\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "15"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30a9-7caa-8498-5f2dcfa03383"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.273500200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"hash\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "16"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30aa-7351-a028-2b65b88a955e"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.274500400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"dedupe\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "17"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30aa-7937-831b-109cd2b3adc9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.274500400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"dedupe\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "18"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ab-795a-b2c1-ff83acf3b52d"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.275503300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"retain\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "19"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7280-875f-c38f6234d70b"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.278527000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"name\":\"Alpha.zip\",\"retained\":\"true\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "20"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "archive"
+   },
+   "type": {
+    "k": "s",
+    "v": "archive.retained"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ae-73cf-8f2c-3b7f69fc57c3"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.278527000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"archive\":\"Alpha.zip\",\"name\":\"Alpha\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "21"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7f04-b544-56687e95cc59"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "mod"
+   },
+   "type": {
+    "k": "s",
+    "v": "mod.imported"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30af-7743-96bd-fc9f60e083cc"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.279532000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"retain\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "22"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30af-7d2a-aa6d-827218942f4b"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.279532000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"inspect\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "23"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b1-7c3c-b439-18df15672d98"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.281534700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"inspect\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "24"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b2-7b12-a2e5-1506c4916891"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.282531600Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"select_installer\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "25"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b2-7012-aa90-45796389daa5"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.282531600Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"select_installer\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "26"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b3-7c15-a43e-745285aa870f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.283531200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"extract\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "27"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b5-7931-a500-044564a62242"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.285239300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"extract\",\"progress\":{\"current\":5,\"total\":17}}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "28"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.progress"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b6-76bd-a157-2e0499d8c674"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.286244000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"extract\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "29"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b6-7196-92e6-ce5a13ce335e"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.286244000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"plan_install\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "30"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b7-70ca-9080-813aeaf4ec98"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.287242700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"plan_install\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "31"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b8-7dd2-97da-e6ca3c28d129"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.288275100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"stage\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "32"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30b9-7b73-be22-55532ac8748c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.289272200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"stage\",\"progress\":{\"current\":1,\"total\":2}}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "33"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.progress"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30bb-71a5-ab2c-04a5f7989411"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.291273100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"stage\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "34"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30bc-787b-bb82-11a7fa47954c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.292271600Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "35"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30bd-72af-98d1-5ee63e6cc3db"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.293271000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"files\":\"2\",\"installation\":\"01a11e27-30bc-7c0f-9a2b-db89f8448691\",\"installer\":\"basic\",\"name\":\"Alpha\",\"type\":\"default\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "36"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7f04-b544-56687e95cc59"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "mod"
+   },
+   "type": {
+    "k": "s",
+    "v": "mod.installed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30bd-7f94-81e2-6217d7fd248c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.293271000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "37"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30be-762d-bfc0-bd2821ad40c6"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.294270900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "38"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30bf-7bb7-96b2-03b34fdf1cc1"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.295270800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "39"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c0-7a3c-8b39-731c5f5ce3f0"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.296271400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"succeeded\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "40"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.succeeded"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c0-71b6-9e4e-5e6a4ac45eb9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.296271400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "41"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c0-711a-9035-dc25baf7c102"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.296271400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"validate\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "42"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c2-7864-9eed-1f7fe846daa5"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.298777000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"validate\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "43"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c2-7d8f-9e8c-1f7f92b5f38a"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.298777000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"hash\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "44"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c3-7423-aacb-780b31788d31"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.299776900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"hash\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "45"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c4-7563-90cf-6094f7206023"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.300777900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"dedupe\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "46"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c5-7754-a4c5-7e9e7ab88696"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.301777700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"dedupe\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "47"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c5-7266-957f-df3c4361a587"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.301777700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"retain\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "48"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c7-78d0-a979-57252c9206c8"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.303778500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"name\":\"Bravo.zip\",\"retained\":\"true\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "49"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "archive"
+   },
+   "type": {
+    "k": "s",
+    "v": "archive.retained"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c7-756f-940d-12a7158a0176"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.303778500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"archive\":\"Bravo.zip\",\"name\":\"Bravo\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "50"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-30c7-7d24-8976-a28198459ebb"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "mod"
+   },
+   "type": {
+    "k": "s",
+    "v": "mod.imported"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c8-7a50-976d-30601c72f972"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.304777700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"retain\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "51"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c9-71a0-8380-dee46e2b7fd9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.305777200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"inspect\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "52"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ca-7b3a-be86-c7e4e05ce3e9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.306776900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"inspect\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "53"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30cb-7d0b-9605-6b3bb3960457"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.307777000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"select_installer\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "54"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30cc-7c73-a93f-d8b007af5000"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.308279700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"select_installer\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "55"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30cd-7f63-b283-577abd12f820"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.309282900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"extract\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "56"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ce-796c-bea7-1bd0692295b9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.310787900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"extract\",\"progress\":{\"current\":5,\"total\":6}}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "57"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.progress"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30cf-710b-aa05-6763fc05abdd"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.311788300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"extract\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "58"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30cf-7770-840a-9a8b78e88094"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.311788300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"plan_install\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "59"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d0-7ed6-92da-5ac3ead63c96"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.312788600Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"plan_install\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "60"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d1-74fe-a6e7-e1149a49c9f9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.313292300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"stage\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "61"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d2-73e9-b852-58182bbcc7af"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.314295200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"stage\",\"progress\":{\"current\":1,\"total\":2}}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "62"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.progress"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d4-711c-9994-7c2ed79b498e"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.316300100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"stage\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "63"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d5-7baa-acf9-6088c1d3304d"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.317298700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "64"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d6-7188-864f-9c3c392d7297"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.318298400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"files\":\"2\",\"installation\":\"01a11e27-30d5-7b39-ae5e-6a5f96f04a86\",\"installer\":\"basic\",\"name\":\"Bravo\",\"type\":\"default\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "65"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-30c7-7d24-8976-a28198459ebb"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "mod"
+   },
+   "type": {
+    "k": "s",
+    "v": "mod.installed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d6-783f-8e86-1b4450d4aa57"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.318800500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "66"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d6-7379-8a75-d57bd7f13534"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.318800500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "67"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d8-7f2f-a44b-2fc5b786fc75"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.320862300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "68"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d8-781c-ab8b-c5be76d39556"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.320862300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"import\",\"status\":\"succeeded\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "69"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.succeeded"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30db-7c38-8330-cc907a12ac0c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.323873300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"pending\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "70"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30dc-762f-a921-d3240bb1f9b9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.324876100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "71"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30dd-77b7-890c-f58022637d10"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.325877200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"reconcile\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "72"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_skipped"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30de-7270-b8da-63fe3aa63338"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.326876800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"preflight\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "73"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e0-7d8f-8663-01bde069cd2d"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.328380800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"preflight\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "74"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e1-7da4-988b-acc8042d0e62"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.329385200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"scan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "75"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e7-76f9-bc7f-2b09a44ca73a"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.335386000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"scan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "76"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e7-7b0d-9018-465c9891401b"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.335386000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"plan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "77"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e8-7242-8e1d-4a91febe2096"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.336385300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"backup\":\"0\",\"create\":\"3\",\"decisions\":\"0\",\"keep\":\"0\",\"remove\":\"0\",\"replace\":\"0\",\"restore\":\"0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "78"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "deployment.planned"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e8-7eb3-9bb0-f26d62ceb258"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.336385300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"plan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "79"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e9-7eea-8869-c1d5a3491d4a"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.337385800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"await_decision\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "80"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_skipped"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30e9-7058-874d-76b7d6fe3d33"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.337385800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"journal\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "81"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ea-7930-8cca-7df2402fcc26"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.338890800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"journal\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "82"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30eb-7779-89f2-89df8f672af5"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.339896100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"apply\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "83"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ef-7dc7-abcc-8b8dca2e1515"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.343935300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"apply\",\"progress\":{\"current\":6,\"total\":6}}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "84"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.progress"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f0-7b47-8cb7-cbec65d9aca9"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.344939800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"apply\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "85"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f1-7801-ac5c-3dc440bdbbce"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.345940100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"verify\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "86"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f1-7847-95ab-e5fc0570a61f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.345940100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"verify\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "87"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f3-789f-be07-15ed51cf4c98"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.347443700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "88"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f5-78bf-85b1-cdba78d04dfd"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.349485000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"backup\":\"0\",\"create\":\"3\",\"decisions\":\"0\",\"entries\":\"6\",\"failed\":\"0\",\"keep\":\"0\",\"profile\":\"01a11e27-3098-7f86-960a-f4f8964e8619\",\"remove\":\"0\",\"replace\":\"0\",\"restore\":\"0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "89"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "deployment.applied"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f6-72ad-b0d6-528ec6a433da"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.350004000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "90"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f7-7f43-b5fe-b8724b1e2d76"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.351146100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "91"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30f9-7901-a6cf-803d6beb4471"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.353269900Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"added\":\"2\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"removed\":\"0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "92"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "profile"
+   },
+   "type": {
+    "k": "s",
+    "v": "plugins.inventory_changed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30fb-7384-a632-1b8971ac2ef6"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.355853100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"count\":\"2\",\"forced\":\"false\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"profile\":\"01a11e27-3098-7f86-960a-f4f8964e8619\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "93"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "loadorder.applied"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3101-7f60-b454-96825954765f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.361581300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"from\":\"never_deployed/no_manifest\",\"to\":\"in_sync/up_to_date\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "94"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "deployment.status_changed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3103-7300-bf09-00e26a4f5d51"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.363643500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "95"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3104-7e60-af6b-846c7ab4499d"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.364680300Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"succeeded\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "96"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.succeeded"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3106-7567-b1d3-5fd047702113"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.366293000Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"wins\",\"loser\":\"01a11e27-30c7-7d24-8976-a28198459ebb\",\"loserName\":\"Bravo\",\"rule\":\"01a11e27-3106-78ba-96a9-c4f3036b5793\",\"winner\":\"01a11e27-30ae-7f04-b544-56687e95cc59\",\"winnerName\":\"Alpha\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "97"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "rule.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3106-7156-8182-fe544ac3365c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.366293000Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"after\":\"m:01a11e27-30c7-7d24-8976-a28198459ebb\\nm:01a11e27-30ae-7f04-b544-56687e95cc59\",\"before\":\"m:01a11e27-30ae-7f04-b544-56687e95cc59\\nm:01a11e27-30c7-7d24-8976-a28198459ebb\",\"moved\":\"1\",\"reason\":\"rule\",\"rule\":\"01a11e27-3106-78ba-96a9-c4f3036b5793\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "98"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "profile"
+   },
+   "type": {
+    "k": "s",
+    "v": "order.changed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3106-7f30-847a-04151ea48db2"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.366875200Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"from\":\"01a11e27-3098-7f86-960a-f4f8964e8619\",\"fromName\":\"Default\",\"name\":\"Survival\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "99"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-3106-76c4-b1b9-b40ac2c811bd"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "profile"
+   },
+   "type": {
+    "k": "s",
+    "v": "profile.cloned"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3107-7aa0-bc0d-c329333c76c2"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.367395300Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"reason\":\"manual\",\"snapshot\":\"01a11e27-3107-7a5c-92d0-cdb358289538\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "100"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "profile"
+   },
+   "type": {
+    "k": "s",
+    "v": "snapshot.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3108-7557-ad68-33637684a264"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.368439400Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"after\":\"\",\"group\":\"Late\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "101"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "plugin_group.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3114-7f00-b0b3-f453353e70a6"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"code\":\"plugin_header_unreadable\",\"count\":\"1\",\"desktop\":\"false\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"kind\":\"diagnostic\",\"notification\":\"01a11e27-3114-70d3-8227-73ce45356239\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "102"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "skyrim.esm"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "plugin"
+   },
+   "type": {
+    "k": "s",
+    "v": "notification.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3114-79b2-9aa5-3acb0b578fcf"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"code\":\"plugin_header_unreadable\",\"count\":\"2\",\"desktop\":\"false\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"kind\":\"diagnostic\",\"notification\":\"01a11e27-3114-70d3-8227-73ce45356239\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "103"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "stray.esp"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "plugin"
+   },
+   "type": {
+    "k": "s",
+    "v": "notification.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3114-7f44-af6f-c4a6af58e2cd"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"code\":\"plugin_header_unreadable\",\"count\":\"3\",\"desktop\":\"false\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"kind\":\"diagnostic\",\"notification\":\"01a11e27-3114-70d3-8227-73ce45356239\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "104"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "alpha.esp"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "plugin"
+   },
+   "type": {
+    "k": "s",
+    "v": "notification.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3114-7a65-823f-6b2cff72f444"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"count\":\"5\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "105"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "diagnostics.changed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3125-7a6d-a20f-5a28cb7da8f1"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.397065800Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"code\":\"\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"key\":\"plugin_header_unreadable#72c7401a0ceaf9c0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "106"
+   },
+   "subject_id": {
+    "k": "s"
+   },
+   "subject_kind": {
+    "k": "s"
+   },
+   "type": {
+    "k": "s",
+    "v": "diagnostics.suppressed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3126-73ba-bea3-17921afa5dd1"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.398063000Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"pending\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "107"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.created"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3127-70a1-af83-71a42bc44633"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.399064200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "108"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3128-7992-a01e-a0184891da3c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.400063800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"reconcile\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "109"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_skipped"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3128-7f8a-9e30-40b19bdf5eca"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.400063800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"preflight\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "110"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3129-71ed-8f14-721fe9e9675f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.401567400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"preflight\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "111"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-312a-7456-b4ed-7f562ea83c15"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.402571900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"scan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "112"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3130-7c99-9625-5f872071e6f7"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.408573100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"scan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "113"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3130-798c-beb7-fa3fa8645a35"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.408573100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"plan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "114"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3132-7fd0-8ca8-9412c8b1cccd"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.410030500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"backup\":\"0\",\"create\":\"0\",\"decisions\":\"0\",\"keep\":\"2\",\"remove\":\"0\",\"replace\":\"1\",\"restore\":\"0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "115"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "deployment.planned"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3133-7690-9577-6130541cf39c"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.411031600Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"plan\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "116"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3133-706c-b035-cd6062c64080"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.411031600Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"await_decision\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "117"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_skipped"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3134-7f60-8899-ff08090b6215"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.412030700Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"journal\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "118"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3135-738a-ae85-79a2c1aa3918"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.413116200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"journal\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "119"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3136-78ca-ad48-85c43dea3535"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.414117400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"apply\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "120"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3137-7757-8885-90cf4b1e5ad5"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.415117200Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"apply\",\"progress\":{\"current\":1,\"total\":1}}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "121"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.progress"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3138-7e85-a34a-da320068cfad"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.416116800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"apply\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "122"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3138-7aa5-9864-9bb51715ece4"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.416116800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"verify\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "123"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3139-7c1a-832d-3d0e7bd87999"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.417622100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"verify\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "124"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3139-7623-8e8d-84536c354988"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.417622100Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "125"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-313c-7097-9e2c-00923b9d640f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.420155400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"backup\":\"0\",\"create\":\"0\",\"decisions\":\"0\",\"entries\":\"6\",\"failed\":\"0\",\"keep\":\"2\",\"profile\":\"01a11e27-3098-7f86-960a-f4f8964e8619\",\"remove\":\"0\",\"replace\":\"1\",\"restore\":\"0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "126"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "deployment.applied"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-313c-7d67-bc08-cc57c0156ac3"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.420155400Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"commit\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "127"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-313d-7424-8c0b-83d72231f29f"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.421154500Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "128"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_started"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-313e-7da7-a427-cc8214e2d98a"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.422656800Z"
+   },
+   "operation_id": {
+    "k": "n"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"added\":\"1\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"removed\":\"0\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "129"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "profile"
+   },
+   "type": {
+    "k": "s",
+    "v": "plugins.inventory_changed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3140-7ab8-a2fc-bcaa2e3d2e08"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.424660900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"count\":\"2\",\"forced\":\"false\",\"instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"profile\":\"01a11e27-3098-7f86-960a-f4f8964e8619\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "130"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "loadorder.applied"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3145-77bc-b1d1-58b24ece2cc0"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.429660900Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"from\":\"pending/desired_changed\",\"to\":\"in_sync/up_to_date\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "131"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "deployment.status_changed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3146-7b6c-9eb1-944984d037f5"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.430660800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"running\",\"step\":\"post\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "132"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.step_completed"
+   }
+  },
+  {
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3146-71f0-a029-9e17b307bcf4"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "occurred_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.430660800Z"
+   },
+   "operation_id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "payload_json": {
+    "k": "s",
+    "v": "{\"kind\":\"deploy\",\"status\":\"succeeded\"}"
+   },
+   "seq": {
+    "k": "i",
+    "v": "133"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "type": {
+    "k": "s",
+    "v": "operation.succeeded"
+   }
+  }
+ ],
+ "game_instances": [
+  {
+   "adapter": {
+    "k": "s",
+    "v": "skyrimse"
+   },
+   "adapter_version": {
+    "k": "s",
+    "v": "1"
+   },
+   "archive_store": {
+    "k": "s",
+    "v": "C:\\Games\\MO-fixture\\mo\\archives"
+   },
+   "backup_store": {
+    "k": "s",
+    "v": "C:\\Games\\MO-fixture\\mo\\backups"
+   },
+   "display_name": {
+    "k": "s",
+    "v": "The Elder Scrolls V: Skyrim Special Edition"
+   },
+   "executable": {
+    "k": "s"
+   },
+   "game": {
+    "k": "s",
+    "v": "skyrimse"
+   },
+   "hidden": {
+    "k": "i",
+    "v": "0"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "preferred_method": {
+    "k": "s",
+    "v": "hardlink"
+   },
+   "root": {
+    "k": "s",
+    "v": "C:\\Games\\MO-fixture\\Skyrim"
+   },
+   "staging": {
+    "k": "s",
+    "v": "C:\\Games\\MO-fixture\\mo\\staging"
+   },
+   "store": {
+    "k": "s",
+    "v": "manual"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.256554000Z"
+   }
+  }
+ ],
+ "installations": [
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.292271600Z"
+   },
+   "file_count": {
+    "k": "i",
+    "v": "2"
+   },
+   "files_json": {
+    "k": "s",
+    "v": "[{\"s\":\"Alpha.esp\",\"t\":\"data\",\"p\":\"Alpha.esp\",\"n\":12},{\"s\":\"textures/shared.dds\",\"t\":\"data\",\"p\":\"textures/shared.dds\",\"n\":5}]"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30bc-7c0f-9a2b-db89f8448691"
+   },
+   "installer": {
+    "k": "s",
+    "v": "basic"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "mod_id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7f04-b544-56687e95cc59"
+   },
+   "options_json": {
+    "k": "s",
+    "v": "{\"root\":\"\"}"
+   },
+   "total_size": {
+    "k": "i",
+    "v": "17"
+   }
+  },
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.317298700Z"
+   },
+   "file_count": {
+    "k": "i",
+    "v": "2"
+   },
+   "files_json": {
+    "k": "s",
+    "v": "[{\"s\":\"meshes/bravo/b.nif\",\"t\":\"data\",\"p\":\"meshes/bravo/b.nif\",\"n\":1},{\"s\":\"textures/shared.dds\",\"t\":\"data\",\"p\":\"textures/shared.dds\",\"n\":5}]"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30d5-7b39-ae5e-6a5f96f04a86"
+   },
+   "installer": {
+    "k": "s",
+    "v": "basic"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "mod_id": {
+    "k": "s",
+    "v": "01a11e27-30c7-7d24-8976-a28198459ebb"
+   },
+   "options_json": {
+    "k": "s",
+    "v": "{\"root\":\"\"}"
+   },
+   "total_size": {
+    "k": "i",
+    "v": "6"
+   }
+  }
+ ],
+ "instance_plugin_rules": [
+  {
+   "data_json": {
+    "k": "s",
+    "v": "{\"rules\":[],\"groups\":[{\"name\":\"default\",\"after\":[]},{\"name\":\"Late\",\"after\":[]}],\"assignments\":{}}"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   }
+  }
+ ],
+ "instance_rules": [
+  {
+   "data_json": {
+    "k": "s",
+    "v": "{\"Instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"Order\":[{\"ID\":\"01a11e27-3106-78ba-96a9-c4f3036b5793\",\"Before\":\"01a11e27-30c7-7d24-8976-a28198459ebb\",\"After\":\"01a11e27-30ae-7f04-b544-56687e95cc59\",\"Source\":\"user\",\"Disabled\":false,\"Note\":\"\",\"CreatedAt\":\"2026-10-09T00:54:07.366293Z\"}],\"Dependencies\":null,\"Incompatibilities\":null}"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   }
+  }
+ ],
+ "instance_targets": [
+  {
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "path": {
+    "k": "s",
+    "v": "C:\\Games\\MO-fixture\\Skyrim\\Data"
+   },
+   "position": {
+    "k": "i",
+    "v": "0"
+   },
+   "target_id": {
+    "k": "s",
+    "v": "data"
+   }
+  },
+  {
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "path": {
+    "k": "s",
+    "v": "C:\\Games\\MO-fixture\\Skyrim"
+   },
+   "position": {
+    "k": "i",
+    "v": "1"
+   },
+   "target_id": {
+    "k": "s",
+    "v": "root"
+   }
+  }
+ ],
+ "mods": [
+  {
+   "data_json": {
+    "k": "s",
+    "v": "{\"ID\":\"01a11e27-30ae-7f04-b544-56687e95cc59\",\"Instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"Name\":\"Alpha\",\"Source\":{\"Kind\":\"manual-file\",\"Ref\":\"Alpha.zip\"},\"Attributes\":{\"Name\":\"\",\"Version\":\"\",\"Author\":\"\",\"Description\":\"\",\"Notes\":\"\",\"Highlight\":{\"Color\":\"\",\"Icon\":\"\"},\"Tags\":null},\"Category\":\"\",\"Type\":\"default\",\"Archive\":\"01a11e27-309e-7936-af9a-1f1b08e4e98e\",\"VariantOf\":\"\",\"VariantLabel\":\"\",\"Content\":[\"plugin\",\"textures\"],\"Installation\":\"01a11e27-30bc-7c0f-9a2b-db89f8448691\",\"State\":\"installed\",\"CreatedAt\":\"2026-10-09T00:54:07.278527Z\",\"InstalledAt\":\"2026-10-09T00:54:07.2922716Z\",\"UpdatedAt\":\"2026-10-09T00:54:07.2922716Z\"}"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30ae-7f04-b544-56687e95cc59"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "state": {
+    "k": "s",
+    "v": "installed"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.292271600Z"
+   }
+  },
+  {
+   "data_json": {
+    "k": "s",
+    "v": "{\"ID\":\"01a11e27-30c7-7d24-8976-a28198459ebb\",\"Instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"Name\":\"Bravo\",\"Source\":{\"Kind\":\"manual-file\",\"Ref\":\"Bravo.zip\"},\"Attributes\":{\"Name\":\"\",\"Version\":\"\",\"Author\":\"\",\"Description\":\"\",\"Notes\":\"\",\"Highlight\":{\"Color\":\"\",\"Icon\":\"\"},\"Tags\":null},\"Category\":\"\",\"Type\":\"default\",\"Archive\":\"01a11e27-309f-72c6-aa61-ed0b97a8da4d\",\"VariantOf\":\"\",\"VariantLabel\":\"\",\"Content\":[\"meshes\",\"textures\"],\"Installation\":\"01a11e27-30d5-7b39-ae5e-6a5f96f04a86\",\"State\":\"installed\",\"CreatedAt\":\"2026-10-09T00:54:07.3037785Z\",\"InstalledAt\":\"2026-10-09T00:54:07.3172987Z\",\"UpdatedAt\":\"2026-10-09T00:54:07.3172987Z\"}"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30c7-7d24-8976-a28198459ebb"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "state": {
+    "k": "s",
+    "v": "installed"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.317298700Z"
+   }
+  }
+ ],
+ "notifications": [
+  {
+   "code": {
+    "k": "s",
+    "v": "plugin_header_unreadable"
+   },
+   "count": {
+    "k": "i",
+    "v": "3"
+   },
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3114-70d3-8227-73ce45356239"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "kind": {
+    "k": "s",
+    "v": "diagnostic"
+   },
+   "params_json": {
+    "k": "s",
+    "v": "{\"plugin\":\"Skyrim.esm\",\"reason\":\"invalid\"}"
+   },
+   "ref": {
+    "k": "s",
+    "v": "diag:01a11e27-308c-77b3-8f55-7bd072f586b4:plugin_header_unreadable"
+   },
+   "severity": {
+    "k": "s",
+    "v": "warning"
+   },
+   "state": {
+    "k": "s",
+    "v": "unread"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "skyrim.esm"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "plugin"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.380348400Z"
+   }
+  }
+ ],
+ "operations": [
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.244615200Z"
+   },
+   "current_step": {
+    "k": "s"
+   },
+   "error_json": {
+    "k": "n"
+   },
+   "finished_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.259705000Z"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-308c-7156-a70f-ee60a21b1c75"
+   },
+   "kind": {
+    "k": "s",
+    "v": "games.manage"
+   },
+   "progress_current": {
+    "k": "i",
+    "v": "0"
+   },
+   "progress_total": {
+    "k": "i",
+    "v": "0"
+   },
+   "started_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.244615200Z"
+   },
+   "status": {
+    "k": "s",
+    "v": "succeeded"
+   },
+   "steps_json": {
+    "k": "s",
+    "v": "[{\"name\":\"validate\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2456438Z\",\"finishedAt\":\"2026-10-09T00:54:07.2528988Z\"},{\"name\":\"folders\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2539943Z\",\"finishedAt\":\"2026-10-09T00:54:07.2555497Z\"},{\"name\":\"register\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.256554Z\",\"finishedAt\":\"2026-10-09T00:54:07.259705Z\"}]"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.259705000Z"
+   }
+  },
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.262974900Z"
+   },
+   "current_step": {
+    "k": "s"
+   },
+   "error_json": {
+    "k": "n"
+   },
+   "finished_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.296271400Z"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309e-7936-af9a-1f1b08e4e98e"
+   },
+   "kind": {
+    "k": "s",
+    "v": "import"
+   },
+   "progress_current": {
+    "k": "i",
+    "v": "0"
+   },
+   "progress_total": {
+    "k": "i",
+    "v": "0"
+   },
+   "started_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.263984000Z"
+   },
+   "status": {
+    "k": "s",
+    "v": "succeeded"
+   },
+   "steps_json": {
+    "k": "s",
+    "v": "[{\"name\":\"validate\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2649874Z\",\"finishedAt\":\"2026-10-09T00:54:07.2714995Z\"},{\"name\":\"hash\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2725013Z\",\"finishedAt\":\"2026-10-09T00:54:07.2735002Z\"},{\"name\":\"dedupe\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2745004Z\",\"finishedAt\":\"2026-10-09T00:54:07.2745004Z\"},{\"name\":\"retain\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2755033Z\",\"finishedAt\":\"2026-10-09T00:54:07.279532Z\"},{\"name\":\"inspect\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.279532Z\",\"finishedAt\":\"2026-10-09T00:54:07.2815347Z\"},{\"name\":\"select_installer\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2825316Z\",\"finishedAt\":\"2026-10-09T00:54:07.2825316Z\"},{\"name\":\"extract\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2835312Z\",\"finishedAt\":\"2026-10-09T00:54:07.286244Z\"},{\"name\":\"plan_install\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.286244Z\",\"finishedAt\":\"2026-10-09T00:54:07.2872427Z\"},{\"name\":\"stage\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2882751Z\",\"finishedAt\":\"2026-10-09T00:54:07.2912731Z\"},{\"name\":\"commit\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2922716Z\",\"finishedAt\":\"2026-10-09T00:54:07.293271Z\"},{\"name\":\"post\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2942709Z\",\"finishedAt\":\"2026-10-09T00:54:07.2952708Z\"}]"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.296271400Z"
+   }
+  },
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.263984000Z"
+   },
+   "current_step": {
+    "k": "s"
+   },
+   "error_json": {
+    "k": "n"
+   },
+   "finished_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.320862300Z"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-309f-72c6-aa61-ed0b97a8da4d"
+   },
+   "kind": {
+    "k": "s",
+    "v": "import"
+   },
+   "progress_current": {
+    "k": "i",
+    "v": "0"
+   },
+   "progress_total": {
+    "k": "i",
+    "v": "0"
+   },
+   "started_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.296271400Z"
+   },
+   "status": {
+    "k": "s",
+    "v": "succeeded"
+   },
+   "steps_json": {
+    "k": "s",
+    "v": "[{\"name\":\"validate\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.2962714Z\",\"finishedAt\":\"2026-10-09T00:54:07.298777Z\"},{\"name\":\"hash\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.298777Z\",\"finishedAt\":\"2026-10-09T00:54:07.2997769Z\"},{\"name\":\"dedupe\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3007779Z\",\"finishedAt\":\"2026-10-09T00:54:07.3017777Z\"},{\"name\":\"retain\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3017777Z\",\"finishedAt\":\"2026-10-09T00:54:07.3047777Z\"},{\"name\":\"inspect\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3057772Z\",\"finishedAt\":\"2026-10-09T00:54:07.3067769Z\"},{\"name\":\"select_installer\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.307777Z\",\"finishedAt\":\"2026-10-09T00:54:07.3082797Z\"},{\"name\":\"extract\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3092829Z\",\"finishedAt\":\"2026-10-09T00:54:07.3117883Z\"},{\"name\":\"plan_install\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3117883Z\",\"finishedAt\":\"2026-10-09T00:54:07.3127886Z\"},{\"name\":\"stage\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3132923Z\",\"finishedAt\":\"2026-10-09T00:54:07.3163001Z\"},{\"name\":\"commit\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3172987Z\",\"finishedAt\":\"2026-10-09T00:54:07.3188005Z\"},{\"name\":\"post\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3188005Z\",\"finishedAt\":\"2026-10-09T00:54:07.3208623Z\"}]"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.320862300Z"
+   }
+  },
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.323873300Z"
+   },
+   "current_step": {
+    "k": "s"
+   },
+   "error_json": {
+    "k": "n"
+   },
+   "finished_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.364680300Z"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-30db-72e1-9603-065af5e3b080"
+   },
+   "kind": {
+    "k": "s",
+    "v": "deploy"
+   },
+   "progress_current": {
+    "k": "i",
+    "v": "0"
+   },
+   "progress_total": {
+    "k": "i",
+    "v": "0"
+   },
+   "started_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.324876100Z"
+   },
+   "status": {
+    "k": "s",
+    "v": "succeeded"
+   },
+   "steps_json": {
+    "k": "s",
+    "v": "[{\"name\":\"reconcile\",\"status\":\"skipped\",\"finishedAt\":\"2026-10-09T00:54:07.3258772Z\"},{\"name\":\"preflight\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3268768Z\",\"finishedAt\":\"2026-10-09T00:54:07.3283808Z\"},{\"name\":\"scan\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3293852Z\",\"finishedAt\":\"2026-10-09T00:54:07.335386Z\"},{\"name\":\"plan\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.335386Z\",\"finishedAt\":\"2026-10-09T00:54:07.3363853Z\"},{\"name\":\"await_decision\",\"status\":\"skipped\",\"finishedAt\":\"2026-10-09T00:54:07.3373858Z\"},{\"name\":\"journal\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3373858Z\",\"finishedAt\":\"2026-10-09T00:54:07.3388908Z\"},{\"name\":\"apply\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3398961Z\",\"finishedAt\":\"2026-10-09T00:54:07.3449398Z\"},{\"name\":\"verify\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3459401Z\",\"finishedAt\":\"2026-10-09T00:54:07.3459401Z\"},{\"name\":\"commit\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3474437Z\",\"finishedAt\":\"2026-10-09T00:54:07.350004Z\"},{\"name\":\"post\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.3511461Z\",\"finishedAt\":\"2026-10-09T00:54:07.3636435Z\"}]"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.364680300Z"
+   }
+  },
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.398063000Z"
+   },
+   "current_step": {
+    "k": "s"
+   },
+   "error_json": {
+    "k": "n"
+   },
+   "finished_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.430660800Z"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3126-79d1-a8a0-8d7115b5f3ab"
+   },
+   "kind": {
+    "k": "s",
+    "v": "deploy"
+   },
+   "progress_current": {
+    "k": "i",
+    "v": "0"
+   },
+   "progress_total": {
+    "k": "i",
+    "v": "0"
+   },
+   "started_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.399064200Z"
+   },
+   "status": {
+    "k": "s",
+    "v": "succeeded"
+   },
+   "steps_json": {
+    "k": "s",
+    "v": "[{\"name\":\"reconcile\",\"status\":\"skipped\",\"finishedAt\":\"2026-10-09T00:54:07.4000638Z\"},{\"name\":\"preflight\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4000638Z\",\"finishedAt\":\"2026-10-09T00:54:07.4015674Z\"},{\"name\":\"scan\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4025719Z\",\"finishedAt\":\"2026-10-09T00:54:07.4085731Z\"},{\"name\":\"plan\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4085731Z\",\"finishedAt\":\"2026-10-09T00:54:07.4110316Z\"},{\"name\":\"await_decision\",\"status\":\"skipped\",\"finishedAt\":\"2026-10-09T00:54:07.4110316Z\"},{\"name\":\"journal\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4120307Z\",\"finishedAt\":\"2026-10-09T00:54:07.4131162Z\"},{\"name\":\"apply\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4141174Z\",\"finishedAt\":\"2026-10-09T00:54:07.4161168Z\"},{\"name\":\"verify\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4161168Z\",\"finishedAt\":\"2026-10-09T00:54:07.4176221Z\"},{\"name\":\"commit\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4176221Z\",\"finishedAt\":\"2026-10-09T00:54:07.4201554Z\"},{\"name\":\"post\",\"status\":\"completed\",\"startedAt\":\"2026-10-09T00:54:07.4211545Z\",\"finishedAt\":\"2026-10-09T00:54:07.4306608Z\"}]"
+   },
+   "subject_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "subject_kind": {
+    "k": "s",
+    "v": "instance"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.430660800Z"
+   }
+  }
+ ],
+ "profile_snapshots": [
+  {
+   "created_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.367395300Z"
+   },
+   "data_json": {
+    "k": "s",
+    "v": "{\"ID\":\"01a11e27-3098-7f86-960a-f4f8964e8619\",\"Instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"Name\":\"Default\",\"Notes\":\"\",\"Features\":{\"LocalSaves\":false,\"LocalSettings\":false},\"Order\":[{\"Mod\":\"01a11e27-30c7-7d24-8976-a28198459ebb\",\"Separator\":\"\"},{\"Mod\":\"01a11e27-30ae-7f04-b544-56687e95cc59\",\"Separator\":\"\"}],\"Separators\":null,\"Mods\":{\"01a11e27-30ae-7f04-b544-56687e95cc59\":{\"Enabled\":true,\"EnabledAt\":\"2026-10-09T00:54:07.2922716Z\"},\"01a11e27-30c7-7d24-8976-a28198459ebb\":{\"Enabled\":true,\"EnabledAt\":\"2026-10-09T00:54:07.3172987Z\"}},\"PluginsEnabled\":{\"Alpha.esp\":true},\"LoadOrder\":[\"Skyrim.esm\",\"Alpha.esp\"],\"IndexLocks\":{},\"CreatedAt\":\"2026-10-09T00:54:07.256554Z\",\"UpdatedAt\":\"2026-10-09T00:54:07.366293Z\",\"LastActivatedAt\":\"0001-01-01T00:00:00Z\"}"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3107-7a5c-92d0-cdb358289538"
+   },
+   "profile_id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   },
+   "reason": {
+    "k": "s",
+    "v": "manual"
+   }
+  }
+ ],
+ "profiles": [
+  {
+   "data_json": {
+    "k": "s",
+    "v": "{\"ID\":\"01a11e27-3098-7f86-960a-f4f8964e8619\",\"Instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"Name\":\"Default\",\"Notes\":\"\",\"Features\":{\"LocalSaves\":false,\"LocalSettings\":false},\"Order\":[{\"Mod\":\"01a11e27-30c7-7d24-8976-a28198459ebb\",\"Separator\":\"\"},{\"Mod\":\"01a11e27-30ae-7f04-b544-56687e95cc59\",\"Separator\":\"\"}],\"Separators\":null,\"Mods\":{\"01a11e27-30ae-7f04-b544-56687e95cc59\":{\"Enabled\":true,\"EnabledAt\":\"2026-10-09T00:54:07.2922716Z\"},\"01a11e27-30c7-7d24-8976-a28198459ebb\":{\"Enabled\":true,\"EnabledAt\":\"2026-10-09T00:54:07.3172987Z\"}},\"PluginsEnabled\":{\"Alpha.esp\":true,\"Stray.esp\":false},\"LoadOrder\":[\"Skyrim.esm\",\"Alpha.esp\",\"Stray.esp\"],\"IndexLocks\":{},\"CreatedAt\":\"2026-10-09T00:54:07.256554Z\",\"UpdatedAt\":\"2026-10-09T00:54:07.4226568Z\",\"LastActivatedAt\":\"0001-01-01T00:00:00Z\"}"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3098-7f86-960a-f4f8964e8619"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Default"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.422656800Z"
+   }
+  },
+  {
+   "data_json": {
+    "k": "s",
+    "v": "{\"ID\":\"01a11e27-3106-76c4-b1b9-b40ac2c811bd\",\"Instance\":\"01a11e27-308c-77b3-8f55-7bd072f586b4\",\"Name\":\"Survival\",\"Notes\":\"\",\"Features\":{\"LocalSaves\":false,\"LocalSettings\":false},\"Order\":[{\"Mod\":\"01a11e27-30c7-7d24-8976-a28198459ebb\",\"Separator\":\"\"},{\"Mod\":\"01a11e27-30ae-7f04-b544-56687e95cc59\",\"Separator\":\"\"}],\"Separators\":null,\"Mods\":{\"01a11e27-30ae-7f04-b544-56687e95cc59\":{\"Enabled\":true,\"EnabledAt\":\"2026-10-09T00:54:07.2922716Z\"},\"01a11e27-30c7-7d24-8976-a28198459ebb\":{\"Enabled\":true,\"EnabledAt\":\"2026-10-09T00:54:07.3172987Z\"}},\"PluginsEnabled\":{\"Alpha.esp\":true},\"LoadOrder\":[\"Skyrim.esm\",\"Alpha.esp\"],\"IndexLocks\":{},\"CreatedAt\":\"2026-10-09T00:54:07.3668752Z\",\"UpdatedAt\":\"2026-10-09T00:54:07.3668752Z\",\"LastActivatedAt\":\"0001-01-01T00:00:00Z\"}"
+   },
+   "id": {
+    "k": "s",
+    "v": "01a11e27-3106-76c4-b1b9-b40ac2c811bd"
+   },
+   "instance_id": {
+    "k": "s",
+    "v": "01a11e27-308c-77b3-8f55-7bd072f586b4"
+   },
+   "name": {
+    "k": "s",
+    "v": "Survival"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.366875200Z"
+   }
+  }
+ ],
+ "settings": [
+  {
+   "key": {
+    "k": "s",
+    "v": "library.verifyStagingOnStartup"
+   },
+   "scope": {
+    "k": "s",
+    "v": "app"
+   },
+   "scope_id": {
+    "k": "s"
+   },
+   "updated_at": {
+    "k": "s",
+    "v": "2026-10-09T00:54:07.369475400Z"
+   },
+   "value": {
+    "k": "s",
+    "v": "true"
+   }
+  }
+ ]
+}

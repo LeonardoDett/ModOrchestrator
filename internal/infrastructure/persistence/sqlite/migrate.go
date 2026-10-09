@@ -82,9 +82,18 @@ func PendingMigrations(ctx context.Context, db *sql.DB) (current, latest int, er
 	return current, LatestSchemaVersion(), nil
 }
 
+// migrationHook lets the F14 tests stop the process inside a migration
+// (before its commit) or right after it. Nil in the app.
+var migrationHook func(version int, committed bool)
+
 // Migrate applies pending migrations, each in its own transaction. A
 // database newer than this build is refused rather than silently used.
 func Migrate(ctx context.Context, db *sql.DB) error {
+	return migrateTo(ctx, db, 0)
+}
+
+// migrateTo applies migrations up to version to (0 = all of them).
+func migrateTo(ctx context.Context, db *sql.DB, to int) error {
 	ms, err := loadMigrations()
 	if err != nil {
 		return err
@@ -103,7 +112,10 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 	if current > len(ms) {
 		return fmt.Errorf("sqlite: database schema v%d is newer than this build (v%d)", current, len(ms))
 	}
-	for _, m := range ms[current:] {
+	if to == 0 || to > len(ms) {
+		to = len(ms)
+	}
+	for _, m := range ms[min(current, to):to] {
 		tx, err := db.BeginTx(ctx, nil)
 		if err != nil {
 			return err
@@ -116,8 +128,14 @@ func Migrate(ctx context.Context, db *sql.DB) error {
 			tx.Rollback()
 			return fmt.Errorf("sqlite: record %s: %w", m.name, err)
 		}
+		if migrationHook != nil {
+			migrationHook(m.version, false)
+		}
 		if err := tx.Commit(); err != nil {
 			return fmt.Errorf("sqlite: commit %s: %w", m.name, err)
+		}
+		if migrationHook != nil {
+			migrationHook(m.version, true)
 		}
 	}
 	return nil

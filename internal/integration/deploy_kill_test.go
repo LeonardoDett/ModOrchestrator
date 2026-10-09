@@ -111,6 +111,16 @@ func TestKillDuringDeploy(t *testing.T) {
 	for _, kind := range []operation.Kind{deploysvc.KindDeploy, deploysvc.KindPurge} {
 		writes[kind] = measureWrites(t, kind)
 	}
+	if os.Getenv("MO_KILL_ALL") != "" { // every write, for the F14 report
+		for _, kind := range []operation.Kind{deploysvc.KindDeploy, deploysvc.KindPurge} {
+			for after := int64(1); after <= writes[kind]; after++ {
+				t.Run(string(kind)+"/after-"+strconv.FormatInt(after, 10), func(t *testing.T) {
+					killAndRecover(t, kind, after)
+				})
+			}
+		}
+		return
+	}
 	points := 0
 	for _, kind := range []operation.Kind{deploysvc.KindDeploy, deploysvc.KindPurge} {
 		n := 14
