@@ -4,7 +4,7 @@ Referências: D031, D040, D041. Vortex: `games/game-skyrimse`, `gamebryo_plugin_
 
 > Itens marcados **(verificar)** são fatos externos a confirmar na implementação. Não inventar: confirmar em fonte primária e atualizar este documento.
 >
-> **Confirmados na F3 (2026-09-30)**, com a fonte: IDs de loja Steam/GOG/Epic e pasta de dados da variante GOG (abaixo). **Ainda pendentes**, por pertencerem à F11: pasta de dados da variante Epic e compatibilidade de ferramentas com `loadorder.txt`.
+> **Confirmados na F3 (2026-09-30)**, com a fonte: IDs de loja Steam/GOG/Epic e pasta de dados da variante GOG (abaixo). **Confirmados na F15 (2026-10-09)**: pasta de dados da variante Epic e o não uso do `loadorder.txt` pelo SE (§5). **Ainda pendente**: registro da GOG Galaxy para o pacote Anniversary Edition (§1), que só uma instalação real responde.
 
 ## 1. Identidade e descoberta
 
@@ -15,7 +15,7 @@ Referências: D031, D040, D041. Vortex: `games/game-skyrimse`, `gamebryo_plugin_
 | Marcador da raiz | `SkyrimSE.exe` |
 | Steam | app id `489830` |
 | GOG | game id `1711230643` (The Elder Scrolls V: Skyrim Special Edition; o `1801825368` do GOG DB é o pacote Anniversary Edition, que reúne o `1711230643` e o upgrade; o adapter reconhece só o `1711230643`, que é o que o Vortex usa. Se a GOG Galaxy registrar uma instalação do pacote AE sob o `1801825368`, isso não foi observado **(verificar com uma instalação real)**; o "Localizar manualmente" cobre o caso). Pastas de usuário usam o sufixo ` GOG` (`%LOCALAPPDATA%\Skyrim Special Edition GOG`, `Documents\My Games\Skyrim Special Edition GOG`). **Confirmado.** Fontes: extensão `game-skyrimse` do Vortex (Nexus-Mods/vortex-games), [GOG DB](https://www.gogdb.org/product/1711230643), [DynDOLOD](https://dyndolod.info/Mods/Skyrim-Special-Edition-GOG-Skyrim-Anniversary-Edition-GOG), [TES5Edit#1058](https://github.com/TES5Edit/TES5Edit/issues/1058) |
-| Epic | existe: `AppName` `ac82db5035584c7f8a2c548d98c86b2c` no manifesto do launcher (`*.item`). **Confirmado** (extensão `game-skyrimse` do Vortex). A pasta de dados do usuário da variante Epic **não foi confirmada** em fonte primária: só a F11 (que escreve o `plugins.txt`) precisa dela, e até lá o adapter não assume nenhuma **(verificar na F11)** |
+| Epic | existe: `AppName` `ac82db5035584c7f8a2c548d98c86b2c` no manifesto do launcher (`*.item`). **Confirmado** (extensão `game-skyrimse` do Vortex). Pasta de dados do usuário: `Skyrim Special Edition EPIC` (§5). **Confirmado na F15** |
 | Registro | `HKLM\SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition` › `installed path` |
 | Versão | versão de arquivo de `SkyrimSE.exe` |
 | Processo em execução | `SkyrimSE.exe` (e `skse64_loader.exe` durante o lançamento) |
@@ -53,8 +53,8 @@ Dicas de root (core/02 §4): pastas `meshes`, `textures`, `scripts`, `interface`
 - Implícitos (sempre ativos, topo, nesta ordem): `Skyrim.esm`, `Update.esm`, `Dawnguard.esm`, `HearthFires.esm`, `Dragonborn.esm`, e então os plugins listados em `<root>/Skyrim.ccc`, na ordem do arquivo, quando existem no Data.
 - Restrições rígidas: implícitos fixos no topo; masters antes de dependentes; plugins com flag master (inclui `.esm`/`.esl`) antes de não-masters.
 - Limites: até 254 plugins completos ativos (índices `00`–`FD`), até 4096 light (`FE:000`–`FE:FFF`). Índice exibido: `0A` para completos, `FE:003` para light.
-- Arquivo de load order: `%LOCALAPPDATA%\Skyrim Special Edition\plugins.txt` (variante GOG em `%LOCALAPPDATA%\Skyrim Special Edition GOG\plugins.txt`, **confirmado**; variante Epic `Skyrim Special Edition EPIC` pela convenção do Vortex, **(verificar)** antes do release, D089 item 7). Formato: uma linha por plugin, na ordem; ativos com prefixo `*`; implícitos não são escritos; codificação Windows-1252; linhas `#` são comentários. Ordem manual permitida.
-- `loadorder.txt`: não é escrito na V1 (o jogo não o usa; ferramentas modernas leem `plugins.txt`). Se existir, é ignorado. **(verificar compatibilidade com ferramentas usadas pela comunidade antes do release)**
+- Arquivo de load order: `%LOCALAPPDATA%\Skyrim Special Edition\plugins.txt` (variante GOG em `%LOCALAPPDATA%\Skyrim Special Edition GOG\plugins.txt`, **confirmado**; variante Epic em `%LOCALAPPDATA%\Skyrim Special Edition EPIC\plugins.txt`, **confirmado na F15**: libloadorder, a biblioteca de load order do LOOT, usa esse nome quando a raiz do jogo tem `EOSSDK-Win64-Shipping.dll` (`src/game_settings.rs`, `skyrim_se_appdata_folder_name`), e o SKSE64 usa o mesmo nome como pasta de saves do runtime Epic (`skse64_common/skse_version.h`, `SAVE_FOLDER_NAME`). A variante Microsoft Store (`Skyrim Special Edition MS`) não é suportada na V1). A variante é escolhida pela loja em que a instalação foi descoberta; uma instalação GOG ou Epic localizada manualmente ou achada só pelo registro usa a pasta da Steam (lacuna registrada na D106). Formato: uma linha por plugin, na ordem; ativos com prefixo `*`; implícitos não são escritos; codificação Windows-1252; linhas `#` são comentários. Ordem manual permitida.
+- `loadorder.txt`: não é escrito na V1 (o jogo não o usa; ferramentas modernas leem `plugins.txt`). Se existir, é ignorado. **Confirmado na F15**: libloadorder (LOOT, e por ele as ferramentas que o usam) trata o Skyrim SE pelo método "asterisk" (ordem e ativação só no `plugins.txt`) e só lê/escreve `loadorder.txt` para o Skyrim original (`GameId::Skyrim`, `src/game_settings.rs`).
 - BSA: carregado pelo jogo se houver plugin ativo com o mesmo nome base (`Mod.bsa`, `Mod - Textures.bsa`). Diagnóstico info `bsa_without_plugin` quando não houver. Conflitos dentro de BSA: V1.x.
 
 ## 6. Instaladores do adapter

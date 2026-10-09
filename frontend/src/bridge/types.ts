@@ -312,6 +312,11 @@ export interface Backend {
   previewMoveArchives(instance: string, path: string): Promise<ArchivesPreview>;
   moveArchiveStore(instance: string, path: string): Promise<string>;
   extensions(): Promise<Extension[]>;
+  // App update (F15, D104): opt-in, the only network access of V1.
+  updateStatus(): Promise<UpdateStatus>;
+  checkForUpdate(): Promise<UpdateStatus>;
+  /** Downloads, verifies and starts the installer; the app then closes. */
+  installUpdate(version: string): Promise<void>;
   // Play, Overview and Dashboard (F12, core/11 §6, overview.md, dashboard.md)
   launchCheck(instance: string): Promise<LaunchCheck>;
   launch(instance: string, request: LaunchRequest): Promise<string>;
@@ -368,6 +373,37 @@ export interface BackupStatus {
   restorePending?: string;
   restoredAt?: string;
   backups: Backup[];
+}
+
+/** App update (internal/bridge/updates.go). */
+export interface UpdateNote {
+  version: string;
+  published?: string;
+  /** Release notes as published (Markdown source, shown as text). */
+  text: string;
+}
+
+export interface UpdateOffer {
+  version: string;
+  published?: string;
+  size: number;
+  /** Notes of every version newer than the installed one, newest first. */
+  notes: UpdateNote[];
+}
+
+export interface UpdateStatus {
+  enabled: boolean;
+  channel: "stable" | "beta" | string;
+  installed: string;
+  checking: boolean;
+  checkedAt?: string;
+  offer?: UpdateOffer;
+  checkError?: { code: string; params?: Record<string, string>; detail?: string };
+  installing: boolean;
+  done: number;
+  /** -1 when unknown. */
+  total: number;
+  launched: boolean;
 }
 
 export interface Workarounds {

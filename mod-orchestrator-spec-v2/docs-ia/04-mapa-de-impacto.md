@@ -36,7 +36,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Código de erro do bridge | core/00 §6, `internal/bridge/errors.go`, catálogo i18n (`error.<code>`) | INV-OPS-05 | todas |
 | Log técnico (formato, rotação, filtros) | core/10 §4, core/13 (`app.logLevel`), ui/telas/diagnostics | — | Diagnostics › Log |
 | Escopo de release | 00-visao-e-escopo, plano, core/15 | — | — |
-| Licença, dependência nova, empacotamento, assinatura, atualização do app | D076, D077, D096, `plano-de-publicacao.md`, `LICENSE`, `CONTRIBUTING.md`, workflows em `.github/` | INV-LIB-04 | Settings (atualização) |
+| Licença, dependência nova, empacotamento, assinatura, atualização do app | D076, D077, D096, D103–D105, `plano-de-publicacao.md`, `LICENSE`, `CONTRIBUTING.md`, `CHANGELOG.md`, workflows em `.github/`, `build/windows/installer/project.nsi`, `tools/release` | INV-LIB-04 | Settings › Aplicação › Atualizações (DLG-30) |
 
 ## Perguntas obrigatórias antes da mudança
 

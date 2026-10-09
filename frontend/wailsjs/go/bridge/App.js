@@ -58,6 +58,10 @@ export function ChangeDeployMethod(arg1, arg2) {
   return window['go']['bridge']['App']['ChangeDeployMethod'](arg1, arg2);
 }
 
+export function CheckForUpdate() {
+  return window['go']['bridge']['App']['CheckForUpdate']();
+}
+
 export function CleanTempFiles() {
   return window['go']['bridge']['App']['CleanTempFiles']();
 }
@@ -202,6 +206,10 @@ export function GetOperationEvents(arg1) {
   return window['go']['bridge']['App']['GetOperationEvents'](arg1);
 }
 
+export function GetUpdateStatus() {
+  return window['go']['bridge']['App']['GetUpdateStatus']();
+}
+
 export function HideGame(arg1, arg2) {
   return window['go']['bridge']['App']['HideGame'](arg1, arg2);
 }
@@ -228,6 +236,10 @@ export function ImportQueue(arg1) {
 
 export function InstallMods(arg1, arg2) {
   return window['go']['bridge']['App']['InstallMods'](arg1, arg2);
+}
+
+export function InstallUpdate(arg1) {
+  return window['go']['bridge']['App']['InstallUpdate'](arg1);
 }
 
 export function InstanceOverview(arg1) {

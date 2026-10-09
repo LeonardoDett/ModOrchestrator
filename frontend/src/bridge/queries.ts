@@ -192,6 +192,11 @@ export function useRestartState() {
   return useBackendQuery((b) => b.restartState(), [], { onOperationEvents: true });
 }
 
+/** App update status; re-read on app_update.changed (D021). */
+export function useUpdateStatus() {
+  return useBackendQuery((b) => b.updateStatus(), [], { onOperationEvents: true });
+}
+
 export function useBackupStatus() {
   return useBackendQuery((b) => b.backupStatus(), [], { onOperationEvents: true });
 }

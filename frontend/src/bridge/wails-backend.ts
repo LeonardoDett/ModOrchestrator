@@ -54,6 +54,9 @@ import {
   RestoreBackup,
   RestoreBackupFromFile,
   Workarounds as WorkaroundsCall,
+  GetUpdateStatus,
+  CheckForUpdate,
+  InstallUpdate,
 } from "../../wailsjs/go/bridge/App";
 import {
   AttentionDiagnostics,
@@ -200,6 +203,7 @@ import type {
   StartupRecovery as StartupRecoveryT,
   TempCleanup,
   Workarounds,
+  UpdateStatus,
   AppNotification,
   FomodView,
   DiagnosticActionResult,
@@ -440,6 +444,9 @@ export function createWailsBackend(): Backend {
     restoreBackupFromFile: (path) => RestoreBackupFromFile(path),
     cancelRestore: () => CancelRestore(),
     workarounds: () => WorkaroundsCall() as unknown as Promise<Workarounds>,
+    updateStatus: () => GetUpdateStatus() as unknown as Promise<UpdateStatus>,
+    checkForUpdate: () => CheckForUpdate() as unknown as Promise<UpdateStatus>,
+    installUpdate: (version) => InstallUpdate(version),
     cleanTempFiles: () => CleanTempFiles() as unknown as Promise<TempCleanup>,
     rebuildPluginHeaderCache: () => RebuildPluginHeaderCache(),
     previewMoveArchives: (instance, path) => PreviewMoveArchives(instance, path) as unknown as Promise<ArchivesPreview>,

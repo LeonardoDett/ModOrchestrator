@@ -33,6 +33,7 @@ Catálogo único. Todo modal do produto está aqui; modal novo exige entrada. Pa
 | DLG-27 | Restaurar backup | Settings › Workarounds | confirmação destrutiva | Restore | 14 §4 |
 | DLG-28 | Renomear instância | Games | formulário | — (rename do perfil do jogo) | 11 §4 |
 | DLG-29 | Alterar localização | Games | formulário com validação | PathSelection | 11 §4 |
+| DLG-30 | Atualizar o app | Settings › Aplicação › Atualizações | decisão com notas de versão e progresso | updater | `plano-de-publicacao.md` etapa 6, D104 |
 
 ## Detalhes dos principais
 

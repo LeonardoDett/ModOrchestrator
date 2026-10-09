@@ -1,0 +1,207 @@
+name: release
+
+# Release pipeline (plano-de-publicacao.md, etapa 3; D077; D105).
+# Trigger: a tag v* on a commit of master ("-beta.N" tags are prereleases).
+# build (no secrets) -> sign (protected environment, manual approval; skipped
+# until SignPath is configured) -> publish (draft GitHub Release for human
+# review). Nothing is published from anyone's machine, and code from pull
+# requests never reaches this workflow (it does not run on pull_request).
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  WAILS_VERSION: v2.12.0
+  NSIS_DIR: C:\Program Files (x86)\NSIS
+
+jobs:
+  build:
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: Tag is on master
+        shell: bash
+        run: git merge-base --is-ancestor "$GITHUB_SHA" origin/master
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24
+      - name: Version (tag = wails.json = CHANGELOG)
+        id: version
+        shell: bash
+        run: |
+          v=$(go run ./tools/release version "$GITHUB_REF_NAME")
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          if [[ "$v" == *-* ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+      - name: gofmt
+        shell: bash
+        run: test -z "$(gofmt -l internal main.go tools)"
+      - run: go vet ./...
+      - run: go test ./...
+      - name: dettmann-ui build
+        working-directory: dettmann-ui-v1
+        run: |
+          npm ci
+          npm run build
+      - run: npm --prefix frontend ci
+      - run: npm --prefix frontend run typecheck
+      - run: npm --prefix frontend test
+      - name: Third-party notices (fails on a license incompatible with GPL-3.0)
+        run: go run ./tools/release notices THIRD_PARTY_NOTICES.txt
+      - name: Build executable and installer (unsigned)
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "$env:NSIS_DIR\makensis.exe")) { choco install nsis -y --no-progress }
+          $env:PATH = "$env:NSIS_DIR;$env:PATH"
+          go install "github.com/wailsapp/wails/v2/cmd/wails@$env:WAILS_VERSION"
+          # -trimpath, no UPX, version from the tag (D077 item 4).
+          wails build -nsis -trimpath -ldflags "-X modorchestrator/internal/bridge.Version=${{ steps.version.outputs.version }}"
+      - name: Stage unsigned files
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force out | Out-Null
+          Copy-Item build/bin/ModOrchestrator.exe, build/bin/ModOrchestrator-amd64-installer.exe, THIRD_PARTY_NOTICES.txt out/
+          # What the sign job needs to rebuild the installer around the signed executable.
+          Copy-Item -Recurse build/windows out/windows
+          Copy-Item LICENSE out/LICENSE
+      - name: Upload unsigned files
+        id: upload
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: unsigned
+          path: out/
+          if-no-files-found: error
+
+  # Signing (D077 items 1-2): runs only once the SignPath Foundation project
+  # exists (repository variable SIGNPATH_ORGANIZATION_ID), in the protected
+  # environment "release-signing" that requires a manual approval. The
+  # executable is signed first, the installer is rebuilt around it and then
+  # signed itself. Slugs below are the expected SignPath configuration
+  # (verificar ao inscrever o projeto, PUB-1).
+  sign:
+    needs: build
+    if: vars.SIGNPATH_ORGANIZATION_ID != ''
+    runs-on: windows-latest
+    environment: release-signing
+    outputs:
+      artifact-id: ${{ steps.upload-signed.outputs.artifact-id }}
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: unsigned
+          path: unsigned
+      - name: Upload executable for signing
+        id: exe
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: exe-to-sign
+          path: unsigned/ModOrchestrator.exe
+      - name: Sign executable
+        uses: signpath/github-action-submit-signing-request@c92b958760219087e01f8d67a1669ed57afe2627 # v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ModOrchestrator
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: executable
+          github-artifact-id: ${{ steps.exe.outputs.artifact-id }}
+          output-artifact-directory: signed-exe
+      - name: Rebuild installer around the signed executable
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "$env:NSIS_DIR\makensis.exe")) { choco install nsis -y --no-progress }
+          New-Item -ItemType Directory -Force build/bin | Out-Null
+          Copy-Item -Recurse unsigned/windows build/windows
+          Copy-Item unsigned/LICENSE LICENSE
+          Push-Location build/windows/installer
+          & "$env:NSIS_DIR\makensis.exe" "-DARG_WAILS_AMD64_BINARY=$env:GITHUB_WORKSPACE\signed-exe\ModOrchestrator.exe" project.nsi
+          Pop-Location
+      - name: Upload installer for signing
+        id: installer
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: installer-to-sign
+          path: build/bin/ModOrchestrator-amd64-installer.exe
+      - name: Sign installer
+        uses: signpath/github-action-submit-signing-request@c92b958760219087e01f8d67a1669ed57afe2627 # v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ModOrchestrator
+          signing-policy-slug: release-signing
+          artifact-configuration-slug: installer
+          github-artifact-id: ${{ steps.installer.outputs.artifact-id }}
+          output-artifact-directory: signed-installer
+      - name: Check signatures
+        shell: pwsh
+        run: |
+          foreach ($f in "signed-exe/ModOrchestrator.exe", "signed-installer/ModOrchestrator-amd64-installer.exe") {
+            $s = Get-AuthenticodeSignature $f
+            if ($s.Status -ne "Valid") { throw "$f signature: $($s.Status)" }
+          }
+          New-Item -ItemType Directory -Force signed | Out-Null
+          Copy-Item signed-exe/ModOrchestrator.exe, signed-installer/ModOrchestrator-amd64-installer.exe, unsigned/THIRD_PARTY_NOTICES.txt signed/
+      - name: Upload signed files
+        id: upload-signed
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: signed
+          path: signed/
+          if-no-files-found: error
+
+  publish:
+    needs: [build, sign]
+    # Unsigned releases are allowed until SignPath approves the project
+    # (D077 item 1; the README explains the SmartScreen warning).
+    if: always() && needs.build.result == 'success' && (needs.sign.result == 'success' || needs.sign.result == 'skipped')
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: ${{ needs.sign.result == 'success' && 'signed' || 'unsigned' }}
+          path: files
+      - name: Release files, SHA256SUMS and notes
+        shell: pwsh
+        run: |
+          $v = "${{ needs.build.outputs.version }}"
+          New-Item -ItemType Directory -Force dist, portable | Out-Null
+          Copy-Item files/ModOrchestrator-amd64-installer.exe dist/
+          # Portable zip: the executable, the license and the notices.
+          Copy-Item files/ModOrchestrator.exe, files/THIRD_PARTY_NOTICES.txt portable/
+          Copy-Item LICENSE portable/LICENSE.txt
+          Compress-Archive -Path portable/* -DestinationPath "dist/ModOrchestrator-$v-portable.zip"
+          Copy-Item files/THIRD_PARTY_NOTICES.txt dist/
+          go run ./tools/release sums dist
+          go run ./tools/release notes $v > notes.md
+          Get-Content dist/SHA256SUMS
+      - name: Draft GitHub Release (published by a person after the checklist)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pre=""
+          if [ "${{ needs.build.outputs.prerelease }}" = "true" ]; then pre="--prerelease"; fi
+          gh release create "$GITHUB_REF_NAME" --draft $pre --verify-tag \
+            --title "Mod Orchestrator ${{ needs.build.outputs.version }}" \
+            --notes-file notes.md dist/*

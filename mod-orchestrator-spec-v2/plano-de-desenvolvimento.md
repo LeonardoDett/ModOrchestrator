@@ -191,6 +191,8 @@ Docs: `plano-de-publicacao.md` (etapas 2–6), D076, D077.
 
 Entregas: instalador Windows, assinatura, atualização do app (opt-in), notas de versão, documentação do usuário mínima (primeiros passos), revisão dos itens **(verificar)** do core/12, checklist de paridade com VORTEX-12 (todo ADOPT/ADAPT V1 presente).
 
+Estado: implementada (D103, D105; D104 e D106 aguardam confirmação). Instalador por usuário (`build/windows/installer/project.nsi`, instalado e desinstalado em teste: sem UAC, só HKCU, dados mantidos), versão no executável (`wails.json` › `info`, `-ldflags`), atualização opt-in (`domain/appupdate`, `application/appupdate`, `infrastructure/updates`, Settings › Aplicação › Atualizações; testes nos três pacotes, em `instancelock` e em `F12.test.tsx`), `release.yml` (build sem segredos → assinatura SignPath em ambiente protegido, pulada enquanto não configurada → release em rascunho com `SHA256SUMS`, zip portátil e notas do `CHANGELOG.md`), `tools/release` (versão, notas, avisos de terceiros com checagem de licença, hashes), `CHANGELOG.md`, `docs/primeiros-passos.md` e `docs/getting-started.md`, core/12 revisado (Epic e `loadorder.txt` confirmados), paridade em `docs-ia/08-paridade-vortex-v1.md` (todos os ADOPT/ADAPT V1 presentes). Pendente: assinatura de fato (PUB-1, PUB-4: repositório público e inscrição na SignPath), primeira execução do `release.yml`, etapa 7 do `plano-de-publicacao.md` (VM limpa, SmartScreen, VirusTotal, atualização de uma versão para outra), registro da GOG Galaxy para o pacote AE (core/12 §1) e as demonstrações manuais das F10–F12.
+
 ---
 
 ## Depois da V1.0

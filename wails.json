@@ -8,5 +8,12 @@
   "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "Leonardo Dettmann Krüger"
+  },
+  "info": {
+    "companyName": "Mod Orchestrator",
+    "productName": "Mod Orchestrator",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright (C) 2026 Leonardo Dettmann Krüger. Licensed under the GPL-3.0-or-later.",
+    "comments": "Mod manager for PC games. https://github.com/LeonardoDett/ModOrchestrator"
   }
 }

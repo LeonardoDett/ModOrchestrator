@@ -30,6 +30,8 @@ export function Categories(arg1:string):Promise<Array<bridge.CategoryDTO>>;
 
 export function ChangeDeployMethod(arg1:string,arg2:string):Promise<string>;
 
+export function CheckForUpdate():Promise<bridge.UpdateStatusDTO>;
+
 export function CleanTempFiles():Promise<bridge.TempCleanupDTO>;
 
 export function ClearFileOverrides(arg1:string,arg2:Array<bridge.LocationDTO>):Promise<void>;
@@ -102,6 +104,8 @@ export function GetAppInfo():Promise<bridge.AppInfo>;
 
 export function GetOperationEvents(arg1:string):Promise<Array<bridge.EventDTO>>;
 
+export function GetUpdateStatus():Promise<bridge.UpdateStatusDTO>;
+
 export function HideGame(arg1:string,arg2:boolean):Promise<void>;
 
 export function HideInstance(arg1:string,arg2:boolean):Promise<void>;
@@ -115,6 +119,8 @@ export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResu
 export function ImportQueue(arg1:string):Promise<Array<bridge.QueueItemDTO>>;
 
 export function InstallMods(arg1:string,arg2:Array<string>):Promise<Array<string>>;
+
+export function InstallUpdate(arg1:string):Promise<void>;
 
 export function InstanceOverview(arg1:string):Promise<bridge.InstanceOverviewDTO>;
 

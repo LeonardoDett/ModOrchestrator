@@ -33,7 +33,7 @@ Gerenciador de mods para PC (Windows, Go + Wails + React/dettmann-ui) que entreg
 ## Índice
 
 ### docs-ia
-- [00 Manifesto](docs-ia/00-manifesto.md) · [01 Glossário](docs-ia/01-glossario.md) · [02 Invariantes](docs-ia/02-invariantes.md) · [03 Fontes de verdade](docs-ia/03-fontes-de-verdade.md) · [04 Mapa de impacto](docs-ia/04-mapa-de-impacto.md) · [05 Histórico da spec](docs-ia/05-historico-da-spec.md) · [06 Revisão 2026-09-30](docs-ia/06-revisao-2026-09-30.md) · [07 Relatório F14](docs-ia/07-relatorio-f14.md) · [Decisões](docs-ia/decisoes.md) · [Anti-patterns](docs-ia/anti-patterns.md)
+- [00 Manifesto](docs-ia/00-manifesto.md) · [01 Glossário](docs-ia/01-glossario.md) · [02 Invariantes](docs-ia/02-invariantes.md) · [03 Fontes de verdade](docs-ia/03-fontes-de-verdade.md) · [04 Mapa de impacto](docs-ia/04-mapa-de-impacto.md) · [05 Histórico da spec](docs-ia/05-historico-da-spec.md) · [06 Revisão 2026-09-30](docs-ia/06-revisao-2026-09-30.md) · [07 Relatório F14](docs-ia/07-relatorio-f14.md) · [08 Paridade Vortex V1](docs-ia/08-paridade-vortex-v1.md) · [Decisões](docs-ia/decisoes.md) · [Anti-patterns](docs-ia/anti-patterns.md)
 
 ### core
 | # | Documento | Fase |

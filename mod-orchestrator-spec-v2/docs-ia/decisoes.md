@@ -755,7 +755,7 @@ Alternativas rejeitadas: `VACUUM INTO` (a API de backup online é a que core/14 
 ## D091 — Comportamentos da F12 não fixados pela spec
 Status: vigente (confirmada pelo usuário em 2026-10-08)
 
-1. **`app.updateCheck` e `app.updateChannel`** existem no catálogo com o default, mas não aparecem em Settings › Aplicação até o mecanismo de atualização existir (F15, `plano-de-publicacao.md`): um switch que não faz nada seria botão quebrado (anti-pattern 18).
+1. **`app.updateCheck` e `app.updateChannel`** existem no catálogo com o default, mas não aparecem em Settings › Aplicação até o mecanismo de atualização existir (F15, `plano-de-publicacao.md`): um switch que não faz nada seria botão quebrado (anti-pattern 18). *Cumprido na F15: aparecem com a D104.*
 2. **`mods.useSuggestedStaging` desligado**: o assistente (DLG-01) deixa a staging em branco, com "Usar a sugerida" e "Alterar…", e não avança sem ela; as outras pastas continuam sugeridas.
 3. **Settings por jogo** usam um único select de jogo compartilhado entre as abas (padrão: o jogo ativo); Interface › Automação e Diagnóstico também são por jogo e ficam sob o select. A aba Plugins só lista jogos com `plugins`.
 4. **`backup_failed`** aparece em todos os jogos (diagnósticos são por instância), com a mesma chave; ação "Abrir Configurações › Soluções".
@@ -886,3 +886,44 @@ Consequência aceita: uma divergência numa Location que o deploy não toca (arq
 Efeito medido: 0,6–0,8 s com 100 mil arquivos (antes 2,3–2,7 s) e 3,1–4,6 s com 500 mil (antes 7,7–9,2 s). Com 500 mil a meta ainda não é atingida: resta trabalho em memória proporcional ao jogo (estado desejado, plano, comparação do manifesto ao gravar, inventário de plugins), registrado no relatório da F14.
 
 Alternativa rejeitada: manter o scan completo e rever a meta. Teste: `TestIncrementalDeployObservesOnlyWhatItTouches`.
+
+## D103 — Instalador por usuário e desinstalação que preserva dados (F15)
+Status: vigente (executa D077 item 3 e `plano-de-publicacao.md` etapa 2)
+
+O template NSIS do Wails 2.12 pede administrador e registra o desinstalador no HKLM (PUB-2, confirmado). O projeto tem o próprio `build/windows/installer/project.nsi` (o `wails build -nsis` o mantém e regenera só o `wails_tools.nsh`):
+
+1. **Por usuário, sem UAC**: `RequestExecutionLevel user`, pasta padrão `%LOCALAPPDATA%\Programs\ModOrchestrator`, registro só em `HKCU\...\Uninstall\ModOrchestrator` (com `InstallLocation`, que a reinstalação/atualização reaproveita). Atalho no menu Iniciar sempre; na área de trabalho opcional (marcado). Página final com "Executar". Idiomas en e pt-BR (o NSIS escolhe o do sistema).
+2. **Executável em uso**: antes de copiar, o instalador espera o `ModOrchestrator.exe` ser liberado (até ~10 s, para o caso da atualização, em que o app está fechando) e depois pede para fechá-lo (Repetir/Cancelar).
+3. **Desinstalação**: remove só o que instalou (executável, `LICENSE.txt`, desinstalador, atalhos, chave do registro) e a pasta se ficar vazia; nunca `RMDir /r` na pasta de instalação, que o usuário pode ter escolhido. A opção "apagar também configurações, banco, backups e logs" (`%APPDATA%\ModOrchestrator` e o cache do WebView2) vem **desmarcada** e pede confirmação explicando que arquivos ainda implantados ficam nos jogos como não gerenciados. Staging, ArchiveStore, BackupStore e pastas de jogo nunca são tocados: o desinstalador não tem como provar posse deles sem o banco (INV-DEP-01/02), e o caminho seguro é o Purge no app.
+
+Alternativa rejeitada: oferecer "apagar staging" no desinstalador (exigiria ler o banco no NSIS, e apagar a staging com arquivos implantados deixaria links órfãos nos jogos). Teste: instalação e desinstalação silenciosas (`/S`) em 2026-10-09, sem UAC, só HKCU, dados mantidos.
+
+## D104 — Atualização do app (F15)
+Status: proposta (implementada na F15; aguarda confirmação do usuário)
+
+Detalha a etapa 6 do `plano-de-publicacao.md` e a D077 item 7.
+
+1. **Só com o setting**: `app.updateCheck` desligado = nenhuma chamada de rede (o serviço recusa com `update_check_disabled`). Ligado: verifica ao abrir e a cada 24 h com o app aberto, e em "Verificar agora". O resultado vive em memória (status no Settings); não é estado de domínio.
+2. **Fonte**: API de releases do GitHub do repositório (`updates.Repository`, alterável por `-ldflags` num fork). O cliente só fala HTTPS com `api.github.com`, `github.com`, `objects.githubusercontent.com` e `release-assets.githubusercontent.com`, inclusive em redirecionamentos.
+3. **O que é oferecido** (domínio `appupdate.Select`, puro): a maior versão semver maior que a instalada, sem rascunhos, sem tag que não é versão, sem release que não tenha `ModOrchestrator-amd64-installer.exe` **e** `SHA256SUMS`; no canal estável, sem prerelease (pela flag ou pela versão). As notas mostradas são as de todas as versões oferecíveis mais novas que a instalada.
+4. **Notificação**: uma por versão (`info`, código `app_update_available`, abre Settings › Aplicação); lida ou dispensada, não volta. Sem notificação do Windows.
+5. **Instalar** só por ação do usuário, depois de ver as notas: recusado com operação em andamento (`instance_busy`) e, enquanto baixa e até o app fechar, nenhuma operação começa (`instancelock.Freeze`, holder `app_update`). Baixa o `SHA256SUMS` (até 64 KB) e o instalador (até 512 MB, via `.part`) para `<dataDir>/cache/updates/<versão>/`, confere o SHA-256 (`update_checksum_mismatch`, arquivo apagado) e a assinatura Authenticode (WinVerifyTrust com revogação de toda a cadeia): assinatura presente precisa ser válida (`update_signature_invalid`), e **se o app em execução é assinado, o instalador também precisa ser** (`update_signature_missing`), para não aceitar um rebaixamento silencioso de assinado para não assinado. Passando, abre o instalador (por usuário, D103) e fecha o app.
+6. **Migrations** depois da atualização seguem core/14 (backup pré-migration), sem nada específico.
+
+Teste: `domain/appupdate` (semver, seleção, SHA256SUMS, confiança), `application/appupdate` (setting desligado não chama a rede, canal, notificação, recusas com o congelamento desfeito), `infrastructure/updates` (TLS local, hosts e redirecionamentos, limite, assinatura válida/ausente/adulterada), `instancelock` (Freeze), UI em `F12.test.tsx` › F15.
+
+## D105 — Pipeline de release e notas de versão (F15)
+Status: vigente (executa D077 itens 1, 2, 4 e 5 e o `plano-de-publicacao.md` etapa 3)
+
+1. **`release.yml`** dispara por tag `v*` num commit da `master`: *build* (sem segredos: testes completos, `THIRD_PARTY_NOTICES`, `wails build -nsis -trimpath` com a versão da tag em `-ldflags`), *sign* (ambiente protegido `release-signing` com aprovação manual; só roda com a variável `SIGNPATH_ORGANIZATION_ID`; assina o executável, refaz o instalador em volta dele com `makensis` e assina o instalador), *publish* (zip portátil, `SHA256SUMS`, notas, GitHub Release **em rascunho**). Sem a SignPath configurada, a release sai sem assinatura (D077 item 1). Actions fixadas por SHA. Os slugs da SignPath no workflow são os previstos e devem ser conferidos na inscrição (PUB-1).
+2. **Versão única**: tag `vX.Y.Z[-pre]` = `wails.json` › `info.productVersion` (sem a parte de prerelease, que o recurso de versão do Windows não tem) = seção `## [X.Y.Z...]` do `CHANGELOG.md`. `go run ./tools/release version <tag>` falha o build se divergirem.
+3. **Notas de versão**: `CHANGELOG.md` no formato Keep a Changelog, em inglês, escrito para o jogador. A seção da versão é o corpo da GitHub Release e, por isso, o "o que há de novo" do atualizador (D104).
+4. **Avisos de terceiros** sem ferramenta externa: `tools/release notices` lista os módulos Go linkados no executável do Windows (`go list -deps`) e os pacotes npm de produção do frontend, com o texto da licença, e **falha** com licença fora da lista compatível com GPL-3.0 (D076) ou não reconhecida.
+5. **CI**: o job de frontend passa a compilar a `dettmann-ui-v1`, que é a que o `frontend/` consome (D095); antes compilava a `dettmann-ui-vnext`.
+
+## D106 — Itens "(verificar)" do adapter Skyrim SE na F15
+Status: proposta (registro de lacuna; aguarda confirmação do usuário sobre a correção)
+
+Confirmados em fonte primária e atualizados no core/12: a pasta de dados da variante Epic é `Skyrim Special Edition EPIC` (libloadorder `src/game_settings.rs`; SKSE64 `skse_version.h`), e o Skyrim SE não usa `loadorder.txt` (libloadorder usa o método "asterisk", só `plugins.txt`). Continua pendente o registro da GOG Galaxy para o pacote Anniversary Edition (`1801825368`), que só uma instalação real responde.
+
+Lacuna encontrada: o adapter escolhe a pasta do `plugins.txt` pela loja em que a instalação foi descoberta. Uma instalação GOG ou Epic achada só pelo registro ou localizada manualmente usa a pasta da Steam, e o jogo não lê a load order escrita. libloadorder decide pelos arquivos da raiz (`Galaxy64.dll` ⇒ GOG, `EOSSDK-Win64-Shipping.dll` ⇒ Epic). Proposta: o adapter detectar a variante pelos mesmos arquivos quando a loja não for `gog` nem `epic`, guardando-a na instância. Não foi feito na F15 porque muda o contrato `LoadOrderFile` (hoje sem acesso a disco) e o dado da instância.

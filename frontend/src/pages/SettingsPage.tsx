@@ -9,6 +9,7 @@ import { DeployMethodSection, GameFoldersSection } from "../features/deploy/Depl
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
 import { AppSettingRows, GameSettingsSelect, InstanceSettingRows, RestartBanner, SettingLine, SettingsSection, settingLabel } from "../features/settings/SettingControls";
+import { UpdateSection } from "../features/settings/UpdateSection";
 import { WorkaroundsTab } from "../features/settings/WorkaroundsTab";
 import { useI18n, type MessageKey } from "../i18n/i18n";
 import { useNavigation } from "../shell/navigation";
@@ -295,6 +296,7 @@ function ApplicationTab() {
       >
         <AppSettingRows keys={["app.logLevel", "app.anonymizeSupportBundle"]} />
       </SettingsSection>
+      <UpdateSection />
       <SettingsSection id="performance" title={t("settings.section.performance")}>
         <AppSettingRows keys={["app.gpuAcceleration"]} />
       </SettingsSection>

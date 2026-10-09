@@ -28,23 +28,23 @@ Tarefas que não dependem do app estar pronto:
 - [ ] **Actions fixadas por SHA** (não por tag) nos workflows; Dependabot para `github-actions`, `gomod` e `npm`.
 - [ ] **`SECURITY.md`**: reporte privado de vulnerabilidade pelo GitHub (Private vulnerability reporting), sem e-mail pessoal.
 - [ ] **Templates** de issue (bug com versão, jogo, passos e log de `%APPDATA%\ModOrchestrator\logs`; pedido de feature) e de PR (checklist de validação do `CONTRIBUTING.md`).
-- [ ] **`THIRD_PARTY_NOTICES`** gerado por script (Go: `go-licenses`; npm: lista das dependências de produção) e checado no CI: dependência com licença incompatível com GPL-3.0 falha o build.
-- [ ] **Metadados do executável**: `build/windows/info.json` com nome, descrição, versão, copyright e licença; versão injetada por `-ldflags` a partir da tag.
+- [x] **`THIRD_PARTY_NOTICES`** gerado por script (F15: `go run ./tools/release notices`, sem `go-licenses`; roda no `release.yml`, ainda não no CI de PR) (Go: `go-licenses`; npm: lista das dependências de produção) e checado no CI: dependência com licença incompatível com GPL-3.0 falha o build.
+- [x] **Metadados do executável**: `build/windows/info.json` com nome, descrição, versão, copyright e licença; versão injetada por `-ldflags` a partir da tag (F15).
 - [ ] **README público**: o que é, estado (alpha/beta), capturas, instalação, aviso do SmartScreen explicado com imagem, link para a política de assinatura.
 - [ ] **Política de assinatura** (exigida pela SignPath **(verificar)**): página no repositório dizendo o que é assinado, por qual pipeline, quem aprova, e os papéis (autor, revisores, aprovador).
 
 ## Etapa 2 — Empacotamento (F15)
 
-- [ ] **Instalador NSIS do Wails** (`wails build -nsis`) **por usuário**: instala em `%LOCALAPPDATA%\Programs\ModOrchestrator`, sem UAC. O template padrão do Wails pede administrador **(verificar)**; ajustar `RequestExecutionLevel user` e o diretório no `project.nsi`.
-- [ ] Desinstalador remove o app e **não** apaga dados (`%APPDATA%\ModOrchestrator`) nem staging, a menos que o usuário marque a opção; nunca toca pastas de jogo.
-- [ ] **WebView2**: usar o bootstrapper do Wails (baixa só se faltar); documentar o requisito.
-- [ ] **Versão portátil** (`.zip`) opcional, avisando que arquivos extraídos herdam a marca "baixado da internet".
-- [ ] Build com `-trimpath`, **sem UPX** (D077).
-- [ ] Ícone, nome e descrição consistentes no executável, instalador e atalho.
+- [x] **Instalador NSIS do Wails** (`wails build -nsis`) **por usuário**: instala em `%LOCALAPPDATA%\Programs\ModOrchestrator`, sem UAC. O template padrão do Wails 2.12 pede administrador (**confirmado**: `REQUEST_EXECUTION_LEVEL` padrão `admin`, desinstalador no HKLM); o `build/windows/installer/project.nsi` próprio usa `user` e escreve só no HKCU (D103).
+- [x] Desinstalador remove o app e **não** apaga dados (`%APPDATA%\ModOrchestrator`), a menos que o usuário marque a opção; staging, archives e pastas de jogo nunca são tocados (D103).
+- [x] **WebView2**: usar o bootstrapper do Wails (baixa só se faltar); documentar o requisito (README, primeiros passos).
+- [x] **Versão portátil** (`.zip`) gerada pelo `release.yml`, com o executável, a licença e os avisos de terceiros. *Falta*: o aviso sobre a marca "baixado da internet" nas notas de release.
+- [x] Build com `-trimpath`, **sem UPX** (D077); versão por `-ldflags` a partir da tag.
+- [x] Ícone, nome e descrição consistentes no executável, instalador e atalho (`wails.json` › `info`, `build/windows/info.json`).
 
 ## Etapa 3 — Pipeline de release
 
-Workflow `release.yml`, separado do CI:
+Workflow `release.yml`, separado do CI (criado na F15, D105; ainda não executado, pois não há tag nem SignPath):
 
 1. Disparo: tag `v*` criada na `master` (pré-release para `v*-beta.*`).
 2. Job de build (sem segredos): testes completos, `wails build -nsis`, `THIRD_PARTY_NOTICES`, artefatos não assinados.
@@ -70,6 +70,9 @@ Workflow `release.yml`, separado do CI:
 | Nexus Mods | a partir da primeira estável | página com descrição e link para o GitHub; arquivo hospedado também lá **(verificar regras do Nexus para ferramentas)** |
 
 ## Etapa 6 — Atualização do app (opt-in)
+
+Implementada na F15 (D104).
+
 
 - Setting desligado por padrão; é a única chamada de rede da V1 (00-visao-e-escopo).
 - Consulta a API de releases do GitHub; canal estável ou beta escolhido pelo usuário.
@@ -102,6 +105,6 @@ Workflow `release.yml`, separado do CI:
 | # | Pendência | Quando | Quem |
 |---|---|---|---|
 | PUB-1 | Requisitos atuais da SignPath Foundation | antes da etapa 4 | agente/usuário |
-| PUB-2 | Nível de execução padrão do instalador NSIS do Wails | F15 | agente |
+| ~~PUB-2~~ | ~~Nível de execução padrão do instalador NSIS do Wails~~ resolvida na F15: `admin` por padrão, trocado por `user` (D103) | F15 | agente |
 | PUB-3 | Regras do Nexus para hospedar ferramentas | antes da etapa 5 | usuário |
 | PUB-4 | Quando tornar o repositório público | antes da etapa 4 | usuário |

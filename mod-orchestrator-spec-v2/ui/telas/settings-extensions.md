@@ -15,6 +15,8 @@ Settings avançados aparecem só com `ui.advancedMode` (switch em Interface › 
 
 Mudanças são aplicadas ao alterar (sem botão Salvar), exceto caminhos e método de deploy, que abrem diálogo de operação (mover staging, trocar método exige purge) com prévia de impacto e espaço necessário.
 
+Aplicação › **Atualizações** (F15, D104): switch `app.updateCheck` (desligado por padrão, é a única chamada de rede), select `app.updateChannel`, linha com a versão instalada, o estado da última verificação e "Verificar agora" (desabilitado com o switch desligado) e, havendo versão nova, a linha "Versão X disponível" com "Ver novidades", que abre o DLG-30 (notas de todas as versões novas, tamanho, aviso de que o app fecha, progresso do download e o motivo de uma recusa).
+
 ### Critérios de aceite
 - Todo setting V1 de core/13 aparece na aba e seção indicadas.
 - Settings que exigem reinício mostram aviso persistente com "Reiniciar agora".

@@ -35,6 +35,9 @@ func (e *BusyError) Params() map[string]string {
 type Locks struct {
 	mu   sync.Mutex
 	held map[game.InstanceID]string
+	// frozen names app-wide work (the app update) that refuses every new
+	// operation on every instance while it runs.
+	frozen string
 }
 
 // New returns an empty lock table.
@@ -46,6 +49,9 @@ func (l *Locks) Acquire(id game.InstanceID, holder string) (release func(), err 
 	defer l.mu.Unlock()
 	if h, busy := l.held[id]; busy {
 		return nil, &BusyError{Instance: id, Holder: h}
+	}
+	if l.frozen != "" {
+		return nil, &BusyError{Instance: id, Holder: l.frozen}
 	}
 	l.held[id] = holder
 	var once sync.Once
@@ -64,4 +70,27 @@ func (l *Locks) Holder(id game.InstanceID) (string, bool) {
 	defer l.mu.Unlock()
 	h, ok := l.held[id]
 	return h, ok
+}
+
+// Freeze takes every instance at once for app-wide work: it is refused
+// while any instance is busy (the holder is reported), and while it is held
+// every Acquire is refused with holder as the reason. It is never queued.
+func (l *Locks) Freeze(holder string) (release func(), err error) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	for id, h := range l.held {
+		return nil, &BusyError{Instance: id, Holder: h}
+	}
+	if l.frozen != "" {
+		return nil, &BusyError{Holder: l.frozen}
+	}
+	l.frozen = holder
+	var once sync.Once
+	return func() {
+		once.Do(func() {
+			l.mu.Lock()
+			l.frozen = ""
+			l.mu.Unlock()
+		})
+	}, nil
 }

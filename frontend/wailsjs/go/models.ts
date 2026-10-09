@@ -1644,6 +1644,22 @@ export namespace bridge {
 	}
 	
 	
+	export class Error {
+	    code: string;
+	    params?: Record<string, string>;
+	    detail?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Error(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.code = source["code"];
+	        this.params = source["params"];
+	        this.detail = source["detail"];
+	    }
+	}
 	export class ErrorDTO {
 	    code: string;
 	    message: string;
@@ -4633,6 +4649,108 @@ export namespace bridge {
 	        this.deleteFiles = source["deleteFiles"];
 	        this.confirmName = source["confirmName"];
 	    }
+	}
+	export class UpdateNoteDTO {
+	    version: string;
+	    published?: string;
+	    text: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new UpdateNoteDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.version = source["version"];
+	        this.published = source["published"];
+	        this.text = source["text"];
+	    }
+	}
+	export class UpdateOfferDTO {
+	    version: string;
+	    published?: string;
+	    size: number;
+	    notes: UpdateNoteDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new UpdateOfferDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.version = source["version"];
+	        this.published = source["published"];
+	        this.size = source["size"];
+	        this.notes = this.convertValues(source["notes"], UpdateNoteDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class UpdateStatusDTO {
+	    enabled: boolean;
+	    channel: string;
+	    installed: string;
+	    checking: boolean;
+	    checkedAt?: string;
+	    offer?: UpdateOfferDTO;
+	    checkError?: Error;
+	    installing: boolean;
+	    done: number;
+	    total: number;
+	    launched: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new UpdateStatusDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.enabled = source["enabled"];
+	        this.channel = source["channel"];
+	        this.installed = source["installed"];
+	        this.checking = source["checking"];
+	        this.checkedAt = source["checkedAt"];
+	        this.offer = this.convertValues(source["offer"], UpdateOfferDTO);
+	        this.checkError = this.convertValues(source["checkError"], Error);
+	        this.installing = source["installing"];
+	        this.done = source["done"];
+	        this.total = source["total"];
+	        this.launched = source["launched"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class VerificationDTO {
 	    name: string;

@@ -139,6 +139,7 @@ Contrato de cada tipo de operação (documentado no core do módulo dono):
 | `backup_failed`, `backup_not_found`, `backup_invalid`, `restore_not_pending` | backups e restauração do banco (core/14 §3–4, D090) | `kind`, `backup`, `path` |
 | `archives_unchanged` | mover o ArchiveStore para a mesma pasta (D090) | `folder` |
 | `launch_unavailable`, `launch_blocked`, `launch_needs_confirmation`, `launch_deploy_failed`, `launch_option_unknown`, `launch_start_failed` | Play (core/11 §6, core/04 §9, D090) | `reason`, `code`, `status`, `operation`, `option`, `exe` |
+| `update_check_disabled`, `update_check_failed`, `update_not_available`, `update_download_failed`, `update_checksum_missing`, `update_checksum_mismatch`, `update_signature_invalid`, `update_signature_missing`, `update_launch_failed`, `update_in_progress` | atualização do app (F15, D104); `instance_busy` com `holder` = `app_update` enquanto ela instala | `version`, `file`, `expected`, `actual` |
 
 Erros de operação (`OperationError`) também carregam `params` desde a F4 (D067), para a UI traduzir a mensagem com os mesmos parâmetros.
 

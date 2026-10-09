@@ -8,11 +8,13 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
+	"modorchestrator/internal/core/application/appupdate"
 	"modorchestrator/internal/core/application/backups"
 	"modorchestrator/internal/core/application/conflicts"
 	"modorchestrator/internal/core/application/deployment"
@@ -41,6 +43,7 @@ import (
 	"modorchestrator/internal/infrastructure/stores"
 	"modorchestrator/internal/infrastructure/supportbundle"
 	"modorchestrator/internal/infrastructure/system"
+	"modorchestrator/internal/infrastructure/updates"
 )
 
 // Container holds the wired application services.
@@ -66,7 +69,10 @@ type Container struct {
 	Launch   *launch.Service
 	Overview *overview.Service
 	Backups  *backups.Service
-	Logger   *slog.Logger
+	// Updates is the opt-in update of the app (D104); nil until
+	// EnableUpdates gives it the running version.
+	Updates *appupdate.Service
+	Logger  *slog.Logger
 	// Interrupted lists operations a previous process left unfinished.
 	Interrupted []*operation.Operation
 	// InterruptedDeploys lists instances with a deploy journal to reconcile.
@@ -89,6 +95,8 @@ type Container struct {
 	db      *sql.DB
 	logFile *logging.RotatingFile
 	unsub   func()
+	fsys    filesystem.OS
+	locks   *instancelock.Locks
 }
 
 // New resolves paths, opens and migrates the database, wires services and
@@ -477,7 +485,25 @@ func New(ctx context.Context) (c *Container, err error) {
 		db:                 db,
 		logFile:            logFile,
 		unsub:              unsub,
+		fsys:               fsys,
+		locks:              locks,
 	}, nil
+}
+
+// EnableUpdates wires the app update for the running version and starts
+// its checks (at start and daily, only while app.updateCheck is on).
+func (c *Container) EnableUpdates(version, executable string) {
+	if c.Updates != nil {
+		return
+	}
+	client := updates.NewClient(version)
+	c.Updates = appupdate.NewService(appupdate.Deps{
+		Settings: c.Settings, Source: client, Downloader: client, Signatures: updates.Signatures{},
+		Launcher: updates.Launcher{}, FS: c.fsys, Hasher: hashing.SHA256{}, Locks: c.locks,
+		Notifier: c.Diagnostics, Publisher: c.Events, IDs: system.IDs{}, Clock: system.Clock{},
+		Installed: version, Executable: executable, Dir: filepath.Join(c.Paths.Cache, "updates"),
+	})
+	go c.Updates.RunPeriodic(context.Background())
 }
 
 // OpenLogFolder shows the technical log folder in the file manager.
@@ -490,6 +516,9 @@ func (c *Container) Close() error {
 	c.Plugins.Close()
 	c.Diagnostics.Close()
 	c.Launch.Close()
+	if c.Updates != nil {
+		c.Updates.Close()
+	}
 	// The exit backup (core/14 §3 "na saída normal") before the database
 	// closes.
 	c.Backups.Close()

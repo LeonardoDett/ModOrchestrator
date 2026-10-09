@@ -5,6 +5,7 @@ package bridge
 
 import (
 	"context"
+	"os"
 	"strings"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -44,6 +45,10 @@ func (a *App) Startup(ctx context.Context) {
 	if a.c == nil {
 		return // recovery screen only
 	}
+	// The update reports the running version and checks only with
+	// app.updateCheck on (D104).
+	exe, _ := os.Executable()
+	a.c.EnableUpdates(Version, exe)
 	a.unsubscribe = a.c.Events.Subscribe(func(e event.Event) {
 		// Operation events and the delivery signals of diagnostics and
 		// notifications tell the UI to read again (D021); the UI never
@@ -68,7 +73,7 @@ func (a *App) Startup(ctx context.Context) {
 // notification created...) and of the plugins module (background sync,
 // load order file monitor) that happen outside operations.
 func isSignal(t event.Type) bool {
-	for _, p := range []string{"diagnostics.", "notification.", "plugins.", "plugin.", "loadorder.", "plugin_rule.", "plugin_group.", "game.", "deployment.external_changes_detected"} {
+	for _, p := range []string{"diagnostics.", "notification.", "plugins.", "plugin.", "loadorder.", "plugin_rule.", "plugin_group.", "game.", "app_update.", "deployment.external_changes_detected"} {
 		if strings.HasPrefix(string(t), p) {
 			return true
 		}

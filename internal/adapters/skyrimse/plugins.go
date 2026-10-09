@@ -209,8 +209,9 @@ func (Adapter) Indexes(_ game.ID, active []plugin.Plugin) (map[string]string, []
 }
 
 // LoadOrderFile is plugins.txt below %LOCALAPPDATA% (core/12 §5): "Skyrim
-// Special Edition", with the GOG variant confirmed; the Epic variant
-// follows Vortex's convention and is still to be verified.
+// Special Edition", with the " GOG" and " EPIC" variants (both confirmed;
+// the Epic one in libloadorder and SKSE64, F15). The variant follows the
+// store the installation was discovered in (D106).
 func (Adapter) LoadOrderFile(inst game.Instance) ports.FileLocation {
 	folder := "Skyrim Special Edition"
 	switch inst.Store {

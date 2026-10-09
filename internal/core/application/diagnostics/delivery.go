@@ -383,3 +383,26 @@ func (s *Service) RefreshAll(ctx context.Context) error {
 }
 
 func modID(id string) mod.ID { return mod.ID(id) }
+
+// NotifyUpdate tells about a new version of the app (core/10 §2, kind
+// info; D104), once per version: a version already notified, read or
+// dismissed, is not notified again.
+func (s *Service) NotifyUpdate(ctx context.Context, version string) error {
+	ref := "app_update:" + version
+	now := s.Clock.Now()
+	stored, err := s.UoW.Do(ctx, func(ctx context.Context, tx ports.Tx) error {
+		switch _, err := tx.Notifications().ByRef(ctx, ref); {
+		case err == nil:
+			return nil
+		case !errors.Is(err, ports.ErrNotFound):
+			return err
+		}
+		return s.deliver(ctx, tx, notification.KindInfo, ref, "app_update_available", diagnostic.Params{"version": version},
+			event.EntityRef{Kind: "app_update", ID: version}, "", string(diagnostic.SeverityInfo), false, now)
+	})
+	if err != nil {
+		return err
+	}
+	s.Publisher.Publish(stored...)
+	return nil
+}

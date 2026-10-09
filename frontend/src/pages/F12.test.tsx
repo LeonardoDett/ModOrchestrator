@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
-import type { Backend, Dashlet, DeployStatus, Diagnostic, InstanceOverview, LaunchCheck, ManagedGame, Setting } from "../bridge/types";
+import type { Backend, Dashlet, DeployStatus, Diagnostic, InstanceOverview, LaunchCheck, ManagedGame, Setting, UpdateStatus } from "../bridge/types";
 
 const GAME: ManagedGame = {
   id: "i1", gameId: "skyrimse", gameName: "Skyrim Special Edition", custom: false, name: "Skyrim", adapter: "skyrimse",
@@ -251,5 +251,79 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     expect(screen.getByRole("switch", { name: "Show Needs attention" })).toBeDisabled();
     await user.click(screen.getByRole("switch", { name: "Show Recent games" }));
     expect(calls).toContain("set:ui.dashboard.dashlets=whats_new,first_steps,attention,recent_games");
+  });
+});
+
+describe("F15: app update (opt-in)", () => {
+  beforeEach(() => localStorage.clear());
+
+  const OFFER = {
+    version: "1.1.0", published: "2026-10-20T12:00:00Z", size: 15 * 1024 * 1024,
+    notes: [{ version: "1.1.0", text: "### Added\n- Faster deploy" }],
+  };
+  const status = (over: Partial<UpdateStatus> = {}): UpdateStatus => ({
+    enabled: true, channel: "stable", installed: "1.0.0", checking: false, installing: false, done: 0, total: -1, launched: false, ...over,
+  });
+  const withUpdates = (on: boolean) => [
+    ...APP_SETTINGS,
+    setting("app.updateCheck", "bool", on ? "true" : "false", { tab: "application" }),
+    setting("app.updateChannel", "enum", "stable", { tab: "application", options: ["stable", "beta"] }),
+  ];
+
+  it("is off by default: Check now stays disabled and nothing is asked", async () => {
+    const user = userEvent.setup();
+    const { backend, calls } = world({
+      listAppSettings: async () => withUpdates(false),
+      updateStatus: async () => status({ enabled: false }),
+      checkForUpdate: async () => {
+        calls.push("check");
+        return status();
+      },
+    });
+    render(<App backend={backend} />);
+    await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
+    await user.click(await screen.findByRole("tab", { name: "Application" }));
+    expect(await screen.findByRole("switch", { name: "Check for updates" })).toHaveAttribute("aria-checked", "false");
+    expect(screen.getByText("Update checks are off.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Check now" })).toBeDisabled();
+    expect(calls).not.toContain("check");
+  });
+
+  it("shows the notes of the offered version before installing it", async () => {
+    const user = userEvent.setup();
+    const { backend, calls } = world({
+      listAppSettings: async () => withUpdates(true),
+      updateStatus: async () => status({ checkedAt: "2026-10-20T13:00:00Z", offer: OFFER }),
+      installUpdate: async (v) => {
+        calls.push(`install:${v}`);
+      },
+    });
+    render(<App backend={backend} />);
+    await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
+    await user.click(await screen.findByRole("tab", { name: "Application" }));
+    expect(await screen.findByText("Version 1.1.0 is available")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "See what's new" }));
+    const dialog = await screen.findByRole("dialog", { name: "Update to 1.1.0" });
+    expect(within(dialog).getByText(/Faster deploy/)).toBeInTheDocument();
+    await user.click(within(dialog).getByRole("button", { name: "Download and install" }));
+    expect(calls).toContain("install:1.1.0");
+  });
+
+  it("a refused installer says why", async () => {
+    const user = userEvent.setup();
+    const { backend } = world({
+      listAppSettings: async () => withUpdates(true),
+      updateStatus: async () => status({ offer: OFFER }),
+      installUpdate: async () => {
+        throw new Error(JSON.stringify({ code: "update_checksum_mismatch", params: {} }));
+      },
+    });
+    render(<App backend={backend} />);
+    await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
+    await user.click(await screen.findByRole("tab", { name: "Application" }));
+    await user.click(await screen.findByRole("button", { name: "See what's new" }));
+    const dialog = await screen.findByRole("dialog", { name: "Update to 1.1.0" });
+    await user.click(within(dialog).getByRole("button", { name: "Download and install" }));
+    expect(await within(dialog).findByText("The downloaded installer does not match the release checksum, so it was discarded.")).toBeInTheDocument();
   });
 });

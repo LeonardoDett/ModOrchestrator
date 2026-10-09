@@ -106,7 +106,7 @@ A aba não aparece na V1 (anti-pattern 18). Chaves previstas V2: pasta de downlo
 - `app.dataDir` é só exibido (com "Abrir"); `mods.stagingPath`, `mods.archiveStorePath` e `deploy.method` vivem na instância e mudam por operação com prévia (mover staging, mover arquivos, trocar método), nunca como valor gravado.
 - `ui.dashboard.dashlets` é uma lista ordenada (`-id` oculto, `+id` fixado); a ordem muda em Dashboard › Personalizar.
 - Limites usam o stepper `Input.Number` (D092); avançados só com `ui.advancedMode`.
-- `app.updateCheck`/`app.updateChannel` ficam ocultos até a F15 (D091 item 1).
+- `app.updateCheck`/`app.updateChannel` ficaram ocultos até a F15 (D091 item 1); desde a F15 aparecem em Aplicação › Atualizações, com "Verificar agora" e a versão oferecida (D104).
 - Reinício: aviso persistente com "Reiniciar agora" enquanto um setting `RestartRequired` difere do valor da inicialização ou uma restauração aguarda.
 
 ## Critérios de aceite

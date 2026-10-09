@@ -19,6 +19,11 @@ export function notificationText(i18n: Translator, n: AppNotification): { title:
       detail: n.count > 1 ? i18n.tp("notif.more", n.count - 1) : undefined,
     };
   }
+  if (n.kind === "info") {
+    // Something the system did or found on its own (app update, D104).
+    const key = `notif.${n.code}`;
+    return { title: i18n.has(key) ? i18n.t(key as MessageKey, n.params) : n.code };
+  }
   const kind = operationKindLabel(i18n, n.params.kind ?? "");
   const base = `notif.${n.code}`;
   const key = n.count > 1 && i18n.has(`${base}.many`) ? `${base}.many` : base;
@@ -79,6 +84,8 @@ export function NotificationBell({ onOpenOperations }: NotificationBellProps) {
     if (n.state === "unread") void run(() => backend.markNotificationsRead([n.id]));
     if (n.kind === "diagnostic") {
       navigate({ view: "diagnostics", tab: "problems", diagnostic: n.params.key ?? n.code });
+    } else if (n.code === "app_update_available") {
+      navigate({ view: "settings", settingsTab: "application" });
     } else {
       onOpenOperations();
     }
