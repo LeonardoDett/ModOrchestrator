@@ -1,6 +1,7 @@
 // Package archive implements ports.Extractor in pure Go (D062): ZIP with
-// the standard library, 7Z with bodgit/sevenzip, RAR with
-// nwaples/rardecode, and imported folders (D048) by walking the disk.
+// the standard library (plus LZMA from ulikunitz/xz, D097), 7Z with
+// bodgit/sevenzip, RAR with nwaples/rardecode (patched copy in
+// third_party/, D098), and imported folders (D048) by walking the disk.
 // Libraries only read; every write is done here, after the entry path was
 // normalised and proven to stay below the destination (INV-ID-04). Nothing
 // is ever executed (INV-LIB-04).
@@ -8,10 +9,14 @@ package archive
 
 import (
 	"archive/zip"
+	"bufio"
 	"bytes"
 	"context"
+	"encoding/binary"
 	"errors"
 	"fmt"
+	"hash"
+	"hash/crc32"
 	"io"
 	"io/fs"
 	"os"
@@ -20,6 +25,7 @@ import (
 
 	"github.com/bodgit/sevenzip"
 	"github.com/nwaples/rardecode/v2"
+	"github.com/ulikunitz/xz/lzma"
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/relpath"
@@ -156,7 +162,7 @@ func (Extractor) walk(ctx context.Context, format, path string, fn func(ports.Ar
 			mode := f.Mode()
 			en := ports.ArchiveEntry{Path: f.Name, Size: int64(f.UncompressedSize64), IsDir: mode.IsDir() || strings.HasSuffix(f.Name, "/"),
 				IsLink: mode&(fs.ModeSymlink|fs.ModeDevice|fs.ModeNamedPipe|fs.ModeSocket) != 0}
-			if err := fn(en, f.Open); err != nil {
+			if err := fn(en, zipOpener(f)); err != nil {
 				return err
 			}
 		}
@@ -240,6 +246,71 @@ func (Extractor) walk(ctx context.Context, format, path string, fn func(ports.Ar
 		})
 	}
 	return ports.ErrArchiveUnsupported
+}
+
+// zipMethodLZMA is ZIP method 14 (APPNOTE 5.8.8), written by 7-Zip and
+// common on Nexus; archive/zip itself only reads Store and Deflate.
+const zipMethodLZMA = 14
+
+// zipOpener returns how to read the content of f.
+func zipOpener(f *zip.File) func() (io.ReadCloser, error) {
+	if f.Method == zipMethodLZMA {
+		return func() (io.ReadCloser, error) { return openZipLZMA(f) }
+	}
+	return f.Open
+}
+
+// openZipLZMA decodes a method 14 entry: 2 bytes of LZMA SDK version, the
+// properties size (always 5), the 5 property bytes, then the raw stream.
+// The classic LZMA header is rebuilt with the size from the central
+// directory, so the optional end marker (flag bit 1) is accepted either
+// way. Size and CRC-32 are checked like archive/zip does.
+func openZipLZMA(f *zip.File) (io.ReadCloser, error) {
+	raw, err := f.OpenRaw()
+	if err != nil {
+		return nil, err
+	}
+	var pre [4]byte
+	if _, err := io.ReadFull(raw, pre[:]); err != nil || binary.LittleEndian.Uint16(pre[2:]) != 5 {
+		return nil, fmt.Errorf("%w: bad LZMA properties", zip.ErrFormat)
+	}
+	head := make([]byte, lzma.HeaderLen)
+	if _, err := io.ReadFull(raw, head[:5]); err != nil {
+		return nil, fmt.Errorf("%w: bad LZMA properties", zip.ErrFormat)
+	}
+	binary.LittleEndian.PutUint64(head[5:], f.UncompressedSize64)
+	lr, err := lzma.NewReader(bufio.NewReader(io.MultiReader(bytes.NewReader(head), raw)))
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", zip.ErrFormat, err)
+	}
+	return io.NopCloser(&zipCheckReader{r: lr, h: crc32.NewIEEE(), size: f.UncompressedSize64, crc: f.CRC32}), nil
+}
+
+// zipCheckReader verifies the size and CRC-32 of an entry at EOF.
+type zipCheckReader struct {
+	r    io.Reader
+	h    hash.Hash32
+	n    uint64
+	size uint64
+	crc  uint32
+}
+
+func (c *zipCheckReader) Read(p []byte) (int, error) {
+	n, err := c.r.Read(p)
+	c.h.Write(p[:n])
+	c.n += uint64(n)
+	if c.n > c.size {
+		return n, zip.ErrFormat
+	}
+	if errors.Is(err, io.EOF) {
+		if c.n != c.size {
+			return n, io.ErrUnexpectedEOF
+		}
+		if c.crc != 0 && c.h.Sum32() != c.crc {
+			return n, zip.ErrChecksum
+		}
+	}
+	return n, err
 }
 
 // safeTarget joins a raw entry path to root only after the domain

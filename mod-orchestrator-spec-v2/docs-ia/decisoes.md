@@ -408,7 +408,7 @@ Status: vigente (fecha parte da pendência P3)
 Confirmados em fonte primária em 2026-09-30 e registrados em core/12 §1 com as fontes: Steam `489830`; GOG `1711230643` (o `1801825368` é o pacote AE no GOG DB); Epic `AppName` `ac82db5035584c7f8a2c548d98c86b2c`; pasta de usuário da variante GOG `Skyrim Special Edition GOG` (AppData Local e Documents). **Continuam pendentes**: pasta de usuário da variante Epic e `loadorder.txt` (F11, quando o `plugins.txt` passa a ser escrito), e a observação de uma instalação GOG real do pacote AE sob `1801825368`. O adapter reconhece apenas o que foi confirmado; o resto cai em "Localizar manualmente".
 
 ## D062 — Extração de archives em Go puro (fecha a pendência P1)
-Status: vigente
+Status: vigente (emendada por D097 e D098)
 
 O port `Extractor` é implementado em `internal/infrastructure/archive` só com bibliotecas Go, sem binário externo nem CGO:
 
@@ -813,3 +813,19 @@ Consequências:
 Alternativas rejeitadas: CLA no repositório todo (afasta contribuidores; o Vortex, referência do projeto, é GPL-3.0 sem CLA); lib fechada ou só com código compilado (impede compilar e contribuir só com o repositório, contrariando D076); MPL-2.0 ou MIT na lib inteira (o usuário preferiu uma licença única para o projeto).
 
 Proteção do nome: nenhuma licença protege o nome "Mod Orchestrator"; isso depende de registro de marca (INPI), fora do repositório.
+
+## D097 — ZIP com método LZMA (14)
+Status: vigente (emenda D062)
+
+`archive/zip` só lê Store e Deflate, mas o 7-Zip grava ZIP com LZMA (método 14), e mods reais do Nexus vêm assim (FSMP 4.1.1: 46 de 78 entradas), recusados como `archive_corrupt`. O extrator lê o método 14 com `github.com/ulikunitz/xz/lzma` (BSD-3), que já era dependência transitiva aprovada em D062 e passa a direta: abre a entrada crua (`OpenRaw`), valida o prefixo do APPNOTE 5.8.8 (versão do SDK, tamanho das propriedades = 5, 5 bytes de propriedades), remonta o cabeçalho LZMA clássico com o tamanho do diretório central (o marcador de fim, bit 1 da flag, é aceito com ou sem) e confere tamanho e CRC-32 como o `archive/zip` faz. O caminho da entrada continua validado antes de abrir o conteúdo (INV-ID-04) e os limites de tamanho valem igual.
+
+Motivo: suporte por leitor, sem registrar descompressor global e sem dependência nova. Alternativas rejeitadas: `zip.RegisterDecompressor` (o descompressor não recebe o tamanho, e LZMA sem marcador de fim precisa dele); Deflate64 (método 9), suspeita inicial, não apareceu nos archives reais: continua `archive_corrupt` até aparecer um caso.
+
+## D098 — Cópia corrigida do rardecode em `third_party/`
+Status: vigente (emenda D062)
+
+`nwaples/rardecode/v2` v2.4.1 (a versão mais recente) corrompe entradas RAR maiores que a janela de decodificação: (1) um match que cruza o fim da janela perde o resto (`bad file checksum`); (2) um filtro lido enquanto um bloco de filtro que cruza o fim da janela está sendo montado recebe offset errado (`invalid filter`). Em archive sólido, todos os arquivos seguintes falham. Visto num mod real (Demon - 3BA, RAR 5 sólido, janela de 128 MiB, BSA de 516 MB).
+
+O app usa uma cópia do v2.4.1 em `third_party/rardecode` com as duas correções em `decode_reader.go` (descritas em `PATCHES.md`), ligada por `replace` no `go.mod`; o import continua `github.com/nwaples/rardecode/v2`. A licença BSD-2 e a atribuição acompanham a cópia (D076). Teste de regressão: fixture sintética `rar5-wrap.rar`, que falha com o upstream e com cada correção isolada.
+
+Motivo: sem a correção, archives RAR grandes (comuns em mods de texturas) não importam, e não existe versão corrigida publicada. Custo aceito: manter a cópia até o upstream corrigir; a correção deve ser proposta ao upstream e a cópia removida quando houver release equivalente. Alternativas rejeitadas: fork publicado em outro repositório (mais um repositório para manter, mesmo efeito); 7-Zip/unRAR externo (rejeitado em D062).

@@ -222,6 +222,81 @@ func TestRar(t *testing.T) {
 	}
 }
 
+// ZIP method 14 (LZMA), as 7-Zip writes it, with and without the end
+// marker (D097). Fixtures from testdata/gen.
+func TestZipLZMA(t *testing.T) {
+	ctx := context.Background()
+	p := "testdata/lzma.zip"
+	es, err := New().List(ctx, p)
+	if err != nil || !slices.Equal(names(es), []string{"Wrap/plugin.esp", "Wrap/readme.txt", "Wrap/textures/a.dds"}) {
+		t.Fatalf("list = %v %v", names(es), err)
+	}
+	dest := t.TempDir()
+	if err := New().Extract(ctx, p, dest, ports.ExtractOptions{}); err != nil {
+		t.Fatal(err)
+	}
+	for name, size := range map[string]int{"Wrap/textures/a.dds": 20000, "Wrap/plugin.esp": 3000} {
+		if got := len(read(t, filepath.Join(dest, filepath.FromSlash(name)))); got != size {
+			t.Fatalf("%s: %d bytes, want %d", name, got, size)
+		}
+	}
+	if read(t, filepath.Join(dest, "Wrap", "readme.txt")) != "stored entry" {
+		t.Fatal("stored entry next to LZMA ones")
+	}
+	if err := New().Extract(ctx, p, t.TempDir(), ports.ExtractOptions{MaxBytes: 1000}); !errors.Is(err, ports.ErrArchiveTooLarge) {
+		t.Fatalf("size limit: %v", err)
+	}
+
+	// a damaged stream fails the decoder or the CRC check: corrupt either way
+	b, err := os.ReadFile(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	b[30+len("Wrap/textures/a.dds")+200] ^= 0x55
+	bad := filepath.Join(t.TempDir(), "bad.zip")
+	_ = os.WriteFile(bad, b, 0o644)
+	if err := New().Extract(ctx, bad, t.TempDir(), ports.ExtractOptions{}); !errors.Is(err, ports.ErrArchiveCorrupt) {
+		t.Fatalf("damaged LZMA = %v", err)
+	}
+}
+
+// INV-ID-04 holds for LZMA entries too: the path is refused before the
+// entry is decoded.
+func TestZipLZMASlipIsRefused(t *testing.T) {
+	parent := t.TempDir()
+	dest := filepath.Join(parent, "tmp")
+	if err := os.Mkdir(dest, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := New().Extract(context.Background(), "testdata/lzma-slip.zip", dest, ports.ExtractOptions{}); !errors.Is(err, ports.ErrArchiveUnsafe) {
+		t.Fatalf("err = %v", err)
+	}
+	if _, err := os.Stat(filepath.Join(parent, "evil.esp")); !os.IsNotExist(err) {
+		t.Fatal("evil.esp escaped the destination")
+	}
+}
+
+// A RAR 5 entry larger than the decoder window, where one match and one
+// filter block cross the end of the window and a second filter is read
+// while the first is gathered. rardecode v2.4.1 drops the end of the match
+// ("bad file checksum") and misplaces the second filter ("invalid filter");
+// the patched copy in third_party/ must extract it intact (D098). The
+// archive CRC is checked by rardecode.
+func TestRar5WindowWrap(t *testing.T) {
+	ctx := context.Background()
+	p := "testdata/rar5-wrap.rar"
+	if f, err := New().Detect(ctx, p); err != nil || f != ports.FormatRar {
+		t.Fatalf("detect = %s %v", f, err)
+	}
+	dest := t.TempDir()
+	if err := New().Extract(ctx, p, dest, ports.ExtractOptions{}); err != nil {
+		t.Fatal(err)
+	}
+	if got := len(read(t, filepath.Join(dest, "Wrap", "textures", "wrap.dds"))); got != 300000 {
+		t.Fatalf("extracted %d bytes, want 300000", got)
+	}
+}
+
 func TestFolderSource(t *testing.T) {
 	ctx := context.Background()
 	src := t.TempDir()
