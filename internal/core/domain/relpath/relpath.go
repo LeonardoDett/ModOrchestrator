@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // ErrInvalid is returned for paths that are empty, absolute or unsafe.
@@ -19,13 +20,14 @@ type Path struct{ s string }
 
 // Parse normalizes raw and rejects anything that could escape its root or be
 // interpreted differently by the OS: absolute paths, drive letters, alternate
-// data streams, ".." segments, NUL bytes and segments with trailing dots or
-// spaces (which Windows silently strips).
+// data streams, ".." segments, NUL bytes, segments with trailing dots or
+// spaces (which Windows silently strips) and invalid UTF-8 (Windows turns
+// every invalid byte into U+FFFD, so two different names would be one file).
 func Parse(raw string) (Path, error) {
-	s := strings.ReplaceAll(raw, `\`, "/")
-	if strings.TrimSpace(s) == "" {
-		return Path{}, fmt.Errorf("%w: empty", ErrInvalid)
+	if !utf8.ValidString(raw) {
+		return Path{}, fmt.Errorf("%w: %q is not valid UTF-8", ErrInvalid, raw)
 	}
+	s := strings.ReplaceAll(raw, `\`, "/")
 	if strings.HasPrefix(s, "/") {
 		return Path{}, fmt.Errorf("%w: %q is absolute", ErrInvalid, raw)
 	}

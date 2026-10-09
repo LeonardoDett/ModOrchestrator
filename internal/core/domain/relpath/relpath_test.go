@@ -25,7 +25,7 @@ func TestParseNormalizes(t *testing.T) {
 func TestParseRejectsUnsafePaths(t *testing.T) {
 	for _, raw := range []string{
 		"", "  ", ".", "/etc/passwd", `\\server\share\x`, "C:/Windows", "a/../../b",
-		"..", "file.txt:stream", "a\x00b", "dir./x", "name ", "CON", "data/nul.txt", "Com1.dds", "a/b?.txt", "x<y", "tab	name",
+		"..", "file.txt:stream", "a\x00b", "dir./x", "name ", "CON", "data/nul.txt", "Com1.dds", "a/b?.txt", "x<y", "tab	name", "\xc4.esp", "a/\xff",
 	} {
 		if _, err := Parse(raw); !errors.Is(err, ErrInvalid) {
 			t.Errorf("Parse(%q) = %v, want ErrInvalid", raw, err)

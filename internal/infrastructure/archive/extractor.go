@@ -22,10 +22,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/bodgit/sevenzip"
 	"github.com/nwaples/rardecode/v2"
 	"github.com/ulikunitz/xz/lzma"
+	"golang.org/x/text/encoding/charmap"
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/relpath"
@@ -160,7 +162,7 @@ func (Extractor) walk(ctx context.Context, format, path string, fn func(ports.Ar
 				return ports.ErrArchiveEncrypted
 			}
 			mode := f.Mode()
-			en := ports.ArchiveEntry{Path: f.Name, Size: int64(f.UncompressedSize64), IsDir: mode.IsDir() || strings.HasSuffix(f.Name, "/"),
+			en := ports.ArchiveEntry{Path: zipName(f.Name), Size: int64(f.UncompressedSize64), IsDir: mode.IsDir() || strings.HasSuffix(f.Name, "/"),
 				IsLink: mode&(fs.ModeSymlink|fs.ModeDevice|fs.ModeNamedPipe|fs.ModeSocket) != 0}
 			if err := fn(en, zipOpener(f)); err != nil {
 				return err
@@ -246,6 +248,20 @@ func (Extractor) walk(ctx context.Context, format, path string, fn func(ports.Ar
 		})
 	}
 	return ports.ErrArchiveUnsupported
+}
+
+// zipName decodes a name written without the UTF-8 flag in code page 437,
+// the ZIP default (APPNOTE appendix D). Raw bytes would reach Windows as
+// U+FFFD and two different names would become one file (D099).
+func zipName(name string) string {
+	if utf8.ValidString(name) {
+		return name
+	}
+	out, err := charmap.CodePage437.NewDecoder().String(name)
+	if err != nil {
+		return name
+	}
+	return out
 }
 
 // zipMethodLZMA is ZIP method 14 (APPNOTE 5.8.8), written by 7-Zip and

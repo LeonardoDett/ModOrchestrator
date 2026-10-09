@@ -11,9 +11,12 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"modorchestrator/internal/core/application/ports"
+	"modorchestrator/internal/core/domain/relpath"
 )
 
 type zipEntry struct {
@@ -317,4 +320,81 @@ func TestFolderSource(t *testing.T) {
 	if read(t, filepath.Join(dest, "textures", "a.dds")) != "dds" {
 		t.Fatal("folder copy")
 	}
+}
+
+// D099: names written without the UTF-8 flag are code page 437; two
+// different names never collapse into one file.
+func TestZipNonUTF8NamesAreCP437(t *testing.T) {
+	ctx := context.Background()
+	var buf bytes.Buffer
+	zw := zip.NewWriter(&buf)
+	for _, n := range []string{"\x8e.esp", "\x99.esp"} { // "Ä" and "Ö" in CP437
+		w, err := zw.CreateHeader(&zip.FileHeader{Name: n, NonUTF8: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, _ = w.Write([]byte(n))
+	}
+	_ = zw.Close()
+	p := filepath.Join(t.TempDir(), "cp437.zip")
+	if err := os.WriteFile(p, buf.Bytes(), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	es, err := New().List(ctx, p)
+	if err != nil || !slices.Equal(names(es), []string{"Ä.esp", "Ö.esp"}) {
+		t.Fatalf("list = %v %v", names(es), err)
+	}
+	dest := t.TempDir()
+	if err := New().Extract(ctx, p, dest, ports.ExtractOptions{}); err != nil {
+		t.Fatal(err)
+	}
+	if read(t, filepath.Join(dest, "Ä.esp")) != "\x8e.esp" || read(t, filepath.Join(dest, "Ö.esp")) != "\x99.esp" {
+		t.Fatal("each name is its own file")
+	}
+}
+
+// F14 (INV-ID-04): whatever the entry names, an extraction writes only
+// below its destination, and only names the domain accepts.
+func FuzzExtractStaysInside(f *testing.F) {
+	for _, s := range []string{"a.txt", "../x", `..\x`, "/abs", "C:/x", "a/../../x", "a:b", "CON", "a/./b", "\x8e.esp", "dir/", `x\..\..\y`} {
+		f.Add(s, "b.txt")
+	}
+	ctx := context.Background()
+	f.Fuzz(func(t *testing.T, a, b string) {
+		var buf bytes.Buffer
+		zw := zip.NewWriter(&buf)
+		for _, n := range []string{a, b} {
+			w, err := zw.CreateHeader(&zip.FileHeader{Name: n, NonUTF8: !utf8.ValidString(n)})
+			if err != nil {
+				return
+			}
+			_, _ = w.Write([]byte("x"))
+		}
+		if zw.Close() != nil {
+			return
+		}
+		parent := t.TempDir()
+		p := filepath.Join(parent, "f.zip")
+		if err := os.WriteFile(p, buf.Bytes(), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		dest := filepath.Join(parent, "out")
+		if err := os.Mkdir(dest, 0o755); err != nil {
+			t.Fatal(err)
+		}
+		_ = New().Extract(ctx, p, dest, ports.ExtractOptions{})
+		_ = filepath.WalkDir(parent, func(cur string, d fs.DirEntry, err error) error {
+			if err != nil || cur == parent || cur == p || cur == dest {
+				return nil
+			}
+			rel, _ := filepath.Rel(dest, cur)
+			if rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+				t.Fatalf("%q/%q wrote %s outside the destination", a, b, cur)
+			}
+			if _, err := relpath.Parse(filepath.ToSlash(rel)); err != nil {
+				t.Fatalf("%q/%q wrote a name the domain refuses: %q", a, b, rel)
+			}
+			return nil
+		})
+	})
 }
