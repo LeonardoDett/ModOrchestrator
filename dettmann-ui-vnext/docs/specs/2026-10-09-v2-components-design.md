@@ -1,6 +1,6 @@
 # dettmann-ui v2 — Componentes (redesenho, micro-interações, variações novas)
 
-Status: em revisão (2026-10-10). Desenho aprovado em conversa em 2026-10-09.
+Status: aprovado (2026-10-10).
 Subprojeto 3 de 4 da reformulação da dettmann-ui v2 (roadmap: seção 2 de
 `2026-10-06-v2-foundation-design.md`). Depende da fundação (1) e dos ícones animados (2),
 concluídos. O subprojeto 4 (migração do app) foi feito antes deste (decisão D107 do app),
@@ -110,7 +110,9 @@ quando o elemento encosta na borda do contêiner, como linhas e abas). Nenhum
   `Accordion` e de `Tabs`: `Presence`.
 - Reordenação (`ReorderableList`, mover linha no `DataTable`, ordenar coluna): `useFlip`.
 - O nível vem da ênfase (`low` = `calm`): nada com mola visível em superfícies `low`.
-- Nenhum `duration-*`, `transition-*`, `animate-*` ou `@keyframes` em componente (as
+- Nenhum `duration-<número>`, `transition-colors|all|opacity`, `animate-*` ou `@keyframes` em
+  componente; a única forma manual aceita é `duration-(--motion-duration)` com
+  `ease-(--motion-ease)` para propriedades que não são cor (D-024). (As
   ocorrências achadas na auditoria saem neste ciclo; `Loader` e `Skeleton` usam as
   primitivas de movimento).
 
