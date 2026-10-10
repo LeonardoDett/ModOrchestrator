@@ -1,5 +1,14 @@
 # Component matrix
 
+Levels follow Atomic Design (D-032): a component imports only its own level or below. The level of every folder lives in `src/__tests__/atomic-levels.test.ts`.
+
+| Level | Components |
+|---|---|
+| Atoms | every primitive, `Button`, `Checkbox`, `Radio`, `Switch`, `Badge`, `Tag`, `Indicator`, `Loader`, `Avatar`, `FeaturedIcon`, `MediaImage`, `Progress`, `Rating`, `Slider`, `Surface`, `Tooltip` |
+| Molecules | `Input`, `ButtonGroup`, `SegmentedControl`, `StatusToggle`, `Accordion`, `ActionBar`, `Alert`, `Breadcrumbs`, `Card`, `ContextMenu`, `DatePicker`, `Drawer`, `EmptyPlaceholder`, `EmptyState`, `FloatingButton`, `List`, `Menu`, `Modal`, `PageContainer`, `Pagination`, `Popover`, `Section`, `SplitPane`, `Stepper`, `Tabs`, `Toast`, `Toolbar` |
+| Organisms | `DataTable`, `Table`, `Tree`, `ReorderableList`, `Command`, `Inspector`, `FilterBar`, `DiffViewer`, `LogViewer`, `FileList`, `FileBrowser`, `Gallery`, `MediaGallery`, `Lightbox`, `Carousel`, `MasterDetail`, `ResourcePage` |
+| Templates | everything in `src/templates` |
+
 ## Foundations
 
 `Box`, `Stack`, `Inline`, `Surface`, `Container`, `Grid`, `Typography`, `Icon`, `Portal`, `Backdrop`, `Skeleton`, `Divider`, `Kbd`, `VirtualList`, `VisuallyHidden`
@@ -10,9 +19,13 @@
 
 ## Inputs and controls
 
-`Button`, `ButtonGroup`, `Checkbox`, `Radio`, `Switch`, `Slider`, `Input` (Field, Textarea, Select, Combobox, MultiSelect, Pin, Number), `DatePicker`, `SegmentedControl`, `Pagination`
+`Button`, `ButtonGroup`, `Checkbox`, `Radio`, `Switch`, `Slider`, `Input` (Field, Password, Textarea, Select, Combobox, MultiSelect, Pin, Number), `DatePicker`, `SegmentedControl`, `Pagination`
 
 `Input.Select` is a custom select with Material Design 3 behaviour (not a native `<select>`): anchored `listbox` that flips when there is no room, opens scrolled to the selection with a vertical-expand entrance (`Presence`, responsive motion), keyboard (Space/Enter/↑/↓ open; ↑/↓/Home/End move; typeahead open and closed; Enter/Space commit; Esc/Tab close without change), disabled options skipped, hidden input for form submission. Options accept `icon` and `description`; `{ label, options }` items render as groups.
+
+`Input.Select multiple` (D-034) holds a `string[]`: options toggle with a check box and the menu stays open; the trigger shows tags on one line and collapses the overflow into `+N` (`moreLabel`), or a summary through `selectedText`; `maxSelected` caps the selection. Use `Input.MultiSelect` when the list needs search.
+
+`Input.Password` (D-034) masks a sensitive value and reveals it with an eye button: `revealed`/`defaultRevealed`/`onRevealedChange`, `hideOnBlur` (default on), `revealable`, `revealLabel`/`hideLabel`.
 
 ## Navigation and transient UI
 

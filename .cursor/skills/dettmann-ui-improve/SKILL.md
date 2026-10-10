@@ -56,6 +56,7 @@ grep -rnE 'Skeleton|Loader|EmptyState|Alert|isLoading|error' ALVO               
 grep -rnE '<(div|span|li|tr|td)[^>]*onClick|outline-none|tabIndex' ALVO          # 10 teclado
 grep -rnE 'opacity-(40|50|60)' ALVO                                              # 11 desabilitado
 grep -rnE "from ['\"]lucide-react['\"]|Loader2|Spinner|<Icon |trigger=\"none\"" ALVO   # 13/14/16 ícones
+grep -rnE 'type="password"|focus-visible:ring-|outline-none|shadow-raised' ALVO          # 17/18 (D-033, D-034)
 grep -rnE 'loading|syncing|deploying|isPending' ALVO                              # 15 (estado contínuo: ausência de indicador é o achado)
 ```
 
@@ -76,6 +77,8 @@ grep -rnE 'loading|syncing|deploying|isPending' ALVO                            
 | 13 | Lucide solto com equivalente no catálogo | o glifo existe em `dettmann-ui/icons` (confira `src/icons/index.ts`) | o ícone próprio (`<Icon icon={Trash2} />` → `<TrashIcon />`, tabela em `docs/migration.md`); sem equivalente, `Icon` |
 | 14 | `Spinner` ou `Loader2` girando à mão | — | `<Loader label=… />` |
 | 15 | Estado contínuo sem indicador | handler/estado `loading`, `syncing`, `deploying` sem `Loader`, `loop` de ícone ou texto de status; `loop` como único indicador sem texto | `<Loader />`, ícone com `loop` + texto de status |
+| 17 | Campo sensível escrito à mão | `type="password"` em `Input.Field` ou `<input>`, com ou sem botão de revelar | `Input.Password` |
+| 18 | Foco ou elevação fora da linguagem (D-033) | `focus-visible:ring-*`/`outline-none` sem utilitário; `shadow-raised` em algo que não é overlay | `focus-ring`/`focus-ring-inset`/`focus-bare`; borda de 1 px no lugar da sombra |
 | 16 | Ação sem feedback em controle com ícone `trigger="none"` | o ícone dentro de `Button`/item não anima no hover/press e não há `playKey` | remover `trigger="none"` ou usar `playKey` na mudança de estado |
 
 ## Heurísticas B — só para a lib

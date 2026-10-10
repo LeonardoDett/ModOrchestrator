@@ -941,3 +941,15 @@ Status: vigente (emenda D095 itens 2 e 4 e D105 item 5)
 8. **Skills**: o `frontend/` passa a seguir `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (AGENTS.md, protocolo, consult-ai-docs e ui/03 atualizados); `theme-first`, `composition`, `component-authoring` e `ui-review` da v1 deixam de valer para o app.
 
 Fora de escopo (subprojeto 3 e polimento): redesenho das telas, micro-interações (`playKey`, `Presence`, `useFlip`) e ajuste do orçamento 60/30/10. Medição inicial no Dashboard sem jogo, tema escuro: low 80%, medium 20%, high 0% (meta 60/30/10 ± 8 p.p.).
+
+## D108 — Redesenho dos componentes da dettmann-ui (subprojeto 3 da D095), onda 1
+Status: vigente (executa D095 item 3; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-032 a D-034)
+
+Escolhas do usuário em 2026-10-09: redesenho completo de tudo o que o `frontend/` importa da lib, com a personalidade "ferramenta profissional densa" (superfícies calmas, destaque só na ação principal, micro-interações curtas), em quatro ondas que seguem o Design Atômico (controles e entradas; feedback e overlays; dados; estrutura e telas). Spec: `dettmann-ui-vnext/docs/specs/2026-10-09-v2-components-design.md`.
+
+Onda 1 (controles e entradas), efeitos no app:
+1. Nenhuma mudança de API nem de código no `frontend/`: `Button`, `Input.*`, `Checkbox`, `Radio`, `Switch`, `SegmentedControl`, `StatusToggle`, `Badge`, `Tag`, `Indicator` e `Kbd` mudam só de aparência (sem sombra, borda de 1 px, anel de foco único, desabilitado por tokens, opções de menu com 32 px).
+2. Duas variações novas ficam disponíveis para as telas: `Input.Select multiple` e `Input.Password`. Campo sensível escrito à mão (`type="password"` com botão de revelar) passa a ser proibido; a `dettmann-ui-improve` aponta.
+3. Pendências que ficam para a onda 4: logo da barra de título como máscara pintada com `bg-fg` (o PNG é branco e some no tema claro) e o orçamento 60/30/10 tela a tela (medição inicial na D107).
+
+A pasta `IconesAnimados/` (vídeos de referência dos ícones, fora do git) foi apagada a pedido do usuário. O plano de crescimento do catálogo da lib é entrega separada, depois da onda 4.

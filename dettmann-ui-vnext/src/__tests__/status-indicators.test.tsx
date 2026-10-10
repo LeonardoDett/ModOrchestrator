@@ -5,6 +5,9 @@ import { AlertTriangle } from "lucide-react";
 import { StatusToggle, type StatusToggleState } from "../components/status-toggle";
 import { Indicator } from "../components/indicator";
 import { FileDropzone } from "../templates/file-dropzone";
+import { Tag } from "../components/tag";
+import { Badge } from "../components/badge";
+import { Kbd } from "../primitives/kbd";
 
 const labels: Record<StatusToggleState, string> = {
   on: "Enabled",
@@ -80,4 +83,66 @@ describe("regressions found in F4", () => {
     expect(screen.getByRole("button", { name: "Install" })).toHaveAttribute("data-intent", "brand");
   });
 
+});
+
+describe("Tag, Badge and Kbd follow the visual language (D-033)", () => {
+  it("Tag resolves color through the emphasis table", () => {
+    render(<Tag intent="success">Ok</Tag>);
+    const tag = screen.getByText("Ok");
+    expect(tag).toHaveAttribute("data-layer", "medium");
+    expect(tag).toHaveAttribute("data-intent", "success");
+    expect(tag).toHaveClass("bg-intent-subtle", "text-intent-text", "border-intent-border");
+    expect(tag.className).not.toMatch(/hover:/);
+  });
+
+  it("Tag defaults to neutral and low is an outline", () => {
+    render(
+      <>
+        <Tag>Plain</Tag>
+        <Tag emphasis="low" intent="danger">
+          Off
+        </Tag>
+      </>,
+    );
+    expect(screen.getByText("Plain")).toHaveAttribute("data-intent", "neutral");
+    expect(screen.getByText("Plain")).toHaveClass("bg-fill-neutral");
+    const off = screen.getByText("Off");
+    expect(off).toHaveAttribute("data-layer", "low");
+    expect(off).toHaveClass("bg-transparent", "border", "text-intent-text");
+  });
+
+  it("Tag remove button is keyboard reachable and labelled", async () => {
+    const user = userEvent.setup();
+    const onRemove = vi.fn();
+    render(
+      <Tag value="design" onRemove={onRemove} removeLabel="Remover design">
+        Design
+      </Tag>,
+    );
+    await user.tab();
+    const remove = screen.getByRole("button", { name: "Remover design" });
+    expect(remove).toHaveFocus();
+    expect(remove).toHaveClass("focus-ring");
+    await user.keyboard("{Enter}");
+    expect(onRemove).toHaveBeenCalledWith("design");
+  });
+
+  it("Badge and Tag use the pill primitive", () => {
+    render(
+      <>
+        <Badge>New</Badge>
+        <Tag onRemove={() => {}}>Design</Tag>
+      </>,
+    );
+    expect(screen.getByText("New")).toHaveClass("rounded-pill");
+    expect(screen.getByText("Design")).toHaveClass("rounded-pill");
+    expect(screen.getByText("Design").innerHTML).not.toContain("rounded-full");
+  });
+
+  it("Kbd is flat", () => {
+    render(<Kbd>Ctrl</Kbd>);
+    const kbd = screen.getByText("Ctrl");
+    expect(kbd).toHaveClass("rounded-chip", "border");
+    expect(kbd.className).not.toMatch(/shadow-/);
+  });
 });

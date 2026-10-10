@@ -25,6 +25,7 @@ import {
 import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { rowRecipe } from "../../core/styles/row";
 import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
 import { inputValueAsString, useInputContext } from "./input.context";
 import { VirtualList } from "../../primitives/virtual-list";
@@ -36,7 +37,7 @@ const comboboxInputVariants = defineRecipe({
     "bg-transparent",
     "text-fg text-sm",
     "placeholder:text-fg-subtle",
-    "outline-none",
+    "focus-bare",
     "disabled:cursor-not-allowed",
   ].join(" "),
 });
@@ -44,37 +45,10 @@ const comboboxInputVariants = defineRecipe({
 const comboboxPanelVariants = defineRecipe({
   base: [
     "z-50 w-full rounded-card",
-    "bg-raised border border-border shadow-modal",
-    "outline-none",
+    "bg-raised border border-border shadow-overlay",
+    "focus-bare",
     "overflow-hidden",
   ].join(" "),
-});
-
-const comboboxOptionVariants = defineRecipe({
-  base: [
-    "flex items-center px-3 py-2 text-sm",
-    "cursor-pointer",
-    "motion-transition",
-  ].join(" "),
-  variants: {
-    active: {
-      true: "bg-selected",
-      false: "hover:bg-state-hover",
-    },
-    selected: {
-      true: "text-fg font-medium",
-      false: "text-fg",
-    },
-    disabled: {
-      true: "text-fg-muted cursor-not-allowed text-fg-subtle",
-      false: "",
-    },
-  },
-  defaultVariants: {
-    active: false,
-    selected: false,
-    disabled: false,
-  },
 });
 
 export interface ComboboxOption {
@@ -133,7 +107,7 @@ export function InputCombobox({
   filterFn = defaultFilter,
   emptyMessage = "No options found",
   virtualThreshold = 50,
-  itemHeight = 36,
+  itemHeight = 32,
   maxHeight = 240,
   className,
   onFocus,
@@ -266,11 +240,7 @@ export function InputCombobox({
         role="option"
         aria-selected={isSelected}
         aria-disabled={option.disabled}
-        className={comboboxOptionVariants({
-          active: isActive,
-          selected: isSelected,
-          disabled: option.disabled,
-        })}
+        className={rowRecipe({ active: isActive, selected: isSelected, disabled: Boolean(option.disabled) })}
         onClick={() => handleSelect(option)}
         onMouseEnter={() => setActiveIndex(index)}
       >
@@ -330,7 +300,7 @@ export function InputCombobox({
                 {...getFloatingProps()}
               >
                 {filteredOptions.length === 0 ? (
-                  <div className="px-3 py-2 text-sm text-fg-muted">
+                  <div role="status" className="px-3 py-2 text-sm text-fg-muted">
                     {emptyMessage}
                   </div>
                 ) : useVirtual ? (

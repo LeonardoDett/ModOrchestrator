@@ -110,3 +110,17 @@ Tests that drove the native element must change: `user.selectOptions(combobox, "
 2. Typecheck and tests pass.
 3. Open the screen with `<BudgetInspector />` in both modes.
 4. Run the `dettmann-ui-improve` skill for a read-only audit.
+
+## Components redesign, wave 1 (D-033, D-034)
+
+No prop was removed. What a consumer may notice:
+
+- `Button`, `Input.Box`, `Kbd`, switch thumbs and `Radio` cards have no shadow; a `medium` button has a 1 px border. Remove any `shadow-*` you added on top of them.
+- `Tag` resolves color through the emphasis table: a neutral tag is `bg-fill-neutral` (it was `bg-intent-subtle`), and `emphasis="low"` gives an outline. It now emits `data-layer`, so `BudgetInspector` counts it as `medium` (or `low`).
+- Every `Button` has a 1 px border box (transparent at `low` and `high`); selected options in `Input.Combobox`/`Input.MultiSelect` are `bg-selected` with the brand indicator instead of bold text only.
+- A disabled checked `Checkbox`/`Switch`/`Radio` is drawn muted, not with the brand fill. An `Input.Box` in error keeps its danger border under hover, and an `Input.Label` in error is red (both were overridden before).
+- `Checkbox` and `Switch` now work uncontrolled (`defaultChecked`); a screen that relied on them never changing without `checked` must pass `checked`.
+- `SegmentedControl` heights follow the control primitives (`h-control-sm|md|lg`) and the container is a `medium` structural layer.
+- `Input.Combobox`/`Input.MultiSelect` default `itemHeight` is 32 (was 36).
+- Focus: use `focus-ring`, `focus-ring-inset` or `focus-bare` in custom controls instead of `focus-visible:ring-*`.
+- A masked field written by hand (`<Input.Field type="password">` plus an eye button) becomes `<Input.Password>`; several values from a fixed list become `<Input.Select multiple>`.

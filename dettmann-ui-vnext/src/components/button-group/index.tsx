@@ -6,7 +6,7 @@ const buttonGroupVariants = defineRecipe({
   base: [
     "inline-flex isolate",
     "[&>*]:rounded-none [&>*]:-ml-px [&>*:first-child]:ml-0",
-    "[&>*:first-child]:rounded-l-lg [&>*:last-child]:rounded-r-lg",
+    "[&>*:first-child]:rounded-l-control [&>*:last-child]:rounded-r-control",
     "[&>*:focus-visible]:z-10",
   ].join(" "),
 });
@@ -14,7 +14,7 @@ const buttonGroupVariants = defineRecipe({
 interface ButtonGroupProps extends ComponentPropsWithoutRef<"div"> {}
 
 /**
- * ButtonGroup visually joins adjacent Buttons (shared edges, 8px outer radius).
+ * ButtonGroup visually joins adjacent Buttons (shared edges, outer radius from the control shape).
  *
  * @example
  * ```tsx

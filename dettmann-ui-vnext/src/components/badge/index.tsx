@@ -15,7 +15,7 @@ const badgeVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center",
     "font-medium whitespace-nowrap text-xs",
-    "rounded-full",
+    "rounded-pill",
     "motion-transition",
   ].join(" "),
   variants: {

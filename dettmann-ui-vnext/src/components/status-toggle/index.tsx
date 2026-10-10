@@ -12,29 +12,29 @@ import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 
 const focusRing =
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas";
+  "focus-ring";
 
 export type StatusToggleState = "on" | "off" | "unavailable" | "busy";
 
 const statusToggleVariants = defineRecipe({
   slots: {
     track: [
-      "relative inline-flex shrink-0 items-center rounded-full p-0.5",
+      "relative inline-flex shrink-0 items-center rounded-pill p-0.5",
       "motion-transition",
       focusRing,
     ].join(" "),
     thumb: [
-      "pointer-events-none flex shrink-0 items-center justify-center rounded-full bg-surface shadow-raised",
+      "pointer-events-none flex shrink-0 items-center justify-center rounded-pill border",
       "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
     ].join(" "),
     icon: "",
   },
   variants: {
     state: {
-      on: { track: "bg-intent-fill cursor-pointer", icon: "text-intent-text" },
-      off: { track: "bg-border-strong cursor-pointer", icon: "text-fg-muted" },
-      unavailable: { track: "cursor-not-allowed border border-dashed border-border-strong bg-sunken", thumb: "bg-sunken shadow-none", icon: "text-fg-subtle" },
-      busy: { track: "cursor-progress bg-sunken", icon: "text-fg-muted" },
+      on: { track: "bg-intent-fill cursor-pointer", thumb: "bg-surface border-border", icon: "text-intent-text" },
+      off: { track: "bg-border-strong cursor-pointer", thumb: "bg-surface border-border", icon: "text-fg-muted" },
+      unavailable: { track: "cursor-not-allowed border border-dashed border-border-strong bg-sunken", thumb: "bg-sunken border-transparent", icon: "text-fg-subtle" },
+      busy: { track: "cursor-progress bg-sunken", thumb: "bg-surface border-border", icon: "text-fg-muted" },
     },
     size: {
       sm: { track: "h-5 w-9", thumb: "h-4 w-4", icon: "h-3! w-3!" },

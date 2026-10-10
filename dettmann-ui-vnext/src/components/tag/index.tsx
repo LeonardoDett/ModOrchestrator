@@ -2,16 +2,14 @@ import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { XIcon } from "../../icons/glyphs/x";
 import { cn } from "../../utils/cn";
-import { Icon } from "../../primitives/icon";
-import { intentData } from "../../theme/emphasis";
+import { resolveEmphasis, restingClassName } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 
 const tagVariants = defineRecipe({
   base: [
     "inline-flex items-center gap-1",
     "font-medium whitespace-nowrap text-xs",
-    "rounded-full",
-    "border border-intent-border bg-intent-subtle text-intent-text",
+    "rounded-pill border",
   ].join(" "),
   variants: {
     size: {
@@ -49,6 +47,8 @@ interface TagProps
   removeLabel?: string;
   /** Significado cromático; padrão `neutral`. */
   intent?: Intent;
+  /** `medium` = tinta suave (padrão), `low` = só contorno. */
+  emphasis?: "low" | "medium";
 }
 
 /**
@@ -67,15 +67,20 @@ export function Tag({
   onRemove,
   removeLabel = "Remove",
   intent = "neutral",
+  emphasis = "medium",
   ...props
 }: TagProps) {
+  const resolved = resolveEmphasis({ emphasis, intent });
   return (
     <span
       className={cn(
         tagVariants({ size, dismissible: Boolean(onRemove) }),
+        restingClassName(resolved),
+        "border-intent-border",
         className
       )}
-      {...intentData(intent)}
+      data-intent={resolved.intent}
+      data-layer={resolved.emphasis}
       {...props}
     >
       {children}
@@ -83,10 +88,10 @@ export function Tag({
         <button
           type="button"
           aria-label={removeLabel}
-          className="inline-flex h-4 w-4 items-center justify-center rounded-full text-fg-muted hover:bg-state-hover hover:text-fg"
+          className="inline-flex h-4 w-4 items-center justify-center rounded-pill text-fg-muted motion-transition hover:bg-state-hover hover:text-fg focus-ring"
           onClick={() => onRemove(value)}
         >
-          <Icon icon={XIcon} size="xs" />
+          <XIcon size="xs" />
         </button>
       ) : null}
     </span>

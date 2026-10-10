@@ -8,8 +8,7 @@ const kbdVariants = defineRecipe({
     "font-mono font-medium",
     "bg-sunken text-fg",
     "border border-border",
-    "rounded-control",
-    "shadow-raised",
+    "rounded-chip",
   ].join(" "),
   variants: {
     /** Size of the keyboard key */

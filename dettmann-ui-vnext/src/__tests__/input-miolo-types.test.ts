@@ -9,6 +9,7 @@ type ComboboxProps = ComponentProps<typeof Input.Combobox>;
 type MultiSelectProps = ComponentProps<typeof Input.MultiSelect>;
 type PinProps = ComponentProps<typeof Input.Pin>;
 type TextareaProps = ComponentProps<typeof Input.Textarea>;
+type PasswordProps = ComponentProps<typeof Input.Password>;
 type RootProps = ComponentProps<typeof Input.Root>;
 type DatePickerFieldProps = ComponentProps<typeof DatePicker.Field>;
 
@@ -27,6 +28,9 @@ type _PinNoValue = ExpectFalse<HasKey<PinProps, "value">>;
 type _PinNoOnChange = ExpectFalse<HasKey<PinProps, "onChange">>;
 type _TextareaNoValue = ExpectFalse<HasKey<TextareaProps, "value">>;
 type _TextareaNoOnChange = ExpectFalse<HasKey<TextareaProps, "onChange">>;
+type _PasswordNoValue = ExpectFalse<HasKey<PasswordProps, "value">>;
+type _PasswordNoOnChange = ExpectFalse<HasKey<PasswordProps, "onChange">>;
+type _PasswordNoType = ExpectFalse<HasKey<PasswordProps, "type">>;
 type _DatePickerFieldNoValue = ExpectFalse<HasKey<DatePickerFieldProps, "value">>;
 type _DatePickerFieldNoOnChange = ExpectFalse<HasKey<DatePickerFieldProps, "onChange">>;
 
@@ -50,6 +54,9 @@ export type InputMioloTypeChecks = [
   _PinNoOnChange,
   _TextareaNoValue,
   _TextareaNoOnChange,
+  _PasswordNoValue,
+  _PasswordNoOnChange,
+  _PasswordNoType,
   _DatePickerFieldNoValue,
   _DatePickerFieldNoOnChange,
 ];

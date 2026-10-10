@@ -22,6 +22,7 @@
 @source inline("{hover:,active:,}state-layer-{hover,pressed} state-layer-selected");
 @source inline("rounded-{control,chip,card,panel,pill} h-control-{sm,md,lg} shadow-{raised,overlay,modal}");
 @source inline("text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
+@source inline("focus-ring focus-ring-inset focus-bare");
 @import "./../styles/theme/themes.generated.css";
 @import "./../styles/theme/foundations.css";
 @import "./../styles/fonts/fonts.css";
@@ -234,6 +235,29 @@
 
 @utility state-layer-selected {
   background-image: linear-gradient(var(--state-selected), var(--state-selected));
+}
+
+/*
+ * Anel de foco único (D-033). `focus-ring` afasta 2 px do elemento; `focus-ring-inset`
+ * fica por dentro, para o que encosta na borda do contêiner (linhas, abas, itens).
+ * `focus-bare` é para o campo cujo contêiner mostra o foco (ex.: `<input>` no Input.Box).
+ */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+}
+
+@utility focus-ring-inset {
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+}
+
+@utility focus-bare {
+  outline: none;
 }
 
 /* Primitivas L2 (spec 6): espaçamento por densidade, forma, alturas, elevação e tipo. */

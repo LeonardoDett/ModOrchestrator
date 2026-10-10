@@ -1,9 +1,12 @@
-import { afterEach, beforeAll, describe, expect, test } from "vitest";
+import { afterEach, beforeAll, describe, expect, test, vi } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./app";
 import { configToCode } from "./panels/export";
 import { CATALOG } from "../src/icons/catalog";
+
+// O app inteiro (duas colunas com a tela de exemplo e o painel de controles) passa de 5 s por interação no jsdom.
+vi.setConfig({ testTimeout: 20_000 });
 
 describe("playground", () => {
   afterEach(() => {

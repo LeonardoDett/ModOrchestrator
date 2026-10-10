@@ -1,6 +1,7 @@
 import { describe, it, expect, test } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Button } from "../components/button";
+import { ButtonGroup } from "../components/button-group";
 
 describe("Button", () => {
   it("renders startIcon and endIcon as siblings of the label", () => {
@@ -74,5 +75,58 @@ describe("Button", () => {
     expect(b).toHaveClass("h-control-lg");
     rerender(<Button size="icon-sm" aria-label="x" />);
     expect(b).toHaveClass("size-control-sm");
+  });
+});
+
+describe("Button visual language (D-033)", () => {
+  it("has no shadow at any emphasis", () => {
+    render(
+      <>
+        <Button emphasis="low">Low</Button>
+        <Button>Medium</Button>
+        <Button emphasis="high">High</Button>
+      </>,
+    );
+    for (const name of ["Low", "Medium", "High"]) {
+      expect(screen.getByRole("button", { name }).className).not.toMatch(/shadow-/);
+    }
+  });
+
+  it("medium is outlined by a border; low and high keep the box with a transparent one", () => {
+    render(
+      <>
+        <Button emphasis="low">Low</Button>
+        <Button>Save</Button>
+        <Button emphasis="high">High</Button>
+      </>,
+    );
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("border", "border-border");
+    expect(screen.getByRole("button", { name: "Low" })).toHaveClass("border", "border-transparent");
+    expect(screen.getByRole("button", { name: "High" })).toHaveClass("border", "border-transparent");
+  });
+
+  it("uses the shared focus ring", () => {
+    render(<Button>Save</Button>);
+    expect(screen.getByRole("button", { name: "Save" })).toHaveClass("focus-ring");
+  });
+
+  it("loading sets aria-busy and keeps the accessible name", () => {
+    render(<Button loading>Save</Button>);
+    const button = screen.getByRole("button", { name: /Save/ });
+    expect(button).toHaveAttribute("aria-busy", "true");
+    expect(button).toBeDisabled();
+  });
+
+  it("group joins radii with the control primitive", () => {
+    render(
+      <ButtonGroup aria-label="Actions">
+        <Button>A</Button>
+        <Button>B</Button>
+      </ButtonGroup>,
+    );
+    const cls = screen.getByRole("group", { name: "Actions" }).className;
+    expect(cls).toContain("rounded-l-control");
+    expect(cls).toContain("rounded-r-control");
+    expect(cls).not.toContain("rounded-l-lg");
   });
 });

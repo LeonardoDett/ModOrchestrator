@@ -122,8 +122,19 @@ Monte telas com slots e primitivas: `Card.Root/Header/Title/Body/Footer`,
 
 Escolha de opção: `Input.Select` (custom, comportamento MD3 — não use `<select>` nativo);
 opções aceitam `icon` e `description`, e `{ label, options }` vira grupo. Precisa
-de busca → `Input.Combobox`; várias → `Input.MultiSelect`. Em teste, clique no
-`combobox` e na `option` (não há `selectOptions`).
+de busca → `Input.Combobox`. Várias de uma lista fixa → `Input.Select multiple`
+(valor `string[]` no `Input.Root`; `maxSelected`, `selectedText`, `moreLabel`);
+várias com busca → `Input.MultiSelect`. Em teste, clique no `combobox` e na
+`option` (não há `selectOptions`).
+
+Dado sensível (senha, token, chave): `Input.Password` (botão de olho embutido,
+`hideOnBlur`, `revealLabel`/`hideLabel` via i18n). Nunca `Input.Field type="password"`
+com botão de revelar escrito à mão.
+
+Linguagem visual (D-033, "ferramenta profissional densa"): sem sombra fora de
+overlay, separação por borda de 1 px, seleção = `bg-selected` + indicador da marca,
+desabilitado por tokens, foco só por `focus-ring`/`focus-ring-inset`. Em controle
+próprio da tela, use esses utilitários; não escreva `focus-visible:ring-*`.
 
 **Faltou componente** (ex.: card de estatística):
 

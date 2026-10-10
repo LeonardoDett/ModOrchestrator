@@ -27,7 +27,9 @@ import { Presence } from "../../motion/presence";
 import type { MotionValues } from "../../motion/read-motion";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { inputValueAsString, useInputContext } from "./input.context";
+import { rowRecipe } from "../../core/styles/row";
+import { inputValueAsArray, inputValueAsString, useInputContext } from "./input.context";
+import { SelectTags } from "./input.select.tags";
 import type { InputRootOwnedNativeProps } from "./input.owned-props";
 import {
   firstEnabled,
@@ -48,7 +50,7 @@ const selectTriggerVariants = defineRecipe({
   base: [
     "flex w-full flex-1 min-w-0 items-center gap-2",
     "bg-transparent text-left text-fg text-sm",
-    "outline-none cursor-pointer",
+    "focus-bare cursor-pointer",
     "disabled:cursor-not-allowed disabled:text-fg-subtle",
   ].join(" "),
 });
@@ -57,27 +59,8 @@ const selectPanelVariants = defineRecipe({
   base: [
     "z-popover overflow-y-auto overscroll-contain p-1",
     "rounded-card bg-raised border border-border shadow-overlay",
-    "outline-none",
+    "focus-bare",
   ].join(" "),
-});
-
-const selectOptionVariants = defineRecipe({
-  base: [
-    "flex items-start gap-3 px-3 py-2 rounded-control",
-    "text-sm text-fg cursor-pointer select-none",
-    "motion-transition",
-  ].join(" "),
-  variants: {
-    selected: { true: "bg-selected font-medium", false: "" },
-    active: { true: "", false: "" },
-    disabled: { true: "text-fg-subtle cursor-not-allowed", false: "" },
-  },
-  compoundVariants: [
-    // Repouso transparente: a camada substitui. Repouso opaco (selecionado): compõe por cima.
-    { active: true, selected: false, disabled: false, class: "bg-state-hover" },
-    { active: true, selected: true, disabled: false, class: "state-layer-hover" },
-  ],
-  defaultVariants: { selected: false, active: false, disabled: false },
 });
 
 /** Expansão vertical a partir do campo (MD3), escalada pela amplitude do nível de movimento. */
@@ -98,7 +81,20 @@ interface InputSelectProps
   placeholder?: string;
   /** Max height of the menu in px (default 320) */
   maxHeight?: number;
+  /**
+   * Multiple selection: `Input.Root` holds a `string[]` (in option order), choosing an
+   * option toggles it and keeps the menu open, and the trigger shows the selection as tags.
+   */
+  multiple?: boolean;
+  /** Only with `multiple`: replaces the tags with a summary (e.g. "3 selected"). */
+  selectedText?: (count: number) => string;
+  /** Only with `multiple`: once reached, unchecked options are disabled. */
+  maxSelected?: number;
+  /** Only with `multiple`: accessible name of the "+N" counter of tags that do not fit. */
+  moreLabel?: (hidden: number) => string;
 }
+
+const defaultMoreLabel = (hidden: number) => `${hidden} more`;
 
 /**
  * Input.Select is a custom select with Material Design 3 behaviour, inside the Input family.
@@ -129,6 +125,10 @@ export function InputSelect({
   options: items,
   placeholder,
   maxHeight = 320,
+  multiple = false,
+  selectedText,
+  maxSelected,
+  moreLabel = defaultMoreLabel,
   className,
   onFocus,
   onBlur,
@@ -142,8 +142,18 @@ export function InputSelect({
   const listId = useId();
 
   const options = useMemo(() => flattenOptions(items), [items]);
-  const selectedIndex = options.findIndex((o) => o.value === stringValue);
-  const selected = selectedIndex >= 0 ? options[selectedIndex] : undefined;
+  // Múltiplo: valor = string[]; um valor string vindo do Root conta como vazio.
+  const values = multiple ? inputValueAsArray(value) : [];
+  const isChecked = (option: SelectOption) => values.includes(option.value);
+  const checkedOptions = multiple ? options.filter(isChecked) : [];
+  const atLimit = multiple && maxSelected !== undefined && checkedOptions.length >= maxSelected;
+  /** Desabilitada pela própria opção ou pelo limite (as marcadas continuam desmarcáveis). */
+  const isDisabled = (option: SelectOption) => Boolean(option.disabled) || (atLimit && !isChecked(option));
+
+  const selectedIndex = multiple
+    ? options.findIndex((o) => isChecked(o) && !o.disabled)
+    : options.findIndex((o) => o.value === stringValue);
+  const selected = !multiple && selectedIndex >= 0 ? options[selectedIndex] : undefined;
 
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -175,11 +185,13 @@ export function InputSelect({
   const { getReferenceProps, getFloatingProps } = useInteractions([dismiss]);
 
   const optionId = (index: number) => `${listId}-opt-${index}`;
+  /** Opções com o desabilitado efetivo (inclui o limite de `maxSelected`), para a navegação por teclado. */
+  const navigable = multiple ? options.map((o) => (isDisabled(o) ? { ...o, disabled: true } : o)) : options;
 
   const open = (prefer: "first" | "last" = "first") => {
     if (disabled) return;
-    const fallback = prefer === "last" ? lastEnabled(options) : firstEnabled(options);
-    setActiveIndex(selectedIndex >= 0 && !selected?.disabled ? selectedIndex : fallback);
+    const fallback = prefer === "last" ? lastEnabled(navigable) : firstEnabled(navigable);
+    setActiveIndex(selectedIndex >= 0 && !navigable[selectedIndex]?.disabled ? selectedIndex : fallback);
     setIsOpen(true);
   };
 
@@ -190,7 +202,16 @@ export function InputSelect({
 
   const commit = (index: number) => {
     const option = options[index];
-    if (!option || option.disabled) return;
+    if (!option) return;
+    if (multiple) {
+      if (isDisabled(option)) return;
+      // Ordem das opções; valores sem opção correspondente (órfãos) são preservados ao fim.
+      const next = options.filter((o) => (o === option ? !isChecked(o) : isChecked(o))).map((o) => o.value);
+      const known = new Set(options.map((o) => o.value));
+      onChange([...next, ...values.filter((v) => !known.has(v))]);
+      return;
+    }
+    if (option.disabled) return;
     if (option.value !== stringValue) onChange(option.value);
     close();
   };
@@ -217,7 +238,7 @@ export function InputSelect({
     const match = matchTypeahead(options, state.query, from);
     if (match < 0) return;
     if (isOpen) setActiveIndex(match);
-    else if (options[match]!.value !== stringValue) onChange(options[match]!.value);
+    else if (!multiple && options[match]!.value !== stringValue) onChange(options[match]!.value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
@@ -245,19 +266,19 @@ export function InputSelect({
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        setActiveIndex((i) => stepEnabled(options, i, 1));
+        setActiveIndex((i) => stepEnabled(navigable, i, 1));
         break;
       case "ArrowUp":
         e.preventDefault();
-        setActiveIndex((i) => stepEnabled(options, i, -1));
+        setActiveIndex((i) => stepEnabled(navigable, i, -1));
         break;
       case "Home":
         e.preventDefault();
-        setActiveIndex(firstEnabled(options));
+        setActiveIndex(firstEnabled(navigable));
         break;
       case "End":
         e.preventDefault();
-        setActiveIndex(lastEnabled(options));
+        setActiveIndex(lastEnabled(navigable));
         break;
       case "Enter":
       case " ":
@@ -280,7 +301,8 @@ export function InputSelect({
   let optionIndex = -1;
   const renderOption = (option: SelectOption) => {
     const index = ++optionIndex;
-    const isSelected = index === selectedIndex;
+    const isSelected = multiple ? isChecked(option) : index === selectedIndex;
+    const optionDisabled = multiple ? isDisabled(option) : Boolean(option.disabled);
     return (
       <div
         key={`${option.value}-${index}`}
@@ -290,17 +312,41 @@ export function InputSelect({
         id={optionId(index)}
         role="option"
         aria-selected={isSelected}
-        aria-disabled={option.disabled || undefined}
-        className={selectOptionVariants({
-          selected: isSelected,
-          active: index === activeIndex,
-          disabled: Boolean(option.disabled),
-        })}
+        aria-disabled={optionDisabled || undefined}
+        className={cn(
+          rowRecipe({
+            selected: isSelected,
+            active: index === activeIndex,
+            disabled: optionDisabled,
+            multiline: Boolean(option.description),
+            indicator: multiple ? "none" : "start",
+          }),
+          "rounded-chip select-none",
+        )}
         // O foco fica no gatilho (aria-activedescendant).
         onMouseDown={(e) => e.preventDefault()}
-        onMouseEnter={() => !option.disabled && setActiveIndex(index)}
+        onMouseEnter={() => !optionDisabled && setActiveIndex(index)}
         onClick={() => commit(index)}
       >
+        {multiple && (
+          <span
+            aria-hidden
+            data-slot="check"
+            data-state={isSelected ? "checked" : "unchecked"}
+            data-intent="brand"
+            className={cn(
+              "flex size-4 shrink-0 items-center justify-center rounded-chip border motion-transition",
+              option.description && "mt-0.5",
+              optionDisabled
+                ? "border-border bg-sunken text-fg-subtle"
+                : isSelected
+                  ? "border-intent-fill bg-intent-fill text-on-intent"
+                  : "border-border-strong bg-surface",
+            )}
+          >
+            {isSelected && <CheckIcon size="xs" strokeWidth={3} trigger="none" />}
+          </span>
+        )}
         {option.icon && (
           <span aria-hidden className="mt-0.5 flex shrink-0 text-fg-muted [&>svg]:size-4">
             {option.icon}
@@ -312,14 +358,18 @@ export function InputSelect({
             <span className="text-caption text-fg-muted">{option.description}</span>
           )}
         </span>
-        {isSelected && <CheckIcon size="sm" className="mt-0.5 text-emphasis-text" />}
+        {isSelected && !multiple && <CheckIcon size="sm" className="mt-0.5 text-emphasis-text" />}
       </div>
     );
   };
 
   return (
     <>
-      <input type="hidden" name={name} value={stringValue} disabled={disabled} />
+      {multiple ? (
+        values.map((v) => <input key={v} type="hidden" name={name} value={v} disabled={disabled} />)
+      ) : (
+        <input type="hidden" name={name} value={stringValue} disabled={disabled} />
+      )}
       <button
         {...props}
         {...getReferenceProps()}
@@ -359,9 +409,17 @@ export function InputSelect({
             {selected.icon}
           </span>
         )}
-        <span className={cn("min-w-0 flex-1 truncate", !selected && "text-fg-subtle")}>
-          {selected ? selected.label : showPlaceholder ? placeholder : " "}
-        </span>
+        {multiple && checkedOptions.length > 0 ? (
+          selectedText ? (
+            <span className="min-w-0 flex-1 truncate">{selectedText(checkedOptions.length)}</span>
+          ) : (
+            <SelectTags selected={checkedOptions} disabled={disabled} moreLabel={moreLabel} />
+          )
+        ) : (
+          <span className={cn("min-w-0 flex-1 truncate", !selected && "text-fg-subtle")}>
+            {selected ? selected.label : showPlaceholder ? placeholder : " "}
+          </span>
+        )}
         <ChevronDownIcon
           size="sm"
           className={cn(
@@ -380,10 +438,13 @@ export function InputSelect({
               ref={refs.setFloating}
               id={listId}
               role="listbox"
+              aria-multiselectable={multiple || undefined}
               aria-labelledby={id}
               data-motion="responsive"
               style={{ ...floatingStyles, transformOrigin: fromTop ? "top" : "bottom" }}
               className={selectPanelVariants()}
+              // O foco fica no gatilho: nenhum clique no painel (opção desabilitada, rótulo de grupo, respiro) o tira de lá.
+              onMouseDown={(e) => e.preventDefault()}
             >
               {items.map((item, g) =>
                 isSelectGroup(item) ? (

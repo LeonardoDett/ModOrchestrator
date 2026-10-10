@@ -11,8 +11,8 @@ const buttonVariants = defineRecipe({
     "text-sm font-semibold",
     "rounded-control",
     "motion-transition motion-press",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
-    "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent disabled:shadow-none",
+    "border focus-ring",
+    "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle disabled:border-transparent",
   ].join(" "),
   variants: {
     /** Size variant: altura pelas primitivas de controle. */
@@ -100,10 +100,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(
           buttonVariants({ size, fullWidth }),
           resolved.className,
-          resolved.emphasis !== "low" && "shadow-raised",
+          resolved.emphasis === "medium" ? "border-border" : "border-transparent",
           hasIcons && "gap-2",
           className
         )}
+        aria-busy={loading || undefined}
         {...resolved.attrs}
         {...props}
       >

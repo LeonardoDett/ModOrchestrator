@@ -12,8 +12,8 @@ const inputFieldVariants = defineRecipe({
     "bg-transparent",
     "text-fg text-sm",
     "placeholder:text-fg-subtle",
-    "outline-none",
-    "disabled:cursor-not-allowed",
+    "focus-bare",
+    "disabled:cursor-not-allowed disabled:text-fg-subtle",
   ].join(" "),
 });
 

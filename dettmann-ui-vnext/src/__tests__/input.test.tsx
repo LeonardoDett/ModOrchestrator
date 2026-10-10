@@ -70,7 +70,7 @@ describe("Input", () => {
       const box = screen.getByTestId("input-box");
       expect(box).toHaveClass("border-danger-border");
       expect(box).toHaveClass("rounded-control");
-      expect(box).toHaveClass("shadow-raised");
+      expect(box.className).not.toMatch(/shadow-/);
     });
 
     it("hides error message when no error", () => {

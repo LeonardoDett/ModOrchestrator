@@ -27,6 +27,7 @@ Violar a letra destas regras é violar o espírito delas.
 
 ## Anatomia de componente
 
+0. Nível atômico (D-032): átomo, molécula, organismo ou template. Só importe componentes do mesmo nível ou abaixo e registre a pasta em `src/__tests__/atomic-levels.test.ts` (o teste falha sem isso).
 1. Procure antes: existe algo parecido (`Tag` é pílula removível; `Badge` rótulo)? Estenda ou justifique a diferença.
 2. Recipe com `defineRecipe` (`src/core/recipe`): `base` + `variants`, ou `slots` para partes. Composto = slots (`X.Root/Header/Body…`), não 20 booleanos.
 3. Cor e camada **só** via tabela central:
@@ -37,10 +38,14 @@ Violar a letra destas regras é violar o espírito delas.
    ```
    Props públicas: `emphasis?`, `intent?`, `motion?` — nunca `variant="primary"`, `tone`, intent padrão `brand`.
 4. Forma/tamanho por primitiva: `rounded-control|chip|card|panel|pill` (`pill` só p/ redondo semântico: switch, avatar, contagem), `h-control-sm|md|lg`, `shadow-raised|overlay|modal`, `text-caption…display`.
-5. Estados: em repouso transparente, `hover:bg-state-hover`, `active:bg-state-pressed`, `bg-state-selected`; em repouso opaco (`bg-surface`, `bg-intent-subtle`, `bg-structure`...), `hover:state-layer-hover`, `active:state-layer-pressed`, `state-layer-selected` (a camada compõe sobre o fundo; `bg-state-*` o substituiria); foco `focus-visible:ring-2 ring-focus ring-offset-canvas`; desabilitado `disabled:bg-sunken disabled:text-fg-subtle` (não `opacity-50`). Seleção nunca só por cor.
+5. Estados: em repouso transparente, `hover:bg-state-hover`, `active:bg-state-pressed`, `bg-state-selected`; em repouso opaco (`bg-surface`, `bg-intent-subtle`, `bg-structure`...), `hover:state-layer-hover`, `active:state-layer-pressed`, `state-layer-selected` (a camada compõe sobre o fundo; `bg-state-*` o substituiria); foco só pelos utilitários `focus-ring` (afastado), `focus-ring-inset` (linhas, abas, itens) ou `focus-bare` (campo cujo contêiner mostra o foco), nunca `outline-none`/`focus-visible:ring-*` à mão; desabilitado `disabled:bg-sunken disabled:text-fg-subtle` (não `opacity-50`). Seleção nunca só por cor.
 6. Movimento: classes `motion-transition` (cor/opacidade) e `motion-press` (press). Entrada/saída = `<Presence>`; gesto = `animate(el, m => [...])` escalando por `m.amp`; reordenar = `useFlip`. Redução de movimento já é tratada pelas primitivas — não reimplemente. **Sem dependência nova** (framer-motion etc.) e sem `animate-in`, `duration-*`, `transition: 200ms`. Encontrou legado desses no arquivo que você tocou? Migre-o junto.
 7. Acessibilidade: nome acessível, teclado, controlado/não controlado com `useControllableState`, textos embutidos por prop (`removeLabel`…), `className` e props DOM repassadas.
 8. Export em `src/components/index.ts` (ou `templates`/`primitives`), JSDoc com `@example`.
+
+## Linguagem visual (D-033)
+
+Arquivo redesenhado entra em `WAVE_FILES` (`src/__tests__/wave-contract.test.ts`), que rejeita: `shadow-raised` (sombra só em overlay: `shadow-overlay`/`shadow-modal`), `opacity-40/50/60`, `rounded-full|sm|md|lg|xl`, `duration-<n>`/`transition-all|colors|opacity`/`animate-*`, foco escrito à mão e lucide com equivalente no catálogo. Linha selecionável (opção, item de menu, linha de tabela/árvore) = `rowRecipe({ selected, active, disabled, indicator, multiline })` de `src/core/styles/row.ts`; não reescreva altura, camada de estado nem indicador. Estrutura declara `data-layer="medium"` em `bg-structure`.
 
 ## Ícones animados (`src/icons`)
 
@@ -90,7 +95,7 @@ Os cinco verdes antes de dizer "pronto". Rodar só o teste focado não conta.
 
 | Desculpa | Realidade |
 |---|---|
-| "Segui o padrão do `Tag`" | Vários componentes ainda são v1. O padrão é `Button`/`Badge` + `resolveEmphasis`. |
+| "Segui o padrão de um componente antigo" | Só os arquivos em `WAVE_FILES` já seguem a D-033. O padrão é `Button`/`Badge`/`Tag` + `resolveEmphasis`. |
 | "`intent` padrão `brand` fica mais bonito" | Padrão é `neutral`; `brand` só via `high`. |
 | "`rounded-full`/`opacity-50` é inofensivo" | Primitiva de forma e tokens de desabilitado existem para isso. |
 | "É só trocar o hue, os testes passam" | Testes antigos não fixam a intenção nova: escreva a propriedade. |

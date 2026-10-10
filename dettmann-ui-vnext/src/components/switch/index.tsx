@@ -3,6 +3,7 @@
 import { forwardRef, useId, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { useControllableState } from "../../hooks/use-controllable-state";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 
@@ -11,15 +12,15 @@ const switchVariants = defineRecipe({
     root: "inline-flex items-start gap-3",
     track: [
       "relative inline-flex shrink-0 items-center",
-      "rounded-full p-0.5",
+      "rounded-pill p-0.5",
       "bg-border-strong",
       "motion-transition",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+      "focus-ring",
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
-      "data-[state=checked]:bg-intent-fill",
+      "enabled:data-[state=checked]:bg-intent-fill",
     ].join(" "),
     thumb: [
-      "pointer-events-none block shrink-0 rounded-full bg-surface shadow-raised",
+      "pointer-events-none block shrink-0 rounded-pill bg-surface border border-border",
       "translate-x-0",
       "transition-transform duration-(--motion-duration) ease-(--motion-ease)",
     ].join(" "),
@@ -119,8 +120,11 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
     const id = providedId ?? generatedId;
     const descriptionId = description ? descriptionGeneratedId : undefined;
 
-    const isControlled = controlledChecked !== undefined;
-    const isChecked = isControlled ? controlledChecked : defaultChecked;
+    const [isChecked, setChecked] = useControllableState({
+      value: controlledChecked,
+      defaultValue: defaultChecked,
+      onChange: onCheckedChange,
+    });
 
     const { root, track, thumb, label: labelClass } = switchVariants({ size, disabled });
 
@@ -128,7 +132,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
 
     const handleClick = () => {
       if (disabled) return;
-      onCheckedChange?.(!isChecked);
+      setChecked(!isChecked);
     };
 
     const textBlock = (label || description) ? (

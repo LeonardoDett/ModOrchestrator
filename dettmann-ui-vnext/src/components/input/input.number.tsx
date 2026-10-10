@@ -13,17 +13,17 @@ const inputNumberVariants = defineRecipe({
     "w-full min-w-0 flex-1",
     "bg-transparent",
     "text-fg text-sm tabular-nums",
-    "outline-none",
+    "focus-bare",
     "disabled:cursor-not-allowed",
     "[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
   ].join(" "),
 });
 
 const stepButton = [
-  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-control",
+  "inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-chip motion-transition",
   "text-fg-muted hover:bg-state-hover hover:text-fg",
-  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
-  "disabled:pointer-events-none disabled:opacity-50",
+  "focus-ring-inset",
+  "disabled:pointer-events-none disabled:text-fg-subtle",
 ].join(" ");
 
 interface InputNumberProps

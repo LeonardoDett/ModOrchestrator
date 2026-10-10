@@ -2,6 +2,7 @@ import { InputRoot } from "./input.root";
 import { InputLabel } from "./input.label";
 import { InputBox } from "./input.box";
 import { InputField } from "./input.field";
+import { InputPassword } from "./input.password";
 import { InputTextarea } from "./input.textarea";
 import { InputSelect, type SelectOption, type SelectGroup, type SelectItem } from "./input.select";
 import { InputCombobox, type ComboboxOption } from "./input.combobox";
@@ -45,9 +46,11 @@ export const Input = {
   Box: InputBox,
   /** Text input field */
   Field: InputField,
+  /** Masked field for sensitive data with a reveal button */
+  Password: InputPassword,
   /** Textarea miolo (same family context as Field) */
   Textarea: InputTextarea,
-  /** Custom select (MD3 behaviour): keyboard, typeahead, icons, descriptions, groups */
+  /** Custom select (MD3 behaviour): keyboard, typeahead, icons, descriptions, groups; `multiple` for string[] */
   Select: InputSelect,
   /** Searchable combobox dropdown */
   Combobox: InputCombobox,

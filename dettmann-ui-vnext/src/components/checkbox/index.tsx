@@ -3,6 +3,7 @@
 import { forwardRef, useId, useState, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { useControllableState } from "../../hooks/use-controllable-state";
 import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 import { CheckIcon } from "../../icons/glyphs/check";
@@ -13,13 +14,14 @@ const checkboxVariants = defineRecipe({
     root: "inline-flex items-center gap-2",
     checkbox: [
       "shrink-0 flex items-center justify-center",
-      "border border-border-strong rounded-control",
+      "border border-border-strong rounded-chip",
       "bg-surface",
       "motion-transition",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+      "focus-ring",
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
-      "data-[state=checked]:bg-intent-fill data-[state=checked]:border-intent-fill data-[state=checked]:text-on-intent",
-      "data-[state=indeterminate]:bg-intent-fill data-[state=indeterminate]:border-intent-fill data-[state=indeterminate]:text-on-intent",
+      // `enabled:` para o desabilitado marcado cair em `disabled:bg-sunken` (o `cn` não resolve o conflito).
+      "enabled:data-[state=checked]:bg-intent-fill enabled:data-[state=checked]:border-intent-fill enabled:data-[state=checked]:text-on-intent",
+      "enabled:data-[state=indeterminate]:bg-intent-fill enabled:data-[state=indeterminate]:border-intent-fill enabled:data-[state=indeterminate]:text-on-intent",
     ].join(" "),
     label: "text-sm text-fg select-none",
   },
@@ -109,8 +111,11 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
     const generatedId = useId();
     const id = providedId ?? generatedId;
 
-    const isControlled = controlledChecked !== undefined;
-    const isChecked = isControlled ? controlledChecked : undefined;
+    const [isChecked, setChecked] = useControllableState({
+      value: controlledChecked,
+      defaultValue: defaultChecked,
+      onChange: onCheckedChange,
+    });
 
     const { root, checkbox, label: labelClass } = checkboxVariants({ size, disabled });
 
@@ -123,7 +128,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
 
     const handleClick = () => {
       if (disabled) return;
-      onCheckedChange?.(!isChecked);
+      setChecked(!isChecked);
     };
 
     const markClass = cn(

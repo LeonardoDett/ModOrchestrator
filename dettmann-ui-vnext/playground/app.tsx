@@ -22,6 +22,7 @@ import { ThemeEditor } from "./panels/theme-editor";
 import { Ramps } from "./panels/ramps";
 import { ContrastPanel, useContrast } from "./panels/contrast";
 import { SampleScreen } from "./panels/sample-screen";
+import { ControlsPanel } from "./panels/controls";
 import { MotionDemo } from "./panels/motion-demo";
 import { IconsPanel } from "./panels/icons";
 import { ExportPanel } from "./panels/export";
@@ -63,6 +64,9 @@ function ModeColumn({ config, theme, mode }: { config: ThemeConfig; theme: Resol
           </Badge>
         </Inline>
         <SampleScreen />
+        <Panel title="Controles e entradas">
+          <ControlsPanel />
+        </Panel>
         <Panel title="Rampas">
           <Ramps theme={theme} mode={mode} />
         </Panel>

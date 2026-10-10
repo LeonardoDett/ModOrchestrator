@@ -2,6 +2,7 @@
 
 import { useId, useState, type ComponentPropsWithoutRef, type KeyboardEvent, type ReactNode } from "react";
 import { cn } from "../../utils/cn";
+import { useFlip } from "../../motion/use-flip";
 
 export interface SegmentedControlOption<T extends string> {
   value: T;
@@ -31,11 +32,10 @@ export function SegmentedControl<T extends string>({
   const firstEnabled = options.find((option) => !option.disabled)?.value;
   const [internal, setInternal] = useState<T | undefined>(defaultValue ?? firstEnabled);
   const value = controlled ?? internal;
-  const height = size === "sm" ? "h-8" : size === "lg" ? "h-11" : "h-9";
-  const selectedIndex = Math.max(
-    0,
-    options.findIndex((option) => option.value === value),
-  );
+  const height = size === "sm" ? "h-control-sm" : size === "lg" ? "h-control-lg" : "h-control-md";
+  const flip = useFlip<HTMLSpanElement>([value]);
+  // Parada de tabulação única: a opção selecionada, se existir e estiver habilitada; senão a primeira habilitada.
+  const tabStop = options.some((option) => option.value === value && !option.disabled) ? value : firstEnabled;
 
   const select = (nextValue: T) => {
     setInternal(nextValue);
@@ -61,15 +61,16 @@ export function SegmentedControl<T extends string>({
   return (
     <div
       role="radiogroup"
+      data-layer="medium"
       className={cn(
-        "inline-flex rounded-control border border-border bg-sunken p-1",
+        "inline-flex rounded-control border border-border bg-structure p-0.5",
         className,
       )}
       {...props}
     >
-      {options.map((option, index) => {
+      {options.map((option) => {
         const active = option.value === value;
-        const tabIndex = active || (value == null && index === selectedIndex) ? 0 : -1;
+        const tabIndex = option.value === tabStop ? 0 : -1;
         return (
           <button
             key={`${id}-${option.value}`}
@@ -107,15 +108,24 @@ export function SegmentedControl<T extends string>({
               }
             }}
             className={cn(
-              "rounded-control px-3 text-sm font-medium motion-transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
+              "relative rounded-chip px-3 text-sm font-medium motion-transition focus-ring",
               height,
-              active
-                ? "bg-surface text-fg shadow-raised"
-                : "text-fg-muted hover:bg-state-hover hover:text-fg",
-              option.disabled && "pointer-events-none opacity-50",
+              option.disabled
+                ? "pointer-events-none text-fg-subtle"
+                : active
+                  ? "text-fg"
+                  : "text-fg-muted hover:bg-state-hover hover:text-fg",
             )}
           >
-            {option.label}
+            {active ? (
+              <span
+                ref={flip("indicator")}
+                data-slot="indicator"
+                aria-hidden="true"
+                className="absolute inset-0 rounded-chip border border-border bg-surface"
+              />
+            ) : null}
+            <span className="relative">{option.label}</span>
           </button>
         );
       })}

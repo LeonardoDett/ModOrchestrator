@@ -9,7 +9,7 @@ const inputBoxVariants = defineRecipe({
   base: [
     "relative flex items-center",
     "rounded-control",
-    "bg-surface border border-border-strong shadow-raised",
+    "border",
     "motion-transition",
     "has-[:is(textarea)]:items-start",
   ].join(" "),
@@ -28,8 +28,8 @@ const inputBoxVariants = defineRecipe({
     },
     /** Disabled state */
     disabled: {
-      true: "bg-sunken text-fg-subtle shadow-none cursor-not-allowed",
-      false: "hover:border-fg-muted",
+      true: "bg-sunken text-fg-subtle cursor-not-allowed",
+      false: "bg-surface",
     },
     /** Error / destructive state */
     error: {
@@ -37,7 +37,10 @@ const inputBoxVariants = defineRecipe({
       false: "",
     },
   },
+  // Uma cor de borda por estado (o `cn` não resolve conflito): repouso, foco ou erro.
   compoundVariants: [
+    { error: false, focused: false, class: "border-border-strong" },
+    { error: false, focused: false, disabled: false, class: "hover:border-fg-muted" },
     {
       error: false,
       focused: true,

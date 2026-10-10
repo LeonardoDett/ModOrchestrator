@@ -7,8 +7,8 @@ import { useInputContext } from "./input.context";
 
 const inputLabelVariants = defineRecipe({
   base: [
-    "text-sm font-medium text-fg",
-    "transition-all duration-(--motion-duration) ease-(--motion-ease)",
+    "font-medium",
+    "transition-[top,font-size,translate] duration-(--motion-duration) ease-(--motion-ease)",
     "pointer-events-none",
   ].join(" "),
   variants: {
@@ -23,16 +23,20 @@ const inputLabelVariants = defineRecipe({
     },
     /** Disabled state */
     disabled: {
-      true: "text-fg-muted cursor-not-allowed",
+      true: "cursor-not-allowed",
       false: "",
     },
     /** Error state */
     error: {
-      true: "text-danger-text",
+      true: "",
       false: "",
     },
   },
+  // Uma cor de texto por estado (o `cn` não resolve conflito).
   compoundVariants: [
+    { error: true, className: "text-danger-text" },
+    { error: false, disabled: false, className: "text-fg" },
+    { error: false, disabled: true, className: "text-fg-muted" },
     {
       floating: true,
       disabled: true,
@@ -94,6 +98,7 @@ export function InputLabel({
           disabled,
           error: Boolean(error),
         }),
+        !isFloating && "text-sm",
         isFloating && [
           isRaised
             ? "top-0 -translate-y-1/2 text-xs"
