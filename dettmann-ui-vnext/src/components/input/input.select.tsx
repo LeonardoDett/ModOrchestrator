@@ -57,7 +57,8 @@ const selectTriggerVariants = defineRecipe({
 
 const selectPanelVariants = defineRecipe({
   base: [
-    "z-popover overflow-y-auto overscroll-contain p-1",
+    // Respiro vertical entre as opções: fundos de seleção vizinhos não encostam.
+    "z-popover flex flex-col gap-0.5 overflow-y-auto overscroll-contain p-1",
     "rounded-card bg-raised border border-border shadow-overlay",
     "focus-bare",
   ].join(" "),
@@ -448,7 +449,7 @@ export function InputSelect({
             >
               {items.map((item, g) =>
                 isSelectGroup(item) ? (
-                  <div key={`group-${g}`} role="group" aria-labelledby={`${listId}-group-${g}`}>
+                  <div key={`group-${g}`} role="group" aria-labelledby={`${listId}-group-${g}`} className="flex flex-col gap-0.5">
                     <div
                       id={`${listId}-group-${g}`}
                       className="px-3 pb-1 pt-2 text-caption font-medium text-fg-muted"

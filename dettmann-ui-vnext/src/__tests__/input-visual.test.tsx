@@ -127,6 +127,43 @@ describe("option rows (D-033)", () => {
   });
 });
 
+describe("options breathe vertically", () => {
+  it("Select separates options, also inside groups", async () => {
+    const user = userEvent.setup();
+    render(
+      <Root initial="dev">
+        <Input.Select options={[...OPTIONS, { label: "Grupo", options: [{ value: "x", label: "Xis" }, { value: "y", label: "Ipsilon" }] }]} />
+      </Root>,
+    );
+    await user.click(screen.getByRole("combobox"));
+    expect(screen.getByRole("listbox")).toHaveClass("flex", "flex-col", "gap-0.5");
+    expect(screen.getByRole("group")).toHaveClass("flex", "flex-col", "gap-0.5");
+  });
+
+  it("Combobox and MultiSelect separate rounded options inside a padded list", async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(
+      <Root>
+        <Input.Combobox options={OPTIONS} />
+      </Root>,
+    );
+    await user.click(screen.getByRole("combobox"));
+    let option = screen.getByRole("option", { name: "Developer" });
+    expect(option).toHaveClass("rounded-chip");
+    expect(option.parentElement!.parentElement).toHaveClass("flex", "flex-col", "gap-0.5", "p-1");
+    unmount();
+    render(
+      <Root initial={["dev"]}>
+        <Input.MultiSelect options={OPTIONS} />
+      </Root>,
+    );
+    await user.click(screen.getByRole("textbox"));
+    option = screen.getByRole("option", { name: "Developer" });
+    expect(option).toHaveClass("rounded-chip");
+    expect(option.parentElement!.parentElement).toHaveClass("flex", "flex-col", "gap-0.5", "p-1");
+  });
+});
+
 describe("Input.Number steppers (D-033)", () => {
   it("disable at the limit with tokens, not opacity", () => {
     render(

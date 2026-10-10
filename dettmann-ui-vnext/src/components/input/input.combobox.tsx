@@ -240,7 +240,7 @@ export function InputCombobox({
         role="option"
         aria-selected={isSelected}
         aria-disabled={option.disabled}
-        className={rowRecipe({ active: isActive, selected: isSelected, disabled: Boolean(option.disabled) })}
+        className={cn(rowRecipe({ active: isActive, selected: isSelected, disabled: Boolean(option.disabled) }), "rounded-chip")}
         onClick={() => handleSelect(option)}
         onMouseEnter={() => setActiveIndex(index)}
       >
@@ -313,7 +313,7 @@ export function InputCombobox({
                     renderItem={renderOption}
                   />
                 ) : (
-                  <div style={{ maxHeight }} className="overflow-auto">
+                  <div style={{ maxHeight }} className="flex flex-col gap-0.5 overflow-auto p-1">
                     {filteredOptions.map((option, index) => (
                       <div key={option.value}>
                         {renderOption(option, index)}
