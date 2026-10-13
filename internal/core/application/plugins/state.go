@@ -73,7 +73,7 @@ func (s *Service) support(inst game.Instance) (game.Definition, ports.PluginSupp
 	if !ok {
 		return game.Definition{}, nil, nil, fail("game_unknown", nil, "game", string(inst.Game))
 	}
-	def, err := adapter.InstanceDefinition(inst.Game, inst.Targets)
+	def, err := ports.InstanceDefinition(adapter, inst)
 	if err != nil {
 		return game.Definition{}, nil, nil, err
 	}

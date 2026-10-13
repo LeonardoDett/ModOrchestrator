@@ -59,6 +59,30 @@ func (r *GameInstanceRepository) targets(ctx context.Context, id game.InstanceID
 	return out, rows.Err()
 }
 
+// features returns the features the user turned on or off; nil when the
+// instance keeps every default.
+func (r *GameInstanceRepository) features(ctx context.Context, id game.InstanceID) (map[game.Capability]bool, error) {
+	rows, err := r.db.QueryContext(ctx,
+		`SELECT feature, enabled FROM instance_features WHERE instance_id = ?`, string(id))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out map[game.Capability]bool
+	for rows.Next() {
+		var f string
+		var on int
+		if err := rows.Scan(&f, &on); err != nil {
+			return nil, err
+		}
+		if out == nil {
+			out = map[game.Capability]bool{}
+		}
+		out[game.Capability(f)] = on != 0
+	}
+	return out, rows.Err()
+}
+
 // Get returns ports.ErrNotFound for an unknown instance.
 func (r *GameInstanceRepository) Get(ctx context.Context, id game.InstanceID) (game.Instance, error) {
 	i, err := scanInstance(r.db.QueryRowContext(ctx, `SELECT `+instanceColumns+` FROM game_instances WHERE id = ?`, string(id)))
@@ -70,6 +94,9 @@ func (r *GameInstanceRepository) Get(ctx context.Context, id game.InstanceID) (g
 	}
 	if i.Targets, err = r.targets(ctx, id); err != nil {
 		return game.Instance{}, fmt.Errorf("sqlite: instance targets %s: %w", id, err)
+	}
+	if i.Features, err = r.features(ctx, id); err != nil {
+		return game.Instance{}, fmt.Errorf("sqlite: instance features %s: %w", id, err)
 	}
 	return i, nil
 }
@@ -98,12 +125,15 @@ func (r *GameInstanceRepository) List(ctx context.Context) ([]game.Instance, err
 		if out[n].Targets, err = r.targets(ctx, out[n].ID); err != nil {
 			return nil, err
 		}
+		if out[n].Features, err = r.features(ctx, out[n].ID); err != nil {
+			return nil, err
+		}
 	}
 	return out, nil
 }
 
-// Save inserts or updates an instance and replaces its targets in one
-// transaction. The instance is validated first.
+// Save inserts or updates an instance and replaces its targets and feature
+// choices in one transaction. The instance is validated first.
 func (r *GameInstanceRepository) Save(ctx context.Context, i game.Instance) error {
 	if err := i.Validate(); err != nil {
 		return err
@@ -139,6 +169,20 @@ func (r *GameInstanceRepository) Save(ctx context.Context, i game.Instance) erro
 			`INSERT INTO instance_targets (instance_id, position, target_id, path) VALUES (?, ?, ?, ?)`,
 			string(i.ID), pos, string(t.ID), t.Path); err != nil {
 			return fmt.Errorf("sqlite: save target %s: %w", t.ID, err)
+		}
+	}
+	if _, err := tx.ExecContext(ctx, `DELETE FROM instance_features WHERE instance_id = ?`, string(i.ID)); err != nil {
+		return err
+	}
+	for f, enabled := range i.Features {
+		on := 0
+		if enabled {
+			on = 1
+		}
+		if _, err := tx.ExecContext(ctx,
+			`INSERT INTO instance_features (instance_id, feature, enabled) VALUES (?, ?, ?)`,
+			string(i.ID), string(f), on); err != nil {
+			return fmt.Errorf("sqlite: save feature %s: %w", f, err)
 		}
 	}
 	return tx.Commit()

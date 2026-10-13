@@ -90,6 +90,27 @@ func TestBridgeManagesAGenericGameEndToEnd(t *testing.T) {
 		t.Fatalf("details = %+v, %v", details, err)
 	}
 
+	// D115: a game with no optional process has nothing to turn off, and
+	// the refusal is coded.
+	feats, err := app.InstanceFeatures(res.InstanceID)
+	if err != nil || len(feats) == 0 {
+		t.Fatalf("features = %+v, %v", feats, err)
+	}
+	for _, f := range feats {
+		if f.Class == "optional" && (f.Status != "not_applicable" || f.Enabled || f.Effective) {
+			t.Errorf("generic feature = %+v", f)
+		}
+		if f.Requires == nil || f.BlockedBy == nil {
+			t.Errorf("lists must never be null for the UI: %+v", f)
+		}
+	}
+	if e := decodeErr(t, app.SetInstanceFeature(res.InstanceID, "plugins", false)); e.Code != "feature_unavailable" {
+		t.Fatalf("code = %s", e.Code)
+	}
+	if e := decodeErr(t, app.SetInstanceFeature(res.InstanceID, "installer", false)); e.Code != "feature_locked" {
+		t.Fatalf("code = %s", e.Code)
+	}
+
 	// Same folder twice is a coded refusal the UI can translate.
 	if e := decodeErr(t, func() error { _, err := app.ManageGame(setup); return err }()); e.Code != "root_in_use" {
 		t.Fatalf("code = %s", e.Code)
@@ -149,11 +170,9 @@ func TestBridgeGamesSupportDescribesTheRegistry(t *testing.T) {
 		t.Errorf("generic plugins = %+v", f)
 	}
 
-	var full GameSupportDTO
-	for _, g := range byID {
-		if g.Support == "full" {
-			full = g
-		}
+	full := byID["skyrimse"]
+	if full.Support != "full" {
+		t.Fatalf("skyrimse = %+v", full)
 	}
 	if !slices.Equal(full.Stores, []string{"steam", "gog", "epic", "registry"}) {
 		t.Fatalf("full game = %+v", full)

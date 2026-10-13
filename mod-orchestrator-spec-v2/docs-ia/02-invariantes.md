@@ -83,3 +83,6 @@ Cada invariante deve ter pelo menos um teste automatizado quando sua fase for im
 | INV-OPS-04 | A UI não guarda estado de domínio próprio; relê do backend após eventos (D021). | F2 |
 | INV-OPS-05 | Todo erro que chega à UI tem código estável e parâmetros; a mensagem é traduzida na UI (D044). | F2 |
 | INV-OPS-06 | Todo diagnóstico bloqueante tem pelo menos uma ação sugerida que leva ao lugar onde ele pode ser resolvido. | F9 |
+| INV-FEAT-01 | As capabilities efetivas de uma instância nunca excedem as que o jogo oferece; recurso `base` nunca é desligado (D115). | R2 |
+| INV-FEAT-02 | Um recurso cujo requisito não está efetivo nunca fica efetivo (D115). | R2 |
+| INV-FEAT-03 | Ligar ou desligar um recurso não escreve em nenhum target nem em arquivo do jogo (D115). | R2 |

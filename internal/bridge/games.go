@@ -230,3 +230,38 @@ func (a *App) GamesSupport() []GameSupportDTO {
 	}
 	return out
 }
+
+// InstanceFeatures lists the features of an instance: what the game offers,
+// what the user chose and what is in effect (D115).
+func (a *App) InstanceFeatures(id string) ([]InstanceFeatureDTO, error) {
+	list, err := a.c.Games.Features(a.context(), game.InstanceID(id))
+	if err != nil {
+		return nil, a.fail("instance features", err, map[string]string{"instance": id})
+	}
+	out := make([]InstanceFeatureDTO, 0, len(list))
+	for _, f := range list {
+		out = append(out, InstanceFeatureDTO{
+			ID: string(f.ID), Status: string(f.Status), Class: string(f.Class),
+			Requires: capabilityIDs(f.Requires), Enabled: f.Enabled, Effective: f.Effective,
+			BlockedBy: capabilityIDs(f.BlockedBy),
+		})
+	}
+	return out, nil
+}
+
+// SetInstanceFeature turns an optional feature of an instance on or off.
+func (a *App) SetInstanceFeature(id, feature string, enabled bool) error {
+	if err := a.c.Games.SetFeature(a.context(), game.InstanceID(id), game.Capability(feature), enabled); err != nil {
+		return a.fail("set instance feature", err, map[string]string{"instance": id, "feature": feature})
+	}
+	a.c.Logger.Info("instance feature changed", "instance", id, "feature", feature, "enabled", enabled)
+	return nil
+}
+
+func capabilityIDs(in []game.Capability) []string {
+	out := make([]string, 0, len(in))
+	for _, c := range in {
+		out = append(out, string(c))
+	}
+	return out
+}

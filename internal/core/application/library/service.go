@@ -150,7 +150,7 @@ func (s *Service) env(ctx context.Context, id game.InstanceID) (env, error) {
 	if !ok {
 		return env{}, fail(games.CodeGameUnknown, nil, "game", string(inst.Game))
 	}
-	def, err := a.InstanceDefinition(inst.Game, inst.Targets)
+	def, err := ports.InstanceDefinition(a, inst)
 	if err != nil {
 		return env{}, fail(games.CodeGameUnknown, err, "game", string(inst.Game))
 	}

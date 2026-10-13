@@ -230,7 +230,7 @@ func (s *Service) definition(inst game.Instance) (game.Definition, error) {
 	if !ok {
 		return game.Definition{}, fail("game_unknown", nil, "game", string(inst.Game))
 	}
-	return adapter.InstanceDefinition(inst.Game, inst.Targets)
+	return ports.InstanceDefinition(adapter, inst)
 }
 
 func (s *Service) boolSetting(ctx context.Context, instance game.InstanceID, key string, def bool) bool {

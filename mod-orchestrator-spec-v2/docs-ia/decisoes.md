@@ -1041,3 +1041,21 @@ O que ele **não** prova: a ordem de carga genérica (item 1 de `docs-ia/09`), p
 Alternativa rejeitada: entrar só como jogo declarado (D113). Um pacote de mod precisa de roteamento por pasta e o framework ausente precisa de check, e os dois são código.
 
 Consequências: rótulos do adapter foram para o catálogo i18n do app, o que repete o acoplamento 8 de `docs-ia/09` (texto de jogo no catálogo do app) até o adapter poder trazer os próprios textos. Dependências do `manifest.json` ficaram fora (core/16 §8).
+
+## D115 — Recursos ligáveis por instância
+Status: vigente (detalha D011, D112 e D113; desenho em `propostas/2026-10-13-registro-de-jogos.md`, fase R2)
+
+Um recurso de jogo tem três camadas: **oferecido** (a definição do jogo declara a capability), **ligado** (escolha do usuário, por instância) e **efetivo** (calculado).
+
+1. **O core só vê o efetivo.** `ports.InstanceDefinition(adapter, instância)` é o único lugar que pede ao adapter a definição de uma instância; ele devolve `Definition.Effective(instância.Features)`. Um recurso desligado se comporta exatamente como um que o jogo não tem: a tela some da navegação, os comandos respondem o código de capability ausente, o passo do deploy é pulado. Teste de arquitetura (`TestInstanceDefinitionIsAskedThroughThePort`) impede chamada direta ao adapter fora de `ports` e de `games/features.go`.
+2. **Cálculo.** Efetivo = oferecido, e (se `optional`) não desligado pelo usuário, e tudo o que ele exige efetivo. Recurso `base` ignora a escolha. A escolha nunca acrescenta o que o jogo não oferece. Sem escolha, o padrão é ligado.
+3. **Onde fica.** `game.Instance.Features` (capability → ligado), na tabela `instance_features` (migração 0009), gravada junto com a instância e apagada com ela. O efetivo não é persistido.
+4. **Operação.** `games.SetFeature(instância, recurso, ligado)` sob o lock da instância. Recusas com código: `feature_unavailable` (o jogo não oferece), `feature_locked` (recurso `base`), `feature_requires` (ligar algo cujo requisito não está efetivo). Desligar um requisito não muda a escolha dos dependentes: eles ficam ligados e não efetivos, e `Features()` diz por quem estão bloqueados.
+5. **Desligar não toca no jogo** (decisão do usuário em 2026-10-13). Nada é apagado nem revertido; o app só para de gerenciar aquela parte. Com `load_order` desligado, o deploy deixa o arquivo de load order como está. Religar não escreve nada por si; o que estiver no disco aparece pela triagem de alteração externa que já existe (D040).
+6. **Bridge.** `InstanceFeatures(id)` e `SetInstanceFeature(id, recurso, ligado)`. `Workspace()` e os detalhes da instância já refletem o efetivo, porque usam a mesma definição.
+
+Motivo: capability respondia só "o jogo suporta?". Faltava o lado do usuário, para quem prefere cuidar da load order por outra ferramenta ou não quer o Play, sem que isso exigisse um `if` novo em cada serviço.
+
+Alternativas rejeitadas: guardar a escolha no catálogo de settings (chaves estáticas, não comportam recurso de extensão); escolha por jogo em vez de por instância (duas cópias do mesmo jogo podem querer coisas diferentes, e as settings já são por instância); desligar em cascata gravando a escolha dos dependentes (perderia a escolha do usuário ao religar o requisito); reverter o que foi aplicado ao desligar (escreveria no jogo sem plano de deploy).
+
+Consequências: `launch` desligado tira o Play, mas a detecção de jogo em execução continua, porque `running_detection` é `base`. O jogo `generic` não oferece nenhum recurso `optional`, então nada muda para ele. A UI ainda não tem a tela de recursos (espera o subprojeto de componentes); as telas que hoje decidem por `capabilities` passam a receber as efetivas.

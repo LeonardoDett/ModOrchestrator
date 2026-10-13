@@ -239,6 +239,18 @@ type GameAdapter interface {
 	ContentFlags(id game.ID, footprint []game.Location) []mod.ContentFlag
 }
 
+// InstanceDefinition is the definition in effect for an instance: what the
+// adapter offers for it, minus the features the user turned off (D115).
+// The core always asks through here, never the adapter directly, so a
+// feature that is off behaves like one the game does not have.
+func InstanceDefinition(a GameAdapter, inst game.Instance) (game.Definition, error) {
+	def, err := a.InstanceDefinition(inst.Game, inst.Targets)
+	if err != nil {
+		return game.Definition{}, err
+	}
+	return def.Effective(inst.Features), nil
+}
+
 // AppState persists small application-level facts that are not settings of
 // the catalog (core/13): the active instance and the hidden games.
 type AppState interface {

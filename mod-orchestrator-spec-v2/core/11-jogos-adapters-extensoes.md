@@ -45,6 +45,10 @@ Cada `GameDefinition` é uma entrada do registro e carrega, além de targets e m
 
 Cada capability é também um **recurso** com classe (`game.Describe`): `base` (sempre ligado) ou `optional` (o usuário poderá ligar e desligar por instância), e dependências (`load_order` exige `plugins`). Definição que declara um recurso sem o que ele exige não registra.
 
+### Recursos por instância (D115)
+
+Um recurso é **oferecido** pela definição, **ligado** pelo usuário em cada instância e **efetivo** quando as duas coisas valem e o que ele exige também está efetivo. O core pede a definição de uma instância só por `ports.InstanceDefinition`, que já devolve as capabilities efetivas; recurso desligado é tratado como recurso que o jogo não tem. Desligar nunca apaga nem reverte arquivos do jogo. `games.Features` lista os três estados e `games.SetFeature` muda a escolha (`feature_unavailable`, `feature_locked`, `feature_requires`).
+
 ### Catálogo de capabilities (já em `game.go`)
 
 `filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `save_games`, `game_settings`, `tools`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (as quatro últimas pela D112). Extensível: capabilities novas entram no catálogo (`game.Catalog()`) com decisão registrada.

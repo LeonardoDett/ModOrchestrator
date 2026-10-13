@@ -138,3 +138,42 @@ func Describe(c Capability) FeatureSpec {
 	}
 	return FeatureSpec{ID: c, Class: ClassOptional}
 }
+
+// Effective returns the definition in effect for an instance: what the
+// game offers, minus the optional features the user turned off (choices
+// maps a capability to on/off; absent means on) and minus the features
+// whose requirements are not in effect. Base features cannot be turned
+// off. It never adds a capability the definition does not offer (D115).
+func (d Definition) Effective(choices map[Capability]bool) Definition {
+	on := map[Capability]bool{}
+	var resolve func(c Capability, seen map[Capability]bool) bool
+	resolve = func(c Capability, seen map[Capability]bool) bool {
+		if v, done := on[c]; done {
+			return v
+		}
+		if !d.Capabilities.Has(c) || seen[c] {
+			return false
+		}
+		seen[c] = true
+		spec := Describe(c)
+		ok := true
+		if enabled, chosen := choices[c]; chosen && !enabled && spec.Class == ClassOptional {
+			ok = false
+		}
+		for _, r := range spec.Requires {
+			if !resolve(r, seen) {
+				ok = false
+			}
+		}
+		on[c] = ok
+		return ok
+	}
+	var kept []Capability
+	for _, c := range d.Capabilities.List() {
+		if resolve(c, map[Capability]bool{}) {
+			kept = append(kept, c)
+		}
+	}
+	d.Capabilities = NewCapabilities(kept...)
+	return d
+}

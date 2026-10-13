@@ -354,6 +354,9 @@ export const ptBR: Record<MessageKey, string> = {
   "error.confirm_name_mismatch": "O nome digitado não confere.",
   "error.folder_unknown": "Essa pasta não pode ser aberta.",
   "error.folder_missing": "A pasta não existe no disco.",
+  "error.feature_unavailable": "Este jogo não oferece esse recurso.",
+  "error.feature_locked": "Esse recurso faz parte do gerenciamento do jogo e não pode ser desligado.",
+  "error.feature_requires": "Ligue antes o recurso do qual este depende ({requires}).",
   "warning.hardlink_unavailable": "Hardlinks não estão disponíveis com essas pastas. Você pode mover a staging para a unidade do jogo ou usar cópias.",
   "warning.backup_other_volume": "A pasta de backups está em uma unidade diferente da do jogo; restaurar originais será mais lento.",
 

@@ -198,7 +198,7 @@ func NewService(d Deps) *Service {
 // declares the launch capability, else the executable of a generic game.
 func (s *Service) options(ctx context.Context, inst game.Instance) ([]ports.LaunchOption, string, error) {
 	if a, ok := s.Registry.ByName(inst.Adapter); ok {
-		if def, err := a.InstanceDefinition(inst.Game, inst.Targets); err == nil && def.Capabilities.Has(game.CapLaunch) {
+		if def, err := ports.InstanceDefinition(a, inst); err == nil && def.Capabilities.Has(game.CapLaunch) {
 			if ls, ok := a.(ports.LaunchSupport); ok {
 				opts, err := ls.LaunchOptions(ctx, s.FS, inst)
 				if err != nil {

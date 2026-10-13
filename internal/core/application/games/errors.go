@@ -45,6 +45,10 @@ const (
 	CodeConfirmName      = "confirm_name_mismatch"
 	CodeFolderUnknown    = "folder_unknown"
 	CodeFolderMissing    = "folder_missing"
+	// Features of an instance (D115).
+	CodeFeatureUnavailable = "feature_unavailable"
+	CodeFeatureLocked      = "feature_locked"
+	CodeFeatureRequires    = "feature_requires"
 )
 
 func fail(code string, cause error, kv ...string) *Error {

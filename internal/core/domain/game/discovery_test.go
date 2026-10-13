@@ -123,3 +123,34 @@ func TestDefinitionRefusesAFeatureWithoutWhatItRequires(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// D115: what is in effect is what the game offers, minus what the user
+// turned off and what depends on it; it never exceeds what is offered and
+// a base feature cannot be turned off.
+func TestEffectiveCapabilities(t *testing.T) {
+	d := discoverable()
+	d.Capabilities = NewCapabilities(CapFilesystemTarget, CapExternalChanges, CapPlugins, CapLoadOrder, CapLaunch)
+	has := func(choices map[Capability]bool, c Capability) bool {
+		return d.Effective(choices).Capabilities.Has(c)
+	}
+	if e := d.Effective(nil); len(e.Capabilities.List()) != 5 {
+		t.Fatalf("no choice keeps everything: %v", e.Capabilities.List())
+	}
+	off := map[Capability]bool{CapPlugins: false}
+	if has(off, CapPlugins) || has(off, CapLoadOrder) || !has(off, CapLaunch) {
+		t.Error("plugins off takes load order with it and nothing else")
+	}
+	off = map[Capability]bool{CapLoadOrder: false}
+	if !has(off, CapPlugins) || has(off, CapLoadOrder) {
+		t.Error("load order off keeps plugins")
+	}
+	if !has(map[Capability]bool{CapExternalChanges: false, CapFilesystemTarget: false}, CapExternalChanges) {
+		t.Error("a base feature cannot be turned off")
+	}
+	if has(map[Capability]bool{CapSaveGames: true}, CapSaveGames) {
+		t.Error("a choice never adds what the game does not offer")
+	}
+	if !d.Capabilities.Has(CapPlugins) {
+		t.Error("Effective must not change the definition it was called on")
+	}
+}

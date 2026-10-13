@@ -210,3 +210,51 @@ func TestDeploymentStateAndAppState(t *testing.T) {
 		t.Fatal("deleted key")
 	}
 }
+
+// D115: the features the user turned on or off are kept per instance and
+// go away with it; an instance with no choice reads back with none.
+func TestInstanceFeatureChoicesRoundTrip(t *testing.T) {
+	ctx := context.Background()
+	path := filepath.Join(t.TempDir(), "state.db")
+	db, err := Open(ctx, path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	insts := NewGameInstanceRepository(db)
+	a, b := sampleInstance("i1", "Main"), sampleInstance("i2", "Other")
+	a.Features = map[game.Capability]bool{game.CapPlugins: false, game.CapLaunch: true}
+	for _, in := range []game.Instance{a, b} {
+		if err := insts.Save(ctx, in); err != nil {
+			t.Fatal(err)
+		}
+	}
+	db.Close()
+	if db, err = Open(ctx, path); err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	insts = NewGameInstanceRepository(db)
+
+	got, err := insts.Get(ctx, "i1")
+	if err != nil || len(got.Features) != 2 || got.Features[game.CapPlugins] || !got.Features[game.CapLaunch] {
+		t.Fatalf("features = %v, %v", got.Features, err)
+	}
+	list, err := insts.List(ctx)
+	if err != nil || len(list) != 2 || len(list[0].Features) != 2 || list[1].Features != nil {
+		t.Fatalf("list = %+v, %v", list, err)
+	}
+	got.Features = map[game.Capability]bool{game.CapLaunch: false}
+	if err := insts.Save(ctx, got); err != nil {
+		t.Fatal(err)
+	}
+	if got, _ = insts.Get(ctx, "i1"); len(got.Features) != 1 || got.Features[game.CapLaunch] {
+		t.Fatalf("saving replaces the choices: %v", got.Features)
+	}
+	if err := insts.Delete(ctx, "i1"); err != nil {
+		t.Fatal(err)
+	}
+	var n int
+	if err := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM instance_features`).Scan(&n); err != nil || n != 0 {
+		t.Fatalf("choices of a deleted instance: %d, %v", n, err)
+	}
+}

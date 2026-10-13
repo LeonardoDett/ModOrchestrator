@@ -299,6 +299,9 @@ type Instance struct {
 	// Executable is the optional game executable relative to Root (generic
 	// games; adapters that know their executable declare it themselves).
 	Executable string
+	// Features holds the optional features the user turned on or off for
+	// this instance (D115). A feature not listed keeps its default: on.
+	Features map[Capability]bool
 }
 
 // Validate checks the structural invariants of an instance. Filesystem checks

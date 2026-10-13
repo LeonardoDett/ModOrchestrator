@@ -357,6 +357,9 @@ export const en = {
   "error.confirm_name_mismatch": "The name typed does not match.",
   "error.folder_unknown": "That folder cannot be opened.",
   "error.folder_missing": "The folder does not exist on disk.",
+  "error.feature_unavailable": "This game does not offer that feature.",
+  "error.feature_locked": "That feature is part of managing the game and cannot be turned off.",
+  "error.feature_requires": "Turn on the feature this one depends on first ({requires}).",
   "warning.hardlink_unavailable": "Hardlinks are unavailable with these folders. You can move the staging folder to the game's drive or use copies.",
   "warning.backup_other_volume": "The backup folder is on a different drive than the game; restoring originals will be slower.",
 

@@ -195,3 +195,47 @@ func TestNoGameSpecificLiteralsOutsideAdapters(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// D115: the definition in effect for an instance is asked in one place
+// (ports.InstanceDefinition), which removes the features the user turned
+// off. A direct call to the adapter would bring a turned-off feature back.
+// The games service may call it to show what the game offers.
+func TestInstanceDefinitionIsAskedThroughThePort(t *testing.T) {
+	allowed := map[string]bool{
+		"core/application/ports/system.go":   true,
+		"core/application/games/features.go": true,
+	}
+	fset := token.NewFileSet()
+	err := filepath.WalkDir(".", func(path string, d fs.DirEntry, err error) error {
+		if err != nil || d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+			return err
+		}
+		rel := filepath.ToSlash(path)
+		if allowed[rel] || strings.HasPrefix(rel, "adapters/") {
+			return nil
+		}
+		f, err := parser.ParseFile(fset, path, nil, 0)
+		if err != nil {
+			return err
+		}
+		ast.Inspect(f, func(n ast.Node) bool {
+			call, ok := n.(*ast.CallExpr)
+			if !ok {
+				return true
+			}
+			sel, ok := call.Fun.(*ast.SelectorExpr)
+			if !ok || sel.Sel.Name != "InstanceDefinition" {
+				return true
+			}
+			if pkg, ok := sel.X.(*ast.Ident); ok && pkg.Name == "ports" {
+				return true
+			}
+			t.Errorf("%s:%d asks the adapter for the instance definition; use ports.InstanceDefinition", rel, fset.Position(call.Pos()).Line)
+			return true
+		})
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+}

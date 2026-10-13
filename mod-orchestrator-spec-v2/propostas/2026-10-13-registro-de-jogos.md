@@ -1,6 +1,6 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 implementada (D113)**; R2 em diante ainda não. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
+Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 (D113) e R2 (D115) implementadas**; R3 em diante ainda não. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
 
@@ -232,6 +232,8 @@ Cada fase fecha com `go vet ./... && go test ./...`, `npm --prefix frontend run 
 | **R6. Contrato de extensão por jogo** | Só contrato e um módulo embutido como prova (candidato: LOOT). Runtime de terceiros continua V2. | `ports`, `application`, `core/11 §7` | Parcial |
 
 Como a R1 ficou (D113): a descoberta virou `Definition.Discovery`; `Markers`, `RegistryHints`, `VersionFile` e `Detect` saíram do port (`Detect` não ficou nem como opcional, porque nenhum adapter precisa); classe e dependências são do recurso (`game.Describe`), não de cada jogo; a consulta é a `Registry.Support()` da D112, exposta em `GamesSupport()`. O formato serializado (JSON com `schema`) fica para a R3.
+
+Como a R2 ficou (D115): a escolha mora em `game.Instance.Features` (tabela `instance_features`); o efetivo sai de `Definition.Effective` e chega ao core só por `ports.InstanceDefinition`; `games.SetFeature` recusa recurso não oferecido, `base` ou com requisito não efetivo. A tela de recursos fica para a R5.
 
 Ordem e dependências: R1 primeiro (tudo depende dela). R2 e R3 são independentes entre si. R4 depende de R3. R5 depende do subprojeto de componentes liberar as telas. R6 depende de R2.
 

@@ -11,10 +11,12 @@ import (
 	"testing"
 	"time"
 
+	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/ports"
 	pluginsvc "modorchestrator/internal/core/application/plugins"
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/event"
+	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/plugin"
 )
@@ -415,5 +417,66 @@ func TestTwoHundredPlugins(t *testing.T) {
 				t.Fatalf("%s before its master %s", r.Name, m.Name)
 			}
 		}
+	}
+}
+
+// D115: a feature the user turned off behaves like one the game does not
+// have, and turning it off never touches the game. With load order off the
+// deploy leaves the game's file as it is; with plugins off every plugin
+// command answers plugins_unsupported; turning both on again brings the
+// screens back without having rewritten anything.
+func TestFeaturesTurnedOffAreLeftAlone(t *testing.T) {
+	e := pluginEnv(t)
+	e.pluginMods(map[string][]byte{"Lib.esm": tes4(1, "Skyrim.esm")}, "Lib.esm")
+	e.deploy("deploy")
+	before, err := os.ReadFile(e.pluginsTxt())
+	if err != nil || !strings.Contains(string(before), "*Lib.esm") {
+		t.Fatalf("plugins.txt before: %q %v", before, err)
+	}
+
+	if err := e.games.SetFeature(ctx, e.inst.ID, game.CapLoadOrder, false); err != nil {
+		t.Fatal(err)
+	}
+	e.pluginMods(map[string][]byte{"New.esp": tes4(0, "Skyrim.esm")}, "New.esp")
+	e.deploy("deploy")
+	after, err := os.ReadFile(e.pluginsTxt())
+	if err != nil || string(after) != string(before) {
+		t.Fatalf("load order off: the file must stay as it was\nbefore:\n%s\nafter:\n%s (%v)", before, after, err)
+	}
+	if got := e.order(); !slices.Contains(got, "New.esp") {
+		t.Fatalf("plugins stay listed with load order off: %v", got)
+	}
+
+	if err := e.games.SetFeature(ctx, e.inst.ID, game.CapPlugins, false); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := e.plug.List(ctx, e.inst.ID); coded(err) != pluginsvc.CodeNoPlugins {
+		t.Fatalf("plugins off: %v", err)
+	}
+	if e.plug.Supported(ctx, e.inst.ID) {
+		t.Fatal("plugins off must read as unsupported")
+	}
+	e.deploy("deploy")
+	if after, _ = os.ReadFile(e.pluginsTxt()); string(after) != string(before) {
+		t.Fatalf("plugins off: the file must stay as it was:\n%s", after)
+	}
+	if _, err := os.Stat(e.data("New.esp")); err != nil {
+		t.Fatalf("the files of the mods stay deployed: %v", err)
+	}
+
+	if err := e.games.SetFeature(ctx, e.inst.ID, game.CapLoadOrder, true); coded(err) != games.CodeFeatureRequires {
+		t.Fatalf("load order needs plugins: %v", err)
+	}
+	if err := e.games.SetFeature(ctx, e.inst.ID, game.CapPlugins, true); err != nil {
+		t.Fatal(err)
+	}
+	if err := e.games.SetFeature(ctx, e.inst.ID, game.CapLoadOrder, true); err != nil {
+		t.Fatal(err)
+	}
+	if got := e.order(); !slices.Contains(got, "Lib.esm") || !slices.Contains(got, "New.esp") {
+		t.Fatalf("back on: %v", got)
+	}
+	if after, _ = os.ReadFile(e.pluginsTxt()); string(after) != string(before) {
+		t.Fatalf("turning a feature on writes nothing by itself:\n%s", after)
 	}
 }

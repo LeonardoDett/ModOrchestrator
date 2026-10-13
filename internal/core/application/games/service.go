@@ -194,7 +194,7 @@ func (s *Service) describe(ctx context.Context, inst game.Instance) Managed {
 		m.Unavailable = true
 		return m
 	}
-	def, err := adapter.InstanceDefinition(inst.Game, inst.Targets)
+	def, err := ports.InstanceDefinition(adapter, inst)
 	if err != nil {
 		m.Unavailable = true
 		return m
@@ -421,6 +421,6 @@ func (s *Service) checkNameFree(ctx context.Context, g game.ID, name string, sel
 // definitionOf is the effective definition of an instance (adapter plus the
 // targets of the instance).
 func definitionOf(a ports.GameAdapter, inst game.Instance) (game.Definition, bool) {
-	d, err := a.InstanceDefinition(inst.Game, inst.Targets)
+	d, err := ports.InstanceDefinition(a, inst)
 	return d, err == nil
 }

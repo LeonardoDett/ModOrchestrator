@@ -2376,6 +2376,30 @@ export namespace bridge {
 	        this.createdAt = source["createdAt"];
 	    }
 	}
+	export class InstanceFeatureDTO {
+	    id: string;
+	    status: string;
+	    class: string;
+	    requires: string[];
+	    enabled: boolean;
+	    effective: boolean;
+	    blockedBy: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new InstanceFeatureDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.status = source["status"];
+	        this.class = source["class"];
+	        this.requires = source["requires"];
+	        this.enabled = source["enabled"];
+	        this.effective = source["effective"];
+	        this.blockedBy = source["blockedBy"];
+	    }
+	}
 	export class LimitDTO {
 	    kind: string;
 	    used: number;

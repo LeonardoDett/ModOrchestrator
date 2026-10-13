@@ -124,6 +124,8 @@ export function InstallMods(arg1:string,arg2:Array<string>):Promise<Array<string
 
 export function InstallUpdate(arg1:string):Promise<void>;
 
+export function InstanceFeatures(arg1:string):Promise<Array<bridge.InstanceFeatureDTO>>;
+
 export function InstanceOverview(arg1:string):Promise<bridge.InstanceOverviewDTO>;
 
 export function Launch(arg1:string,arg2:bridge.LaunchRequestDTO):Promise<string>;
@@ -307,6 +309,8 @@ export function SetFileExclusions(arg1:string,arg2:string,arg3:Array<bridge.Loca
 export function SetFileOverrides(arg1:string,arg2:string,arg3:Array<bridge.LocationDTO>):Promise<void>;
 
 export function SetIndexLock(arg1:string,arg2:Array<string>,arg3:boolean):Promise<void>;
+
+export function SetInstanceFeature(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
 export function SetInstanceSetting(arg1:string,arg2:string,arg3:string):Promise<void>;
 

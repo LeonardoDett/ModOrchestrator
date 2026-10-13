@@ -253,3 +253,16 @@ type GameSupportDTO struct {
 	Custom         bool         `json:"custom"`
 	Features       []FeatureDTO `json:"features"`
 }
+
+// InstanceFeatureDTO is one feature of a managed instance. Enabled is the
+// choice of the user; effective is what the app does. BlockedBy names the
+// required features that are not in effect.
+type InstanceFeatureDTO struct {
+	ID        string   `json:"id"`
+	Status    string   `json:"status"`
+	Class     string   `json:"class"`
+	Requires  []string `json:"requires"`
+	Enabled   bool     `json:"enabled"`
+	Effective bool     `json:"effective"`
+	BlockedBy []string `json:"blockedBy"`
+}

@@ -246,6 +246,10 @@ export function InstallUpdate(arg1) {
   return window['go']['bridge']['App']['InstallUpdate'](arg1);
 }
 
+export function InstanceFeatures(arg1) {
+  return window['go']['bridge']['App']['InstanceFeatures'](arg1);
+}
+
 export function InstanceOverview(arg1) {
   return window['go']['bridge']['App']['InstanceOverview'](arg1);
 }
@@ -612,6 +616,10 @@ export function SetFileOverrides(arg1, arg2, arg3) {
 
 export function SetIndexLock(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetIndexLock'](arg1, arg2, arg3);
+}
+
+export function SetInstanceFeature(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetInstanceFeature'](arg1, arg2, arg3);
 }
 
 export function SetInstanceSetting(arg1, arg2, arg3) {
