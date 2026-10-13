@@ -1,6 +1,6 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 (D113) e R2 (D115) implementadas**; R3 em diante ainda não. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
+Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 (D113) e R2 (D115) implementadas; da R3 só o formato do manifesto no domínio (D116)**. Falta: adapter `generic` interpretando manifestos, R4, R5 e R6. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
 

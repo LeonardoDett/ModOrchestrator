@@ -1059,3 +1059,16 @@ Motivo: capability respondia só "o jogo suporta?". Faltava o lado do usuário, 
 Alternativas rejeitadas: guardar a escolha no catálogo de settings (chaves estáticas, não comportam recurso de extensão); escolha por jogo em vez de por instância (duas cópias do mesmo jogo podem querer coisas diferentes, e as settings já são por instância); desligar em cascata gravando a escolha dos dependentes (perderia a escolha do usuário ao religar o requisito); reverter o que foi aplicado ao desligar (escreveria no jogo sem plano de deploy).
 
 Consequências: `launch` desligado tira o Play, mas a detecção de jogo em execução continua, porque `running_detection` é `base`. O jogo `generic` não oferece nenhum recurso `optional`, então nada muda para ele. A UI ainda não tem a tela de recursos (espera o subprojeto de componentes); as telas que hoje decidem por `capabilities` passam a receber as efetivas.
+
+## D116 — Manifesto de jogo: formato de entrada só de dados
+Status: vigente (detalha D113; desenho em `propostas/2026-10-13-registro-de-jogos.md`, fase R3, parte de domínio)
+
+`game.Manifest` é a forma serializada (JSON, `schema: 1`) de um jogo descrito só por dados: identificação, descoberta (lojas, registro, marcadores, executável de versão, processos), layout (targets relativos à raiz, mod types com detecção, dicas de root, saídas de ferramenta, padrões de "não gerenciar") e opções de lançamento. Jogos declarados e jogos criados pelo usuário usam o mesmo formato.
+
+1. `ParseManifest` recusa o arquivo inteiro se o `schema` não é o desta versão (`ErrManifestSchema`), se há campo desconhecido, conteúdo depois do documento, mais de 256 KiB ou qualquer caminho que não seja relativo e interno à pasta do jogo.
+2. O manifesto não declara capabilities, nível de suporte nem origem: `Manifest.Definition(support)` deriva as capabilities do conteúdo (`launch` se há opção de lançamento, `running_detection` se há processos, `multiple_mod_types` com mais de um tipo, `external_change_strategy` com saídas ou padrões) e quem carrega diz o nível. Um arquivo não consegue alegar um processo que exige código.
+3. `Marshal` só exporta manifesto válido, e o que o app exporta volta a importar.
+
+Motivo: é a base para o jogo personalizado com identidade própria e para exportar/importar (decisão do usuário em 2026-10-13). Alternativa rejeitada: aceitar `features`/`support` no arquivo (o arquivo vem de fora; o que o app oferece tem que sair do que ele consegue verificar).
+
+Consequências: nesta decisão só existe o formato, com testes e fuzz. Ainda não feito (R3 restante e R4): o adapter `generic` interpretar manifestos, o repositório de entradas do usuário, o registro composto, a migração das instâncias `generic` e o bridge de exportar/importar. Dois pontos em aberto para essa etapa: a checagem capability↔interface da D112 precisa aceitar um adapter cujas definições chegam em runtime, e `games.Registry` deixa de ser imutável.
