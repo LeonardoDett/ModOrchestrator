@@ -206,6 +206,43 @@ Decisões a registrar se aprovado (próximos ids livres em `decisoes.md`):
 
 ## 9. Perguntas em aberto
 
-1. Qual é o segundo jogo? Ele define a forma da ordem de carga genérica. Um jogo Bethesda (Fallout 4) valida quase nada; um jogo com ordem de mods em manifesto valida o que importa.
+1. ~~Qual é o segundo jogo?~~ Respondida em 2026-10-13: **Valheim** (§10).
 2. A V1.0 promete mais de um jogo com suporte dedicado, ou Skyrim + genérico?
 3. Extensões de terceiros poderão trazer instaladores e providers, ou só jogos?
+
+## 10. Segundo jogo: Valheim (escolha do Leonardo, 2026-10-13)
+
+Lido da instalação desta máquina (somente leitura), não de memória:
+
+| Fato | Onde foi visto |
+|---|---|
+| Steam, app id `892970`, pasta `Valheim`, executável `valheim.exe` | `steamapps/appmanifest_892970.acf` e a pasta do jogo |
+| Mods carregam pelo BepInEx, iniciado pelo Doorstop (`winhttp.dll` + `doorstop_config.ini` na raiz do jogo) | raiz do jogo; `target_assembly=BepInEx\core\BepInEx.Preloader.dll` |
+| A raiz do jogo tem os arquivos do Doorstop, mas **não** tem a pasta `BepInEx` | pasta do jogo |
+| O r2modman guarda cada profile fora do jogo, com a árvore `BepInEx/{core,plugins,patchers,config}` inteira | `%APPDATA%/r2modmanPlus-local/Valheim/profiles/<profile>/` |
+| Cada mod é uma pasta `Autor-Nome` em `BepInEx/plugins`, com `manifest.json` (nome, versão, `dependencies` no formato `Autor-Nome-versão`) | profile `Modded_v2`: 69 pastas de mod, 96 arquivos em `config` |
+| O estado do profile (habilitado, dependências, incompatibilidades) fica em `mods.yml` | raiz de cada profile |
+
+### O que o Valheim valida e o que não valida
+
+| Assunto do diagnóstico | Valida? | Como |
+|---|---|---|
+| Jogo sem plugins e sem load order, com suporte dedicado | Sim | Nenhuma tela de Plugins/Load Order; tudo o mais funciona. |
+| Vários targets e tipos de mod | Sim | `BepInEx/plugins`, `BepInEx/patchers`, `BepInEx/config` e a raiz (pacote do BepInEx). |
+| Framework obrigatório (item 4) | Sim | BepInEx ausente é o mesmo caso do SKSE: obriga o check do adapter a não depender de código Bethesda. |
+| Instalador como ponto de extensão (item 11) | Sim | Pacote da Thunderstore tem layout e `manifest.json` próprios; não é FOMOD. |
+| Dependências vindas de metadado do pacote | Sim | `dependencies` do `manifest.json` viram `DependencyRule` com `source=metadata`. |
+| Arquivos gerados pelo jogo | Sim | `BepInEx/config/*.cfg` nasce na primeira execução: saídas conhecidas e "não gerenciar". |
+| Rótulos e textos que vêm do adapter (item 8) | Sim | Tipos de conteúdo e opções de launch novos, sem tradução no catálogo do app. |
+| Outro gerenciador no mesmo jogo | Sim | Os arquivos do Doorstop na raiz foram postos pelo r2modman: caso real de implantação estrangeira (D035). |
+| **Ordem de carga genérica (item 1)** | **Não** | O BepInEx ordena sozinho pelas dependências declaradas no código; não existe arquivo de ordem que o usuário edite. |
+
+Consequência: o Valheim é uma boa prova de "segundo jogo" para quase tudo, mas **não** guia a generalização do modelo de plugin. Ela continua adiada, com o limite registrado (item 1), até existir um jogo com ordem de carga editável.
+
+### Como entra
+
+1. **Como jogo declarado, na R3 do registro de jogos**: lojas, marcador, targets, tipos de mod, launch. Só dados.
+2. **Código específico, depois da R1** (fase B desta proposta, agora menor): instalador de pacote Thunderstore, leitura de `manifest.json` para nome, versão e dependências, check de BepInEx ausente, saídas conhecidas em `BepInEx/config`.
+3. **Mais tarde** (core/15): importar profiles do r2modman e provider da Thunderstore para downloads.
+
+Ponto a decidir antes do item 2: o Mod Orchestrator implanta **dentro da pasta do jogo** (como faz hoje), enquanto o r2modman mantém o profile fora e aponta o Doorstop para ele. Manter o modelo atual é o caminho sem mudança de motor; os dois gerenciadores não devem gerenciar a mesma instalação ao mesmo tempo.
