@@ -250,10 +250,17 @@ Riscos:
 
 ## 7. Alinhamento com a frente de desacoplamento
 
-A frente "Desacoplamento por jogo e SDK" ainda não publicou o relatório. O que este desenho assume dela, para ser conferido quando sair:
+Conferido contra `docs-ia/09-proposta-multi-jogo-e-extensoes.md` (b322b70). Não há conflito de modelo; há sobreposição de trabalho e uma ordem a respeitar.
 
-- Capability continua sendo a única forma de o core variar por jogo (D011), e o conjunto continua aberto.
-- O contrato obrigatório do adapter encolhe para dados, com comportamento em interfaces opcionais. A R1 daqui faz exatamente isso para detecção.
-- O ponto de extensão do SDK contribui capabilities; aqui elas aparecem como recursos com `provider`.
+| Ponto | Lá | Aqui | Como fica |
+|---|---|---|---|
+| Consulta de suporte por jogo | `GameSupport` com `features[{id, status}]`, na fase A | "Suportados enriquecido", na R1 | **Uma consulta só**, a `GameSupport` da fase A. A R1 só acrescenta `support`, lojas, `class`, `default` e `requires`. |
+| Estados de um recurso | `available`, `not_applicable`, `planned` | oferecido, ligado, efetivo | Complementares: o `status` de lá é a camada "oferecido" daqui. `not_applicable` nunca vira chave para o usuário. |
+| Capability e interface | Relação 1:1 validada no registro; id para `HealthCheckProvider`, `CategoryProvider`, `ProcessDeclarer`; reservar as que nada lê | Tabela de 3.3 usa o catálogo atual | A tabela de 3.3 é refeita sobre o catálogo que sair da fase A (as `base` que nada lê podem sumir). |
+| Port `GameAdapter` | `RegistryHints` e `VersionFile` obrigatórios são o acoplamento 12; SDK só na fase C | R1 tira detecção do contrato obrigatório | A R1 resolve o item 12. Vem **depois** da fase A e é a única mudança do port até a fase C. |
+| UI decidindo por capability | Acoplamento 9, corrigido na fase A | R2 depende de a UI só ler o efetivo | R2 só começa com isso corrigido. |
+| Módulos de recurso (N1) | Um por capability, com pontos de contribuição | Recurso `optional` ligável por instância | Ligar/desligar um recurso é ligar/desligar o módulo N1 naquela instância. |
+| Jogos "em breve" | Deixa para esta frente decidir | Sem entradas "em breve" (anti-pattern 18) | O nível `declared` cobre o caso com suporte real em vez de promessa. |
+| Segundo jogo | Fase B: um jogo não Bethesda **com ordem de carga**, para generalizar o modelo de plugin | R3: um ou dois jogos de arquivos soltos | São provas diferentes. Os jogos da R3 não validam a ordem de carga genérica e não substituem a fase B. |
 
-Se ela propuser outro nome ou outra granularidade para capability, o que muda aqui é a tabela de 3.3, não o modelo de três camadas.
+Ordem combinada: **fase A de lá → R1 → R2 e R3 em paralelo → R4**; a fase B de lá é independente de R2 a R4.
