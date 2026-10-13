@@ -1,6 +1,6 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **proposta, aguardando ok** (2026-10-13). Nada aqui foi implementado. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
+Status: **aprovada em 2026-10-13** com as respostas da seção 6. Nada aqui foi implementado ainda. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
 
@@ -241,12 +241,14 @@ Riscos:
 - **R1 mexe no port `GameAdapter`**, que a outra frente também deve propor enxugar. As duas mudanças precisam ser uma só.
 - **Desligar `load_order` com arquivo já escrito** é o caso mais delicado de R2; a regra de 3.3 (não reverter) precisa do seu ok explícito.
 
-## 6. Perguntas para você
+## 6. Respostas do Leonardo (2026-10-13)
 
-1. **Liga/desliga vale por instância ou por jogo?** Recomendo **instância** (é o escopo das settings de hoje, e duas cópias do mesmo jogo podem querer coisas diferentes). O padrão vem da entrada.
-2. **Desligar um recurso deixa os arquivos como estão?** Recomendo **sim**: o app só para de gerenciar; religar passa pela triagem de mudança externa.
-3. **Quais jogos entram primeiro como `declared`, na R3?** Preciso de um ou dois nomes seus; os ids de loja eu confirmo na fonte antes de gravar.
-4. **Jogos personalizados podem ser exportados/importados como arquivo?** Recomendo **sim**, é o que torna a opção "aberta" de verdade.
+1. Liga/desliga vale **por instância**; o padrão vem da entrada.
+2. Desligar um recurso **deixa os arquivos como estão**: o app só para de gerenciar; religar passa pela triagem de mudança externa.
+3. O primeiro jogo publicado no formato de entrada é o **Skyrim**. Consequência: a R1 faz o adapter `skyrimse` publicar `discovery`, `layout` e `features` como dado, e a R3 valida o formato com a parte declarativa do Skyrim, sem acrescentar outro jogo por enquanto. O comportamento de plugins e load order continua em código (nível `full`).
+4. Jogo personalizado **pode ser exportado e importado** como arquivo.
+
+Início da implementação: a R1 espera a fase A da frente de desacoplamento entrar no master, porque as duas mexem em `registry.go`, `game.go` e no adapter do Skyrim.
 
 ## 7. Alinhamento com a frente de desacoplamento
 
