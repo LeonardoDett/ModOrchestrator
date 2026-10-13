@@ -194,6 +194,10 @@ export function GameInstanceDetails(arg1) {
   return window['go']['bridge']['App']['GameInstanceDetails'](arg1);
 }
 
+export function GamesSupport() {
+  return window['go']['bridge']['App']['GamesSupport']();
+}
+
 export function GamesView(arg1) {
   return window['go']['bridge']['App']['GamesView'](arg1);
 }

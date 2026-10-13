@@ -230,3 +230,26 @@ func toVerificationDTO(v games.Verification) VerificationDTO {
 	}
 	return dto
 }
+
+// FeatureDTO is one capability of the catalog for one game. Status says
+// whether the game offers it ("available", "not_applicable"); class whether
+// the user may turn it off ("base", "optional").
+type FeatureDTO struct {
+	ID       string   `json:"id"`
+	Status   string   `json:"status"`
+	Class    string   `json:"class"`
+	Requires []string `json:"requires"`
+	Default  bool     `json:"default"`
+}
+
+// GameSupportDTO is what the app offers for one game of the registry.
+type GameSupportDTO struct {
+	GameID         string       `json:"gameId"`
+	GameName       string       `json:"gameName"`
+	Adapter        string       `json:"adapter"`
+	AdapterVersion string       `json:"adapterVersion"`
+	Support        string       `json:"support"`
+	Stores         []string     `json:"stores"`
+	Custom         bool         `json:"custom"`
+	Features       []FeatureDTO `json:"features"`
+}

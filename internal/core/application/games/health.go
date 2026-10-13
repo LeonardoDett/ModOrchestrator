@@ -44,11 +44,11 @@ func (s *Service) RunningProcesses(ctx context.Context, inst game.Instance) ([]s
 // last acknowledged. The first version seen is recorded silently, so only
 // a later change is reported (game_version_changed).
 func (s *Service) VersionCheck(ctx context.Context, inst game.Instance) (current, seen string, err error) {
-	a, ok := s.Registry.ByName(inst.Adapter)
+	_, ok := s.Registry.ByName(inst.Adapter)
 	if !ok {
 		return "", "", nil
 	}
-	current = s.version(ctx, a, inst.Game, inst.Root)
+	current = s.version(ctx, inst.Game, inst.Root)
 	if current == "" {
 		return "", "", nil
 	}
@@ -65,11 +65,11 @@ func (s *Service) AcknowledgeVersion(ctx context.Context, id game.InstanceID) er
 	if err != nil {
 		return err
 	}
-	a, ok := s.Registry.ByName(inst.Adapter)
+	_, ok := s.Registry.ByName(inst.Adapter)
 	if !ok {
 		return nil
 	}
-	if v := s.version(ctx, a, inst.Game, inst.Root); v != "" {
+	if v := s.version(ctx, inst.Game, inst.Root); v != "" {
 		return s.State.Set(ctx, stateSeenVersion+string(id), v)
 	}
 	return nil

@@ -27,7 +27,23 @@ Um adapter é registrado no bootstrap e implementa o port `GameAdapter`. Ele **d
 
 ### Forma do port na F3 (D057)
 
-O port `ports.GameAdapter` implementa as linhas acima assim: `Definitions()`, `InstanceDefinition(id, targets)` (definição efetiva de **uma instância**: estática nos jogos fixos, montada dos targets do usuário no `generic`; capabilities efetivas = adapter + instância), `Markers(id)` (arquivos que identificam a pasta do jogo, usados pela busca completa e por `ValidateRoot`), `RegistryHints(id)` (valores do registro que apontam a instalação), `VersionFile(id)` (executável cuja versão é a do jogo), `Detect(stores, fs)`, `ValidateRoot(fs, id, root)` (devolve `*game.RootError` com `reason` e, se for o caso, o marcador esperado), `Targets(id, root, custom)`, `RootHints(id)` e `ContentFlags(id, footprint)`. O adapter só recebe um `FileReader` (leitura): não escreve no disco, nem no do jogo (anti-pattern 24). ModTypes são dados (`game.ModType` com `Priority` e `Detect []DetectRule`) e `Definition.DetectModType(paths)` escolhe o de maior prioridade. `healthChecks`, `launch`, `plugins`, `loadOrder`, `installers`, `toolOutputs` e `defaultCategories` entram como interfaces opcionais nas fases que os usam (F4, F9, F11, F12).
+O port `ports.GameAdapter` implementa as linhas acima assim: `Definitions()`, `InstanceDefinition(id, targets)` (definição efetiva de **uma instância**: estática nos jogos fixos, montada dos targets do usuário no `generic`; capabilities efetivas = adapter + instância), `ValidateRoot(fs, id, root)` (devolve `*game.RootError` com `reason` e, se for o caso, o marcador esperado), `Targets(id, root, custom)`, `RootHints(id)` e `ContentFlags(id, footprint)`. O adapter só recebe um `FileReader` (leitura): não escreve no disco, nem no do jogo (anti-pattern 24). ModTypes são dados (`game.ModType` com `Priority` e `Detect []DetectRule`) e `Definition.DetectModType(paths)` escolhe o de maior prioridade. `healthChecks`, `launch`, `plugins`, `loadOrder`, `installers`, `toolOutputs` e `defaultCategories` entram como interfaces opcionais nas fases que os usam (F4, F9, F11, F12).
+
+Desde a D113 a descoberta não é mais método do port: `Markers`, `RegistryHints`, `VersionFile` e `Detect` viraram o dado `Definition.Discovery` (ver "Registro de jogos" abaixo).
+
+### Registro de jogos (D113)
+
+Cada `GameDefinition` é uma entrada do registro e carrega, além de targets e mod types:
+
+| Campo | Conteúdo |
+|---|---|
+| `Support` | `full` (adapter dedicado), `declared` (só dados) ou `custom` (definido pelo usuário). |
+| `Discovery.Stores` | Id do jogo em cada loja (`steam`, `gog`, `epic`). |
+| `Discovery.Registry` | Valores do registro que apontam a instalação. |
+| `Discovery.Markers` | Arquivos, relativos à raiz, que identificam a pasta do jogo (busca completa). |
+| `Discovery.VersionFile` | Executável cuja versão é a do jogo. |
+
+Cada capability é também um **recurso** com classe (`game.Describe`): `base` (sempre ligado) ou `optional` (o usuário poderá ligar e desligar por instância), e dependências (`load_order` exige `plugins`). Definição que declara um recurso sem o que ele exige não registra.
 
 ### Catálogo de capabilities (já em `game.go`)
 
@@ -49,7 +65,7 @@ Cada capability servida por código do adapter tem **uma** interface opcional, e
 
 As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`save_games`, `game_settings`, `tools`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
 
-`Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Classe, padrão e dependências de cada recurso entram com o registro de jogos (proposta em `propostas/2026-10-13-registro-de-jogos.md`).
+`Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Desde a D113 a mesma consulta traz o nível de suporte, as lojas onde o jogo é procurado e, por recurso, classe, dependências e padrão; o bridge a expõe em `GamesSupport()`.
 
 ### Regras
 - O core decide por capability (D011). Se uma tela depende de capability ausente, ela não aparece na navegação do workspace (core/11 §5).
@@ -72,7 +88,7 @@ Modos (paridade Vortex "Scan: quick/full"):
 
 Resultado: lista de **candidatos** (não gerencia nada sozinho). Instalação nunca encontrada ⇒ "Localizar manualmente" com validação.
 
-Como ficou (F3, D057): o `StoreScanner` devolve toda instalação que encontra (`Scan(ctx, registryHints)`) e cada adapter escolhe as suas em `Detect`. Steam lê `SteamPath`/`InstallPath` do registro, `steamapps\libraryfolders.vdf` (formato atual e antigo) e `appmanifest_*.acf`; GOG lê `HKLM\SOFTWARE\WOW6432Node\GOG.com\Games\*` (`path`, `gameID`); Epic lê `*.item` (JSON: `AppName`, `InstallLocation`); um launcher ausente ou um arquivo corrompido contribui com nada e não é erro. Candidatos são deduplicados por pasta (sem diferenciar maiúsculas nem barra final), com a loja vencendo o registro e este a busca nas unidades. A busca completa é a operação cancelável `games.scan` (passos `stores` e `drives`, progresso = pastas verificadas), percorre as unidades fixas até 6 níveis, ignora áreas de sistema (`Windows`, `$Recycle.Bin`, `System Volume Information`, `AppData`, `ProgramData`, `node_modules`, `.git`…) e não desce dentro de uma pasta de jogo encontrada. Os candidatos vivem na memória da sessão (são calculados, nunca persistidos); a busca rápida roda na abertura da janela, fora do caminho da UI.
+Como ficou (F3, D057; D113): o `StoreScanner` devolve toda instalação que encontra (`Scan(ctx, registryHints)`) e o serviço de jogos fica com as que alguma definição declara em `Discovery` e cuja pasta o adapter aceita em `ValidateRoot`. Steam lê `SteamPath`/`InstallPath` do registro, `steamapps\libraryfolders.vdf` (formato atual e antigo) e `appmanifest_*.acf`; GOG lê `HKLM\SOFTWARE\WOW6432Node\GOG.com\Games\*` (`path`, `gameID`); Epic lê `*.item` (JSON: `AppName`, `InstallLocation`); um launcher ausente ou um arquivo corrompido contribui com nada e não é erro. Candidatos são deduplicados por pasta (sem diferenciar maiúsculas nem barra final), com a loja vencendo o registro e este a busca nas unidades. A busca completa é a operação cancelável `games.scan` (passos `stores` e `drives`, progresso = pastas verificadas), percorre as unidades fixas até 6 níveis, ignora áreas de sistema (`Windows`, `$Recycle.Bin`, `System Volume Information`, `AppData`, `ProgramData`, `node_modules`, `.git`…) e não desce dentro de uma pasta de jogo encontrada. Os candidatos vivem na memória da sessão (são calculados, nunca persistidos); a busca rápida roda na abertura da janela, fora do caminho da UI.
 
 ## 4. Gerenciar um jogo (assistente)
 

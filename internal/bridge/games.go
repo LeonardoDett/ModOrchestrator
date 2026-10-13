@@ -208,3 +208,25 @@ func (a *App) PickFolder(title string) (string, error) {
 	}
 	return path, nil
 }
+
+// GamesSupport returns, for every game of the registry, how it is served
+// and each capability of the catalog as a feature (D112, D113). It is
+// derived from the registered adapters.
+func (a *App) GamesSupport() []GameSupportDTO {
+	out := []GameSupportDTO{}
+	for _, s := range a.c.Games.Registry.Support() {
+		g := GameSupportDTO{
+			GameID: string(s.Game), GameName: s.Name, Adapter: s.Adapter, AdapterVersion: s.AdapterVersion,
+			Support: string(s.Support), Stores: s.Stores, Custom: s.Custom, Features: []FeatureDTO{},
+		}
+		for _, f := range s.Features {
+			fd := FeatureDTO{ID: string(f.ID), Status: string(f.Status), Class: string(f.Class), Default: f.Default, Requires: []string{}}
+			for _, r := range f.Requires {
+				fd.Requires = append(fd.Requires, string(r))
+			}
+			g.Features = append(g.Features, fd)
+		}
+		out = append(out, g)
+	}
+	return out
+}

@@ -125,6 +125,11 @@ type Definition struct {
 	Targets []TargetID
 	// ModTypes always contains DefaultModType.
 	ModTypes []ModType
+	// Support is how the game is served; SupportLevel answers for
+	// definitions that leave it empty.
+	Support Support
+	// Discovery is how installations of the game are found.
+	Discovery Discovery
 	// CustomTargets means the user declares the targets of each instance
 	// (generic adapter); Targets and ModTypes are then only a template and
 	// the adapter builds the effective definition per instance.
@@ -169,6 +174,21 @@ func (d Definition) Validate() error {
 	if len(d.Targets) == 0 {
 		return fmt.Errorf("%w: %s declares no target", ErrInvalid, d.ID)
 	}
+	switch d.Support {
+	case "", SupportFull, SupportDeclared, SupportCustom:
+	default:
+		return fmt.Errorf("%w: %s has unknown support level %q", ErrInvalid, d.ID, d.Support)
+	}
+	if err := d.Discovery.validate(); err != nil {
+		return fmt.Errorf("%s: %w", d.ID, err)
+	}
+	for _, c := range d.Capabilities.List() {
+		for _, r := range Describe(c).Requires {
+			if !d.Capabilities.Has(r) {
+				return fmt.Errorf("%w: %s declares %q without %q", ErrInvalid, d.ID, c, r)
+			}
+		}
+	}
 	seen := map[ModTypeID]struct{}{}
 	for _, t := range d.ModTypes {
 		if t.ID == "" || !slices.Contains(d.Targets, t.Target) {
@@ -188,6 +208,18 @@ func (d Definition) Validate() error {
 		return fmt.Errorf("%w: %s must declare the %q mod type", ErrInvalid, d.ID, DefaultModType)
 	}
 	return nil
+}
+
+// SupportLevel is Support, or the level implied by the definition when the
+// adapter did not say: custom when the user declares the targets.
+func (d Definition) SupportLevel() Support {
+	switch {
+	case d.Support != "":
+		return d.Support
+	case d.CustomTargets:
+		return SupportCustom
+	}
+	return SupportFull
 }
 
 // ModType returns the declared mod type.

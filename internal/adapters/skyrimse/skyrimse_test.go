@@ -6,7 +6,6 @@ import (
 	"slices"
 	"testing"
 
-	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/relpath"
@@ -33,24 +32,26 @@ func TestDefinitionIsValidAndDeclaresCapabilities(t *testing.T) {
 	}
 }
 
-func TestDetectsStoreInstallationsWithTheExecutable(t *testing.T) {
-	fs := memfs.New("C:", "D:")
-	fs.AddFile(`C:\Steam\steamapps\common\Skyrim Special Edition\SkyrimSE.exe`, "")
-	fs.AddFile(`D:\GOG\Skyrim\SkyrimSE.exe`, "")
-	fs.AddDir(`D:\Epic\Skyrim`) // executable missing
-	stores := []ports.StoreInstall{
-		{Store: "steam", AppID: "489830", Path: `C:\Steam\steamapps\common\Skyrim Special Edition`},
-		{Store: "steam", AppID: "22330", Path: `C:\Steam\steamapps\common\Oblivion`},
-		{Store: "gog", AppID: "1711230643", Path: `D:\GOG\Skyrim`},
-		{Store: "epic", AppID: "ac82db5035584c7f8a2c548d98c86b2c", Path: `D:\Epic\Skyrim`},
-		{Store: "gog", AppID: "999", Path: `D:\GOG\Skyrim`},
+// D113: how the game is found is data of the definition.
+func TestDefinitionDeclaresDiscovery(t *testing.T) {
+	def := Adapter{}.Definitions()[0]
+	d := def.Discovery
+	for store, id := range map[string]string{
+		game.StoreSteam: "489830", game.StoreGOG: "1711230643",
+		game.StoreEpic: "ac82db5035584c7f8a2c548d98c86b2c", game.StoreRegistry: "bethesda",
+	} {
+		if !d.Matches(store, id) {
+			t.Errorf("%s %s is Skyrim SE", store, id)
+		}
 	}
-	got, err := Adapter{}.Detect(context.Background(), stores, fs)
-	if err != nil {
-		t.Fatal(err)
+	if d.Matches(game.StoreSteam, "22330") || d.Matches(game.StoreGOG, "489830") || d.Matches(game.StoreSteam, "") {
+		t.Error("another game or another store must not match")
 	}
-	if len(got) != 2 || got[0].Store != "steam" || got[1].Store != "gog" {
-		t.Fatalf("candidates = %+v", got)
+	if !slices.Equal(d.Markers, []string{Executable}) || d.VersionFile != Executable {
+		t.Errorf("markers = %v, version file = %q", d.Markers, d.VersionFile)
+	}
+	if def.SupportLevel() != game.SupportFull {
+		t.Errorf("support = %q", def.SupportLevel())
 	}
 }
 

@@ -35,7 +35,8 @@ func (Adapter) Name() string    { return Name }
 func (Adapter) Version() string { return Version }
 
 // Definitions returns the template definition (CustomTargets): it passes
-// validation, but its target is replaced by the ones of each instance.
+// validation, but its target is replaced by the ones of each instance. It
+// declares no discovery: generic games are always added by hand.
 func (Adapter) Definitions() []game.Definition {
 	return []game.Definition{{
 		ID:   GameID,
@@ -46,6 +47,7 @@ func (Adapter) Definitions() []game.Definition {
 		Targets:       []game.TargetID{defaultTarget},
 		ModTypes:      []game.ModType{{ID: game.DefaultModType, Name: "Default", Target: defaultTarget}},
 		CustomTargets: true,
+		Support:       game.SupportCustom,
 	}}
 }
 
@@ -70,15 +72,6 @@ func (a Adapter) InstanceDefinition(id game.ID, targets []game.Target) (game.Def
 		def.ModTypes = append(def.ModTypes, mt)
 	}
 	return def, def.Validate()
-}
-
-func (Adapter) Markers(game.ID) []string                   { return nil }
-func (Adapter) RegistryHints(game.ID) []ports.RegistryHint { return nil }
-func (Adapter) VersionFile(game.ID) string                 { return "" }
-
-// Detect finds nothing: generic games are always added by hand.
-func (Adapter) Detect(context.Context, []ports.StoreInstall, ports.FileReader) ([]ports.Candidate, error) {
-	return nil, nil
 }
 
 // ValidateRoot only requires an existing folder: the adapter cannot know

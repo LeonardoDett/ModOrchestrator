@@ -43,7 +43,8 @@ var skippedDirs = []string{
 }
 
 // ScanQuick asks the stores and the registry for installations and keeps
-// the ones an adapter recognises. It is read-only, fast and safe to run at
+// the ones a definition declares (game.Discovery) and whose folder the
+// adapter accepts. It is read-only, fast and safe to run at
 // startup (core/11 §3). Nothing is managed by it.
 func (s *Service) ScanQuick(ctx context.Context) (int, error) {
 	stores, err := s.Stores.Scan(ctx, s.Registry.hints())
@@ -51,17 +52,17 @@ func (s *Service) ScanQuick(ctx context.Context) (int, error) {
 		return 0, err
 	}
 	var found []ports.Candidate
-	for _, a := range s.Registry.Adapters() {
-		cands, err := a.Detect(ctx, stores, s.FS)
-		if err != nil {
-			return 0, err
-		}
-		for _, c := range cands {
-			c.Root = cleanRoot(c.Root)
-			if adapter, ok := s.Registry.Adapter(c.Game); ok {
-				c.Version = s.version(ctx, adapter, c.Game, c.Root)
+	for _, d := range s.Registry.Definitions() {
+		a, _ := s.Registry.Adapter(d.ID)
+		for _, in := range stores {
+			if in.Path == "" || !d.Discovery.Matches(in.Store, in.AppID) {
+				continue
 			}
-			found = append(found, c)
+			if a.ValidateRoot(ctx, s.FS, d.ID, in.Path) != nil {
+				continue
+			}
+			root := cleanRoot(in.Path)
+			found = append(found, ports.Candidate{Game: d.ID, Root: root, Store: in.Store, Version: s.version(ctx, d.ID, root)})
 		}
 	}
 	s.mu.Lock()
@@ -163,8 +164,7 @@ func (s *Service) fullScan(ctx context.Context, t *operations.Tracker) error {
 func (s *Service) markers() map[string][]game.ID {
 	out := map[string][]game.ID{}
 	for _, d := range s.Registry.Definitions() {
-		a, _ := s.Registry.Adapter(d.ID)
-		for _, m := range a.Markers(d.ID) {
+		for _, m := range d.Discovery.Markers {
 			out[strings.ToLower(m)] = append(out[strings.ToLower(m)], d.ID)
 		}
 	}
@@ -203,7 +203,7 @@ func (w *walker) walk(ctx context.Context, dir string, depth int) error {
 				continue
 			}
 			c := ports.Candidate{Game: id, Root: dir, Store: "scan"}
-			c.Version = w.s.version(ctx, a, id, dir)
+			c.Version = w.s.version(ctx, id, dir)
 			w.found = append(w.found, c)
 			return nil // a game folder holds no other game
 		}

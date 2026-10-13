@@ -1005,3 +1005,21 @@ Motivo: só três das dez capabilities eram lidas pelo código e as interfaces o
 Alternativas rejeitadas: generalizar já o modelo de plugin para "unidades ordenáveis" (com um jogo só a abstração seria um chute; fica para quando houver um segundo adapter com ordem de carga); ligar `installer` a `InstallerProvider` (o `generic` declara `installer` sem ter instaladores próprios, e o sentido atual é o do pipeline).
 
 Consequências: capability nova exige entrada no catálogo e, se servida por código, uma linha em `games.contracts`. O port `GameAdapter` não mudou. Não foi feito nesta decisão: tirar da UI as decisões por capability (espera o subprojeto de componentes) e expor a matriz no bridge (entra com o registro de jogos).
+
+## D113 — Registro de jogos como dado: descoberta, nível de suporte e classe dos recursos
+Status: vigente (emenda D057; detalha D011 e D112; desenho em `propostas/2026-10-13-registro-de-jogos.md`, fase R1)
+
+A lista de jogos com suporte passa a ser dado da `GameDefinition`, e não métodos de cada adapter:
+
+1. **Descoberta é dado.** `game.Definition.Discovery` traz os ids do jogo por loja (`Stores`), as dicas de registro (`Registry`), os arquivos marcadores (`Markers`) e o executável de versão (`VersionFile`). O serviço de jogos casa as instalações do `StoreScanner` com `Discovery.Matches(loja, id)` e confirma a pasta com `ValidateRoot` do adapter. Saíram do port `GameAdapter`: `Markers`, `RegistryHints`, `VersionFile` e `Detect`. `ports.RegistryHint` virou alias de `game.RegistryHint`.
+2. **Nível de suporte.** `Definition.Support`: `full` (adapter dedicado), `declared` (jogo descrito só por dados, ainda sem nenhum) ou `custom` (definido pelo usuário; hoje o `generic`). Sem valor declarado, `SupportLevel()` deduz `custom` de `CustomTargets` e `full` do resto.
+3. **Classe dos recursos.** `game.Describe(capability)` classifica cada capability como `base` (sempre ligada: `filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection`) ou `optional` (`plugins`, `load_order`, `launch`, `save_games`, `game_settings`, `tools`), com dependências (`load_order` exige `plugins`). Capability fora do catálogo é `optional`. `Definition.Validate` recusa definição que declara um recurso sem o que ele exige.
+4. **Consulta única.** `Registry.Support()` (D112) ganhou `Support`, `Stores` e, por recurso, `Class`, `Requires` e `Default`. O bridge expõe em `GamesSupport()`.
+
+Decisões do usuário (2026-10-13) que valem para as fases seguintes: ligar e desligar recurso é **por instância**; desligar **não apaga nem reverte** arquivos do jogo, o app só para de gerenciar; jogo personalizado poderá ser exportado e importado; o Skyrim é o primeiro jogo publicado nesse formato.
+
+Motivo: os ids de loja e os marcadores estavam em constantes e métodos privados de cada adapter, então a lista de suportados só sabia nome e id, e um jogo simples exigiria escrever código de detecção. Com a descoberta em dado, a mesma definição serve ao adapter dedicado, ao jogo declarado e ao personalizado.
+
+Alternativas rejeitadas: manter `Detect` como interface opcional (nenhum adapter precisa, e a D112 pede uma capability por interface; volta com capability própria se um jogo exigir detecção por código); guardar classe e dependências em cada definição (são propriedades do recurso, não do jogo; por jogo só varia o que é oferecido).
+
+Consequências: adapter novo declara `Discovery` em vez de implementar quatro métodos. Nesta fase nada muda para o usuário: nenhum recurso pode ser desligado ainda (R2), a UI não consome `GamesSupport()` (espera o subprojeto de componentes) e o `generic` continua com um único id de jogo (R3 e R4).

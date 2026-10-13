@@ -27,12 +27,6 @@ func (b bare) Definitions() []game.Definition {
 func (b bare) InstanceDefinition(game.ID, []game.Target) (game.Definition, error) {
 	return b.Definitions()[0], nil
 }
-func (bare) Markers(game.ID) []string                   { return nil }
-func (bare) RegistryHints(game.ID) []ports.RegistryHint { return nil }
-func (bare) VersionFile(game.ID) string                 { return "" }
-func (bare) Detect(context.Context, []ports.StoreInstall, ports.FileReader) ([]ports.Candidate, error) {
-	return nil, nil
-}
 func (bare) ValidateRoot(context.Context, ports.FileReader, game.ID, string) error { return nil }
 func (bare) Targets(game.ID, string, []game.TargetSpec) ([]game.Target, error)     { return nil, nil }
 func (bare) RootHints(game.ID) ports.RootHints                                     { return ports.RootHints{} }

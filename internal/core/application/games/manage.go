@@ -172,7 +172,7 @@ func (s *Service) Verify(ctx context.Context, su Setup) (Verification, error) {
 			v.Problems = append(v.Problems, *p)
 		}
 	}
-	v.Version = s.version(ctx, adapter, su.Game, root)
+	v.Version = s.version(ctx, su.Game, root)
 
 	v.Folders = su.Folders
 	if v.Folders.Staging == "" || v.Folders.ArchiveStore == "" || v.Folders.BackupStore == "" {

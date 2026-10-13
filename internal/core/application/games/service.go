@@ -203,14 +203,15 @@ func (s *Service) describe(ctx context.Context, inst game.Instance) Managed {
 	if info, err := s.FS.Stat(ctx, inst.Root); err == nil && !info.Exists {
 		m.RootMissing = true
 	}
-	m.Version = s.version(ctx, adapter, inst.Game, inst.Root)
+	m.Version = s.version(ctx, inst.Game, inst.Root)
 	m.Foreign, _ = s.CheckForeign(ctx, inst)
 	m.Deployed, _ = s.Deployments.Deployed(ctx, inst.ID)
 	return m
 }
 
-func (s *Service) version(ctx context.Context, a ports.GameAdapter, id game.ID, root string) string {
-	file := a.VersionFile(id)
+func (s *Service) version(ctx context.Context, id game.ID, root string) string {
+	def, _ := s.Registry.Definition(id)
+	file := def.Discovery.VersionFile
 	if file == "" {
 		return ""
 	}

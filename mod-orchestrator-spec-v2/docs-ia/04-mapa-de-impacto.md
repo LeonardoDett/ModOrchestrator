@@ -9,7 +9,8 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Contrato do adapter / capabilities | core/11, core/12, ui/00 (navegação), ui/01, `ports.GameAdapter`, teste de arquitetura (literais de jogo) | — | todas do workspace |
 | Marcadores das pastas / detecção de implantação estrangeira | core/04 §10–11, core/11 §4, D058/D059, diagnóstico `foreign_deployment` (F9) | INV-LIB-03, INV-DEP-08 | Games, Overview, assistente (DLG-01) |
 | Estado de app (instância ativa, jogos ocultos) | docs-ia/03, D060, `ports.AppState` | — | barra de título, Games |
-| Descoberta (StoreScanner, busca completa) | core/11 §3, D057, adapters (`Markers`, `RegistryHints`) | — | Games |
+| Descoberta (StoreScanner, busca completa) | core/11 §1 e §3, D057, D113, `Definition.Discovery` de cada adapter | — | Games |
+| Nível de suporte ou classe de um recurso | core/11 §1 (Registro de jogos), `game.Describe`, `Registry.Support()`, bridge `GamesSupport()`, D113 | — | Games, Extensions |
 | Capability nova ou interface opcional de adapter | core/11 §1 (catálogo e tabela de contratos), `game.Catalog()`, `games.contracts`, core/12 §2, `capability.*` no i18n, D112 | — | Extensions, Games (detalhes) |
 | ModType | core/11, core/12, core/03, core/04 | INV-CON-01 | Mods (coluna/inspector) |
 | Modelo de Mod / atributos | core/01, core/02, ui/telas/mods | INV-LIB-01, INV-LIB-05 | Mods |

@@ -164,16 +164,13 @@ type StoreInstall struct {
 	Path  string
 }
 
-// RegistryHint is a registry value an adapter declares as the install path
-// of a game (core/11 §3). ID identifies the hint in StoreInstall.AppID.
-type RegistryHint struct {
-	ID    string
-	Key   string // "HKLM\SOFTWARE\..." (64-bit view of the machine hive)
-	Value string
-}
+// RegistryHint is a registry value a game definition declares as its
+// install path (core/11 §3).
+type RegistryHint = game.RegistryHint
 
 // StoreScanner discovers installations (core/11 §3). Scanning is read-only
-// and returns every installation it finds; adapters pick theirs.
+// and returns every installation it finds; the games service keeps the
+// ones a definition recognises.
 type StoreScanner interface {
 	Scan(ctx context.Context, hints []RegistryHint) ([]StoreInstall, error)
 }
@@ -204,8 +201,8 @@ type LaunchSupport interface {
 	LaunchOptions(ctx context.Context, fs FileReader, inst game.Instance) ([]LaunchOption, error)
 }
 
-// Candidate is an installation the adapter recognises; managing it is always
-// a user decision.
+// Candidate is an installation recognised as a game of the registry;
+// managing it is always a user decision.
 type Candidate struct {
 	Game    game.ID
 	Root    string
@@ -222,8 +219,9 @@ type RootHints struct {
 
 // GameAdapter is the contract every adapter implements (core/11 §1). It
 // declares and answers; it never deploys and never writes (anti-pattern 24):
-// it only receives a FileReader. Plugin and load order support are the
-// optional interfaces PluginSupport and LoadOrderSupport (F11).
+// it only receives a FileReader. How a game is found is data of its
+// definition (game.Discovery, D113), not a method. Optional processes are
+// the optional interfaces below, one per capability (D112).
 type GameAdapter interface {
 	Name() string
 	Version() string
@@ -232,14 +230,6 @@ type GameAdapter interface {
 	// static one for fixed games, built from the instance targets for games
 	// with Definition.CustomTargets. Capabilities are adapter + instance.
 	InstanceDefinition(id game.ID, targets []game.Target) (game.Definition, error)
-	// Markers are the files whose presence in a folder identify the game
-	// (used by the full search and by ValidateRoot).
-	Markers(id game.ID) []string
-	RegistryHints(id game.ID) []RegistryHint
-	// VersionFile is the executable, relative to the root, whose version
-	// resource is the game version; "" when the game has none.
-	VersionFile(id game.ID) string
-	Detect(ctx context.Context, stores []StoreInstall, fs FileReader) ([]Candidate, error)
 	// ValidateRoot returns a *game.RootError when root is not an installation.
 	ValidateRoot(ctx context.Context, fs FileReader, id game.ID, root string) error
 	// Targets resolves the targets of an installation; custom holds the

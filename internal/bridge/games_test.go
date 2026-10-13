@@ -124,3 +124,44 @@ func TestBridgeRefusesAWrongFolderWithACodedReason(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// D113: the registry answers, as data, how each game is served and which
+// features it offers.
+func TestBridgeGamesSupportDescribesTheRegistry(t *testing.T) {
+	app := newGamesApp(t)
+	byID := map[string]GameSupportDTO{}
+	for _, g := range app.GamesSupport() {
+		byID[g.GameID] = g
+	}
+	feature := func(g GameSupportDTO, id string) FeatureDTO {
+		i := slices.IndexFunc(g.Features, func(f FeatureDTO) bool { return f.ID == id })
+		if i < 0 {
+			t.Fatalf("%s lists no %q", g.GameID, id)
+		}
+		return g.Features[i]
+	}
+
+	custom, ok := byID["generic"]
+	if !ok || custom.Support != "custom" || !custom.Custom || len(custom.Stores) != 0 {
+		t.Fatalf("generic = %+v", custom)
+	}
+	if f := feature(custom, "plugins"); f.Status != "not_applicable" || f.Class != "optional" || f.Default {
+		t.Errorf("generic plugins = %+v", f)
+	}
+
+	var full GameSupportDTO
+	for _, g := range byID {
+		if g.Support == "full" {
+			full = g
+		}
+	}
+	if !slices.Equal(full.Stores, []string{"steam", "gog", "epic", "registry"}) {
+		t.Fatalf("full game = %+v", full)
+	}
+	if f := feature(full, "load_order"); f.Status != "available" || f.Class != "optional" || !f.Default || !slices.Equal(f.Requires, []string{"plugins"}) {
+		t.Errorf("load_order = %+v", f)
+	}
+	if f := feature(full, "external_change_strategy"); f.Class != "base" || len(f.Requires) != 0 {
+		t.Errorf("external changes = %+v", f)
+	}
+}

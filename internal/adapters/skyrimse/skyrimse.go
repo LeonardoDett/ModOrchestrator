@@ -77,6 +77,21 @@ func (Adapter) Definitions() []game.Definition {
 			game.CapPlugins, game.CapLoadOrder, game.CapLaunch, game.CapExternalChanges,
 			game.CapAdapterInstallers, game.CapHealthChecks, game.CapDefaultCategories, game.CapRunningDetection,
 		),
+		Support: game.SupportFull,
+		Discovery: game.Discovery{
+			Stores: []game.StoreRef{
+				{Store: game.StoreSteam, AppID: steamAppID},
+				{Store: game.StoreGOG, AppID: gogGameID},
+				{Store: game.StoreEpic, AppID: epicAppName},
+			},
+			Registry: []game.RegistryHint{{
+				ID:    registryID,
+				Key:   `HKLM\SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition`,
+				Value: "installed path",
+			}},
+			Markers:     []string{Executable},
+			VersionFile: Executable,
+		},
 		Targets: []game.TargetID{TargetData, TargetRoot},
 		ModTypes: []game.ModType{
 			{ID: game.DefaultModType, Name: "Default", Target: TargetData},
@@ -109,48 +124,6 @@ func (a Adapter) InstanceDefinition(id game.ID, _ []game.Target) (game.Definitio
 		return game.Definition{}, fmt.Errorf("%w: %s does not define %q", game.ErrInvalid, Name, id)
 	}
 	return a.Definitions()[0], nil
-}
-
-func (Adapter) Markers(game.ID) []string { return []string{Executable} }
-
-func (Adapter) RegistryHints(game.ID) []ports.RegistryHint {
-	return []ports.RegistryHint{{
-		ID:    registryID,
-		Key:   `HKLM\SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition`,
-		Value: "installed path",
-	}}
-}
-
-func (Adapter) VersionFile(game.ID) string { return Executable }
-
-// Detect keeps the installations of the stores that carry Skyrim SE and
-// whose folder really holds the game executable.
-func (a Adapter) Detect(ctx context.Context, stores []ports.StoreInstall, fs ports.FileReader) ([]ports.Candidate, error) {
-	var out []ports.Candidate
-	for _, s := range stores {
-		if !isSkyrim(s) || s.Path == "" {
-			continue
-		}
-		if a.ValidateRoot(ctx, fs, GameID, s.Path) != nil {
-			continue
-		}
-		out = append(out, ports.Candidate{Game: GameID, Root: s.Path, Store: s.Store})
-	}
-	return out, nil
-}
-
-func isSkyrim(s ports.StoreInstall) bool {
-	switch s.Store {
-	case "steam":
-		return s.AppID == steamAppID
-	case "gog":
-		return s.AppID == gogGameID
-	case "epic":
-		return s.AppID == epicAppName
-	case "registry":
-		return s.AppID == registryID
-	}
-	return false
 }
 
 func (Adapter) ValidateRoot(ctx context.Context, fs ports.FileReader, _ game.ID, root string) error {

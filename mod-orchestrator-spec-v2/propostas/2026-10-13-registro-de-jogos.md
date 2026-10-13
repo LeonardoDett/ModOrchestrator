@@ -1,6 +1,6 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **aprovada em 2026-10-13** com as respostas da seção 6. Nada aqui foi implementado ainda. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
+Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 implementada (D113)**; R2 em diante ainda não. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
 
@@ -230,6 +230,8 @@ Cada fase fecha com `go vet ./... && go test ./...`, `npm --prefix frontend run 
 | **R4. Jogo personalizado como entrada** | Repositório de entradas do usuário; registro composto; reconhecimento de pasta; modelos; exportar/importar; migração das instâncias `generic`. | migração SQL, `application/games`, `adapters/generic`, `bridge` | Sim |
 | **R5. UI** | Telas de 3.7, com as skills `dettmann-ui-use` e `dettmann-ui-improve`. | `frontend/` | Sim |
 | **R6. Contrato de extensão por jogo** | Só contrato e um módulo embutido como prova (candidato: LOOT). Runtime de terceiros continua V2. | `ports`, `application`, `core/11 §7` | Parcial |
+
+Como a R1 ficou (D113): a descoberta virou `Definition.Discovery`; `Markers`, `RegistryHints`, `VersionFile` e `Detect` saíram do port (`Detect` não ficou nem como opcional, porque nenhum adapter precisa); classe e dependências são do recurso (`game.Describe`), não de cada jogo; a consulta é a `Registry.Support()` da D112, exposta em `GamesSupport()`. O formato serializado (JSON com `schema`) fica para a R3.
 
 Ordem e dependências: R1 primeiro (tudo depende dela). R2 e R3 são independentes entre si. R4 depende de R3. R5 depende do subprojeto de componentes liberar as telas. R6 depende de R2.
 

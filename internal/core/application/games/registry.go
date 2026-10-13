@@ -73,11 +73,11 @@ func (r *Registry) Definition(id game.ID) (game.Definition, bool) {
 	return r.defs[i], true
 }
 
-// hints gathers the registry hints declared by every adapter.
+// hints gathers the registry hints declared by every definition.
 func (r *Registry) hints() []ports.RegistryHint {
 	var out []ports.RegistryHint
 	for _, d := range r.defs {
-		out = append(out, r.byGame[d.ID].RegistryHints(d.ID)...)
+		out = append(out, d.Discovery.Registry...)
 	}
 	return out
 }

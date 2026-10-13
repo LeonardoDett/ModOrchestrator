@@ -278,7 +278,7 @@ func (e env) pluginTarget() game.TargetID {
 func (s *Service) fomodEnv(ctx context.Context, e env, m *fomod.Module, self mod.ID) fomod.Env {
 	out := fomod.Env{Files: map[string]fomod.FileState{}, ManagerVersion: s.AppVersion}
 	if s.Versions != nil {
-		if file := e.adapter.VersionFile(e.inst.Game); file != "" {
+		if file := e.def.Discovery.VersionFile; file != "" {
 			if v, err := s.Versions.FileVersion(ctx, game.JoinPath(e.inst.Root, file)); err == nil {
 				out.GameVersion = v
 			}

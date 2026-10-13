@@ -98,6 +98,8 @@ export function FomodState(arg1:string,arg2:Array<bridge.FomodSelectionDTO>):Pro
 
 export function GameInstanceDetails(arg1:string):Promise<bridge.ManagedGameDTO>;
 
+export function GamesSupport():Promise<Array<bridge.GameSupportDTO>>;
+
 export function GamesView(arg1:boolean):Promise<bridge.GamesViewDTO>;
 
 export function GetAppInfo():Promise<bridge.AppInfo>;

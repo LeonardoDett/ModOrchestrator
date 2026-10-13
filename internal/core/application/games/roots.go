@@ -37,6 +37,6 @@ func (s *Service) CheckRoot(ctx context.Context, id game.ID, root string) (RootC
 		out.Problem = &Problem{Code: code, Params: params}
 		return out, nil
 	}
-	out.Version = s.version(ctx, adapter, id, root)
+	out.Version = s.version(ctx, id, root)
 	return out, nil
 }

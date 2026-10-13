@@ -2,6 +2,7 @@ package games
 
 import (
 	"fmt"
+	"slices"
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/game"
@@ -72,10 +73,22 @@ const (
 	FeatureNotApplicable FeatureStatus = "not_applicable"
 )
 
-// Feature is one capability of the catalog for one game.
+// Feature is one capability of the catalog for one game: whether the game
+// offers it and how it behaves as a feature (D113).
 type Feature struct {
 	ID     game.Capability
 	Status FeatureStatus
+	// Class says whether the user may turn it off.
+	Class game.FeatureClass
+	// Requires lists the features that must be in effect for this one.
+	Requires []game.Capability
+	// Default is the state of an optional feature in a new instance.
+	Default bool
+}
+
+func feature(c game.Capability, st FeatureStatus) Feature {
+	spec := game.Describe(c)
+	return Feature{ID: c, Status: st, Class: spec.Class, Requires: spec.Requires, Default: st == FeatureAvailable}
 }
 
 // GameSupport is what the app offers for one game (D112). It is derived
@@ -85,6 +98,11 @@ type GameSupport struct {
 	Name           string
 	Adapter        string
 	AdapterVersion string
+	// Support is how the game is served: full, declared or custom.
+	Support game.Support
+	// Stores lists where the app looks for the game; empty for a game that
+	// is always added by hand.
+	Stores []string
 	// Custom: the user declares the targets of each instance.
 	Custom   bool
 	Features []Feature
@@ -96,7 +114,10 @@ func (r *Registry) Support() []GameSupport {
 	out := make([]GameSupport, 0, len(r.defs))
 	for _, d := range r.defs {
 		a := r.byGame[d.ID]
-		s := GameSupport{Game: d.ID, Name: d.Name, Adapter: a.Name(), AdapterVersion: a.Version(), Custom: d.CustomTargets}
+		s := GameSupport{
+			Game: d.ID, Name: d.Name, Adapter: a.Name(), AdapterVersion: a.Version(),
+			Support: d.SupportLevel(), Stores: stores(d.Discovery), Custom: d.CustomTargets,
+		}
 		known := map[game.Capability]bool{}
 		for _, c := range game.Catalog() {
 			known[c] = true
@@ -104,14 +125,28 @@ func (r *Registry) Support() []GameSupport {
 			if d.Capabilities.Has(c) {
 				st = FeatureAvailable
 			}
-			s.Features = append(s.Features, Feature{ID: c, Status: st})
+			s.Features = append(s.Features, feature(c, st))
 		}
 		for _, c := range d.Capabilities.List() {
 			if !known[c] {
-				s.Features = append(s.Features, Feature{ID: c, Status: FeatureAvailable})
+				s.Features = append(s.Features, feature(c, FeatureAvailable))
 			}
 		}
 		out = append(out, s)
+	}
+	return out
+}
+
+// stores names where a game is looked for, without repeats.
+func stores(d game.Discovery) []string {
+	out := []string{}
+	for _, s := range d.Stores {
+		if !slices.Contains(out, s.Store) {
+			out = append(out, s.Store)
+		}
+	}
+	if len(d.Registry) > 0 {
+		out = append(out, game.StoreRegistry)
 	}
 	return out
 }
