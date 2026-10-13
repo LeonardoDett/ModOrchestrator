@@ -246,3 +246,30 @@ Consequência: o Valheim é uma boa prova de "segundo jogo" para quase tudo, mas
 3. **Mais tarde** (core/15): importar profiles do r2modman e provider da Thunderstore para downloads.
 
 Ponto a decidir antes do item 2: o Mod Orchestrator implanta **dentro da pasta do jogo** (como faz hoje), enquanto o r2modman mantém o profile fora e aponta o Doorstop para ele. Manter o modelo atual é o caminho sem mudança de motor; os dois gerenciadores não devem gerenciar a mesma instalação ao mesmo tempo.
+
+## 11. Teste de ponta a ponta na instalação real (2026-10-13)
+
+`TestE2EValheimRealInstallation` (`internal/integration/e2e_valheim_test.go`) roda só com `MO_E2E_VALHEIM_PACKAGE` definido. Usa banco e pastas do gerenciador temporários; o banco do app não é tocado. Rodado com autorização do Leonardo, com o pacote `ASharpPen-Custom_Raids 1.8.1` do cache do r2modman.
+
+| Passo | Resultado |
+|---|---|
+| Descoberta | Encontrado pela Steam em `C:\Program Files (x86)\Steam\steamapps\common\Valheim`. |
+| Gerenciar | Instância criada, método `hardlink`; a pasta do jogo não mudou. Workspace: Overview, Mods, Conflicts, Profiles, Diagnostics. |
+| Importar | Instalador `bepinex-package`, tipo `default`, 4 arquivos, conteúdo `bepinex_plugin`. |
+| Deploy | 4 arquivos em `BepInEx/plugins/Custom_Raids/` mais o marcador de implantação em `BepInEx/`. |
+| Diagnóstico | `framework_missing` (falta `BepInEx/core/BepInEx.Preloader.dll`), correto para esta instalação. |
+| Purge | Pasta do jogo com as mesmas 1025 entradas, mesmos tamanhos e datas. Só a data de modificação da própria pasta raiz mudou. |
+
+O teste revelou dois acoplamentos que a leitura do código não tinha mostrado:
+
+| # | Onde | Problema | Sev. |
+|---|---|---|---|
+| 14 | `domain/deployplan/deployplan.go:268` (`target_unavailable`) | O motor de deploy exige que a pasta do target **já exista**. No Skyrim, `Data/` sempre existe. No Valheim, `BepInEx/` só existe depois de instalar o framework, então o primeiro deploy de qualquer mod fica bloqueado. O teste criou a pasta vazia à mão para seguir. | A |
+| 15 | detecção de nome do mod (core/02; `domain/installer/metadata.go`) | O mod ficou com o nome `1.8.1`, o nome da pasta importada. O núcleo só conhece `fomod/info.xml` e o padrão de nome do Nexus; o adapter não tem como informar nome, versão e autor a partir do `manifest.json`. | M |
+
+Propostas:
+
+- **Item 14.** A definição declara quais targets o app pode criar (por exemplo `Definition.CreatableTargets`, sempre abaixo da raiz do jogo). O deploy cria a pasta dentro do plano, com journal, e o purge a remove se ficar vazia. Um target ausente que **não** é declarado criável continua `target_unavailable`, que é a proteção contra unidade desconectada. Alternativa sem mexer no núcleo: o adapter usar um target só, a raiz, com todos os caminhos prefixados por `BepInEx/`; funciona, mas esconde o limite em vez de resolvê-lo, e o jogo personalizado com pasta `Mods` ainda inexistente cai no mesmo caso.
+- **Item 15.** O plano do instalador passa a poder devolver metadados do mod (nome, versão, autor), com a mesma prioridade que o `info.xml` tem hoje. Isso também abre o caminho para as dependências do `manifest.json` (core/16 §8).
+
+Os dois mexem em contrato do núcleo (`domain/game`, `domain/deployplan`, `domain/installer`) e precisam de decisão antes de entrar.

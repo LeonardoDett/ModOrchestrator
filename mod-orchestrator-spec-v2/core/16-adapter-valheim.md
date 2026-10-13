@@ -70,6 +70,9 @@ Diferença conhecida para o r2modman: ele nomeia a pasta `Autor-Nome`, com o aut
 - Importar profiles do r2modman e provider da Thunderstore (core/15).
 - Implantação fora da pasta do jogo, como o r2modman faz: o Mod Orchestrator implanta na pasta do jogo. Os dois gerenciadores não devem gerenciar a mesma instalação ao mesmo tempo.
 
+- **Limite conhecido:** o primeiro deploy numa instalação sem a pasta `BepInEx` fica bloqueado com `target_unavailable`, porque o motor não cria pasta de target (`docs-ia/09` §11, item 14). Até isso ser resolvido, instale o pacote do framework antes ou crie a pasta.
+- **Limite conhecido:** nome, versão e autor do mod não vêm do `manifest.json` (`docs-ia/09` §11, item 15).
+
 ## 9. Critérios de aceite
 
 - O registro aceita o adapter ao lado de `generic` e `skyrimse` (D112) e o workspace não tem Plugins nem Load Order.

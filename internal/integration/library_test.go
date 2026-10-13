@@ -85,6 +85,10 @@ type envOptions struct {
 	// generic manages a user-defined game (no plugins, no load order, no
 	// adapter launch) instead of Skyrim.
 	generic bool
+	// adapters are registered next to generic and skyrimse; setup, when
+	// set, is the game to manage (given the folder of the test).
+	adapters []ports.GameAdapter
+	setup    func(dir string) games.Setup
 }
 
 func newEnv(t *testing.T) *env { return newEnvWith(t, envOptions{}) }
@@ -117,7 +121,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 	})
 	ids, clock := system.IDs{}, system.Clock{}
 	e.ops = operations.NewService(sqlite.NewOperationRepository(db), bus, ids, clock)
-	registry, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{})
+	registry, err := games.NewRegistry(append([]ports.GameAdapter{generic.Adapter{}, skyrimse.Adapter{}}, o.adapters...)...)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,6 +210,14 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 			t.Fatalf("existing instance: %v %v", list, err)
 		}
 		e.inst = list[0]
+		return e
+	}
+	if o.setup != nil {
+		res, err := e.games.Manage(ctx, o.setup(dir))
+		if err != nil {
+			t.Fatal(err)
+		}
+		e.inst, _ = sqlite.NewGameInstanceRepository(db).Get(ctx, res.Instance)
 		return e
 	}
 	if o.generic {
