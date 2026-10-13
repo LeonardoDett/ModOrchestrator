@@ -58,6 +58,13 @@ export const WAVE_FILES: string[] = [
   ...folderFiles("components/media-image"),
   ...folderFiles("components/lightbox"),
   ...folderFiles("templates/file-dropzone"),
+  // Onda 4: estrutura
+  ...folderFiles("components/card"),
+  ...folderFiles("components/toolbar"),
+  ...folderFiles("components/action-bar"),
+  ...folderFiles("components/empty-state"),
+  ...folderFiles("components/featured-icon"),
+  ...folderFiles("templates/sidebar"),
 ];
 
 /** Glifos lucide sem equivalente no catálogo, por arquivo. Todo import fora daqui é achado. */

@@ -64,8 +64,8 @@ const asideVariants = defineRecipe({
       false: "w-64",
     },
     variant: {
-      strong: "border-border-strong bg-fill-neutral text-fg",
-      subtle: "border-border-strong bg-selected text-fg",
+      strong: "border-border bg-structure text-fg",
+      subtle: "border-border bg-surface text-fg",
     },
   },
   defaultVariants: {
@@ -75,22 +75,22 @@ const asideVariants = defineRecipe({
 
 const itemVariants = defineRecipe({
   base: [
-    "flex w-full items-center gap-2 rounded-control px-2 py-2 text-left text-sm",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2",
+    "relative flex w-full items-center gap-2 rounded-chip px-2 text-left text-sm min-h-control-sm",
+    "motion-transition focus-ring-inset",
   ].join(" "),
   variants: {
     collapsed: {
       true: "justify-center px-2",
       false: "",
     },
-    /** Current page: primary subtle fill and primary text. */
+    /** Current page: tinted row plus the brand bar (D-033), never a filled block. */
     current: {
-      true: "bg-emphasis-subtle font-medium text-emphasis-text hover:state-layer-hover",
+      true: "bg-selected font-medium text-fg hover:state-layer-hover before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:rounded-pill before:bg-brand-fill",
       false: "",
     },
     variant: {
-      strong: "focus-visible:ring-focus focus-visible:ring-offset-fill-neutral",
-      subtle: "focus-visible:ring-offset-canvas",
+      strong: "",
+      subtle: "",
     },
     disabled: {
       true: "",
@@ -102,7 +102,7 @@ const itemVariants = defineRecipe({
       variant: "strong",
       current: false,
       disabled: false,
-      class: "text-fg hover:bg-fill-neutral-hover active:bg-fill-neutral-hover",
+      class: "text-fg hover:bg-state-hover active:bg-state-pressed",
     },
     {
       variant: "subtle",
@@ -112,7 +112,7 @@ const itemVariants = defineRecipe({
     },
     {
       disabled: true,
-      class: "pointer-events-none bg-sunken text-fg-subtle",
+      class: "pointer-events-none text-fg-subtle",
     },
   ],
   defaultVariants: {
@@ -124,11 +124,11 @@ const itemVariants = defineRecipe({
 
 /** Beats classes baked into Button, Accordion and Drawer, which assume a neutral surface. */
 const strongChromeClass =
-  "!text-fg hover:!bg-fill-neutral-hover hover:!text-fg active:!bg-fill-neutral-hover focus-visible:!ring-focus focus-visible:!ring-offset-fill-neutral";
+  "!text-fg hover:!bg-state-hover hover:!text-fg active:!bg-state-pressed";
 
 const drawerSurfaceClass: Record<SidebarVariant, string> = {
-  strong: "!border-border-strong !bg-fill-neutral !text-fg",
-  subtle: "!border-border-strong !bg-selected !text-fg",
+  strong: "!border-border !bg-structure !text-fg",
+  subtle: "!border-border !bg-surface !text-fg",
 };
 
 interface SidebarRootProps extends Omit<ComponentPropsWithoutRef<"div">, "children"> {

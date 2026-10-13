@@ -10,9 +10,9 @@ import type { Intent } from "../../theme/engine";
 const featuredIconVariants = defineRecipe({
   slots: {
     /** Outer wash (intent subtle) */
-    root: "inline-flex items-center justify-center rounded-full",
+    root: "inline-flex items-center justify-center rounded-pill",
     /** Inner disc (state layer over the wash) holding the icon */
-    inner: "inline-flex items-center justify-center rounded-full",
+    inner: "inline-flex items-center justify-center rounded-pill",
   },
   variants: {
     /** Two-tone wash: tinted intents use the intent contract, neutral uses surface roles. */

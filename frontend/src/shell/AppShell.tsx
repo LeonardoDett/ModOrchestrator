@@ -131,7 +131,6 @@ function Shell({ children }: { children: ReactNode }) {
         <Sidebar.Root
           sections={sections}
           currentId={route.view}
-          variant="subtle"
           collapsed={collapsed}
           onCollapsedChange={(next) => {
             setCollapsed(next);

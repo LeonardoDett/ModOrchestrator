@@ -95,7 +95,7 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
               <Card.Root
                 key={p.id}
                 role="listitem"
-                variant="interactive"
+                interactive
                 selected={selected?.id === p.id}
                 aria-current={p.active ? "true" : undefined}
                 tabIndex={0}

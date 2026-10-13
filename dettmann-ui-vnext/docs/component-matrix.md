@@ -39,6 +39,8 @@ Wave 2 (D-035): `Modal` and `Drawer` animate entrance and exit (the panel is `in
 
 Wave 3 (D-036): `DataTable` rows are 32/28 px with one state variant (idle, selected, dragged, group) and slide on reorder, sort and filter; `Table` is compact with a structural header; `Tabs` show the brand indicator on the active tab and animate the panel entrance; `FilterBar` (`filtersLabel`) and the `Inspector` header are structural `medium` layers.
 
+Wave 4 (D-037): `Card.Root` takes `emphasis` (`low` | `medium`), `interactive` and `selected` (no `variant`, no shadow); `Toolbar`, `ActionBar` and `Sidebar` are `bg-structure` medium layers.
+
 ## Files and media
 
 `Tree`, `FileList`, `FileBrowser`, `ReorderableList`, `MediaImage`, `Lightbox`, `MediaGallery`, `Gallery`, `Carousel`, `FileDropzone`

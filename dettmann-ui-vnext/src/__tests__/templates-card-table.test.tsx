@@ -126,14 +126,14 @@ describe("Sidebar", () => {
     const links = screen.getAllByRole("link", { name: "Home" });
     const current = links.find((link) => link.getAttribute("aria-current") === "page");
     expect(current).toBeTruthy();
-    expect(current).toHaveClass("bg-emphasis-subtle");
+    expect(current).toHaveClass("bg-selected");
   });
 
   it("uses the solid secondary surface by default", () => {
     const { container } = render(
       <Sidebar.Root items={[{ id: "home", label: "Home", href: "#home" }]} />
     );
-    expect(container.querySelector("aside")).toHaveClass("bg-fill-neutral", "text-fg");
+    expect(container.querySelector("aside")).toHaveClass("bg-structure", "text-fg");
   });
 
   it("keeps a disabled item out of navigation and shows its badge", () => {
@@ -185,7 +185,7 @@ describe("Sidebar", () => {
       />
     );
     expect(container.querySelector("aside")).toHaveClass(
-      "bg-selected",
+      "bg-surface",
       "text-fg"
     );
   });

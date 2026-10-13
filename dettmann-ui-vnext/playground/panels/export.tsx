@@ -71,7 +71,7 @@ export function ExportPanel({ config }: { config: ThemeConfig }) {
     }
   };
   return (
-    <Card.Root variant="subtle">
+    <Card.Root emphasis="medium">
       <Card.Header className="flex-row items-center justify-between">
         <Typography variant="heading-6" color="fg">
           Exportar

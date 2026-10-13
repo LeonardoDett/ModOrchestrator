@@ -13,6 +13,22 @@ const drag = { "--wails-draggable": "drag" } as CSSProperties;
 const noDrag = { "--wails-draggable": "no-drag" } as CSSProperties;
 
 /**
+ * The logo artwork is a white PNG: painted as a mask with the foreground role it
+ * follows the theme (it vanished on the light theme as an <img>). 1702 x 694 px.
+ */
+const logoMask: CSSProperties = {
+  maskImage: `url(${logo})`,
+  WebkitMaskImage: `url(${logo})`,
+  maskSize: "contain",
+  WebkitMaskSize: "contain",
+  maskRepeat: "no-repeat",
+  WebkitMaskRepeat: "no-repeat",
+  maskPosition: "center",
+  WebkitMaskPosition: "center",
+  aspectRatio: "1702 / 694",
+};
+
+/**
  * Custom title bar (ui/00 §2.1, ui.customTitleBar): launcher area (active
  * game select and Play, F3/F12), a reserved area for the
  * tools hotbar (V1.x, D045: space only, no action) and the window controls
@@ -24,9 +40,9 @@ export function TitleBar({ windowControls }: { windowControls: boolean }) {
   const controls = windowControls ? backend.window : null;
 
   return (
-    <header className="flex h-10 shrink-0 select-none items-center border-b border-border bg-structure" style={drag}>
+    <header data-layer="medium" className="flex h-10 shrink-0 select-none items-center border-b border-border bg-structure" style={drag}>
       <div className="flex h-full items-center px-3">
-        <img src={logo} alt={t("app.name")} className="h-6 w-auto" draggable={false} />
+        <span role="img" aria-label={t("app.name")} className="block h-6 bg-fg" style={logoMask} />
       </div>
       <div role="group" aria-label={t("titlebar.launcher")} data-slot="launcher" className="flex h-full items-center gap-2 border-l border-border px-3">
         <span style={noDrag}>

@@ -8,7 +8,7 @@ describe("FeaturedIcon", () => {
     const { container } = render(<FeaturedIcon icon={Check} intent="success" />);
     const root = container.firstElementChild;
     expect(root).toHaveAttribute("aria-hidden", "true");
-    expect(root).toHaveClass("rounded-full");
+    expect(root).toHaveClass("rounded-pill");
     expect(root).toHaveClass("bg-intent-subtle");
     expect(root).toHaveAttribute("data-intent", "success");
     expect(root?.firstElementChild).toHaveClass("bg-state-hover");

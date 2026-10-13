@@ -95,6 +95,16 @@ describe("App shell", () => {
     expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 
+  it("title bar is a structural layer and paints the logo as a themed mask", async () => {
+    render(<App backend={createOfflineBackend()} />);
+    await screen.findByRole("heading", { level: 1, name: "Dashboard" });
+    const logo = screen.getByRole("img", { name: "Mod Orchestrator" });
+    expect(logo.tagName).not.toBe("IMG");
+    expect(logo).toHaveClass("bg-fg");
+    expect(logo.style.maskImage || logo.style.getPropertyValue("mask-image") || logo.style.getPropertyValue("-webkit-mask-image")).toContain("url(");
+    expect(logo.closest("header")).toHaveAttribute("data-layer", "medium");
+  });
+
   it("renders the sectioned sidebar and navigates", async () => {
     const user = userEvent.setup();
     render(<App backend={createOfflineBackend()} />);

@@ -136,6 +136,11 @@ Feedback e overlays (D-035): `Alert.Root` e toasts já mostram o ícone do inten
 saída sozinhos (não envolva em `Presence`); `Command` tem `loading`/`loadingLabel`;
 item destrutivo de `ContextMenu` é `destructive: true`, nunca classe de cor.
 
+Estrutura (D-037): `Card.Root` usa `emphasis` (`low` padrão; `medium` = estrutura),
+`interactive` e `selected`; não existe mais `variant` nem sombra em cartão. O
+orçamento 60/30/10 se ajusta trocando área entre `low` e `medium` (`Card emphasis`,
+`Toolbar`, `FilterBar`, `ActionBar`), nunca com cor local.
+
 Dados (D-036): `DataTable` já vem com linhas de 32 px (28 em `density="compact"`) e
 anima reordenação, ordenação e filtro sozinho; não passe `rowHeight` nem envolva
 linhas em `useFlip`. Textos embutidos sempre por i18n: `FilterBar filtersLabel`,

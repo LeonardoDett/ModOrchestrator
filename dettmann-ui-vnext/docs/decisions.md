@@ -187,3 +187,11 @@ Applies D-033 to `Table`, `DataTable` (and `DataTableColumnPicker`), `Tree`, `Re
 - **Structure.** `Inspector` header and `FilterBar` declare `data-layer="medium"` on `bg-structure`; `FilterBar` is a `data-budget-region`.
 - **Texts (D-009).** `FilterBar` gains `filtersLabel`; `ReorderableList` gains `labels` (`dragHandle`, `moveUp`, `moveDown`). Both had hard-coded English.
 - **Lucide exceptions.** `Columns3`, `GripVertical`, `Terminal` and `ImageOff` have no catalog glyph and are listed per file in `ALLOWED_LUCIDE`.
+
+## D-037 — Wave 4: structure
+
+Closes the redesign of what the Mod Orchestrator uses (`Card`, `Toolbar`, `ActionBar`, `Sidebar`, `EmptyState`, `FeaturedIcon` join `WAVE_FILES`).
+
+- **`Card` takes `emphasis`, not `variant`** (breaking). `low` (default) is a flat bordered surface outside the structural layer; `medium` is `bg-structure` with `data-layer="medium"`. There is no `high`: the highlight comes from the action inside. `interactive` adds the pointer, the hover layer and the focus ring; `selected` swaps the rest classes for `bg-selected border-border-strong`. No shadow in any state. Slot paddings are dense (`px-4`).
+- **Structure uses `bg-structure`.** `Toolbar` (it declared the layer on `bg-surface`), `ActionBar` (now declares `data-layer="medium"`) and `Sidebar` `strong`. `Sidebar` `subtle` is `bg-surface`. The current sidebar item is `bg-selected` with the brand bar (it used the `emphasis` roles), also when collapsed; items use `focus-ring-inset`.
+- **The budget is chosen by the screen.** The library only declares layers; a screen moves area between `low` and `medium` with `Card emphasis` and by using the structural components. Measurements of the Mod Orchestrator are in its decision D111.

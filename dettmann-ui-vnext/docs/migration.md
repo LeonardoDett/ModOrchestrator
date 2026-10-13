@@ -147,3 +147,10 @@ No prop was removed. What a consumer may notice:
 - `FilterBar` is `bg-structure` and its field uses the small padding; pass `filtersLabel` to localize the button.
 - `ReorderableList`: pass `labels` to localize the handle and the move buttons; the move buttons are 28 px.
 - `Tabs`: the active underline is the brand color; `Tabs.Panel` and `Accordion.Content` animate in.
+
+## Components redesign, wave 4 (D-037)
+
+- **`Card.Root variant` was removed.** `variant="default"` → nothing; `variant="raised"` or `"subtle"` → `emphasis="medium"`; `variant="interactive"` → `interactive`. Cards have no shadow and their slots use `px-4`.
+- `Toolbar` and `ActionBar` are `bg-structure`; `ActionBar` is `px-4 py-2` (it was `px-4 py-4 sm:px-6`).
+- `Sidebar`: `strong` (default) is `bg-structure` and `subtle` is `bg-surface` (they were `bg-fill-neutral` and `bg-selected`); the current item is `bg-selected` with a brand bar.
+- A logo or other single-color artwork that must follow the theme: paint it as a CSS mask over `bg-fg` instead of an `<img>` (see the Mod Orchestrator `TitleBar`).

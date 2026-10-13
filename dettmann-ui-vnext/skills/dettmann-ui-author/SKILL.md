@@ -47,6 +47,8 @@ Violar a letra destas regras é violar o espírito delas.
 
 Arquivo redesenhado entra em `WAVE_FILES` (`src/__tests__/wave-contract.test.ts`), que rejeita: `shadow-raised` (sombra só em overlay: `shadow-overlay`/`shadow-modal`), `opacity-40/50/60`, `rounded-full|sm|md|lg|xl`, `duration-<n>`/`transition-all|colors|opacity`/`animate-*`, foco escrito à mão e lucide com equivalente no catálogo. Linha selecionável (opção, item de menu, linha de tabela/árvore) = `rowRecipe({ selected, active, disabled, indicator, multiline, tone })` de `src/core/styles/row.ts`; não reescreva altura, camada de estado nem indicador. Estrutura declara `data-layer="medium"` em `bg-structure`.
 
+Estrutura (D-037): peça de estrutura = `bg-structure` + `data-layer="medium"` juntos (declarar a camada sobre `bg-surface` engana o `BudgetInspector`).
+
 Dados (D-036): linha com vários estados (selecionada, arrastada, grupo, desabilitada) = **uma** variante `state` no recipe, nunca classes somadas; lista virtualizada usa altura em px e pode usar `useFlip` (anima `translate`, o virtualizador usa `transform`).
 
 Overlays (D-035): entrada/saída com `Presence` + keyframes de `src/motion/overlay-keyframes.ts` (`overlayEnter/Exit`, `slideEnter/Exit(side)`, `fadeEnter/Exit`); overlay modal que precisa sair animado usa `useExitPresence(open)` na raiz e `Presence onExited` no painel; elemento do floating-ui que anima `transform` precisa de `transform: false` no `useFloating`. Status = `intentIcon(intent)`, nunca só cor. Estado que muda cor **troca** a classe (variante): o `cn` não resolve conflito.

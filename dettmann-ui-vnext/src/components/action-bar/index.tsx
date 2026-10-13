@@ -5,7 +5,7 @@ import { cn } from "../../utils/cn";
 const barVariants = defineRecipe({
   base: [
     "flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end",
-    "border-t border-border bg-surface px-4 py-4 sm:px-6",
+    "border-t border-border bg-structure px-4 py-2",
   ].join(" "),
   variants: {
     sticky: {
@@ -35,5 +35,5 @@ interface ActionBarProps extends ComponentPropsWithoutRef<"div"> {
  * ```
  */
 export function ActionBar({ className, sticky = false, ...props }: ActionBarProps) {
-  return <div data-budget-region="action-bar" className={cn(barVariants({ sticky }), className)} {...props} />;
+  return <div data-layer="medium" data-budget-region="action-bar" className={cn(barVariants({ sticky }), className)} {...props} />;
 }

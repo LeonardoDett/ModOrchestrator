@@ -971,3 +971,20 @@ Efeitos no app:
 2. Linha selecionada: fundo `selected` com barra da marca. Linha arrastada: fundo rebaixado, sem transparência. Reordenar, ordenar e filtrar deslizam as linhas visíveis (respeita `ui.reduceMotion`).
 3. Abas mostram o indicador da marca na aba ativa; o painel da aba e o conteúdo do acordeão entram animados.
 4. Única mudança de código no `frontend/`: a lista de dashlets do Dashboard passa os rótulos de arrastar e mover pelo i18n (`dashboard.customizeDrag`, `dashboard.customizeMoveUp`, `dashboard.customizeMoveDown`), que antes vinham em inglês fixo da lib.
+
+## D111 — Redesenho dos componentes da dettmann-ui, onda 4 (estrutura e telas)
+Status: vigente, com um item em aberto (item 4); continua D110; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-037
+
+1. **Logo da barra de título**: o PNG é branco e sumia no tema claro. A `TitleBar` passa a pintá-lo como máscara CSS sobre `bg-fg` (`role="img"`, nome do app pelo i18n), então ele segue o tema sem arquivo novo.
+2. **Camadas do shell**: a barra de título declara `data-layer="medium"` (já usava `bg-structure`, mas não contava no orçamento). A `Sidebar` passa à variante padrão (`bg-structure`); o item atual é `bg-selected` com a barra da marca.
+3. **`Card`**: `variant` deu lugar a `emphasis`/`interactive`; a lista de perfis usa `interactive`. Cartões não têm sombra.
+4. **Orçamento 60/30/10** (meta: low 60% e medium 30%, ± 8 p.p.; high ≤ 12%). Medição em 2026-10-13, app real em `wails dev`, janela de 1280 x 800, sem jogo gerenciado, amostragem de 8 px:
+
+   | Tela | low | medium | high |
+   |---|---|---|---|
+   | Dashboard | 75,3% | 24,7% | 0% |
+   | Jogos | 73,9% | 25,2% | 0,9% |
+   | Extensões | 72,7% | 27,3% | 0% |
+   | Configurações | 72,2% | 27,8% | 0% |
+
+   Antes (D107): Dashboard low 80%, medium 20%. O medium entrou na faixa (22% a 38%) nas quatro telas. O low ficou de 4 a 7 pontos acima do teto de 68%, porque nessas telas quase não há elemento `high`. **Em aberto**: aceitar esse resultado para o estado sem jogo ou promover mais área a estrutura (por exemplo `Card emphasis="medium"` nos dashlets secundários); aguarda escolha do usuário. As telas com jogo (Mods, Plugins, Conflitos, Perfis, Diagnóstico) não foram medidas: o ambiente de desenvolvimento não tem jogo gerenciado.

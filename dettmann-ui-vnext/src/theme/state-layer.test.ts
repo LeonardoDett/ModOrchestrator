@@ -68,14 +68,14 @@ test("opaque-rest components overlay the state layer instead of replacing the ba
   const { createElement } = await import("react");
   const { Card } = await import("../components/card");
   const { Sidebar } = await import("../templates/sidebar");
-  const card = renderToStaticMarkup(createElement(Card.Root, { variant: "interactive" }));
+  const card = renderToStaticMarkup(createElement(Card.Root, { interactive: true }));
   expect(card).toContain("hover:state-layer-hover");
   expect(card).not.toContain("hover:bg-state-hover");
   const sidebar = renderToStaticMarkup(
     createElement(Sidebar.Root, { sections: [{ id: "s", items: [{ id: "files", label: "Files" }] }], currentId: "files" }),
   );
   const current = sidebar.match(/<button[^>]*aria-current="page"[^>]*>/)![0];
-  expect(current).toContain("bg-emphasis-subtle");
+  expect(current).toContain("bg-selected");
   expect(current).toContain("hover:state-layer-hover");
   expect(resolveEmphasis({ emphasis: "medium", intent: "danger" }).className).toContain("active:state-layer-pressed");
 });
