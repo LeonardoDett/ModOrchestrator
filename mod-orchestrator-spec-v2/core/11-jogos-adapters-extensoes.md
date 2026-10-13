@@ -78,6 +78,8 @@ As demais são respondidas pela própria definição (`filesystem_mod_target`, `
 
 ## 2. ModTypes
 
+- Um target pode ser declarado **criável** (`Definition.CreatableTargets`, D118): a pasta pode não existir numa instalação nova, e o deploy a cria (core/04 §4). Só vale para target abaixo da raiz do jogo.
+
 - Cada mod tem um ModType (padrão do adapter). Tipo define target e métodos permitidos.
 - Detecção automática no install por regra do adapter (ex.: ENB, SKSE → `root`). O usuário pode trocar em "Avançado" (paridade `ModTypeWidget`).
 - Location = target do tipo + caminho relativo do arquivo no mod.

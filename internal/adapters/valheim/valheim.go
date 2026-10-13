@@ -89,6 +89,9 @@ func (Adapter) Definitions() []game.Definition {
 			Markers: []string{Executable},
 		},
 		Targets: []game.TargetID{TargetBepInEx, TargetRoot},
+		// The framework folder only exists once the framework or a mod is
+		// installed: the first deploy creates it.
+		CreatableTargets: []game.TargetID{TargetBepInEx},
 		ModTypes: []game.ModType{
 			{ID: game.DefaultModType, Name: "Default", Target: TargetBepInEx},
 			{

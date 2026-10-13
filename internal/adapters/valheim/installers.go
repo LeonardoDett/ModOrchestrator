@@ -129,26 +129,45 @@ func (Package) Supports(entries []installer.Entry, _ installer.Context) (bool, s
 
 var unsafeFolder = regexp.MustCompile(`[^A-Za-z0-9_.-]+`)
 
+// readManifest reads what the package manifest says about the mod; empty
+// before the archive is extracted or when the manifest cannot be read. The
+// manifest does not name the author.
+func readManifest(ctx installer.Context) installer.Metadata {
+	if ctx.Content == nil {
+		return installer.Metadata{}
+	}
+	p, err := relpath.Parse(manifestFile)
+	if err != nil {
+		return installer.Metadata{}
+	}
+	data, err := ctx.Content(p)
+	if err != nil {
+		return installer.Metadata{}
+	}
+	var m struct {
+		Name        string `json:"name"`
+		Version     string `json:"version_number"`
+		Description string `json:"description"`
+		Website     string `json:"website_url"`
+	}
+	// Manifests are often saved with a byte order mark.
+	if json.Unmarshal([]byte(strings.TrimPrefix(string(data), "\xef\xbb\xbf")), &m) != nil {
+		return installer.Metadata{}
+	}
+	return installer.Metadata{
+		Name: strings.TrimSpace(m.Name), Version: strings.TrimSpace(m.Version),
+		Description: strings.TrimSpace(m.Description), Website: strings.TrimSpace(m.Website),
+	}
+}
+
 // packageFolder is the folder of the mod: the recorded one on a reinstall,
 // else the name the manifest declares, else the name of its first DLL.
-func packageFolder(entries []installer.Entry, ctx installer.Context, opts installer.Options) string {
+func packageFolder(entries []installer.Entry, meta installer.Metadata, opts installer.Options) string {
 	if f, ok := opts[OptionFolder]; ok && f != "" {
 		return f
 	}
-	if ctx.Content != nil {
-		if p, err := relpath.Parse(manifestFile); err == nil {
-			if data, err := ctx.Content(p); err == nil {
-				var m struct {
-					Name string `json:"name"`
-				}
-				// Manifests are often saved with a byte order mark.
-				if json.Unmarshal([]byte(strings.TrimPrefix(string(data), "\xef\xbb\xbf")), &m) == nil {
-					if n := strings.Trim(unsafeFolder.ReplaceAllString(m.Name, "_"), "._"); n != "" {
-						return n
-					}
-				}
-			}
-		}
+	if n := strings.Trim(unsafeFolder.ReplaceAllString(meta.Name, "_"), "._"); n != "" {
+		return n
 	}
 	return dllFolder(entries)
 }
@@ -167,8 +186,11 @@ func (Package) Plan(entries []installer.Entry, ctx installer.Context, opts insta
 	if !hasFile(entries, manifestFile) {
 		return installer.Result{}, installer.ErrUnsupported
 	}
-	folder := packageFolder(entries, ctx, opts)
-	plan := &installer.Plan{Installer: PackageID, ModType: game.DefaultModType, Options: installer.Options{OptionFolder: folder}}
+	meta := readManifest(ctx)
+	folder := packageFolder(entries, meta, opts)
+	// The name of a package uses "_" for spaces.
+	meta.Name = strings.ReplaceAll(meta.Name, "_", " ")
+	plan := &installer.Plan{Installer: PackageID, ModType: game.DefaultModType, Options: installer.Options{OptionFolder: folder}, Metadata: meta}
 	for _, e := range entries {
 		if e.Dir {
 			continue

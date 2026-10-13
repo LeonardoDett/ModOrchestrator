@@ -35,6 +35,8 @@ Fatos lidos de uma instalação real em 2026-10-13 (`steamapps/appmanifest_89297
 | `root` | `root` | pasta `root/` no mod |
 | `bepinex` | `root` | `winhttp.dll` e `BepInEx/core/` (o pacote do framework) |
 
+O target `bepinex` é **criável** (D118): numa instalação sem o framework a pasta não existe, e o primeiro deploy a cria; o purge a remove se ficar vazia.
+
 Um mod comum tem arquivos em `plugins/`, `patchers/` e `config/`; por isso o target padrão é a pasta `BepInEx` e não `BepInEx/plugins` (um mod tem um ModType, logo um target).
 
 ## 4. Instaladores do adapter
@@ -46,6 +48,8 @@ Perguntados depois do FOMOD e antes do básico. Só produzem plano.
 | `bepinex-pack` | 20 | pasta do archive com `winhttp.dll` ao lado de `BepInEx/core/` | tudo dessa pasta na raiz do jogo, ModType `bepinex` |
 | `bepinex-package` | 30 | `manifest.json` na raiz do archive | `plugins/<pasta>/…`, `patchers/<pasta>/…`, `config/…`; o resto (DLLs na raiz, `manifest.json`, `icon.png`, `README.md`) em `plugins/<pasta>/` |
 | `bepinex-loose` | 40 | DLL sem `manifest.json` e sem nenhuma pasta do framework | `plugins/<pasta>/…`, sem a pasta invólucro |
+
+O instalador de pacote também devolve os metadados do `manifest.json` (D118): nome (com `_` trocado por espaço), versão, descrição e site.
 
 `<pasta>` é o `name` do `manifest.json` (aceita BOM); sem ele, o nome da primeira DLL. Fica gravada em `Installation.options["folder"]`, então a reinstalação cai no mesmo lugar. Um `BepInEx/` no começo do caminho é removido. Archive já no layout do framework (`BepInEx/plugins/...`) fica com o instalador básico, pelas dicas de root `plugins`, `patchers`, `config`, `core`.
 
@@ -70,8 +74,7 @@ Diferença conhecida para o r2modman: ele nomeia a pasta `Autor-Nome`, com o aut
 - Importar profiles do r2modman e provider da Thunderstore (core/15).
 - Implantação fora da pasta do jogo, como o r2modman faz: o Mod Orchestrator implanta na pasta do jogo. Os dois gerenciadores não devem gerenciar a mesma instalação ao mesmo tempo.
 
-- **Limite conhecido:** o primeiro deploy numa instalação sem a pasta `BepInEx` fica bloqueado com `target_unavailable`, porque o motor não cria pasta de target (`docs-ia/09` §11, item 14). Até isso ser resolvido, instale o pacote do framework antes ou crie a pasta.
-- **Limite conhecido:** nome, versão e autor do mod não vêm do `manifest.json` (`docs-ia/09` §11, item 15).
+- Autor do mod: o `manifest.json` não o informa (ele está só no nome do arquivo baixado).
 
 ## 9. Critérios de aceite
 

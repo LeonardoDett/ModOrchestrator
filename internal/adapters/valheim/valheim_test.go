@@ -114,6 +114,10 @@ func TestPackageIsRoutedToTheFrameworkFolders(t *testing.T) {
 	if p.Options[OptionFolder] != "Custom_Raids" {
 		t.Fatalf("options %v", p.Options)
 	}
+	// The manifest names the mod (D118), not the archive.
+	if p.Metadata.Name != "Custom Raids" || p.Metadata.Version != "1.8.1" {
+		t.Fatalf("metadata %+v", p.Metadata)
+	}
 	flags := Adapter{}.ContentFlags(GameID, p.Locations(TargetBepInEx))
 	if !slices.Equal(flags, []mod.ContentFlag{FlagConfig, FlagPatcher, FlagPlugin}) {
 		t.Fatalf("flags %v", flags)

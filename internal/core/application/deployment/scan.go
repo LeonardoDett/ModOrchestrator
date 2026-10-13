@@ -48,10 +48,17 @@ type scanned struct {
 // decide). With only set (incremental deploy, D102) it observes those
 // locations and the folders above the desired ones among them; every other
 // link is taken as the manifest recorded it.
-func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Desired, applied *deployment.Manifest, only map[string]bool) (scanned, error) {
+//
+// A target that does not exist is unavailable, unless the definition says
+// the app may create it (creatable) and nothing sits at its path (D118).
+func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Desired, applied *deployment.Manifest, only map[string]bool, creatable func(game.Target) bool) (scanned, error) {
 	out := scanned{files: map[string]deployment.Observation{}, dirs: map[string]deployment.Observation{}, blocked: map[game.TargetID]bool{}}
 	for _, t := range inst.Targets {
-		if obs := s.observe(ctx, t.Path); !obs.Exists || !obs.IsDir {
+		obs := s.observe(ctx, t.Path)
+		if obs.Exists && obs.IsDir {
+			continue
+		}
+		if obs.Exists || obs.Unreadable || creatable == nil || !creatable(t) {
 			out.blocked[t.ID] = true
 		}
 	}

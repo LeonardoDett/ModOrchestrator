@@ -206,6 +206,11 @@ type Plan struct {
 	// moduleDependencies); they become DependencyRules only when the user
 	// confirms them (core/03 §2).
 	Requirements []string
+	// Metadata is what the installer read about the mod in the archive (a
+	// package manifest): name, version, author. It takes precedence over
+	// what the archive name and fomod/info.xml say, never over the user's
+	// attributes (D118).
+	Metadata Metadata
 }
 
 // Locations returns the plan destinations as locations of target.

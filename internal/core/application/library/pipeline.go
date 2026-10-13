@@ -564,6 +564,8 @@ func (p *pipeline) planInstall(ctx context.Context) error {
 			}
 		}
 	}
+	// What the installer itself read (a package manifest) comes first.
+	p.meta = p.plan.Metadata.Merge(p.meta)
 	return nil
 }
 

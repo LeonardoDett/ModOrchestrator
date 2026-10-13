@@ -134,6 +134,10 @@ type Definition struct {
 	// (generic adapter); Targets and ModTypes are then only a template and
 	// the adapter builds the effective definition per instance.
 	CustomTargets bool
+	// CreatableTargets are the targets the app may create when the folder
+	// does not exist yet (D118): a folder the game only gets with its first
+	// mod. A missing target that is not listed blocks the deploy.
+	CreatableTargets []TargetID
 	// ToolOutputs are folders where tools generate files (core/09 §3):
 	// they are searched for unexpected files, with their subfolders, even
 	// when they hold no managed file.
@@ -173,6 +177,11 @@ func (d Definition) Validate() error {
 	}
 	if len(d.Targets) == 0 {
 		return fmt.Errorf("%w: %s declares no target", ErrInvalid, d.ID)
+	}
+	for _, t := range d.CreatableTargets {
+		if !slices.Contains(d.Targets, t) {
+			return fmt.Errorf("%w: %s: creatable target %q is not declared", ErrInvalid, d.ID, t)
+		}
 	}
 	switch d.Support {
 	case "", SupportFull, SupportDeclared, SupportCustom:

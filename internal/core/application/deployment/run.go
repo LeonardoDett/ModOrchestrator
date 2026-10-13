@@ -499,7 +499,7 @@ func (s *Service) scanStep(ctx context.Context, r *run) error {
 	if s.incremental(ctx, r) {
 		r.only = s.touched(r)
 	}
-	sc, err := s.scan(ctx, r.inst, r.desired, r.applied, r.only)
+	sc, err := s.scan(ctx, r.inst, r.desired, r.applied, r.only, s.creatableTargets(ctx, r.inst, r.in.def))
 	if err != nil {
 		return err
 	}
@@ -597,6 +597,9 @@ func (s *Service) journalStep(ctx context.Context, r *run) error {
 
 func (s *Service) applyStep(ctx context.Context, r *run) error {
 	j := r.journal
+	if err := s.createTargets(ctx, r.inst, r.in.def, j.Actions); err != nil {
+		return err
+	}
 	total := int64(len(j.Actions))
 	batch := map[int]deployment.ActionState{}
 	flush := func() error {
@@ -701,6 +704,7 @@ func (s *Service) commitStep(ctx context.Context, r *run, entries []deployment.E
 	if err := s.writeMarkers(ctx, r.inst, m); err != nil {
 		return err
 	}
+	s.removeCreatedTargets(ctx, r.inst, m)
 	s.recordBaseline(ctx, r.inst.ID, r.applied, m)
 	payload := map[string]string{"entries": strconv.Itoa(len(entries)), "failed": strconv.Itoa(len(r.failures)), "profile": string(r.desired.Profile)}
 	for k, v := range summaryPayload(r.plan.Summary) {

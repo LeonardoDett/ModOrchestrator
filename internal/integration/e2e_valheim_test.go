@@ -135,23 +135,16 @@ func TestE2EValheimRealInstallation(t *testing.T) {
 	}
 	row := e.only()
 	t.Logf("installed %q: type %s, %d files, content %v", row.Name, row.Type, row.Files, row.Content)
+	// The name comes from the package manifest, not from the imported folder
+	// (D118).
+	if row.Name == filepath.Base(pkg) {
+		t.Errorf("the mod is named after the imported folder: %q", row.Name)
+	}
 	if row.Type != game.DefaultModType || !slices.Contains(row.Content, valheim.FlagPlugin) {
 		t.Fatalf("mod row %+v", row)
 	}
 	if err := e.prof.SetModsEnabled(ctx, e.inst.ID, []mod.ID{row.ID}, true); err != nil {
 		t.Fatal(err)
-	}
-	// Known limit (docs-ia/09 §11): the deploy engine does not create a
-	// target folder, and this game has none before the framework is
-	// installed. The test creates the empty folder and removes it at the end.
-	for _, tg := range e.inst.Targets {
-		if _, err := os.Stat(tg.Path); os.IsNotExist(err) {
-			t.Logf("target %s does not exist: creating the empty folder %s for the test", tg.ID, tg.Path)
-			if err := os.Mkdir(tg.Path, 0o755); err != nil {
-				t.Fatal(err)
-			}
-			t.Cleanup(func() { _ = os.Remove(tg.Path) }) // only if empty
-		}
 	}
 	plan, err := e.dep.Preview(ctx, e.inst.ID, false)
 	if err != nil {
@@ -213,11 +206,6 @@ func TestE2EValheimRealInstallation(t *testing.T) {
 		t.Fatalf("purge: %+v", op)
 	}
 	purged = true
-	for _, tg := range e.inst.Targets {
-		if tg.Path != root {
-			_ = os.Remove(tg.Path) // the folder the test created, only if empty
-		}
-	}
 	after := folderSnapshot(t, root)
 	if !slices.Equal(after, before) {
 		for _, l := range after {

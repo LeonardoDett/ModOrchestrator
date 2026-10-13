@@ -1072,3 +1072,17 @@ Status: vigente (detalha D113; desenho em `propostas/2026-10-13-registro-de-jogo
 Motivo: é a base para o jogo personalizado com identidade própria e para exportar/importar (decisão do usuário em 2026-10-13). Alternativa rejeitada: aceitar `features`/`support` no arquivo (o arquivo vem de fora; o que o app oferece tem que sair do que ele consegue verificar).
 
 Consequências: nesta decisão só existe o formato, com testes e fuzz. Ainda não feito (R3 restante e R4): o adapter `generic` interpretar manifestos, o repositório de entradas do usuário, o registro composto, a migração das instâncias `generic` e o bridge de exportar/importar. Dois pontos em aberto para essa etapa: a checagem capability↔interface da D112 precisa aceitar um adapter cujas definições chegam em runtime, e `games.Registry` deixa de ser imutável.
+
+## D118 — Target criável e metadados do mod vindos do instalador
+Status: vigente (detalha D011/D057; origem em `docs-ia/09` §11, itens 14 e 15)
+
+O teste de ponta a ponta do Valheim numa instalação real mostrou duas suposições do núcleo que só valiam para o Skyrim.
+
+1. **Target criável.** `game.Definition.CreatableTargets` lista os targets cuja pasta o app pode criar. No deploy, um target ausente continua `target_unavailable`, exceto se estiver na lista, estiver abaixo da raiz do jogo, a raiz existir e nada ocupar o caminho. A pasta é criada no começo do `apply`; a criação é gravada antes (`app_state`, `deployment.createdTargets`). Quando o manifesto deixa de usar o target, a pasta é removida **só se foi criada pelo app e está vazia** (INV-DEP-09); com qualquer arquivo dentro, fica.
+2. **Metadados do instalador.** `installer.Plan.Metadata` leva nome, versão, autor, descrição e site lidos pelo instalador. Precedência: atributos do usuário, depois o instalador, depois `fomod/info.xml`, depois o nome do archive.
+
+Motivo: no Skyrim `Data/` sempre existe, e o nome do mod vem do FOMOD ou do padrão de nome do Nexus. No Valheim a pasta `BepInEx` só existe depois do primeiro mod, e o nome está no `manifest.json` do pacote.
+
+Alternativas rejeitadas: criar qualquer target ausente (perderia a proteção contra pasta ou unidade que sumiu); o adapter usar a raiz como target único com caminhos prefixados (esconde o limite, e o jogo declarado ou personalizado cairia no mesmo caso); registrar a pasta criada como entrada do manifesto (a `Location` não representa a raiz de um target).
+
+Consequências: jogo declarado ou personalizado pode usar o mesmo campo quando o manifesto de jogo (D116) o expuser; isso não foi feito aqui. O adapter do Valheim declara `bepinex` como criável e devolve os metadados do `manifest.json`.

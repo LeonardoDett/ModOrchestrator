@@ -33,6 +33,8 @@ Ao adicionar o jogo, o assistente sugere a staging no mesmo volume do jogo (pari
 
 ## 4. Plano de deploy
 
+Target ausente: toda Location dele fica bloqueada com `target_unavailable` e nada é escrito. Exceção (D118): target que a definição declara criável (`CreatableTargets`), abaixo de uma raiz de jogo que existe e sem nada no caminho. Nesse caso a pasta é criada no começo do `apply`, com a criação gravada antes, e removida quando o manifesto deixa de usar o target, só se estiver vazia.
+
 Ações por Location:
 
 | Ação | Quando | Decisão necessária? |
