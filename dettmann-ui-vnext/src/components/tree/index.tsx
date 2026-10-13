@@ -224,11 +224,12 @@ export function Tree<T>({
           >
             <div
               className={cn(
-                "group flex min-h-9 items-center gap-1 rounded-control px-2",
+                "group relative flex min-h-control-sm items-center gap-1 rounded-chip px-2 motion-transition",
+                // Uma cor de texto e um fundo por estado (o `cn` não resolve conflito).
+                node.disabled ? "text-fg-subtle" : "text-fg",
                 selected
-                  ? "bg-emphasis-subtle text-emphasis-text"
-                  : "text-fg hover:bg-state-hover",
-                node.disabled && "opacity-50",
+                  ? "bg-selected before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:rounded-pill before:bg-brand-fill"
+                  : !node.disabled && "hover:bg-state-hover",
               )}
               style={{ paddingLeft: depth * indent + 8 }}
             >
@@ -239,7 +240,7 @@ export function Tree<T>({
                   aria-expanded={open}
                   disabled={node.disabled}
                   onClick={() => toggle(node.id)}
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus hover:bg-state-hover"
+                  className="flex size-6 shrink-0 items-center justify-center rounded-chip motion-transition hover:bg-state-hover focus-ring-inset"
                 >
                   <ChevronRightIcon
                     size="sm"
@@ -250,7 +251,7 @@ export function Tree<T>({
                   />
                 </button>
               ) : (
-                <span aria-hidden="true" className="h-7 w-7 shrink-0" />
+                <span aria-hidden="true" className="size-6 shrink-0" />
               )}
               {checkable ? (
                 <Checkbox
@@ -272,7 +273,7 @@ export function Tree<T>({
                 disabled={node.disabled}
                 onClick={() => onSelect?.(node)}
                 onKeyDown={(event) => handleItemKeyDown(event, current, index)}
-                className="flex min-w-0 flex-1 items-center gap-2 rounded-control py-1 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+                className="flex min-w-0 flex-1 items-center gap-2 self-stretch rounded-chip text-left text-sm focus-ring-inset"
               >
                 <span aria-hidden="true" className="shrink-0 [&>svg]:h-4 [&>svg]:w-4">
                   {icon}

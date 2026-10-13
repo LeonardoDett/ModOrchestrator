@@ -10,6 +10,7 @@ import { GripVertical } from "lucide-react";
 import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
 import { ChevronUpIcon } from "../../icons/glyphs/chevron-up";
 import { cn } from "../../utils/cn";
+import { useFlip } from "../../motion/use-flip";
 
 export interface ReorderableListItem<T = unknown> {
   id: string;
@@ -23,6 +24,14 @@ export interface ReorderableListProps<T = unknown>
   renderItem: (item: ReorderableListItem<T>, index: number) => ReactNode;
   disabled?: boolean;
   keyboardControls?: boolean;
+  /** Accessible names of the handle and the move buttons (localize them). */
+  labels?: ReorderableListLabels;
+}
+
+export interface ReorderableListLabels {
+  dragHandle?: string;
+  moveUp?: string;
+  moveDown?: string;
 }
 
 export function ReorderableList<T>({
@@ -31,12 +40,16 @@ export function ReorderableList<T>({
   renderItem,
   disabled = false,
   keyboardControls = true,
+  labels,
   className,
   ...props
 }: ReorderableListProps<T>) {
   const [internal, setInternal] = useState([...items]);
   const [dragging, setDragging] = useState<string | null>(null);
   const source = onReorder ? items : internal;
+  const dragLabel = labels?.dragHandle ?? "Drag to reorder";
+  // Os itens que trocam de lugar deslizam até a posição nova.
+  const flip = useFlip<HTMLDivElement>([source.map((item) => item.id).join("\u0000")]);
 
   const commit = (next: ReorderableListItem<T>[]) => {
     if (!onReorder) setInternal(next);
@@ -71,7 +84,7 @@ export function ReorderableList<T>({
     <div
       role="list"
       className={cn(
-        "divide-y divide-border overflow-hidden rounded-card border border-border bg-surface",
+        "divide-y divide-border overflow-hidden rounded-card border border-border",
         className,
       )}
       {...props}
@@ -79,6 +92,7 @@ export function ReorderableList<T>({
       {source.map((item, index) => (
         <div
           key={item.id}
+          ref={flip(item.id)}
           role="listitem"
           draggable={!disabled}
           aria-posinset={index + 1}
@@ -90,14 +104,14 @@ export function ReorderableList<T>({
           }}
           onDragEnd={() => setDragging(null)}
           className={cn(
-            "flex min-h-12 items-stretch",
-            dragging === item.id && "opacity-60",
+            "flex min-h-12 items-stretch motion-transition",
+            dragging === item.id ? "bg-sunken text-fg-subtle" : "bg-surface",
           )}
         >
           <div
             className="flex w-9 shrink-0 items-center justify-center text-fg-subtle"
-            aria-label="Drag to reorder"
-            title="Drag to reorder"
+            aria-label={dragLabel}
+            title={dragLabel}
           >
             <GripVertical aria-hidden="true" className="h-4 w-4" />
           </div>
@@ -107,11 +121,11 @@ export function ReorderableList<T>({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted motion-transition",
-                  "hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
+                  "inline-flex size-7 items-center justify-center rounded-chip text-fg-muted motion-transition",
+                  "hover:bg-state-hover hover:text-fg focus-ring-inset",
                   index === 0 && "invisible pointer-events-none",
                 )}
-                aria-label="Move item up"
+                aria-label={labels?.moveUp ?? "Move item up"}
                 aria-hidden={index === 0 || undefined}
                 onClick={() => moveBy(item.id, -1)}
                 disabled={index === 0}
@@ -121,11 +135,11 @@ export function ReorderableList<T>({
               <button
                 type="button"
                 className={cn(
-                  "inline-flex h-8 w-8 items-center justify-center rounded-control text-fg-muted motion-transition",
-                  "hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
+                  "inline-flex size-7 items-center justify-center rounded-chip text-fg-muted motion-transition",
+                  "hover:bg-state-hover hover:text-fg focus-ring-inset",
                   index === source.length - 1 && "invisible pointer-events-none",
                 )}
-                aria-label="Move item down"
+                aria-label={labels?.moveDown ?? "Move item down"}
                 aria-hidden={index === source.length - 1 || undefined}
                 onClick={() => moveBy(item.id, 1)}
                 disabled={index === source.length - 1}

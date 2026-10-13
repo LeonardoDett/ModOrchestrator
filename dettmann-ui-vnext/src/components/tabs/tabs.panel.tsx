@@ -2,6 +2,7 @@
 
 import { type ComponentPropsWithoutRef } from "react";
 import { cn } from "../../utils/cn";
+import { Presence } from "../../motion/presence";
 import { useTabsContext } from "./tabs.context";
 
 interface TabsPanelProps extends Omit<ComponentPropsWithoutRef<"div">, "value"> {
@@ -18,13 +19,16 @@ export function TabsPanel({ value, className, ...props }: TabsPanelProps) {
 
   if (!isActive) return null;
 
+  // Só a entrada é animada: o painel anterior sai na hora, então nunca há dois ao mesmo tempo.
   return (
-    <div
-      role="tabpanel"
-      id={`panel-${value}`}
-      aria-labelledby={`trigger-${value}`}
-      className={cn("py-4", className)}
-      {...props}
-    />
+    <Presence show>
+      <div
+        role="tabpanel"
+        id={`panel-${value}`}
+        aria-labelledby={`trigger-${value}`}
+        className={cn("py-4", className)}
+        {...props}
+      />
+    </Presence>
   );
 }

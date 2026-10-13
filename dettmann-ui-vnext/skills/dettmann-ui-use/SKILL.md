@@ -136,6 +136,11 @@ Feedback e overlays (D-035): `Alert.Root` e toasts já mostram o ícone do inten
 saída sozinhos (não envolva em `Presence`); `Command` tem `loading`/`loadingLabel`;
 item destrutivo de `ContextMenu` é `destructive: true`, nunca classe de cor.
 
+Dados (D-036): `DataTable` já vem com linhas de 32 px (28 em `density="compact"`) e
+anima reordenação, ordenação e filtro sozinho; não passe `rowHeight` nem envolva
+linhas em `useFlip`. Textos embutidos sempre por i18n: `FilterBar filtersLabel`,
+`ReorderableList labels`, `DataTable labels`, `Tree labels`.
+
 Linguagem visual (D-033, "ferramenta profissional densa"): sem sombra fora de
 overlay, separação por borda de 1 px, seleção = `bg-selected` + indicador da marca,
 desabilitado por tokens, foco só por `focus-ring`/`focus-ring-inset`. Em controle

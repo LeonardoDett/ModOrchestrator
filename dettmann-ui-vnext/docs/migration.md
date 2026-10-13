@@ -136,3 +136,14 @@ No prop was removed. What a consumer may notice:
 - `Toast` uses `shadow-overlay`; its action is a `Button`.
 - `Skeleton` no longer has the `animate-pulse` class. A custom round skeleton should use `rounded-pill`.
 - `Menu`/`Popover` content is positioned with `left`/`top` (no `transform`): do not rely on the floating element's `transform` for positioning tweaks.
+
+## Components redesign, wave 3 (D-036)
+
+No prop was removed. What a consumer may notice:
+
+- `DataTable` rows went from 40/30 px to 32/28 px. Pass `rowHeight` to keep another height; tests that assert pixel offsets of rows must be updated.
+- A selected `DataTable` or `Tree` row is `bg-selected` with a brand bar (it used the `emphasis` roles); a dragged row is `bg-sunken` instead of translucent.
+- `Table.Head`/`Table.Cell` are `h-control-sm px-3` (they were `h-11 px-4` and `px-4 py-3`); the header background is `bg-structure`.
+- `FilterBar` is `bg-structure` and its field uses the small padding; pass `filtersLabel` to localize the button.
+- `ReorderableList`: pass `labels` to localize the handle and the move buttons; the move buttons are 28 px.
+- `Tabs`: the active underline is the brand color; `Tabs.Panel` and `Accordion.Content` animate in.

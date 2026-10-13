@@ -175,3 +175,15 @@ Applies D-033 to `Alert`, `Toast`, `Modal`, `Drawer`, `Menu`, `ContextMenu`, `Po
 - **`rowRecipe` tone.** `tone: "danger"` swaps the text color and the hover layer (destructive menu item). A disabled row no longer carries `pointer-events-none`: the consumer decides what the click does.
 - **Command.** Options are `div[role=option]` rows addressed by `aria-activedescendant` (focus stays on the field); arrows, Home and End skip disabled items; with every item disabled nothing is active. `loading` plus `loadingLabel` replace the list with a `Loader`; the empty message is `role="status"`.
 - **Skeleton** pulses through `animateLoop` (opacity, 1600 ms; the reduced loop under reduced motion) instead of `animate-pulse`. **Progress** animates its width with the motion tokens.
+
+## D-036 — Wave 3: data components
+
+Applies D-033 to `Table`, `DataTable` (and `DataTableColumnPicker`), `Tree`, `ReorderableList`, `Tabs`, `Accordion`, `Inspector`, `FilterBar`, `DiffViewer`, `LogViewer`, `MediaImage`, `Lightbox` and `FileDropzone` (all in `WAVE_FILES`). Behaviour (virtualization, selection, drag, keyboard, ARIA roles) is untouched; only height, state colors, focus and motion changed.
+
+- **Density.** `DataTable` rows are 32 px (`comfortable`) and 28 px (`compact`), in px because the virtualizer needs the number; an explicit `rowHeight` still wins. Header cells are `h-8`/`h-7`. `Table` cells and heads are `h-control-sm px-3`; its header is `bg-structure` (it was `bg-selected`).
+- **Row state is one variant.** `DataTable` rows resolve `state` to `idle`, `selected` (`bg-selected` plus the 2 px `bg-brand-fill` bar, replacing `emphasis-subtle`/`emphasis-fill`), `dragged` (`bg-sunken text-fg-subtle`, replacing `opacity-60`) or `group`, so no two backgrounds ever compete. `Tree` rows do the same and a disabled node is `text-fg-subtle`. A `<tr>` of `Table` gets only `bg-selected`: a pseudo-element bar on a table row is not reliable.
+- **Reorder is animated.** `DataTable` data rows register with `useFlip([rowOrder])`: reordering, sorting and filtering slide the rows that stay visible; scrolling does not change the order, so it never animates. It works with virtualization because FLIP animates `translate` while the virtualizer positions with `transform`. `ReorderableList` does the same per item.
+- **Disclosure.** The active `underline` tab carries a `border-brand-fill` indicator; the `segmented` one is `bg-selected` without shadow. `Tabs.Panel` and `Accordion.Content` animate their entrance with `Presence` and leave at once, so there are never two panels.
+- **Structure.** `Inspector` header and `FilterBar` declare `data-layer="medium"` on `bg-structure`; `FilterBar` is a `data-budget-region`.
+- **Texts (D-009).** `FilterBar` gains `filtersLabel`; `ReorderableList` gains `labels` (`dragHandle`, `moveUp`, `moveDown`). Both had hard-coded English.
+- **Lucide exceptions.** `Columns3`, `GripVertical`, `Terminal` and `ImageOff` have no catalog glyph and are listed per file in `ALLOWED_LUCIDE`.

@@ -163,7 +163,7 @@ export function LogViewer({
                 onClick={() => onSelect?.(entry)}
                 className={cn(
                   "flex w-full items-start gap-3 border-b border-border-subtle px-3 text-left",
-                  "hover:bg-state-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus",
+                  "motion-transition hover:bg-state-hover focus-ring-inset",
                   dense ? "min-h-8 py-1" : "min-h-10 py-2",
                   level === "error" && "bg-danger-subtle/40",
                 )}

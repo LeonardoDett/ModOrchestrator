@@ -44,10 +44,30 @@ export const WAVE_FILES: string[] = [
   ...folderFiles("components/loader"),
   "primitives/skeleton.tsx",
   "primitives/backdrop.tsx",
+  // Onda 3: dados
+  ...folderFiles("components/table"),
+  ...folderFiles("components/data-table"),
+  ...folderFiles("components/tree"),
+  ...folderFiles("components/reorderable-list"),
+  ...folderFiles("components/tabs"),
+  ...folderFiles("components/accordion"),
+  ...folderFiles("components/inspector"),
+  ...folderFiles("components/filter-bar"),
+  ...folderFiles("components/diff-viewer"),
+  ...folderFiles("components/log-viewer"),
+  ...folderFiles("components/media-image"),
+  ...folderFiles("components/lightbox"),
+  ...folderFiles("templates/file-dropzone"),
 ];
 
 /** Glifos lucide sem equivalente no catálogo, por arquivo. Todo import fora daqui é achado. */
-const ALLOWED_LUCIDE: Record<string, string[]> = {};
+const ALLOWED_LUCIDE: Record<string, string[]> = {
+  "components/data-table/column-picker.tsx": ["Columns3"],
+  "components/data-table/data-table.tsx": ["GripVertical"],
+  "components/reorderable-list/index.tsx": ["GripVertical"],
+  "components/log-viewer/index.tsx": ["Terminal"],
+  "components/media-image/index.tsx": ["ImageOff"],
+};
 
 const FORBIDDEN: [string, RegExp][] = [
   ["opacidade em desabilitado", /\bopacity-(40|50|60)\b/],

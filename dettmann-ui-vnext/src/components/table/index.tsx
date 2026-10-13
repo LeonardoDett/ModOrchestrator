@@ -36,7 +36,7 @@ function TableHeader({ className, ...props }: ComponentPropsWithoutRef<"thead">)
   return (
     <thead
       data-layer="medium"
-      className={cn("sticky top-0 z-10 bg-selected [&_tr]:border-b [&_tr]:border-border", className)}
+      className={cn("sticky top-0 z-10 bg-structure [&_tr]:border-b [&_tr]:border-border", className)}
       {...props}
     />
   );
@@ -83,7 +83,7 @@ function TableHead({ className, ...props }: ComponentPropsWithoutRef<"th">) {
   return (
     <th
       className={cn(
-        "h-11 px-4 text-left align-middle font-medium text-fg-muted",
+        "h-control-sm px-3 text-left align-middle font-medium text-fg-muted",
         className
       )}
       {...props}
@@ -93,7 +93,7 @@ function TableHead({ className, ...props }: ComponentPropsWithoutRef<"th">) {
 
 function TableCell({ className, ...props }: ComponentPropsWithoutRef<"td">) {
   const layout = useTableLayout();
-  const classes = cn("px-4 py-3 align-middle text-fg", layout === "virtual" && "flex-1", className);
+  const classes = cn("h-control-sm px-3 py-1 align-middle text-fg", layout === "virtual" && "flex-1", className);
 
   if (layout === "virtual") {
     return (

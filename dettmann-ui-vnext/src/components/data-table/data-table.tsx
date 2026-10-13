@@ -25,6 +25,7 @@ import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useControllableState } from "../../hooks/use-controllable-state";
 import { Skeleton } from "../../primitives/skeleton";
+import { useFlip } from "../../motion/use-flip";
 import {
   applySelection,
   buildDisplayItems,
@@ -151,7 +152,8 @@ export interface DataTableProps<T>
   onRowsMove?: (move: DataTableRowMove) => void | Promise<unknown>;
 }
 
-const ROW_HEIGHT = { comfortable: 40, compact: 30 } as const;
+/** Linha de dados compacta (D-033). Em px porque a virtualização precisa do número. */
+const ROW_HEIGHT = { comfortable: 32, compact: 28 } as const;
 const DEFAULT_WIDTH = 160;
 const RESIZE_STEP = 16;
 const HANDLE_WIDTH = 28;
@@ -164,19 +166,22 @@ const rootVariants = defineRecipe({
   base: "relative flex min-h-0 flex-col overflow-hidden rounded-card border border-border bg-surface text-sm",
 });
 
+// Um fundo e uma cor de texto por estado (o `cn` não resolve conflito de classes).
 const rowVariants = defineRecipe({
-  base: "relative grid items-center border-b border-border-subtle text-fg",
+  base: "relative grid items-center border-b border-border-subtle",
   variants: {
-    selected: {
-      true: "bg-emphasis-subtle before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-emphasis-fill",
-      false: "hover:bg-state-hover",
+    state: {
+      idle: "text-fg hover:bg-state-hover",
+      selected: "text-fg bg-selected before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-brand-fill",
+      dragged: "bg-sunken text-fg-subtle",
+      group: "text-fg bg-structure hover:state-layer-hover",
     },
     focused: {
       true: "outline-2 -outline-offset-2 outline-focus",
       false: "",
     },
   },
-  defaultVariants: { selected: false, focused: false },
+  defaultVariants: { state: "idle", focused: false },
 });
 
 const alignClass = { start: "justify-start text-left", center: "justify-center text-center", end: "justify-end text-right" } as const;
@@ -572,6 +577,9 @@ export function DataTable<T>({
   const headerRowCount = hasFilters ? 2 : 1;
   const activeDescendant = focusedIndex >= 0 ? `${idPrefix}-${focusedIndex}` : undefined;
 
+  // Reordenar, ordenar e filtrar deslizam as linhas que continuam visíveis; rolar não muda a ordem.
+  const flip = useFlip<HTMLDivElement>([rowOrder]);
+
   const renderItem = (item: DataTableDisplayItem<T>, index: number, style?: CSSProperties) => {
     const common = {
       id: `${idPrefix}-${index}`,
@@ -587,7 +595,7 @@ export function DataTable<T>({
           key={item.key}
           {...common}
           aria-expanded={!item.collapsed}
-          className={cn(rowVariants({ focused }), "cursor-pointer bg-structure hover:state-layer-hover")}
+          className={cn(rowVariants({ state: "group", focused }), "cursor-pointer")}
           style={{ ...gridStyle, height: rowHeight, ...style }}
           onClick={() => {
             moveFocus(item.key);
@@ -618,14 +626,14 @@ export function DataTable<T>({
       <div
         key={item.key}
         {...common}
+        ref={flip(item.key)}
         aria-selected={selectionMode === "none" ? undefined : isSelected}
         data-selected={isSelected || undefined}
         data-drop={dropAt}
         className={cn(
-          rowVariants({ selected: isSelected, focused }),
+          rowVariants({ state: dragged ? "dragged" : isSelected ? "selected" : "idle", focused }),
           "cursor-default",
-          dragged && "opacity-60",
-          dropAt && "after:pointer-events-none after:absolute after:inset-x-0 after:z-10 after:h-0.5 after:bg-emphasis-fill",
+          dropAt && "after:pointer-events-none after:absolute after:inset-x-0 after:z-10 after:h-0.5 after:bg-brand-fill",
           dropAt === "before" && "after:top-0",
           dropAt === "after" && "after:bottom-0",
           rowClassName?.(item.row),
@@ -643,7 +651,7 @@ export function DataTable<T>({
                 aria-label={labels?.dragHandle ?? "Drag to reorder"}
                 aria-disabled={movePending || undefined}
                 className={cn(
-                  "flex h-6 w-5 touch-none items-center justify-center rounded-control text-fg-subtle hover:bg-state-hover hover:text-fg",
+                  "flex h-6 w-5 touch-none items-center justify-center rounded-chip text-fg-subtle motion-transition hover:bg-state-hover hover:text-fg",
                   movePending ? "cursor-progress" : "cursor-grab active:cursor-grabbing",
                 )}
                 onPointerDown={(event) => startDrag(event, item.key)}
@@ -717,7 +725,8 @@ export function DataTable<T>({
         aria-multiselectable={selectionMode === "multiple" || undefined}
         aria-activedescendant={hasFocus ? activeDescendant : undefined}
         aria-busy={loading || movePending || undefined}
-        className="min-h-0 flex-1 overflow-auto focus-visible:outline-none"
+        // O foco aparece na linha ativa (aria-activedescendant), não no contêiner de rolagem.
+        className="min-h-0 flex-1 overflow-auto focus-bare"
         onKeyDown={handleKeyDown}
         onFocus={(event) => {
           onFocus?.(event);
@@ -751,7 +760,7 @@ export function DataTable<T>({
                   aria-sort={ariaSort}
                   className={cn(
                     "relative flex min-w-0 items-center font-medium text-fg-muted",
-                    density === "compact" ? "h-8" : "h-10",
+                    density === "compact" ? "h-7" : "h-8",
                   )}
                 >
                   {column.sortable ? (
@@ -759,8 +768,7 @@ export function DataTable<T>({
                       type="button"
                       onClick={() => setSort(nextSort(sort, column.id))}
                       className={cn(
-                        "flex h-full min-w-0 flex-1 items-center gap-1 px-3 hover:text-fg",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-focus",
+                        "flex h-full min-w-0 flex-1 items-center gap-1 px-3 motion-transition hover:text-fg focus-ring-inset",
                         alignClass[columnAlign(column)],
                       )}
                     >
@@ -770,7 +778,7 @@ export function DataTable<T>({
                       ) : sorted === "desc" ? (
                         <ArrowDownIcon size="sm" className="h-3.5! w-3.5! text-fg" />
                       ) : (
-                        <ArrowUpDownIcon size="sm" className="h-3.5! w-3.5! opacity-40" />
+                        <ArrowUpDownIcon size="sm" className="h-3.5! w-3.5! text-fg-subtle" />
                       )}
                     </button>
                   ) : (
@@ -791,8 +799,8 @@ export function DataTable<T>({
                       onKeyDown={(event) => resizeByKey(event, column)}
                       onClick={(event) => event.stopPropagation()}
                       className={cn(
-                        "absolute inset-y-1 right-0 w-1.5 cursor-col-resize touch-none rounded-full",
-                        "hover:bg-border-strong focus-visible:bg-focus focus-visible:outline-none",
+                        "absolute inset-y-1 right-0 w-1.5 cursor-col-resize touch-none rounded-pill",
+                        "motion-transition hover:bg-border-strong focus-visible:bg-focus focus-ring-inset",
                       )}
                     />
                   ) : null}

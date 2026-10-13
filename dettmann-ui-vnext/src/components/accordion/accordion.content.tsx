@@ -2,6 +2,7 @@
 
 import { type ComponentPropsWithoutRef } from "react";
 import { cn } from "../../utils/cn";
+import { Presence } from "../../motion/presence";
 import { useAccordionContext } from "./accordion.context";
 
 interface AccordionContentProps extends Omit<ComponentPropsWithoutRef<"div">, "value"> {
@@ -19,14 +20,16 @@ export function AccordionContent({ value, className, children, ...props }: Accor
   if (!isOpen) return null;
 
   return (
-    <div
-      id={`content-${value}`}
-      role="region"
-      aria-labelledby={`trigger-${value}`}
-      className={cn("px-4 py-3 text-sm", className)}
-      {...props}
-    >
-      {children}
-    </div>
+    <Presence show>
+      <div
+        id={`content-${value}`}
+        role="region"
+        aria-labelledby={`trigger-${value}`}
+        className={cn("px-4 py-3 text-sm", className)}
+        {...props}
+      >
+        {children}
+      </div>
+    </Presence>
   );
 }

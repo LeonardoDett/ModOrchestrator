@@ -44,7 +44,7 @@ export function Inspector({ title, description, actions, children, sticky = true
   }, [closable]);
   return (
     <aside className={cn("min-w-0 border-l border-border bg-raised", sticky && "sticky top-0 h-fit", className)} {...props}>
-      <div className="border-b border-border px-4 py-3">
+      <div data-layer="medium" className="border-b border-border bg-structure px-4 py-3">
         <div className="flex items-start gap-3">
           <div className="min-w-0 flex-1">
             {title ? <h2 className="truncate text-sm font-semibold text-fg">{title}</h2> : null}

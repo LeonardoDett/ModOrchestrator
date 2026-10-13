@@ -37,6 +37,8 @@ Wave 2 (D-035): `Modal` and `Drawer` animate entrance and exit (the panel is `in
 
 `Table`, `DataTable`, `DataTableColumnPicker`, `List`, `Badge`, `Tag`, `Alert`, `Progress`, `Rating`, `Breadcrumbs`, `ActionBar`, `Toolbar`, `FilterBar`, `Inspector`, `LogViewer`, `DiffViewer`
 
+Wave 3 (D-036): `DataTable` rows are 32/28 px with one state variant (idle, selected, dragged, group) and slide on reorder, sort and filter; `Table` is compact with a structural header; `Tabs` show the brand indicator on the active tab and animate the panel entrance; `FilterBar` (`filtersLabel`) and the `Inspector` header are structural `medium` layers.
+
 ## Files and media
 
 `Tree`, `FileList`, `FileBrowser`, `ReorderableList`, `MediaImage`, `Lightbox`, `MediaGallery`, `Gallery`, `Carousel`, `FileDropzone`

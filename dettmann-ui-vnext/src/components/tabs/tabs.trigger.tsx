@@ -9,7 +9,7 @@ const tabsTriggerVariants = defineRecipe({
   base: [
     "inline-flex items-center justify-center whitespace-nowrap px-4 py-2",
     "text-sm font-medium motion-transition",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
+    "focus-ring-inset",
     "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle",
   ].join(" "),
   variants: {
@@ -40,7 +40,8 @@ const tabsTriggerVariants = defineRecipe({
     {
       variant: "underline",
       active: true,
-      class: "text-fg border-border-strong",
+      // Aba ativa: indicador de 2 px na cor da marca (D-033), nunca bloco preenchido.
+      class: "text-fg border-brand-fill",
     },
     {
       variant: "underline",
@@ -50,7 +51,7 @@ const tabsTriggerVariants = defineRecipe({
     {
       variant: "segmented",
       active: true,
-      class: "bg-selected text-fg shadow-raised",
+      class: "bg-selected text-fg",
     },
     {
       variant: "segmented",

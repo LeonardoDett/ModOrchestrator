@@ -25,6 +25,7 @@ import { ContrastPanel, useContrast } from "./panels/contrast";
 import { SampleScreen } from "./panels/sample-screen";
 import { ControlsPanel } from "./panels/controls";
 import { FeedbackPanel } from "./panels/feedback";
+import { DataPanel } from "./panels/data";
 import { MotionDemo } from "./panels/motion-demo";
 import { IconsPanel } from "./panels/icons";
 import { ExportPanel } from "./panels/export";
@@ -73,6 +74,9 @@ function ModeColumn({ config, theme, mode }: { config: ThemeConfig; theme: Resol
           <ToastProvider>
             <FeedbackPanel />
           </ToastProvider>
+        </Panel>
+        <Panel title="Dados">
+          <DataPanel />
         </Panel>
         <Panel title="Rampas">
           <Ramps theme={theme} mode={mode} />

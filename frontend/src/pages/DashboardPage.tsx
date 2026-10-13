@@ -145,6 +145,11 @@ function CustomizeList({ dashlets }: { dashlets: Dashlet[] }) {
       <Card.Body>
         <ReorderableList
           aria-label={t("dashboard.customizeTitle")}
+          labels={{
+            dragHandle: t("dashboard.customizeDrag"),
+            moveUp: t("dashboard.customizeMoveUp"),
+            moveDown: t("dashboard.customizeMoveDown"),
+          }}
           items={dashlets.map((d) => ({ id: d.id, data: d }))}
           onReorder={(items) => store(items.map((i) => i.data))}
           renderItem={(item) => {

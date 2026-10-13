@@ -963,3 +963,11 @@ Efeitos no app, sem mudança de código no `frontend/`:
 3. Itens de menu e opções da paleta de comandos são linhas compactas de 32 px com 2 px de intervalo (aprovado pelo usuário em 2026-10-10). Na paleta, as setas pulam itens desabilitados.
 4. `Skeleton` e `Progress` usam a camada de movimento da lib (respeitam `ui.reduceMotion`, core/13).
 
+## D110 — Redesenho dos componentes da dettmann-ui, onda 3 (dados)
+Status: vigente (continua D109; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-036)
+
+Efeitos no app:
+1. Todas as tabelas (`DataTable`) passam a ter linhas de 32 px na densidade confortável e 28 px na compacta (eram 40 e 30). A preferência de densidade do usuário continua valendo; o app não fixa `rowHeight`.
+2. Linha selecionada: fundo `selected` com barra da marca. Linha arrastada: fundo rebaixado, sem transparência. Reordenar, ordenar e filtrar deslizam as linhas visíveis (respeita `ui.reduceMotion`).
+3. Abas mostram o indicador da marca na aba ativa; o painel da aba e o conteúdo do acordeão entram animados.
+4. Única mudança de código no `frontend/`: a lista de dashlets do Dashboard passa os rótulos de arrastar e mover pelo i18n (`dashboard.customizeDrag`, `dashboard.customizeMoveUp`, `dashboard.customizeMoveDown`), que antes vinham em inglês fixo da lib.
