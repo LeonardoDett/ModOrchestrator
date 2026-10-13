@@ -357,6 +357,11 @@ export const ptBR: Record<MessageKey, string> = {
   "error.feature_unavailable": "Este jogo não oferece esse recurso.",
   "error.feature_locked": "Esse recurso faz parte do gerenciamento do jogo e não pode ser desligado.",
   "error.feature_requires": "Ligue antes o recurso do qual este depende ({requires}).",
+  "error.entry_invalid": "Este arquivo não descreve um jogo válido.",
+  "error.entry_schema": "Este arquivo foi feito para outra versão do Mod Orchestrator.",
+  "error.entry_exists": "Já existe um jogo com essa identificação ({name}).",
+  "error.entry_in_use": "Este jogo ainda é gerenciado em {instance}. Pare de gerenciar antes de excluir.",
+  "error.entry_unknown": "Este jogo não foi adicionado por você.",
   "warning.hardlink_unavailable": "Hardlinks não estão disponíveis com essas pastas. Você pode mover a staging para a unidade do jogo ou usar cópias.",
   "warning.backup_other_volume": "A pasta de backups está em uma unidade diferente da do jogo; restaurar originais será mais lento.",
 

@@ -163,7 +163,7 @@ type WorkspaceDTO struct {
 func toManagedDTO(m games.Managed) ManagedGameDTO {
 	i := m.Instance
 	dto := ManagedGameDTO{
-		ID: string(i.ID), GameID: string(i.Game), GameName: m.Definition.Name, Custom: m.Definition.CustomTargets,
+		ID: string(i.ID), GameID: string(i.Game), GameName: m.Definition.Name, Custom: m.Definition.SupportLevel() == game.SupportCustom,
 		Name: i.DisplayName, Adapter: i.Adapter, Store: i.Store, Root: i.Root, Staging: i.Staging,
 		ArchiveStore: i.ArchiveStore, BackupStore: i.BackupStore, Method: string(i.PreferredMethod),
 		Executable: i.Executable, Version: m.Version, Active: m.Active, Hidden: i.Hidden,
@@ -265,4 +265,11 @@ type InstanceFeatureDTO struct {
 	Enabled   bool     `json:"enabled"`
 	Effective bool     `json:"effective"`
 	BlockedBy []string `json:"blockedBy"`
+}
+
+// GameEntryDTO is a game the user described (D117).
+type GameEntryDTO struct {
+	GameID    string `json:"gameId"`
+	GameName  string `json:"gameName"`
+	Instances int    `json:"instances"`
 }

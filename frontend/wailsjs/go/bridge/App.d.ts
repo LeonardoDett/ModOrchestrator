@@ -64,6 +64,8 @@ export function DecidePairs(arg1:string,arg2:Array<bridge.PairDecisionDTO>):Prom
 
 export function DeleteCategory(arg1:string,arg2:string):Promise<void>;
 
+export function DeleteGameEntry(arg1:string):Promise<void>;
+
 export function DeletePluginGroup(arg1:string,arg2:string):Promise<void>;
 
 export function DeleteProfile(arg1:string):Promise<void>;
@@ -84,6 +86,8 @@ export function EnableImpact(arg1:string,arg2:Array<string>,arg3:boolean):Promis
 
 export function ExecuteDiagnosticAction(arg1:string,arg2:string,arg3:string,arg4:number):Promise<bridge.DiagnosticActionResultDTO>;
 
+export function ExportGameEntry(arg1:string):Promise<string>;
+
 export function ExportLoadOrder(arg1:string):Promise<string>;
 
 export function ExportSupportBundle(arg1:string,arg2:string):Promise<string>;
@@ -95,6 +99,8 @@ export function FirstSteps():Promise<bridge.FirstStepsDTO>;
 export function FomodImage(arg1:string,arg2:string):Promise<string>;
 
 export function FomodState(arg1:string,arg2:Array<bridge.FomodSelectionDTO>):Promise<bridge.FomodViewDTO>;
+
+export function GameEntries():Promise<Array<bridge.GameEntryDTO>>;
 
 export function GameInstanceDetails(arg1:string):Promise<bridge.ManagedGameDTO>;
 
@@ -115,6 +121,8 @@ export function HideInstance(arg1:string,arg2:boolean):Promise<void>;
 export function History(arg1:bridge.HistoryFilterDTO):Promise<Array<bridge.HistoryEntryDTO>>;
 
 export function ImportFiles(arg1:string,arg2:Array<string>):Promise<Array<string>>;
+
+export function ImportGameEntry(arg1:string):Promise<string>;
 
 export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResultDTO>;
 

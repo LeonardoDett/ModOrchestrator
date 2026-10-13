@@ -193,7 +193,7 @@ type env struct {
 }
 
 func newEnv() *env {
-	reg, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{})
+	reg, err := games.NewRegistry(generic.New(), skyrimse.Adapter{})
 	if err != nil {
 		panic(err)
 	}

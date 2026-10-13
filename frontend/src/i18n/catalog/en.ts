@@ -360,6 +360,11 @@ export const en = {
   "error.feature_unavailable": "This game does not offer that feature.",
   "error.feature_locked": "That feature is part of managing the game and cannot be turned off.",
   "error.feature_requires": "Turn on the feature this one depends on first ({requires}).",
+  "error.entry_invalid": "This file does not describe a valid game.",
+  "error.entry_schema": "This file was made for another version of Mod Orchestrator.",
+  "error.entry_exists": "A game with that identification already exists ({name}).",
+  "error.entry_in_use": "This game is still managed in {instance}. Stop managing it before deleting.",
+  "error.entry_unknown": "This game was not added by you.",
   "warning.hardlink_unavailable": "Hardlinks are unavailable with these folders. You can move the staging folder to the game's drive or use copies.",
   "warning.backup_other_volume": "The backup folder is on a different drive than the game; restoring originals will be slower.",
 

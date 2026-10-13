@@ -20,7 +20,7 @@ const sampleManifest = `{
     "processes": ["Sample.exe"]
   },
   "layout": {
-    "targets": [{"id": "mods", "path": "Mods"}, {"id": "root", "path": ""}],
+    "targets": [{"id": "mods", "path": "Mods", "creatable": true}, {"id": "root", "path": ""}],
     "modTypes": [
       {"id": "default", "name": "Default", "target": "mods"},
       {"id": "root", "name": "Root", "target": "root", "methods": ["hardlink", "copy"], "priority": 10,
@@ -60,6 +60,9 @@ func TestManifestBecomesADefinition(t *testing.T) {
 	}
 	if !d.Discovery.Matches(StoreSteam, "100") || !d.Discovery.Matches(StoreRegistry, "sample") || d.Discovery.VersionFile != "Sample.exe" {
 		t.Errorf("discovery = %+v", d.Discovery)
+	}
+	if !slices.Equal(d.CreatableTargets, []TargetID{"mods"}) {
+		t.Errorf("creatable targets = %v", d.CreatableTargets)
 	}
 	if len(d.ToolOutputs) != 1 || d.ToolOutputs[0].String() != "mods:Generated" || len(d.UnmanagedHints) != 1 {
 		t.Errorf("outputs = %v, hints = %v", d.ToolOutputs, d.UnmanagedHints)
@@ -130,7 +133,8 @@ func TestManifestRefusesWhatLeavesTheGameFolder(t *testing.T) {
 	bad := map[string][2]string{
 		"absolute target":     {`"path": "Mods"`, `"path": "C:\\Windows"`},
 		"target outside":      {`"path": "Mods"`, `"path": "../Other"`},
-		"target id":           {`{"id": "mods", "path": "Mods"}`, `{"id": "My Mods", "path": "Mods"}`},
+		"target id":           {`{"id": "mods", "path": "Mods", "creatable": true}`, `{"id": "My Mods", "path": "Mods"}`},
+		"creatable root":      {`{"id": "root", "path": ""}`, `{"id": "root", "path": "", "creatable": true}`},
 		"marker outside":      {`"markers": ["Sample.exe"]`, `"markers": ["..\\Sample.exe"]`},
 		"version file drive":  {`"versionFile": "Sample.exe"`, `"versionFile": "D:\\Sample.exe"`},
 		"process with folder": {`"processes": ["Sample.exe"]`, `"processes": ["bin/Sample.exe"]`},

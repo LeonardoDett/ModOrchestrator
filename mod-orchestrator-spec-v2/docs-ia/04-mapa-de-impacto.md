@@ -11,6 +11,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Estado de app (instância ativa, jogos ocultos) | docs-ia/03, D060, `ports.AppState` | — | barra de título, Games |
 | Descoberta (StoreScanner, busca completa) | core/11 §1 e §3, D057, D113, `Definition.Discovery` de cada adapter | — | Games |
 | Recurso ligado/desligado numa instância | core/11 §1 (Recursos por instância), `game.Definition.Effective`, `ports.InstanceDefinition`, `games.SetFeature`, tabela `instance_features`, bridge `InstanceFeatures`/`SetInstanceFeature`, D115 | INV-FEAT-01..03 | navegação do workspace, Games (detalhes), Settings por jogo |
+| Manifesto de jogo ou entrada do usuário | core/11 §1 (Jogos descritos por dados), `game.Manifest`, `ports.GameEntries`/`EntryHost`, adapter `generic`, `games.Registry.SetEntries`, tabela `game_entries`, bridge `GameEntries`/`ExportGameEntry`/`ImportGameEntry`/`DeleteGameEntry`, D116, D117 | INV-ENT-01..04 | Games, assistente de jogo genérico |
 | Nível de suporte ou classe de um recurso | core/11 §1 (Registro de jogos), `game.Describe`, `Registry.Support()`, bridge `GamesSupport()`, D113 | — | Games, Extensions |
 | Capability nova ou interface opcional de adapter | core/11 §1 (catálogo e tabela de contratos), `game.Catalog()`, `games.contracts`, core/12 §2, `capability.*` no i18n, D112 | — | Extensions, Games (detalhes) |
 | ModType | core/11, core/12, core/03, core/04 | INV-CON-01 | Mods (coluna/inspector) |

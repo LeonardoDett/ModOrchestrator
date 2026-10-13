@@ -9,6 +9,8 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 | `GameDefinition` | Jogo | Identidade lógica de um jogo suportado (id, nome, capabilities, regras de detecção). Vem de um adapter. |
 | `GameInstance` | Jogo gerenciado | Uma instalação concreta sendo gerenciada: raiz, targets, staging, archive store, método de deploy, adapter. Um jogo pode ter mais de uma instância (ex.: duas cópias do Skyrim). |
 | `Adapter` | — | Implementação que fornece GameDefinitions e capabilities. V1: `generic`, `skyrimse` (D031) e `valheim` (D114). |
+| `GameManifest` | Manifesto de jogo | Forma serializada de um jogo descrito só por dados (D116). Não declara capabilities: elas são derivadas. |
+| `GameEntry` | Jogo personalizado | Manifesto que o usuário criou ou importou, com id `user.<nome>`, guardado no banco e servido pelo adapter `generic` (D117). |
 | `Capability` | — | Algo que o adapter declara suportar (`plugins`, `load_order`, `save_games`...). O core decide comportamento por capability, nunca por identidade de jogo. |
 | `DeploymentTarget` (`Target`) | Pasta de destino | Pasta da instância onde arquivos são implantados, identificada por `TargetID` (`data`, `root`...). |
 | `Location` | Caminho | `Target` + caminho relativo normalizado (sem diferenciar maiúsculas). Unidade de footprint, conflito, manifesto e external change. |

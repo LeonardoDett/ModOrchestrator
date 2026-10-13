@@ -2176,6 +2176,22 @@ export namespace bridge {
 	}
 	
 	
+	export class GameEntryDTO {
+	    gameId: string;
+	    gameName: string;
+	    instances: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new GameEntryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.gameId = source["gameId"];
+	        this.gameName = source["gameName"];
+	        this.instances = source["instances"];
+	    }
+	}
 	export class GameSupportDTO {
 	    gameId: string;
 	    gameName: string;

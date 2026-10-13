@@ -86,3 +86,7 @@ Cada invariante deve ter pelo menos um teste automatizado quando sua fase for im
 | INV-FEAT-01 | As capabilities efetivas de uma instância nunca excedem as que o jogo oferece; recurso `base` nunca é desligado (D115). | R2 |
 | INV-FEAT-02 | Um recurso cujo requisito não está efetivo nunca fica efetivo (D115). | R2 |
 | INV-FEAT-03 | Ligar ou desligar um recurso não escreve em nenhum target nem em arquivo do jogo (D115). | R2 |
+| INV-ENT-01 | Manifesto inválido ou de `schema` desconhecido nunca vira definição nem é lido pela metade (D116). | R3 |
+| INV-ENT-02 | Um manifesto não contém caminho absoluto nem caminho que saia da pasta do jogo (D116). | R3 |
+| INV-ENT-03 | Uma entrada do usuário nunca toma o id de um jogo embutido, e importar nunca substitui uma entrada existente (D117). | R4 |
+| INV-ENT-04 | Uma entrada usada por alguma instância não pode ser excluída; uma entrada ilegível nunca é apagada (D117). | R4 |

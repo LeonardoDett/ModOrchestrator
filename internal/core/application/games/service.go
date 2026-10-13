@@ -30,6 +30,9 @@ const (
 type Deps struct {
 	Registry    *Registry
 	Instances   ports.GameInstances
+	// Entries keeps the games the user describes (D117); a nil value gets
+	// a private in-memory store (tests).
+	Entries ports.GameEntries
 	Profiles    ports.Profiles
 	State       ports.AppState
 	Deployments ports.DeploymentState
@@ -66,6 +69,9 @@ type Service struct {
 func NewService(d Deps) *Service {
 	if d.Locks == nil {
 		d.Locks = instancelock.New()
+	}
+	if d.Entries == nil {
+		d.Entries = &memoryEntries{}
 	}
 	return &Service{Deps: d, cancels: map[string]context.CancelFunc{}}
 }

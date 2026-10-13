@@ -156,7 +156,8 @@ func (s *Service) Verify(ctx context.Context, su Setup) (Verification, error) {
 		if game.SamePath(o.Root, root) {
 			v.Problems = append(v.Problems, problem(CodeRootInUse, "instance", o.DisplayName))
 		}
-		if name != "" && o.Game == su.Game && strings.EqualFold(strings.TrimSpace(o.DisplayName), name) {
+		sameGame := o.Game == su.Game || (def.CustomTargets && game.IsUserEntry(o.Game))
+		if name != "" && sameGame && strings.EqualFold(strings.TrimSpace(o.DisplayName), name) {
 			v.Problems = append(v.Problems, problem(CodeNameTaken, "name", name))
 		}
 	}
@@ -237,6 +238,12 @@ func (s *Service) Manage(ctx context.Context, su Setup) (Result, error) {
 
 	id := game.InstanceID(s.IDs.NewID())
 	var res Result
+	var created game.ID // entry made for this instance; removed if the rest fails
+	defer func() {
+		if created != "" && res.Instance == "" {
+			_ = s.removeEntry(context.WithoutCancel(ctx), created)
+		}
+	}()
 	opID, err := s.run(ctx, operations.Spec{Kind: KindManage, Subject: subject(id), Steps: []string{stepValidate, stepFolders, stepRegister}},
 		func(ctx context.Context, t *operations.Tracker) error {
 			if err := t.BeginStep(ctx, stepValidate); err != nil {
@@ -253,10 +260,20 @@ func (s *Service) Manage(ctx context.Context, su Setup) (Result, error) {
 			if err != nil {
 				return err
 			}
-			adapter, _, _ := s.lookup(su.Game)
+			adapter, def, _ := s.lookup(su.Game)
 			inst := s.newInstance(id, su, adapter, v.Root, v.Name, v.Targets, v.Folders, method)
 			if err := inst.Validate(); err != nil {
 				return fail(CodeFoldersInvalid, err, "detail", err.Error())
+			}
+			if def.CustomTargets {
+				// A game the user describes gets an entry and an id of its
+				// own (D117); the instance belongs to that game.
+				entry, err := s.createEntry(ctx, v.Name, su)
+				if err != nil {
+					return err
+				}
+				inst.Game = entry
+				created = entry
 			}
 			if err := t.CompleteStep(ctx, stepValidate); err != nil {
 				return err

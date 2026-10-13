@@ -49,6 +49,12 @@ const (
 	CodeFeatureUnavailable = "feature_unavailable"
 	CodeFeatureLocked      = "feature_locked"
 	CodeFeatureRequires    = "feature_requires"
+	// Games described by the user (D117).
+	CodeEntryInvalid = "entry_invalid"
+	CodeEntrySchema  = "entry_schema"
+	CodeEntryExists  = "entry_exists"
+	CodeEntryInUse   = "entry_in_use"
+	CodeEntryUnknown = "entry_unknown"
 )
 
 func fail(code string, cause error, kv ...string) *Error {

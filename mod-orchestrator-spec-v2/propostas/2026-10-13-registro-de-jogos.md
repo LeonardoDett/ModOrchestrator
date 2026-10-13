@@ -1,6 +1,6 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 (D113) e R2 (D115) implementadas; da R3 só o formato do manifesto no domínio (D116)**. Falta: adapter `generic` interpretando manifestos, R4, R5 e R6. Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
+Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 (D113), R2 (D115), R3 (D116) e R4 (D117) implementadas no backend e no bridge.** Falta: R5 (telas) e R6 (contrato de extensão por jogo). Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
 
@@ -234,6 +234,8 @@ Cada fase fecha com `go vet ./... && go test ./...`, `npm --prefix frontend run 
 Como a R1 ficou (D113): a descoberta virou `Definition.Discovery`; `Markers`, `RegistryHints`, `VersionFile` e `Detect` saíram do port (`Detect` não ficou nem como opcional, porque nenhum adapter precisa); classe e dependências são do recurso (`game.Describe`), não de cada jogo; a consulta é a `Registry.Support()` da D112, exposta em `GamesSupport()`. O formato serializado (JSON com `schema`) fica para a R3.
 
 Como a R2 ficou (D115): a escolha mora em `game.Instance.Features` (tabela `instance_features`); o efetivo sai de `Definition.Effective` e chega ao core só por `ports.InstanceDefinition`; `games.SetFeature` recusa recurso não oferecido, `base` ou com requisito não efetivo. A tela de recursos fica para a R5.
+
+Como a R3 e a R4 ficaram (D116, D117): o manifesto não carrega `features`, `support`, `origin` nem `adapter` (são derivados ou decididos por quem carrega); nenhum jogo `declared` embutido existe ainda, porque Skyrim e Valheim têm adapter próprio; o `generic` v2 serve as entradas; o assistente atual já cria entrada sem mudança na UI; a migração roda na inicialização. Reconhecimento de pasta e modelos prontos ficaram para a R5, junto com as telas.
 
 Ordem e dependências: R1 primeiro (tudo depende dela). R2 e R3 são independentes entre si. R4 depende de R3. R5 depende do subprojeto de componentes liberar as telas. R6 depende de R2.
 

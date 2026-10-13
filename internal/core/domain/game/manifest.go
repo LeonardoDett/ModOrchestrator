@@ -68,9 +68,12 @@ type ManifestLayout struct {
 }
 
 // ManifestTarget is a folder relative to the game root ("" is the root).
+// Creatable marks a folder the app may create when it does not exist yet
+// (D118); the root itself never is.
 type ManifestTarget struct {
-	ID   TargetID `json:"id"`
-	Path string   `json:"path"`
+	ID        TargetID `json:"id"`
+	Path      string   `json:"path"`
+	Creatable bool     `json:"creatable,omitempty"`
 }
 
 type ManifestModType struct {
@@ -272,6 +275,12 @@ func (m Manifest) definition(support Support) (Definition, error) {
 	d := Definition{ID: m.ID, Name: strings.TrimSpace(m.Name), Support: support}
 	for _, t := range m.Layout.Targets {
 		d.Targets = append(d.Targets, t.ID)
+		if t.Creatable {
+			if strings.TrimSpace(t.Path) == "" {
+				return Definition{}, fmt.Errorf("%w: manifest %s: the game folder itself cannot be creatable", ErrInvalid, m.ID)
+			}
+			d.CreatableTargets = append(d.CreatableTargets, t.ID)
+		}
 	}
 	if len(d.Targets) == 0 {
 		return Definition{}, fmt.Errorf("%w: manifest %s declares no target", ErrInvalid, m.ID)

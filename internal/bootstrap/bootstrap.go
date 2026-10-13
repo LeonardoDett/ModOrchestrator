@@ -195,7 +195,7 @@ func New(ctx context.Context) (c *Container, err error) {
 
 	// Adapters are compiled in and registered here (D031); the core learns
 	// about games only through this registry.
-	registry, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{}, valheim.Adapter{})
+	registry, err := games.NewRegistry(generic.New(), skyrimse.Adapter{}, valheim.Adapter{})
 	if err != nil {
 		unsub()
 		return nil, fmt.Errorf("bootstrap: adapters: %w", err)
@@ -207,6 +207,7 @@ func New(ctx context.Context) (c *Container, err error) {
 	gamesSvc := games.NewService(games.Deps{
 		Registry:    registry,
 		Instances:   instances,
+		Entries:     sqlite.NewGameEntryRepository(db),
 		Profiles:    profiles,
 		State:       appState,
 		Deployments: sqlite.NewDeploymentState(db),
@@ -221,6 +222,21 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:       clock,
 		Locks:       locks,
 	})
+	// Games the user described are served by the registry from here on;
+	// instances created before they had an id of their own get one (D117).
+	unreadable, err := gamesSvc.LoadEntries(ctx)
+	if err != nil {
+		unsub()
+		return nil, fmt.Errorf("bootstrap: game entries: %w", err)
+	}
+	for _, id := range unreadable {
+		logger.Warn("game entry cannot be read by this version; its instances are unavailable", "game", string(id))
+	}
+	if n, err := gamesSvc.MigrateLegacyCustom(ctx); err != nil {
+		logger.Error("migrating custom games to entries", "error", err.Error())
+	} else if n > 0 {
+		logger.Info("custom games migrated to entries", "count", n)
+	}
 	librarySvc := library.NewService(library.Deps{
 		Registry:      registry,
 		Instances:     instances,

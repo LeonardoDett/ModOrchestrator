@@ -55,7 +55,9 @@ func checkContracts(a ports.GameAdapter) error {
 				return fmt.Errorf("games: adapter %s: game %q declares %q without implementing %s", a.Name(), d.ID, c.Capability, c.Interface)
 			}
 		}
-		if !declared && c.implemented(a) {
+		// The games of an entry host arrive while the app runs (D117): it
+		// may implement a contract no game declares yet.
+		if _, host := a.(ports.EntryHost); !declared && c.implemented(a) && !host {
 			return fmt.Errorf("games: adapter %s implements %s but no game declares %q", a.Name(), c.Interface, c.Capability)
 		}
 	}
@@ -111,6 +113,8 @@ type GameSupport struct {
 // Support lists every game of the registry with the status of each
 // capability: the catalog first, then the ones only the definition names.
 func (r *Registry) Support() []GameSupport {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
 	out := make([]GameSupport, 0, len(r.defs))
 	for _, d := range r.defs {
 		a := r.byGame[d.ID]

@@ -258,3 +258,54 @@ func TestInstanceFeatureChoicesRoundTrip(t *testing.T) {
 		t.Fatalf("choices of a deleted instance: %d, %v", n, err)
 	}
 }
+
+// D117: the games the user describes are stored as manifests. An entry this
+// build cannot read stays stored and is reported, never dropped.
+func TestGameEntriesRoundTripAndKeepWhatCannotBeRead(t *testing.T) {
+	ctx := context.Background()
+	db, err := Open(ctx, filepath.Join(t.TempDir(), "state.db"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer db.Close()
+	repo := NewGameEntryRepository(db)
+	entry := func(id, name string) game.Manifest {
+		return game.Manifest{
+			Schema: game.ManifestSchema, ID: game.ID(id), Name: name,
+			Layout: game.ManifestLayout{Targets: []game.ManifestTarget{{ID: "mods", Path: "Mods"}}},
+		}
+	}
+	for _, m := range []game.Manifest{entry("user.b", "B"), entry("user.a", "A"), entry("user.a", "A2")} {
+		if err := repo.Save(ctx, m); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err := repo.Save(ctx, game.Manifest{Schema: game.ManifestSchema, ID: "user.bad", Name: "Bad"}); err == nil {
+		t.Fatal("an invalid manifest is never stored")
+	}
+	for id, raw := range map[string]string{
+		"user.future": `{"schema":2,"id":"user.future","name":"Future"}`,
+		"user.other":  `{"schema":1,"id":"user.mismatch","name":"X","discovery":{},"layout":{"targets":[{"id":"mods","path":"Mods"}],"rootHints":{}}}`,
+	} {
+		if _, err := db.ExecContext(ctx, `INSERT INTO game_entries (id, manifest_json, updated_at) VALUES (?, ?, 'x')`, id, raw); err != nil {
+			t.Fatal(err)
+		}
+	}
+	list, unreadable, err := repo.List(ctx)
+	if err != nil || len(list) != 2 || list[0].ID != "user.a" || list[0].Name != "A2" || list[1].ID != "user.b" {
+		t.Fatalf("list = %+v, %v", list, err)
+	}
+	if len(unreadable) != 2 || unreadable[0] != "user.future" || unreadable[1] != "user.other" {
+		t.Fatalf("unreadable = %v", unreadable)
+	}
+	var n int
+	if err := db.QueryRowContext(ctx, `SELECT COUNT(*) FROM game_entries`).Scan(&n); err != nil || n != 4 {
+		t.Fatalf("rows = %d, %v (an unreadable entry must stay stored)", n, err)
+	}
+	if err := repo.Delete(ctx, "user.a"); err != nil {
+		t.Fatal(err)
+	}
+	if err := repo.Delete(ctx, "user.a"); !errors.Is(err, ports.ErrNotFound) {
+		t.Fatalf("deleting twice: %v", err)
+	}
+}

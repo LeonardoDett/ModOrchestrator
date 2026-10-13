@@ -265,3 +265,45 @@ func capabilityIDs(in []game.Capability) []string {
 	}
 	return out
 }
+
+// GameEntries lists the games the user described (D117).
+func (a *App) GameEntries() ([]GameEntryDTO, error) {
+	list, err := a.c.Games.ListEntries(a.context())
+	if err != nil {
+		return nil, a.fail("game entries", err, nil)
+	}
+	out := make([]GameEntryDTO, 0, len(list))
+	for _, e := range list {
+		out = append(out, GameEntryDTO{GameID: string(e.Manifest.ID), GameName: e.Manifest.Name, Instances: e.Instances})
+	}
+	return out, nil
+}
+
+// ExportGameEntry returns the manifest of a user entry as JSON text, the
+// same document ImportGameEntry reads.
+func (a *App) ExportGameEntry(gameID string) (string, error) {
+	data, err := a.c.Games.ExportEntry(a.context(), game.ID(gameID))
+	if err != nil {
+		return "", a.fail("export game entry", err, map[string]string{"game": gameID})
+	}
+	return string(data), nil
+}
+
+// ImportGameEntry adds a game from manifest text and returns its id.
+func (a *App) ImportGameEntry(manifest string) (string, error) {
+	id, err := a.c.Games.ImportEntry(a.context(), []byte(manifest))
+	if err != nil {
+		return "", a.fail("import game entry", err, nil)
+	}
+	a.c.Logger.Info("game entry imported", "game", string(id))
+	return string(id), nil
+}
+
+// DeleteGameEntry removes a user entry no instance uses.
+func (a *App) DeleteGameEntry(gameID string) error {
+	if err := a.c.Games.DeleteEntry(a.context(), game.ID(gameID)); err != nil {
+		return a.fail("delete game entry", err, map[string]string{"game": gameID})
+	}
+	a.c.Logger.Info("game entry deleted", "game", gameID)
+	return nil
+}

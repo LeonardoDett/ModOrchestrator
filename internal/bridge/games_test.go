@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 
 	"modorchestrator/internal/bootstrap"
@@ -90,6 +91,26 @@ func TestBridgeManagesAGenericGameEndToEnd(t *testing.T) {
 		t.Fatalf("details = %+v, %v", details, err)
 	}
 
+	// D117: the game got an entry and an id of its own, still shown as a
+	// custom game, and it exports to a document that holds no absolute path.
+	if g := view.Managed[0]; !g.Custom || g.GameID != "user.valheim" || g.GameName != "Valheim" {
+		t.Fatalf("managed = %+v", g)
+	}
+	entries, err := app.GameEntries()
+	if err != nil || len(entries) != 1 || entries[0].GameID != "user.valheim" || entries[0].Instances != 1 {
+		t.Fatalf("entries = %+v, %v", entries, err)
+	}
+	doc, err := app.ExportGameEntry("user.valheim")
+	if err != nil || strings.Contains(doc, filepath.Base(base)) || !strings.Contains(doc, "BepInEx/plugins") {
+		t.Fatalf("export = %s, %v", doc, err)
+	}
+	if e := decodeErr(t, func() error { _, err := app.ImportGameEntry(doc); return err }()); e.Code != "entry_exists" {
+		t.Fatalf("code = %s", e.Code)
+	}
+	if e := decodeErr(t, app.DeleteGameEntry("user.valheim")); e.Code != "entry_in_use" {
+		t.Fatalf("code = %s", e.Code)
+	}
+
 	// D115: a game with no optional process has nothing to turn off, and
 	// the refusal is coded.
 	feats, err := app.InstanceFeatures(res.InstanceID)
@@ -124,6 +145,17 @@ func TestBridgeManagesAGenericGameEndToEnd(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(setup.Staging, ".modorchestrator-staging")); err != nil {
 		t.Fatal("staging is kept by default")
+	}
+	// The entry outlives the instance, so the game can be managed again;
+	// with no instance left it can be deleted.
+	if view, _ := app.GamesView(false); !slices.ContainsFunc(view.Supported, func(g SupportedGameDTO) bool { return g.GameID == "user.valheim" }) {
+		t.Fatalf("supported = %+v", view.Supported)
+	}
+	if err := app.DeleteGameEntry("user.valheim"); err != nil {
+		t.Fatal(err)
+	}
+	if entries, _ := app.GameEntries(); len(entries) != 0 {
+		t.Fatalf("entries = %+v", entries)
 	}
 }
 

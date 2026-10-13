@@ -45,6 +45,10 @@ Cada `GameDefinition` é uma entrada do registro e carrega, além de targets e m
 
 Cada capability é também um **recurso** com classe (`game.Describe`): `base` (sempre ligado) ou `optional` (o usuário poderá ligar e desligar por instância), e dependências (`load_order` exige `plugins`). Definição que declara um recurso sem o que ele exige não registra.
 
+### Jogos descritos por dados (D116, D117)
+
+Um **manifesto** (`game.Manifest`, JSON com `schema`) descreve um jogo sem código: descoberta, targets relativos à raiz (com `creatable`, D118), mod types, dicas de root, saídas de ferramenta e opções de lançamento. As capabilities são derivadas do conteúdo; o arquivo não as declara. Todo jogo que o usuário adiciona é uma **entrada**: um manifesto com id `user.<nome>` guardado em `game_entries` e servido pelo adapter `generic`, que é o único `ports.EntryHost`. `games.Registry.SetEntries` troca as entradas com o app rodando. O jogo `generic` restante é só o modelo de onde o assistente parte: gerenciá-lo cria a entrada e a instância pertence a ela. Entradas podem ser exportadas, importadas (nunca substituindo um id existente) e excluídas quando nenhuma instância as usa.
+
 ### Recursos por instância (D115)
 
 Um recurso é **oferecido** pela definição, **ligado** pelo usuário em cada instância e **efetivo** quando as duas coisas valem e o que ele exige também está efetivo. O core pede a definição de uma instância só por `ports.InstanceDefinition`, que já devolve as capabilities efetivas; recurso desligado é tratado como recurso que o jogo não tem. Desligar nunca apaga nem reverte arquivos do jogo. `games.Features` lista os três estados e `games.SetFeature` muda a escolha (`feature_unavailable`, `feature_locked`, `feature_requires`).

@@ -121,7 +121,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 	})
 	ids, clock := system.IDs{}, system.Clock{}
 	e.ops = operations.NewService(sqlite.NewOperationRepository(db), bus, ids, clock)
-	registry, err := games.NewRegistry(append([]ports.GameAdapter{generic.Adapter{}, skyrimse.Adapter{}}, o.adapters...)...)
+	registry, err := games.NewRegistry(append([]ports.GameAdapter{generic.New(), skyrimse.Adapter{}}, o.adapters...)...)
 	if err != nil {
 		t.Fatal(err)
 	}

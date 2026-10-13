@@ -1073,6 +1073,26 @@ Motivo: é a base para o jogo personalizado com identidade própria e para expor
 
 Consequências: nesta decisão só existe o formato, com testes e fuzz. Ainda não feito (R3 restante e R4): o adapter `generic` interpretar manifestos, o repositório de entradas do usuário, o registro composto, a migração das instâncias `generic` e o bridge de exportar/importar. Dois pontos em aberto para essa etapa: a checagem capability↔interface da D112 precisa aceitar um adapter cujas definições chegam em runtime, e `games.Registry` deixa de ser imutável.
 
+## D117 — Jogo personalizado como entrada do registro
+Status: vigente (emenda D031 e D057; detalha D113 e D116; desenho em `propostas/2026-10-13-registro-de-jogos.md`, resto da R3 e R4)
+
+Todo jogo que o usuário adiciona passa a ser uma **entrada**: um manifesto (D116) com id próprio no espaço `user.`, guardado no banco e servido pelo adapter `generic`.
+
+1. **Adapter `generic` versão 2.** Além do jogo modelo `generic` (o ponto de partida do assistente "adicionar qualquer jogo"), ele serve uma definição por manifesto: targets, mod types, dicas de root, marcadores em `ValidateRoot`, opções de lançamento (`LaunchSupport`) e processos (`ProcessDeclarer`). É o único adapter que implementa `ports.EntryHost`.
+2. **Registro composto.** `games.Registry` tem adapters fixos e definições que mudam: `SetEntries` troca as entradas do usuário e relê as definições. Entrada fora do espaço `user.` é recusada, e adapter que não hospeda entradas não pode definir jogo nesse espaço, então uma entrada nunca toma o id de um jogo embutido, hoje ou no futuro. Mudança recusada mantém o que estava sendo servido.
+3. **Exceção na D112.** O adapter que hospeda entradas pode implementar uma interface opcional sem que nenhum jogo a declare ainda, porque os jogos dele chegam com o app rodando. A outra direção continua valendo: capability declarada sem interface não registra.
+4. **Fonte de verdade.** Tabela `game_entries` (migração 0010), um manifesto por jogo, o mesmo documento que é exportado. Entrada que esta versão não consegue ler (outro `schema`, linha danificada) fica guardada, é registrada no log e as instâncias dela aparecem como indisponíveis; nunca é apagada.
+5. **Assistente.** `Manage` com o jogo modelo cria a entrada a partir do nome, dos targets e do executável informados (o executável vira opção de lançamento, processo e arquivo de versão) e a instância nasce pertencendo a essa entrada. Se o resto falhar, a entrada é desfeita. O id sai do nome (`user.valheim`, `user.valheim-2`). A UI não mudou: continua enviando `gameId: "generic"`.
+6. **Migração.** Na inicialização, toda instância que ainda pertence ao jogo modelo ganha uma entrada montada dos seus targets (relativos à raiz) e do executável; só mudam `game` e `adapter_version` (1 → 2). Instância com target fora da raiz não é migrada e continua funcionando pelo caminho antigo.
+7. **Exportar, importar, excluir.** `ExportEntry` devolve o manifesto; `ImportEntry` lê o documento inteiro ou recusa (`entry_invalid`, `entry_schema`), move o id para `user.` e recusa id já existente (`entry_exists`): importar nunca substitui um jogo. `DeleteEntry` recusa entrada com instância (`entry_in_use`). Parar de gerenciar não apaga a entrada: o jogo continua na lista de suportados e pode ser gerenciado de novo.
+8. **Target criável (D118).** O manifesto aceita `creatable` em cada target, menos na raiz. As entradas criadas pelo assistente e pela migração não marcam nenhum, para não mudar o comportamento de quem já usa.
+
+Motivo: antes todo jogo fora da lista era o mesmo `generic`, definido instância por instância, sem identidade, sem detecção e sem como sair do PC. Com id próprio, o jogo personalizado é detectado por loja e marcador quando o manifesto os traz, tem recursos ligáveis (D115) e poderá receber extensões.
+
+Alternativas rejeitadas: migrar por SQL (montar o manifesto exige a mesma validação do domínio); apagar a entrada junto com a última instância (perderia a descrição que o usuário fez; a lista tem "esconder" e a entrada pode ser excluída); substituir ao importar um id existente (mudaria os targets de um jogo com mods implantados).
+
+Consequências: `Instance.Executable` continua existindo e preenchido, mas o lançamento e a detecção de execução das entradas vêm do manifesto. Falta a UI (R5): tela para exportar, importar e excluir, reconhecimento de pasta e modelos prontos. O bridge já expõe `GameEntries`, `ExportGameEntry`, `ImportGameEntry` e `DeleteGameEntry`.
+
 ## D118 — Target criável e metadados do mod vindos do instalador
 Status: vigente (detalha D011/D057; origem em `docs-ia/09` §11, itens 14 e 15)
 

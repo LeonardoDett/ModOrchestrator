@@ -126,6 +126,10 @@ export function DeleteCategory(arg1, arg2) {
   return window['go']['bridge']['App']['DeleteCategory'](arg1, arg2);
 }
 
+export function DeleteGameEntry(arg1) {
+  return window['go']['bridge']['App']['DeleteGameEntry'](arg1);
+}
+
 export function DeletePluginGroup(arg1, arg2) {
   return window['go']['bridge']['App']['DeletePluginGroup'](arg1, arg2);
 }
@@ -166,6 +170,10 @@ export function ExecuteDiagnosticAction(arg1, arg2, arg3, arg4) {
   return window['go']['bridge']['App']['ExecuteDiagnosticAction'](arg1, arg2, arg3, arg4);
 }
 
+export function ExportGameEntry(arg1) {
+  return window['go']['bridge']['App']['ExportGameEntry'](arg1);
+}
+
 export function ExportLoadOrder(arg1) {
   return window['go']['bridge']['App']['ExportLoadOrder'](arg1);
 }
@@ -188,6 +196,10 @@ export function FomodImage(arg1, arg2) {
 
 export function FomodState(arg1, arg2) {
   return window['go']['bridge']['App']['FomodState'](arg1, arg2);
+}
+
+export function GameEntries() {
+  return window['go']['bridge']['App']['GameEntries']();
 }
 
 export function GameInstanceDetails(arg1) {
@@ -228,6 +240,10 @@ export function History(arg1) {
 
 export function ImportFiles(arg1, arg2) {
   return window['go']['bridge']['App']['ImportFiles'](arg1, arg2);
+}
+
+export function ImportGameEntry(arg1) {
+  return window['go']['bridge']['App']['ImportGameEntry'](arg1);
 }
 
 export function ImportLoadOrder(arg1, arg2) {
