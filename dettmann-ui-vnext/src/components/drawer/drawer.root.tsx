@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, type ReactNode } from "react";
+import { useExitPresence } from "../../hooks/use-exit-presence";
 import { DrawerProvider, type DrawerContextValue } from "./drawer.context";
 
 interface DrawerRootProps {
@@ -38,6 +39,7 @@ export function DrawerRoot({
   closeOnEscape = true,
 }: DrawerRootProps) {
   const id = useId();
+  const { mounted, onExited, registerPanel } = useExitPresence(open);
   const drawerId = `drawer-${id}`;
   const titleId = `drawer-title-${id}`;
   const descriptionId = `drawer-desc-${id}`;
@@ -50,9 +52,12 @@ export function DrawerRoot({
     descriptionId,
     closeOnBackdropClick,
     closeOnEscape,
+    onExited,
+    registerPanel,
   };
 
-  if (!open) {
+  // Fechado, os filhos continuam montados só até a saída do painel terminar.
+  if (!mounted) {
     return null;
   }
 

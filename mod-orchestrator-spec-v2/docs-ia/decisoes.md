@@ -953,3 +953,13 @@ Onda 1 (controles e entradas), efeitos no app:
 3. Pendências que ficam para a onda 4: logo da barra de título como máscara pintada com `bg-fg` (o PNG é branco e some no tema claro) e o orçamento 60/30/10 tela a tela (medição inicial na D107).
 
 A pasta `IconesAnimados/` (vídeos de referência dos ícones, fora do git) foi apagada a pedido do usuário. O plano de crescimento do catálogo da lib é entrega separada, depois da onda 4.
+
+## D109 — Redesenho dos componentes da dettmann-ui, onda 2 (feedback e overlays)
+Status: vigente (continua D108; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-035)
+
+Efeitos no app, sem mudança de código no `frontend/`:
+1. `Alert` e toasts mostram o ícone do intent (status nunca só por cor); os papéis ARIA não mudaram.
+2. `Modal` e `Drawer` animam entrada e saída; durante a saída o painel fica inerte, e foco, rolagem e Esc são liberados na hora. `Menu`, `ContextMenu` e `Popover` animam só a entrada.
+3. Itens de menu e opções da paleta de comandos são linhas compactas de 32 px com 2 px de intervalo (aprovado pelo usuário em 2026-10-10). Na paleta, as setas pulam itens desabilitados.
+4. `Skeleton` e `Progress` usam a camada de movimento da lib (respeitam `ui.reduceMotion`, core/13).
+

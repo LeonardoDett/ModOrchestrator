@@ -124,3 +124,15 @@ No prop was removed. What a consumer may notice:
 - `Input.Combobox`/`Input.MultiSelect` default `itemHeight` is 32 (was 36).
 - Focus: use `focus-ring`, `focus-ring-inset` or `focus-bare` in custom controls instead of `focus-visible:ring-*`.
 - A masked field written by hand (`<Input.Field type="password">` plus an eye button) becomes `<Input.Password>`; several values from a fixed list become `<Input.Select multiple>`.
+
+## Components redesign, wave 2 (D-035)
+
+No prop was removed. What a consumer may notice:
+
+- `Alert.Root` now lays out an icon and one text column: its direct children are wrapped in an inner `div`, so a test that looked for `data-intent` on the element returned by `getByText` must use `closest('[role="alert"]')`. Pass `icon={null}` for a text-only alert.
+- `Modal.Root`/`Drawer.Root` stay mounted while the exit animation runs (in tests without WAAPI they still leave at once). Query a closing dialog with `{ hidden: true }` if a test stubs `Element.animate`.
+- `Drawer.Content` no longer has `rounded-card`; only the free edge is rounded (`rounded-l-panel` for `side="right"`).
+- `Command`: arrows skip disabled items (they used to stop on them), options are `div[role=option]` instead of buttons, and the field carries `aria-activedescendant`.
+- `Toast` uses `shadow-overlay`; its action is a `Button`.
+- `Skeleton` no longer has the `animate-pulse` class. A custom round skeleton should use `rounded-pill`.
+- `Menu`/`Popover` content is positioned with `left`/`top` (no `transform`): do not rely on the floating element's `transform` for positioning tweaks.

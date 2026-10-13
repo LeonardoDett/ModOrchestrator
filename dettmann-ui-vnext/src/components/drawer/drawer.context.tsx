@@ -19,6 +19,10 @@ export interface DrawerContextValue {
   closeOnBackdropClick: boolean;
   /** Whether pressing Escape closes the drawer */
   closeOnEscape: boolean;
+  /** Content calls it when its exit animation ends, so Root can unmount */
+  onExited: () => void;
+  /** Content registers itself while mounted (see `useExitPresence`) */
+  registerPanel: () => () => void;
 }
 
 export const [DrawerProvider, useDrawerContext] =

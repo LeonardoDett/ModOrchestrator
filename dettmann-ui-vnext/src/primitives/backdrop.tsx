@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef } from "react";
+import { forwardRef, type ComponentPropsWithoutRef } from "react";
 import { defineRecipe, type VariantProps } from "../core/recipe";
 import { cn } from "../utils/cn";
 
@@ -21,11 +21,11 @@ const backdropVariants = defineRecipe({
       xl: "backdrop-blur-xl",
       overlay: "backdrop-blur-overlay",
     },
-    /** Animation state */
+    /** Estado de montagem. A animação vem do `Presence` de quem usa (Modal, Drawer); só `exited` muda o estilo. */
     state: {
-      entering: "animate-in fade-in [animation-duration:var(--motion-duration)]",
+      entering: "",
       entered: "",
-      exiting: "animate-out fade-out [animation-duration:var(--motion-duration)]",
+      exiting: "",
       exited: "hidden",
     },
   },
@@ -51,18 +51,16 @@ type BackdropProps = ComponentPropsWithoutRef<"div"> & BackdropVariants;
  * <Backdrop opacity="heavy" blur="none" state={isOpen ? "entered" : "exited"} />
  * ```
  */
-export function Backdrop({
-  className,
-  opacity,
-  blur,
-  state,
-  ...props
-}: BackdropProps) {
+export const Backdrop = forwardRef<HTMLDivElement, BackdropProps>(function Backdrop(
+  { className, opacity, blur, state, ...props },
+  ref,
+) {
   return (
     <div
+      ref={ref}
       className={cn(backdropVariants({ opacity, blur, state }), className)}
       aria-hidden="true"
       {...props}
     />
   );
-}
+});

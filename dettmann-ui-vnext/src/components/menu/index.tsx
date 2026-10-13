@@ -35,6 +35,9 @@ import {
 import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { Presence } from "../../motion/presence";
+import { overlayEnter } from "../../motion/overlay-keyframes";
+import { rowRecipe } from "../../core/styles/row";
 import { useControllableState } from "../../hooks/use-controllable-state";
 
 interface MenuContextValue {
@@ -97,6 +100,8 @@ function MenuRoot({
     open: isOpen,
     onOpenChange: setIsOpen,
     placement,
+    // Posiciona por left/top: o `transform` fica livre para a animação de entrada (escala).
+    transform: false,
     middleware: [offset(4), flip(), shift({ padding: 8 })],
     whileElementsMounted: autoUpdate,
   });
@@ -189,9 +194,9 @@ function MenuTrigger({ children, className }: MenuTriggerProps) {
 
 const menuContentVariants = defineRecipe({
   base: [
-    "z-popover min-w-40 rounded-card p-1",
-    "bg-raised border border-border shadow-modal",
-    "outline-none",
+    "z-popover flex min-w-40 flex-col gap-0.5 rounded-card p-1",
+    "bg-raised border border-border shadow-overlay",
+    "focus-bare",
   ].join(" "),
 });
 
@@ -211,44 +216,25 @@ function MenuContent({ children, className, style, ...props }: MenuContentProps)
     <FloatingPortal>
       <OverlayScope>
         <FloatingFocusManager context={context} modal={false}>
-          <div
-            ref={refs.setFloating}
-            id={menuId}
-            role="menu"
-            style={{ ...floatingStyles, ...style }}
-            className={cn(menuContentVariants(), className)}
-            {...getFloatingProps()}
-            {...props}
-          >
-            {children}
-          </div>
+          <Presence show enter={overlayEnter}>
+            <div
+              ref={refs.setFloating}
+              id={menuId}
+              role="menu"
+              data-motion="responsive"
+              style={{ ...floatingStyles, ...style }}
+              className={cn(menuContentVariants(), className)}
+              {...getFloatingProps()}
+              {...props}
+            >
+              {children}
+            </div>
+          </Presence>
         </FloatingFocusManager>
       </OverlayScope>
     </FloatingPortal>
   );
 }
-
-const menuItemVariants = defineRecipe({
-  base: [
-    "flex w-full items-center rounded-control px-3 py-2 text-sm text-left",
-    "text-fg cursor-pointer",
-    "outline-none motion-transition",
-  ].join(" "),
-  variants: {
-    active: {
-      true: "bg-selected",
-      false: "",
-    },
-    disabled: {
-      true: "pointer-events-none text-fg-subtle text-fg-muted",
-      false: "hover:bg-state-hover",
-    },
-  },
-  defaultVariants: {
-    active: false,
-    disabled: false,
-  },
-});
 
 interface MenuItemProps extends Omit<ComponentPropsWithoutRef<"button">, "onSelect"> {
   /** Called when the item is chosen; the menu then closes */
@@ -299,7 +285,7 @@ function MenuItem({
       role="menuitem"
       tabIndex={isActive ? 0 : -1}
       disabled={disabled}
-      className={cn(menuItemVariants({ active: isActive, disabled }), className)}
+      className={cn(rowRecipe({ active: isActive, disabled }), "w-full rounded-chip text-left", className)}
       {...getItemProps({
         onClick(event) {
           onClick?.(event as MouseEvent<HTMLButtonElement>);

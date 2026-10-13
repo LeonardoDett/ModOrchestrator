@@ -11,6 +11,7 @@ import {
   Stack,
   ThemeProvider,
   ThemeScope,
+  ToastProvider,
   Typography,
   createTheme,
   type Mode,
@@ -23,6 +24,7 @@ import { Ramps } from "./panels/ramps";
 import { ContrastPanel, useContrast } from "./panels/contrast";
 import { SampleScreen } from "./panels/sample-screen";
 import { ControlsPanel } from "./panels/controls";
+import { FeedbackPanel } from "./panels/feedback";
 import { MotionDemo } from "./panels/motion-demo";
 import { IconsPanel } from "./panels/icons";
 import { ExportPanel } from "./panels/export";
@@ -66,6 +68,11 @@ function ModeColumn({ config, theme, mode }: { config: ThemeConfig; theme: Resol
         <SampleScreen />
         <Panel title="Controles e entradas">
           <ControlsPanel />
+        </Panel>
+        <Panel title="Feedback e overlays">
+          <ToastProvider>
+            <FeedbackPanel />
+          </ToastProvider>
         </Panel>
         <Panel title="Rampas">
           <Ramps theme={theme} mode={mode} />

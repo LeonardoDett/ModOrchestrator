@@ -31,7 +31,10 @@ describe("Toast", () => {
     expect(alert).toHaveClass("bg-intent-subtle");
     expect(alert).toHaveClass("text-intent-text");
     expect(alert).toHaveAttribute("data-intent", "success");
-    expect(alert).toHaveClass("shadow-modal");
+    expect(alert).toHaveClass("shadow-overlay");
+    expect(alert).not.toHaveClass("shadow-modal");
+    expect(alert.querySelector("[data-slot=toast-icon]")).toHaveAttribute("aria-hidden", "true");
+    expect(screen.getByRole("button", { name: "Close" })).toHaveClass("focus-ring");
     expect(alert).toHaveClass("rounded-card");
   });
 
@@ -52,6 +55,7 @@ describe("Toast", () => {
       </ToastProvider>
     );
     await user.click(screen.getByRole("button", { name: "Notify" }));
+    expect(screen.getByRole("button", { name: "Also enable B" })).toHaveClass("focus-ring");
     await user.click(screen.getByRole("button", { name: "Also enable B" }));
     expect(onClick).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("alert")).toBeNull();

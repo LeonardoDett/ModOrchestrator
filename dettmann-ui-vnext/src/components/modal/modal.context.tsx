@@ -15,6 +15,10 @@ export interface ModalContextValue {
   closeOnBackdropClick: boolean;
   /** Whether pressing Escape closes the modal */
   closeOnEscape: boolean;
+  /** Content calls it when its exit animation ends, so Root can unmount */
+  onExited: () => void;
+  /** Content registers itself while mounted (see `useExitPresence`) */
+  registerPanel: () => () => void;
 }
 
 export const [ModalProvider, useModalContext] =

@@ -28,6 +28,8 @@ import {
 import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { Presence } from "../../motion/presence";
+import { overlayEnter } from "../../motion/overlay-keyframes";
 
 // Context
 interface PopoverContextValue {
@@ -91,6 +93,8 @@ function PopoverRoot({
     open: isOpen,
     onOpenChange: setIsOpen,
     placement,
+    // Posiciona por left/top: o `transform` fica livre para a animação de entrada (escala).
+    transform: false,
     middleware: [offset(offsetValue), flip(), shift({ padding: 8 })],
     whileElementsMounted: autoUpdate,
   });
@@ -150,8 +154,8 @@ function PopoverTrigger({ children, className }: PopoverTriggerProps) {
 const popoverContentVariants = defineRecipe({
   base: [
     "z-50 rounded-card",
-    "bg-raised border border-border shadow-modal",
-    "outline-none",
+    "bg-raised border border-border shadow-overlay",
+    "focus-bare",
   ].join(" "),
 });
 
@@ -176,16 +180,19 @@ function PopoverContent({
     <FloatingPortal>
       <OverlayScope>
         <FloatingFocusManager context={context} modal={false}>
-          <div
-            ref={refs.setFloating}
-            id={popoverId}
-            style={{ ...floatingStyles, ...style }}
-            className={cn(popoverContentVariants(), className)}
-            {...getFloatingProps()}
-            {...props}
-          >
-            {children}
-          </div>
+          <Presence show enter={overlayEnter}>
+            <div
+              ref={refs.setFloating}
+              id={popoverId}
+              data-motion="responsive"
+              style={{ ...floatingStyles, ...style }}
+              className={cn(popoverContentVariants(), className)}
+              {...getFloatingProps()}
+              {...props}
+            >
+              {children}
+            </div>
+          </Presence>
         </FloatingFocusManager>
       </OverlayScope>
     </FloatingPortal>

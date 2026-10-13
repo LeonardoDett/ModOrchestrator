@@ -5,7 +5,7 @@ import { intentData } from "../../theme/emphasis";
 import type { Intent } from "../../theme/engine";
 
 const linearVariants = defineRecipe({
-  base: "relative h-2 w-full overflow-hidden rounded-full bg-sunken",
+  base: "relative h-2 w-full overflow-hidden rounded-pill bg-sunken",
 });
 
 const circleTrackVariants = defineRecipe({
@@ -57,7 +57,7 @@ function ProgressRoot({
       {...props}
     >
       <div
-        className="h-full rounded-full bg-intent-fill"
+        className="h-full rounded-pill bg-intent-fill transition-[width] duration-(--motion-duration) ease-(--motion-ease)"
         style={{ width: `${percent}%` }}
       />
     </div>

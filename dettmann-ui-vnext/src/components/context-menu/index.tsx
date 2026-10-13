@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../utils/cn";
 import { OverlayScope } from "../../primitives/portal";
+import { Presence } from "../../motion/presence";
+import { overlayEnter } from "../../motion/overlay-keyframes";
+import { rowRecipe } from "../../core/styles/row";
 
 export interface ContextMenuItem { id:string; label:ReactNode; shortcut?:string; disabled?:boolean; destructive?:boolean; onSelect?:()=>void; }
 export interface ContextMenuProps { items:readonly ContextMenuItem[]; children:ReactNode; className?:string; }
@@ -35,6 +38,15 @@ export function ContextMenu({items,children,className}:ContextMenuProps){
     if(restoreFocus)returnFocusRef.current?.focus({preventScroll:true});
     returnFocusRef.current=null;
   };
+  // Perto da borda direita ou inferior, recua o menu para caber na janela (8 px de margem).
+  useLayoutEffect(()=>{
+    const menu=menuRef.current;
+    if(!position||!menu)return;
+    const rect=menu.getBoundingClientRect();
+    const margin=8;
+    menu.style.left=`${Math.max(margin,Math.min(position.x,window.innerWidth-rect.width-margin))}px`;
+    menu.style.top=`${Math.max(margin,Math.min(position.y,window.innerHeight-rect.height-margin))}px`;
+  },[position]);
   useEffect(()=>{
     if(!position)return;
     const dismiss=()=>close(false);
@@ -64,8 +76,44 @@ export function ContextMenu({items,children,className}:ContextMenuProps){
       onKeyDown={event=>{if(event.defaultPrevented||!isMenuKey(event))return;event.preventDefault();open(keyboardAnchor(event.target as Element))}}
       className={className}
     >{children}</div>
-    {position?createPortal(<OverlayScope><div ref={menuRef} className="fixed z-dropdown min-w-52 rounded-control border border-border bg-raised p-1 shadow-overlay" style={{left:position.x,top:position.y}} role="menu" onPointerDown={e=>e.stopPropagation()} onKeyDown={onMenuKeyDown}>
-      {items.map(item=><button key={item.id} type="button" role="menuitem" tabIndex={-1} disabled={item.disabled} onClick={()=>{item.onSelect?.();close(true)}} className={cn("flex w-full items-center gap-3 rounded-control px-3 py-2 text-left text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",item.destructive?"text-danger-text hover:bg-danger-subtle focus-visible:bg-danger-subtle":"text-fg hover:bg-state-hover focus-visible:bg-state-hover",item.disabled&&"pointer-events-none opacity-50")}><span className="min-w-0 flex-1">{item.label}</span>{item.shortcut?<span className="text-xs text-fg-subtle">{item.shortcut}</span>:null}</button>)}
-    </div></OverlayScope>,document.body):null}
+    {position
+      ? createPortal(
+          <OverlayScope>
+            <Presence show enter={overlayEnter}>
+              <div
+                ref={menuRef}
+                role="menu"
+                data-motion="responsive"
+                className="fixed z-dropdown flex min-w-52 flex-col gap-0.5 rounded-card border border-border bg-raised p-1 shadow-overlay"
+                style={{ left: position.x, top: position.y }}
+                onPointerDown={(e) => e.stopPropagation()}
+                onKeyDown={onMenuKeyDown}
+              >
+                {items.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="menuitem"
+                    tabIndex={-1}
+                    disabled={item.disabled}
+                    onClick={() => {
+                      item.onSelect?.();
+                      close(true);
+                    }}
+                    className={cn(
+                      rowRecipe({ disabled: item.disabled, tone: item.destructive ? "danger" : "default" }),
+                      "w-full rounded-chip text-left",
+                    )}
+                  >
+                    <span className="min-w-0 flex-1">{item.label}</span>
+                    {item.shortcut ? <span className="text-caption text-fg-muted">{item.shortcut}</span> : null}
+                  </button>
+                ))}
+              </div>
+            </Presence>
+          </OverlayScope>,
+          document.body,
+        )
+      : null}
   </>;
 }

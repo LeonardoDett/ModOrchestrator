@@ -13,7 +13,7 @@ const drawerCloseButtonVariants = defineRecipe({
     "text-fg-muted hover:text-fg",
     "hover:bg-state-hover",
     "motion-transition",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
+    "focus-ring",
   ].join(" "),
 });
 

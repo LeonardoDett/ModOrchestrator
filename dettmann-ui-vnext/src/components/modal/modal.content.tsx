@@ -1,11 +1,13 @@
 "use client";
 
-import { type ComponentPropsWithoutRef, type MouseEvent } from "react";
+import { useEffect, type ComponentPropsWithoutRef, type MouseEvent } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { Backdrop } from "../../primitives/backdrop";
 import { useOverlay } from "../../hooks/use-overlay";
 import { useModalContext } from "./modal.context";
+import { Presence } from "../../motion/presence";
+import { fadeEnter, fadeExit, overlayEnter, overlayExit } from "../../motion/overlay-keyframes";
 
 const modalContentVariants = defineRecipe({
   base: [
@@ -53,7 +55,11 @@ export function ModalContent({
     descriptionId,
     closeOnBackdropClick,
     closeOnEscape,
+    onExited,
+    registerPanel,
   } = useModalContext("Content");
+
+  useEffect(() => registerPanel(), [registerPanel]);
 
   const { containerRef, Portal } = useOverlay<HTMLDivElement>({
     enabled: open,
@@ -61,33 +67,47 @@ export function ModalContent({
     onClose: () => onOpenChange(false),
   });
 
+  // Em saída o `Presence` mantém o último filho renderizado aberto: o estado vai direto no nó.
+  // Fechado, o painel segue visível, mas fora do foco, do ponteiro e da árvore de acessibilidade.
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    el.toggleAttribute("inert", !open);
+    el.dataset.state = open ? "open" : "closed";
+  }, [open, containerRef]);
+
   const handleBackdropClick = (event: MouseEvent) => {
-    if (closeOnBackdropClick && event.target === event.currentTarget) {
+    if (open && closeOnBackdropClick && event.target === event.currentTarget) {
       onOpenChange(false);
     }
   };
 
   return (
     <Portal>
-      <Backdrop state="entered" onClick={handleBackdropClick} />
-      <div
-        className="fixed inset-0 z-modal flex items-center justify-center p-4 pointer-events-none"
-        onClick={handleBackdropClick}
-      >
+      <Presence show={open} enter={fadeEnter} exit={fadeExit}>
+        <Backdrop state="entered" onClick={handleBackdropClick} />
+      </Presence>
+      <Presence show={open} enter={overlayEnter} exit={overlayExit} onExited={onExited}>
         <div
-          ref={containerRef}
-          id={modalId}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          aria-describedby={descriptionId}
-          className={cn(modalContentVariants({ size }), "pointer-events-auto", className)}
-          onClick={(e) => e.stopPropagation()}
-          {...props}
+          className="fixed inset-0 z-modal flex items-center justify-center p-4 pointer-events-none"
+          onClick={handleBackdropClick}
         >
-          {children}
+          <div
+            ref={containerRef}
+            id={modalId}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            aria-describedby={descriptionId}
+            data-state="open"
+            className={cn(modalContentVariants({ size }), "pointer-events-auto", className)}
+            onClick={(e) => e.stopPropagation()}
+            {...props}
+          >
+            {children}
+          </div>
         </div>
-      </div>
+      </Presence>
     </Portal>
   );
 }

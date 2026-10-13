@@ -131,6 +131,11 @@ Dado sensível (senha, token, chave): `Input.Password` (botão de olho embutido,
 `hideOnBlur`, `revealLabel`/`hideLabel` via i18n). Nunca `Input.Field type="password"`
 com botão de revelar escrito à mão.
 
+Feedback e overlays (D-035): `Alert.Root` e toasts já mostram o ícone do intent
+(`icon={null}` no `Alert.Root` para só texto); `Modal`/`Drawer` animam entrada e
+saída sozinhos (não envolva em `Presence`); `Command` tem `loading`/`loadingLabel`;
+item destrutivo de `ContextMenu` é `destructive: true`, nunca classe de cor.
+
 Linguagem visual (D-033, "ferramenta profissional densa"): sem sombra fora de
 overlay, separação por borda de 1 px, seleção = `bg-selected` + indicador da marca,
 desabilitado por tokens, foco só por `focus-ring`/`focus-ring-inset`. Em controle

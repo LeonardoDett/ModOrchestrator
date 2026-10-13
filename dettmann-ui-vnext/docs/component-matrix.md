@@ -31,6 +31,8 @@ Levels follow Atomic Design (D-032): a component imports only its own level or b
 
 `Menu`, `ContextMenu`, `Popover`, `Tooltip`, `Modal`, `Drawer`, `Tabs`, `Accordion`, `Toast`, `Command`
 
+Wave 2 (D-035): `Modal` and `Drawer` animate entrance and exit (the panel is `inert` while leaving); `Menu`, `ContextMenu` and `Popover` animate the entrance. Menu items and `Command` options are compact `rowRecipe` rows. `Command` accepts `loading`/`loadingLabel`. `Alert.Root` and toasts show the status glyph of their intent (`icon` on `Alert.Root` overrides or removes it).
+
 ## Data and status
 
 `Table`, `DataTable`, `DataTableColumnPicker`, `List`, `Badge`, `Tag`, `Alert`, `Progress`, `Rating`, `Breadcrumbs`, `ActionBar`, `Toolbar`, `FilterBar`, `Inspector`, `LogViewer`, `DiffViewer`

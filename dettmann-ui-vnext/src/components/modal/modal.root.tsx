@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, type ReactNode } from "react";
+import { useExitPresence } from "../../hooks/use-exit-presence";
 import { ModalProvider, type ModalContextValue } from "./modal.context";
 
 interface ModalRootProps {
@@ -42,6 +43,7 @@ export function ModalRoot({
   closeOnEscape = true,
 }: ModalRootProps) {
   const id = useId();
+  const { mounted, onExited, registerPanel } = useExitPresence(open);
   const modalId = `modal-${id}`;
   const titleId = `modal-title-${id}`;
   const descriptionId = `modal-desc-${id}`;
@@ -54,9 +56,12 @@ export function ModalRoot({
     descriptionId,
     closeOnBackdropClick,
     closeOnEscape,
+    onExited,
+    registerPanel,
   };
 
-  if (!open) {
+  // Fechado, os filhos continuam montados só até a saída do painel terminar.
+  if (!mounted) {
     return null;
   }
 

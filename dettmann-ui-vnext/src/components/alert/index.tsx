@@ -3,6 +3,7 @@ import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { createStrictContext } from "../../utils/create-strict-context";
 import { intentData } from "../../theme/emphasis";
+import { intentIcon } from "../../icons/intent-icon";
 import type { Intent } from "../../theme/engine";
 
 const alertSurface = "bg-intent-subtle text-intent-text border border-intent-border";
@@ -24,7 +25,7 @@ interface AlertContextValue {
 const [AlertProvider, useAlertContext] = createStrictContext<AlertContextValue>("Alert");
 
 const rootVariants = defineRecipe({
-  base: "flex w-full flex-col items-start gap-1 rounded-card p-4 text-sm",
+  base: "flex w-full items-start gap-3 rounded-card p-3 text-sm",
 });
 
 interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
@@ -33,10 +34,14 @@ interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
   variant?: AlertVariant;
   /** Sobrepõe o intent derivado de `variant`. */
   intent?: Intent;
+  /** Glifo de status. Padrão: o do intent (status nunca só por cor); `null` remove. */
+  icon?: ReactNode | null;
 }
 
-function AlertRoot({ children, className, variant = "default", intent, ...props }: AlertRootProps) {
+function AlertRoot({ children, className, variant = "default", intent, icon, ...props }: AlertRootProps) {
   const resolved = intent ?? alertIntent[variant];
+  const StatusIcon = intentIcon(resolved);
+  const glyph = icon === undefined ? <StatusIcon size="sm" trigger="none" /> : icon;
   return (
     <AlertProvider value={{ variant }}>
       <div
@@ -45,7 +50,12 @@ function AlertRoot({ children, className, variant = "default", intent, ...props 
         {...intentData(resolved)}
         {...props}
       >
-        {children}
+        {glyph ? (
+          <span data-slot="alert-icon" aria-hidden="true" className="mt-0.5 flex shrink-0">
+            {glyph}
+          </span>
+        ) : null}
+        <div className="flex min-w-0 flex-1 flex-col items-start gap-1">{children}</div>
       </div>
     </AlertProvider>
   );

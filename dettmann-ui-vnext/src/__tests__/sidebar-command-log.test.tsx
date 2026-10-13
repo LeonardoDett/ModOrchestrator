@@ -66,8 +66,10 @@ describe("Command", () => {
     await user.click(screen.getByRole("textbox"));
     await user.keyboard("{ArrowDown}{Enter}");
     expect(onValueChange).toHaveBeenCalledWith(items[1]);
+    // A seta pula o item desabilitado e volta ao primeiro.
     await user.keyboard("{ArrowDown}{Enter}");
-    expect(onValueChange).toHaveBeenCalledTimes(1);
+    expect(onValueChange).toHaveBeenCalledTimes(2);
+    expect(onValueChange).toHaveBeenLastCalledWith(items[0]);
   });
 });
 

@@ -47,8 +47,8 @@ describe("intent replaces tone", () => {
       </>,
     );
     expect(screen.getByText("Ok")).toHaveAttribute("data-intent", "success");
-    expect(screen.getByText("Careful")).toHaveAttribute("data-intent", "warning");
-    expect(screen.getByText("Plain")).toHaveAttribute("data-intent", "neutral");
+    expect(screen.getByText("Careful").closest("[role=alert]")).toHaveAttribute("data-intent", "warning");
+    expect(screen.getByText("Plain").closest("[role=alert]")).toHaveAttribute("data-intent", "neutral");
   });
 
   it("checked fills default to the brand intent", () => {

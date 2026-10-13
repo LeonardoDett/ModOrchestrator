@@ -20,6 +20,8 @@ export interface PresenceProps {
   enter?: KeyframesInput;
   /** Saída. Padrão: o inverso da entrada padrão. */
   exit?: KeyframesInput;
+  /** Chamado quando a saída termina e o filho é desmontado (na hora, sem animação). */
+  onExited?: () => void;
   /**
    * Um único elemento cujo `ref` chega ao nó DOM: um elemento nativo ou um componente que
    * repassa `ref` (prop `ref` no React 19, `forwardRef` no 18). O `ref` do próprio filho é preservado.
@@ -48,7 +50,7 @@ function elementRef(child: ReactElement): Ref<Element> | undefined {
  * redução de movimento) desmonta na hora. Voltar a `show` durante a saída cancela a saída;
  * desmontar o `Presence` cancela a animação em curso.
  */
-export function Presence({ show, enter, exit, children }: PresenceProps) {
+export function Presence({ show, enter, exit, onExited, children }: PresenceProps) {
   const child = Children.only(children);
   const [present, setPresent] = useState(show);
   const node = useRef<Element | null>(null);
@@ -58,6 +60,9 @@ export function Presence({ show, enter, exit, children }: PresenceProps) {
 
   const keyframes = useRef({ enter, exit });
   keyframes.current = { enter, exit };
+  const exited = useRef(onExited);
+  exited.current = onExited;
+  const wasShown = useRef(show);
 
   useIsomorphicLayoutEffect(
     () => () => {
@@ -73,20 +78,26 @@ export function Presence({ show, enter, exit, children }: PresenceProps) {
     running.current?.cancel();
     running.current = null;
     if (show) {
+      wasShown.current = true;
       setPresent(true);
       if (el) running.current = animate(el, keyframes.current.enter ?? defaultEnter);
       return;
     }
     const anim = el ? animate(el, keyframes.current.exit ?? defaultExit, { spring: false, fill: "forwards" }) : null;
-    if (!anim) {
+    const leave = () => {
       setPresent(false);
+      if (wasShown.current) exited.current?.();
+      wasShown.current = false;
+    };
+    if (!anim) {
+      leave();
       return;
     }
     running.current = anim;
     let active = true;
     anim.finished.then(
       () => {
-        if (active) setPresent(false);
+        if (active) leave();
       },
       () => {},
     );

@@ -10,6 +10,8 @@ import type { Intent } from "../../theme/engine";
 import { Presence } from "../../motion/presence";
 import type { MotionValues } from "../../motion/read-motion";
 import { XIcon } from "../../icons/glyphs/x";
+import { intentIcon } from "../../icons/intent-icon";
+import { Button } from "../button";
 
 /**
  * Entrada pela camada de movimento: desliza da direita (16px × amp) e aparece. Sob redução
@@ -34,7 +36,7 @@ const toastIntent: Record<string, Intent> = {
 const toastVariants = defineRecipe({
   base: [
     "pointer-events-auto flex w-full max-w-sm items-start gap-3",
-    "rounded-card p-4 shadow-modal",
+    "rounded-card p-3 shadow-overlay",
   ].join(" "),
   variants: {
     variant: {
@@ -62,6 +64,7 @@ const ToastItem = forwardRef<HTMLDivElement, ToastItemProps>(function ToastItem(
   { toast, onRemove, closeLabel, className, ...props },
   ref,
 ) {
+  const StatusIcon = intentIcon(toastIntent[toast.variant ?? "default"] ?? "neutral");
   return (
     <div
       ref={ref}
@@ -74,7 +77,10 @@ const ToastItem = forwardRef<HTMLDivElement, ToastItemProps>(function ToastItem(
       {...intentData(toastIntent[toast.variant ?? "default"])}
       {...props}
     >
-      <div className="flex-1">
+      <span data-slot="toast-icon" aria-hidden="true" className="mt-0.5 flex shrink-0">
+        <StatusIcon size="sm" trigger="none" />
+      </span>
+      <div className="min-w-0 flex-1">
         {toast.title && (
           <div className="text-sm font-semibold">{toast.title}</div>
         )}
@@ -84,22 +90,22 @@ const ToastItem = forwardRef<HTMLDivElement, ToastItemProps>(function ToastItem(
           </div>
         )}
         {toast.action && (
-          <button
-            type="button"
+          <Button
+            size="sm"
+            className="mt-2"
             onClick={() => {
               toast.action?.onClick();
               onRemove(toast.id);
             }}
-            className="mt-2 rounded-control border border-current/30 px-2 py-1 text-sm font-medium hover:bg-state-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             {toast.action.label}
-          </button>
+          </Button>
         )}
       </div>
       <button
         type="button"
         onClick={() => onRemove(toast.id)}
-        className="shrink-0 rounded-control text-fg-muted hover:bg-state-hover hover:text-fg transition-opacity duration-(--motion-duration) ease-(--motion-ease)"
+        className="-m-1 flex size-6 shrink-0 items-center justify-center rounded-chip text-fg-muted motion-transition hover:bg-state-hover hover:text-fg focus-ring"
         aria-label={closeLabel}
       >
         <XIcon size="sm" />
