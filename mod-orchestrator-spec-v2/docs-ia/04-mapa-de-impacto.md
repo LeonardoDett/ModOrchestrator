@@ -10,6 +10,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Marcadores das pastas / detecção de implantação estrangeira | core/04 §10–11, core/11 §4, D058/D059, diagnóstico `foreign_deployment` (F9) | INV-LIB-03, INV-DEP-08 | Games, Overview, assistente (DLG-01) |
 | Estado de app (instância ativa, jogos ocultos) | docs-ia/03, D060, `ports.AppState` | — | barra de título, Games |
 | Descoberta (StoreScanner, busca completa) | core/11 §3, D057, adapters (`Markers`, `RegistryHints`) | — | Games |
+| Capability nova ou interface opcional de adapter | core/11 §1 (catálogo e tabela de contratos), `game.Catalog()`, `games.contracts`, core/12 §2, `capability.*` no i18n, D112 | — | Extensions, Games (detalhes) |
 | ModType | core/11, core/12, core/03, core/04 | INV-CON-01 | Mods (coluna/inspector) |
 | Modelo de Mod / atributos | core/01, core/02, ui/telas/mods | INV-LIB-01, INV-LIB-05 | Mods |
 | Installation / installers | core/02, core/03, core/15 (downloads) | INV-LIB-02, INV-LIB-04 | Mods, diálogo FOMOD (DLG-06), fixtures `integration/testdata/fomod` |

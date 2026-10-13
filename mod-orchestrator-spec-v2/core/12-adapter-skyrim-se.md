@@ -22,7 +22,7 @@ Referências: D031, D040, D041. Vortex: `games/game-skyrimse`, `gamebryo_plugin_
 
 ## 2. Capabilities
 
-`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`. V1.x: `game_settings`, `save_games`.
+`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112). V1.x: `game_settings`, `save_games`.
 
 ## 3. Targets e ModTypes
 

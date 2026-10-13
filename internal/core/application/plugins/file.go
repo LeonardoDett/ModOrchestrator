@@ -158,11 +158,7 @@ func (s *Service) write(ctx context.Context, st *state, op operation.ID, force b
 		return false, nil // the game already has it
 	}
 	if fs.obs.exists && (fs.applied == nil || fs.external) {
-		name := "plugins.txt"
-		if fs.applied != nil {
-			name = "plugins-external-" + s.Clock.Now().UTC().Format("20060102T150405") + ".txt"
-		}
-		rel, err := s.backup(ctx, st, name, fs.obs.data)
+		rel, err := s.backup(ctx, st, s.backupName(fs), fs.obs.data)
 		if err != nil {
 			return false, err
 		}
@@ -208,6 +204,18 @@ func (s *Service) write(ctx context.Context, st *state, op operation.ID, force b
 	})
 	s.remember(st.inst.ID, fs.obs.path, hash)
 	return err == nil, err
+}
+
+// backupName names the copy of the load order file being replaced after the
+// game's own file (declared by the adapter): the name itself the first
+// time, "<name>-external-<time><ext>" for a later external version.
+func (s *Service) backupName(fs fileState) string {
+	name := path.Base(strings.ReplaceAll(fs.obs.path, `\`, "/"))
+	if fs.applied == nil {
+		return name
+	}
+	ext := path.Ext(name)
+	return strings.TrimSuffix(name, ext) + "-external-" + s.Clock.Now().UTC().Format("20060102T150405") + ext
 }
 
 // backup keeps a copy of the file being replaced in the BackupStore of
@@ -345,11 +353,7 @@ func (s *Service) ResolveExternalChange(ctx context.Context, instance game.Insta
 			rec = &cp
 		}
 		if fs.obs.exists {
-			name := "plugins.txt"
-			if fs.applied != nil {
-				name = "plugins-external-" + s.Clock.Now().UTC().Format("20060102T150405") + ".txt"
-			}
-			rel, err := s.backup(ctx, st, name, fs.obs.data)
+			rel, err := s.backup(ctx, st, s.backupName(fs), fs.obs.data)
 			if err != nil {
 				return err
 			}

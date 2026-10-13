@@ -156,6 +156,9 @@ func checkImports(t *testing.T, rules map[string][]string) {
 // one of its tools. Tests and the composition root are exempt.
 var gameNames = []string{
 	"skyrim", "skse", "fallout", "oblivion", "morrowind", "starfield", "witcher", "cyberpunk", "enbseries",
+	// File names and extensions of one game family are game facts too
+	// (D112): the adapter declares them.
+	"plugins.txt", "loadorder.txt", ".esp", ".esm", ".esl", ".bsa",
 }
 
 func TestNoGameSpecificLiteralsOutsideAdapters(t *testing.T) {
@@ -165,7 +168,7 @@ func TestNoGameSpecificLiteralsOutsideAdapters(t *testing.T) {
 			return err
 		}
 		rel := filepath.ToSlash(path)
-		if strings.HasPrefix(rel, "adapters/") || strings.HasPrefix(rel, "bootstrap/") || strings.HasPrefix(rel, "testutil/") {
+		if strings.HasPrefix(rel, "adapters/") || strings.HasPrefix(rel, "bootstrap/") || strings.HasPrefix(rel, "testutil/") || strings.Contains(rel, "/testdata/") {
 			return nil
 		}
 		f, err := parser.ParseFile(fset, path, nil, 0)

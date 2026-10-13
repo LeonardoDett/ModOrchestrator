@@ -25,6 +25,9 @@ func NewRegistry(adapters ...ports.GameAdapter) (*Registry, error) {
 			return nil, fmt.Errorf("games: adapter %q registered twice", a.Name())
 		}
 		names[a.Name()] = true
+		if err := checkContracts(a); err != nil {
+			return nil, err
+		}
 		for _, d := range a.Definitions() {
 			if err := d.Validate(); err != nil {
 				return nil, fmt.Errorf("games: adapter %s: %w", a.Name(), err)

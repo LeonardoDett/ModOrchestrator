@@ -2023,6 +2023,10 @@ export const en = {
   "capability.tools": "Tools",
   "capability.launch": "Launch",
   "capability.external_change_strategy": "External changes",
+  "capability.adapter_installers": "Game installers",
+  "capability.health_checks": "Game checks",
+  "capability.default_categories": "Starting categories",
+  "capability.running_detection": "Running game detection",
 
   "dashboard.loadError": "Could not load this dashlet",
   "dashboard.customize": "Customize",

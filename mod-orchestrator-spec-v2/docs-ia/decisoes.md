@@ -988,3 +988,20 @@ Status: vigente, com um item em aberto (item 4); continua D110; detalhes em `det
    | Configurações | 72,2% | 27,8% | 0% |
 
    Antes (D107): Dashboard low 80%, medium 20%. O medium entrou na faixa (22% a 38%) nas quatro telas. O low ficou de 4 a 7 pontos acima do teto de 68%, porque nessas telas quase não há elemento `high`. **Em aberto**: aceitar esse resultado para o estado sem jogo ou promover mais área a estrutura (por exemplo `Card emphasis="medium"` nos dashlets secundários); aguarda escolha do usuário. As telas com jogo (Mods, Plugins, Conflitos, Perfis, Diagnóstico) não foram medidas: o ambiente de desenvolvimento não tem jogo gerenciado.
+
+## D112 — Escopo de jogo: capability e contrato 1:1, e checagem em toda fase
+Status: vigente (detalha D011; análise em `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, fase A)
+
+O Mod Orchestrator começa pelo Skyrim, mas não é só dele, e extensões de terceiros são objetivo futuro (D012). Para que "o processo X não existe neste jogo" seja sempre o caso normal:
+
+1. **Regra de processo.** Todo resumo de fase declara o escopo de jogo da mudança: vale para todo jogo, ou depende de qual capability e o que acontece sem ela. A regra entrou em `prompts/00-protocolo.md` e no `AGENTS.md`.
+2. **Capability e interface opcional são a mesma coisa.** Cada interface opcional do adapter tem uma capability e vice-versa; `games.NewRegistry` recusa o adapter em que as duas discordam. `InstallerProvider`, `HealthCheckProvider`, `CategoryProvider` e `ProcessDeclarer` ganharam as capabilities `adapter_installers`, `health_checks`, `default_categories` e `running_detection`. `installer` continua significando "o jogo instala mods pelo pipeline", que todo jogo tem.
+3. **Matriz de suporte derivada.** `Registry.Support()` lista, por jogo, cada capability como `available` ou `not_applicable`, a partir dos adapters registrados; nada é mantido à mão.
+4. **Fato de jogo inclui nome de arquivo e extensão.** O teste de literais passou a vigiar também `plugins.txt`, `loadorder.txt`, `.esp`, `.esm`, `.esl` e `.bsa`. O backup do arquivo de load order passa a usar o nome do arquivo que o adapter declara (para o Skyrim os nomes não mudam).
+5. **Caminho "sem a capability" testado.** Uma instância do adapter `generic` importa, habilita e implanta; todo comando de plugins responde `plugins_unsupported`.
+
+Motivo: só três das dez capabilities eram lidas pelo código e as interfaces opcionais eram resolvidas só por type assertion, então um adapter podia declarar o que não implementa sem ninguém notar; e a lista de literais vigiava nomes de jogo, mas não o vocabulário de formato, por onde `plugins.txt` entrou no núcleo.
+
+Alternativas rejeitadas: generalizar já o modelo de plugin para "unidades ordenáveis" (com um jogo só a abstração seria um chute; fica para quando houver um segundo adapter com ordem de carga); ligar `installer` a `InstallerProvider` (o `generic` declara `installer` sem ter instaladores próprios, e o sentido atual é o do pipeline).
+
+Consequências: capability nova exige entrada no catálogo e, se servida por código, uma linha em `games.contracts`. O port `GameAdapter` não mudou. Não foi feito nesta decisão: tirar da UI as decisões por capability (espera o subprojeto de componentes) e expor a matriz no bridge (entra com o registro de jogos).

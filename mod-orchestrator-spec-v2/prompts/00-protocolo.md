@@ -19,13 +19,20 @@ ANTES DE IMPLEMENTAR, escreva um resumo curto:
 - estados alterados e suas fontes de verdade;
 - invariantes envolvidos (IDs);
 - decisões que restringem a tarefa (IDs);
-- o que está fora do escopo da fase.
+- o que está fora do escopo da fase;
+- escopo de jogo (D112): a mudança vale para todo jogo ou depende de uma capability?
+  Se depende, diga qual, e o que acontece numa instância sem ela (adapter generic).
 
 REGRAS:
 - Não invente comportamento: se a spec não responde, pare e pergunte ou registre decisão "proposta".
 - Nenhuma regra de negócio na UI; a UI relê o backend após eventos.
 - Conflito ≠ regra; diagnóstico ≠ notificação ≠ histórico ≠ log.
 - ModOrder ≠ LoadOrder. Use os termos do glossário.
+- Multi-jogo (D011, D112): nada no núcleo, no bridge ou no frontend supõe um processo
+  que só alguns jogos têm. Comportamento opcional entra por capability + contrato do
+  adapter, com teste do caminho "sem a capability". Nome de jogo, de ferramenta, de
+  arquivo ou extensão de um jogo só existe em internal/adapters. Catálogo novo (códigos,
+  rótulos, telas, settings) nasce extensível pelo adapter ou registra por que não.
 - Nada toca o filesystem do jogo sem plano + journal; nada não gerenciado é apagado.
 - Toda UI com dettmann-ui; faltou componente genérico → cria na lib.
 - Todo texto de UI via i18n.
@@ -39,7 +46,8 @@ AO FINAL:
 1. go vet ./... && go test ./...
 2. npm --prefix frontend run typecheck && npm --prefix frontend test
 3. wails build (quando a fase tocar build/UI)
-4. Conferir anti-patterns e critérios de aceite dos documentos da fase.
+4. Conferir anti-patterns, critérios de aceite dos documentos da fase e o escopo de jogo
+   declarado no resumo.
 5. Registrar decisões novas (docs-ia/decisoes.md) e atualizar documentos afetados.
 6. Relatar: arquivos alterados, testes executados, demonstração manual, riscos restantes.
 ```

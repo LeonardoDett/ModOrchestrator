@@ -31,7 +31,25 @@ O port `ports.GameAdapter` implementa as linhas acima assim: `Definitions()`, `I
 
 ### Catálogo de capabilities (já em `game.go`)
 
-`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `save_games`, `game_settings`, `tools`, `launch`, `external_change_strategy`. Extensível: capabilities novas entram no catálogo com decisão registrada.
+`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `save_games`, `game_settings`, `tools`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (as quatro últimas pela D112). Extensível: capabilities novas entram no catálogo (`game.Catalog()`) com decisão registrada.
+
+### Capability e contrato (D112)
+
+Cada capability servida por código do adapter tem **uma** interface opcional, e cada interface opcional tem **uma** capability. O registro (`games.NewRegistry`) recusa o adapter que declara sem implementar ou implementa sem declarar.
+
+| Capability | Interface (`ports`) |
+|---|---|
+| `plugins` | `PluginSupport` (sub-contrato opcional: `PluginArchives`) |
+| `load_order` | `LoadOrderSupport` |
+| `launch` | `LaunchSupport` |
+| `adapter_installers` | `InstallerProvider` |
+| `health_checks` | `HealthCheckProvider` |
+| `default_categories` | `CategoryProvider` |
+| `running_detection` | `ProcessDeclarer` |
+
+As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`save_games`, `game_settings`, `tools`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
+
+`Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Classe, padrão e dependências de cada recurso entram com o registro de jogos (proposta em `propostas/2026-10-13-registro-de-jogos.md`).
 
 ### Regras
 - O core decide por capability (D011). Se uma tela depende de capability ausente, ela não aparece na navegação do workspace (core/11 §5).
@@ -86,7 +104,9 @@ Contrato previsto: manifesto (id, versão, autor, capabilities fornecidas, vers�
 
 ## 8. Critérios de aceite
 
-- Nenhum `if gameId == …` fora de `internal/adapters`.
+- Nenhum `if gameId == …` fora de `internal/adapters`; nenhum literal com nome de jogo, de ferramenta, de arquivo ou extensão de um jogo fora dali (`TestNoGameSpecificLiteralsOutsideAdapters`).
+- Adapter que declara capability sem a interface, ou o contrário, não registra (D112).
+- Numa instância sem `plugins`, todo comando de plugins responde `plugins_unsupported` e o deploy conclui sem escrever arquivo de load order (`TestGameWithoutPluginsWorksAndAnswersUnsupported`).
 - Skyrim SE instalado pela Steam é encontrado na busca rápida.
 - Pasta errada no "localizar manualmente" é recusada com motivo.
 - Jogo genérico com dois targets funciona de ponta a ponta (import, conflito, deploy).

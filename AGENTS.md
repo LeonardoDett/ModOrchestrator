@@ -19,6 +19,7 @@ UI (`frontend/` e `dettmann-ui-vnext/`, dettmann-ui v2; D095, D107):
 ## Regras de código
 
 - Camadas: `internal/core/domain` <- `internal/core/application` <- `internal/infrastructure` / `internal/adapters`. `internal/bridge` só transporta; `internal/bootstrap` só conecta. `go test ./internal` falha se a regra for violada.
+- Todo recurso que não vale para qualquer jogo entra por capability do adapter e tem teste com o adapter `generic` (sem a capability). Fatos de um jogo (nomes, arquivos, extensões) só em `internal/adapters` (D112).
 - Nenhuma regra de negócio em componentes React; a UI relê estado do backend e trata eventos apenas como sinal.
 - Toda UI usa `dettmann-ui`; não criar componentes paralelos.
 - Validação: `go vet ./... && go test ./...`, `npm --prefix frontend run typecheck`, `npm --prefix frontend test`, `wails build`.

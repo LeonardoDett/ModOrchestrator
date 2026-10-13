@@ -38,7 +38,26 @@ const (
 	CapTools            Capability = "tools"
 	CapLaunch           Capability = "launch"
 	CapExternalChanges  Capability = "external_change_strategy"
+	// Capabilities of the optional adapter contracts that had no id before
+	// D112: installers, health checks and categories of the adapter, and the
+	// processes of a running game.
+	CapAdapterInstallers Capability = "adapter_installers"
+	CapHealthChecks      Capability = "health_checks"
+	CapDefaultCategories Capability = "default_categories"
+	CapRunningDetection  Capability = "running_detection"
 )
+
+// Catalog lists the capabilities the core knows, in a stable order. The set
+// stays open: a definition may declare others.
+func Catalog() []Capability {
+	out := []Capability{
+		CapFilesystemTarget, CapModTypes, CapInstaller, CapPlugins, CapLoadOrder, CapSaveGames,
+		CapGameSettings, CapTools, CapLaunch, CapExternalChanges, CapAdapterInstallers,
+		CapHealthChecks, CapDefaultCategories, CapRunningDetection,
+	}
+	slices.Sort(out)
+	return out
+}
 
 // ErrInvalid is returned when a game entity violates its invariants.
 var ErrInvalid = errors.New("game: invalid")

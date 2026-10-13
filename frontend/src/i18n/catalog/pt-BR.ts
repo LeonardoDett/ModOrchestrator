@@ -2020,6 +2020,10 @@ export const ptBR: Record<MessageKey, string> = {
   "capability.tools": "Ferramentas",
   "capability.launch": "Lançar",
   "capability.external_change_strategy": "Alterações externas",
+  "capability.adapter_installers": "Instaladores do jogo",
+  "capability.health_checks": "Verificações do jogo",
+  "capability.default_categories": "Categorias iniciais",
+  "capability.running_detection": "Detecção de jogo em execução",
 
   "dashboard.loadError": "Não foi possível carregar este dashlet",
   "dashboard.customize": "Personalizar",

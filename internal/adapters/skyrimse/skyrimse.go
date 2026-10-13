@@ -75,6 +75,7 @@ func (Adapter) Definitions() []game.Definition {
 		Capabilities: game.NewCapabilities(
 			game.CapFilesystemTarget, game.CapModTypes, game.CapInstaller,
 			game.CapPlugins, game.CapLoadOrder, game.CapLaunch, game.CapExternalChanges,
+			game.CapAdapterInstallers, game.CapHealthChecks, game.CapDefaultCategories, game.CapRunningDetection,
 		),
 		Targets: []game.TargetID{TargetData, TargetRoot},
 		ModTypes: []game.ModType{

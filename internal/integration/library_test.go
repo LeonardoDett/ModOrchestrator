@@ -82,6 +82,9 @@ type envOptions struct {
 	fs     func(ports.FileSystem) ports.FileSystem
 	// existing skips managing the game: the database already has it.
 	existing bool
+	// generic manages a user-defined game (no plugins, no load order, no
+	// adapter launch) instead of Skyrim.
+	generic bool
 }
 
 func newEnv(t *testing.T) *env { return newEnvWith(t, envOptions{}) }
@@ -203,6 +206,23 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 			t.Fatalf("existing instance: %v %v", list, err)
 		}
 		e.inst = list[0]
+		return e
+	}
+	if o.generic {
+		root := filepath.Join(dir, "Game")
+		e.write(filepath.Join(root, "Mods", "keep.txt"), "x")
+		res, err := e.games.Manage(ctx, games.Setup{
+			Game: generic.GameID, Name: "Game", Root: root, Method: o.method,
+			Targets: []game.TargetSpec{{ID: "mods", Path: "Mods"}},
+			Folders: games.Folders{
+				Staging: filepath.Join(dir, "mo", "staging"), ArchiveStore: filepath.Join(dir, "mo", "archives"),
+				BackupStore: filepath.Join(dir, "mo", "backups"),
+			},
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		e.inst, _ = sqlite.NewGameInstanceRepository(db).Get(ctx, res.Instance)
 		return e
 	}
 	root := filepath.Join(dir, "Skyrim")
