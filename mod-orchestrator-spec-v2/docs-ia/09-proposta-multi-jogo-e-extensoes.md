@@ -1,6 +1,6 @@
 # Proposta: núcleo agnóstico de jogo, capacidades por jogo e extensões
 
-Status: **fase A aprovada e aplicada** (2026-10-13, D112); fases B a D continuam proposta. O diagnóstico abaixo descreve o código de antes da fase A: os itens 5, 6 e 13 da tabela de acoplamentos foram resolvidos por ela. Ficaram para depois, da fase A: o item 9 (decisões por capability na UI), que espera o subprojeto de componentes liberar as telas, e a exposição de `GameSupport` no bridge, que entra com a R1 do registro de jogos.
+Status: **fase A aprovada e aplicada** (2026-10-13, D112); o adapter do Valheim (§10, item 2) foi escrito (D114, core/16); fases C e D continuam proposta. O diagnóstico abaixo descreve o código de antes da fase A: os itens 5, 6 e 13 da tabela de acoplamentos foram resolvidos por ela. Ficaram para depois, da fase A: o item 9 (decisões por capability na UI), que espera o subprojeto de componentes liberar as telas, e a exposição de `GameSupport` no bridge, que entra com a R1 do registro de jogos.
 
 Pergunta que este documento responde: o Mod Orchestrator começa pelo Skyrim, mas não será só dele. O código segmenta o que é de um jogo e o que é de todos? Se um processo não existe em outro jogo, isso gera problema? E o que falta para um SDK de plugins no estilo do VS Code?
 

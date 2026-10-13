@@ -14,6 +14,7 @@ import (
 
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
+	"modorchestrator/internal/adapters/valheim"
 	"modorchestrator/internal/core/application/appupdate"
 	"modorchestrator/internal/core/application/backups"
 	"modorchestrator/internal/core/application/conflicts"
@@ -194,7 +195,7 @@ func New(ctx context.Context) (c *Container, err error) {
 
 	// Adapters are compiled in and registered here (D031); the core learns
 	// about games only through this registry.
-	registry, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{})
+	registry, err := games.NewRegistry(generic.Adapter{}, skyrimse.Adapter{}, valheim.Adapter{})
 	if err != nil {
 		unsub()
 		return nil, fmt.Errorf("bootstrap: adapters: %w", err)

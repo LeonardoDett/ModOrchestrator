@@ -116,7 +116,7 @@ Como ficou (F12, D090): interface opcional `ports.LaunchSupport` (opções de la
 
 ## 7. Extensões (V2)
 
-Contrato previsto: manifesto (id, versão, autor, capabilities fornecidas, versão mínima do app, permissões: filesystem de quais pastas, rede, processos), ciclo de vida (instalar, habilitar, desabilitar, atualizar, remover, reinício necessário), isolamento (processo separado ou WASM, a decidir). Na V1, a tela Extensions lista os adapters embutidos (nome, versão, jogos, capabilities, "embutido") e explica que extensões de terceiros virão; sem botões falsos (anti-pattern 18).
+Contrato previsto: manifesto (id, versão, autor, capabilities fornecidas, versão mínima do app, permissões: filesystem de quais pastas, rede, processos), ciclo de vida (instalar, habilitar, desabilitar, atualizar, remover, reinício necessário), isolamento (processo separado ou WASM, a decidir). Na V1, a tela Extensions lista os adapters embutidos (`generic`, `skyrimse`, `valheim`) (nome, versão, jogos, capabilities, "embutido") e explica que extensões de terceiros virão; sem botões falsos (anti-pattern 18).
 
 ## 8. Critérios de aceite
 

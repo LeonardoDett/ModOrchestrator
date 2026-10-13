@@ -1023,3 +1023,21 @@ Motivo: os ids de loja e os marcadores estavam em constantes e métodos privados
 Alternativas rejeitadas: manter `Detect` como interface opcional (nenhum adapter precisa, e a D112 pede uma capability por interface; volta com capability própria se um jogo exigir detecção por código); guardar classe e dependências em cada definição (são propriedades do recurso, não do jogo; por jogo só varia o que é oferecido).
 
 Consequências: adapter novo declara `Discovery` em vez de implementar quatro métodos. Nesta fase nada muda para o usuário: nenhum recurso pode ser desligado ainda (R2), a UI não consome `GamesSupport()` (espera o subprojeto de componentes) e o `generic` continua com um único id de jogo (R3 e R4).
+
+## D114 — Segundo adapter dedicado: Valheim
+Status: vigente (emenda D031, que previa só `generic` e `skyrimse`; detalhes em core/16)
+
+O Valheim entra como segundo jogo com adapter próprio (`internal/adapters/valheim`), escolhido pelo usuário em 2026-10-13 por estar instalado e em uso com o r2modman. Declara launch, instaladores próprios, health check e detecção de execução; **não** declara `plugins` nem `load_order`.
+
+1. Targets `bepinex` (`<root>/BepInEx`, padrão) e `root`; ModType `bepinex` para o pacote do framework.
+2. Três instaladores do adapter: pacote do framework, pacote de mod com `manifest.json` e DLL solta.
+3. `framework_missing` é reutilizado com `framework = BepInEx`, exigindo proxy e preloader na raiz.
+4. O Mod Orchestrator continua implantando dentro da pasta do jogo.
+
+Motivo: provar com um caso real que o núcleo aceita um jogo sem os processos do Skyrim. O adapter não exigiu nenhuma mudança em `internal/core`, no bridge nem nas telas: só o registro no bootstrap e rótulos no catálogo i18n.
+
+O que ele **não** prova: a ordem de carga genérica (item 1 de `docs-ia/09`), porque o BepInEx não tem ordem editável. Essa generalização continua adiada até existir um jogo que a exija.
+
+Alternativa rejeitada: entrar só como jogo declarado (D113). Um pacote de mod precisa de roteamento por pasta e o framework ausente precisa de check, e os dois são código.
+
+Consequências: rótulos do adapter foram para o catálogo i18n do app, o que repete o acoplamento 8 de `docs-ia/09` (texto de jogo no catálogo do app) até o adapter poder trazer os próprios textos. Dependências do `manifest.json` ficaram fora (core/16 §8).
