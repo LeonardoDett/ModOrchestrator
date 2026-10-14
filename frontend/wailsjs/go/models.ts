@@ -3050,6 +3050,8 @@ export namespace bridge {
 	    opponents: number;
 	    winsAgainst: number;
 	    losesTo: number;
+	    filesWon: number;
+	    filesLost: number;
 	
 	    static createFrom(source: any = {}) {
 	        return new ModConflictCountsDTO(source);
@@ -3060,6 +3062,8 @@ export namespace bridge {
 	        this.opponents = source["opponents"];
 	        this.winsAgainst = source["winsAgainst"];
 	        this.losesTo = source["losesTo"];
+	        this.filesWon = source["filesWon"];
+	        this.filesLost = source["filesLost"];
 	    }
 	}
 	export class ModConflictFileDTO {

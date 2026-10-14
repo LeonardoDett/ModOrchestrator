@@ -281,6 +281,8 @@ type ModConflictCountsDTO struct {
 	Opponents   int `json:"opponents"`
 	WinsAgainst int `json:"winsAgainst"`
 	LosesTo     int `json:"losesTo"`
+	FilesWon    int `json:"filesWon"`
+	FilesLost   int `json:"filesLost"`
 }
 
 // RequirementsDTO counts the requirements of a mod and the present ones.
@@ -294,7 +296,7 @@ func (a *App) ModSummary(instance, modID string) (ModSummaryDTO, error) {
 	v := a.c.Overview.Mod(a.context(), game.InstanceID(instance), mod.ID(modID))
 	var out ModSummaryDTO
 	if v.Conflicts != nil {
-		out.Conflicts = &ModConflictCountsDTO{Opponents: v.Conflicts.Opponents, WinsAgainst: v.Conflicts.WinsAgainst, LosesTo: v.Conflicts.LosesTo}
+		out.Conflicts = &ModConflictCountsDTO{Opponents: v.Conflicts.Opponents, WinsAgainst: v.Conflicts.WinsAgainst, LosesTo: v.Conflicts.LosesTo, FilesWon: v.Conflicts.FilesWon, FilesLost: v.Conflicts.FilesLost}
 	}
 	if v.Requirements != nil {
 		out.Requirements = &RequirementsDTO{Total: v.Requirements.Total, Present: v.Requirements.Present}

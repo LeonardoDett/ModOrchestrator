@@ -181,7 +181,7 @@ func TestModSummary(t *testing.T) {
 	}
 	ov := e.overview()
 	s := ov.Mod(ctx, e.inst.ID, alpha)
-	if s.Conflicts == nil || s.Conflicts.Opponents != 1 || s.Conflicts.WinsAgainst+s.Conflicts.LosesTo != 1 {
+	if s.Conflicts == nil || s.Conflicts.Opponents != 1 || s.Conflicts.WinsAgainst+s.Conflicts.LosesTo != 1 || s.Conflicts.FilesWon+s.Conflicts.FilesLost != 1 {
 		t.Fatalf("conflicts = %+v", s.Conflicts)
 	}
 	if s.Requirements == nil || s.Requirements.Total != 1 || s.Requirements.Present != 1 {

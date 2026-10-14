@@ -346,6 +346,9 @@ type ModConflicts struct {
 	// WinsAgainst and LosesTo count the opponents m wins at least one file
 	// against, and those it loses at least one file to (B13).
 	WinsAgainst, LosesTo int
+	// FilesWon and FilesLost count the disputed files m deploys and those
+	// another mod deploys instead (the KPIs of the mod detail, D127).
+	FilesWon, FilesLost int
 }
 
 // ModConflicts summarises the disputes of m by opponent, opponents of
@@ -377,6 +380,16 @@ func (s *Service) ModConflicts(ctx context.Context, instance game.InstanceID, m 
 		}
 		if o.Loses > 0 {
 			out.LosesTo++
+		}
+	}
+	for _, c := range st.eval.Conflicts {
+		if !slices.Contains(c.Providers, m) || c.Resolution == conflict.ResolutionRedundant || st.intent.Excluded(m, c.Location) {
+			continue
+		}
+		if c.Winner == m {
+			out.FilesWon++
+		} else {
+			out.FilesLost++
 		}
 	}
 	slices.SortStableFunc(out.Opponents, func(a, b OpponentView) int { return b.Opponent.Priority - a.Opponent.Priority })

@@ -3,15 +3,23 @@ import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 
 const modalHeaderVariants = defineRecipe({
-  base: [
-    "flex shrink-0 items-center justify-between gap-4",
-    "px-6 pt-5 pb-4",
-    // D-040: header and footer are structure bands around the raised body (boards).
-    "border-b border-border bg-structure",
-  ].join(" "),
+  // D-040: header and footer are structure bands around the raised body (boards).
+  base: "flex shrink-0 border-b border-border bg-structure",
+  variants: {
+    layout: {
+      /** Title and actions on one line. */
+      inline: "items-center justify-between gap-4 px-6 pt-5 pb-4",
+      /** Rows stacked 16 px apart, the last one (tabs) touching the bottom line. */
+      stacked: "flex-col items-stretch gap-4 px-6 pt-5",
+    },
+  },
+  defaultVariants: { layout: "inline" },
 });
 
-interface ModalHeaderProps extends ComponentPropsWithoutRef<"div"> {}
+interface ModalHeaderProps extends ComponentPropsWithoutRef<"div"> {
+  /** `inline` (default) or `stacked`, for a header with tabs under it. */
+  layout?: "inline" | "stacked";
+}
 
 /**
  * Modal.Header is the header section of the modal.
@@ -20,10 +28,11 @@ interface ModalHeaderProps extends ComponentPropsWithoutRef<"div"> {}
 export function ModalHeader({
   children,
   className,
+  layout,
   ...props
 }: ModalHeaderProps) {
   return (
-    <div data-layer="medium" className={cn(modalHeaderVariants(), className)} {...props}>
+    <div data-layer="medium" className={cn(modalHeaderVariants({ layout }), className)} {...props}>
       {children}
     </div>
   );

@@ -10,14 +10,23 @@ const tagVariants = defineRecipe({
   base: [
     "inline-flex items-center gap-1",
     "font-medium whitespace-nowrap text-xs",
-    "rounded-pill border",
+    "border",
   ].join(" "),
   variants: {
     size: {
       /** Inline label under a name (board JogoMods): 18 px, no outline. */
-      xs: "h-4.5 text-[0.6875rem] border-transparent",
+      xs: "h-4.5 text-[0.6875rem]",
       sm: "h-5",
       md: "h-6",
+    },
+    outline: {
+      true: "border-intent-border",
+      false: "border-transparent",
+    },
+    /** `pill` (default) for tags; `rounded` for a category chip (boards). */
+    shape: {
+      pill: "rounded-pill",
+      rounded: "rounded-control",
     },
     dismissible: {
       true: "",
@@ -35,14 +44,31 @@ const tagVariants = defineRecipe({
   defaultVariants: {
     size: "md",
     dismissible: false,
+    shape: "pill",
   },
+});
+
+const tagAddVariants = defineRecipe({
+  base: [
+    "inline-flex items-center gap-1 rounded-pill border border-dashed border-border-strong bg-transparent",
+    "font-medium whitespace-nowrap text-fg-muted",
+    "motion-transition motion-press hover:bg-state-hover hover:text-fg focus-ring",
+  ].join(" "),
+  variants: {
+    size: {
+      xs: "h-4.5 px-1.75 text-[0.6875rem]",
+      sm: "h-5.5 px-2 text-xs",
+      md: "h-6 px-2.5 text-xs",
+    },
+  },
+  defaultVariants: { size: "sm" },
 });
 
 type TagVariants = VariantProps<typeof tagVariants>;
 
 interface TagProps
   extends Omit<ComponentPropsWithoutRef<"span">, "onRemove">,
-    Omit<TagVariants, "dismissible"> {
+    Omit<TagVariants, "dismissible" | "outline"> {
   children: ReactNode;
   /** Value delivered to onRemove (never a DOM event) */
   value?: string;
@@ -63,6 +89,8 @@ interface TagProps
   icon?: IconComponent;
   /** Ponto da cor antes do texto (tag do usuário). */
   dot?: boolean;
+  /** Contorno na cor do intent. Padrão: sim, menos no `xs`. */
+  outline?: boolean;
 }
 
 /**
@@ -87,6 +115,8 @@ export function Tag({
   color,
   icon,
   dot = false,
+  shape,
+  outline,
   ...props
 }: TagProps) {
   // Com cor da paleta, as classes coloridas do intent; `data-category` reaponta as variáveis.
@@ -94,9 +124,8 @@ export function Tag({
   return (
     <span
       className={cn(
-        tagVariants({ size, dismissible: Boolean(onRemove) }),
+        tagVariants({ size, dismissible: Boolean(onRemove), shape, outline: outline ?? size !== "xs" }),
         restingClassName(resolved),
-        "border-intent-border",
         className
       )}
       data-intent={resolved.intent}
@@ -119,4 +148,21 @@ export function Tag({
       ) : null}
     </span>
   );
+}
+
+interface TagAddProps extends ComponentPropsWithoutRef<"button"> {
+  /** Same heights as Tag; `sm` here is 22 px, the tags of a detail header. */
+  size?: "xs" | "sm" | "md";
+}
+
+/**
+ * Tag.Add-style dashed pill that starts adding a tag ("+ tag").
+ *
+ * @example
+ * ```tsx
+ * <TagAdd onClick={startAdding}>+ tag</TagAdd>
+ * ```
+ */
+export function TagAdd({ size, className, type = "button", ...props }: TagAddProps) {
+  return <button type={type} className={cn(tagAddVariants({ size }), className)} {...props} />;
 }

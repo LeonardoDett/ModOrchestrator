@@ -601,7 +601,10 @@ export function ModsWorkspace({ instance }: { instance: string }) {
           setInspected(null);
           setRemoving(ids);
         }}
-        onEditConflicts={setEditingConflicts}
+        onReorder={(id) => {
+          setInspected(null);
+          setMovingTo([{ mod: id }]);
+        }}
         onChooseWinner={setFilesPair}
         onOpenConflictsPage={() => {
           setInspected(null);

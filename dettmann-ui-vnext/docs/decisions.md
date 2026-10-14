@@ -236,5 +236,12 @@ The approved boards are the specification of each screen. What a board needs and
 - `ResourcePage layout="workspace"`: a desktop screen that fills the area, with one 76 px header line (title, `meta` chips, actions with a divider before the primary one) and 28 px side margins. `meta` also works in the default layout.
 - `Switch size="xs"` (30×18) for dense rows.
 - `Tag size="xs"` (18 px, no outline) and `dot` (the palette color before the text) for user tags under a name.
+- `Tag shape="rounded"` (category chip) and `outline={false}`; `TagAdd`, the dashed "+ tag" pill.
+- `Modal`: header and footer are structure bands; `Modal.Content size="custom"` takes the board's width and height (up to 95 % of the window); `Modal.Header layout="stacked"` (rows 16 px apart, tabs on the bottom line); `Modal.Footer size="sm"` (48 px status line); `Modal.Title size="lg"` (20 px).
+- `Tabs size="sm"`: 38 px tabs of 13 px that sit on the line of a header band.
+- `StatTile size="lg"` (icon in a tinted 24 px square, 28 px number) and `outlined` (border in the intent color).
+- `Table density="relaxed"`: 48 px rows, 36 px header, 16 px cell padding.
+- `Tree variant="rows"`: edge-to-edge 34 px rows with a line between them, for a tree with columns under a header.
+- `SwatchPicker size` (`square`, `sm`, `md`) and `tint` (`"self"` or a palette color).
 
 Tests: `src/__tests__/fidelity-props.test.tsx`.

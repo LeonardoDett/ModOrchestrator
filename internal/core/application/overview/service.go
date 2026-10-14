@@ -395,13 +395,15 @@ type ModSummary struct {
 // ConflictCounts are the conflict numbers of one mod.
 type ConflictCounts struct {
 	Opponents, WinsAgainst, LosesTo int
+	// FilesWon and FilesLost count disputed files, not mods.
+	FilesWon, FilesLost int
 }
 
 // Mod builds the summary of one mod, each number from its owner.
 func (s *Service) Mod(ctx context.Context, instance game.InstanceID, m mod.ID) ModSummary {
 	var out ModSummary
 	if c, err := s.Conflicts.ModConflicts(ctx, instance, m); err == nil {
-		out.Conflicts = &ConflictCounts{Opponents: len(c.Opponents), WinsAgainst: c.WinsAgainst, LosesTo: c.LosesTo}
+		out.Conflicts = &ConflictCounts{Opponents: len(c.Opponents), WinsAgainst: c.WinsAgainst, LosesTo: c.LosesTo, FilesWon: c.FilesWon, FilesLost: c.FilesLost}
 	}
 	if r, err := s.Diagnostics.ModRequirements(ctx, instance, m); err == nil {
 		out.Requirements = &r

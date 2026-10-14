@@ -20,15 +20,29 @@ function useTableLayout() {
   return useContext(TableLayoutContext);
 }
 
+type TableDensity = "compact" | "relaxed";
+
+const TableDensityContext = createContext<TableDensity>("compact");
+
 const rootVariants = defineRecipe({
   base: "overflow-auto rounded-card border border-border bg-surface",
 });
 
-function TableRoot({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+interface TableRootProps extends ComponentPropsWithoutRef<"div"> {
+  /**
+   * `compact` (default): 32 px rows. `relaxed`: 48 px rows of 13 px text,
+   * 36 px header and 16 px cell padding, as in the detail boards (D-040).
+   */
+  density?: TableDensity;
+}
+
+function TableRoot({ className, children, density = "compact", ...props }: TableRootProps) {
   return (
-    <div className={cn(rootVariants(), className)} {...props}>
-      <table className="w-full caption-bottom text-sm">{children}</table>
-    </div>
+    <TableDensityContext.Provider value={density}>
+      <div className={cn(rootVariants(), className)} {...props}>
+        <table className="w-full caption-bottom text-sm">{children}</table>
+      </div>
+    </TableDensityContext.Provider>
   );
 }
 
@@ -47,8 +61,12 @@ function TableBody({ className, ...props }: ComponentPropsWithoutRef<"tbody">) {
 }
 
 const rowVariants = defineRecipe({
-  base: "border-b border-border text-sm motion-transition",
+  base: "border-b motion-transition",
   variants: {
+    density: {
+      compact: "border-border text-sm",
+      relaxed: "h-12 border-border-subtle text-[0.8125rem]",
+    },
     selected: {
       true: "bg-selected",
       false: "hover:bg-state-hover",
@@ -61,6 +79,7 @@ const rowVariants = defineRecipe({
   defaultVariants: {
     selected: false,
     layout: "table",
+    density: "compact",
   },
 });
 
@@ -70,7 +89,8 @@ interface TableRowProps extends ComponentPropsWithoutRef<"tr"> {
 
 function TableRow({ className, selected = false, ...props }: TableRowProps) {
   const layout = useTableLayout();
-  const classes = cn(rowVariants({ selected, layout }), className);
+  const density = useContext(TableDensityContext);
+  const classes = cn(rowVariants({ selected, layout, density }), className);
 
   if (layout === "virtual") {
     return <div role="row" className={classes} {...(props as ComponentPropsWithoutRef<"div">)} />;
@@ -80,10 +100,12 @@ function TableRow({ className, selected = false, ...props }: TableRowProps) {
 }
 
 function TableHead({ className, ...props }: ComponentPropsWithoutRef<"th">) {
+  const density = useContext(TableDensityContext);
   return (
     <th
       className={cn(
-        "h-control-sm px-3 text-left align-middle font-medium text-fg-muted",
+        "text-left align-middle text-fg-muted",
+        density === "relaxed" ? "h-9 px-4 text-xs font-semibold" : "h-control-sm px-3 font-medium",
         className
       )}
       {...props}
@@ -93,7 +115,8 @@ function TableHead({ className, ...props }: ComponentPropsWithoutRef<"th">) {
 
 function TableCell({ className, ...props }: ComponentPropsWithoutRef<"td">) {
   const layout = useTableLayout();
-  const classes = cn("h-control-sm px-3 py-1 align-middle text-fg", layout === "virtual" && "flex-1", className);
+  const density = useContext(TableDensityContext);
+  const classes = cn("align-middle text-fg", density === "relaxed" ? "px-4" : "h-control-sm px-3 py-1", layout === "virtual" && "flex-1", className);
 
   if (layout === "virtual") {
     return (

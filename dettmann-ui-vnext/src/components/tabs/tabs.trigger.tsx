@@ -7,8 +7,8 @@ import { useTabsContext } from "./tabs.context";
 
 const tabsTriggerVariants = defineRecipe({
   base: [
-    "inline-flex items-center justify-center whitespace-nowrap px-4 py-2",
-    "text-sm font-medium motion-transition",
+    "inline-flex items-center justify-center whitespace-nowrap",
+    "font-medium motion-transition",
     "focus-ring-inset",
     "disabled:pointer-events-none disabled:bg-sunken disabled:text-fg-subtle",
   ].join(" "),
@@ -24,6 +24,10 @@ const tabsTriggerVariants = defineRecipe({
     variant: {
       underline: "",
       segmented: "rounded-control",
+    },
+    size: {
+      md: "px-4 py-2 text-sm",
+      sm: "h-9.5 gap-1.5 px-2.5 text-[0.8125rem]",
     },
   },
   compoundVariants: [
@@ -63,6 +67,7 @@ const tabsTriggerVariants = defineRecipe({
     active: false,
     orientation: "horizontal",
     variant: "underline",
+    size: "md",
   },
 });
 
@@ -70,7 +75,7 @@ type TabsTriggerVariants = VariantProps<typeof tabsTriggerVariants>;
 
 interface TabsTriggerProps
   extends Omit<ComponentPropsWithoutRef<"button">, "value">,
-    Omit<TabsTriggerVariants, "active"> {
+    Omit<TabsTriggerVariants, "active" | "size"> {
   /** Value of this tab */
   value: string;
 }
@@ -79,7 +84,7 @@ interface TabsTriggerProps
  * Tabs.Trigger is a clickable tab header with keyboard navigation.
  */
 export function TabsTrigger({ value, className, ...props }: TabsTriggerProps) {
-  const { value: activeValue, onChange, orientation, variant, registerTrigger, unregisterTrigger, handleRovingKeyDown } =
+  const { value: activeValue, onChange, orientation, variant, size, registerTrigger, unregisterTrigger, handleRovingKeyDown } =
     useTabsContext("Trigger");
   const ref = useRef<HTMLButtonElement>(null);
   const isActive = activeValue === value;
@@ -107,7 +112,7 @@ export function TabsTrigger({ value, className, ...props }: TabsTriggerProps) {
       tabIndex={isActive ? 0 : -1}
       onClick={() => onChange(value)}
       onKeyDown={handleKeyDown}
-      className={cn(tabsTriggerVariants({ active: isActive, orientation, variant }), className)}
+      className={cn(tabsTriggerVariants({ active: isActive, orientation, variant, size }), className)}
       {...props}
     />
   );

@@ -1178,7 +1178,8 @@ export interface ExtensionCount {
 
 /** Numbers of the summary of a mod (B13); a missing part could not be read. */
 export interface ModSummary {
-  conflicts?: { opponents: number; winsAgainst: number; losesTo: number };
+  /** Opponents (mods) and the disputed files the mod wins and loses. */
+  conflicts?: { opponents: number; winsAgainst: number; losesTo: number; filesWon: number; filesLost: number };
   requirements?: { total: number; present: number };
 }
 

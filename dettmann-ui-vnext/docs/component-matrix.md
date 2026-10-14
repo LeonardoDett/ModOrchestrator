@@ -41,6 +41,8 @@ Wave 3 (D-036): `DataTable` rows are 32/28 px with one state variant (idle, sele
 
 Redesign batch 2 (D-039): `FilterChip` (+ `Group`), `StatTile` (+ `Grid`), `SwatchPicker`, `SettingRow` are new; `Tag` gains `color` and `icon`; `Progress.Stacked`; `Checkbox variant="card"`; `Section` gains `density` and header `actions`; `List` gains a static mode, slot rows (`title`, `description`, `meta`, `actions`, `unread`) and `List.Group`.
 
+Board fidelity (D-040): `DataTable density="relaxed"`, `ResourcePage layout="workspace"` + `meta`, `Switch size="xs"`, `Tag size="xs"`/`dot`/`shape`/`outline` and `TagAdd`, `Modal.Content size="custom"`, `Modal.Header layout`, `Modal.Footer size`, `Modal.Title size`, `Tabs size="sm"`, `StatTile size="lg"`/`outlined`, `Table density`, `Tree variant="rows"`, `SwatchPicker size`/`tint`.
+
 Redesign batch 1 (D-038): `Indicator variant="chip"` (value and label visible, for page headers); `Alert` gains `action`, `onDismiss`/`dismissLabel` and `compact`; `Avatar` gains `shape="square"` (monograms), `color` from the category palette, `emphasis` and `label`; `Button` gains `badge`, `progress` and `tooltip`.
 
 Wave 4 (D-037): `Card.Root` takes `emphasis` (`low` | `medium`), `interactive` and `selected` (no `variant`, no shadow); `Toolbar`, `ActionBar` and `Sidebar` are `bg-structure` medium layers.

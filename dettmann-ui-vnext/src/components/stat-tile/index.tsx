@@ -10,7 +10,8 @@ import type { Intent } from "../../theme/engine";
 
 const tileVariants = defineRecipe({
   slots: {
-    root: "flex min-w-0 flex-col items-start gap-0.5 rounded-card border border-border bg-surface text-left",
+    root: "flex min-w-0 flex-col items-start rounded-card border bg-surface text-left",
+    tile: "inline-flex size-6 shrink-0 items-center justify-center rounded-control",
     label: "flex items-center gap-1.5 text-xs text-fg-muted",
     value: "flex items-baseline gap-1 font-semibold tabular-nums text-fg",
     unit: "text-xs font-medium text-fg-muted",
@@ -18,15 +19,22 @@ const tileVariants = defineRecipe({
   },
   variants: {
     size: {
-      sm: { root: "px-3 py-2", value: "text-sm" },
-      md: { root: "px-3 py-2.5", value: "text-lg" },
+      sm: { root: "gap-0.5 px-3 py-2", value: "text-sm" },
+      md: { root: "gap-0.5 px-3 py-2.5", value: "text-lg" },
+      /** Painel de detalhe: ícone num quadrado de 24 px, número de 28 px (D-040). */
+      lg: { root: "gap-2.5 px-4 py-3.5", label: "gap-2", value: "gap-2 text-[1.75rem] leading-none", unit: "text-[0.8125rem] font-normal" },
+    },
+    /** Borda na cor do intent: o número que pede atenção. */
+    outlined: {
+      true: { root: "border-intent-border" },
+      false: { root: "border-border" },
     },
     interactive: {
       true: { root: "cursor-pointer motion-transition hover:state-layer-hover active:state-layer-pressed focus-ring" },
       false: {},
     },
   },
-  defaultVariants: { size: "md", interactive: false },
+  defaultVariants: { size: "md", interactive: false, outlined: false },
 });
 
 interface StatTileBaseProps {
@@ -41,7 +49,10 @@ interface StatTileBaseProps {
   icon?: IconComponent;
   /** Pinta o ícone e o valor (status ou destaque). */
   intent?: Intent;
-  size?: "sm" | "md";
+  /** `lg`: o ícone vira um quadrado tingido e só ele leva a cor do `intent`. */
+  size?: "sm" | "md" | "lg";
+  /** Pinta a borda com o `intent` (exige `intent`). */
+  outlined?: boolean;
   /** Carregando: o valor vira um esqueleto. */
   loading?: boolean;
   className?: string;
@@ -67,21 +78,32 @@ export interface StatTileProps extends StatTileBaseProps {
  * </StatTile.Grid>
  * ```
  */
-function StatTileRoot({ label, value, unit, description, icon, intent, size, loading = false, href, onClick, className, style }: StatTileProps) {
+function StatTileRoot({ label, value, unit, description, icon, intent, size, outlined = false, loading = false, href, onClick, className, style }: StatTileProps) {
   const interactive = Boolean(href || onClick);
-  const s = tileVariants({ size, interactive });
   const tinted = intent !== undefined && intent !== "neutral";
+  const s = tileVariants({ size, interactive, outlined: outlined && tinted });
+  const large = size === "lg";
+  let glyph: ReactNode = null;
+  if (icon && large) {
+    glyph = (
+      <span className={cn(s.tile(), tinted ? "bg-intent-subtle text-intent-text" : "bg-sunken text-fg-muted")}>
+        <Icon icon={icon} size="xs" color="current" />
+      </span>
+    );
+  } else if (icon) {
+    glyph = (
+      <span className={cn("inline-flex", tinted ? "text-intent-text" : "text-fg-muted")}>
+        <Icon icon={icon} size="xs" color="current" />
+      </span>
+    );
+  }
   const body = (
     <>
       <span className={s.label()}>
-        {icon ? (
-          <span className={cn("inline-flex", tinted ? "text-intent-text" : "text-fg-muted")}>
-            <Icon icon={icon} size="xs" color="current" />
-          </span>
-        ) : null}
+        {glyph}
         {label}
       </span>
-      <span className={cn(s.value(), tinted && "text-intent-text")}>
+      <span className={cn(s.value(), tinted && !large && "text-intent-text")}>
         {loading ? <Skeleton className="h-5 w-12" /> : value}
         {unit && !loading ? <span className={s.unit()}>{unit}</span> : null}
       </span>

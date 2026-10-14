@@ -6,10 +6,17 @@ import { cn } from "../../utils/cn";
 import { useModalContext } from "./modal.context";
 
 const modalTitleVariants = defineRecipe({
-  base: "text-lg font-semibold text-fg",
+  base: "font-semibold text-fg",
+  variants: {
+    /** `md` 18 px (default); `lg` 20 px, the name in a detail header. */
+    size: { md: "text-lg", lg: "text-xl" },
+  },
+  defaultVariants: { size: "md" },
 });
 
-interface ModalTitleProps extends ComponentPropsWithoutRef<"h2"> {}
+interface ModalTitleProps extends ComponentPropsWithoutRef<"h2"> {
+  size?: "md" | "lg";
+}
 
 /**
  * Modal.Title is the title of the modal dialog.
@@ -18,12 +25,13 @@ interface ModalTitleProps extends ComponentPropsWithoutRef<"h2"> {}
 export function ModalTitle({
   children,
   className,
+  size,
   ...props
 }: ModalTitleProps) {
   const { titleId } = useModalContext("Title");
 
   return (
-    <h2 id={titleId} className={cn(modalTitleVariants(), className)} {...props}>
+    <h2 id={titleId} className={cn(modalTitleVariants({ size }), className)} {...props}>
       {children}
     </h2>
   );

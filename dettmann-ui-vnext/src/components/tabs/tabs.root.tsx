@@ -17,6 +17,12 @@ interface TabsRootProps {
   orientation?: "horizontal" | "vertical";
   /** Visual style — `segmented` is Untitled-style compact control */
   variant?: "underline" | "segmented";
+  /**
+   * `md` (default). `sm`: 38 px tabs of 13 px text that sit on the bottom
+   * line of a header band (`Modal.Header layout="stacked"`), so the list
+   * draws no line of its own.
+   */
+  size?: "md" | "sm";
 }
 
 /**
@@ -41,6 +47,7 @@ export function TabsRoot({
   onValueChange,
   orientation = "horizontal",
   variant = "underline",
+  size = "md",
 }: TabsRootProps) {
   const [value, setValue] = useControllableState({
     value: controlledValue,
@@ -60,6 +67,7 @@ export function TabsRoot({
         onChange: setValue,
         orientation,
         variant,
+        size,
         registerTrigger: register,
         unregisterTrigger: unregister,
         handleRovingKeyDown: handleKeyDown,

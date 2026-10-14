@@ -13,19 +13,19 @@ const modalContentVariants = defineRecipe({
   base: [
     "relative flex flex-col",
     "bg-raised rounded-card shadow-modal",
-    "max-h-[85vh] overflow-hidden",
+    "overflow-hidden",
   ].join(" "),
   variants: {
     size: {
-      sm: "w-full max-w-sm",
-      md: "w-full max-w-md",
-      lg: "w-full max-w-lg",
-      xl: "w-full max-w-xl",
-      "2xl": "w-full max-w-2xl",
-      wide: "w-full max-w-[min(68.75rem,90vw)] h-[min(85vh,85dvh)]",
-      full: "w-full max-w-[calc(100vw-2rem)] h-[calc(100vh-2rem)]",
-      /** D-040: the screen gives width and height (`className`), as its board measures them. */
-      custom: "",
+      sm: "max-h-[85vh] w-full max-w-sm",
+      md: "max-h-[85vh] w-full max-w-md",
+      lg: "max-h-[85vh] w-full max-w-lg",
+      xl: "max-h-[85vh] w-full max-w-xl",
+      "2xl": "max-h-[85vh] w-full max-w-2xl",
+      wide: "max-h-[85vh] w-full max-w-[min(68.75rem,90vw)] h-[min(85vh,85dvh)]",
+      full: "max-h-[85vh] w-full max-w-[calc(100vw-2rem)] h-[calc(100vh-2rem)]",
+      /** D-040: the screen gives width and height (`className`), as its board measures them; it may use up to 95 % of the window. */
+      custom: "max-h-[95vh]",
     },
   },
   defaultVariants: {

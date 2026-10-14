@@ -55,6 +55,12 @@ export interface TreeProps<T = unknown>
   onCheckedIdsChange?: (next: Set<string>) => void;
   /** Extra column at the end of each row (e.g. a select per node). */
   renderEnd?: (node: TreeNode<T>) => ReactNode;
+  /**
+   * `list` (default): rounded rows that float on the surface. `rows`: a
+   * table of 34 px rows edge to edge, with a line between them and 24 px
+   * side padding, for a tree with columns (`renderEnd`) under a header.
+   */
+  variant?: "list" | "rows";
   labels?: TreeLabels;
 }
 
@@ -77,10 +83,12 @@ export function Tree<T>({
   checkedIds,
   onCheckedIdsChange,
   renderEnd,
+  variant = "list",
   labels,
   className,
   ...props
 }: TreeProps<T>) {
+  const rows = variant === "rows";
   const checkable = checkedIds !== undefined;
   const toggleCheck = (node: TreeNode<T>) => {
     if (!checkedIds || node.disabled) return;
@@ -197,7 +205,7 @@ export function Tree<T>({
     <div
       role="tree"
       aria-multiselectable={checkable}
-      className={cn("select-none py-1", className)}
+      className={cn(rows ? "select-none" : "select-none py-1", className)}
       {...props}
     >
       {visibleNodes.map((current, index) => {
@@ -224,14 +232,16 @@ export function Tree<T>({
           >
             <div
               className={cn(
-                "group relative flex min-h-control-sm items-center gap-1 rounded-chip px-2 motion-transition",
+                rows
+                  ? "group relative flex h-8.5 items-center gap-1 border-b border-border-subtle pr-6 motion-transition"
+                  : "group relative flex min-h-control-sm items-center gap-1 rounded-chip px-2 motion-transition",
                 // Uma cor de texto e um fundo por estado (o `cn` não resolve conflito).
                 node.disabled ? "text-fg-subtle" : "text-fg",
                 selected
                   ? "bg-selected before:absolute before:inset-y-1 before:left-0 before:w-0.5 before:rounded-pill before:bg-brand-fill"
                   : !node.disabled && "hover:bg-state-hover",
               )}
-              style={{ paddingLeft: depth * indent + 8 }}
+              style={{ paddingLeft: depth * indent + (rows ? 24 : 8) }}
             >
               {hasChildren ? (
                 <button
@@ -280,7 +290,7 @@ export function Tree<T>({
                 </span>
                 <span className="truncate">{node.label}</span>
               </button>
-              {renderEnd ? <div className="flex shrink-0 items-center gap-2">{renderEnd(node)}</div> : null}
+              {renderEnd ? <div className={cn("flex shrink-0 items-center", rows ? "gap-3" : "gap-2")}>{renderEnd(node)}</div> : null}
             </div>
           </div>
         );

@@ -16,12 +16,20 @@ const tabsListVariants = defineRecipe({
       underline: "",
       segmented: "rounded-control bg-sunken p-1",
     },
+    size: { md: "", sm: "" },
   },
   compoundVariants: [
     {
       variant: "underline",
       orientation: "horizontal",
+      size: "md",
       class: "items-end border-b border-border",
+    },
+    {
+      variant: "underline",
+      orientation: "horizontal",
+      size: "sm",
+      class: "items-end",
     },
     {
       variant: "underline",
@@ -32,6 +40,7 @@ const tabsListVariants = defineRecipe({
   defaultVariants: {
     orientation: "horizontal",
     variant: "underline",
+    size: "md",
   },
 });
 
@@ -41,14 +50,14 @@ interface TabsListProps extends ComponentPropsWithoutRef<"div"> {}
  * Tabs.List is the container for tab triggers.
  */
 export function TabsList({ className, ...props }: TabsListProps) {
-  const { orientation, variant } = useTabsContext("List");
+  const { orientation, variant, size } = useTabsContext("List");
 
   return (
     <div
       role="tablist"
       data-layer="medium"
       aria-orientation={orientation}
-      className={cn(tabsListVariants({ orientation, variant }), className)}
+      className={cn(tabsListVariants({ orientation, variant, size }), className)}
       {...props}
     />
   );

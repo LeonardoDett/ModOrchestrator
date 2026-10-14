@@ -90,12 +90,13 @@ function world() {
     }),
     modFiles: async () => ({ total: 0, files: [] }),
     modHistory: async () => [],
-    modSummary: async () => ({ conflicts: { opponents: 3, winsAgainst: 2, losesTo: 1 }, requirements: { total: 2, present: 1 } }),
+    modSummary: async () => ({ conflicts: { opponents: 3, winsAgainst: 2, losesTo: 1, filesWon: 12, filesLost: 25 }, requirements: { total: 2, present: 1 } }),
     modExtensions: async () => [
       { ext: ".dds", files: 742, size: 1 },
       { ext: ".nif", files: 418, size: 1 },
     ],
     modConflicts: async (_i, id) => ({ mod: { id, name: id, priority: 1, enabled: true }, indicator: "none", opponents: [] }),
+    modConflictFiles: async () => ({ total: 1, files: [{ location: { target: "data", path: "interface/skyui.swf" }, size: 2048, state: "none", opponents: [], overridden: false }] }),
     setModsEnabled: async (_i, ids, enabled) => {
       state.calls.push(`enable:${ids.join(",")}:${enabled}`);
       state.mods = state.mods.map((m) => (ids.includes(m.id) ? { ...m, enabled } : m));
@@ -350,7 +351,7 @@ describe("Mods screen (F4)", () => {
     screen.getByRole("grid").focus();
     await user.keyboard("{Enter}");
     const detail = await screen.findByRole("dialog", { name: "SkyUI" });
-    await user.click(within(detail).getByRole("button", { name: "Remove…" }));
+    await user.click(within(detail).getByRole("button", { name: "Remove" }));
     const dialog = await screen.findByRole("dialog");
     expect(await within(dialog).findByText(/1 rule mentions these mods/)).toBeInTheDocument();
     await user.click(within(dialog).getByRole("checkbox", { name: /Also remove the original files/ }));
@@ -440,20 +441,26 @@ describe("Mods screen (F4)", () => {
     await user.keyboard("{Enter}");
     const detail = await screen.findByRole("dialog", { name: "SkyUI" });
     expect(await within(detail).findByText("1/2")).toBeInTheDocument();
+    // Board KPIs count files: loses 25, wins 12.
+    expect(within(detail).getByText("25")).toBeInTheDocument();
+    expect(within(detail).getByText("12")).toBeInTheDocument();
     expect(within(detail).getByText("essencial")).toBeInTheDocument();
-    expect(within(detail).getByText("Mod 1 of 3 · Esc closes")).toBeInTheDocument();
+    expect(within(detail).getByText(/Mod 1 of 3 ·/)).toBeInTheDocument();
+    expect(within(detail).getByRole("group", { name: "Quick actions" })).toBeInTheDocument();
 
     await user.click(within(detail).getByRole("tab", { name: /Files/ }));
     expect(await within(detail).findByRole("img", { name: /Files by type/ })).toBeInTheDocument();
 
+    expect(await within(detail).findByRole("tree", { name: "Mod files" })).toBeInTheDocument();
+
     await user.click(within(detail).getByRole("tab", { name: "Installation" }));
-    expect(await within(detail).findByText("Choices in the mod installer")).toBeInTheDocument();
+    expect(await within(detail).findByText("Installed by the mod installer (FOMOD)")).toBeInTheDocument();
     expect(within(detail).getByText("2K")).toBeInTheDocument();
 
     await user.click(within(detail).getByRole("button", { name: "Next" }));
     const next = await screen.findByRole("dialog", { name: "Textures" });
     await user.click(within(next).getByRole("tab", { name: "Installation" }));
     // Without a wizard there are no recorded choices (generic installer).
-    await waitFor(() => expect(within(next).queryByText("Choices in the mod installer")).not.toBeInTheDocument());
+    expect(await within(next).findByText("Installed straight from the archive")).toBeInTheDocument();
   });
 });

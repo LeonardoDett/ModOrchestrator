@@ -12,6 +12,8 @@ export interface TabsContextValue {
   orientation: "horizontal" | "vertical";
   /** Visual style */
   variant: "underline" | "segmented";
+  /** Density: `sm` are the 38 px tabs of a header band */
+  size: "md" | "sm";
   /** Register tab trigger for roving tabindex */
   registerTrigger: (value: string, element: HTMLElement | null) => void;
   /** Unregister tab trigger */
