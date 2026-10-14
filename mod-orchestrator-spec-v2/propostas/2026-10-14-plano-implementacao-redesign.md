@@ -8,12 +8,12 @@ Data: 2026-10-14. Convenção: um commit por fase no master, push só a pedido.
 
 | Frente | Documento | Commit |
 |---|---|---|
-| Redesign das telas | `propostas/redesign-telas-v1-fechamento.md` (telas, B1 a B16, C1 a C18, em aberto); canvas https://claude.ai/artifact/H2LwUCQTWSq7ev4ALRTZrP | `ea603a0`, `fb06cc2` |
+| Redesign das telas | `propostas/redesign-telas-v1-fechamento.md` (telas, B1 a B16, C1 a C18, em aberto); canvas https://claude.ai/artifact/H2LwUCQTWSq7ev4ALRTZrP | `ea603a0`, `fb06cc2`, `6c26fba` |
 | Desacoplamento por jogo e SDK | `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, seção 0 (D112, D114, D118) | `fc358fb` |
 | Lista de jogos com suporte | `propostas/2026-10-13-registro-de-jogos.md`, seção 0 (D113, D115 a D117; R5 e R6 pendentes) | `fa25df2` |
 | Subprojeto de componentes | `dettmann-ui-vnext/docs/plans/2026-10-13-catalog-growth.md` (estado da lib, P1 a P6, como um componente entra) | `9a5b20f` |
 
-Estado das telas: todas as **desenhadas** estão aprovadas (as quatro primeiras antes, as demais em 2026-10-14 com "pode fazer todas as telas", registrado em `fb06cc2`). Continuam fora as três **reservadas** (Downloads, Inspetor de assets, Extensões de usuários). Seis telas estão **em desenho** desde 2026-10-14, a pedido do Leonardo: Perfis, Diagnóstico, painel de Notificações, menu Filtros, "Mais ações" de Mods e Ajustes globais. Elas entram na RD17 e não bloqueiam as outras fases.
+Estado das telas: todas as **desenhadas** estão aprovadas (as quatro primeiras antes, as demais em 2026-10-14 com "pode fazer todas as telas", registrado em `fb06cc2`). Continuam fora as três **reservadas** (Downloads, Inspetor de assets, Extensões de usuários). Cinco pranchas foram desenhadas depois dessa liberação (`6c26fba`) e **aguardam a revisão do Leonardo**: Perfis, Diagnóstico (aba Problemas), painel de Notificações, Mods com os menus Filtros e Mais ações, e Configurações do app (aba Interface). Elas entram na RD17 e não bloqueiam as outras fases. Sem desenho ficam só abas e diálogos secundários (lista na RD17).
 
 ## 2. Regras que valem para toda fase
 
@@ -81,6 +81,11 @@ Classificação inicial, a confirmar na RD1 contra o canvas e o catálogo. "Seç
 | C14 | Barra de ação em lote e rodapé de alterações não salvas | `ActionBar` existente; rodapé é variação | RD3 |
 | C16 | Lista de arrastar com painel de explicação | `ReorderableList` ou `DataTable reorderable` + `SplitPane` (seção 1.3) | RD3 |
 | C17 | Cartão de escolha grande e botão de duas linhas | Estender `Radio` (cartão) e `Button` | RD3 |
+| C19 | Painel de notificações: item lido e não lido, ações na linha, dispensar | `Popover` + lista; conferir `List` (seção 1.3) | RD17 |
+| C20 | Painel de filtros com grupos de chips e chips de filtro aplicado | Estender `FilterBar` | RD17 |
+| C21 | Cartão de perfil com selos e rodapé de ações | `Card interactive` com slot de rodapé; os selos são composição do app | RD17 |
+| C22 | Lista agrupada por gravidade com painel de evidência e ações | `MasterDetail` ou `SplitPane` (seção 1.3) + lista agrupada | RD17 |
+| C23 | Linha de configuração (rótulo, descrição, controle) e seção com escopo | Novo (molécula), se a `Section` não cobrir | RD17 |
 | C13 | Linha de conflito com dois vencedores, "Sugerido" e cadeado | Composição do app (termo de domínio) | RD11 |
 | C15 | Opção de instalador com "Escolha anterior", imagem e descrição | Composição do app sobre `Radio`/`Checkbox`/`MediaImage` | RD10 |
 
@@ -109,7 +114,7 @@ Tamanho: P (até um dia), M (alguns dias), G (uma semana ou mais).
 | RD14 | Nível do app: Biblioteca, Início, Adicionar jogo (R5b a R5d) | Tela + core | RD4 | G |
 | RD15 | Importação de Vortex e MO2: leitura e importação | Core | RD5, RD14 | G |
 | RD16 | Importação de Vortex e MO2: telas | Tela | RD15, RD3 | M |
-| RD17 | Telas em desenho (Perfis, Diagnóstico, Notificações, Filtros, Mais ações, Ajustes globais) | Tela | RD4; artboards aprovados | M a G |
+| RD17 | Telas desenhadas depois da liberação (Notificações, menus de Mods, Perfis, Diagnóstico, Configurações), em cinco partes | Lib + tela | RD4; revisão de cada prancha | G |
 | RD18 | Fechamento | Qualidade | todas | M |
 
 Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não dependem da lib e podem ser intercaladas com RD2 e RD3 (uma fase por vez no checkout).
@@ -199,7 +204,7 @@ Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não d
 ### RD8. Mods: três visões, Organização e fila de instalação
 
 - **Objetivo:** a tela principal do espaço do jogo.
-- **Entregáveis:** `ui/telas/mods.md` reescrito; visões Lista, Aninhada e Abas; cabeçalho com chips e ações só com ícone ("Adicionar mods" em destaque; fila, importar e implantar); filtro rápido; selo de categoria e tags na linha; coluna "Atualizado"; Organização (abas Categorias e Tags, com cor e ícone); modal da fila de instalação; multi-seleção e dropzone mantidas. Menu Filtros e "Mais ações" ficam como estão hoje até o desenho deles chegar (RD17).
+- **Entregáveis:** `ui/telas/mods.md` reescrito; visões Lista, Aninhada e Abas; cabeçalho com chips e ações só com ícone ("Adicionar mods" em destaque; fila, importar e implantar); filtro rápido; selo de categoria e tags na linha; coluna "Atualizado"; Organização (abas Categorias e Tags, com cor e ícone); modal da fila de instalação; multi-seleção e dropzone mantidas. Menu Filtros e "Mais ações" ficam como estão hoje até a parte 17b.
 - **Dependências:** RD3, RD4, RD5.
 - **Pronto quando:** aceite da regra 5; critérios do `mods.md` novo; 2.000 mods rolam sem travar nas três visões; `ModsPage.test.tsx` reescrito; demonstração: arrastar 10 archives, instalar todos, categorizar, alternar as visões.
 - **Sem a capability:** vale para todo jogo. No `generic`: sem categorias iniciais (a visão Abas mostra só "Sem categoria" e o convite para criar), sem ContentFlags, e nenhuma coluna de plugin. Teste da página com workspace `generic`.
@@ -277,13 +282,25 @@ Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não d
 - **Pronto quando:** aceite da regra 5; demonstração com uma instalação real de cada gerenciador.
 - **Sem a capability:** as partes de plugin e ordem de carga só aparecem quando o backend as lista. Teste da tela com prévia de jogo `generic`.
 
-### RD17. Telas em desenho
+### RD17. Telas desenhadas depois da liberação
 
-- **Objetivo:** levar o resto para o desenho novo.
-- **Entregáveis:** as seis telas em desenho (Perfis, Diagnóstico, painel de Notificações, menu Filtros, "Mais ações" de Mods e Ajustes globais; os artboards ficam no canvas, não no repositório). Quando o fechamento do design for atualizado, esta fase é desdobrada: Filtros e "Mais ações" voltam para a RD8, o painel de Notificações para a RD4 (se elas ainda não tiverem sido feitas), e Perfis, Diagnóstico e Ajustes globais viram uma fase cada, no mesmo formato. As dependências novas de backend e de componentes entram na RD1 e na tabela da seção 4.
-- **Dependências:** RD4; artboard aprovado de cada tela.
-- **Pronto quando:** cada tela tem artboard aprovado, documento reescrito e passou pelo aceite da regra 5. Até lá vale o item 2 da D119.
-- **Sem a capability:** cada artboard traz a variante do jogo com menos capacidades, como `JogoGenerico` fez para a Visão geral.
+- **Objetivo:** levar Perfis, Diagnóstico, Notificações, os menus de Mods e as Configurações para o desenho novo.
+- **Estado:** as cinco pranchas estão **aguardando a revisão do Leonardo**. Nenhuma parte começa antes de a prancha dela ser aprovada. Elas seguem a spec existente (`ui/telas/profiles.md`, `diagnostics.md`, `settings-extensions.md`, `mods.md` §5.1, `core/10`, `core/13`) e não criam contrato novo no backend (B18).
+- **Entregáveis, um commit por parte:**
+
+  | Parte | Prancha | Conteúdo | Componentes | Depende de |
+  |---|---|---|---|---|
+  | 17a | `JogoNotificacoes` | Painel aberto pelo sino: lido e não lido, ações na linha, dispensar, marcar todas | C19 | RD4 |
+  | 17b | `JogoModsMenus` | Menu Filtros (categoria, tags, situação, conflitos, "contém") com chips de filtro aplicado; menu Mais ações (B17) | C20 | RD8 |
+  | 17c | `JogoPerfis` | Cartões de perfil, aviso de "ativo diferente do implantado", pontos de restauração | C21 | RD4 |
+  | 17d | `JogoDiagnostico` | Aba Problemas: lista por gravidade e painel com evidência, impacto e ações | C22 | RD4; a ação "Importar do Vortex" só depois da RD15 |
+  | 17e | `Configuracoes` | Aba Interface no padrão de linha de configuração, com o escopo "vale para [jogo]" | C23 | RD4 |
+
+  Cada parte reescreve o documento da tela, cria na lib o componente que faltar (com ficha na RD1, se a prancha já estiver aprovada quando a RD1 rodar) e troca a tela. Se a 17a ou a 17b forem aprovadas antes da RD4 ou da RD8, entram nelas em vez de virar commit próprio.
+- **Sem desenho, ficam como estão dentro da casca nova** (D119, item 2): abas Histórico, Operações e Log do Diagnóstico; abas Aplicação, Mods, Plugins, Soluções de problemas e Tema das Configurações; diálogos de Perfis (novo, clonar, transferir seleção, comparar, excluir); diálogos de Mods abertos pelo Mais ações (regras, colunas, exportar lista). As abas não desenhadas de uma tela redesenhada adotam os componentes novos da aba desenhada (C22, C23) sem mudar de conteúdo.
+- **Dependências:** RD4 para todas; RD8 para a 17b; RD5 para o filtro por tag (B5).
+- **Pronto quando:** cada parte tem prancha aprovada, documento reescrito e passou pelo aceite da regra 5; `ProfilesAndOrder.test.tsx`, `Diagnostics.test.tsx` e `F12.test.tsx` reescritos na parte correspondente.
+- **Sem a capability:** o filtro "contém" só aparece quando o adapter classifica arquivos: some no `generic` (teste). A aba Plugins das Configurações e a seção "vale para [jogo]" vêm do backend, como na RD4: sem `plugins`, a aba não existe. Perfis não mostra estado de plugin nem ordem de carga para quem não tem a capability. Diagnóstico lista só os checks que o adapter registra; nenhum código de plugin aparece no `generic` nem no Valheim. Teste de cada tela com workspace `generic`.
 
 ### RD18. Fechamento
 
