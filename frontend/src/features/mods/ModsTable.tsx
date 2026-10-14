@@ -1,261 +1,190 @@
 import { useMemo } from "react";
-import { GitBranch, Palette, StickyNote } from "lucide-react";
-import { ChevronDownIcon, ChevronRightIcon } from "dettmann-ui/icons";
-import { DataTable, Indicator, StatusToggle, Tag, type DataTableColumn, type DataTableRowMove, type DataTableSort, Icon } from "dettmann-ui";
-import type { ConflictIndicator, ModRow, Separator, TagInfo } from "../../bridge/types";
-import { CategoryTag, ModTags } from "./category-look";
-import { ConflictIndicatorCell } from "../conflicts/conflict-labels";
-import type { Density } from "../../app/settings-context";
-import { useI18n } from "../../i18n/i18n";
-import { categoryText, contentLabel, formatSize, highlightIntent, toggleLabels, toggleState } from "./mod-labels";
+import { DataTable, Icon, Switch, Tag, type DataTableColumn } from "dettmann-ui";
+import type { ConflictIndicator, ModRow, TagInfo } from "../../bridge/types";
+import { useI18n, type Translator } from "../../i18n/i18n";
+import { categoryText, formatSize } from "./mod-labels";
+import { categoryIcon, paletteColor } from "./category-look";
 import type { ListRow } from "./mod-order";
 
-/** Columns shown by default (ui/telas/mods.md §5.1, without the F9 ones). */
-export const DEFAULT_HIDDEN = ["version", "type", "content", "author", "installedAt", "enabledAt", "source", "variant"];
+export type ModsView = "list" | "nested" | "tabs";
 
-/** The default and only reorderable ordering: priority, lowest first (§5.2). */
-export const PRIORITY_SORT: DataTableSort = { columnId: "priority", direction: "asc" };
+/** Rows in the order of the active profile: priority ascending, mods outside the order last. */
+export function byPriority(rows: readonly ListRow[]): ListRow[] {
+  const key = (r: ListRow) => (r.kind === "mod" ? (r.priority ?? Number.MAX_SAFE_INTEGER) : Number.MAX_SAFE_INTEGER);
+  return [...rows].sort((a, b) => key(a) - key(b));
+}
 
-const SORT_KEYS: Record<string, (row: Extract<ListRow, { kind: "mod" }>) => string | number> = {
-  status: ({ mod: r }) => (r.state !== "installed" ? 2 : r.enabled ? 0 : 1),
-  priority: (r) => r.priority ?? Number.MAX_SAFE_INTEGER,
-  name: ({ mod: r }) => r.name.toLowerCase(),
-  version: ({ mod: r }) => r.version.toLowerCase(),
-  category: ({ mod: r }) => r.categoryPath.join("/").toLowerCase(),
-  size: ({ mod: r }) => r.size,
-  type: ({ mod: r }) => r.typeName.toLowerCase(),
-  author: ({ mod: r }) => r.author.toLowerCase(),
-  installedAt: ({ mod: r }) => r.installedAt ?? "",
-  updated: ({ mod: r }) => r.installedAt ?? "",
-  enabledAt: ({ mod: r }) => r.enabledAt ?? "",
-  source: ({ mod: r }) => r.source.toLowerCase(),
-  variant: ({ mod: r }) => (r.variantLabel ?? "").toLowerCase(),
-};
-
-/** Presentation-only ordering of mod rows the backend already returned. */
-export function sortRows(rows: readonly ListRow[], sort: DataTableSort | null, conflicts: ReadonlyMap<string, ConflictIndicator> = new Map()): readonly ListRow[] {
-  if (!sort) return rows;
-  const key =
-    sort.columnId === "conflicts"
-      ? (r: Extract<ListRow, { kind: "mod" }>) => INDICATOR_RANK[conflicts.get(r.mod.id)?.indicator ?? "none"]
-      : SORT_KEYS[sort.columnId];
-  if (!key) return rows;
-  const mods = rows.filter((r): r is Extract<ListRow, { kind: "mod" }> => r.kind === "mod");
-  const sorted = [...mods].sort((a, b) => {
-    const x = key(a);
-    const y = key(b);
-    return typeof x === "number" && typeof y === "number" ? x - y : String(x).localeCompare(String(y));
-  });
-  return sort.direction === "desc" ? sorted.reverse() : sorted;
+/** The text and the meaning of the Conflitos cell (board JogoMods). */
+export function conflictCell(i18n: Translator, row: ModRow, c: ConflictIndicator | undefined): { text: string; intent?: "success" | "warning" | "info" } {
+  const { t } = i18n;
+  if (row.state === "installing") return { text: t("mods.conflict.installing"), intent: "info" };
+  if (row.queued || row.state === "imported") return { text: t("mods.conflict.queued") };
+  if (!c || c.indicator === "none" || c.indicator === "redundant_only") return { text: t("mods.conflict.none") };
+  if (c.unreviewed > 0) return { text: t("mods.conflict.toDecide", { count: c.unreviewed }), intent: "warning" };
+  const wins = c.winsAgainst ?? 0;
+  const loses = c.losesTo ?? 0;
+  if (wins > 0 && loses > 0) return { text: t("mods.conflict.mixed", { wins, loses }) };
+  if (wins > 0) return { text: t("mods.conflict.wins", { count: wins }), intent: "success" };
+  return { text: t("mods.conflict.loses", { count: loses }), intent: "warning" };
 }
 
 interface ModsTableProps {
   rows: readonly ListRow[];
-  sort: DataTableSort | null;
-  onSortChange: (sort: DataTableSort | null) => void;
-  hidden: readonly string[];
+  view: ModsView;
   selected: ReadonlySet<string>;
   onSelectedChange: (ids: ReadonlySet<string>) => void;
   onFocusedChange: (id: string | null) => void;
   onToggle: (row: ModRow, enabled: boolean) => void;
-  onToggleSeparator: (separator: Separator) => void;
   onActivate: (row: ListRow) => void;
   onContextMenu: (row: ListRow) => void;
   /** Keys on the focused row that the table itself does not use (Space, Delete, Shift+F10). */
   onRowKeyDown?: (event: React.KeyboardEvent<HTMLDivElement>, row: ListRow) => void;
-  /** Whether rows can be dragged now (priority order, nothing hidden). */
-  reorderable: boolean;
-  onRowsMove: (move: DataTableRowMove) => Promise<unknown>;
   categoryLastOnly: boolean;
   conflicts: ReadonlyMap<string, ConflictIndicator>;
-  onOpenConflicts: (mod: string) => void;
-  density: Density;
-  groupByCategory: boolean;
   /** Tag definitions by lower-case name, for their colors (D123). */
   tagDefs: ReadonlyMap<string, TagInfo>;
+  /** Nested view: the group of a row and its header (category tile, name, counts). */
+  groupOf?: (row: ListRow) => string;
+  renderGroup?: (group: string, count: number) => React.ReactNode;
+  /** Abas view: the table sits inside a card under the tabs. */
+  embedded?: boolean;
   empty?: React.ReactNode;
 }
 
-/** Sort order of the conflict indicator: most worrying first. */
-const INDICATOR_RANK = { fully_overwritten: 0, loses_all: 1, mixed: 2, wins_all: 3, redundant_only: 4, none: 5 } as const;
+/** The colored square with the category icon (boards JogoMods and JogoModsAninhada). */
+export function CategoryTile({ color, icon }: { color?: string; icon?: string }) {
+  const c = paletteColor(color);
+  const glyph = categoryIcon(icon);
+  return (
+    <span
+      data-category={c}
+      className={`flex size-5.5 shrink-0 items-center justify-center rounded-chip ${c ? "bg-intent-subtle text-intent-text" : "bg-sunken text-fg-muted"}`}
+    >
+      {glyph ? <Icon icon={glyph} size="xs" /> : null}
+    </span>
+  );
+}
 
-export function useModColumns(
-  onToggle: (row: ModRow, enabled: boolean) => void,
-  onToggleSeparator: (separator: Separator) => void,
-  categoryLastOnly: boolean,
-  conflicts: ReadonlyMap<string, ConflictIndicator> = new Map(),
-  onOpenConflicts: (mod: string) => void = () => {},
-  tagDefs: ReadonlyMap<string, TagInfo> = new Map(),
-) {
+/**
+ * The Mods table (ui/telas/mods.md §5, board JogoMods): Ativo, Mod (name and
+ * tags underneath), Categoria (only in the list), Conflitos, Atualizado and
+ * Tamanho, in rows of 54 px. The order is the priority of the active profile.
+ */
+export function ModsTable(props: ModsTableProps) {
   const i18n = useI18n();
-  const { t, tp } = i18n;
-  return useMemo<DataTableColumn<ListRow>[]>(() => {
-    const states = toggleLabels(i18n);
-    const mod = (render: (row: ModRow, list: Extract<ListRow, { kind: "mod" }>) => React.ReactNode) => (row: ListRow) =>
-      row.kind === "mod" ? render(row.mod, row) : null;
-    return [
+  const { t } = i18n;
+  const { view, conflicts, tagDefs, onToggle, categoryLastOnly } = props;
+  const columns = useMemo<DataTableColumn<ListRow>[]>(() => {
+    const mod = (render: (row: ModRow) => React.ReactNode) => (row: ListRow) => (row.kind === "mod" ? render(row.mod) : null);
+    const out: DataTableColumn<ListRow>[] = [
       {
         id: "status",
-        label: t("mods.column.status"),
-        width: 84,
-        sortable: true,
+        label: t("mods.column.active"),
+        width: 68,
         hideable: false,
         // The span keeps a toggle click from also changing the row selection.
         cell: mod((row) => (
-          <span onClick={(e) => e.stopPropagation()}>
-            <StatusToggle
-              state={toggleState(row)}
-              label={t("mods.toggleLabel", { name: row.name })}
-              stateLabels={states}
+          <span onClick={(e) => e.stopPropagation()} className="flex items-center">
+            <Switch
+              size="xs"
+              checked={row.state === "installed" && row.enabled}
+              disabled={row.state !== "installed" || row.queued}
+              aria-label={t(row.state === "installed" && row.enabled ? "mods.toggle.disable" : "mods.toggle.enable", { name: row.name })}
               onCheckedChange={(next) => onToggle(row, next)}
             />
           </span>
         )),
       },
       {
-        id: "priority",
-        label: t("mods.column.priority"),
-        header: <span title={t("mods.column.priorityHelp")}>{t("mods.column.priorityShort")}</span>,
-        width: 64,
-        numeric: true,
-        sortable: true,
-        hideable: false,
-        cell: mod((_, r) => (r.priority != null ? r.priority : "")),
-      },
-      {
         id: "name",
-        label: t("mods.column.name"),
+        label: t("mods.column.mod"),
         width: 320,
         grow: true,
-        sortable: true,
         hideable: false,
-        cell: (row) =>
-          row.kind === "separator" ? (
-            <span className="flex min-w-0 items-center gap-2 font-medium text-fg">
-              <button
-                type="button"
-                aria-expanded={!row.separator.collapsed}
-                aria-label={t(row.separator.collapsed ? "mods.separator.expand" : "mods.separator.collapse", { name: row.separator.label })}
-                className="flex h-6 w-6 shrink-0 items-center justify-center rounded-chip text-fg-muted hover:bg-state-hover hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleSeparator(row.separator);
-                }}
-              >
-                {row.separator.collapsed ? <ChevronRightIcon size="sm" /> : <ChevronDownIcon size="sm" />}
-              </button>
-              {row.separator.color ? <Indicator icon={Palette} intent={highlightIntent(row.separator.color)} label={t("mods.separator.colored")} /> : null}
-              <span className="truncate">{row.separator.label}</span>
-              <span className="shrink-0 text-xs font-normal text-fg-muted">
-                {tp("mods.separator.count", row.separator.total, { enabled: row.separator.enabled })}
-              </span>
-            </span>
-          ) : (
-            <span className={`flex min-w-0 items-center gap-2 ${row.mod.state !== "installed" ? "italic text-fg-muted" : row.mod.enabled ? "" : "text-fg-muted"}`}>
-              {row.mod.highlight ? <Indicator icon={Palette} intent={highlightIntent(row.mod.highlight)} label={t("mods.highlighted")} /> : null}
-              <span className="truncate">{row.mod.name}</span>
-              {row.mod.variantLabel ? <Tag size="sm">{row.mod.variantLabel}</Tag> : null}
-              {row.mod.hasNotes ? <Indicator icon={StickyNote} intent="subtle" label={t("mods.hasNotes")} /> : null}
-              {row.mod.tags && row.mod.tags.length > 0 ? (
-                <span className="flex min-w-0 shrink items-center gap-1 overflow-hidden" aria-label={t("mods.tagsLabel", { names: row.mod.tags.join(", ") })}>
-                  <ModTags names={row.mod.tags} defs={tagDefs} />
-                </span>
-              ) : null}
-            </span>
-          ),
-      },
-      { id: "version", label: t("mods.column.version"), width: 110, sortable: true, cell: mod((row) => row.version || t("common.empty")) },
-      {
-        id: "category",
-        label: t("mods.column.category"),
-        width: 180,
-        sortable: true,
-        cell: mod((row) =>
-          row.categoryPath.length > 0 ? (
-            <CategoryTag name={categoryText(row, categoryLastOnly)} color={row.categoryColor} icon={row.categoryIcon} />
-          ) : (
-            <span className="text-fg-subtle">{t("mods.noCategory")}</span>
-          ),
-        ),
-      },
-      {
-        id: "conflicts",
-        label: t("mods.column.conflicts"),
-        width: 110,
-        sortable: true,
-        cell: mod((row) => <ConflictIndicatorCell value={conflicts.get(row.id)} onOpen={() => onOpenConflicts(row.id)} />),
-      },
-      {
-        id: "updated",
-        label: t("mods.column.updated"),
-        width: 130,
-        sortable: true,
-        cell: mod((row) => <span title={i18n.formatAbsolute(row.installedAt)}>{i18n.formatAgo(row.installedAt)}</span>),
-      },
-      {
-        id: "size",
-        label: t("mods.column.size"),
-        width: 120,
-        numeric: true,
-        align: "end",
-        sortable: true,
-        cell: mod((row) => (row.state === "installed" ? formatSize(i18n.language, row.size) : t("common.empty"))),
-      },
-      { id: "type", label: t("mods.column.type"), width: 120, sortable: true, cell: mod((row) => row.typeName || row.type) },
-      {
-        id: "content",
-        label: t("mods.column.content"),
-        width: 200,
         cell: mod((row) => {
-          const shown = row.content.slice(0, 4).map((f) => contentLabel(i18n, f));
-          const more = row.content.length - shown.length;
+          const tags = row.tags ?? [];
           return (
-            <span className="truncate" title={row.content.map((f) => contentLabel(i18n, f)).join(", ")}>
-              {shown.join(", ")}
-              {more > 0 ? ` +${more}` : ""}
+            <span className="flex min-w-0 flex-col gap-1.25">
+              <span className={`truncate font-medium ${row.state === "installed" && row.enabled ? "text-fg" : "text-fg-muted"}`}>{row.name}</span>
+              <span className="flex min-h-4.5 items-center gap-1.5 overflow-hidden">
+                {tags.length === 0 ? (
+                  <span className="text-xs text-fg-subtle">{t("mods.noTags")}</span>
+                ) : (
+                  tags.map((g) => {
+                    const c = paletteColor(tagDefs.get(g.toLowerCase())?.color);
+                    return (
+                      <Tag key={g} size="xs" dot {...(c ? { color: c } : {})}>
+                        {g}
+                      </Tag>
+                    );
+                  })
+                )}
+              </span>
             </span>
           );
         }),
       },
-      { id: "author", label: t("mods.column.author"), width: 140, sortable: true, cell: mod((row) => row.author || t("common.empty")) },
-      { id: "installedAt", label: t("mods.column.installedAt"), width: 170, sortable: true, cell: mod((row) => i18n.formatDateTime(row.installedAt)) },
-      { id: "enabledAt", label: t("mods.column.enabledAt"), width: 170, sortable: true, cell: mod((row) => i18n.formatDateTime(row.enabledAt)) },
-      { id: "source", label: t("mods.column.source"), width: 220, sortable: true, cell: mod((row) => <span className="truncate" title={row.source}>{row.source}</span>) },
-      {
-        id: "variant",
-        label: t("mods.column.variant"),
-        width: 140,
-        sortable: true,
+    ];
+    if (view === "list") {
+      out.push({
+        id: "category",
+        label: t("mods.column.category"),
+        width: 206,
         cell: mod((row) =>
-          row.variantLabel ? (
-            <span className="flex items-center gap-1">
-              <Icon icon={GitBranch} size="sm" className="text-fg-muted" />
-              {row.variantLabel}
+          row.categoryPath.length > 0 ? (
+            <span className="flex min-w-0 items-center gap-2">
+              <CategoryTile color={row.categoryColor} icon={row.categoryIcon} />
+              <span className="truncate text-fg">{categoryText(row, categoryLastOnly)}</span>
             </span>
           ) : (
-            t("common.empty")
+            <span className="text-fg-subtle">{t("mods.noCategory")}</span>
           ),
         ),
+      });
+    }
+    out.push(
+      {
+        id: "conflicts",
+        label: t("mods.column.conflicts"),
+        width: view === "list" ? 166 : 176,
+        cell: mod((row) => {
+          const c = conflictCell(i18n, row, conflicts.get(row.id));
+          return (
+            <span data-intent={c.intent} className={c.intent ? "text-intent-text" : c.text === t("mods.conflict.none") ? "text-fg-subtle" : "text-fg-muted"}>
+              {c.text}
+            </span>
+          );
+        }),
       },
-    ];
-  }, [i18n, t, tp, onToggle, onToggleSeparator, categoryLastOnly, conflicts, onOpenConflicts, tagDefs]);
-}
+      {
+        id: "updated",
+        label: t("mods.column.updated"),
+        width: view === "list" ? 136 : 146,
+        cell: mod((row) => (
+          <span className="text-fg-muted" title={i18n.formatAbsolute(row.installedAt)}>
+            {i18n.formatAgo(row.installedAt)}
+          </span>
+        )),
+      },
+      {
+        id: "size",
+        label: t("mods.column.size"),
+        width: 96,
+        align: "end",
+        cell: mod((row) => <span className="text-fg-muted">{row.state === "installed" ? formatSize(i18n.language, row.size) : t("common.empty")}</span>),
+      },
+    );
+    return out;
+  }, [i18n, t, view, conflicts, tagDefs, onToggle, categoryLastOnly]);
 
-/** The Mods table (ui/telas/mods.md §5) over the lib DataTable (L1, L2). */
-export function ModsTable(props: ModsTableProps) {
-  const { t } = useI18n();
-  const columns = useModColumns(props.onToggle, props.onToggleSeparator, props.categoryLastOnly, props.conflicts, props.onOpenConflicts, props.tagDefs);
   return (
     <DataTable
       aria-label={t("mods.tableLabel")}
-      className="min-h-0 flex-1"
+      className={props.embedded ? "min-h-0 flex-1 rounded-none border-0" : "min-h-0 flex-1"}
       columns={columns}
       rows={props.rows}
       getRowId={(row) => row.id}
-      hiddenColumns={props.hidden}
-      sort={props.sort}
-      onSortChange={props.onSortChange}
-      density={props.density}
+      density="relaxed"
       selectionMode="multiple"
       selectedIds={props.selected}
       onSelectedIdsChange={props.onSelectedChange}
@@ -263,12 +192,8 @@ export function ModsTable(props: ModsTableProps) {
       onRowActivate={props.onActivate}
       onRowContextMenu={(_, row) => props.onContextMenu(row)}
       onRowKeyDown={props.onRowKeyDown}
-      getGroup={props.groupByCategory ? (row) => (row.kind === "mod" ? row.mod.categoryPath.join(" › ") || t("mods.noCategory") : "") : undefined}
-      rowClassName={(row) =>
-        row.kind === "separator" ? "bg-structure" : row.mod.highlight ? "border-l-2 border-l-emphasis-border" : undefined
-      }
-      reorderable={props.reorderable ? (row) => row.kind === "separator" || row.priority != null : false}
-      onRowsMove={props.onRowsMove}
+      getGroup={props.groupOf}
+      renderGroupHeader={props.renderGroup ? (g) => props.renderGroup!(g.group, g.count) : undefined}
       empty={props.empty}
       labels={{ resizeColumn: t("table.resizeColumn"), loading: t("common.loading"), dragHandle: t("mods.dragHandle"), moving: t("mods.moving") }}
     />

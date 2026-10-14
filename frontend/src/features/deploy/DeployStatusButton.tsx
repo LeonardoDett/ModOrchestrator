@@ -1,6 +1,7 @@
 import { Wrench } from "lucide-react";
 import { EyeIcon, FileSearchIcon, RefreshIcon, RocketIcon } from "dettmann-ui/icons";
-import { Badge, Button, Popover, Stack, Typography, Icon, Loader } from "dettmann-ui";
+import { Badge, Button, Popover, Progress, Stack, Typography, Icon, Loader } from "dettmann-ui";
+import { useOperations } from "../../bridge/queries";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useDeploy } from "./DeployContext";
 import { statusLook } from "./deploy-labels";
@@ -31,40 +32,83 @@ export function DeployStatusButton() {
   );
 }
 
+/** The deploy running on the active game and its progress, from the operations list. */
+function useRunningDeploy(instance: string) {
+  const ops = useOperations(20);
+  if (ops.status !== "ready") return null;
+  const op = ops.data.find((o) => o.status === "running" && (o.kind === "deploy" || o.kind === "purge") && (!o.subject || o.subject.id === instance));
+  return op ?? null;
+}
+
 /**
- * Deployment card at the foot of the game menu (D120): the status of the
- * active game with the same panel as the status button; while a deploy runs
- * it shows the loader. Collapsed, it is an icon button with the status as
- * name and hint.
+ * Deployment card at the foot of the game menu (D120, board JogoMods): only
+ * while something is pending. Deploying: icon tile, "Implantando", files done
+ * of total, the percentage and a thin bar at the bottom. Needing action: the
+ * status with its icon. In sync it is not shown. Collapsed: a ring with the
+ * percentage, or the status icon.
  */
 export function DeployCard({ collapsed = false }: { collapsed?: boolean }) {
-  const { t } = useI18n();
-  const { status } = useDeploy();
+  const i18n = useI18n();
+  const { t } = i18n;
+  const { status, instance } = useDeploy();
+  const running = useRunningDeploy(instance);
   if (!status) return null;
   const look = statusLook(status);
-  const StateIcon = look.icon;
   const busy = Boolean(status.busy);
-  const name = `${t("deploy.statusLabel")}: ${t(look.label)}`;
-  const glyph = StateIcon && !busy ? <Icon icon={StateIcon} size="sm" /> : <Loader decorative size="xs" />;
+  if (!busy && status.kind === "in_sync" && status.newFiles === 0 && status.externalChanges === 0) return null;
+  const StateIcon = look.icon;
+  const total = running?.progress.total ?? 0;
+  const done = running?.progress.current ?? 0;
+  const percent = total > 0 ? Math.round((done / total) * 100) : undefined;
+  const title = busy ? t("deploy.card.deploying") : t(look.label);
+  const detail = busy
+    ? total > 0
+      ? t("deploy.card.files", { done: i18n.formatNumber(done), total: i18n.formatNumber(total) })
+      : t("deploy.card.starting")
+    : t("deploy.card.open");
+  const name = percent !== undefined ? `${title}, ${percent}%` : `${t("deploy.statusLabel")}: ${title}`;
+  const intent = busy ? "info" : look.intent;
+  let glyph = <Loader decorative size="xs" />;
+  if (busy) glyph = <RocketIcon size="sm" loop />;
+  else if (StateIcon) glyph = <Icon icon={StateIcon} size="sm" />;
   return (
     <Popover.Root placement={collapsed ? "right-end" : "top-start"}>
       <Popover.Trigger>
         {collapsed ? (
-          <Button emphasis="low" size="icon" aria-label={name} title={name}>
-            {glyph}
-          </Button>
+          <button type="button" aria-label={name} title={name} className="focus-ring flex size-10 items-center justify-center rounded-pill">
+            {percent !== undefined ? (
+              <span className="relative flex size-10 items-center justify-center">
+                <Progress.Circle value={percent} size={40} strokeWidth={4} intent="info" aria-hidden="true" />
+                <span className="absolute text-[10px] font-bold text-intent-text" data-intent="info">
+                  {percent}%
+                </span>
+              </span>
+            ) : (
+              <span data-intent={intent} className="flex size-9 items-center justify-center rounded-control bg-intent-subtle text-intent-text">
+                {glyph}
+              </span>
+            )}
+          </button>
         ) : (
           <button
             type="button"
             aria-label={name}
             data-slot="deploy-card"
-            className="flex w-full flex-col gap-1 rounded-card border border-border bg-surface px-3 py-2 text-left motion-transition hover:state-layer-hover focus-ring"
+            className="relative flex h-14 w-full items-center gap-2.5 overflow-hidden rounded-control border border-border bg-surface px-3 text-left motion-transition hover:state-layer-hover focus-ring"
           >
-            <span className="text-caption font-medium text-fg-muted">{t("deploy.card.title")}</span>
-            <Badge intent={look.intent} emphasis={look.intent ? undefined : "low"} className="gap-1 self-start">
+            <span data-intent={intent} className="flex size-7 shrink-0 items-center justify-center rounded-control bg-intent-subtle text-intent-text">
               {glyph}
-              {t(look.label)}
-            </Badge>
+            </span>
+            <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="text-sm font-semibold text-fg">{title}</span>
+              <span className="truncate text-xs text-fg-muted">{detail}</span>
+            </span>
+            {percent !== undefined ? (
+              <span data-intent="info" className="shrink-0 text-[15px] font-semibold text-intent-text">
+                {percent}%
+              </span>
+            ) : null}
+            {percent !== undefined ? <Progress.Root value={percent} intent="info" className="absolute inset-x-0 bottom-0 h-[3px] rounded-none" aria-hidden="true" /> : null}
           </button>
         )}
       </Popover.Trigger>

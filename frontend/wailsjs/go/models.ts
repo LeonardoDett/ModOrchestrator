@@ -851,6 +851,8 @@ export namespace bridge {
 	    indicator: string;
 	    files: number;
 	    unreviewed: number;
+	    winsAgainst: number;
+	    losesTo: number;
 	
 	    static createFrom(source: any = {}) {
 	        return new ConflictIndicatorDTO(source);
@@ -862,6 +864,8 @@ export namespace bridge {
 	        this.indicator = source["indicator"];
 	        this.files = source["files"];
 	        this.unreviewed = source["unreviewed"];
+	        this.winsAgainst = source["winsAgainst"];
+	        this.losesTo = source["losesTo"];
 	    }
 	}
 	export class ConflictModDTO {

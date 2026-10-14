@@ -663,7 +663,8 @@ export const en = {
   "error.import_source_unreadable.file_locked": "{name} is in use by another program (an antivirus scan, for example). Try again in a moment.",
   "error.import_source_unreadable.permission_denied": "You do not have permission to read {name}.",
   // Profiles and mod order (F5: core/05 §1–4, core/07, ui/telas/profiles.md)
-  "topbar.profile": "Active profile",
+  "topbar.profile": "Profile",
+  "topbar.profileOf": "Profile {name}, change",
   "profiles.loadError": "The profiles could not be loaded.",
   "profiles.listLabel": "Profiles",
   "profiles.active": "Active",
@@ -2197,6 +2198,10 @@ export const en = {
   "nav.badge.diagnostics.other": "{count} problems",
   "topbar.commandPalette": "Command palette",
   "help.operations": "Operations",
+  "deploy.card.deploying": "Deploying",
+  "deploy.card.files": "{done} of {total} files",
+  "deploy.card.starting": "Starting",
+  "deploy.card.open": "See what to do",
   "deploy.card.title": "Deployment",
 
   // Mods screen of the redesign (RD8, D123, D124).
@@ -2376,6 +2381,23 @@ export const en = {
   "mods.fomod.summaryIntro": "Review what will be installed and choose Install.",
   "mods.fomod.targetRoot": "{target} (root)",
   "mods.fomod.yourChoices": "Your choices",
+
+  // Mods screen by the board (fidelity rework).
+  "mods.conflict.installing": "Installing",
+  "mods.conflict.queued": "In the queue",
+  "mods.conflict.none": "No conflict",
+  "mods.conflict.toDecide": "To decide · {count}",
+  "mods.conflict.mixed": "Wins {wins}, loses {loses}",
+  "mods.conflict.wins": "Wins {count}",
+  "mods.conflict.loses": "Loses {count}",
+  "mods.column.active": "Active",
+  "mods.column.mod": "Mod",
+  "mods.toggle.enable": "Enable {name}",
+  "mods.toggle.disable": "Disable {name}",
+  "mods.noTags": "no tags",
+  "mods.group.info": "{enabled} of {count} enabled",
+  "mods.filter.button": "Filters",
+  "mods.deploy.runningPercent": "Deploying {percent}%",
 } as const;
 
 export type MessageKey = keyof typeof en;

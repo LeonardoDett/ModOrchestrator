@@ -152,6 +152,9 @@ type ConflictIndicatorDTO struct {
 	Indicator  string `json:"indicator"`
 	Files      int    `json:"files"`
 	Unreviewed int    `json:"unreviewed"`
+	// WinsAgainst and LosesTo count opponents (the Mods list "Vence 3").
+	WinsAgainst int `json:"winsAgainst"`
+	LosesTo     int `json:"losesTo"`
 }
 
 type PairRefDTO struct {
@@ -316,7 +319,7 @@ func (a *App) ConflictIndicators(instance string) ([]ConflictIndicatorDTO, error
 	}
 	out := make([]ConflictIndicatorDTO, 0, len(m))
 	for id, ind := range m {
-		out = append(out, ConflictIndicatorDTO{ModID: string(id), Indicator: string(ind.Indicator), Files: ind.Files, Unreviewed: ind.Unreviewed})
+		out = append(out, ConflictIndicatorDTO{ModID: string(id), Indicator: string(ind.Indicator), Files: ind.Files, Unreviewed: ind.Unreviewed, WinsAgainst: ind.WinsAgainst, LosesTo: ind.LosesTo})
 	}
 	return out, nil
 }

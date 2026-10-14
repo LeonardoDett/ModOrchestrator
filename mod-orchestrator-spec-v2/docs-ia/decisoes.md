@@ -1226,3 +1226,14 @@ Motivo: o design v1 tem o selo "Sugerido", o "Para todos os N" e a linha travada
 Alternativas rejeitadas: sugerir pelo mais novo, pelo maior ou por tipo de arquivo (palpite, não fato; levaria a regra errada aceita no automático); gravar a sugestão (ficaria velha quando as regras mudassem); comando em lote novo para o par (a regra do par já cobre).
 
 Consequências: vale para todo jogo e não lê plugin. No `generic` sem regras de dependência não há sugestão. Conforme a RD6 traz dependências de pacote e o Skyrim traz masters como regra de metadados, as sugestões aparecem sem nada novo.
+
+## D127 — A prancha aprovada é a especificação de cada tela
+Status: vigente (2026-10-14, pedido do Leonardo: "o redesign SIGA o DESIGN")
+
+1. Cada tela do redesign reproduz a prancha aprovada: organização, espaços, colunas, opções de filtro, textos e ações. Controle que a prancha não tem sai da tela; o que ela tem e a lib não faz entra na lib (D-040 da dettmann-ui).
+2. Antes do commit, um screenshot do app em 1440×900 é comparado com o artboard renderizado; diferença só com motivo aprovado pelo Leonardo.
+3. Consequências já aplicadas na tela de Mods: a lista não tem mais coluna de prioridade, alça de arrastar nem separadores (a ordem continua sendo a prioridade do perfil, mudada por "Mover para…" e pelo detalhe do mod); o seletor de colunas e os selects na barra saíram (categoria e conflito ficam no botão "Filtros"); a coluna Conflitos diz "Vence N", "Perde N", "A resolver · N", "Instalando", "Na fila" (o backend passou a contar adversários vencidos e perdidos por mod). Na casca: perfil como botão "Perfil ▾", sem busca na barra (Ctrl+K continua), card de implantação só quando há algo a mostrar, e Jogar como um botão só (as outras opções no menu de contexto).
+
+Motivo: a primeira versão das telas adaptou as pranchas aos componentes existentes e ficou muito diferente do aprovado (auditoria em `propostas/2026-10-14-auditoria-fidelidade.md`).
+
+Consequência: a numeração reservada no plano do redesign avança um número (importação Vortex/MO2 passa a D128, assistente do jogo a D129).

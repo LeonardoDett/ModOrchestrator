@@ -28,6 +28,12 @@ const switchVariants = defineRecipe({
   },
   variants: {
     size: {
+      /** Dense rows (board JogoMods): 30×18. */
+      xs: {
+        track: "h-4.5 w-7.5",
+        thumb: "h-3.5 w-3.5 data-[state=checked]:translate-x-3",
+        label: "text-xs",
+      },
       sm: {
         track: "h-5 w-9",
         thumb: "h-4 w-4 data-[state=checked]:translate-x-4",

@@ -1,5 +1,5 @@
 import { Activity, Command as CommandIcon, Keyboard, ScrollText, WifiOff } from "lucide-react";
-import { ChevronLeftIcon, CircleHelpIcon, InfoIcon, SearchIcon } from "dettmann-ui/icons";
+import { ChevronLeftIcon, CircleHelpIcon, InfoIcon } from "dettmann-ui/icons";
 import { Badge, Button, Kbd, Menu, Navbar, Icon } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { useI18n } from "../i18n/i18n";
@@ -60,15 +60,6 @@ export function TopBar({ level, onBackToLibrary, onOpenOperations, onOpenDialog,
               {t("app.offline")}
             </Badge>
           ) : null}
-          <Button
-            emphasis="low"
-            size="icon"
-            aria-label={`${t("topbar.commandPalette")} (${PALETTE_KEYS})`}
-            tooltip={`${t("topbar.commandPalette")} · ${PALETTE_KEYS}`}
-            onClick={() => onOpenDialog("palette")}
-          >
-            <SearchIcon size="sm" />
-          </Button>
           <span data-slot="notifications">
             <NotificationBell onOpenOperations={onOpenOperations} />
           </span>

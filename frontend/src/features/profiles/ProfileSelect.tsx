@@ -1,4 +1,5 @@
-import { Input } from "dettmann-ui";
+import { CheckIcon, ChevronDownIcon } from "dettmann-ui/icons";
+import { Button, Menu } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useProfiles, useWorkspace } from "../../bridge/queries";
 import { useI18n } from "../../i18n/i18n";
@@ -23,18 +24,31 @@ function ProfileSelectFor({ instance }: { instance: string }) {
   const profiles = useProfiles(instance);
   if (profiles.status !== "ready" || profiles.data.length === 0) return null;
   const active = profiles.data.find((p) => p.active);
+  // Board JogoVisaoGeral: a bordered button "Perfil <name> ▾" opening the list.
   return (
-    <Input.Root
-      value={active?.id ?? ""}
-      onChange={(id: string) => {
-        if (id && id !== active?.id) void run(() => backend.activateProfile(id), { success: "profiles.activated" });
-      }}
-    >
-      <Input.Select
-        aria-label={t("topbar.profile")}
-        className="min-w-40"
-        options={profiles.data.map((p) => ({ value: p.id, label: p.name }))}
-      />
-    </Input.Root>
+    <Menu.Root>
+      <Menu.Trigger>
+        <Button size="sm" endIcon={<ChevronDownIcon size="sm" />} aria-label={t("topbar.profileOf", { name: active?.name ?? "" })}>
+          <span className="text-fg-muted">{t("topbar.profile")}</span>
+          <span className="font-medium">{active?.name}</span>
+        </Button>
+      </Menu.Trigger>
+      <Menu.Content>
+        {profiles.data.map((p) => (
+          <Menu.Item
+            key={p.id}
+            label={p.name}
+            onSelect={() => {
+              if (p.id !== active?.id) void run(() => backend.activateProfile(p.id), { success: "profiles.activated" });
+            }}
+          >
+            <span className="flex items-center gap-2">
+              <CheckIcon size="sm" className={p.id === active?.id ? "" : "invisible"} />
+              {p.name}
+            </span>
+          </Menu.Item>
+        ))}
+      </Menu.Content>
+    </Menu.Root>
   );
 }

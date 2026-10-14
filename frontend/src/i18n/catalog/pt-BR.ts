@@ -660,7 +660,8 @@ export const ptBR: Record<MessageKey, string> = {
   "error.import_source_unreadable.file_locked": "{name} está em uso por outro programa (uma verificação do antivírus, por exemplo). Tente de novo em instantes.",
   "error.import_source_unreadable.permission_denied": "Você não tem permissão para ler {name}.",
   // Perfis e ordem de mods (F5: core/05 §1–4, core/07, ui/telas/profiles.md)
-  "topbar.profile": "Perfil ativo",
+  "topbar.profile": "Perfil",
+  "topbar.profileOf": "Perfil {name}, trocar",
   "profiles.loadError": "Não foi possível carregar os perfis.",
   "profiles.listLabel": "Perfis",
   "profiles.active": "Ativo",
@@ -2194,6 +2195,10 @@ export const ptBR: Record<MessageKey, string> = {
   "nav.badge.diagnostics.other": "{count} problemas",
   "topbar.commandPalette": "Paleta de comandos",
   "help.operations": "Operações",
+  "deploy.card.deploying": "Implantando",
+  "deploy.card.files": "{done} de {total} arquivos",
+  "deploy.card.starting": "Começando",
+  "deploy.card.open": "Ver o que fazer",
   "deploy.card.title": "Implantação",
   // Mods screen of the redesign (RD8, D123, D124).
   "mods.add": "Adicionar mods",
@@ -2372,4 +2377,21 @@ export const ptBR: Record<MessageKey, string> = {
   "mods.fomod.summaryIntro": "Revise o que será instalado e escolha Instalar.",
   "mods.fomod.targetRoot": "{target} (raiz)",
   "mods.fomod.yourChoices": "Suas escolhas",
+
+  // Mods screen by the board (fidelity rework).
+  "mods.conflict.installing": "Instalando",
+  "mods.conflict.queued": "Na fila",
+  "mods.conflict.none": "Sem conflito",
+  "mods.conflict.toDecide": "A resolver · {count}",
+  "mods.conflict.mixed": "Vence {wins}, perde {loses}",
+  "mods.conflict.wins": "Vence {count}",
+  "mods.conflict.loses": "Perde {count}",
+  "mods.column.active": "Ativo",
+  "mods.column.mod": "Mod",
+  "mods.toggle.enable": "Ativar {name}",
+  "mods.toggle.disable": "Desativar {name}",
+  "mods.noTags": "sem tags",
+  "mods.group.info": "{enabled} de {count} ativos",
+  "mods.filter.button": "Filtros",
+  "mods.deploy.runningPercent": "Implantando {percent}%",
 };

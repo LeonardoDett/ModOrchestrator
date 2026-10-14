@@ -148,12 +148,11 @@ describe("Mods screen (F4)", () => {
 
     const toggle = await screen.findByRole("switch", { name: "Enable Textures" });
     expect(toggle).toHaveAttribute("aria-checked", "false");
-    expect(toggle).toHaveAccessibleDescription("Disabled");
-    // A mod that is not installed cannot be toggled and says why.
-    expect(screen.getByRole("switch", { name: "Enable Pending" })).toHaveAccessibleDescription("Not installed");
+    // A mod that is not installed cannot be toggled.
+    expect(screen.getByRole("switch", { name: "Enable Pending" })).toBeDisabled();
     await user.click(toggle);
     expect(state.calls).toContain("enable:m2:true");
-    await waitFor(() => expect(screen.getByRole("switch", { name: "Enable Textures" })).toHaveAttribute("aria-checked", "true"));
+    await waitFor(() => expect(screen.getByRole("switch", { name: "Disable Textures" })).toHaveAttribute("aria-checked", "true"));
   });
 
   it("filters by text and status without asking the backend", async () => {

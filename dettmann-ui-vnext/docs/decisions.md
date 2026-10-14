@@ -225,3 +225,16 @@ Second batch of the Mod Orchestrator screen redesign (inventory in `docs/plans/2
 - **`Checkbox variant="card"`** with `description` and `action` (outside the control), like `Radio`'s card.
 - **`Section`** left the 1.3 backlog: `density` (`spacious` | `compact`), `Section.Header actions`, the title is an `h2` sized by density (no `Typography` heading).
 - **`List`** left the 1.3 backlog: `selectionMode="none"` renders a static `list`/`listitem` without a tab stop; selectable rows use `rowRecipe` (the hand-written ring and the emphasis-filled selection are gone); `List.Item` takes slots (`start`, `title`, `description`, `meta`, `actions`, `unread`; actions only in static lists, an option never holds controls); `List.Group` titles and optionally collapses a run of rows.
+
+## D-040 — Screen redesign: fidelity to the boards
+
+Status: accepted (2026-10-14).
+
+The approved boards are the specification of each screen. What a board needs and the library did not have goes into the library:
+
+- `DataTable density="relaxed"`: rows of 54 px for two lines (a name and its tags underneath) and group headers of 42 px.
+- `ResourcePage layout="workspace"`: a desktop screen that fills the area, with one 76 px header line (title, `meta` chips, actions with a divider before the primary one) and 28 px side margins. `meta` also works in the default layout.
+- `Switch size="xs"` (30×18) for dense rows.
+- `Tag size="xs"` (18 px, no outline) and `dot` (the palette color before the text) for user tags under a name.
+
+Tests: `src/__tests__/fidelity-props.test.tsx`.

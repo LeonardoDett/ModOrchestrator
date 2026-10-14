@@ -14,6 +14,8 @@ const tagVariants = defineRecipe({
   ].join(" "),
   variants: {
     size: {
+      /** Inline label under a name (board JogoMods): 18 px, no outline. */
+      xs: "h-4.5 text-[0.6875rem] border-transparent",
       sm: "h-5",
       md: "h-6",
     },
@@ -23,6 +25,8 @@ const tagVariants = defineRecipe({
     },
   },
   compoundVariants: [
+    { size: "xs", dismissible: false, class: "px-1.75" },
+    { size: "xs", dismissible: true, class: "pl-1.75 pr-0.5" },
     { size: "sm", dismissible: false, class: "px-2" },
     { size: "md", dismissible: false, class: "px-2.5" },
     { size: "sm", dismissible: true, class: "pl-2 pr-0.5" },
@@ -57,6 +61,8 @@ interface TagProps
   color?: CategoryColor;
   /** Ícone antes do texto (decorativo). */
   icon?: IconComponent;
+  /** Ponto da cor antes do texto (tag do usuário). */
+  dot?: boolean;
 }
 
 /**
@@ -66,6 +72,7 @@ interface TagProps
  * ```tsx
  * <Tag value="design" onRemove={setRemoved}>Design</Tag>
  * <Tag color="violet" icon={LayersIcon}>Gráficos</Tag>
+ * <Tag size="xs" color="amber" dot>essencial</Tag>
  * ```
  */
 export function Tag({
@@ -79,6 +86,7 @@ export function Tag({
   emphasis = "medium",
   color,
   icon,
+  dot = false,
   ...props
 }: TagProps) {
   // Com cor da paleta, as classes coloridas do intent; `data-category` reaponta as variáveis.
@@ -96,6 +104,7 @@ export function Tag({
       data-layer={resolved.emphasis}
       {...props}
     >
+      {dot ? <span aria-hidden="true" className="size-1.25 shrink-0 rounded-pill bg-intent-fill" /> : null}
       {icon ? <Icon icon={icon} size="xs" color="current" /> : null}
       {children}
       {onRemove ? (

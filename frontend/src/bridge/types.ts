@@ -1492,6 +1492,9 @@ export interface ConflictIndicator {
   indicator: ConflictIndicatorKind;
   files: number;
   unreviewed: number;
+  /** Opponents the mod wins against and loses to (absent from older backends). */
+  winsAgainst?: number;
+  losesTo?: number;
 }
 
 export type PairChoice = "wins" | "loses" | "order";

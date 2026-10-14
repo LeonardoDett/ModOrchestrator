@@ -39,8 +39,9 @@ D119 a D121 estão registradas. Daí em diante a numeração é provisória: val
 | D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação. Registrada | Detalha D038, D065 | RD5 ✅ |
 | D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Package`, ao lado de `Plan.Requirements`, que segue de arquivos). Registrada | Detalha D118; fecha `core/16` §8 | RD6 ✅ |
 | D126 | **Sugestão de vencedor** em conflito: de onde vem, e que nunca cria regra sozinha; par travado. Registrada | Detalha D004, D027 | RD7 ✅ |
-| D127 | **Importar de Vortex e MO2** entra neste plano (hoje V1.x em `core/15`); copiar por padrão | Emenda D047; detalha D035, D048 | RD15 |
-| D128 | **Assistente de jogo**: reconhecimento de pasta, modelos e target criável | Detalha D117 | RD14 |
+| D127 | **A prancha aprovada é a especificação de cada tela**; retrabalho da casca e das telas já feitas. Registrada | Emenda o método de todas as fases de tela | RD4, RD8–RD10 (retrabalho) |
+| D128 | **Importar de Vortex e MO2** entra neste plano (hoje V1.x em `core/15`); copiar por padrão | Emenda D047; detalha D035, D048 | RD15 |
+| D129 | **Assistente de jogo**: reconhecimento de pasta, modelos e target criável | Detalha D117 | RD14 |
 
 ### 3.1 D119, texto proposto
 
@@ -278,7 +279,7 @@ Concluída em 2026-10-14. Feito: DLG-06 reescrito; passos com a linha do que foi
 - **Objetivo:** as telas fora do jogo.
 - **Entregáveis:**
   - Biblioteca de jogos (substitui a tela Jogos) e Início com resumo por instância (B14: consulta nova, sem abrir o jogo).
-  - Adicionar jogo: suportados com nível de suporte, lojas e recursos (R5b, `GamesSupport`); personalizados com exportar, importar e excluir (R5c: falta o método de bridge que abre e salva o arquivo); pasta com reconhecimento e modelos (R5d: faltam a consulta "que jogo é esta pasta" e o catálogo de modelos no `generic`); opção de target criável (D128; perguntas 7 e 8).
+  - Adicionar jogo: suportados com nível de suporte, lojas e recursos (R5b, `GamesSupport`); personalizados com exportar, importar e excluir (R5c: falta o método de bridge que abre e salva o arquivo); pasta com reconhecimento e modelos (R5d: faltam a consulta "que jogo é esta pasta" e o catálogo de modelos no `generic`); opção de target criável (D129; perguntas 7 e 8).
   - `Instance.Executable` removido do DTO onde ficou redundante.
   - `ui/telas/games.md` e `dashboard.md` reescritos.
 - **Dependências:** RD4. Pode virar duas fases (14a: Biblioteca, Início, R5b, R5c; 14b: R5d).
@@ -293,7 +294,7 @@ Concluída em 2026-10-14. Feito: DLG-06 reescrito; passos com a linha do que foi
   - Port de leitura por gerenciador, somente leitura; prévia com contagens por parte.
   - Importação como operação com plano e journal: mods entram pelo pipeline de pasta (D048), **copiados** por padrão; ordem e separadores; regras; perfis; plugins e ordem de carga; categorias opcionais.
   - Relação com o bloqueio de implantação estrangeira (D035): importar não libera o deploy; a instrução de limpar no outro gerenciador continua.
-  - D127; `core/15` atualizado; `core/02` e `core/11` com o fluxo.
+  - D128; `core/15` atualizado; `core/02` e `core/11` com o fluxo.
 - **Dependências:** RD5 (categorias), RD14 (ponto de entrada no adicionar jogo); respostas às perguntas 3 e 4.
 - **Pronto quando:** fixtures de uma instância MO2 e de um staging do Vortex importadas em teste de integração; kill no meio da importação reabre sem lixo; nada é escrito na pasta do outro gerenciador (teste compara a árvore antes e depois); regra importada que fecharia ciclo vira diagnóstico, não erro (D028).
 - **Sem a capability:** mods, ordem, regras e perfis valem para todo jogo. Plugins e ordem de carga só entram com `plugins` e `load_order` efetivas: no `generic` e no Valheim a prévia nem lista essas partes. Teste: importar uma instância MO2 para um jogo `generic`. Fato de gerenciador (nome de arquivo, formato) fica na infraestrutura do leitor, fora do domínio.

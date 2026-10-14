@@ -5,7 +5,6 @@ import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
 import type { Backend, ModOrder, ModRow, MoveRequest, ProfileSummary } from "../bridge/types";
 import { moveRequestFor, orderedRows } from "../features/mods/mod-order";
-import { chooseOption } from "../test/select";
 
 const mod = (id: string, name: string, over: Partial<ModRow> = {}): ModRow => ({
   id,
@@ -118,19 +117,18 @@ describe("mod order rows (presentation of ModOrder)", () => {
 describe("Mods screen: priority and order (F5)", () => {
   beforeEach(() => localStorage.clear());
 
-  it("shows priorities, separators with counts and drag handles in priority order", async () => {
+  it("lists the mods in the priority of the active profile, without drag handles (board JogoMods)", async () => {
     const user = userEvent.setup();
     const { backend } = world();
     render(<App backend={backend} />);
     await open(user, "Mods");
-    expect(await screen.findByText("Textures")).toBeInTheDocument();
-    expect(screen.getByText("1 of 2 enabled")).toBeInTheDocument();
-    // Three mods in the order and the separator can be dragged; the mod
-    // that is not installed cannot.
-    expect(screen.getAllByRole("button", { name: "Drag to change priority" })).toHaveLength(4);
-    await user.type(screen.getByRole("textbox", { name: "Search by name or tag" }), "a");
+    expect(await screen.findByText("Alpha")).toBeInTheDocument();
+    // The board has no priority column, no separators and no drag: the
+    // order changes through "Move to" and the detail of the mod.
     expect(screen.queryAllByRole("button", { name: "Drag to change priority" })).toHaveLength(0);
-    expect(screen.getByText(/Clear the filters to drag mods/)).toBeInTheDocument();
+    const names = screen.getAllByRole("row").map((r) => r.textContent ?? "");
+    const pos = (n: string) => names.findIndex((t) => t.includes(n));
+    expect(pos("Alpha")).toBeLessThan(pos("Gamma"));
   });
 
   it("explains a refused move and applies the alternative chosen (DLG-11)", async () => {
@@ -157,8 +155,8 @@ describe("Profiles (F5)", () => {
     const { state, backend } = world();
     render(<App backend={backend} />);
     await openScreen(user, "Overview");
-    const select = await screen.findByRole("combobox", { name: "Active profile" });
-    await chooseOption(user, select, "Survival");
+    await user.click(await screen.findByRole("button", { name: /^Profile .*, change$/ }));
+    await user.click(await screen.findByRole("menuitem", { name: "Survival" }));
     await waitFor(() => expect(state.calls).toContain("activate:p2"));
   });
 

@@ -194,7 +194,8 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     await openScreen(user, "Overview");
     await user.click(await screen.findByRole("button", { name: /^Play\./ }));
     expect(calls).toContain('launch:i1:{"option":"","deploy":false,"confirmed":false}');
-    await user.click(screen.getByRole("button", { name: "More launch options" }));
+    // The other launch options sit on the context menu of Play (board JogoMods: one Play button).
+    await user.pointer({ keys: "[MouseRight]", target: screen.getByRole("button", { name: /^Play\./ }) });
     await user.click(await screen.findByRole("menuitem", { name: "Launch the game executable" }));
     expect(calls).toContain('launch:i1:{"option":"game","deploy":false,"confirmed":false}');
   });

@@ -161,7 +161,7 @@ Estrutura (D-037): `Card.Root` usa `emphasis` (`low` padrão; `medium` = estrutu
 orçamento 60/30/10 se ajusta trocando área entre `low` e `medium` (`Card emphasis`,
 `Toolbar`, `FilterBar`, `ActionBar`), nunca com cor local.
 
-Dados (D-036): `DataTable` já vem com linhas de 32 px (28 em `density="compact"`) e
+Dados (D-036): `DataTable` já vem com linhas de 32 px (28 em `density="compact"`; 54 em `density="relaxed"` para nome com tags embaixo, D-040) e
 anima reordenação, ordenação e filtro sozinho; não passe `rowHeight` nem envolva
 linhas em `useFlip`. Textos embutidos sempre por i18n: `FilterBar filtersLabel`,
 `ReorderableList labels`, `DataTable labels`, `Tree labels`.
@@ -212,3 +212,5 @@ tela já tem ou deixe a prop vazia.
 - [ ] Movimento só por primitivas/escopos; nada de `transition` manual.
 - [ ] Ícones do catálogo onde existem; `loop` com texto de status; `Loader` em vez de `Spinner`.
 - [ ] Nenhum componente genérico novo no projeto; typecheck do projeto verde.
+
+Fidelidade às pranchas (D-040): a prancha aprovada é a especificação da tela. Tela do espaço do jogo = `ResourcePage layout="workspace"` (título, `meta` com chips e ações numa linha de 76 px). Linha densa com switch = `Switch size="xs"`; tag do usuário embaixo do nome = `Tag size="xs" dot color`. Faltou algo da prancha: mude a lib, não adapte a tela.

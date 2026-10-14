@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { OctagonX, Square } from "lucide-react";
 import { ChevronDownIcon, FolderOpenIcon, PlayIcon, TriangleAlertIcon, UploadIcon } from "dettmann-ui/icons";
-import { Button, Icon, Loader, Menu } from "dettmann-ui";
+import { Button, ContextMenu, Icon, Loader, Menu, type ContextMenuItem } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useLaunchCheck, useWorkspace } from "../../bridge/queries";
 import type { LaunchCheck, LaunchRequest } from "../../bridge/types";
@@ -98,11 +98,30 @@ export function PlayButton({ layout = "split" }: { layout?: "split" | "block" | 
     );
   }
 
+  // Foot of the game menu (board JogoMods): one 40 px button in the game's
+  // color. The other launch options and the game folder stay on its
+  // context menu (right click or the menu key).
+  if (layout === "block") {
+    const options: ContextMenuItem[] = [
+      ...others.map((o) => ({ id: o.id, label: launchOptionLabel(i18n, o.id), disabled, onSelect: () => play(o.id) })),
+      { id: "folder", label: t("launch.openGameFolder"), onSelect: () => void run(() => backend.openInstanceFolder(instance, "game")) },
+    ];
+    return (
+      <>
+        <ContextMenu items={options} className="w-full">
+          <Button size="lg" fullWidth intent={intent} emphasis={emphasis} disabled={disabled} startIcon={icon} title={hint} aria-label={label} onClick={() => play("")}>
+            {t(c.state === "running" ? "launch.running" : "launch.play")}
+          </Button>
+        </ContextMenu>
+        {dialogNode}
+      </>
+    );
+  }
+
   return (
-    <div className={layout === "block" ? "flex w-full items-stretch" : "flex items-center"}>
+    <div className="flex items-center">
       <Button
-        size={layout === "block" ? "md" : "sm"}
-        fullWidth={layout === "block"}
+        size="sm"
         intent={intent}
         emphasis={emphasis}
         disabled={disabled}
@@ -116,7 +135,7 @@ export function PlayButton({ layout = "split" }: { layout?: "split" | "block" | 
       </Button>
       <Menu.Root placement="bottom-end">
         <Menu.Trigger>
-          <Button size={layout === "block" ? "md" : "sm"} className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
+          <Button size="sm" className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
             <ChevronDownIcon size="sm" />
           </Button>
         </Menu.Trigger>

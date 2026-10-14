@@ -109,3 +109,6 @@ export const NavigationContext = createContext<NavigationValue>({ route: DEFAULT
 export function useNavigation() {
   return useContext(NavigationContext);
 }
+
+/** Target of the skip link and of keyboard navigation (screens with their own header put it on their main). */
+export const MAIN_ID = "main-content";

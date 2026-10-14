@@ -110,7 +110,7 @@ describe("shell in two levels (D120)", () => {
     await within(sidebar()).findByRole("group", { name: "Jump to" });
     expect(screen.queryByRole("button", { name: /^Deploy status/ })).not.toBeInTheDocument();
     await openScreen(user, "Overview");
-    const card = await screen.findByRole("button", { name: "Deploy status: In sync" });
-    expect(screen.getByRole("banner")).not.toContainElement(card);
+    // In sync there is nothing to show (board JogoVisaoGeral): the card appears only when something is pending.
+    expect(screen.queryByRole("button", { name: /^Deploy status/ })).not.toBeInTheDocument();
   });
 });

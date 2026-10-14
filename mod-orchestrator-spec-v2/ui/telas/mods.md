@@ -12,71 +12,51 @@ Responder: quais mods tenho, quais estão habilitados, em que ordem, quem está 
 
 Reproduz: toolbar no topo, tabela com filtros por coluna, toggle de status por linha, painel de detalhes à direita, barra de ações de multi-seleção, dropzone na base, histórico e categorias pela toolbar, ações por linha em menu. Divergências: coluna Prioridade + arrastar + separadores (divergência 6), linguagem "vence" (7).
 
-## 3. Layout
+## 3. Layout (prancha `JogoMods`, D127)
 
 ```
-[título da página: Mods]
-[◆ 142 de 380 ativos] [▣ 48 GB em disco]                 (fila ³) (importar) (implantação) (…)  [Adicionar mods]
-Faixa "N mods esperam a sua escolha" [Abrir fila]   (só se houver decisão pendente)
-Faixa de problemas e de ciclo (como antes)
-FilterBar: [busca por nome ou tag] [Todos 380 | Ativos 142 | Desligados 238] [Categoria ▾] [Conflitos ▾]   [Lista | Aninhada | Abas] [Colunas ▾]
-(visão Abas) [Todos 380] [▣ Correções 18] [▣ Gráficos 96] … [Sem categoria n]
-┌──────────────────────────────────────────────────────────────────────────┬──────────────┐
-│ Ativo  #  Mod (nome · tags)            Categoria      Conflitos  Atualizado  Tamanho │  Inspector  │
-└──────────────────────────────────────────────────────────────────────────┴──────────────┘
-Barra de multi-seleção (≥2) e dropzone compacta, como antes.
+Mods  [◆ 142 de 380 ativos] [▣ 48 GB em disco]          [≡ 3] [⇩] [🚀 64%] [⋯] │ [+ Adicionar mods]     (linha de 76 px)
+[🔍 Buscar por nome ou tag (320 px)] [Filtros] [Todos 380 | Ativos 142 | Desligados 238]      [Lista | Aninhada | Abas]  (48 px)
+┌ Ativo │ Mod (nome / tags embaixo)            │ Categoria        │ Conflitos      │ Atualizado │ Tamanho ┐ (cabeçalho 36 px)
+│  ◉    │ Correções Não Oficiais               │ ▣ Correções      │ Vence 3        │ há 3 dias  │  220 MB │ (linhas de 54 px)
+│       │ • essencial                          │                  │                │            │         │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+Faixas de escolha pendente, problemas e ciclo aparecem acima da tabela só quando há algo. A tela inteira aceita arquivos soltos; não há dropzone fixa (só no estado vazio).
 
 ## 4. Cabeçalho
 
+`ResourcePage layout="workspace"`: título, chips (`Indicator variant="chip"`: ativos e disco) e as ações numa linha.
+
 | Elemento | Comportamento |
 |---|---|
-| Chip "N de M ativos" | `Indicator variant="chip"`; conta mods instalados e habilitados no perfil ativo sobre o total da lista |
-| Chip "tamanho em disco" | soma do tamanho dos mods instalados |
-| Fila (ícone com selo) | abre o modal da fila (§5.6); o selo conta operações na fila e mods importados sem instalar; fica `warning` quando alguma pede escolha |
-| Importar (ícone, menu) | "De arquivos…" e "De pasta…"; importar de outro gerenciador entra na RD16 |
-| Implantação (ícone, menu) | Implantar (desabilitado com o motivo), Prévia, Limpar; o ícone gira enquanto implanta |
-| Mais ações (ícone, menu) | Categorias e tags, Regras, Novo separador, Histórico da ordem, Histórico, abrir pastas (jogo, staging, arquivos, mod selecionado). Fica assim até a parte 17b |
-| **Adicionar mods** (primário) | seletor de arquivos; o único `high` da região |
-
-Botão só com ícone tem `aria-label`, dica com o mesmo texto e selo decorativo (o nome diz a contagem).
+| Fila (botão com borda, ícone e contador em pílula) | abre o modal da fila; conta operações na fila e importados sem instalar; a pílula fica `warning` quando alguém pede escolha |
+| Importar (ícone) | "De arquivos…" e "De pasta…" |
+| Implantação | ícone em repouso; implantando, "64%" na cor de informação; menu Implantar, Prévia, Limpar |
+| Mais ações (ícone) | Categorias e tags, Regras, Histórico da ordem, Histórico, abrir pastas |
+| **Adicionar mods** (primário, depois de um divisor) | seletor de arquivos |
 
 ## 5. Tabela
 
 ### 5.1 Colunas
 
-| Coluna | Padrão | Conteúdo | Ordenável |
-|---|---|---|---|
-| Ativo | sim | toggle (habilitado, desabilitado, não instalado, instalando) | sim |
-| Prioridade (#) | sim | número; vazio para "não instalado" | sim (padrão) |
-| Mod | sim | nome, variante, nota e as tags do mod com a cor da definição (D123); tag sem definição fica sem cor | sim |
-| Categoria | sim | selo `Tag` com a cor e o ícone da categoria; último nível ou caminho (`ui.hideTopLevelCategory`) | sim |
-| Conflitos | sim | indicador core/05 §5.2; clique abre o editor de conflitos | sim |
-| Atualizado | sim | tempo desde a instalação atual ("há 3 dias"); a data completa na dica | sim |
-| Tamanho | sim | tamanho instalado | sim |
-| Versão, Tipo, Conteúdo, Autor, Instalado em, Habilitado em, Origem, Variante | não | como antes | — |
-
-As tags ficam na mesma linha do nome, porque a linha da `DataTable` tem altura fixa (D-036); a prancha as mostra abaixo do nome.
+Fixas, sem seletor de colunas e sem ordenação por cabeçalho: **Ativo** (switch 30×18), **Mod** (nome em cima; tags embaixo com ponto colorido, ou "sem tags"; mod desligado com texto apagado), **Categoria** (só na Lista: quadrado com ícone e cor + nome), **Conflitos** ("Vence N", "Perde N", "Vence N, perde M", "A resolver · N", "Sem conflito", "Instalando", "Na fila", com cor de significado), **Atualizado** ("há 3 dias", data na dica) e **Tamanho**. A ordem das linhas é a prioridade do perfil ativo.
 
 ### 5.1.1 Filtro rápido e busca
-- Filtro rápido `SegmentedControl` com contagem: Todos, Ativos, Desligados. "Não instalados" saiu do filtro: eles aparecem em Todos e na fila.
-- A busca casa nome, autor, origem e tags. Categoria e Conflitos continuam como selects até a parte 17b.
+- Busca de 320 px; casa nome, autor, origem e tags.
+- Botão "Filtros" abre um painel com Categoria e Conflitos (com contagem de filtros ativos); o painel definitivo é a prancha `JogoModsMenus`, ainda em revisão.
+- Filtro rápido com contagem: Todos, Ativos, Desligados.
 
 ### 5.1.2 Visões (D123)
 - **Lista**: a tabela com prioridade, separadores e arrastar.
-- **Aninhada**: a mesma tabela agrupada pela categoria (caminho completo), com grupos que recolhem.
-- **Abas**: uma aba por categoria de primeiro nível com ícone, cor e contagem, mais "Todos" e "Sem categoria" (quando houver); a aba filtra a lista. Sem categorias, a tela convida a criar a primeira.
-- A visão é a setting de instância `mods.view`, gravada ao trocar. Aninhada e Abas só agrupam a exibição: a prioridade só se arrasta na Lista, e a nota da tabela diz isso.
+- **Aninhada** (prancha `JogoModsAninhada`): grupos de 42 px por categoria (seta, ícone colorido, nome, "N de M ativos"), sem a coluna Categoria.
+- **Abas** (prancha `JogoModsAbas`): faixa de abas dentro do cartão da tabela (Todos, categorias de primeiro nível com ícone e contagem, Sem categoria), sem a coluna Categoria. Sem categorias, a tela convida a criar a primeira.
+- A visão é a setting de instância `mods.view`, gravada ao trocar.
 
-### 5.2 Ordenação e reordenação
-- Ordenação padrão: Prioridade crescente (maior prioridade embaixo, "quem está mais abaixo vence"; texto de ajuda no cabeçalho da coluna).
-- Arrastar para reordenar e separadores visíveis **só** quando ordenado por Prioridade e sem filtro que esconda itens entre origem e destino; caso contrário a alça some e há tooltip explicando.
-- Reordenação inválida: fluxo F-04.
-- Menu da linha: "Mover para o topo/fundo", "Mover para…" (número ou "logo abaixo de <mod>"), "Mover para o separador…".
+### 5.2 Ordem
 
-### 5.3 Separadores
-- Linha de largura total com rótulo, cor opcional, contagem de mods habilitados/total, recolher/expandir.
-- Menu: renomear, cor, excluir, habilitar/desabilitar todos do bloco.
+A prancha não tem coluna de prioridade, alça de arrastar nem separadores (D127). A ordem muda por "Mover para…" (menu da linha e barra de multi-seleção) e pela ação "Reordenar" do detalhe do mod; recusa e alternativas continuam no DLG-11. Separadores já gravados continuam no ModOrder, mas a tela não os mostra.
 
 ### 5.4 Estados de linha
 Habilitado (normal), desabilitado (texto `fg-secondary`), não instalado (itálico + ação "Instalar"), instalando (progresso na linha, sem ações), com erro (ícone `danger` na coluna Problemas), destacado pelo usuário (marca de cor na borda esquerda).

@@ -126,7 +126,11 @@ export interface DataTableProps<T>
   defaultCollapsedGroups?: readonly string[];
   onCollapsedGroupsChange?: (groups: string[]) => void;
 
-  density?: "comfortable" | "compact";
+  /**
+   * Row height: `compact` 28, `comfortable` 32 (default), `relaxed` 54 for rows with two
+   * lines (a name and its tags underneath).
+   */
+  density?: "comfortable" | "compact" | "relaxed";
   /** Overrides the density row height (px). */
   rowHeight?: number;
   /** Virtualize above this many display items (default 100). */
@@ -153,7 +157,9 @@ export interface DataTableProps<T>
 }
 
 /** Linha de dados compacta (D-033). Em px porque a virtualização precisa do número. */
-const ROW_HEIGHT = { comfortable: 32, compact: 28 } as const;
+const ROW_HEIGHT = { comfortable: 32, compact: 28, relaxed: 54 } as const;
+/** Group header rows: the row height, except `relaxed` (a one-line header of 42). */
+const GROUP_HEIGHT = { comfortable: 32, compact: 28, relaxed: 42 } as const;
 const DEFAULT_WIDTH = 160;
 const RESIZE_STEP = 16;
 const HANDLE_WIDTH = 28;
@@ -252,6 +258,7 @@ export function DataTable<T>({
   ...props
 }: DataTableProps<T>) {
   const rowHeight = rowHeightProp ?? ROW_HEIGHT[density];
+  const groupHeight = rowHeightProp ?? GROUP_HEIGHT[density];
   const scrollRef = useRef<HTMLDivElement>(null);
   const idPrefix = `dt${useId().replace(/:/g, "")}`;
 
@@ -404,7 +411,7 @@ export function DataTable<T>({
   const virtualizer = useVirtualizer({
     count: virtualize ? items.length : 0,
     getScrollElement: () => scrollRef.current,
-    estimateSize: () => rowHeight,
+    estimateSize: (index) => (items[index]?.kind === "group" ? groupHeight : rowHeight),
     overscan: 10,
     getItemKey: (index) => items[index]?.key ?? index,
   });
@@ -596,7 +603,7 @@ export function DataTable<T>({
           {...common}
           aria-expanded={!item.collapsed}
           className={cn(rowVariants({ state: "group", focused }), "cursor-pointer")}
-          style={{ ...gridStyle, height: rowHeight, ...style }}
+          style={{ ...gridStyle, height: groupHeight, ...style }}
           onClick={() => {
             moveFocus(item.key);
             toggleGroup(item.group);
@@ -760,7 +767,7 @@ export function DataTable<T>({
                   aria-sort={ariaSort}
                   className={cn(
                     "relative flex min-w-0 items-center font-medium text-fg-muted",
-                    density === "compact" ? "h-7" : "h-8",
+                    density === "compact" ? "h-7" : density === "relaxed" ? "h-9" : "h-8",
                   )}
                 >
                   {column.sortable ? (

@@ -5,7 +5,7 @@ import type { MenuBadge, WorkspaceItemId } from "../bridge/types";
 import { useI18n } from "../i18n/i18n";
 import { AboutDialog, ShortcutsDialog } from "./HelpDialogs";
 import { CommandPalette } from "./CommandPalette";
-import { APP_END, APP_START, GROUP_LABELS, VIEWS, isWorkspaceView, useNavigation, workspaceGroups, type Route } from "./navigation";
+import { APP_END, APP_START, GROUP_LABELS, MAIN_ID, VIEWS, isWorkspaceView, useNavigation, workspaceGroups, type Route } from "./navigation";
 import { useGlobalShortcuts } from "./shortcuts";
 import { TopBar, type ShellDialog } from "./TopBar";
 import { OperationsDrawer } from "../features/operations/OperationsDrawer";
@@ -18,8 +18,10 @@ import { useAction } from "../features/games/use-action";
 
 const SIDEBAR_KEY = "mo.sidebar.collapsed";
 
-/** Target of the skip link and of keyboard navigation. */
-const MAIN_ID = "main-content";
+/** Screens whose title sits on their own header line, next to their numbers and actions (boards). */
+const OWN_HEADER: ReadonlySet<string> = new Set(["mods"]);
+
+
 
 /** Sidebar collapse is presentation state (docs-ia/03 rule 1): kept per viewer. */
 function readCollapsed(): boolean {
@@ -206,12 +208,19 @@ function Shell({ children }: { children: ReactNode }) {
       }
       sidebar={sidebar}
     >
-      <main id={MAIN_ID} tabIndex={-1} className="flex min-h-full flex-col focus:outline-none">
-        <div data-slot="page-title" className="px-4 pt-5 md:px-6">
-          <h1 className="m-0 text-title font-semibold text-fg">{t(VIEWS[route.view].label)}</h1>
+      {OWN_HEADER.has(route.view) ? (
+        // Screens redone by their board draw their own header line and main (ResourcePage workspace).
+        <div className="flex h-full min-h-0 flex-col">
+          {children}
         </div>
-        {children}
-      </main>
+      ) : (
+        <main id={MAIN_ID} tabIndex={-1} className="flex min-h-full flex-col focus:outline-none">
+          <div data-slot="page-title" className="px-4 pt-5 md:px-6">
+            <h1 className="m-0 text-title font-semibold text-fg">{t(VIEWS[route.view].label)}</h1>
+          </div>
+          {children}
+        </main>
+      )}
     </Chrome.Root>
   );
 

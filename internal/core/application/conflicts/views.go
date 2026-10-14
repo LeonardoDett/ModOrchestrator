@@ -475,6 +475,10 @@ type Indicator struct {
 	Indicator conflict.Indicator
 	// Files disputed with enabled mods; Unreviewed pairs needing review.
 	Files, Unreviewed int
+	// WinsAgainst and LosesTo count the opponents the mod wins at least
+	// one file against, and those it loses at least one file to (the
+	// "Vence 3", "Perde 2" of the Mods list).
+	WinsAgainst, LosesTo int
 }
 
 // Indicators returns the indicator of every mod of the active profile.
@@ -492,14 +496,23 @@ func (s *Service) Indicators(ctx context.Context, instance game.InstanceID) (map
 		}
 	}
 	unreviewed := map[mod.ID]int{}
+	wins, loses := map[mod.ID]int{}, map[mod.ID]int{}
 	for _, ps := range conflict.Pairs(st.eval.Conflicts) {
 		if v := st.pairView(ps); v.NeedsReview {
 			unreviewed[ps.Pair.A]++
 			unreviewed[ps.Pair.B]++
 		}
+		if ps.WinsA > 0 {
+			wins[ps.Pair.A]++
+			loses[ps.Pair.B]++
+		}
+		if ps.WinsB > 0 {
+			wins[ps.Pair.B]++
+			loses[ps.Pair.A]++
+		}
 	}
 	for _, sl := range st.order {
-		out[sl.Mod] = Indicator{Indicator: conflict.ModIndicator(sl.Mod, st.eval.Provided[sl.Mod], st.eval.Conflicts), Files: files[sl.Mod], Unreviewed: unreviewed[sl.Mod]}
+		out[sl.Mod] = Indicator{Indicator: conflict.ModIndicator(sl.Mod, st.eval.Provided[sl.Mod], st.eval.Conflicts), Files: files[sl.Mod], Unreviewed: unreviewed[sl.Mod], WinsAgainst: wins[sl.Mod], LosesTo: loses[sl.Mod]}
 	}
 	return out, nil
 }

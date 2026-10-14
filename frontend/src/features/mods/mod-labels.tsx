@@ -60,6 +60,8 @@ export function formatSize(language: string, bytes: number): string {
     value /= 1024;
     unit++;
   }
+  // "1.000 bytes" does not fit the Tamanho column (board: "4 MB", "1,2 GB"): bytes use "B".
+  if (unit === 0) return `${new Intl.NumberFormat(language, { maximumFractionDigits: 0 }).format(value)} B`;
   return new Intl.NumberFormat(language, {
     style: "unit",
     unit: UNITS[unit],
