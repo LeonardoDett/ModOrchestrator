@@ -1,56 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { FolderIcon, TriangleAlertIcon, XIcon } from "dettmann-ui/icons";
+import { FolderIcon } from "dettmann-ui/icons";
 import { Alert, Button, Input, Modal, Radio, Stack, Tree, Typography, type TreeNode } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, type UIError } from "../../bridge/errors";
 import type { ImportAnswer, QueueItem } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
-import { OperationStatusBadge, operationStepLabel } from "../operations/operation-labels";
 import { FomodWizard } from "./FomodWizard";
-
-/** The visible install queue (core/00 §5, D065): one item at a time, cancellable per item. */
-export function ImportQueuePanel({ items, onDecide }: { items: readonly QueueItem[]; onDecide: (item: QueueItem) => void }) {
-  const i18n = useI18n();
-  const { t, tp } = i18n;
-  const backend = useBackend();
-  const run = useAction();
-  if (items.length === 0) return null;
-  return (
-    <section aria-labelledby="import-queue" className="rounded-card border border-border bg-surface p-3">
-      <Typography id="import-queue" variant="heading-6" color="fg" className="mb-2">
-        {tp("mods.queue.title", items.length)}
-      </Typography>
-      <ul className="flex max-h-48 flex-col gap-1 overflow-auto">
-        {items.map((item) => (
-          <li key={item.operationId} className="flex items-center gap-3 rounded-control px-2 py-1 text-sm hover:bg-state-hover">
-            <OperationStatusBadge status={item.status} />
-            <span className="min-w-0 flex-1 truncate text-fg" title={item.label}>
-              {item.label}
-            </span>
-            {item.decision ? (
-              <Button emphasis="high" size="sm" intent="warning" startIcon={<TriangleAlertIcon size="sm" />} onClick={() => onDecide(item)}>
-                {t("mods.queue.decide")}
-              </Button>
-            ) : item.step ? (
-              <span className="shrink-0 text-xs text-fg-muted">{operationStepLabel(i18n, item.step)}</span>
-            ) : null}
-            <Button
-              size="icon-sm"
-              emphasis="low"
-              disabled={!item.cancellable}
-              title={item.cancellable ? undefined : t("error.operation_not_cancellable")}
-              aria-label={t("mods.queue.cancel", { name: item.label })}
-              onClick={() => void run(() => backend.cancelImport(item.operationId))}
-            >
-              <XIcon size="sm" />
-            </Button>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
 
 function folderTree(folders: readonly string[]): TreeNode<string>[] {
   const roots: TreeNode<string>[] = [];

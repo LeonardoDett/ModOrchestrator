@@ -3,7 +3,7 @@ import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
-import type { Backend, FomodSelection, FomodView, ImportAnswer, ModDetails, ModRow, QueueItem } from "../bridge/types";
+import type { Backend, Category, FomodSelection, FomodView, ImportAnswer, ModDetails, ModRow, QueueItem } from "../bridge/types";
 
 const row = (over: Partial<ModRow>): ModRow => ({
   id: "m1",
@@ -29,11 +29,17 @@ const row = (over: Partial<ModRow>): ModRow => ({
 
 function world() {
   const state = {
-    mods: [row({}), row({ id: "m2", name: "Textures", enabled: false }), row({ id: "m3", name: "Pending", state: "imported" })],
+    mods: [
+      row({ category: "c1", categoryPath: ["Interface"], categoryColor: "violet", categoryIcon: "monitor", tags: ["essencial"] }),
+      row({ id: "m2", name: "Textures", enabled: false }),
+      row({ id: "m3", name: "Pending", state: "imported" }),
+    ],
+    categories: [{ id: "c1", name: "Interface", order: 0, color: "violet", icon: "monitor" }] as Category[],
     queue: [] as QueueItem[],
     calls: [] as string[],
     answers: [] as ImportAnswer[],
     dropped: null as null | ((paths: string[]) => void),
+    settings: [] as string[],
   };
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((l) => l());
@@ -50,7 +56,22 @@ function world() {
     workspace: async () => ({ active: { id: "i1", name: "Skyrim", gameName: "Skyrim" }, instances: [{ id: "i1", name: "Skyrim", gameName: "Skyrim" }], items: ["overview", "mods"] }),
     modList: async () => state.mods,
     importQueue: async () => state.queue,
-    categories: async () => [{ id: "c1", name: "Interface", order: 0 }],
+    categories: async () => state.categories,
+    tags: async () => [{ name: "essencial", color: "amber", order: 0, mods: 1 }],
+    listInstanceSettings: async () => [],
+    setInstanceSetting: async (_i, key, value) => {
+      state.settings.push(`${key}=${value}`);
+    },
+    installAll: async (_i, ids) => {
+      state.calls.push(`installAll:${ids.join(",")}`);
+      return ["op9"];
+    },
+    saveCategory: async (_i, c) => {
+      state.calls.push(`category:${c.name}:${c.parent ?? ""}:${c.color ?? ""}:${c.icon ?? ""}`);
+      state.categories = [...state.categories, { ...c, id: "c2" }];
+      notify();
+      return "c2";
+    },
     modDetails: async (id): Promise<ModDetails> => ({ ...state.mods.find((m) => m.id === id)!, description: "", notes: "", tags: [], modTypes: [] }),
     modFiles: async () => ({ total: 0, files: [] }),
     modHistory: async () => [],
@@ -88,6 +109,13 @@ async function openMods(user: ReturnType<typeof userEvent.setup>) {
   await openScreen(user, "Mods");
 }
 
+/** A decision waits in the queue: the band opens the queue, the item opens the dialog. */
+async function openDecision(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(await screen.findByRole("button", { name: "Open queue" }));
+  const queue = await screen.findByRole("dialog", { name: "Install queue" });
+  await user.click(within(queue).getByRole("button", { name: "Choose options" }));
+}
+
 describe("Mods screen (F4)", () => {
   beforeEach(() => localStorage.clear());
 
@@ -113,7 +141,7 @@ describe("Mods screen (F4)", () => {
     render(<App backend={backend} />);
     await openMods(user);
     await screen.findByText("SkyUI");
-    await user.type(screen.getByRole("textbox", { name: "Search mods" }), "tex");
+    await user.type(screen.getByRole("textbox", { name: "Search by name or tag" }), "tex");
     expect(screen.queryByText("SkyUI")).not.toBeInTheDocument();
     expect(screen.getByText("Textures")).toBeInTheDocument();
   });
@@ -140,7 +168,7 @@ describe("Mods screen (F4)", () => {
       },
     ];
     notify();
-    await user.click(await screen.findByRole("button", { name: "Decide…" }));
+    await openDecision(user);
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Folder to install: Option A")).toBeInTheDocument();
     await user.click(within(dialog).getByText("Option B"));
@@ -215,7 +243,7 @@ describe("Mods screen (F4)", () => {
       },
     ];
     notify();
-    await user.click(await screen.findByRole("button", { name: "Decide…" }));
+    await openDecision(user);
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Step 1 of 1")).toBeInTheDocument();
     expect(await within(dialog).findByRole("radio", { name: "2K" })).toHaveAttribute("aria-checked", "true");
@@ -272,7 +300,7 @@ describe("Mods screen (F4)", () => {
       },
     ];
     notify();
-    await user.click(await screen.findByRole("button", { name: "Decide…" }));
+    await openDecision(user);
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("The choices of the previous installation are loaded.")).toBeInTheDocument();
     expect(await within(dialog).findByRole("radio", { name: "SE" })).toHaveAttribute("aria-checked", "true");
@@ -293,5 +321,77 @@ describe("Mods screen (F4)", () => {
     await user.click(within(dialog).getByRole("checkbox", { name: /Also remove the original files/ }));
     await user.click(within(dialog).getByRole("button", { name: "Remove…" }));
     await waitFor(() => expect(state.calls).toContain("remove:m1:true"));
+  });
+
+  it("shows the header counts, the quick filter and the category and tags of each mod", async () => {
+    const user = userEvent.setup();
+    const { backend } = world();
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    expect(screen.getByText("of 3 enabled")).toBeInTheDocument();
+    expect(screen.getByText("essencial")).toBeInTheDocument();
+    expect(screen.getAllByText("Interface").length).toBeGreaterThan(0);
+    await user.click(screen.getByRole("radio", { name: /Disabled/ }));
+    expect(screen.queryByText("SkyUI")).not.toBeInTheDocument();
+    expect(screen.getByText("Textures")).toBeInTheDocument();
+  });
+
+  it("switches the view, saves it for the game and lists the categories as tabs", async () => {
+    const user = userEvent.setup();
+    const { state, backend } = world();
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    await user.click(screen.getByRole("radio", { name: "Tabs" }));
+    await waitFor(() => expect(state.settings).toContain("mods.view=tabs"));
+    const tabs = screen.getByRole("tablist", { name: "Categories" });
+    await user.click(within(tabs).getByRole("tab", { name: /Interface/ }));
+    expect(screen.getByText("SkyUI")).toBeInTheDocument();
+    expect(screen.queryByText("Textures")).not.toBeInTheDocument();
+    await user.click(within(tabs).getByRole("tab", { name: /No category/ }));
+    expect(screen.getByText("Textures")).toBeInTheDocument();
+  });
+
+  it("invites to create a category when a game has none (generic game)", async () => {
+    const user = userEvent.setup();
+    const { state, backend } = world();
+    state.categories = [];
+    state.mods = state.mods.map((m) => ({ ...m, category: "", categoryPath: [], categoryColor: undefined, categoryIcon: undefined }));
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    await user.click(screen.getByRole("radio", { name: "Tabs" }));
+    expect(await screen.findByText("No categories yet. Create one to see the mods by category.")).toBeInTheDocument();
+  });
+
+  it("installs every imported mod from the queue in one go (D124)", async () => {
+    const user = userEvent.setup();
+    const { state, backend } = world();
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    await user.click(screen.getByRole("button", { name: "Install queue, 1 item" }));
+    const queue = await screen.findByRole("dialog", { name: "Install queue" });
+    expect(within(queue).getByText("Pending")).toBeInTheDocument();
+    await user.click(within(queue).getByRole("button", { name: "Install 1" }));
+    await waitFor(() => expect(state.calls).toContain("installAll:m3"));
+  });
+
+  it("creates a category with a palette color and an icon in the Organization dialog (D123)", async () => {
+    const user = userEvent.setup();
+    const { state, backend } = world();
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    await user.click(screen.getByRole("button", { name: "More actions" }));
+    await user.click(await screen.findByRole("menuitem", { name: "Categories and tags" }));
+    const dialog = await screen.findByRole("dialog", { name: "Mod organization" });
+    await user.click(within(dialog).getByRole("button", { name: "New category" }));
+    await user.type(within(dialog).getByRole("textbox", { name: "Category name" }), "Textures");
+    await user.click(within(dialog).getByRole("radio", { name: "Green" }));
+    await user.click(within(dialog).getByRole("radio", { name: "Image" }));
+    await user.click(within(dialog).getByRole("button", { name: "Save category" }));
+    await waitFor(() => expect(state.calls).toContain("category:Textures::green:image"));
   });
 });

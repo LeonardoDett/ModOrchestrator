@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { GitBranch, Palette, StickyNote } from "lucide-react";
 import { ChevronDownIcon, ChevronRightIcon } from "dettmann-ui/icons";
 import { DataTable, Indicator, StatusToggle, Tag, type DataTableColumn, type DataTableRowMove, type DataTableSort, Icon } from "dettmann-ui";
-import type { ConflictIndicator, ModRow, Separator } from "../../bridge/types";
+import type { ConflictIndicator, ModRow, Separator, TagInfo } from "../../bridge/types";
+import { CategoryTag, ModTags } from "./category-look";
 import { ConflictIndicatorCell } from "../conflicts/conflict-labels";
 import type { Density } from "../../app/settings-context";
 import { useI18n } from "../../i18n/i18n";
@@ -10,7 +11,7 @@ import { categoryText, contentLabel, formatSize, highlightIntent, toggleLabels, 
 import type { ListRow } from "./mod-order";
 
 /** Columns shown by default (ui/telas/mods.md §5.1, without the F9 ones). */
-export const DEFAULT_HIDDEN = ["type", "content", "author", "installedAt", "enabledAt", "source", "variant"];
+export const DEFAULT_HIDDEN = ["version", "type", "content", "author", "installedAt", "enabledAt", "source", "variant"];
 
 /** The default and only reorderable ordering: priority, lowest first (§5.2). */
 export const PRIORITY_SORT: DataTableSort = { columnId: "priority", direction: "asc" };
@@ -25,6 +26,7 @@ const SORT_KEYS: Record<string, (row: Extract<ListRow, { kind: "mod" }>) => stri
   type: ({ mod: r }) => r.typeName.toLowerCase(),
   author: ({ mod: r }) => r.author.toLowerCase(),
   installedAt: ({ mod: r }) => r.installedAt ?? "",
+  updated: ({ mod: r }) => r.installedAt ?? "",
   enabledAt: ({ mod: r }) => r.enabledAt ?? "",
   source: ({ mod: r }) => r.source.toLowerCase(),
   variant: ({ mod: r }) => (r.variantLabel ?? "").toLowerCase(),
@@ -69,6 +71,8 @@ interface ModsTableProps {
   onOpenConflicts: (mod: string) => void;
   density: Density;
   groupByCategory: boolean;
+  /** Tag definitions by lower-case name, for their colors (D123). */
+  tagDefs: ReadonlyMap<string, TagInfo>;
   empty?: React.ReactNode;
 }
 
@@ -81,6 +85,7 @@ export function useModColumns(
   categoryLastOnly: boolean,
   conflicts: ReadonlyMap<string, ConflictIndicator> = new Map(),
   onOpenConflicts: (mod: string) => void = () => {},
+  tagDefs: ReadonlyMap<string, TagInfo> = new Map(),
 ) {
   const i18n = useI18n();
   const { t, tp } = i18n;
@@ -151,6 +156,11 @@ export function useModColumns(
               <span className="truncate">{row.mod.name}</span>
               {row.mod.variantLabel ? <Tag size="sm">{row.mod.variantLabel}</Tag> : null}
               {row.mod.hasNotes ? <Indicator icon={StickyNote} intent="subtle" label={t("mods.hasNotes")} /> : null}
+              {row.mod.tags && row.mod.tags.length > 0 ? (
+                <span className="flex min-w-0 shrink items-center gap-1 overflow-hidden" aria-label={t("mods.tagsLabel", { names: row.mod.tags.join(", ") })}>
+                  <ModTags names={row.mod.tags} defs={tagDefs} />
+                </span>
+              ) : null}
             </span>
           ),
       },
@@ -160,7 +170,13 @@ export function useModColumns(
         label: t("mods.column.category"),
         width: 180,
         sortable: true,
-        cell: mod((row) => categoryText(row, categoryLastOnly) || <span className="text-fg-subtle">{t("mods.noCategory")}</span>),
+        cell: mod((row) =>
+          row.categoryPath.length > 0 ? (
+            <CategoryTag name={categoryText(row, categoryLastOnly)} color={row.categoryColor} icon={row.categoryIcon} />
+          ) : (
+            <span className="text-fg-subtle">{t("mods.noCategory")}</span>
+          ),
+        ),
       },
       {
         id: "conflicts",
@@ -168,6 +184,13 @@ export function useModColumns(
         width: 110,
         sortable: true,
         cell: mod((row) => <ConflictIndicatorCell value={conflicts.get(row.id)} onOpen={() => onOpenConflicts(row.id)} />),
+      },
+      {
+        id: "updated",
+        label: t("mods.column.updated"),
+        width: 130,
+        sortable: true,
+        cell: mod((row) => <span title={i18n.formatAbsolute(row.installedAt)}>{i18n.formatAgo(row.installedAt)}</span>),
       },
       {
         id: "size",
@@ -215,13 +238,13 @@ export function useModColumns(
         ),
       },
     ];
-  }, [i18n, t, tp, onToggle, onToggleSeparator, categoryLastOnly, conflicts, onOpenConflicts]);
+  }, [i18n, t, tp, onToggle, onToggleSeparator, categoryLastOnly, conflicts, onOpenConflicts, tagDefs]);
 }
 
 /** The Mods table (ui/telas/mods.md §5) over the lib DataTable (L1, L2). */
 export function ModsTable(props: ModsTableProps) {
   const { t } = useI18n();
-  const columns = useModColumns(props.onToggle, props.onToggleSeparator, props.categoryLastOnly, props.conflicts, props.onOpenConflicts);
+  const columns = useModColumns(props.onToggle, props.onToggleSeparator, props.categoryLastOnly, props.conflicts, props.onOpenConflicts, props.tagDefs);
   return (
     <DataTable
       aria-label={t("mods.tableLabel")}

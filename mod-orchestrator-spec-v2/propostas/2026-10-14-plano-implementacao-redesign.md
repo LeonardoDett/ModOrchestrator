@@ -219,7 +219,9 @@ Concluída em 2026-10-14 (D126). Feito: sugestão por dependência e por regra d
 - **Pronto quando:** testes de domínio (sugestão determinística; aceitar sugestão que fecharia ciclo é recusado como qualquer regra, D028); INV-CON-01..04 continuam passando; meta de 500 ms com 200.000 Locations mantida.
 - **Sem a capability:** vale para todo jogo, não lê nada de plugin. No `generic` sem regras de dependência não há sugestão e a tela funciona sem o selo (teste).
 
-### RD8. Mods: três visões, Organização e fila de instalação
+### RD8. Mods: três visões, Organização e fila de instalação ✅
+
+Concluída em 2026-10-14. Feito: `ui/telas/mods.md` reescrito; cabeçalho com chips (ativos, disco) e ações só com ícone (fila com selo, importar, implantação, mais ações) e "Adicionar mods" como primário; filtro rápido Todos/Ativos/Desligados com contagem; visões Lista, Aninhada e Abas gravadas em `mods.view`; selo de categoria com cor e ícone, tags com cor e coluna "Atualizado" (tempo relativo); modal Organização (Categorias e Tags, `SwatchPicker` com as 16 cores e 48 ícones); modal da fila com "Instalar todos" e faixa de escolha pendente; busca por tag. `ModsPage.test.tsx` reescrito (inclui jogo sem categorias). Diferenças da prancha: o título fica no topo da página da casca; as tags ficam na linha do nome, porque a linha da `DataTable` tem altura fixa. A rolagem com 2.000 mods não foi medida nesta fase (a tabela continua a mesma `DataTable`); fica para a RD18.
 
 - **Objetivo:** a tela principal do espaço do jogo.
 - **Entregáveis:** `ui/telas/mods.md` reescrito; visões Lista, Aninhada e Abas; cabeçalho com chips e ações só com ícone ("Adicionar mods" em destaque; fila, importar e implantar); filtro rápido; selo de categoria e tags na linha; coluna "Atualizado"; Organização (abas Categorias e Tags, com cor e ícone); modal da fila de instalação; multi-seleção e dropzone mantidas. Menu Filtros e "Mais ações" ficam como estão hoje até a parte 17b.

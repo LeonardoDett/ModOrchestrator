@@ -59,6 +59,11 @@ export function useCategories(instance: string) {
   return useBackendQuery(async (b) => (await b.categories(instance)) ?? [], [instance], { onOperationEvents: true });
 }
 
+/** Tag definitions with their mod counts (D123). */
+export function useTags(instance: string) {
+  return useBackendQuery(async (b) => (await b.tags(instance)) ?? [], [instance], { onOperationEvents: true });
+}
+
 // --- Profiles and mod order (F5). Profile commands are short and reread
 // through useAction's refresh; imports change the order through operation
 // events (D021). ---

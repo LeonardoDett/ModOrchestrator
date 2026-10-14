@@ -1,5 +1,7 @@
 # Tela: Mods
 
+Redesenho v1 (pranchas `JogoMods`, `JogoModsAninhada`, `JogoModsAbas`, `JogoOrganizacao`, `JogoOrganizacaoTags`, `JogoFilaInstalacao`; RD8, D119, D123, D124). O detalhe do mod (§6) muda para o modal de cinco abas na RD9; até lá vale o Inspector descrito aqui.
+
 Core: 02, 03, 05, 06, 04. Vortex: página Mods (`mod_management/views/ModList`, toolbar, filtros, details panel, multi-select bar, drop zone); `mod-highlight`, `mod-content`, `category_management`, `history_management`. MO2: lista de prioridade com separadores e flags de conflito.
 
 ## 1. Objetivo
@@ -13,61 +15,58 @@ Reproduz: toolbar no topo, tabela com filtros por coluna, toggle de status por l
 ## 3. Layout
 
 ```
-Toolbar: [Importar arquivo ▾] [Deploy] [Purge] | [Regras] [Categorias] [Histórico] | [Abrir ▾] [… ]
-Faixa de problemas (só se houver): "2 mods com requisitos faltando · 1 alteração externa"  [Ver]
-FilterBar: [busca] [Status ▾] [Categoria ▾] [Conflitos ▾] [Problemas ▾] [Tipo ▾]  Agrupar: [Nenhum|Separador|Categoria]  [Colunas ▾]
-┌─────────────────────────────────────────────────────────────────────┬──────────────┐
-│ ☐ ● #  Nome                     Versão Categoria   ⚡  ⛓  ⚠  Tamanho │  INSPECTOR   │
-│ ── Separador: Base ───────────────────────────────────────────────  │              │
-│ ☐ ● 1  Unofficial Patch         4.3.2  Correções   ↑   ✓     220MB │              │
-│ ☐ ○ 2  Texture Pack A           1.0    Texturas    ↕         1.2GB │              │
-│ ...                                                                 │              │
-├─────────────────────────────────────────────────────────────────────┴──────────────┤
-│ Barra de multi-seleção (≥2): "3 selecionados  [Habilitar] [Desabilitar] [Mover…] [Categoria…] [Reinstalar] [Remover] [Limpar]" │
-│ Dropzone: "Solte arquivos ou pastas aqui para importar"                                       │
-└──────────────────────────────────────────────────────────────────────────────────┘
+[título da página: Mods]
+[◆ 142 de 380 ativos] [▣ 48 GB em disco]                 (fila ³) (importar) (implantação) (…)  [Adicionar mods]
+Faixa "N mods esperam a sua escolha" [Abrir fila]   (só se houver decisão pendente)
+Faixa de problemas e de ciclo (como antes)
+FilterBar: [busca por nome ou tag] [Todos 380 | Ativos 142 | Desligados 238] [Categoria ▾] [Conflitos ▾]   [Lista | Aninhada | Abas] [Colunas ▾]
+(visão Abas) [Todos 380] [▣ Correções 18] [▣ Gráficos 96] … [Sem categoria n]
+┌──────────────────────────────────────────────────────────────────────────┬──────────────┐
+│ Ativo  #  Mod (nome · tags)            Categoria      Conflitos  Atualizado  Tamanho │  Inspector  │
+└──────────────────────────────────────────────────────────────────────────┴──────────────┘
+Barra de multi-seleção (≥2) e dropzone compacta, como antes.
 ```
 
-## 4. Toolbar
+## 4. Cabeçalho
 
-| Ação | Comportamento | Condição |
-|---|---|---|
-| **Importar arquivo** (primário) | seletor de arquivos múltiplo; menu: "Importar pasta…" | instância não bloqueada |
-| **Deploy** | deploy manual; mostra plano se houver decisão | status ≠ in_sync; desabilitado com motivo se bloqueado |
-| **Purge** | confirmação curta | há manifesto |
-| **Regras** | abre diálogo Gerenciar regras (todas as regras da instância) | — |
-| **Categorias** | abre diálogo Categorias (árvore editável) | — |
-| **Histórico** | abre Diagnostics › Histórico filtrado pela seleção atual (ou jogo) | — |
-| **Abrir ▾** | pasta do jogo, Data/targets, staging, arquivos (ArchiveStore), pasta do mod selecionado | — |
-| **…** | Verificar implantação, Verificar integridade da staging, Criar separador, Exportar lista (texto) | — |
+| Elemento | Comportamento |
+|---|---|
+| Chip "N de M ativos" | `Indicator variant="chip"`; conta mods instalados e habilitados no perfil ativo sobre o total da lista |
+| Chip "tamanho em disco" | soma do tamanho dos mods instalados |
+| Fila (ícone com selo) | abre o modal da fila (§5.6); o selo conta operações na fila e mods importados sem instalar; fica `warning` quando alguma pede escolha |
+| Importar (ícone, menu) | "De arquivos…" e "De pasta…"; importar de outro gerenciador entra na RD16 |
+| Implantação (ícone, menu) | Implantar (desabilitado com o motivo), Prévia, Limpar; o ícone gira enquanto implanta |
+| Mais ações (ícone, menu) | Categorias e tags, Regras, Novo separador, Histórico da ordem, Histórico, abrir pastas (jogo, staging, arquivos, mod selecionado). Fica assim até a parte 17b |
+| **Adicionar mods** (primário) | seletor de arquivos; o único `high` da região |
 
-Reservados (não renderizados na V1): "Verificar atualizações", "Obter mais mods", "Tutoriais".
+Botão só com ícone tem `aria-label`, dica com o mesmo texto e selo decorativo (o nome diz a contagem).
 
 ## 5. Tabela
 
 ### 5.1 Colunas
 
-| Coluna | Default | Conteúdo | Ordenável | Filtro |
-|---|---|---|---|---|
-| Seleção | sim | checkbox | — | — |
-| Status | sim | toggle (habilitado/desabilitado/não instalado/instalando/erro) | sim | Status: Habilitado, Desabilitado, Não instalado, Com erro |
-| Prioridade (#) | sim | número; vazio para "não instalado" | sim (padrão) | — |
-| Nome | sim | nome (customizado se houver) + destaque (cor/ícone) + indicador de nota | sim | busca |
-| Versão | sim | texto | sim | — |
-| Categoria | sim | último nível ou caminho | sim | árvore |
-| Conflitos | sim | indicador core/05 §5.2 (vence, perde, misto, totalmente sobrescrito, redundante); clique abre Editor de conflitos do mod | sim | Tem conflito, Não revisado, Totalmente sobrescrito |
-| Dependências | sim | ok / faltando / incompatível | sim | Com problema |
-| Problemas | sim | contagem de diagnósticos do mod | sim | Com problema |
-| Tamanho | sim | tamanho instalado | sim | — |
-| Tipo | não | ModType | sim | tipo |
-| Conteúdo | não | ícones de ContentFlags (máx. 4 + "+n") | não | contém: plugin, textura, SKSE… |
-| Autor | não | | sim | busca |
-| Instalado em | não | data (relativa, setting) | sim | período |
-| Habilitado em | não | data | sim | período |
-| Origem | não | "Arquivo local" + nome do archive | sim | — |
-| Variante | não | rótulo | sim | — |
+| Coluna | Padrão | Conteúdo | Ordenável |
+|---|---|---|---|
+| Ativo | sim | toggle (habilitado, desabilitado, não instalado, instalando) | sim |
+| Prioridade (#) | sim | número; vazio para "não instalado" | sim (padrão) |
+| Mod | sim | nome, variante, nota e as tags do mod com a cor da definição (D123); tag sem definição fica sem cor | sim |
+| Categoria | sim | selo `Tag` com a cor e o ícone da categoria; último nível ou caminho (`ui.hideTopLevelCategory`) | sim |
+| Conflitos | sim | indicador core/05 §5.2; clique abre o editor de conflitos | sim |
+| Atualizado | sim | tempo desde a instalação atual ("há 3 dias"); a data completa na dica | sim |
+| Tamanho | sim | tamanho instalado | sim |
+| Versão, Tipo, Conteúdo, Autor, Instalado em, Habilitado em, Origem, Variante | não | como antes | — |
 
-Seletor de colunas lembra visibilidade/largura/ordem por jogo.
+As tags ficam na mesma linha do nome, porque a linha da `DataTable` tem altura fixa (D-036); a prancha as mostra abaixo do nome.
+
+### 5.1.1 Filtro rápido e busca
+- Filtro rápido `SegmentedControl` com contagem: Todos, Ativos, Desligados. "Não instalados" saiu do filtro: eles aparecem em Todos e na fila.
+- A busca casa nome, autor, origem e tags. Categoria e Conflitos continuam como selects até a parte 17b.
+
+### 5.1.2 Visões (D123)
+- **Lista**: a tabela com prioridade, separadores e arrastar.
+- **Aninhada**: a mesma tabela agrupada pela categoria (caminho completo), com grupos que recolhem.
+- **Abas**: uma aba por categoria de primeiro nível com ícone, cor e contagem, mais "Todos" e "Sem categoria" (quando houver); a aba filtra a lista. Sem categorias, a tela convida a criar a primeira.
+- A visão é a setting de instância `mods.view`, gravada ao trocar. Aninhada e Abas só agrupam a exibição: a prioridade só se arrasta na Lista, e a nota da tabela diz isso.
 
 ### 5.2 Ordenação e reordenação
 - Ordenação padrão: Prioridade crescente (maior prioridade embaixo, "quem está mais abaixo vence"; texto de ajuda no cabeçalho da coluna).
@@ -81,6 +80,20 @@ Seletor de colunas lembra visibilidade/largura/ordem por jogo.
 
 ### 5.4 Estados de linha
 Habilitado (normal), desabilitado (texto `fg-secondary`), não instalado (itálico + ação "Instalar"), instalando (progresso na linha, sem ações), com erro (ícone `danger` na coluna Problemas), destacado pelo usuário (marca de cor na borda esquerda).
+
+### 5.6 Fila de instalação (D124, prancha `JogoFilaInstalacao`)
+Modal aberto pelo ícone da fila. Lista as operações da fila (instalando, esperando, pedindo escolha) e os mods importados que não foram instalados.
+- Item que pede escolha: "Escolher opções" abre o diálogo da decisão (raiz, duplicado, FOMOD).
+- Mod importado: "Instalar".
+- "Instalar todos" (primário) chama `InstallAll` com os importados: o backend instala os que não pedem escolha e deixa os outros importados, sem travar a fila.
+- "Esvaziar fila" cancela as operações canceláveis; o X de cada operação cancela só ela.
+- Com decisão pendente, a faixa "N mods esperam a sua escolha" aparece acima da lista com "Abrir fila".
+
+### 5.7 Organização (D123, pranchas `JogoOrganizacao` e `JogoOrganizacaoTags`)
+Modal "Organização dos mods" aberto por Mais ações › Categorias e tags, com abas:
+- **Categorias**: árvore à esquerda (ícone, cor e contagem de mods), "Nova categoria"; à direita nome, "Dentro de", cor (16 cores da paleta categórica, `SwatchPicker`), ícone (48 ícones) e a prévia na lista e como grupo ou aba. Rodapé: Excluir categoria, Fechar, Salvar categoria.
+- **Tags**: lista com selo colorido e contagem, "Nova tag"; à direita nome e cor, prévia e "Usada em N mods" com "Ver os mods com esta tag" (fecha o modal e busca pela tag). Renomear muda a tag em todos os mods; renomear para uma tag que já existe é recusado (`tag_exists`).
+- A cor e o ícone são ids; o backend valida e guarda só o id. Nada aqui muda a implantação.
 
 ### 5.5 Menu de contexto da linha
 Habilitar/Desabilitar · Instalar (se não instalado) · Reinstalar · Editar conflitos… · Regras… · Mover… · Categoria ▸ · Tipo de mod ▸ (Avançado) · Destacar ▸ · Abrir pasta · Abrir archive · Renomear · Remover…
@@ -114,8 +127,8 @@ Sempre visível na base (compacta), aceita arquivos e pastas; também é possív
 
 ## 10. Bridge
 
-Consultas: `ModListView(instance, profile, filtros?)` (inclui prioridade, status, indicadores, contagens), `ModDetails(mod)`, `ModFiles(mod, janela, filtro)`, `ModConflictsSummary(mod)`, `Categories(instance)`.
-Comandos: `ImportFiles`, `ImportFolder`, `SetModsEnabled`, `MoveMods` (retorna recusa com regras e alternativas), `CreateSeparator`/`UpdateSeparator`/`DeleteSeparator`, `SetModAttributes`, `SetModCategory`, `SetModType`, `ReinstallMods`, `RemoveMods`, `Deploy`, `Purge`, `SetFileExclusion`, `SetFileOverride`.
+Consultas: `ModListView(instance, profile, filtros?)` (inclui prioridade, status, indicadores, contagens, cor e ícone da categoria, tags), `ModDetails(mod)`, `ModFiles(mod, janela, filtro)`, `ModConflictsSummary(mod)`, `Categories(instance)`, `Tags(instance)`, `ImportQueue(instance)`, `InstanceSettings(instance)` (`mods.view`).
+Comandos: `ImportFiles`, `ImportFolder`, `InstallMods`, `InstallAll`, `CancelImport`, `SetModsEnabled`, `MoveMods` (retorna recusa com regras e alternativas), `CreateSeparator`/`UpdateSeparator`/`DeleteSeparator`, `SetModAttributes`, `SetModCategory`, `SaveCategory`/`DeleteCategory`, `SaveTag`/`DeleteTag`, `SetInstanceSetting`, `SetModType`, `ReinstallMods`, `RemoveMods`, `Deploy`, `Purge`, `SetFileExclusion`, `SetFileOverride`.
 
 ## 11. Critérios de aceite de UX
 
@@ -124,3 +137,5 @@ Comandos: `ImportFiles`, `ImportFolder`, `SetModsEnabled`, `MoveMods` (retorna r
 - Arrastar mod para posição que viola regra explica a regra e oferece alternativa.
 - Todo indicador de linha tem tooltip e leva ao detalhe correspondente com um clique.
 - Tudo acessível por teclado (seleção, toggle, mover, inspector).
+- Jogo sem capability de conteúdo (`generic`): sem categorias iniciais, a visão Abas mostra só "Todos" e o convite para criar; nenhuma coluna de plugin; teste da página sem categorias (`ModsPage.test.tsx`).
+- Demonstração da RD8: arrastar 10 archives, "Instalar todos", categorizar e alternar as três visões.

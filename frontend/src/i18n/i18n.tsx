@@ -41,6 +41,8 @@ export interface Translator {
   formatDateTime: (iso: string | undefined) => string;
   /** Always the absolute date and time (tooltips, exports). */
   formatAbsolute: (iso: string | undefined) => string;
+  /** Always relative, at any distance ("3 days ago", "last year"): columns that show age. */
+  formatAgo: (iso: string | undefined) => string;
   /** Time of day only, for dense logs. */
   formatTime: (iso: string | undefined) => string;
   formatDuration: (ms: number) => string;
@@ -90,6 +92,19 @@ export function createTranslator(language: Language, options: TranslatorOptions 
       return relative.format(Math.round(diff / 86400_000), "day");
     },
     formatAbsolute: (iso) => format(dateTime, iso),
+    formatAgo: (iso) => {
+      const date = iso ? new Date(iso) : null;
+      if (!date || Number.isNaN(date.getTime())) return catalog["common.empty"];
+      const diff = date.getTime() - now();
+      const abs = Math.abs(diff);
+      if (abs < 45_000) return relative.format(0, "second");
+      if (abs < 3600_000) return relative.format(Math.round(diff / 60_000), "minute");
+      if (abs < 86400_000) return relative.format(Math.round(diff / 3600_000), "hour");
+      if (abs < 7 * 86400_000) return relative.format(Math.round(diff / 86400_000), "day");
+      if (abs < 30 * 86400_000) return relative.format(Math.round(diff / (7 * 86400_000)), "week");
+      if (abs < 365 * 86400_000) return relative.format(Math.round(diff / (30 * 86400_000)), "month");
+      return relative.format(Math.round(diff / (365 * 86400_000)), "year");
+    },
     formatTime: (iso) => format(time, iso),
     formatDuration: (ms) => (ms < 60_000 ? seconds.format(ms / 1000) : minutes.format(ms / 60_000)),
   };

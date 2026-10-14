@@ -128,7 +128,7 @@ describe("Mods screen: priority and order (F5)", () => {
     // Three mods in the order and the separator can be dragged; the mod
     // that is not installed cannot.
     expect(screen.getAllByRole("button", { name: "Drag to change priority" })).toHaveLength(4);
-    await user.type(screen.getByRole("textbox", { name: "Search mods" }), "a");
+    await user.type(screen.getByRole("textbox", { name: "Search by name or tag" }), "a");
     expect(screen.queryAllByRole("button", { name: "Drag to change priority" })).toHaveLength(0);
     expect(screen.getByText(/Clear the filters to drag mods/)).toBeInTheDocument();
   });

@@ -125,7 +125,7 @@ describe("F13: keyboard and page states", () => {
     await screen.findByRole("grid", { name: "Mods" });
     await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
     await user.keyboard("{Control>}f{/Control}");
-    expect(screen.getByRole("textbox", { name: "Search mods" })).toHaveFocus();
+    expect(screen.getByRole("textbox", { name: "Search by name or tag" })).toHaveFocus();
   });
 
   it("Ctrl+I opens the import of the active game", async () => {
