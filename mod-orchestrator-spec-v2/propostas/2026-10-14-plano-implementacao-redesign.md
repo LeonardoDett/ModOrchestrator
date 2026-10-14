@@ -61,7 +61,7 @@ Registrada em `docs-ia/decisoes.md` com ajustes de redação; vale o texto de l�
 
 ## 4. Componentes da lib que o design pede
 
-Classificação inicial, a confirmar na RD1 contra o canvas e o catálogo. "Seção 1.3" são os componentes da lib que ainda não passaram pelo redesenho e precisam passar antes de uma tela nova usá-los.
+**Confirmada e corrigida pela RD1** em `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-components.md`, que vale no lugar desta tabela: C10, C11 e C17 já existem, C6 vira `Indicator variant="chip"`, e entram `StatTile`, `FilterChip`, `SettingRow`, `SwatchPicker`, a paleta categórica e o monograma no `Avatar`. A tabela abaixo fica como registro da classificação inicial. "Seção 1.3" são os componentes da lib que ainda não passaram pelo redesenho e precisam passar antes de uma tela nova usá-los.
 
 | # | Componente ou padrão | Hipótese | Lote |
 |---|---|---|---|
@@ -131,7 +131,9 @@ Concluída em 2026-10-14. Além dos entregáveis abaixo, foram atualizados as re
 - **Pronto quando:** nenhum documento vigente manda seguir o layout do Vortex; `ui/00` descreve os dois níveis; nenhum código mudou.
 - **Sem a capability:** `ui/00` passa a dizer que grupos e itens do menu vêm do backend pelas capabilities **efetivas**; grupo sem item não aparece (é o caso de Plugins e Ordem de carga no `generic` e no Valheim).
 
-### RD1. Inventário de componentes por tela e fichas
+### RD1. Inventário de componentes por tela e fichas ✅
+
+Concluída em 2026-10-14: `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-components.md`. Achados que valem para as fases seguintes estão na seção 1 dele (categorias com hierarquia no desenho; diferenças do menu do jogo entre pranchas, para a RD4; menu lateral próprio do nível do app).
 
 - **Objetivo:** fechar a lista real de componentes antes de escrever qualquer um (passos 1 a 3 de `catalog-growth.md` §4).
 - **Entregáveis:** `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-components.md` com: tabela tela × componente lida do canvas (26 artboards), classificação de cada um (existe; existe e pede prop ou slot; sai da seção 1.3; novo; composição do app), ficha de meia página por componente novo, e os lotes RD2 e RD3 ordenados por nível atômico.
@@ -324,7 +326,7 @@ Concluída em 2026-10-14. Além dos entregáveis abaixo, foram atualizados as re
 | 2 | Onde o Ctrl K aparece, já que a busca saiu do menu? | Botão de ícone na barra superior, com a dica do atalho | RD4 |
 | 3 | A importação de Vortex e MO2 entra antes da V1.0? | Sim, mas como as últimas fases de tela, para a V1.0 poder sair sem ela se atrasar | RD15 |
 | 4 | Perfis e categorias do Vortex entram na importação? | Perfis sim; categorias como opção desligada, como desenhado | RD15 |
-| 5 | Categoria continua em árvore ou vira lista plana? | Manter a árvore no domínio; a tela v1 cria só no primeiro nível | RD5 |
+| 5 | Categoria continua em árvore ou vira lista plana? | Manter a árvore no domínio. ~~A tela v1 cria só no primeiro nível.~~ Corrigido na RD1: o artboard aprovado tem o campo "Dentro de", então a tela cria subcategorias (D119) | RD5 |
 | 6 | Nas visões Aninhada e Abas, dá para reordenar a prioridade? | Não: agrupam só a exibição; prioridade se arrasta na Lista | RD5 |
 | 7 | O assistente oferece "o app pode criar esta pasta"? | Sim, desligado por padrão | RD14 |
 | 8 | Quais modelos prontos de jogo personalizado entram? | Só "pasta Mods" e "BepInEx" na primeira versão | RD14 |

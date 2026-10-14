@@ -32,6 +32,8 @@ Vale para todos os jogos e usa a cor da marca do app.
 | **Extensões** | Lista do suporte embutido | `telas/settings-extensions.md` |
 | **Configurações** | Preferências do app; as do jogo ficam dentro do jogo | `telas/settings-extensions.md` |
 
+Casca do nível do app: barra superior com o logo, o sino e a ajuda (sem seletor de jogo); menu lateral com Início e Biblioteca, um grupo "Entrar direto" com os jogos fixados (cada um com selo de problemas), Extensões e Configurações no rodapé, e a versão do app.
+
 Reservado, não renderizado: Downloads (V2).
 
 ### 2.2 Espaço do jogo
