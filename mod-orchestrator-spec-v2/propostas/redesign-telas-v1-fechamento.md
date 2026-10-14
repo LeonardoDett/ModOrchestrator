@@ -20,7 +20,7 @@ Casca do espaço do jogo:
 
 ## 2. Telas do canvas
 
-Estados: **Aprovada** (o Leonardo disse que está ok; "em 2026-10-14" marca as liberadas em conjunto com "pode fazer todas as telas"), **Reservada** (espaço para o futuro, sem compromisso de escopo).
+Estados: **Aprovada** (o Leonardo disse que está ok; "em 2026-10-14" marca as liberadas em conjunto com "pode fazer todas as telas"), **Aguardando** (desenhada depois dessa liberação, sem resposta), **Reservada** (espaço para o futuro, sem compromisso de escopo).
 
 ### Nível do app
 
@@ -66,14 +66,24 @@ Estados: **Aprovada** (o Leonardo disse que está ok; "em 2026-10-14" marca as l
 | `FuturoAssets` | Inspetor de assets | Reservada |
 | `FuturoExtensoes` | Extensões de usuários | Reservada |
 
+### Desenhadas depois da liberação
+
+Feitas em 2026-10-14 a pedido do Leonardo, a partir de `ui/telas/profiles.md`, `ui/telas/diagnostics.md`, `core/10`, `ui/telas/mods.md` e `core/13`. Ainda **aguardam** o olhar dele.
+
+| Artboard | Tela | Estado |
+|---|---|---|
+| `JogoPerfis` | Perfis: cartões, aviso de "ativo diferente do implantado", pontos de restauração | Aguardando |
+| `JogoDiagnostico` | Diagnóstico, aba Problemas (lista por gravidade e painel com evidência, impacto e ações) | Aguardando |
+| `JogoNotificacoes` | Painel de Notificações, aberto a partir do sino | Aguardando |
+| `JogoModsMenus` | Mods: menu Filtros e menu Mais ações, os dois abertos na mesma prancha | Aguardando |
+| `Configuracoes` | Configurações do app, aba Interface | Aguardando |
+
 ### Não desenhadas
 
-- Perfis.
-- Diagnóstico.
-- Painel de Notificações (o sino substitui o indicador de status, mas o painel aberto não foi desenhado).
-- Menu "Filtros" da página de Mods.
-- "Mais ações" da página de Mods.
-- Ajustes globais do app.
+- Diagnóstico: abas Histórico, Operações e Log.
+- Configurações: abas Aplicação, Mods, Plugins, Soluções de problemas e Tema.
+- Diálogos de Perfis: novo, clonar, transferir seleção, comparar, excluir.
+- Diálogos de Mods abertos pelo menu Mais ações: regras, colunas, exportar lista.
 
 ## 3. Dependências que o design criou
 
@@ -97,6 +107,9 @@ Estados: **Aprovada** (o Leonardo disse que está ok; "em 2026-10-14" marca as l
 | B14 | **Início (dash global)** com dados de vários jogos | Lista de instâncias | Resumo por instância sem abrir o jogo |
 | B15 | **Plugins**: limites (completos e light), grupo, mod de origem, masters, "carrega depois de" | `core/08` e `ui/telas/plugins.md` | Conferir se a contagem contra os limites e o motivo da posição ("por que está aqui") já saem do backend |
 | B16 | **Ordem de carga**: estado "diferente da aplicada" e "Aplicar no jogo" | `ui/telas/load-order.md` | Conferir o comparativo entre a ordem desejada e a aplicada |
+
+| B17 | **Filtros de Mods** por categoria, tags, situação, conflitos e "contém" | Filtros de `ui/telas/mods.md §5.1` | Filtro por tag depende de B5. "Contém" só aparece quando o adapter classifica arquivos; ativos e desligados ficam no filtro rápido |
+| B18 | **Perfis, Diagnóstico e Configurações** | Especificados em `ui/telas/profiles.md`, `diagnostics.md`, `settings-extensions.md` e `core/13` | Nada novo no backend: o desenho segue a spec. A ação "Importar do Vortex" dentro do diagnóstico de outro gerenciador depende de B1 |
 
 Itens B1, B2, B5, B10 e B11 mudam contrato. B15 e B16 foram desenhados a partir da spec e devem estar cobertos; falta só conferir campo a campo.
 
@@ -126,6 +139,11 @@ Conferir cada um no catálogo da lib antes de criar (skills `dettmann-ui-use` e 
 | C16 | Lista de arrastar com painel lateral de explicação | Ordem de carga |
 | C17 | Cartão de escolha grande (rádio com conteúdo) e botão de ação com duas linhas | Importação |
 | C18 | Linha de ajuda fina ("Abrir o passo a passo") | Visão geral |
+| C19 | Painel de notificações: item lido e não lido, ações na linha, dispensar | Sino da barra superior |
+| C20 | Painel de filtros com grupos de chips e chips de filtro aplicado na barra | Mods |
+| C21 | Cartão de perfil com selos "Ativo" e "Implantado" e rodapé de ações | Perfis |
+| C22 | Lista agrupada por gravidade com painel de evidência e ações | Diagnóstico |
+| C23 | Linha de configuração (rótulo, descrição, controle) e seção com "Vale para [jogo]" | Configurações |
 
 Tema: as telas do jogo trocam o teal pela cor de destaque do jogo (Skyrim azul, genérico dourado). Isso pede um destaque por jogo no tema, além dos tokens atuais.
 
