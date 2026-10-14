@@ -168,6 +168,8 @@ import {
   SetModsCategory,
   SetModsEnabled,
   GameInstanceDetails,
+  InstanceFeatures as InstanceFeaturesCall,
+  SetInstanceFeature as SetInstanceFeatureCall,
   GamesView,
   GetAppInfo,
   GetOperationEvents,
@@ -195,6 +197,7 @@ import {
 import type { bridge } from "../../wailsjs/go/models";
 import { EventsOn, OnFileDrop, OnFileDropOff, Quit, WindowMinimise, WindowToggleMaximise } from "../../wailsjs/runtime/runtime";
 import type {
+  InstanceFeature,
   ExtensionCount,
   ModSummary,
   TagInfo,
@@ -297,6 +300,8 @@ export function createWailsBackend(): Backend {
     openLogFolder: () => OpenLogFolder(),
     gamesView: (showHidden) => GamesView(showHidden) as unknown as Promise<GamesViewT>,
     gameInstanceDetails: (id) => GameInstanceDetails(id) as unknown as Promise<ManagedGame>,
+    instanceFeatures: async (id) => ((await InstanceFeaturesCall(id)) ?? []) as unknown as InstanceFeature[],
+    setInstanceFeature: (id, feature, enabled) => SetInstanceFeatureCall(id, feature, enabled),
     workspace: () => Workspace() as unknown as Promise<WorkspaceT>,
     scanGames: (mode) => ScanGames(mode),
     cancelOperation: (id) => CancelOperation(id),

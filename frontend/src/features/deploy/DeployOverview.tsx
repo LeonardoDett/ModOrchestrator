@@ -1,41 +1,22 @@
-import { useState } from "react";
 import { Wrench } from "lucide-react";
-import { FileSearchIcon, RocketIcon, ScanSearchIcon } from "dettmann-ui/icons";
-import { Alert, Badge, Button, Stack, Typography, useToast, Icon, Loader } from "dettmann-ui";
-import { useBackend } from "../../bridge/backend-context";
-import { useI18n, type MessageKey } from "../../i18n/i18n";
-import { useAction } from "../games/use-action";
+import { FileSearchIcon } from "dettmann-ui/icons";
+import { Alert, Button, Stack, Icon } from "dettmann-ui";
+import { useI18n } from "../../i18n/i18n";
 import { useDeploy } from "./DeployContext";
 import { statusLook } from "./deploy-labels";
 
 /**
- * Deploy strip of the Overview (ui/telas/overview.md): status, profile,
- * method, "Verify deployment", and the blocking banner of an interrupted
- * deploy with "Reconcile now" (ui/02 F-13).
+ * Deploy alerts of the Overview (ui/telas/overview.md, D127): the blocking
+ * banner of an interrupted deploy with "Reconcile now" (ui/02 F-13),
+ * changes made outside the app and a failed deploy. The board has no deploy
+ * strip: deploying is the sidebar card and the attention row.
  */
 export function DeployOverview() {
-  const i18n = useI18n();
-  const { t, tp } = i18n;
-  const backend = useBackend();
-  const run = useAction();
-  const { addToast } = useToast();
-  const { instance, status, deploy, reconcile, openFailures, openReview } = useDeploy();
-  const [verifying, setVerifying] = useState(false);
+  const { t, tp } = useI18n();
+  const { status, reconcile, openFailures, openReview } = useDeploy();
   if (!status) return null;
   const look = statusLook(status);
-  const StateIcon = look.icon;
   const busy = Boolean(status.busy);
-
-  const verify = async () => {
-    setVerifying(true);
-    const result = await run(() => backend.verifyDeployment(instance), { quiet: true });
-    setVerifying(false);
-    if (result.ok) {
-      const { changeCount, newFileCount } = result.value;
-      if (changeCount + newFileCount === 0) addToast({ title: t("deploy.verify.clean"), variant: "success", duration: 4000 });
-      else openReview();
-    }
-  };
 
   return (
     <Stack gap="sm">
@@ -61,38 +42,11 @@ export function DeployOverview() {
           </div>
         </Alert.Root>
       ) : null}
-      <div className="flex flex-wrap items-center gap-3 rounded-card border border-border bg-surface px-4 py-3">
-        <Badge intent={look.intent} emphasis={look.intent ? undefined : "low"} className="gap-1">
-          {StateIcon ? <Icon icon={StateIcon} size="xs" /> : <Loader decorative size="xs" />}
-          {t(look.label)}
-        </Badge>
-        <Typography variant="body-sm" color="muted-fg">
-          {[
-            t("deploy.strip.profile", { name: status.activeProfile.name }),
-            status.appliedAt ? t("deploy.strip.appliedAt", { when: i18n.formatDateTime(status.appliedAt) }) : null,
-            t("deploy.strip.method", { method: t(`deploy.method.${status.method}` as MessageKey) }),
-          ]
-            .filter(Boolean)
-            .join(" · ")}
-        </Typography>
-        <div className="flex-1" />
-        {status.kind === "failed" && status.failures.length > 0 ? (
-          <Button size="sm" onClick={openFailures}>
-            {t("deploy.action.failures")}
-          </Button>
-        ) : null}
-        <Button size="sm" startIcon={<ScanSearchIcon size="sm" />} disabled={verifying || busy || status.entries === 0} onClick={() => void verify()}>
-          {t("deploy.action.verify")}
-        </Button>
-        <Button emphasis="high"
-          size="sm"
-          startIcon={<RocketIcon size="sm" />}
-          disabled={busy || status.kind === "in_sync" || status.kind === "unknown" || status.foreign.length > 0}
-          onClick={() => void deploy()}
-        >
-          {t("deploy.action.deploy")}
-        </Button>
-      </div>
+      {status.kind === "failed" && status.failures.length > 0 ? (
+        <Alert.Root intent="danger" action={<Button size="sm" onClick={openFailures}>{t("deploy.action.failures")}</Button>}>
+          <Alert.Description>{t(look.label)}</Alert.Description>
+        </Alert.Root>
+      ) : null}
     </Stack>
   );
 }

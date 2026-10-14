@@ -165,7 +165,7 @@ describe("Games screen and assistant (F3)", () => {
     const nav = sidebar();
     expect(await within(nav).findByRole("button", { name: "Plugins" })).toBeInTheDocument();
     expect(within(nav).getByRole("button", { name: "Load Order" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1, name: "Overview" })).toBeInTheDocument();
+    expect(within(nav).getByRole("button", { name: "Overview" })).toHaveAttribute("aria-current", "page");
   });
 
   it("a generic game has no Plugins or Load Order screens (navigation by capability)", async () => {

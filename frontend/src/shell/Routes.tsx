@@ -11,6 +11,7 @@ import { ProfilesPage } from "../pages/ProfilesPage";
 import { LoadOrderPage } from "../pages/LoadOrderPage";
 import { PluginsPage } from "../pages/PluginsPage";
 import { OverviewPage } from "../pages/WorkspacePages";
+import { InstanceSettingsPage } from "../pages/InstanceSettingsPage";
 import { isWorkspaceView, useNavigation } from "./navigation";
 
 /**
@@ -54,5 +55,7 @@ export function Routes() {
       return <PluginsPage />;
     case "load_order":
       return <LoadOrderPage />;
+    case "instance_settings":
+      return <InstanceSettingsPage />;
   }
 }

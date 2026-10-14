@@ -21,6 +21,8 @@ export function createOfflineBackend(): Backend {
     openLogFolder: unavailable,
     gamesView: unavailable,
     gameInstanceDetails: unavailable,
+    instanceFeatures: unavailable,
+    setInstanceFeature: unavailable,
     workspace: unavailable,
     scanGames: unavailable,
     cancelOperation: unavailable,

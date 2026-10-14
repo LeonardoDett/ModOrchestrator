@@ -22,7 +22,7 @@ func TestWorkspaceGroupsFollowCapabilities(t *testing.T) {
 		GroupEntry:   {ItemOverview},
 		GroupContent: {ItemMods, ItemPlugins, ItemLoadOrder, ItemConflicts},
 		GroupSetup:   {ItemProfiles},
-		GroupHealth:  {ItemDiagnostics},
+		GroupHealth:  {ItemDiagnostics, ItemInstanceSettings},
 	}
 	if !reflect.DeepEqual(full, want) {
 		t.Fatalf("plugins game groups = %v", full)

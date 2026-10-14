@@ -60,7 +60,7 @@ describe("shell in two levels (D120)", () => {
     expect(within(sidebar()).getByRole("button", { name: "Home" })).toHaveAttribute("aria-current", "page");
     expect(within(sidebar()).queryByRole("button", { name: "Mods" })).not.toBeInTheDocument();
     await user.click(within(jump).getByRole("button", { name: "Skyrim" }));
-    expect(await screen.findByRole("heading", { level: 1, name: "Overview" })).toBeInTheDocument();
+    expect(await within(sidebar()).findByRole("button", { name: "Overview" })).toHaveAttribute("aria-current", "page");
     // Game level: grouped menu, game selector, back to the Library.
     for (const group of ["Content", "Setup", "Health"]) expect(within(sidebar()).getByRole("group", { name: group })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Active game: Skyrim/ })).toBeInTheDocument();

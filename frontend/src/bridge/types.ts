@@ -127,6 +127,8 @@ export interface Backend {
   // Games (ui/telas/games.md §6)
   gamesView(showHidden: boolean): Promise<GamesView>;
   gameInstanceDetails(id: string): Promise<ManagedGame>;
+  instanceFeatures(id: string): Promise<InstanceFeature[]>;
+  setInstanceFeature(id: string, feature: string, enabled: boolean): Promise<void>;
   workspace(): Promise<Workspace>;
   /** "quick" returns "" when done; "full" returns the operation id. */
   scanGames(mode: "quick" | "full"): Promise<string>;
@@ -971,7 +973,20 @@ export interface MenuBadge {
 }
 
 /** Workspace screens the backend derives from capabilities (core/11 §5). */
-export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "diagnostics";
+export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "diagnostics" | "instance_settings";
+
+/** One feature of an instance (D115): offered by the game, chosen by the user, in effect. */
+export interface InstanceFeature {
+  id: string;
+  /** "available" or "not_applicable". */
+  status: string;
+  /** "core" (always on) or "optional" (has a switch). */
+  class: string;
+  requires: string[];
+  enabled: boolean;
+  effective: boolean;
+  blockedBy: string[];
+}
 
 export interface Workspace {
   active?: InstanceRef;

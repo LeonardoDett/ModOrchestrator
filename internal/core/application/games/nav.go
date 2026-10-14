@@ -18,11 +18,14 @@ const (
 	ItemConflicts   WorkspaceItem = "conflicts"
 	ItemProfiles    WorkspaceItem = "profiles"
 	ItemDiagnostics WorkspaceItem = "diagnostics"
+	// ItemInstanceSettings is "Ajustes da instância" (D127, board
+	// JogoAjustesRecursos): the features of the instance, for every game.
+	ItemInstanceSettings WorkspaceItem = "instance_settings"
 )
 
 // WorkspaceItems is the navigation of a workspace, derived from the
-// capabilities of the game (core/11 §5): Overview, Mods, Conflicts, Profiles
-// and Diagnostics always; Plugins and Load Order only when the adapter
+// capabilities of the game (core/11 §5): Overview, Mods, Conflicts, Profiles,
+// Diagnostics and the instance settings always; Plugins and Load Order only when the adapter
 // declares them. Saves arrive with the save_games capability (V1.x).
 func WorkspaceItems(caps game.Capabilities) []WorkspaceItem {
 	items := []WorkspaceItem{ItemOverview, ItemMods}
@@ -32,7 +35,7 @@ func WorkspaceItems(caps game.Capabilities) []WorkspaceItem {
 	if caps.Has(game.CapLoadOrder) {
 		items = append(items, ItemLoadOrder)
 	}
-	return append(items, ItemConflicts, ItemProfiles, ItemDiagnostics)
+	return append(items, ItemConflicts, ItemProfiles, ItemDiagnostics, ItemInstanceSettings)
 }
 
 // WorkspaceGroup is a titled group of the game menu (D120): entry,
@@ -56,13 +59,14 @@ const (
 // dropped.
 func WorkspaceGroups(items []WorkspaceItem) []WorkspaceGroup {
 	place := map[WorkspaceItem]string{
-		ItemOverview:    GroupEntry,
-		ItemMods:        GroupContent,
-		ItemPlugins:     GroupContent,
-		ItemLoadOrder:   GroupContent,
-		ItemConflicts:   GroupContent,
-		ItemProfiles:    GroupSetup,
-		ItemDiagnostics: GroupHealth,
+		ItemOverview:         GroupEntry,
+		ItemMods:             GroupContent,
+		ItemPlugins:          GroupContent,
+		ItemLoadOrder:        GroupContent,
+		ItemConflicts:        GroupContent,
+		ItemProfiles:         GroupSetup,
+		ItemDiagnostics:      GroupHealth,
+		ItemInstanceSettings: GroupHealth,
 	}
 	order := []string{GroupEntry, GroupContent, GroupSetup, GroupHealth}
 	var out []WorkspaceGroup

@@ -1237,3 +1237,14 @@ Status: vigente (2026-10-14, pedido do Leonardo: "o redesign SIGA o DESIGN")
 Motivo: a primeira versão das telas adaptou as pranchas aos componentes existentes e ficou muito diferente do aprovado (auditoria em `propostas/2026-10-14-auditoria-fidelidade.md`).
 
 Consequência: a numeração reservada no plano do redesign avança um número (importação Vortex/MO2 passa a D128, assistente do jogo a D129).
+
+## D130 — Ajustes da instância no menu do jogo e a Visão geral sem Jogar
+Status: vigente (2026-10-14; executa a RD13 pela regra da D127)
+
+1. "Ajustes da instância" é uma tela do espaço do jogo para todo jogo (`instance_settings`), no grupo Saúde depois de Diagnóstico, como nas pranchas (`JogoAjustesRecursos`; as demais pranchas do jogo põem Diagnóstico no grupo Saúde). Abas Geral, Recursos, Pastas e Implantação; Recursos segue a prancha: opcionais com chave e estado (ligado, desligado, bloqueado, não se aplica), "Sempre ligados" sem chave, "Como fica o menu deste jogo" e o aviso de recurso bloqueado com "Ligar X". Tudo vem de `InstanceFeatures`.
+2. A Visão geral não tem botão Jogar nem faixa de implantação: Jogar é o botão do menu lateral e a implantação pendente aparece como linha de "Precisa de atenção" e no card lateral.
+
+Motivo: as pranchas aprovadas.
+
+Consequências: `games.WorkspaceItems` sempre inclui `instance_settings`; o teste da navegação fixa o grupo Saúde com os dois itens.
+

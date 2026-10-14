@@ -2,7 +2,7 @@ import { type IconComponent } from "dettmann-ui";
 import { createContext, useContext } from "react";
 import { Activity, GitCompareArrows, Plug } from "lucide-react";
 import { HomeIcon, LayersIcon, ListOrderedIcon, PackageIcon, PuzzleIcon, SettingsIcon } from "dettmann-ui/icons";
-import { LayoutGrid } from "lucide-react";
+import { LayoutGrid, SlidersHorizontal } from "lucide-react";
 import type { WorkspaceGroup, WorkspaceItemId } from "../bridge/types";
 import type { MessageKey } from "../i18n/i18n";
 
@@ -66,6 +66,7 @@ export const VIEWS: Record<ViewId, NavEntry> = {
   conflicts: { id: "conflicts", label: "nav.conflicts", icon: GitCompareArrows },
   profiles: { id: "profiles", label: "nav.profiles", icon: LayersIcon },
   diagnostics: { id: "diagnostics", label: "nav.diagnostics", icon: Activity },
+  instance_settings: { id: "instance_settings", label: "nav.instanceSettings", icon: SlidersHorizontal },
 };
 
 /** App level: start and end of the column; the jump-to games sit between them. */
@@ -91,7 +92,7 @@ export function workspaceGroups(groups: readonly WorkspaceGroup[] | undefined, i
   return flat.length > 0 ? [{ id: "entry", items: flat }] : [];
 }
 
-const WORKSPACE_VIEWS: readonly string[] = ["overview", "mods", "plugins", "load_order", "conflicts", "profiles", "diagnostics"];
+const WORKSPACE_VIEWS: readonly string[] = ["overview", "mods", "plugins", "load_order", "conflicts", "profiles", "diagnostics", "instance_settings"];
 
 export function isWorkspaceView(id: string): id is WorkspaceViewId {
   return WORKSPACE_VIEWS.includes(id);

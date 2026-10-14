@@ -32,6 +32,11 @@ export function useInstanceDetails(id: string) {
   return useBackendQuery((b) => b.gameInstanceDetails(id), [id], { onOperationEvents: true });
 }
 
+/** Features of an instance (D115), for Ajustes da instância. */
+export function useInstanceFeatures(id: string) {
+  return useBackendQuery((b) => b.instanceFeatures(id), [id], { onOperationEvents: true });
+}
+
 // --- Library (ui/telas/mods.md §10). Every read follows operation events:
 // imports, removals and decisions arrive as operation events (D021). ---
 

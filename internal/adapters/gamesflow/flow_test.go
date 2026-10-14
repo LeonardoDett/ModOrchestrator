@@ -312,7 +312,7 @@ func TestWorkspaceFollowsCapabilities(t *testing.T) {
 		t.Fatal(err)
 	}
 	w, _ := e.svc.Workspace(ctx)
-	want := []games.WorkspaceItem{"overview", "mods", "plugins", "load_order", "conflicts", "profiles", "diagnostics"}
+	want := []games.WorkspaceItem{"overview", "mods", "plugins", "load_order", "conflicts", "profiles", "diagnostics", "instance_settings"}
 	if !slices.Equal(w.Items, want) || w.Active == nil || w.Active.GameName == "" {
 		t.Fatalf("workspace = %+v", w)
 	}

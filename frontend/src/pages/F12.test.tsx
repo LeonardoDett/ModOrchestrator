@@ -236,8 +236,37 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     render(<App backend={backend} />);
     await openScreen(user, "Overview");
     expect(await screen.findByText("Nothing needs attention. The setup is ready to play.")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "142 enabled / 380" }));
+    // Numbers of the game (board JogoGenerico): each opens the screen it counts.
+    expect(screen.getByRole("button", { name: /38.*conflicts, 12 to decide/ })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /142 of 380.*mods active/ }));
     expect(await screen.findByRole("heading", { level: 1, name: "Mods" })).toBeInTheDocument();
+  });
+
+  it("Instance settings: a game without plugins shows them as not for this game, base ones without a switch (D127)", async () => {
+    const user = userEvent.setup();
+    const generic: ManagedGame = { ...GAME, gameId: "generic", gameName: "Generic", custom: true, name: "Meu jogo", adapter: "generic", capabilities: [], sections: [] };
+    const calls: string[] = [];
+    const { backend } = world({
+      workspace: async () => ({ active: { id: "i1", name: "Meu jogo", gameName: "Generic" }, instances: [{ id: "i1", name: "Meu jogo", gameName: "Generic" }], items: ["overview", "mods", "instance_settings"] }),
+      gameInstanceDetails: async () => generic,
+      instanceFeatures: async () => [
+        { id: "plugins", status: "not_applicable", class: "optional", requires: [], enabled: false, effective: false, blockedBy: [] },
+        { id: "launch", status: "available", class: "optional", requires: [], enabled: true, effective: true, blockedBy: [] },
+        { id: "filesystem_mod_target", status: "available", class: "base", requires: [], enabled: true, effective: true, blockedBy: [] },
+      ],
+      setInstanceFeature: async (_i, f, on) => {
+        calls.push(`feature:${f}=${on}`);
+      },
+    });
+    render(<App backend={backend} />);
+    await openScreen(user, "Instance settings");
+    const optional = await screen.findByText("Optional features");
+    expect(optional).toBeInTheDocument();
+    expect(screen.getByText("Not for this game")).toBeInTheDocument();
+    expect(screen.queryByRole("switch", { name: "Turn on Plugins" })).not.toBeInTheDocument();
+    expect(screen.getByText("Always on")).toBeInTheDocument();
+    await user.click(screen.getByRole("switch", { name: "Turn off Launch" }));
+    expect(calls).toContain("feature:launch=false");
   });
 
   it("the Dashboard renders only visible dashlets and customizes them", async () => {
