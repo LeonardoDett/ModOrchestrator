@@ -973,7 +973,7 @@ Efeitos no app:
 4. Única mudança de código no `frontend/`: a lista de dashlets do Dashboard passa os rótulos de arrastar e mover pelo i18n (`dashboard.customizeDrag`, `dashboard.customizeMoveUp`, `dashboard.customizeMoveDown`), que antes vinham em inglês fixo da lib.
 
 ## D111 — Redesenho dos componentes da dettmann-ui, onda 4 (estrutura e telas)
-Status: vigente, com um item em aberto (item 4); continua D110; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-037
+Status: vigente; continua D110; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-037
 
 1. **Logo da barra de título**: o PNG é branco e sumia no tema claro. A `TitleBar` passa a pintá-lo como máscara CSS sobre `bg-fg` (`role="img"`, nome do app pelo i18n), então ele segue o tema sem arquivo novo.
 2. **Camadas do shell**: a barra de título declara `data-layer="medium"` (já usava `bg-structure`, mas não contava no orçamento). A `Sidebar` passa à variante padrão (`bg-structure`); o item atual é `bg-selected` com a barra da marca.
@@ -987,7 +987,7 @@ Status: vigente, com um item em aberto (item 4); continua D110; detalhes em `det
    | Extensões | 72,7% | 27,3% | 0% |
    | Configurações | 72,2% | 27,8% | 0% |
 
-   Antes (D107): Dashboard low 80%, medium 20%. O medium entrou na faixa (22% a 38%) nas quatro telas. O low ficou de 4 a 7 pontos acima do teto de 68%, porque nessas telas quase não há elemento `high`. **Em aberto**: aceitar esse resultado para o estado sem jogo ou promover mais área a estrutura (por exemplo `Card emphasis="medium"` nos dashlets secundários); aguarda escolha do usuário. As telas com jogo (Mods, Plugins, Conflitos, Perfis, Diagnóstico) não foram medidas: o ambiente de desenvolvimento não tem jogo gerenciado.
+   Antes (D107): Dashboard low 80%, medium 20%. O medium entrou na faixa (22% a 38%) nas quatro telas. O low ficou de 4 a 7 pontos acima do teto de 68%, porque nessas telas quase não há elemento `high`. **Aceito pelo usuário em 2026-10-13** para o estado sem jogo: forçar o número em telas vazias pintaria cartões só para a conta fechar. As telas com jogo (Mods, Plugins, Conflitos, Perfis, Diagnóstico) não foram medidas, porque o ambiente de desenvolvimento não tem jogo gerenciado; a medição passa a ser critério de aceite de cada tela do redesign (pendência P1 em `dettmann-ui-vnext/docs/plans/2026-10-13-catalog-growth.md`, que também lista as demais pendências da lib e o plano de crescimento do catálogo).
 
 ## D112 — Escopo de jogo: capability e contrato 1:1, e checagem em toda fase
 Status: vigente (detalha D011; análise em `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, fase A)

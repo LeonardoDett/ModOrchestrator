@@ -1,6 +1,6 @@
 # dettmann-ui v2 — Componentes (redesenho, micro-interações, variações novas)
 
-Status: aprovado (2026-10-10) e implementado (2026-10-13; ondas 1 a 4, D-032 a D-037). Pendente: critério 1 (orçamento) fora da tolerância em low nas telas sem jogo, ver D111 do app; plano de crescimento do catálogo (seção 9).
+Status: aprovado (2026-10-10) e implementado (2026-10-13; ondas 1 a 4, D-032 a D-037). Critério 1 (orçamento): low acima da tolerância nas telas sem jogo, aceito pelo usuário (D111 do app). Estado, pendências e plano de crescimento do catálogo: `docs/plans/2026-10-13-catalog-growth.md`.
 Subprojeto 3 de 4 da reformulação da dettmann-ui v2 (roadmap: seção 2 de
 `2026-10-06-v2-foundation-design.md`). Depende da fundação (1) e dos ícones animados (2),
 concluídos. O subprojeto 4 (migração do app) foi feito antes deste (decisão D107 do app),
