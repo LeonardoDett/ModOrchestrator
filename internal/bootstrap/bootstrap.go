@@ -244,6 +244,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Archives:      sqlite.NewArchiveRepository(db),
 		Installations: sqlite.NewInstallationRepository(db),
 		Categories:    sqlite.NewCategoryRepository(db),
+		Tags:          sqlite.NewTagRepository(db),
 		Profiles:      profiles,
 		Rules:         sqlite.NewRuleRepository(db),
 		Manifests:     sqlite.NewManifestRepository(db),

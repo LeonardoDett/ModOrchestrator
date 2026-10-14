@@ -256,7 +256,7 @@ func NewCategoryRepository(db *sql.DB) *CategoryRepository { return &CategoryRep
 
 func (r *CategoryRepository) List(ctx context.Context, instance game.InstanceID) ([]mod.Category, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, name, parent, position FROM categories WHERE instance_id = ? ORDER BY parent, position, name`, string(instance))
+		`SELECT id, name, parent, position, color, icon FROM categories WHERE instance_id = ? ORDER BY parent, position, name`, string(instance))
 	if err != nil {
 		return nil, err
 	}
@@ -265,7 +265,7 @@ func (r *CategoryRepository) List(ctx context.Context, instance game.InstanceID)
 	for rows.Next() {
 		c := mod.Category{Instance: instance}
 		var id, parent string
-		if err := rows.Scan(&id, &c.Name, &parent, &c.Order); err != nil {
+		if err := rows.Scan(&id, &c.Name, &parent, &c.Order, &c.Color, &c.Icon); err != nil {
 			return nil, err
 		}
 		c.ID, c.Parent = mod.CategoryID(id), mod.CategoryID(parent)
@@ -282,9 +282,50 @@ func (r *CategoryRepository) Replace(ctx context.Context, instance game.Instance
 			return err
 		}
 		for _, c := range tree {
-			if _, err := q.ExecContext(ctx, `INSERT INTO categories (instance_id, id, name, parent, position) VALUES (?, ?, ?, ?, ?)`,
-				string(instance), string(c.ID), c.Name, string(c.Parent), c.Order); err != nil {
+			if _, err := q.ExecContext(ctx, `INSERT INTO categories (instance_id, id, name, parent, position, color, icon) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+				string(instance), string(c.ID), c.Name, string(c.Parent), c.Order, c.Color, c.Icon); err != nil {
 				return fmt.Errorf("sqlite: save category %s: %w", c.ID, err)
+			}
+		}
+		return nil
+	})
+}
+
+// TagRepository implements ports.Tags (D123).
+type TagRepository struct{ db querier }
+
+var _ ports.Tags = (*TagRepository)(nil)
+
+// NewTagRepository returns a repository over an opened database.
+func NewTagRepository(db *sql.DB) *TagRepository { return &TagRepository{db: db} }
+
+func (r *TagRepository) List(ctx context.Context, instance game.InstanceID) ([]mod.Tag, error) {
+	rows, err := r.db.QueryContext(ctx, `SELECT name, color, position FROM tags WHERE instance_id = ? ORDER BY position, name`, string(instance))
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var out []mod.Tag
+	for rows.Next() {
+		var t mod.Tag
+		if err := rows.Scan(&t.Name, &t.Color, &t.Order); err != nil {
+			return nil, err
+		}
+		out = append(out, t)
+	}
+	return out, rows.Err()
+}
+
+// Replace stores the whole list of the instance.
+func (r *TagRepository) Replace(ctx context.Context, instance game.InstanceID, tags []mod.Tag) error {
+	return withTx(ctx, r.db, func(q querier) error {
+		if _, err := q.ExecContext(ctx, `DELETE FROM tags WHERE instance_id = ?`, string(instance)); err != nil {
+			return err
+		}
+		for _, t := range tags {
+			if _, err := q.ExecContext(ctx, `INSERT INTO tags (instance_id, name, color, position) VALUES (?, ?, ?, ?)`,
+				string(instance), t.Name, t.Color, t.Order); err != nil {
+				return fmt.Errorf("sqlite: save tag %s: %w", t.Name, err)
 			}
 		}
 		return nil

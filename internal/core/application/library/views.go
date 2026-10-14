@@ -2,13 +2,16 @@ package library
 
 import (
 	"context"
+	"encoding/json"
 	"slices"
 	"strings"
 	"time"
 
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/domain/event"
+	"modorchestrator/internal/core/domain/fomod"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 )
 
@@ -22,7 +25,12 @@ type ModRow struct {
 	Author       string
 	Category     mod.CategoryID
 	CategoryPath []string
-	State        mod.State
+	// CategoryColor and CategoryIcon are the look of the category (D123).
+	CategoryColor string
+	CategoryIcon  string
+	// Tags are the tag names the mod carries, in its order.
+	Tags  []string
+	State mod.State
 	// Enabled is the state in the active profile.
 	Enabled   bool
 	EnabledAt time.Time
@@ -112,10 +120,13 @@ func (s *Service) row(e env, m *mod.Mod, tree mod.CategoryTree) ModRow {
 		ID: m.ID, Name: m.DisplayName(), DetectedName: m.Name, Version: m.Attributes.Version, Author: m.Attributes.Author,
 		Category: m.Category, State: m.State, Type: m.Type, Content: slices.Clone(m.Content), Source: m.Source.Ref,
 		InstalledAt: m.InstalledAt, VariantOf: m.VariantOf, VariantLabel: m.VariantLabel, Highlight: m.Attributes.Highlight,
-		HasNotes: strings.TrimSpace(m.Attributes.Notes) != "",
+		HasNotes: strings.TrimSpace(m.Attributes.Notes) != "", Tags: slices.Clone(m.Attributes.Tags),
 	}
 	if p, ok := tree.Path(m.Category); ok {
 		r.CategoryPath = p
+	}
+	if c, ok := tree.Get(m.Category); ok {
+		r.CategoryColor, r.CategoryIcon = c.Color, c.Icon
 	}
 	if mt, ok := e.def.ModType(m.Type); ok {
 		r.TypeName = mt.Name
@@ -141,6 +152,9 @@ type InstallationInfo struct {
 	Files     int
 	Size      int64
 	CreatedAt time.Time
+	// Choices are the recorded FOMOD choices in readable form (step,
+	// group, option names), in position order; empty for other installers.
+	Choices []fomod.Choice
 }
 
 // ModTypeOption is a mod type the user may pick (Advanced).
@@ -187,7 +201,10 @@ func (s *Service) Details(ctx context.Context, id mod.ID) (ModDetails, error) {
 	}
 	if m.Installation != "" {
 		if inst, err := s.Installations.Get(ctx, m.Installation); err == nil {
-			info := &InstallationInfo{ID: inst.ID, Installer: inst.Installer, Options: inst.Options, Files: len(inst.Files), CreatedAt: inst.CreatedAt}
+			info := &InstallationInfo{ID: inst.ID, Installer: inst.Installer, Options: inst.Options, Files: len(inst.Files), CreatedAt: inst.CreatedAt, Choices: []fomod.Choice{}}
+			if raw := inst.Options[installer.OptionFomod]; raw != "" {
+				_ = json.Unmarshal([]byte(raw), &info.Choices)
+			}
 			for _, f := range inst.Files {
 				info.Size += f.Size
 			}

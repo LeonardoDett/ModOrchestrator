@@ -297,6 +297,9 @@ type ModConflicts struct {
 	Mod       ModRef
 	Indicator conflict.Indicator
 	Opponents []OpponentView
+	// WinsAgainst and LosesTo count the opponents m wins at least one file
+	// against, and those it loses at least one file to (B13).
+	WinsAgainst, LosesTo int
 }
 
 // ModConflicts summarises the disputes of m by opponent, opponents of
@@ -323,6 +326,12 @@ func (s *Service) ModConflicts(ctx context.Context, instance game.InstanceID, m 
 			o.Opponent, o.Wins, o.Loses = pv.A, ps.WinsB, ps.WinsA
 		}
 		out.Opponents = append(out.Opponents, o)
+		if o.Wins > 0 {
+			out.WinsAgainst++
+		}
+		if o.Loses > 0 {
+			out.LosesTo++
+		}
 	}
 	slices.SortStableFunc(out.Opponents, func(a, b OpponentView) int { return b.Opponent.Priority - a.Opponent.Priority })
 	return out, nil

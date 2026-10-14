@@ -30,6 +30,7 @@ func (t *txRepos) Mods() ports.Mods                   { return &ModRepository{db
 func (t *txRepos) Archives() ports.Archives           { return &ArchiveRepository{db: t.q} }
 func (t *txRepos) Installations() ports.Installations { return &InstallationRepository{db: t.q} }
 func (t *txRepos) Categories() ports.Categories       { return &CategoryRepository{db: t.q} }
+func (t *txRepos) Tags() ports.Tags                   { return &TagRepository{db: t.q} }
 func (t *txRepos) Profiles() ports.Profiles           { return &ProfileRepository{db: t.q} }
 func (t *txRepos) Rules() ports.Rules                 { return &RuleRepository{db: t.q} }
 func (t *txRepos) Overrides() ports.Overrides         { return &OverrideRepository{db: t.q} }

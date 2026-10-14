@@ -22,22 +22,27 @@ type ModRowDTO struct {
 	Author       string   `json:"author"`
 	Category     string   `json:"category"`
 	CategoryPath []string `json:"categoryPath"`
-	State        string   `json:"state"`
-	Enabled      bool     `json:"enabled"`
-	EnabledAt    string   `json:"enabledAt,omitempty"`
-	Size         int64    `json:"size"`
-	Files        int      `json:"files"`
-	Type         string   `json:"type"`
-	TypeName     string   `json:"typeName"`
-	Content      []string `json:"content"`
-	Installer    string   `json:"installer"`
-	Source       string   `json:"source"`
-	InstalledAt  string   `json:"installedAt,omitempty"`
-	VariantOf    string   `json:"variantOf,omitempty"`
-	VariantLabel string   `json:"variantLabel,omitempty"`
-	Highlight    string   `json:"highlight,omitempty"`
-	HasNotes     bool     `json:"hasNotes"`
-	Queued       bool     `json:"queued"`
+	// CategoryColor (palette id) and CategoryIcon (icon id) are the look
+	// of the category (D123).
+	CategoryColor string   `json:"categoryColor,omitempty"`
+	CategoryIcon  string   `json:"categoryIcon,omitempty"`
+	Tags          []string `json:"tags"`
+	State         string   `json:"state"`
+	Enabled       bool     `json:"enabled"`
+	EnabledAt     string   `json:"enabledAt,omitempty"`
+	Size          int64    `json:"size"`
+	Files         int      `json:"files"`
+	Type          string   `json:"type"`
+	TypeName      string   `json:"typeName"`
+	Content       []string `json:"content"`
+	Installer     string   `json:"installer"`
+	Source        string   `json:"source"`
+	InstalledAt   string   `json:"installedAt,omitempty"`
+	VariantOf     string   `json:"variantOf,omitempty"`
+	VariantLabel  string   `json:"variantLabel,omitempty"`
+	Highlight     string   `json:"highlight,omitempty"`
+	HasNotes      bool     `json:"hasNotes"`
+	Queued        bool     `json:"queued"`
 }
 
 type ArchiveInfoDTO struct {
@@ -55,13 +60,45 @@ type InstallationInfoDTO struct {
 	Files     int               `json:"files"`
 	Size      int64             `json:"size"`
 	CreatedAt string            `json:"createdAt"`
+	// Choices are the recorded FOMOD choices in readable form.
+	Choices []FomodChoiceDTO `json:"choices"`
+}
+
+// FomodChoiceDTO is one recorded group choice (step, group, option names).
+type FomodChoiceDTO struct {
+	Step      int      `json:"step"`
+	StepName  string   `json:"stepName"`
+	Group     int      `json:"group"`
+	GroupName string   `json:"groupName"`
+	Names     []string `json:"names"`
+}
+
+// TagDTO is a tag of an instance and how many mods carry it (D123).
+type TagDTO struct {
+	Name  string `json:"name"`
+	Color string `json:"color,omitempty"`
+	Order int    `json:"order"`
+	Mods  int    `json:"mods"`
+}
+
+// TagInputDTO creates (empty name), renames or recolors a tag.
+type TagInputDTO struct {
+	Name    string `json:"name"`
+	NewName string `json:"newName,omitempty"`
+	Color   string `json:"color,omitempty"`
+}
+
+// ExtensionCountDTO is the files of one extension in a mod (D123).
+type ExtensionCountDTO struct {
+	Ext   string `json:"ext"`
+	Files int    `json:"files"`
+	Size  int64  `json:"size"`
 }
 
 type ModDetailsDTO struct {
 	ModRowDTO
 	Description   string               `json:"description"`
 	Notes         string               `json:"notes"`
-	Tags          []string             `json:"tags"`
 	VariantOfName string               `json:"variantOfName,omitempty"`
 	Archive       *ArchiveInfoDTO      `json:"archive,omitempty"`
 	Installation  *InstallationInfoDTO `json:"installation,omitempty"`
@@ -123,6 +160,9 @@ type AnswerDTO struct {
 	// requirement files confirmed in its summary.
 	Fomod        []FomodSelectionDTO `json:"fomod,omitempty"`
 	Requirements []string            `json:"requirements,omitempty"`
+	// Category and Tags organize the mod when the install completes (D124).
+	Category string   `json:"category,omitempty"`
+	Tags     []string `json:"tags,omitempty"`
 }
 
 type RemovalPreviewDTO struct {
@@ -146,6 +186,8 @@ type CategoryDTO struct {
 	Name   string `json:"name"`
 	Parent string `json:"parent,omitempty"`
 	Order  int    `json:"order"`
+	Color  string `json:"color,omitempty"`
+	Icon   string `json:"icon,omitempty"`
 }
 
 func toModRowDTO(r library.ModRow) ModRowDTO {
@@ -155,6 +197,7 @@ func toModRowDTO(r library.ModRow) ModRowDTO {
 		Size: r.Size, Files: r.Files, Type: string(r.Type), TypeName: r.TypeName, Content: []string{},
 		Installer: r.Installer, Source: r.Source, VariantOf: string(r.VariantOf), VariantLabel: r.VariantLabel,
 		Highlight: r.Highlight.Color, HasNotes: r.HasNotes, Queued: r.Queued,
+		CategoryColor: r.CategoryColor, CategoryIcon: r.CategoryIcon, Tags: append([]string{}, r.Tags...),
 	}
 	if dto.CategoryPath == nil {
 		dto.CategoryPath = []string{}
@@ -222,7 +265,7 @@ func (a *App) ModDetails(id string) (ModDetailsDTO, error) {
 		return ModDetailsDTO{}, a.fail("mod details", err, map[string]string{"mod": id})
 	}
 	out := ModDetailsDTO{
-		ModRowDTO: toModRowDTO(d.ModRow), Description: d.Description, Notes: d.Notes, Tags: append([]string{}, d.Tags...),
+		ModRowDTO: toModRowDTO(d.ModRow), Description: d.Description, Notes: d.Notes,
 		VariantOfName: d.VariantOfName, ModTypes: []ModTypeDTO{},
 	}
 	if d.Archive != nil {
@@ -236,6 +279,12 @@ func (a *App) ModDetails(id string) (ModDetailsDTO, error) {
 		out.Installation = &InstallationInfoDTO{
 			ID: string(d.Installation.ID), Installer: d.Installation.Installer, Options: opts,
 			Files: d.Installation.Files, Size: d.Installation.Size, CreatedAt: formatTime(d.Installation.CreatedAt),
+			Choices: []FomodChoiceDTO{},
+		}
+		for _, c := range d.Installation.Choices {
+			out.Installation.Choices = append(out.Installation.Choices, FomodChoiceDTO{
+				Step: c.Step, StepName: c.StepName, Group: c.Group, GroupName: c.GroupName, Names: append([]string{}, c.Names...),
+			})
 		}
 	}
 	for _, t := range d.ModTypes {
@@ -330,6 +379,7 @@ func (a *App) ResolveImport(operationID string, answer AnswerDTO) error {
 	err := a.c.Library.Resolve(operation.ID(operationID), library.Answer{
 		Choice: answer.Choice, Mod: mod.ID(answer.Mod), Label: answer.Label, Root: answer.Root,
 		Fomod: fromFomodSelection(answer.Fomod), Requirements: answer.Requirements,
+		Category: mod.CategoryID(answer.Category), Tags: answer.Tags,
 	})
 	if err != nil {
 		return a.fail("resolve import", err, map[string]string{"operation": operationID})
@@ -421,7 +471,7 @@ func (a *App) Categories(instance string) ([]CategoryDTO, error) {
 	}
 	out := make([]CategoryDTO, len(cats))
 	for i, c := range cats {
-		out[i] = CategoryDTO{ID: string(c.ID), Name: c.Name, Parent: string(c.Parent), Order: c.Order}
+		out[i] = CategoryDTO{ID: string(c.ID), Name: c.Name, Parent: string(c.Parent), Order: c.Order, Color: c.Color, Icon: c.Icon}
 	}
 	return out, nil
 }
@@ -429,7 +479,7 @@ func (a *App) Categories(instance string) ([]CategoryDTO, error) {
 // SaveCategory creates (empty id) or updates a category and returns its id.
 func (a *App) SaveCategory(instance string, c CategoryDTO) (string, error) {
 	id, err := a.c.Library.SaveCategory(a.context(), game.InstanceID(instance), library.CategoryInput{
-		ID: mod.CategoryID(c.ID), Name: c.Name, Parent: mod.CategoryID(c.Parent), Order: c.Order,
+		ID: mod.CategoryID(c.ID), Name: c.Name, Parent: mod.CategoryID(c.Parent), Order: c.Order, Color: c.Color, Icon: c.Icon,
 	})
 	if err != nil {
 		return "", a.fail("save category", err, map[string]string{"name": c.Name})
@@ -467,4 +517,57 @@ func (a *App) OpenModArchive(id string) error {
 		return a.fail("open archive folder", err, map[string]string{"folder": "archive"})
 	}
 	return nil
+}
+
+// InstallAll installs the given imported mods that need no choice; the ones
+// that would ask stay imported (D124).
+func (a *App) InstallAll(instance string, ids []string) ([]string, error) {
+	ops, err := a.c.Library.InstallAll(a.context(), game.InstanceID(instance), modIDs(ids))
+	if err != nil {
+		return nil, a.fail("install all", err, map[string]string{"instance": instance})
+	}
+	return opIDs(ops), nil
+}
+
+// Tags returns the tags of an instance with their counts (D123).
+func (a *App) Tags(instance string) ([]TagDTO, error) {
+	tags, err := a.c.Library.TagList(a.context(), game.InstanceID(instance))
+	if err != nil {
+		return nil, a.fail("tags", err, map[string]string{"instance": instance})
+	}
+	out := make([]TagDTO, len(tags))
+	for i, t := range tags {
+		out[i] = TagDTO{Name: t.Name, Color: t.Color, Order: t.Order, Mods: t.Mods}
+	}
+	return out, nil
+}
+
+// SaveTag creates, renames or recolors a tag and returns its name.
+func (a *App) SaveTag(instance string, in TagInputDTO) (string, error) {
+	name, err := a.c.Library.SaveTag(a.context(), game.InstanceID(instance), library.TagInput{Name: in.Name, NewName: in.NewName, Color: in.Color})
+	if err != nil {
+		return "", a.fail("save tag", err, map[string]string{"tag": in.Name})
+	}
+	return name, nil
+}
+
+// DeleteTag removes a tag from the instance and from every mod.
+func (a *App) DeleteTag(instance, name string) error {
+	if err := a.c.Library.DeleteTag(a.context(), game.InstanceID(instance), name); err != nil {
+		return a.fail("delete tag", err, map[string]string{"tag": name})
+	}
+	return nil
+}
+
+// ModExtensions returns the files of a mod grouped by extension (D123).
+func (a *App) ModExtensions(id string) ([]ExtensionCountDTO, error) {
+	counts, err := a.c.Library.ExtensionCounts(a.context(), mod.ID(id))
+	if err != nil {
+		return nil, a.fail("mod extensions", err, map[string]string{"mod": id})
+	}
+	out := make([]ExtensionCountDTO, len(counts))
+	for i, c := range counts {
+		out[i] = ExtensionCountDTO{Ext: c.Ext, Files: c.Files, Size: c.Size}
+	}
+	return out, nil
 }

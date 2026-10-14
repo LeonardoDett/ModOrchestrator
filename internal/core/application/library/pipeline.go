@@ -53,6 +53,8 @@ type pipeline struct {
 	plan    *installer.Plan
 	// requirements are the FOMOD requirements the user confirmed.
 	requirements []FomodRequirement
+	// organize is the category and tags chosen in the wizard summary.
+	organize *Answer
 
 	began, placed, swapped, committed bool
 	tmp, staged                       string
@@ -542,6 +544,9 @@ func (p *pipeline) planInstall(ctx context.Context) error {
 			}
 			opts = installer.Options{installer.OptionFomod: fomod.Encode(sess.pkg.Module, a.Fomod)}
 			p.requirements = p.confirmedRequirements(ctx, sess, a.Requirements)
+			if a.Category != "" || len(a.Tags) > 0 {
+				p.organize = &Answer{Category: a.Category, Tags: a.Tags}
+			}
 			continue
 		}
 		if res.Decision != nil {
@@ -755,6 +760,15 @@ func (p *pipeline) commit(ctx context.Context) error {
 		}
 		if m.Attributes.Description == "" {
 			m.Attributes.Description = p.meta.Description
+		}
+		if p.organize != nil {
+			if p.organize.Category != "" {
+				if cats, err := tx.Categories().List(ctx, p.env.inst.ID); err == nil &&
+					slices.ContainsFunc(cats, func(c mod.Category) bool { return c.ID == p.organize.Category }) {
+					m.Category = p.organize.Category
+				}
+			}
+			m.Attributes.Tags = mergeTags(m.Attributes.Tags, p.organize.Tags)
 		}
 		m.Content = p.env.adapter.ContentFlags(p.env.inst.Game, inst.Footprint())
 		if err := m.CompleteInstall(inst, now); err != nil {

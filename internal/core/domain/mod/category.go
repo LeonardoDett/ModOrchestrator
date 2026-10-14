@@ -19,6 +19,10 @@ type Category struct {
 	Name     string
 	Parent   CategoryID
 	Order    int
+	// Color is a palette id (Colors) and Icon an icon id, both optional
+	// (D123): how the category looks in the list, the tabs and its badge.
+	Color string
+	Icon  string
 }
 
 // CategoryTree is the validated category tree of an instance.
@@ -36,6 +40,9 @@ func NewCategoryTree(cats []Category) (CategoryTree, error) {
 		}
 		if _, dup := t.byID[c.ID]; dup {
 			return CategoryTree{}, fmt.Errorf("%w: category %q listed twice", ErrInvalid, c.ID)
+		}
+		if !ValidColor(c.Color) || !ValidIcon(c.Icon) {
+			return CategoryTree{}, fmt.Errorf("%w: category %q has an invalid color or icon", ErrInvalid, c.ID)
 		}
 		t.byID[c.ID] = c
 	}

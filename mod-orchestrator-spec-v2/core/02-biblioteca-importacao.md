@@ -106,7 +106,9 @@ Detectados (sobrescrevíveis pelo usuário, que tem precedência):
 
 Editáveis: nome, versão, autor, categoria, notas (texto longo), destaque (cor da paleta semântica + ícone, como `mod-highlight`), tags, mod type (Avançado; troca exige confirmação porque muda destinos e pode criar/desfazer conflitos).
 
-## 10. Categorias
+## 10. Categorias e tags
+
+Desde a D123: categoria com cor da paleta e ícone, opcionais; tags definidas por instância com cor, renomeadas e excluídas em lote em todos os mods; visão da lista (`mods.view`); arquivos por extensão; resumo numérico do mod. "Instalar todos" e categoria/tags na instalação: D124.
 
 Árvore por instância: criar, renomear, mover (arrastar), excluir (mods ficam sem categoria). Filtro e agrupamento por categoria na tela Mods; setting "Ocultar categoria de nível superior" exibe só o último nível (paridade Vortex). Categorias padrão iniciais: fornecidas pelo adapter (Skyrim: conjunto enxuto inspirado nas categorias do Nexus); nenhuma chamada de rede.
 

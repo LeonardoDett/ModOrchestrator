@@ -72,6 +72,8 @@ export function DeleteProfile(arg1:string):Promise<void>;
 
 export function DeleteSeparator(arg1:string,arg2:string):Promise<void>;
 
+export function DeleteTag(arg1:string,arg2:string):Promise<void>;
+
 export function Deploy(arg1:string):Promise<string>;
 
 export function DeployMethods(arg1:string):Promise<Array<bridge.DeployMethodDTO>>;
@@ -128,6 +130,8 @@ export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResu
 
 export function ImportQueue(arg1:string):Promise<Array<bridge.QueueItemDTO>>;
 
+export function InstallAll(arg1:string,arg2:Array<string>):Promise<Array<string>>;
+
 export function InstallMods(arg1:string,arg2:Array<string>):Promise<Array<string>>;
 
 export function InstallUpdate(arg1:string):Promise<void>;
@@ -170,6 +174,8 @@ export function ModConflicts(arg1:string,arg2:string):Promise<bridge.ModConflict
 
 export function ModDetails(arg1:string):Promise<bridge.ModDetailsDTO>;
 
+export function ModExtensions(arg1:string):Promise<Array<bridge.ExtensionCountDTO>>;
+
 export function ModFiles(arg1:string,arg2:string,arg3:number,arg4:number):Promise<bridge.ModFilesDTO>;
 
 export function ModHistory(arg1:string):Promise<Array<bridge.ModHistoryDTO>>;
@@ -179,6 +185,8 @@ export function ModList(arg1:string):Promise<Array<bridge.ModRowDTO>>;
 export function ModOrder(arg1:string):Promise<bridge.ModOrderDTO>;
 
 export function ModRules(arg1:string):Promise<Array<bridge.RuleDTO>>;
+
+export function ModSummary(arg1:string,arg2:string):Promise<bridge.ModSummaryDTO>;
 
 export function MoveArchiveStore(arg1:string,arg2:string):Promise<string>;
 
@@ -302,6 +310,8 @@ export function RunHealthChecks(arg1:string):Promise<void>;
 
 export function SaveCategory(arg1:string,arg2:bridge.CategoryDTO):Promise<string>;
 
+export function SaveTag(arg1:string,arg2:bridge.TagInputDTO):Promise<string>;
+
 export function ScanExternalChanges(arg1:string):Promise<void>;
 
 export function ScanGames(arg1:string):Promise<string>;
@@ -353,6 +363,8 @@ export function SuggestGameFolders(arg1:string,arg2:string,arg3:string):Promise<
 export function SuppressDiagnostic(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
 export function Suppressions():Promise<Array<bridge.SuppressionDTO>>;
+
+export function Tags(arg1:string):Promise<Array<bridge.TagDTO>>;
 
 export function TransferSelection(arg1:string,arg2:string,arg3:bridge.TransferOptionsDTO):Promise<void>;
 

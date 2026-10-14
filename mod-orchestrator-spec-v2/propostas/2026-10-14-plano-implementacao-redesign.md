@@ -35,8 +35,8 @@ D119 a D121 estão registradas. Daí em diante a numeração é provisória: val
 | D120 | **Dois níveis: app e espaço do jogo.** Barra superior com "‹ Biblioteca", jogo, perfil, sino e ajuda; menu lateral em grupos com recolher; "Jogar" e o cartão de implantação no rodapé do menu; status e problemas viram contagem no sino | Emenda D023, D045 (Play sai da barra de título), D054 e `ui/00` §2 | RD0 ✅ |
 | D121 | **Detalhe do mod em modal grande com abas**, no lugar do Inspector lateral | Emenda `ui/03` §4 ("modal só para decisão curta") | RD0 ✅ |
 | D122 | **Cor de destaque por jogo** e paleta de categorias no tema. Registrada | Detalha D043 | RD2 ✅ |
-| D123 | **Categoria com cor e ícone, e tags** como conceito separado; preferência de visão da lista por instância | Detalha D026, `core/02` §9 | RD5 |
-| D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação | Detalha D038, D065 | RD5 |
+| D123 | **Categoria com cor e ícone, e tags** como conceito separado; preferência de visão da lista por instância. Registrada | Detalha D026, `core/02` §9 | RD5 ✅ |
+| D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação. Registrada | Detalha D038, D065 | RD5 ✅ |
 | D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Requirements` passa a aceitar pacote, não só arquivo) | Detalha D118; fecha `core/16` §8 | RD6 |
 | D126 | **Sugestão de vencedor** em conflito: de onde vem, e que nunca cria regra sozinha | Detalha D004, D027 | RD7 |
 | D127 | **Importar de Vortex e MO2** entra neste plano (hoje V1.x em `core/15`); copiar por padrão | Emenda D047; detalha D035, D048 | RD15 |
@@ -176,7 +176,9 @@ Concluída em 2026-10-14, sem decisão nova (executa D120 e D122). Backend: `Wor
 - **Pronto quando:** todas as telas atuais abrem na casca nova; teste de navegação cobre os dois níveis e o menu recolhido; `grep` por `capabilities.includes` no `frontend/src` volta vazio; os 90 testes atuais do frontend passam ou foram reescritos.
 - **Sem a capability:** teste de navegação com três instâncias. `generic`: grupo Conteúdo só com Mods e Conflitos, "Jogar" só se há executável. Valheim: sem Plugins nem Ordem de carga, com "Jogar". Skyrim com `load_order` desligado (D115): Ordem de carga some, Plugins fica. `launch` desligado: "Jogar" some e o cartão de implantação continua.
 
-### RD5. Backend: organização de mods e fila
+### RD5. Backend: organização de mods e fila ✅
+
+Concluída em 2026-10-14 (D123, D124; migração 0011). Feito: cor e ícone de categoria; tags definidas com cor, renomear e excluir em lote; `mods.view`; categoria, cor, ícone e tags na linha do mod; arquivos por extensão; escolhas do FOMOD legíveis no detalhe; categoria e tags na conclusão da instalação; "instalar todos"; resumo do mod (conflitos e requisitos). B7 já existia (`InstalledAt` e a data da instalação atual). A ponte e os tipos do frontend estão prontos; as telas usam na RD8 e na RD9.
 
 - **Objetivo:** os dados que Mods, o modal do mod e o FOMOD pedem.
 - **Entregáveis (domínio, aplicação, SQLite com migração 0011, bridge):**

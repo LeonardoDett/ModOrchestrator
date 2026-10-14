@@ -142,7 +142,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 	e.lib = library.NewService(library.Deps{
 		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods,
 		Archives: sqlite.NewArchiveRepository(db), Installations: sqlite.NewInstallationRepository(db),
-		Categories: sqlite.NewCategoryRepository(db), Profiles: profiles, Rules: e.rules,
+		Categories: sqlite.NewCategoryRepository(db), Tags: sqlite.NewTagRepository(db), Profiles: profiles, Rules: e.rules,
 		State: sqlite.NewAppState(db), Events: sqlite.NewEventLog(db), UoW: sqlite.NewUnitOfWork(db), Publisher: bus,
 		FS: fsys, Extractor: archive.New(), Hasher: hashing.SHA256{},
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),

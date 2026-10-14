@@ -64,6 +64,14 @@ type Installations interface {
 	Delete(ctx context.Context, id mod.InstallationID) error
 }
 
+// Tags persists the tag definitions of an instance as one list (D123).
+// Mods keep the names they carry; a name without a definition is a tag
+// without color.
+type Tags interface {
+	List(ctx context.Context, instance game.InstanceID) ([]mod.Tag, error)
+	Replace(ctx context.Context, instance game.InstanceID, tags []mod.Tag) error
+}
+
 // Categories persists the category tree of an instance.
 type Categories interface {
 	List(ctx context.Context, instance game.InstanceID) ([]mod.Category, error)
@@ -188,6 +196,7 @@ type Tx interface {
 	Archives() Archives
 	Installations() Installations
 	Categories() Categories
+	Tags() Tags
 	Profiles() Profiles
 	Rules() Rules
 	Overrides() Overrides

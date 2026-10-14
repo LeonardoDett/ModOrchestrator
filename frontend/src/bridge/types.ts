@@ -162,6 +162,13 @@ export interface Backend {
   fomodImage(operationId: string, image: string): Promise<string>;
   cancelImport(operationId: string): Promise<void>;
   installMods(instance: string, ids: string[]): Promise<string[]>;
+  /** Installs what needs no choice; the rest stays imported (D124). */
+  installAll(instance: string, ids: string[]): Promise<string[]>;
+  tags(instance: string): Promise<TagInfo[]>;
+  saveTag(instance: string, tag: { name: string; newName?: string; color?: string }): Promise<string>;
+  deleteTag(instance: string, name: string): Promise<void>;
+  modExtensions(id: string): Promise<ExtensionCount[]>;
+  modSummary(instance: string, id: string): Promise<ModSummary>;
   reinstallMods(instance: string, ids: string[]): Promise<string[]>;
   previewModRemoval(instance: string, ids: string[]): Promise<RemovalPreview>;
   removeMods(instance: string, ids: string[], withArchives: boolean): Promise<string>;
@@ -988,6 +995,11 @@ export interface ModRow {
   author: string;
   category: string;
   categoryPath: string[];
+  /** Palette id and icon id of the category (D123). */
+  categoryColor?: string;
+  categoryIcon?: string;
+  /** Tag names the mod carries (absent from older backends). */
+  tags?: string[];
   state: ModState;
   enabled: boolean;
   enabledAt?: string;
@@ -1012,7 +1024,7 @@ export interface ModDetails extends ModRow {
   tags: string[];
   variantOfName?: string;
   archive?: { name: string; kind: string; size: number; hash: string; retained: boolean };
-  installation?: { id: string; installer: string; options: Record<string, string>; files: number; size: number; createdAt: string };
+  installation?: { id: string; installer: string; options: Record<string, string>; files: number; size: number; createdAt: string; choices?: FomodChoice[] };
   modTypes: ModTypeInfo[];
 }
 
@@ -1133,6 +1145,39 @@ export interface ImportAnswer {
   /** FOMOD: the visited groups and the requirement files to turn into rules. */
   fomod?: FomodSelection[];
   requirements?: string[];
+  /** Organize the mod when the install completes (D124). */
+  category?: string;
+  tags?: string[];
+}
+
+/** A recorded FOMOD group choice in readable form. */
+export interface FomodChoice {
+  step: number;
+  stepName: string;
+  group: number;
+  groupName: string;
+  names: string[];
+}
+
+/** A tag of the instance and how many mods carry it (D123). */
+export interface TagInfo {
+  name: string;
+  color?: string;
+  order: number;
+  mods: number;
+}
+
+/** Files of one extension in a mod (D123). */
+export interface ExtensionCount {
+  ext: string;
+  files: number;
+  size: number;
+}
+
+/** Numbers of the summary of a mod (B13); a missing part could not be read. */
+export interface ModSummary {
+  conflicts?: { opponents: number; winsAgainst: number; losesTo: number };
+  requirements?: { total: number; present: number };
 }
 
 export interface RemovalPreview {
@@ -1156,6 +1201,9 @@ export interface Category {
   name: string;
   parent?: string;
   order: number;
+  /** Palette id and icon id (D123). */
+  color?: string;
+  icon?: string;
 }
 
 // --- Profiles and mod order (internal/bridge/profiles.go) ---

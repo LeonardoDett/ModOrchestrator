@@ -100,6 +100,8 @@ var Catalog = []Def{
 	{Key: "automation.enableOnInstall", Scope: ScopeInstance, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "true"},
 	{Key: "automation.deployDelayMs", Scope: ScopeApp, Type: TypeInt, Tab: TabInterface, Release: V1, Default: "1500", Min: 0, Max: 60000, Advanced: true},
 	{Key: "diagnostics.showUnreviewedConflicts", Scope: ScopeInstance, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "true"},
+	// View of the Mods list (D123): list, nested by category, or category tabs.
+	{Key: "mods.view", Scope: ScopeInstance, Type: TypeEnum, Tab: TabInterface, Release: V1, Default: "list", Options: []string{"list", "nested", "tabs"}},
 	{Key: "app.runAtStartup", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1x, Default: "false"},
 	{Key: "app.startMinimized", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1x, Default: "false"},
 	{Key: "automation.installOnDownload", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V2, Default: "false"},

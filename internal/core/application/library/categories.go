@@ -79,6 +79,9 @@ type CategoryInput struct {
 	Name   string
 	Parent mod.CategoryID
 	Order  int
+	// Color (palette id) and Icon (icon id) are optional (D123).
+	Color string
+	Icon  string
 }
 
 // SaveCategory creates or updates a category (rename, move).
@@ -96,7 +99,7 @@ func (s *Service) SaveCategory(ctx context.Context, instance game.InstanceID, in
 	} else if !tree.Has(id) {
 		return "", fail(CodeCategoryInvalid, nil, "category", string(id))
 	}
-	next, err := tree.With(mod.Category{ID: id, Instance: instance, Name: in.Name, Parent: in.Parent, Order: in.Order})
+	next, err := tree.With(mod.Category{ID: id, Instance: instance, Name: in.Name, Parent: in.Parent, Order: in.Order, Color: in.Color, Icon: in.Icon})
 	if err != nil {
 		return "", fail(CodeCategoryInvalid, err, "category", string(id))
 	}

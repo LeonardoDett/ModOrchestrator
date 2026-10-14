@@ -8,6 +8,7 @@ import (
 
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/ports"
+	"modorchestrator/internal/core/domain/dependency"
 	"modorchestrator/internal/core/domain/deploystate"
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/event"
@@ -449,4 +450,38 @@ func (s *Service) adapterChecks(ctx context.Context, inst game.Instance) ([]diag
 		return nil, err
 	}
 	return build(specs...)
+}
+
+// Requirements counts the requirements of a mod (DependencyRule "requires")
+// and how many are satisfied now, for the summary of the mod (B13). Optional
+// recommendations are not counted.
+type Requirements struct {
+	Total, Present int
+}
+
+// ModRequirements evaluates the requirements of m with the same rule as
+// the dependency checks (core/06 §2).
+func (s *Service) ModRequirements(ctx context.Context, instance game.InstanceID, m mod.ID) (Requirements, error) {
+	facts, err := s.modFacts(ctx, instance)
+	if err != nil {
+		return Requirements{}, err
+	}
+	set, err := s.Rules.Get(ctx, instance)
+	if errors.Is(err, ports.ErrNotFound) {
+		return Requirements{}, nil
+	}
+	if err != nil {
+		return Requirements{}, err
+	}
+	var out Requirements
+	for _, r := range set.DependencyRules() {
+		if r.Mod != m || r.Kind != rules.Requires {
+			continue
+		}
+		out.Total++
+		if res, err := health.Evaluate(r, facts); err == nil && res.Status == dependency.StatusSatisfied {
+			out.Present++
+		}
+	}
+	return out, nil
 }

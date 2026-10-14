@@ -6,6 +6,7 @@ import (
 	"modorchestrator/internal/core/application/overview"
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/mod"
 )
 
 // Play, Overview and Dashboard (core/11 §6, core/04 §9, ui/telas/overview.md,
@@ -264,6 +265,39 @@ func (a *App) MenuBadges(instance string) ([]MenuBadgeDTO, error) {
 	out := []MenuBadgeDTO{}
 	for _, b := range a.c.Overview.MenuBadges(a.context(), game.InstanceID(instance)) {
 		out = append(out, MenuBadgeDTO{Item: string(b.Item), Count: b.Count, Attention: b.Attention})
+	}
+	return out, nil
+}
+
+// ModSummaryDTO is the numbers of the summary of a mod (B13). A nil part
+// could not be read.
+type ModSummaryDTO struct {
+	Conflicts    *ModConflictCountsDTO `json:"conflicts,omitempty"`
+	Requirements *RequirementsDTO      `json:"requirements,omitempty"`
+}
+
+// ModConflictCountsDTO counts the opponents of a mod.
+type ModConflictCountsDTO struct {
+	Opponents   int `json:"opponents"`
+	WinsAgainst int `json:"winsAgainst"`
+	LosesTo     int `json:"losesTo"`
+}
+
+// RequirementsDTO counts the requirements of a mod and the present ones.
+type RequirementsDTO struct {
+	Total   int `json:"total"`
+	Present int `json:"present"`
+}
+
+// ModSummary returns the numbers of the summary of a mod.
+func (a *App) ModSummary(instance, modID string) (ModSummaryDTO, error) {
+	v := a.c.Overview.Mod(a.context(), game.InstanceID(instance), mod.ID(modID))
+	var out ModSummaryDTO
+	if v.Conflicts != nil {
+		out.Conflicts = &ModConflictCountsDTO{Opponents: v.Conflicts.Opponents, WinsAgainst: v.Conflicts.WinsAgainst, LosesTo: v.Conflicts.LosesTo}
+	}
+	if v.Requirements != nil {
+		out.Requirements = &RequirementsDTO{Total: v.Requirements.Total, Present: v.Requirements.Present}
 	}
 	return out, nil
 }

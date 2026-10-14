@@ -43,12 +43,14 @@ type Sources struct {
 	Diagnostics interface {
 		Problems(ctx context.Context, instance game.InstanceID) (diagnostics.View, error)
 		Attention(ctx context.Context) ([]diagnostics.View, error)
+		ModRequirements(ctx context.Context, instance game.InstanceID, m mod.ID) (diagnostics.Requirements, error)
 	}
 	Library interface {
 		ModList(ctx context.Context, instance game.InstanceID) ([]library.ModRow, error)
 	}
 	Conflicts interface {
 		Pairs(ctx context.Context, instance game.InstanceID, includeDisabled bool, search string) (conflicts.PairsView, error)
+		ModConflicts(ctx context.Context, instance game.InstanceID, m mod.ID) (conflicts.ModConflicts, error)
 	}
 	Plugins interface {
 		Supported(ctx context.Context, instance game.InstanceID) bool
@@ -379,6 +381,30 @@ func (s *Service) MenuBadges(ctx context.Context, id game.InstanceID) []MenuBadg
 		if pv, err := s.Conflicts.Pairs(ctx, id, false, ""); err == nil && pv.Totals.Unreviewed > 0 {
 			out = append(out, MenuBadge{Item: games.ItemConflicts, Count: pv.Totals.Unreviewed, Attention: true})
 		}
+	}
+	return out
+}
+
+// ModSummary is the numbers of the summary of a mod (B13): conflicts it
+// wins and loses, and requirements present. A nil part could not be read.
+type ModSummary struct {
+	Conflicts    *ConflictCounts
+	Requirements *diagnostics.Requirements
+}
+
+// ConflictCounts are the conflict numbers of one mod.
+type ConflictCounts struct {
+	Opponents, WinsAgainst, LosesTo int
+}
+
+// Mod builds the summary of one mod, each number from its owner.
+func (s *Service) Mod(ctx context.Context, instance game.InstanceID, m mod.ID) ModSummary {
+	var out ModSummary
+	if c, err := s.Conflicts.ModConflicts(ctx, instance, m); err == nil {
+		out.Conflicts = &ConflictCounts{Opponents: len(c.Opponents), WinsAgainst: c.WinsAgainst, LosesTo: c.LosesTo}
+	}
+	if r, err := s.Diagnostics.ModRequirements(ctx, instance, m); err == nil {
+		out.Requirements = &r
 	}
 	return out
 }

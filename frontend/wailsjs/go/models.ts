@@ -405,6 +405,8 @@ export namespace bridge {
 	    root?: string;
 	    fomod?: FomodSelectionDTO[];
 	    requirements?: string[];
+	    category?: string;
+	    tags?: string[];
 	
 	    static createFrom(source: any = {}) {
 	        return new AnswerDTO(source);
@@ -418,6 +420,8 @@ export namespace bridge {
 	        this.root = source["root"];
 	        this.fomod = this.convertValues(source["fomod"], FomodSelectionDTO);
 	        this.requirements = source["requirements"];
+	        this.category = source["category"];
+	        this.tags = source["tags"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -765,6 +769,8 @@ export namespace bridge {
 	    name: string;
 	    parent?: string;
 	    order: number;
+	    color?: string;
+	    icon?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new CategoryDTO(source);
@@ -776,6 +782,8 @@ export namespace bridge {
 	        this.name = source["name"];
 	        this.parent = source["parent"];
 	        this.order = source["order"];
+	        this.color = source["color"];
+	        this.icon = source["icon"];
 	    }
 	}
 	export class ConflictProviderDTO {
@@ -1750,6 +1758,22 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class ExtensionCountDTO {
+	    ext: string;
+	    files: number;
+	    size: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ExtensionCountDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.ext = source["ext"];
+	        this.files = source["files"];
+	        this.size = source["size"];
+	    }
+	}
 	export class ExtensionGameDTO {
 	    id: string;
 	    name: string;
@@ -1967,6 +1991,26 @@ export namespace bridge {
 	        this.archiveStore = source["archiveStore"];
 	        this.backupStore = source["backupStore"];
 	        this.suggestedStaging = source["suggestedStaging"];
+	    }
+	}
+	export class FomodChoiceDTO {
+	    step: number;
+	    stepName: string;
+	    group: number;
+	    groupName: string;
+	    names: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new FomodChoiceDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.step = source["step"];
+	        this.stepName = source["stepName"];
+	        this.group = source["group"];
+	        this.groupName = source["groupName"];
+	        this.names = source["names"];
 	    }
 	}
 	
@@ -2381,6 +2425,7 @@ export namespace bridge {
 	    files: number;
 	    size: number;
 	    createdAt: string;
+	    choices: FomodChoiceDTO[];
 	
 	    static createFrom(source: any = {}) {
 	        return new InstallationInfoDTO(source);
@@ -2394,7 +2439,26 @@ export namespace bridge {
 	        this.files = source["files"];
 	        this.size = source["size"];
 	        this.createdAt = source["createdAt"];
+	        this.choices = this.convertValues(source["choices"], FomodChoiceDTO);
 	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class InstanceFeatureDTO {
 	    id: string;
@@ -2919,6 +2983,22 @@ export namespace bridge {
 	        this.tags = source["tags"];
 	    }
 	}
+	export class ModConflictCountsDTO {
+	    opponents: number;
+	    winsAgainst: number;
+	    losesTo: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModConflictCountsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.opponents = source["opponents"];
+	        this.winsAgainst = source["winsAgainst"];
+	        this.losesTo = source["losesTo"];
+	    }
+	}
 	export class ModConflictFileDTO {
 	    location: LocationDTO;
 	    size: number;
@@ -3033,6 +3113,9 @@ export namespace bridge {
 	    author: string;
 	    category: string;
 	    categoryPath: string[];
+	    categoryColor?: string;
+	    categoryIcon?: string;
+	    tags: string[];
 	    state: string;
 	    enabled: boolean;
 	    enabledAt?: string;
@@ -3051,7 +3134,6 @@ export namespace bridge {
 	    queued: boolean;
 	    description: string;
 	    notes: string;
-	    tags: string[];
 	    variantOfName?: string;
 	    archive?: ArchiveInfoDTO;
 	    installation?: InstallationInfoDTO;
@@ -3070,6 +3152,9 @@ export namespace bridge {
 	        this.author = source["author"];
 	        this.category = source["category"];
 	        this.categoryPath = source["categoryPath"];
+	        this.categoryColor = source["categoryColor"];
+	        this.categoryIcon = source["categoryIcon"];
+	        this.tags = source["tags"];
 	        this.state = source["state"];
 	        this.enabled = source["enabled"];
 	        this.enabledAt = source["enabledAt"];
@@ -3088,7 +3173,6 @@ export namespace bridge {
 	        this.queued = source["queued"];
 	        this.description = source["description"];
 	        this.notes = source["notes"];
-	        this.tags = source["tags"];
 	        this.variantOfName = source["variantOfName"];
 	        this.archive = this.convertValues(source["archive"], ArchiveInfoDTO);
 	        this.installation = this.convertValues(source["installation"], InstallationInfoDTO);
@@ -3303,6 +3387,9 @@ export namespace bridge {
 	    author: string;
 	    category: string;
 	    categoryPath: string[];
+	    categoryColor?: string;
+	    categoryIcon?: string;
+	    tags: string[];
 	    state: string;
 	    enabled: boolean;
 	    enabledAt?: string;
@@ -3333,6 +3420,9 @@ export namespace bridge {
 	        this.author = source["author"];
 	        this.category = source["category"];
 	        this.categoryPath = source["categoryPath"];
+	        this.categoryColor = source["categoryColor"];
+	        this.categoryIcon = source["categoryIcon"];
+	        this.tags = source["tags"];
 	        this.state = source["state"];
 	        this.enabled = source["enabled"];
 	        this.enabledAt = source["enabledAt"];
@@ -3350,6 +3440,52 @@ export namespace bridge {
 	        this.hasNotes = source["hasNotes"];
 	        this.queued = source["queued"];
 	    }
+	}
+	export class RequirementsDTO {
+	    total: number;
+	    present: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new RequirementsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.total = source["total"];
+	        this.present = source["present"];
+	    }
+	}
+	export class ModSummaryDTO {
+	    conflicts?: ModConflictCountsDTO;
+	    requirements?: RequirementsDTO;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModSummaryDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.conflicts = this.convertValues(source["conflicts"], ModConflictCountsDTO);
+	        this.requirements = this.convertValues(source["requirements"], RequirementsDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	
 	
@@ -4361,6 +4497,7 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	
 	export class RestartStateDTO {
 	    settings: string[];
 	    restore: boolean;
@@ -4730,6 +4867,40 @@ export namespace bridge {
 	        this.key = source["key"];
 	        this.code = source["code"];
 	        this.createdAt = source["createdAt"];
+	    }
+	}
+	export class TagDTO {
+	    name: string;
+	    color?: string;
+	    order: number;
+	    mods: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new TagDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.color = source["color"];
+	        this.order = source["order"];
+	        this.mods = source["mods"];
+	    }
+	}
+	export class TagInputDTO {
+	    name: string;
+	    newName?: string;
+	    color?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new TagInputDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.newName = source["newName"];
+	        this.color = source["color"];
 	    }
 	}
 	

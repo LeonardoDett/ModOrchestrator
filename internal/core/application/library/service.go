@@ -86,6 +86,7 @@ type Deps struct {
 	Archives      ports.Archives
 	Installations ports.Installations
 	Categories    ports.Categories
+	Tags          ports.Tags
 	Profiles      ports.Profiles
 	Rules         ports.Rules
 	// Manifests answers whether mods being removed are deployed (optional).

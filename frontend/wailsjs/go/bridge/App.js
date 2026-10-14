@@ -142,6 +142,10 @@ export function DeleteSeparator(arg1, arg2) {
   return window['go']['bridge']['App']['DeleteSeparator'](arg1, arg2);
 }
 
+export function DeleteTag(arg1, arg2) {
+  return window['go']['bridge']['App']['DeleteTag'](arg1, arg2);
+}
+
 export function Deploy(arg1) {
   return window['go']['bridge']['App']['Deploy'](arg1);
 }
@@ -254,6 +258,10 @@ export function ImportQueue(arg1) {
   return window['go']['bridge']['App']['ImportQueue'](arg1);
 }
 
+export function InstallAll(arg1, arg2) {
+  return window['go']['bridge']['App']['InstallAll'](arg1, arg2);
+}
+
 export function InstallMods(arg1, arg2) {
   return window['go']['bridge']['App']['InstallMods'](arg1, arg2);
 }
@@ -338,6 +346,10 @@ export function ModDetails(arg1) {
   return window['go']['bridge']['App']['ModDetails'](arg1);
 }
 
+export function ModExtensions(arg1) {
+  return window['go']['bridge']['App']['ModExtensions'](arg1);
+}
+
 export function ModFiles(arg1, arg2, arg3, arg4) {
   return window['go']['bridge']['App']['ModFiles'](arg1, arg2, arg3, arg4);
 }
@@ -356,6 +368,10 @@ export function ModOrder(arg1) {
 
 export function ModRules(arg1) {
   return window['go']['bridge']['App']['ModRules'](arg1);
+}
+
+export function ModSummary(arg1, arg2) {
+  return window['go']['bridge']['App']['ModSummary'](arg1, arg2);
 }
 
 export function MoveArchiveStore(arg1, arg2) {
@@ -602,6 +618,10 @@ export function SaveCategory(arg1, arg2) {
   return window['go']['bridge']['App']['SaveCategory'](arg1, arg2);
 }
 
+export function SaveTag(arg1, arg2) {
+  return window['go']['bridge']['App']['SaveTag'](arg1, arg2);
+}
+
 export function ScanExternalChanges(arg1) {
   return window['go']['bridge']['App']['ScanExternalChanges'](arg1);
 }
@@ -704,6 +724,10 @@ export function SuppressDiagnostic(arg1, arg2, arg3) {
 
 export function Suppressions() {
   return window['go']['bridge']['App']['Suppressions']();
+}
+
+export function Tags(arg1) {
+  return window['go']['bridge']['App']['Tags'](arg1);
 }
 
 export function TransferSelection(arg1, arg2, arg3) {

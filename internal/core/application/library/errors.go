@@ -45,13 +45,15 @@ const (
 	CodeNotCancellable    = "operation_not_cancellable"
 	CodeNoDecision        = "decision_not_pending"
 	CodeCategoryInvalid   = "category_invalid"
+	CodeTagInvalid        = "tag_invalid"
+	CodeTagExists         = "tag_exists"
 	CodeModTypeUnknown    = "mod_type_unknown"
 	CodeNameEmpty         = "name_empty"
 	CodeSourceMissing     = "import_source_missing"
 	// CodeSourceUnreadable: the file exists but cannot be read now; reason
 	// file_locked (another program holds it) or permission_denied (F14).
 	CodeSourceUnreadable = "import_source_unreadable"
-	CodeModNotFound       = "mod_not_found"
+	CodeModNotFound      = "mod_not_found"
 	// FOMOD (core/03 §8).
 	CodeFomodInvalidXML       = "fomod_invalid_xml"
 	CodeFomodModuleDeps       = "fomod_module_dependencies_failed"

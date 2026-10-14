@@ -32,7 +32,8 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 | `Installer` | Instalador | Estratégia que transforma archive em Installation (`basic`, `fomod`, instaladores do adapter). |
 | `Footprint` | Arquivos do mod | Conjunto de Locations que a Installation fornece. |
 | `Variant` | Variante | Outro Mod criado a partir do mesmo archive ou de versão diferente do mesmo mod, com rótulo próprio. |
-| `Category` | Categoria | Metadado hierárquico para filtro/agrupamento. Nunca afeta deploy. |
+| `Category` | Categoria | Metadado hierárquico para filtro/agrupamento, com cor da paleta e ícone opcionais (D123). Um mod tem no máximo uma. Nunca afeta deploy. |
+| `Tag` | Tag | Rótulo definido por instância, com cor da paleta opcional; um mod pode ter várias (D123). Nunca afeta deploy. |
 | `ModAttributes` | — | Metadados editáveis: nome customizado, versão, autor, notas, destaque (cor/ícone), tags. |
 
 ## Profile e ordem

@@ -652,6 +652,8 @@ export const ptBR: Record<MessageKey, string> = {
   "error.operation_not_cancellable": "Esta etapa não pode mais ser cancelada.",
   "error.decision_not_pending": "Esta operação não está mais esperando uma decisão.",
   "error.category_invalid": "Essa categoria não é válida.",
+  "error.tag_invalid": "A tag {tag} não é válida: use um nome e uma cor da paleta.",
+  "error.tag_exists": "Já existe uma tag chamada {tag}. Renomear para ela juntaria as duas.",
   "error.mod_type_unknown": "Este jogo não tem o tipo de mod {type}.",
   "error.import_source_missing": "{name} não existe mais.",
   "error.import_source_unreadable": "Não foi possível ler {name}.",

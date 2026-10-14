@@ -3,6 +3,7 @@ package library
 import (
 	"context"
 	"errors"
+	"fmt"
 	"path"
 	"slices"
 	"strings"
@@ -90,6 +91,11 @@ type Answer struct {
 	// detected requirements the user confirmed (files), for "install".
 	Fomod        fomod.Selection
 	Requirements []string
+	// Category and Tags organize the mod when the install completes
+	// (D124): a category that no longer exists is ignored, tags are
+	// normalized and merged with the ones the mod has.
+	Category mod.CategoryID
+	Tags     []string
 }
 
 // QueueItem is one entry of the visible install queue (core/00 §5).
@@ -119,6 +125,9 @@ type job struct {
 	answer      chan Answer
 	// fomod is the wizard session while a fomod decision is pending.
 	fomod *fomodSession
+	// skipChoices: an install that would ask the user anything is
+	// cancelled instead and the mod stays imported (D124, "install all").
+	skipChoices bool
 }
 
 type queue struct {
@@ -151,6 +160,21 @@ func (s *Service) InstallMods(ctx context.Context, instance game.InstanceID, ids
 	return s.queueMods(ctx, instance, ids, KindInstall, mod.StateImported)
 }
 
+// InstallAll installs the given imported mods that need no choice and
+// leaves the others imported, without blocking the queue (D124): an install
+// that reaches a question (FOMOD wizard, root folder) is cancelled and its
+// mod stays in the list of not installed mods for the user to choose.
+func (s *Service) InstallAll(ctx context.Context, instance game.InstanceID, ids []mod.ID) ([]operation.ID, error) {
+	jobs, err := s.modJobs(ctx, instance, ids, KindInstall, mod.StateImported)
+	if err != nil {
+		return nil, err
+	}
+	for _, j := range jobs {
+		j.skipChoices = true
+	}
+	return s.enqueue(ctx, instance, jobs)
+}
+
 // ReinstallMods reinstalls installed mods from their retained archives,
 // repeating the recorded options (core/02 §7).
 func (s *Service) ReinstallMods(ctx context.Context, instance game.InstanceID, ids []mod.ID) ([]operation.ID, error) {
@@ -158,6 +182,14 @@ func (s *Service) ReinstallMods(ctx context.Context, instance game.InstanceID, i
 }
 
 func (s *Service) queueMods(ctx context.Context, instance game.InstanceID, ids []mod.ID, kind operation.Kind, want mod.State) ([]operation.ID, error) {
+	jobs, err := s.modJobs(ctx, instance, ids, kind, want)
+	if err != nil {
+		return nil, err
+	}
+	return s.enqueue(ctx, instance, jobs)
+}
+
+func (s *Service) modJobs(ctx context.Context, instance game.InstanceID, ids []mod.ID, kind operation.Kind, want mod.State) ([]*job, error) {
 	var jobs []*job
 	for _, id := range ids {
 		m, err := s.Mods.Get(ctx, id)
@@ -175,7 +207,7 @@ func (s *Service) queueMods(ctx context.Context, instance game.InstanceID, ids [
 		}
 		jobs = append(jobs, &job{instance: instance, kind: kind, label: m.DisplayName(), mod: id})
 	}
-	return s.enqueue(ctx, instance, jobs)
+	return jobs, nil
 }
 
 func (s *Service) enqueue(ctx context.Context, instance game.InstanceID, jobs []*job) ([]operation.ID, error) {
@@ -340,7 +372,13 @@ func (s *Service) findJob(id operation.ID) *job {
 }
 
 // ask publishes a decision and waits for the answer or the cancellation.
+// errSkippedChoices cancels an install of "install all" that would ask.
+var errSkippedChoices = fmt.Errorf("%w: the install needs choices", context.Canceled)
+
 func (s *Service) ask(ctx context.Context, j *job, d Decision) (Answer, error) {
+	if j.skipChoices {
+		return Answer{}, errSkippedChoices
+	}
 	s.mu.Lock()
 	j.decision = &d
 	s.mu.Unlock()

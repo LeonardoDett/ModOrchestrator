@@ -1168,3 +1168,29 @@ Motivo: o design v1 troca o teal do app pela cor do jogo dentro do espaço do jo
 Alternativas rejeitadas: um preset por jogo (não serve a jogo personalizado nem a cor declarada por dados); reaproveitar os intents de status para categorias (uma categoria "vermelha" seria lida como erro); hex livre escolhido pelo usuário (sem garantia de contraste nos dois modos).
 
 Consequências: o id da cor de categoria é o que o backend guarda (RD5). A largura padrão da `Sidebar` passou a 232 px aberta e 60 px recolhida, os valores do design; o app atual herda isso até a RD4.
+
+## D123 — Categorias com cor e ícone, tags definidas e visão da lista de mods
+Status: vigente (detalha D026 e core/02 §9–10; executa a RD5 do plano do redesign)
+
+1. **Categoria** continua árvore por instância (o desenho aprovado cria subcategorias com "Dentro de") e ganha `Color` e `Icon`, ambos opcionais. A cor é um id da paleta categórica (`mod.Colors`, os mesmos 16 ids que o tema gera com contraste garantido, D122); o ícone é um id de ícone (slug minúsculo) que a UI mapeia para um glifo. O backend nunca guarda valor de cor.
+2. **Tag** é definida por instância (`tags`, migração 0011: nome, cor da paleta, ordem) e um mod carrega quantos nomes quiser (`Attributes.Tags`, como já era). Nome sem definição continua valendo como tag sem cor. Renomear muda o nome em todos os mods na mesma transação; renomear para um nome que já existe (definido ou só usado em mods) é recusado (`tag_exists`), porque seria mesclar; excluir tira o nome de todos os mods. Comparação sem diferenciar maiúsculas.
+3. **Linha da lista** traz `CategoryColor`, `CategoryIcon` e `Tags`. **Arquivos por extensão** (`ExtensionCounts`) agrupa a instalação atual por extensão, sem dado do adapter, então vale para qualquer jogo.
+4. **Visão da lista** é a setting de instância `mods.view` (`list`, `nested`, `tabs`; padrão `list`). As visões Aninhada e Abas agrupam só a exibição pela categoria; a prioridade (ModOrder) não muda por causa delas e só se arrasta na Lista (resposta do usuário em 2026-10-14).
+5. **Escolhas do FOMOD legíveis**: o detalhe da instalação devolve as escolhas gravadas (passo, grupo, nomes das opções), que já eram guardadas em forma legível.
+6. **Resumo do mod** (`overview.Mod`): adversários em conflito, contra quantos vence e para quantos perde, e requisitos presentes sobre o total, cada número do seu dono; parte que não pôde ser lida não vem.
+
+Motivo: o design v1 pinta categorias e tags, separa as duas (uma categoria, várias tags) e mostra arquivos por tipo e números do mod.
+
+Alternativas rejeitadas: lista plana de categorias (o artboard aprovado tem subcategoria); tag só como texto livre no mod, sem definição (não teria onde guardar a cor nem como renomear em lote); arquivos por tipo de conteúdo do adapter (o jogo genérico não classifica nada).
+
+Consequências: a UI dessas partes chega nas RD8 e RD9. O id da cor é o contrato com o tema; trocar a paleta exige migrar os ids guardados.
+
+## D124 — Fila de instalação: "instalar todos" e organizar ao instalar
+Status: vigente (detalha D038 e D065; executa a RD5 do plano do redesign)
+
+1. **Instalar todos** (`InstallAll`) põe na fila a instalação dos mods importados escolhidos com a marca de não perguntar: a instalação que chegaria a uma pergunta (assistente FOMOD, escolha de pasta raiz) é cancelada naquele ponto, o mod continua importado e a fila segue para o próximo. Nada é instalado com escolha presumida. Os que ficaram aparecem para o usuário escolher depois.
+2. **Organizar ao instalar**: a resposta do assistente pode trazer categoria e tags. Na conclusão da instalação, a categoria só é aplicada se ainda existir; as tags são normalizadas e somadas às que o mod já tem, sem repetir.
+
+Motivo: o desenho da fila tem "Instalar" por item e "Instalar todos" que pula os que pedem escolhas sem travar os outros, e o resumo do FOMOD tem categoria e tags.
+
+Alternativa rejeitada: instalar os FOMOD com as opções padrão no "instalar todos" (decidiria pelo usuário, contra D036 e o espírito de D030).

@@ -655,6 +655,8 @@ export const en = {
   "error.operation_not_cancellable": "This step can no longer be cancelled.",
   "error.decision_not_pending": "This operation is not waiting for a decision anymore.",
   "error.category_invalid": "That category is not valid.",
+  "error.tag_invalid": "The tag {tag} is not valid: use a name and a color from the palette.",
+  "error.tag_exists": "A tag named {tag} already exists. Renaming onto it would merge the two.",
   "error.mod_type_unknown": "This game has no mod type {type}.",
   "error.import_source_missing": "{name} no longer exists.",
   "error.import_source_unreadable": "{name} could not be read.",
