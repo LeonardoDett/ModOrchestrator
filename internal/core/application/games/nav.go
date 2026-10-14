@@ -35,11 +35,58 @@ func WorkspaceItems(caps game.Capabilities) []WorkspaceItem {
 	return append(items, ItemConflicts, ItemProfiles, ItemDiagnostics)
 }
 
+// WorkspaceGroup is a titled group of the game menu (D120): entry,
+// content, setup and health. A group without items is not returned.
+type WorkspaceGroup struct {
+	ID    string
+	Items []WorkspaceItem
+}
+
+// Group ids of the game menu.
+const (
+	GroupEntry   = "entry"
+	GroupContent = "content"
+	GroupSetup   = "setup"
+	GroupHealth  = "health"
+)
+
+// WorkspaceGroups arranges the items of a workspace in the groups of the
+// game menu (ui/00 §2.2). It only places what WorkspaceItems offered, so a
+// screen without its capability never appears; a group left empty is
+// dropped.
+func WorkspaceGroups(items []WorkspaceItem) []WorkspaceGroup {
+	place := map[WorkspaceItem]string{
+		ItemOverview:    GroupEntry,
+		ItemMods:        GroupContent,
+		ItemPlugins:     GroupContent,
+		ItemLoadOrder:   GroupContent,
+		ItemConflicts:   GroupContent,
+		ItemProfiles:    GroupSetup,
+		ItemDiagnostics: GroupHealth,
+	}
+	order := []string{GroupEntry, GroupContent, GroupSetup, GroupHealth}
+	var out []WorkspaceGroup
+	for _, id := range order {
+		g := WorkspaceGroup{ID: id}
+		for _, it := range items {
+			if place[it] == id {
+				g.Items = append(g.Items, it)
+			}
+		}
+		if len(g.Items) > 0 {
+			out = append(out, g)
+		}
+	}
+	return out
+}
+
 // InstanceRef identifies an instance in the game switcher.
 type InstanceRef struct {
 	ID       game.InstanceID
 	Name     string
 	GameName string
+	// Accent is the game's accent (D122); empty for the app's own.
+	Accent string
 }
 
 // Workspace is the navigation state of the shell: which instance is active,
@@ -48,6 +95,8 @@ type Workspace struct {
 	Active    *InstanceRef
 	Instances []InstanceRef
 	Items     []WorkspaceItem
+	// Groups are the same items arranged as the game menu (D120).
+	Groups []WorkspaceGroup
 }
 
 // Workspace answers the shell navigation query. It is cheap: it does not
@@ -74,6 +123,7 @@ func (s *Service) Workspace(ctx context.Context) (Workspace, error) {
 		}
 		if ok {
 			ref.GameName = def.Name
+			ref.Accent = def.Accent
 		}
 		w.Instances = append(w.Instances, ref)
 		if inst.ID == active {
@@ -81,6 +131,7 @@ func (s *Service) Workspace(ctx context.Context) (Workspace, error) {
 			w.Active = &r
 			if ok {
 				w.Items = WorkspaceItems(def.Capabilities)
+				w.Groups = WorkspaceGroups(w.Items)
 			}
 		}
 	}
@@ -94,4 +145,27 @@ func (s *Service) Workspace(ctx context.Context) (Workspace, error) {
 		return 0
 	})
 	return w, nil
+}
+
+// Section ids name the parts of shared screens that exist only with a
+// capability (ui/00 §1.4: the UI never tests a capability, it renders the
+// sections the backend lists).
+const (
+	// SectionSettingsPlugins is the Plugins tab of Settings.
+	SectionSettingsPlugins = "settings.plugins"
+	// SectionPluginCache is the plugin header cache action of Workarounds.
+	SectionPluginCache = "workarounds.pluginCache"
+	// SectionOverviewPlugins is the plugins figure of the Overview.
+	SectionOverviewPlugins = "overview.plugins"
+)
+
+// Sections lists the capability-bound sections an instance offers, from
+// its effective capabilities (D115): a feature switched off takes its
+// sections with it.
+func Sections(caps game.Capabilities) []string {
+	out := []string{}
+	if caps.Has(game.CapPlugins) {
+		out = append(out, SectionSettingsPlugins, SectionPluginCache, SectionOverviewPlugins)
+	}
+	return out
 }

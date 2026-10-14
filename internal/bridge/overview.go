@@ -257,3 +257,13 @@ func (a *App) ActiveGameStatus() (ActiveGameDTO, error) {
 	}
 	return dto, nil
 }
+
+// MenuBadges returns the counts and attention of the game menu of an
+// instance (D120). A source that cannot be read gives no badge.
+func (a *App) MenuBadges(instance string) ([]MenuBadgeDTO, error) {
+	out := []MenuBadgeDTO{}
+	for _, b := range a.c.Overview.MenuBadges(a.context(), game.InstanceID(instance)) {
+		out = append(out, MenuBadgeDTO{Item: string(b.Item), Count: b.Count, Attention: b.Attention})
+	}
+	return out, nil
+}

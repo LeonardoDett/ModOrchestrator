@@ -1,4 +1,5 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -84,8 +85,7 @@ function world() {
 }
 
 async function openMods(user: ReturnType<typeof userEvent.setup>) {
-  const nav = screen.getAllByRole("navigation", { name: "Main navigation" })[0]!;
-  await user.click(await within(nav).findByRole("button", { name: "Mods" }));
+  await openScreen(user, "Mods");
 }
 
 describe("Mods screen (F4)", () => {

@@ -40,29 +40,34 @@ type ProblemDTO struct {
 // ManagedGameDTO is a managed instance as the Games screen and the details
 // popover show it.
 type ManagedGameDTO struct {
-	ID           string       `json:"id"`
-	GameID       string       `json:"gameId"`
-	GameName     string       `json:"gameName"`
-	Custom       bool         `json:"custom"`
-	Name         string       `json:"name"`
-	Adapter      string       `json:"adapter"`
-	Store        string       `json:"store"`
-	Root         string       `json:"root"`
-	Staging      string       `json:"staging"`
-	ArchiveStore string       `json:"archiveStore"`
-	BackupStore  string       `json:"backupStore"`
-	Method       string       `json:"method"`
-	Executable   string       `json:"executable,omitempty"`
-	Version      string       `json:"version,omitempty"`
-	Active       bool         `json:"active"`
-	Hidden       bool         `json:"hidden"`
-	Unavailable  bool         `json:"unavailable"`
-	RootMissing  bool         `json:"rootMissing"`
-	Deployed     bool         `json:"deployed"`
-	Capabilities []string     `json:"capabilities"`
-	Targets      []TargetDTO  `json:"targets"`
-	ModTypes     []ModTypeDTO `json:"modTypes"`
-	Foreign      []FindingDTO `json:"foreign"`
+	ID           string   `json:"id"`
+	GameID       string   `json:"gameId"`
+	GameName     string   `json:"gameName"`
+	Custom       bool     `json:"custom"`
+	Name         string   `json:"name"`
+	Adapter      string   `json:"adapter"`
+	Store        string   `json:"store"`
+	Root         string   `json:"root"`
+	Staging      string   `json:"staging"`
+	ArchiveStore string   `json:"archiveStore"`
+	BackupStore  string   `json:"backupStore"`
+	Method       string   `json:"method"`
+	Executable   string   `json:"executable,omitempty"`
+	Version      string   `json:"version,omitempty"`
+	Active       bool     `json:"active"`
+	Hidden       bool     `json:"hidden"`
+	Unavailable  bool     `json:"unavailable"`
+	RootMissing  bool     `json:"rootMissing"`
+	Deployed     bool     `json:"deployed"`
+	Capabilities []string `json:"capabilities"`
+	// Sections are the capability-bound parts of shared screens this instance
+	// offers (games.Sections); the UI renders them, never tests capabilities.
+	Sections []string `json:"sections"`
+	// Accent is the game's accent color (D122); empty for the app's own.
+	Accent   string       `json:"accent,omitempty"`
+	Targets  []TargetDTO  `json:"targets"`
+	ModTypes []ModTypeDTO `json:"modTypes"`
+	Foreign  []FindingDTO `json:"foreign"`
 }
 
 type DiscoveredGameDTO struct {
@@ -149,6 +154,21 @@ type InstanceRefDTO struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
 	GameName string `json:"gameName"`
+	// Accent is the game's accent color (D122); empty for the app's own.
+	Accent string `json:"accent,omitempty"`
+}
+
+// WorkspaceGroupDTO is a group of the game menu (D120).
+type WorkspaceGroupDTO struct {
+	ID    string   `json:"id"`
+	Items []string `json:"items"`
+}
+
+// MenuBadgeDTO is the count and attention of an item of the game menu.
+type MenuBadgeDTO struct {
+	Item      string `json:"item"`
+	Count     int    `json:"count"`
+	Attention bool   `json:"attention"`
 }
 
 // WorkspaceDTO is the navigation of the shell: the active instance, the
@@ -158,6 +178,8 @@ type WorkspaceDTO struct {
 	Active    *InstanceRefDTO  `json:"active,omitempty"`
 	Instances []InstanceRefDTO `json:"instances"`
 	Items     []string         `json:"items"`
+	// Groups arrange Items as the game menu (D120).
+	Groups []WorkspaceGroupDTO `json:"groups"`
 }
 
 func toManagedDTO(m games.Managed) ManagedGameDTO {
@@ -169,6 +191,7 @@ func toManagedDTO(m games.Managed) ManagedGameDTO {
 		Executable: i.Executable, Version: m.Version, Active: m.Active, Hidden: i.Hidden,
 		Unavailable: m.Unavailable, RootMissing: m.RootMissing, Deployed: m.Deployed,
 		Capabilities: []string{}, Targets: []TargetDTO{}, ModTypes: []ModTypeDTO{}, Foreign: []FindingDTO{},
+		Sections: games.Sections(m.Definition.Capabilities), Accent: m.Definition.Accent,
 	}
 	for _, c := range m.Definition.Capabilities.List() {
 		dto.Capabilities = append(dto.Capabilities, string(c))

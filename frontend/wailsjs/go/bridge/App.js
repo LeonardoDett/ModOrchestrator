@@ -322,6 +322,10 @@ export function MarkNotificationsRead(arg1) {
   return window['go']['bridge']['App']['MarkNotificationsRead'](arg1);
 }
 
+export function MenuBadges(arg1) {
+  return window['go']['bridge']['App']['MenuBadges'](arg1);
+}
+
 export function ModConflictFiles(arg1, arg2, arg3, arg4, arg5) {
   return window['go']['bridge']['App']['ModConflictFiles'](arg1, arg2, arg3, arg4, arg5);
 }

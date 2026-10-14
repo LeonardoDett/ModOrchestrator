@@ -321,6 +321,8 @@ export interface Backend {
   launchCheck(instance: string): Promise<LaunchCheck>;
   launch(instance: string, request: LaunchRequest): Promise<string>;
   instanceOverview(instance: string): Promise<InstanceOverview>;
+  /** Badges of the game menu of an instance (D120). */
+  menuBadges(instance: string): Promise<MenuBadge[]>;
   dashboardLayout(): Promise<Dashlet[]>;
   firstSteps(): Promise<FirstSteps>;
   recentGames(): Promise<RecentGame[]>;
@@ -850,6 +852,10 @@ export interface ManagedGame {
   rootMissing: boolean;
   deployed: boolean;
   capabilities: string[];
+  /** Capability-bound sections of shared screens (settings.plugins…); the UI renders them, never tests capabilities. */
+  sections?: string[];
+  /** Accent color of the game (D122). */
+  accent?: string;
   targets: Target[];
   modTypes: ModTypeInfo[];
   foreign: ForeignFinding[];
@@ -940,6 +946,21 @@ export interface InstanceRef {
   id: string;
   name: string;
   gameName: string;
+  /** Accent color of the game (D122); absent for the app's own. */
+  accent?: string;
+}
+
+/** A group of the game menu (D120): entry, content, setup, health. */
+export interface WorkspaceGroup {
+  id: string;
+  items: WorkspaceItemId[];
+}
+
+/** Count and attention of an item of the game menu, decided by the backend. */
+export interface MenuBadge {
+  item: WorkspaceItemId;
+  count: number;
+  attention: boolean;
 }
 
 /** Workspace screens the backend derives from capabilities (core/11 §5). */
@@ -949,6 +970,8 @@ export interface Workspace {
   active?: InstanceRef;
   instances: InstanceRef[];
   items: WorkspaceItemId[];
+  /** The same items arranged as the game menu (D120). */
+  groups?: WorkspaceGroup[];
 }
 
 export type InstanceFolder = "game" | "staging" | "archives" | "backups";

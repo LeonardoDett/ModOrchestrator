@@ -213,6 +213,11 @@ export function useLaunchCheck(instance: string) {
   return useBackendQuery(async (b) => (instance ? await b.launchCheck(instance) : null), [instance], { onOperationEvents: true });
 }
 
+/** Badges of the game menu (D120); empty without an instance. */
+export function useMenuBadges(instance: string) {
+  return useBackendQuery(async (b) => (instance ? await b.menuBadges(instance) : []), [instance], { onOperationEvents: true });
+}
+
 export function useInstanceOverview(instance: string) {
   return useBackendQuery((b) => b.instanceOverview(instance), [instance], { onOperationEvents: true });
 }

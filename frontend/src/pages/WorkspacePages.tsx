@@ -203,7 +203,7 @@ function SummaryCard({ overview }: { overview: InstanceOverview }) {
   const i18n = useI18n();
   const { t } = i18n;
   const { mods, plugins, conflicts } = overview;
-  const hasPlugins = overview.instance.capabilities.includes("plugins");
+  const hasPlugins = overview.instance.sections?.includes("overview.plugins") ?? false;
   const limits = plugins?.limits.filter((l) => l.used > 0).map((l) => `${l.used} ${i18n.has(`plugins.limit.${l.kind}`) ? t(`plugins.limit.${l.kind}` as MessageKey) : l.kind}`);
   return (
     <OverviewCard title={t("overview.summary")}>

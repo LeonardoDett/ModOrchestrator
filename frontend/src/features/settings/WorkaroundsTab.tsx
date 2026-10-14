@@ -25,7 +25,7 @@ export function WorkaroundsTab({ games, instance, onInstance }: { games: readonl
   const { addToast } = useToast();
   const status = useBackupStatus();
   const facts = useWorkarounds();
-  const anyPlugins = games.some((g) => g.capabilities.includes("plugins"));
+  const anyPlugins = games.some((g) => g.sections?.includes("workarounds.pluginCache"));
 
   const cleanTemp = async () => {
     const r = await run(() => backend.cleanTempFiles());

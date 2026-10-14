@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -113,10 +114,11 @@ function world(status: Partial<DeployStatus> = {}, decision: DeployPlan | null =
 describe("Deploy (F7)", () => {
   beforeEach(() => localStorage.clear());
 
-  it("shows the status in the top bar and deploys from its popover", async () => {
+  it("shows the status in the deployment card of the game menu and deploys from its popover (D120)", async () => {
     const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
+    await openScreen(user, "Overview");
     const status = await screen.findByRole("button", { name: "Deploy status: Deploy pending" });
     await user.click(status);
     expect(await screen.findByText("Mods, order or file choices changed since the last deploy.")).toBeInTheDocument();
@@ -125,8 +127,10 @@ describe("Deploy (F7)", () => {
   });
 
   it("Ctrl+D deploys the active game", async () => {
+    const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
+    await openScreen(user, "Overview");
     await screen.findByRole("button", { name: "Deploy status: Deploy pending" });
     fireEvent.keyDown(window, { key: "d", ctrlKey: true });
     await vi.waitFor(() => expect(calls).toContain("deploy:i1"));
@@ -164,6 +168,7 @@ describe("Deploy (F7)", () => {
     const user = userEvent.setup();
     const { backend, calls } = world({ kind: "unknown", reason: "journal_pending" });
     render(<App backend={backend} />);
+    await openScreen(user, "Overview");
     await user.click(await screen.findByRole("button", { name: "Deploy status: Check" }));
     expect(screen.queryByRole("button", { name: "Deploy" })).not.toBeInTheDocument();
     await user.click(await screen.findByRole("button", { name: "Reconcile now" }));
@@ -178,6 +183,7 @@ describe("External changes (F8, DLG-15)", () => {
     const user = userEvent.setup();
     const { backend, calls } = world({ kind: "in_sync", reason: "up_to_date", newFiles: 3 });
     render(<App backend={backend} />);
+    await openScreen(user, "Overview");
     await user.click(await screen.findByRole("button", { name: "Deploy status: In sync" }));
     await user.click(await screen.findByRole("button", { name: "Review changes" }));
     const dialog = await screen.findByRole("dialog", { name: "External changes" });
@@ -200,8 +206,10 @@ describe("External changes (F8, DLG-15)", () => {
   });
 
   it("asks the backend for a limited scan when the window gets the focus", async () => {
+    const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
+    await openScreen(user, "Overview");
     await screen.findByRole("button", { name: "Deploy status: Deploy pending" });
     fireEvent.focus(window);
     await vi.waitFor(() => expect(calls).toContain("scan:i1"));

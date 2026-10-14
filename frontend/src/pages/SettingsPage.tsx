@@ -47,7 +47,7 @@ export function SettingsPage() {
   const active = workspace.status === "ready" ? (workspace.data.active?.id ?? "") : "";
   const [instance, setInstance] = useState("");
   const selected = games.some((g) => g.id === instance) ? instance : games.some((g) => g.id === active) ? active : (games[0]?.id ?? "");
-  const pluginGames = games.filter((g) => g.capabilities.includes("plugins"));
+  const pluginGames = games.filter((g) => g.sections?.includes("settings.plugins"));
   const tabs: TabId[] = ["interface", "application", "mods", ...(pluginGames.length > 0 ? (["plugins"] as const) : []), "workarounds", "theme"];
   const [tab, setTab] = useState<TabId>((route.settingsTab as TabId) ?? "interface");
 

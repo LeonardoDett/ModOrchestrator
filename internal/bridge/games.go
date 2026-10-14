@@ -54,15 +54,22 @@ func (a *App) Workspace() (WorkspaceDTO, error) {
 	if err != nil {
 		return WorkspaceDTO{}, a.fail("workspace", err, nil)
 	}
-	out := WorkspaceDTO{Instances: []InstanceRefDTO{}, Items: []string{}}
+	out := WorkspaceDTO{Instances: []InstanceRefDTO{}, Items: []string{}, Groups: []WorkspaceGroupDTO{}}
 	for _, r := range w.Instances {
-		out.Instances = append(out.Instances, InstanceRefDTO{ID: string(r.ID), Name: r.Name, GameName: r.GameName})
+		out.Instances = append(out.Instances, InstanceRefDTO{ID: string(r.ID), Name: r.Name, GameName: r.GameName, Accent: r.Accent})
 	}
 	if w.Active != nil {
-		out.Active = &InstanceRefDTO{ID: string(w.Active.ID), Name: w.Active.Name, GameName: w.Active.GameName}
+		out.Active = &InstanceRefDTO{ID: string(w.Active.ID), Name: w.Active.Name, GameName: w.Active.GameName, Accent: w.Active.Accent}
 	}
 	for _, it := range w.Items {
 		out.Items = append(out.Items, string(it))
+	}
+	for _, g := range w.Groups {
+		dto := WorkspaceGroupDTO{ID: g.ID, Items: []string{}}
+		for _, it := range g.Items {
+			dto.Items = append(dto.Items, string(it))
+		}
+		out.Groups = append(out.Groups, dto)
 	}
 	return out, nil
 }

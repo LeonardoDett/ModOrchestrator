@@ -190,6 +190,7 @@ export function createOfflineBackend(): Backend {
     launchCheck: unavailable,
     launch: unavailable,
     instanceOverview: unavailable,
+    menuBadges: unavailable,
     dashboardLayout: unavailable,
     firstSteps: unavailable,
     recentGames: unavailable,

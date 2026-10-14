@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -9,7 +10,7 @@ const GAME: ManagedGame = {
   id: "i1", gameId: "skyrimse", gameName: "Skyrim Special Edition", custom: false, name: "Skyrim", adapter: "skyrimse",
   store: "steam", root: "C:/Skyrim", staging: "C:/MO/staging", archiveStore: "C:/MO/archives", backupStore: "C:/MO/backups",
   method: "hardlink", version: "1.6", active: true, hidden: false, unavailable: false, rootMissing: false, deployed: true,
-  capabilities: ["plugins", "load_order", "launch"], targets: [], modTypes: [], foreign: [],
+  capabilities: ["plugins", "load_order", "launch"], sections: ["settings.plugins", "workarounds.pluginCache", "overview.plugins"], targets: [], modTypes: [], foreign: [],
 };
 
 const STATUS: DeployStatus = {
@@ -189,10 +190,11 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
-    const launcher = screen.getByRole("group", { name: "Game launcher" });
-    await user.click(await within(launcher).findByRole("button", { name: /^Play\./ }));
+    // Play sits at the foot of the game menu (D120).
+    await openScreen(user, "Overview");
+    await user.click(await screen.findByRole("button", { name: /^Play\./ }));
     expect(calls).toContain('launch:i1:{"option":"","deploy":false,"confirmed":false}');
-    await user.click(within(launcher).getByRole("button", { name: "More launch options" }));
+    await user.click(screen.getByRole("button", { name: "More launch options" }));
     await user.click(await screen.findByRole("menuitem", { name: "Launch the game executable" }));
     expect(calls).toContain('launch:i1:{"option":"game","deploy":false,"confirmed":false}');
   });
@@ -201,8 +203,9 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     const user = userEvent.setup();
     const { backend, calls } = world({}, { state: "deploy", deployNeeded: true, autoDeploy: false, deployKind: "pending", deployReason: "desired_changed" });
     render(<App backend={backend} />);
-    const launcher = screen.getByRole("group", { name: "Game launcher" });
-    await user.click(await within(launcher).findByRole("button", { name: /^Play\./ }));
+    // Play sits at the foot of the game menu (D120).
+    await openScreen(user, "Overview");
+    await user.click(await screen.findByRole("button", { name: /^Play\./ }));
     const dialog = await screen.findByRole("dialog", { name: "Deploy needed" });
     await user.click(within(dialog).getByRole("button", { name: "Deploy and play" }));
     expect(calls).toContain('launch:i1:{"option":"","deploy":true,"confirmed":false}');
@@ -212,8 +215,9 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     const user = userEvent.setup();
     const { backend, calls } = world({}, { state: "blocked", blocking: [blocking] });
     render(<App backend={backend} />);
-    const launcher = screen.getByRole("group", { name: "Game launcher" });
-    await user.click(await within(launcher).findByRole("button", { name: /^Play\./ }));
+    // Play sits at the foot of the game menu (D120).
+    await openScreen(user, "Overview");
+    await user.click(await screen.findByRole("button", { name: /^Play\./ }));
     const dialog = await screen.findByRole("dialog", { name: "Cannot launch" });
     expect(within(dialog).queryByRole("button", { name: /Play/ })).not.toBeInTheDocument();
     expect(within(dialog).getAllByRole("button").length).toBeGreaterThan(1);
@@ -229,7 +233,7 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     };
     const { backend } = world({ instanceOverview: async () => overview, modList: async () => [] });
     render(<App backend={backend} />);
-    await user.click(await within(sidebar()).findByRole("button", { name: "Overview" }));
+    await openScreen(user, "Overview");
     expect(await screen.findByText("Nothing needs attention. The setup is ready to play.")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "142 enabled / 380" }));
     expect(await screen.findByRole("heading", { level: 1, name: "Mods" })).toBeInTheDocument();

@@ -72,6 +72,8 @@ func (Adapter) Definitions() []game.Definition {
 	return []game.Definition{{
 		ID:   GameID,
 		Name: "The Elder Scrolls V: Skyrim Special Edition",
+		// Accent of the workspace (D122): the cold blue of the game's art.
+		Accent: "#7FA6D9",
 		Capabilities: game.NewCapabilities(
 			game.CapFilesystemTarget, game.CapModTypes, game.CapInstaller,
 			game.CapPlugins, game.CapLoadOrder, game.CapLaunch, game.CapExternalChanges,

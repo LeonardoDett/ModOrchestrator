@@ -1,4 +1,5 @@
 import { act, render, screen, waitFor, within } from "@testing-library/react";
+import { openOperations } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -90,14 +91,14 @@ describe("App shell", () => {
 
   it("applies the orchestrator theme in dark mode", async () => {
     render(<App backend={createOfflineBackend()} />);
-    expect(await screen.findByRole("heading", { level: 1, name: "Dashboard" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Home" })).toBeInTheDocument();
     await waitFor(() => expect(document.documentElement.getAttribute("data-theme")).toBe("orchestrator"));
     expect(document.documentElement.classList.contains("dark")).toBe(true);
   });
 
   it("title bar is a structural layer and paints the logo as a themed mask", async () => {
     render(<App backend={createOfflineBackend()} />);
-    await screen.findByRole("heading", { level: 1, name: "Dashboard" });
+    await screen.findByRole("heading", { level: 1, name: "Home" });
     const logo = screen.getByRole("img", { name: "Mod Orchestrator" });
     expect(logo.tagName).not.toBe("IMG");
     expect(logo).toHaveClass("bg-fg");
@@ -109,10 +110,10 @@ describe("App shell", () => {
     const user = userEvent.setup();
     render(<App backend={createOfflineBackend()} />);
     const nav = sidebar();
-    expect(within(nav).getByRole("button", { name: "Dashboard" })).toHaveAttribute("aria-current", "page");
+    expect(within(nav).getByRole("button", { name: "Home" })).toHaveAttribute("aria-current", "page");
     expect(within(nav).getByRole("button", { name: "Settings" }).closest(".mt-auto")).not.toBeNull();
-    await user.click(within(nav).getByRole("button", { name: "Games" }));
-    expect(screen.getByRole("heading", { level: 1, name: "Games" })).toBeInTheDocument();
+    await user.click(within(nav).getByRole("button", { name: "Library" }));
+    expect(screen.getByRole("heading", { level: 1, name: "Library" })).toBeInTheDocument();
     expect(screen.getByText("Live data is available only inside the desktop app.")).toBeInTheDocument();
   });
 
@@ -120,7 +121,8 @@ describe("App shell", () => {
     render(<App backend={createOfflineBackend()} />);
     expect(screen.getByText("Backend offline")).toBeInTheDocument();
     expect(screen.getAllByText(/only inside the desktop app/).length).toBeGreaterThan(0);
-    expect(screen.getByRole("group", { name: "Game launcher" })).toHaveTextContent("No game selected");
+    // Without a game there is only the app level: no game menu, no game top bar (D023, D120).
+    expect(within(sidebar()).queryByRole("button", { name: "Mods" })).not.toBeInTheDocument();
     // No window controls outside a frameless desktop window.
     expect(screen.queryByRole("button", { name: "Minimize" })).not.toBeInTheDocument();
   });
@@ -138,8 +140,10 @@ describe("App shell", () => {
       fake.push([op("b", "running"), op("a", "interrupted")], { id: "e1", sequence: 1, type: "operation.started", occurredAt: "", operationId: "b", status: "failed" });
     });
     expect(await screen.findByText("kind-b")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Operations: 1 operation running" })).toBeInTheDocument();
-    expect(screen.queryByText("Failed")).not.toBeInTheDocument();
+    const user = userEvent.setup();
+    await openOperations(user);
+    const drawer = await screen.findByRole("dialog", { name: "Operations" });
+    expect(within(drawer).getByRole("region", { name: "In progress" })).toHaveTextContent("kind-b");
   });
 
   it("switches the language through the backend setting", async () => {
@@ -153,7 +157,7 @@ describe("App shell", () => {
     expect(await screen.findByRole("heading", { level: 1, name: "Configurações" })).toBeInTheDocument();
     expect(document.documentElement.lang).toBe("pt-BR");
     const nav = screen.getAllByRole("navigation", { name: "Navegação principal" })[0]!;
-    expect(within(nav).getByRole("button", { name: "Jogos" })).toBeInTheDocument();
+    expect(within(nav).getByRole("button", { name: "Biblioteca" })).toBeInTheDocument();
   });
 
   it("translates coded backend errors (INV-OPS-05)", async () => {
@@ -175,7 +179,7 @@ describe("App shell", () => {
       error: { code: "brand_new_failure", message: "bad header", step: "extract", retryable: true },
     });
     render(<App backend={fakeBackend([op("r", "running", { progress: { current: 2, total: 5 } }), failed]).backend} />);
-    await user.click(await screen.findByRole("button", { name: /Operations: 1 operation running/ }));
+    await openOperations(user);
     const drawer = await screen.findByRole("dialog", { name: "Operations" });
     expect(within(drawer).getByRole("region", { name: "In progress" })).toHaveTextContent("kind-r");
     expect(within(drawer).getByText("2 of 5")).toBeInTheDocument();
@@ -187,7 +191,7 @@ describe("App shell", () => {
     const user = userEvent.setup();
     const fake = fakeBackend([op("a", "failed")]);
     render(<App backend={fake.backend} />);
-    await user.click(await screen.findByRole("button", { name: "Operations" }));
+    await openOperations(user);
     const drawer = await screen.findByRole("dialog", { name: "Operations" });
     await user.click(within(drawer).getByRole("button", { name: "View log entries" }));
     expect(await screen.findByText("copy failed")).toBeInTheDocument();

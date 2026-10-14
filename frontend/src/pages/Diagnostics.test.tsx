@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { openScreen } from "../test/shell";
 import { join } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -68,6 +69,7 @@ function world() {
   });
   const backend: Backend = {
     ...createOfflineBackend(),
+    menuBadges: async () => [{ item: "diagnostics", count: 2, attention: true }],
     connected: true,
     getAppInfo: async () => ({ name: "Mod Orchestrator", version: "1", dataDir: "/d", schemaVersion: 7, interruptedOperations: 0, logsDir: "/l", customTitleBar: false }),
     listRecentOperations: async () => [],
@@ -113,14 +115,15 @@ function world() {
 }
 
 async function openProblems(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(await screen.findByRole("button", { name: "2 problems need attention" }));
+  // The count of the game menu comes from the backend (D120).
+  await openScreen(user, /^Diagnostics, 2 problems$/);
   return screen.findByRole("grid", { name: "Problems" });
 }
 
 describe("Diagnostics (F9)", () => {
   beforeEach(() => localStorage.clear());
 
-  it("counts blocking + errors in the top bar and lists problems by severity with evidence and actions", async () => {
+  it("counts blocking + errors in the game menu and lists problems by severity with evidence and actions", async () => {
     const user = userEvent.setup();
     const { backend } = world();
     render(<App backend={backend} />);

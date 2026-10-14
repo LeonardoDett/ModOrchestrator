@@ -1,4 +1,5 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -66,7 +67,7 @@ function world(over: Partial<Backend> = {}) {
 const sidebar = () => screen.getAllByRole("navigation", { name: "Main navigation" })[0]!;
 
 async function openMods(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(await within(sidebar()).findByRole("button", { name: "Mods" }));
+  await openScreen(user, "Mods");
   return screen.findByRole("grid", { name: "Mods" });
 }
 
@@ -119,7 +120,7 @@ describe("F13: keyboard and page states", () => {
     const user = userEvent.setup();
     const { backend } = world();
     render(<App backend={backend} />);
-    await within(sidebar()).findByRole("button", { name: "Mods" });
+    await within(sidebar()).findByRole("group", { name: "Jump to" });
     await user.keyboard("{Control>}2{/Control}");
     await screen.findByRole("grid", { name: "Mods" });
     await waitFor(() => expect(screen.getByRole("main")).toHaveFocus());
@@ -131,7 +132,7 @@ describe("F13: keyboard and page states", () => {
     const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
-    await within(sidebar()).findByRole("button", { name: "Mods" });
+    await within(sidebar()).findByRole("group", { name: "Jump to" });
     await user.keyboard("{Control>}i{/Control}");
     await waitFor(() => expect(calls).toContain("pick"));
   });
@@ -140,7 +141,7 @@ describe("F13: keyboard and page states", () => {
     const user = userEvent.setup();
     const { backend } = world();
     render(<App backend={backend} />);
-    await within(sidebar()).findByRole("button", { name: "Mods" });
+    await within(sidebar()).findByRole("group", { name: "Jump to" });
     await user.keyboard("{Control>}k{/Control}");
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("Go to Plugins")).toBeInTheDocument();
@@ -169,7 +170,7 @@ describe("F13: keyboard and page states", () => {
     const user = userEvent.setup();
     const { backend } = world({ modList: () => new Promise(() => {}) });
     render(<App backend={backend} />);
-    await user.click(await within(sidebar()).findByRole("button", { name: "Mods" }));
+    await openScreen(user, "Mods");
     expect(await screen.findByRole("status", { name: "Loading" })).toBeInTheDocument();
   });
 
@@ -177,7 +178,7 @@ describe("F13: keyboard and page states", () => {
     const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
-    await user.click(await within(sidebar()).findByRole("button", { name: "Plugins" }));
+    await openScreen(user, "Plugins");
     const grid = await screen.findByRole("grid", { name: "Plugins" });
     await screen.findByText("SkyUI.esp");
     grid.focus(); // Skyrim.esm, implicit

@@ -1,4 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -115,8 +116,7 @@ function world(over: Partial<LoadOrderView["state"]> = {}) {
 }
 
 async function open(user: ReturnType<typeof userEvent.setup>, name: string) {
-  const nav = screen.getAllByRole("navigation", { name: "Main navigation" })[0]!;
-  await user.click(await within(nav).findByRole("button", { name }));
+  await openScreen(user, name);
 }
 
 describe("Plugins screen (F11)", () => {

@@ -116,11 +116,13 @@ Outras ações na tela Games: parar de gerenciar (exige purge; mantém ou apaga 
 
 O workspace mostra: Overview, Mods, Conflicts, Profiles, Diagnostics sempre; Plugins se `plugins`; Load Order se `load_order`; Saves se `save_games` (V1.x). A lista é consulta do bridge (a UI não decide, anti-pattern 1).
 
+Como ficou (RD4, D120): o mesmo `Workspace()` devolve também `groups`, os itens arrumados como o menu do jogo (`entry`: Visão geral; `content`: Mods, Plugins, Ordem de carga, Conflitos; `setup`: Perfis; `health`: Diagnóstico) por `games.WorkspaceGroups`; grupo vazio não vem. `MenuBadges(instância)` (serviço `overview`) devolve contagem e atenção por item: Diagnóstico com `blocking` + `error` (atenção quando algo bloqueia) e Conflitos com os pares não revisados quando `diagnostics.showUnreviewedConflicts` está ligada (atenção enquanto houver). Fonte que não pôde ser lida não dá selo, nunca zero. A instância ativa traz `accent`, a cor do jogo (D122), declarada pela definição (`Definition.Accent`; Skyrim e Valheim declaram; jogo personalizado fica com a cor do app). Partes de telas compartilhadas que dependem de capability vêm como `sections` no jogo gerenciado (`games.Sections`: aba Plugins de Configurações, cache de cabeçalhos de plugin, número de plugins da Visão geral); a UI renderiza as que recebe e não testa capability.
+
 Como ficou (F3): `Workspace()` devolve a instância ativa, as instâncias para troca e os ids das telas (`overview`, `mods`, `plugins`, `load_order`, `conflicts`, `profiles`, `diagnostics`) derivados por `games.WorkspaceItems(capabilities)`. A UI só mapeia cada id para ícone e rótulo e ignora ids que não conhece. Sem instância ativa não há seção de workspace. Telas cuja fase ainda não chegou mostram uma página honesta, sem ações.
 
 ## 6. Launch (D045)
 
-Botão Play na barra de título: executa `launch()` do adapter pelo `ProcessLauncher`, após a checagem pré-lançamento (core/04 §9). Enquanto o jogo roda (detecção por processo), deploy/purge ficam bloqueados (`game_running`). Ferramentas adicionais (hotbar) V1.x.
+Botão Play no rodapé do menu do jogo desde a D120 (antes, na barra de título): executa `launch()` do adapter pelo `ProcessLauncher`, após a checagem pré-lançamento (core/04 §9). Enquanto o jogo roda (detecção por processo), deploy/purge ficam bloqueados (`game_running`). Ferramentas adicionais (hotbar) V1.x.
 
 Como ficou (F12, D090): interface opcional `ports.LaunchSupport` (opções de lançamento; Skyrim: SKSE se o loader está na raiz, senão o executável); jogo genérico usa o executável declarado; sem opção, Play fica indisponível com o motivo. Operação `launch` (`check`, `deploy`, `start`) e monitor de processo (`game.running_changed`).
 

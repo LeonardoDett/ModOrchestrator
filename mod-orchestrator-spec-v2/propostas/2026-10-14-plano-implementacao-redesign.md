@@ -161,7 +161,9 @@ Concluída em 2026-10-14 (D-039 na lib, sem decisão nova no app): `FilterChip`,
 - **Pronto quando:** mesma validação da RD2; pendência P6 da lib (conferir no navegador `DataTable` virtualizada com reordenação, `Tree`, `Drawer`, `Popover`, `ContextMenu`) feita para o que este lote toca.
 - **Sem a capability:** não se aplica a componente; estados vazio e desabilitado cobertos por teste.
 
-### RD4. Estrutura do app: dois níveis e casca
+### RD4. Estrutura do app: dois níveis e casca ✅
+
+Concluída em 2026-10-14, sem decisão nova (executa D120 e D122). Backend: `Workspace()` com grupos e cor do jogo, `MenuBadges`, `sections` no jogo gerenciado. App: casca em dois níveis com a `AppShell layout="topbar"`, menu do jogo com contagem e atenção vindas do backend, cartão de implantação e Jogar no rodapé, paleta por botão na barra, operações pelo menu Ajuda, cor do jogo por `ThemeScope`. Os três `capabilities.includes` saíram da UI. Conferida no `wails dev` com um jogo genérico de teste (nível do app, entrada no jogo, menu sem Plugins, menu recolhido de 60 px). Ficaram para as fases das telas: o título da página ainda é uma linha da casca (cada tela redesenhada traz o seu cabeçalho) e a Visão geral antiga ainda tem o próprio botão Jogar.
 
 - **Objetivo:** o app passa a ter nível do app e espaço do jogo, com as telas atuais funcionando dentro da casca nova.
 - **Entregáveis:**

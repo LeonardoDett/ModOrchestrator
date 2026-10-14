@@ -76,6 +76,8 @@ func (Adapter) Definitions() []game.Definition {
 	return []game.Definition{{
 		ID:   GameID,
 		Name: "Valheim",
+		// Accent of the workspace (D122): the amber of the game's fire light.
+		Accent: "#D98B48",
 		// No plugins and no load_order: the framework orders what it loads
 		// by the dependencies each mod declares in its own code.
 		Capabilities: game.NewCapabilities(

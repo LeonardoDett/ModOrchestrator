@@ -44,7 +44,7 @@ function stateHint(i18n: Translator, c: LaunchCheck): string {
  * them; while the game runs Play becomes "Em execução". The menu has the
  * other launch options and the game folder.
  */
-export function PlayButton() {
+export function PlayButton({ layout = "split" }: { layout?: "split" | "block" | "icon" } = {}) {
   const i18n = useI18n();
   const { t } = i18n;
   const backend = useBackend();
@@ -81,16 +81,34 @@ export function PlayButton() {
   const hint = stateHint(i18n, c);
   const others = c.options.filter((o) => !o.default);
 
+  const label = `${t(c.state === "running" ? "launch.running" : "launch.play")}. ${hint}`;
+  const intent = c.state === "blocked" ? "danger" : c.state === "warnings" ? "warning" : "brand";
+  const emphasis = c.state === "running" ? "medium" : "high";
+  const dialogNode = dialog ? <PrelaunchDialog check={c} option={dialog.option} onLaunch={launch} onClose={() => setDialog(null)} /> : null;
+
+  // Rail of the collapsed menu (D120): the main action only, named by its state.
+  if (layout === "icon") {
+    return (
+      <>
+        <Button size="icon" intent={intent} emphasis={emphasis} disabled={disabled} aria-label={label} tooltip={hint} onClick={() => play("")}>
+          {icon}
+        </Button>
+        {dialogNode}
+      </>
+    );
+  }
+
   return (
-    <div className="flex items-center">
+    <div className={layout === "block" ? "flex w-full items-stretch" : "flex items-center"}>
       <Button
-        size="sm"
-        intent={c.state === "blocked" ? "danger" : c.state === "warnings" ? "warning" : "brand"}
-        emphasis={c.state === "running" ? "medium" : "high"}
+        size={layout === "block" ? "md" : "sm"}
+        fullWidth={layout === "block"}
+        intent={intent}
+        emphasis={emphasis}
         disabled={disabled}
         startIcon={icon}
         title={hint}
-        aria-label={`${t(c.state === "running" ? "launch.running" : "launch.play")}. ${hint}`}
+        aria-label={label}
         className="rounded-r-none"
         onClick={() => play("")}
       >
@@ -98,7 +116,7 @@ export function PlayButton() {
       </Button>
       <Menu.Root placement="bottom-end">
         <Menu.Trigger>
-          <Button size="sm" className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
+          <Button size={layout === "block" ? "md" : "sm"} className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
             <ChevronDownIcon size="sm" />
           </Button>
         </Menu.Trigger>
@@ -115,7 +133,7 @@ export function PlayButton() {
           </Menu.Item>
         </Menu.Content>
       </Menu.Root>
-      {dialog ? <PrelaunchDialog check={c} option={dialog.option} onLaunch={launch} onClose={() => setDialog(null)} /> : null}
+      {dialogNode}
     </div>
   );
 }

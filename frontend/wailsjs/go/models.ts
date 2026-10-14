@@ -241,6 +241,8 @@ export namespace bridge {
 	    rootMissing: boolean;
 	    deployed: boolean;
 	    capabilities: string[];
+	    sections: string[];
+	    accent?: string;
 	    targets: TargetDTO[];
 	    modTypes: ModTypeDTO[];
 	    foreign: FindingDTO[];
@@ -271,6 +273,8 @@ export namespace bridge {
 	        this.rootMissing = source["rootMissing"];
 	        this.deployed = source["deployed"];
 	        this.capabilities = source["capabilities"];
+	        this.sections = source["sections"];
+	        this.accent = source["accent"];
 	        this.targets = this.convertValues(source["targets"], TargetDTO);
 	        this.modTypes = this.convertValues(source["modTypes"], ModTypeDTO);
 	        this.foreign = this.convertValues(source["foreign"], FindingDTO);
@@ -2512,6 +2516,7 @@ export namespace bridge {
 	    id: string;
 	    name: string;
 	    gameName: string;
+	    accent?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new InstanceRefDTO(source);
@@ -2522,6 +2527,7 @@ export namespace bridge {
 	        this.id = source["id"];
 	        this.name = source["name"];
 	        this.gameName = source["gameName"];
+	        this.accent = source["accent"];
 	    }
 	}
 	export class LaunchOptionDTO {
@@ -2859,6 +2865,22 @@ export namespace bridge {
 	    }
 	}
 	
+	export class MenuBadgeDTO {
+	    item: string;
+	    count: number;
+	    attention: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new MenuBadgeDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.item = source["item"];
+	        this.count = source["count"];
+	        this.attention = source["attention"];
+	    }
+	}
 	export class MethodStatusDTO {
 	    method: string;
 	    available: boolean;
@@ -4918,10 +4940,25 @@ export namespace bridge {
 	        this.longPaths = source["longPaths"];
 	    }
 	}
+	export class WorkspaceGroupDTO {
+	    id: string;
+	    items: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new WorkspaceGroupDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.items = source["items"];
+	    }
+	}
 	export class WorkspaceDTO {
 	    active?: InstanceRefDTO;
 	    instances: InstanceRefDTO[];
 	    items: string[];
+	    groups: WorkspaceGroupDTO[];
 	
 	    static createFrom(source: any = {}) {
 	        return new WorkspaceDTO(source);
@@ -4932,6 +4969,7 @@ export namespace bridge {
 	        this.active = this.convertValues(source["active"], InstanceRefDTO);
 	        this.instances = this.convertValues(source["instances"], InstanceRefDTO);
 	        this.items = source["items"];
+	        this.groups = this.convertValues(source["groups"], WorkspaceGroupDTO);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

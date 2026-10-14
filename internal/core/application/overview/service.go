@@ -59,6 +59,7 @@ type Sources struct {
 	}
 	Settings interface {
 		AppValue(ctx context.Context, key string) (appsettings.Effective, error)
+		InstanceValue(ctx context.Context, instance, key string) (appsettings.Effective, error)
 	}
 	// Facts answers the first-steps checklist.
 	Facts interface {
@@ -343,4 +344,41 @@ func (s *Service) ActiveGame(ctx context.Context) (ActiveGame, error) {
 		return ActiveGame{}, err
 	}
 	return ActiveGame{Instance: &v.Instance, Status: v.Status, Mods: v.Mods, Conflicts: v.Conflicts}, nil
+}
+
+// MenuBadge is the count shown on an item of the game menu (D120) and
+// whether the item asks for attention. The UI draws it; it never decides.
+type MenuBadge struct {
+	Item      games.WorkspaceItem
+	Count     int
+	Attention bool
+}
+
+// showUnreviewed is the instance setting that turns the badge of
+// unreviewed conflicts on (ui/00 §2.2).
+const showUnreviewed = "diagnostics.showUnreviewedConflicts"
+
+// MenuBadges answers the badges of the game menu of an instance: problems
+// that block or are errors on Diagnostics (attention when something
+// blocks), unreviewed conflict pairs on Conflicts when the setting is on
+// (attention while any is left) and plugins with problems when the game has
+// plugins. A source that cannot be read gives no badge, never a zero.
+func (s *Service) MenuBadges(ctx context.Context, id game.InstanceID) []MenuBadge {
+	var out []MenuBadge
+	if p, err := s.Diagnostics.Problems(ctx, id); err == nil {
+		blocking := p.Counts.Blocking
+		if n := blocking + p.Counts.Errors; n > 0 {
+			out = append(out, MenuBadge{Item: games.ItemDiagnostics, Count: n, Attention: blocking > 0})
+		}
+	}
+	show := true
+	if v, err := s.Settings.InstanceValue(ctx, string(id), showUnreviewed); err == nil {
+		show = v.Value == "true"
+	}
+	if show {
+		if pv, err := s.Conflicts.Pairs(ctx, id, false, ""); err == nil && pv.Totals.Unreviewed > 0 {
+			out = append(out, MenuBadge{Item: games.ItemConflicts, Count: pv.Totals.Unreviewed, Attention: true})
+		}
+	}
+	return out
 }

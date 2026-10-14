@@ -76,3 +76,33 @@ func TestOverviewAndFirstSteps(t *testing.T) {
 		t.Fatalf("recent = %+v %v", recent, err)
 	}
 }
+
+// D120: the game menu badges come from their owners on each read. Unreviewed
+// conflicts ask for attention while the setting is on; turned off, the badge
+// goes away instead of showing zero.
+func TestMenuBadges(t *testing.T) {
+	e := newEnv(t)
+	ov := e.overview()
+	e.installFiles(map[string][]string{"Alpha": {"textures/a.dds", "a"}, "Bravo": {"textures/a.dds", "b"}}, "Alpha", "Bravo")
+
+	var conflicts *overviewsvc.MenuBadge
+	for _, b := range ov.MenuBadges(ctx, e.inst.ID) {
+		if b.Item == "conflicts" {
+			b := b
+			conflicts = &b
+		}
+	}
+	if conflicts == nil || conflicts.Count != 1 || !conflicts.Attention {
+		t.Fatalf("conflicts badge = %+v", conflicts)
+	}
+
+	set := appsettings.NewService(sqlite.NewSettingsRepository(e.db), system.Locale{}, settings.V1)
+	if err := set.SetInstance(ctx, string(e.inst.ID), "diagnostics.showUnreviewedConflicts", "false"); err != nil {
+		t.Fatal(err)
+	}
+	for _, b := range ov.MenuBadges(ctx, e.inst.ID) {
+		if b.Item == "conflicts" {
+			t.Fatalf("badge with the setting off: %+v", b)
+		}
+	}
+}

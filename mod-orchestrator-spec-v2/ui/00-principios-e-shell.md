@@ -2,7 +2,7 @@
 
 Referências: D014, D015, D016, D021, D037, D043–D045, D112, D115, **D119, D120, D121**; design v1 em `propostas/redesign-telas-v1-fechamento.md` (canvas "Redesign das telas do Mod Orchestrator"); plano em `propostas/2026-10-14-plano-implementacao-redesign.md`.
 
-> Este documento descreve o shell **alvo** do design v1. O `frontend/` passa a segui-lo na fase RD4 do plano; até lá o app roda o shell anterior (barra de título com lançador, sidebar única e topbar da página). A descrição do shell anterior está no histórico do git e na D054.
+> O `frontend/` segue esta casca desde a fase RD4 do plano (2026-10-14). As telas dentro dela continuam as anteriores até a fase de cada uma; a descrição do shell antigo está no histórico do git e na D054.
 
 ## 1. Princípios
 
@@ -90,7 +90,8 @@ Reservado, não renderizado: Downloads (V2).
 - **Item em atenção**: Conflitos fica em âmbar com selo preenchido quando há pendência. O nível de atenção vem com o item; a UI não o deduz da contagem.
 - **Rodapé**: cartão **"Implantando"** com progresso enquanto há deploy em curso, preso acima do botão **Jogar**. O botão segue core/11 §6 (habilitado; "deploy necessário antes", quando ele mesmo implanta; bloqueado com o diagnóstico na dica) e só existe com `launch` efetiva. O cartão de implantação não depende de `launch`.
 - **Recolhido**: trilho de 60 px só com ícones, dica ao passar o mouse com nome e contagem, selos mantidos, anel de progresso da implantação e "Jogar" como ícone. O estado é lembrado (estado de apresentação, no navegador).
-- **Ajustes da instância** (recursos ligáveis, D115) pertence ao espaço do jogo; o ponto de entrada é fixado em `telas/overview.md` quando a tela for transcrita (plano, RD13).
+- **Ajustes da instância** (recursos ligáveis, D115) pertence ao espaço do jogo; o item entra no menu na RD13, junto com a tela (até lá não aparece: nada falso). As pranchas divergiam sobre onde fica o Diagnóstico; ficou no grupo Saúde.
+- O "Jogar" aparece desabilitado com o motivo quando o backend diz que não há como lançar (jogo sem executável); some de vez quando `launch` não é efetiva.
 
 #### Cabeçalho da página
 Título, chips de número com ícone ("142 de 380 ativos") e ações. A ação principal da tela é o único botão preenchido; as demais são botões só com ícone, com dica obrigatória e, quando faz sentido, selo ou progresso. Ação indisponível aparece desabilitada com o motivo vindo do backend, nunca escondida, exceto as que dependem de capability.

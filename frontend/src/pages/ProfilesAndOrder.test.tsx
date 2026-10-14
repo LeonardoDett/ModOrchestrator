@@ -1,4 +1,5 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -88,8 +89,7 @@ function world() {
 }
 
 async function open(user: ReturnType<typeof userEvent.setup>, page: "Mods" | "Profiles") {
-  const nav = screen.getAllByRole("navigation", { name: "Main navigation" })[0]!;
-  await user.click(await within(nav).findByRole("button", { name: page }));
+  await openScreen(user, page);
 }
 
 describe("mod order rows (presentation of ModOrder)", () => {
@@ -152,10 +152,11 @@ describe("Mods screen: priority and order (F5)", () => {
 describe("Profiles (F5)", () => {
   beforeEach(() => localStorage.clear());
 
-  it("switches the active profile from the top bar", async () => {
+  it("switches the active profile from the top bar of the game (D120)", async () => {
     const user = userEvent.setup();
     const { state, backend } = world();
     render(<App backend={backend} />);
+    await openScreen(user, "Overview");
     const select = await screen.findByRole("combobox", { name: "Active profile" });
     await chooseOption(user, select, "Survival");
     await waitFor(() => expect(state.calls).toContain("activate:p2"));

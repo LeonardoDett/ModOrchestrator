@@ -1,4 +1,5 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
+import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -127,7 +128,7 @@ function fakeWorld(over: Partial<World> = {}) {
 const sidebar = () => screen.getAllByRole("navigation", { name: "Main navigation" })[0]!;
 
 async function openGames(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(within(sidebar()).getByRole("button", { name: "Games" }));
+  await user.click(within(sidebar()).getByRole("button", { name: "Library" }));
 }
 
 describe("Games screen and assistant (F3)", () => {
@@ -171,6 +172,7 @@ describe("Games screen and assistant (F3)", () => {
     const user = userEvent.setup();
     const { backend } = fakeWorld({ items: GENERIC, instances: [managed({ custom: true, gameId: "generic", gameName: "Generic game", name: "Valheim", capabilities: [] })], discovered: [] });
     render(<App backend={backend} />);
+    await openScreen(user, "Mods");
     const nav = sidebar();
     expect(await within(nav).findByRole("button", { name: "Mods" })).toBeInTheDocument();
     expect(within(nav).queryByRole("button", { name: "Plugins" })).not.toBeInTheDocument();

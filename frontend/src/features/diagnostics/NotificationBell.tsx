@@ -97,15 +97,13 @@ export function NotificationBell({ onOpenOperations }: NotificationBellProps) {
       <Popover.Trigger>
         <Button
           emphasis="low"
-          size="sm"
+          size="icon"
           aria-label={unread > 0 ? `${t("topbar.notifications")}: ${tp("topbar.notificationsUnread", unread)}` : t("topbar.notifications")}
-          startIcon={<BellIcon size="sm" />}
+          title={t("topbar.notifications")}
+          badge={unread > 0 ? unread : undefined}
+          badgeIntent="warning"
         >
-          {unread > 0 ? (
-            <Badge intent="brand" size="sm" aria-hidden="true">
-              {unread}
-            </Badge>
-          ) : null}
+          <BellIcon size="sm" />
         </Button>
       </Popover.Trigger>
       <Popover.Content className="w-[26rem] max-w-[90vw] p-0">

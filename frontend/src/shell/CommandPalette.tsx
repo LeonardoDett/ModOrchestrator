@@ -4,7 +4,7 @@ import { InfoIcon, MoonIcon, PackagePlusIcon, RocketIcon, SunIcon } from "dettma
 import { Command, Modal, type CommandItem, Icon } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { LANGUAGES, useI18n } from "../i18n/i18n";
-import { buildSections, type Route } from "./navigation";
+import { APP_END, APP_START, VIEWS, isWorkspaceView, type Route } from "./navigation";
 import type { ShellDialog } from "./TopBar";
 
 type PaletteAction =
@@ -40,7 +40,7 @@ export function CommandPalette({ open, onOpenChange, onNavigate, workspaceItems,
   const settings = useSettings();
 
   const items = useMemo<CommandItem<PaletteAction>[]>(() => {
-    const list: CommandItem<PaletteAction>[] = buildSections(workspaceItems).flatMap((section) => section.items).map((entry) => {
+    const list: CommandItem<PaletteAction>[] = [...APP_START, ...(workspaceItems ?? []).filter(isWorkspaceView).map((id) => VIEWS[id]), ...APP_END].map((entry) => {
       const GlyphIcon = entry.icon;
       return {
         id: `go:${entry.id}`,

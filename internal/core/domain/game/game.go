@@ -145,6 +145,10 @@ type Definition struct {
 	// UnmanagedHints are patterns of generated files suggested as "leave
 	// unmanaged" (core/12 §9).
 	UnmanagedHints []FilePattern
+	// Accent is the game's accent color (#RRGGBB) used inside its workspace
+	// (D122). Empty: the app's own accent. Only a seed for the theme engine,
+	// which still guarantees contrast; never a status.
+	Accent string
 }
 
 // FilePattern matches the locations of one target whose path (case

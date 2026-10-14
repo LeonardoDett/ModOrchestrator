@@ -1,42 +1,46 @@
-import { DEFAULT_ROUTE, NAV_SECTIONS, VIEWS, buildSections } from "./navigation";
+import { APP_END, APP_START, DEFAULT_ROUTE, GROUP_LABELS, workspaceGroups } from "./navigation";
 import { en } from "../i18n/catalog/en";
 
-describe("navigation", () => {
-  const items = NAV_SECTIONS.flatMap((s) => s.items);
+describe("navigation (D120)", () => {
+  const appItems = [...APP_START, ...APP_END];
 
-  it("has unique ids, includes the default view and pins global app items to the bottom", () => {
-    const ids = items.map((e) => e.id);
+  it("app level has unique ids, includes the default view and no game screen", () => {
+    const ids = appItems.map((e) => e.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect(ids).toContain(DEFAULT_ROUTE.view);
-    expect(NAV_SECTIONS.map((s) => [s.id, s.placement])).toEqual([
-      ["global", "start"],
-      ["app", "end"],
-    ]);
-  });
-
-  it("does not expose reserved areas or the game workspace without a game (D023, anti-pattern 18)", () => {
-    const labels = items.map((e) => en[e.label].toLowerCase());
+    const labels = appItems.map((e) => en[e.label].toLowerCase());
     for (const reserved of ["downloads", "tools", "collections", "saves", "mods", "overview"]) {
       expect(labels).not.toContain(reserved);
     }
-    expect(items).not.toContain(VIEWS.diagnostics);
-    expect(buildSections(undefined)).toBe(NAV_SECTIONS);
-    expect(buildSections([])).toBe(NAV_SECTIONS);
   });
 
-  it("shows exactly the workspace screens the backend sent, in its order (core/11 §5)", () => {
-    const generic = buildSections(["overview", "mods", "conflicts", "profiles", "diagnostics"]);
-    expect(generic.map((s) => s.id)).toEqual(["global", "workspace", "app"]);
-    const ids = generic[1]!.items.map((e) => e.id);
-    expect(ids).toEqual(["overview", "mods", "conflicts", "profiles", "diagnostics"]);
-    expect(ids).not.toContain("plugins");
-
-    const withPlugins = buildSections(["overview", "mods", "plugins", "load_order", "diagnostics"]);
-    expect(withPlugins[1]!.items.map((e) => e.id)).toEqual(["overview", "mods", "plugins", "load_order", "diagnostics"]);
+  it("renders exactly the groups and items the backend sent, in its order (core/11 §5)", () => {
+    const groups = workspaceGroups(
+      [
+        { id: "entry", items: ["overview"] },
+        { id: "content", items: ["mods", "conflicts"] },
+        { id: "setup", items: ["profiles"] },
+        { id: "health", items: ["diagnostics"] },
+      ],
+      undefined,
+    );
+    expect(groups.map((g) => [g.id, g.items])).toEqual([
+      ["entry", ["overview"]],
+      ["content", ["mods", "conflicts"]],
+      ["setup", ["profiles"]],
+      ["health", ["diagnostics"]],
+    ]);
+    expect(GROUP_LABELS.entry).toBeUndefined();
+    expect(en[GROUP_LABELS.content!]).toBe("Content");
   });
 
-  it("ignores ids it does not know instead of inventing screens", () => {
-    const sections = buildSections(["overview", "saves", "downloads"]);
-    expect(sections[1]!.items.map((e) => e.id)).toEqual(["overview"]);
+  it("ignores ids it does not know and drops a group left empty", () => {
+    const groups = workspaceGroups([{ id: "content", items: ["mods", "saves" as never] }, { id: "obtain", items: ["downloads" as never] }], undefined);
+    expect(groups).toEqual([{ id: "content", items: ["mods"] }]);
+  });
+
+  it("an older backend without groups gets one group with its items", () => {
+    expect(workspaceGroups(undefined, ["overview", "mods", "saves"])).toEqual([{ id: "entry", items: ["overview", "mods"] }]);
+    expect(workspaceGroups(undefined, undefined)).toEqual([]);
   });
 });
