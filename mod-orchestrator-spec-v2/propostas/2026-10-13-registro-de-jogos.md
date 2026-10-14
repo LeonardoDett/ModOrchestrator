@@ -1,8 +1,48 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **aprovada em 2026-10-13** com as respostas da seção 6. **R1 (D113), R2 (D115), R3 (D116) e R4 (D117) implementadas no backend e no bridge.** Falta: R5 (telas) e R6 (contrato de extensão por jogo). Este arquivo não é autoridade: vira decisão em `docs-ia/decisoes.md` e texto de `core/11` só depois de aprovado.
+Status: **R1 a R4 concluídas em 2026-10-13** (backend e bridge, no master); **R5 e R6 pendentes**, a entrar como fases do plano de implementação. Estado final na seção 0. As seções 2 e 3 descrevem o desenho como foi aprovado; onde a implementação divergiu, vale a decisão citada.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
+
+## 0. Estado final (2026-10-14)
+
+### Feito
+
+| Fase | Commit | Decisão | O que entregou |
+|---|---|---|---|
+| R1. Registro como dado | `6c75748` | D113 | `Definition.Discovery` e `Support`; detecção por loja genérica; classe e dependências dos recursos (`game.Describe`); `Registry.Support()` e bridge `GamesSupport()`. |
+| R2. Recursos ligáveis | `c7aabfe` | D115 | `Instance.Features` (tabela `instance_features`, migração 0009); `Definition.Effective`; `ports.InstanceDefinition` como único ponto de consulta; `games.SetFeature`/`Features`; bridge `InstanceFeatures`/`SetInstanceFeature`. |
+| R3. Manifesto | `6d5626b`, `5b7b665` | D116, D117 | `game.Manifest` (JSON, `schema: 1`, com `creatable` da D118); adapter `generic` v2 servindo manifestos. |
+| R4. Jogo personalizado como entrada | `5b7b665` | D117 | Tabela `game_entries` (migração 0010); registro composto (`Registry.SetEntries`); o assistente atual cria a entrada; migração das instâncias `generic` na inicialização; bridge `GameEntries`/`ExportGameEntry`/`ImportGameEntry`/`DeleteGameEntry`. |
+
+Nenhum push foi feito. Validação em cada fase: `go vet ./...`, `go test ./...`, typecheck, testes do frontend e `wails build`.
+
+### O que o usuário já percebe sem tela nova
+
+- Adicionar um jogo pelo assistente de jogo genérico cria um jogo com id próprio (`user.<nome>`), que continua na lista de suportados depois de parar de gerenciar.
+- Instâncias de jogo genérico existentes são migradas ao abrir o app.
+- Um jogo importado com id de loja e marcador é encontrado pela busca.
+
+### Pendente
+
+| Fase | O que falta | Depende de | Já pronto no backend |
+|---|---|---|---|
+| **R5a. Recursos por jogo** | Seção "Recursos" na área do jogo: chave só nos opcionais, motivo quando bloqueado por dependência, base e não aplicável sem chave. | Telas novas do redesign (área do jogo / Settings por jogo). | `InstanceFeatures`, `SetInstanceFeature`; erros `feature_unavailable`, `feature_locked`, `feature_requires` traduzidos. |
+| **R5b. Lista de suportados** | Mostrar nível de suporte, lojas e recursos de cada jogo. | Tela nova de escolha de jogo do redesign. | `GamesSupport`. |
+| **R5c. Jogo personalizado** | Exportar, importar e excluir; diálogos de arquivo (o bridge troca texto JSON, falta abrir/salvar arquivo). | Tela nova de Jogos; um método de bridge para ler/gravar o arquivo escolhido. | `GameEntries`, `ExportGameEntry`, `ImportGameEntry`, `DeleteGameEntry`; erros `entry_*` traduzidos. |
+| **R5d. Assistente** | Reconhecer a pasta escolhida (bate com entrada do registro ou com instalação de loja) e modelos prontos de targets; opção de marcar target como criável. | R5c; decisão sobre quais modelos entram. | Falta backend: consulta "que jogo é esta pasta" e catálogo de modelos no adapter `generic`. |
+| **R5e. UI deixa de decidir por capability** | `SettingsPage`, `WorkspacePages` e `WorkaroundsTab` ainda fazem `capabilities.includes(...)` (acoplamento 9 do relatório de desacoplamento). Hoje recebem as efetivas, então funcionam, mas a regra pede que o backend decida. | Reescrita dessas telas no redesign. | `Workspace()` já devolve os itens por capability efetiva. |
+| **R6. Extensão por jogo** | Contrato de contribuição ancorado no id do jogo, com `provider` em cada recurso, e um módulo embutido como prova. | Fases C e D do SDK (`docs-ia/09-proposta-multi-jogo-e-extensoes.md`); recomendado que fique com aquela frente. | Ids estáveis de jogo, catálogo de capabilities aberto, tabela de escolhas por id de recurso. |
+
+Ordem sugerida para o plano: R5e junto com a reescrita das telas (não é fase separada), depois R5a e R5b (só leitura e uma chave), depois R5c, depois R5d. R6 fora desta frente.
+
+### Pontos em aberto para o plano
+
+1. **Entradas criadas pelo assistente não marcam target como criável**, para não mudar o comportamento de quem já usa. Se a pasta `Mods` de um jogo personalizado ainda não existe, o deploy continua bloqueando. Decidir na R5d se o assistente oferece essa opção.
+2. **Nenhum jogo `declared` embutido existe.** Skyrim e Valheim têm adapter próprio. O nível existe e está testado pelo caminho do jogo importado; o primeiro jogo embutido só de dados fica para quando houver um candidato.
+3. **`Instance.Executable` ficou redundante** para entradas (o lançamento vem do manifesto). Remover exige mexer no DTO e na tela de detalhes; fazer junto com a R5c.
+4. **Instância `generic` com target fora da raiz não é migrada** e segue pelo caminho antigo. Não há caso conhecido; o código do caminho antigo pode sair quando isso for confirmado.
+5. **Falha intermitente na suíte Go.** Duas execuções com a máquina carregada falharam (uma em `TestDeployPurgeDeploy`) e não se repetiram em quatro execuções seguidas. Não é desta frente, mas o plano deveria prever investigar antes de fechar a V1.
 
 ## 1. Resumo
 
