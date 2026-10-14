@@ -3,7 +3,8 @@ import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { XIcon } from "../../icons/glyphs/x";
 import { cn } from "../../utils/cn";
 import { resolveEmphasis, restingClassName } from "../../theme/emphasis";
-import type { Intent } from "../../theme/engine";
+import type { CategoryColor, Intent } from "../../theme/engine";
+import { Icon, type IconComponent } from "../../primitives/icon";
 
 const tagVariants = defineRecipe({
   base: [
@@ -49,6 +50,13 @@ interface TagProps
   intent?: Intent;
   /** `medium` = tinta suave (padrão), `low` = só contorno. */
   emphasis?: "low" | "medium";
+  /**
+   * Cor da paleta categórica (categoria, tag do usuário). Exclusiva com `intent`:
+   * sem significado de status.
+   */
+  color?: CategoryColor;
+  /** Ícone antes do texto (decorativo). */
+  icon?: IconComponent;
 }
 
 /**
@@ -57,6 +65,7 @@ interface TagProps
  * @example
  * ```tsx
  * <Tag value="design" onRemove={setRemoved}>Design</Tag>
+ * <Tag color="violet" icon={LayersIcon}>Gráficos</Tag>
  * ```
  */
 export function Tag({
@@ -68,9 +77,12 @@ export function Tag({
   removeLabel = "Remove",
   intent = "neutral",
   emphasis = "medium",
+  color,
+  icon,
   ...props
 }: TagProps) {
-  const resolved = resolveEmphasis({ emphasis, intent });
+  // Com cor da paleta, as classes coloridas do intent; `data-category` reaponta as variáveis.
+  const resolved = resolveEmphasis({ emphasis, intent: color ? "brand" : intent });
   return (
     <span
       className={cn(
@@ -80,9 +92,11 @@ export function Tag({
         className
       )}
       data-intent={resolved.intent}
+      data-category={color}
       data-layer={resolved.emphasis}
       {...props}
     >
+      {icon ? <Icon icon={icon} size="xs" color="current" /> : null}
       {children}
       {onRemove ? (
         <button

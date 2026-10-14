@@ -148,6 +148,14 @@ contagem e atenção = `Sidebar` (`count`, `countLabel`, `attention`, `footer` c
 função de `{ collapsed }`); app de desktop = `AppShell layout="topbar"` +
 `Navbar size="compact" windowControls`.
 
+Conteúdo do redesign (D-039): número com rótulo (KPI) = `StatTile` (`StatTile.Grid`);
+filtro que liga e desliga, com contagem = `FilterChip` (`FilterChip.Group type`); para
+visões de uma lista continue com `SegmentedControl`. Escolher cor ou ícone =
+`SwatchPicker` com `renderSwatch`. Linha de ajuste = `SettingRow` (`controlId` liga o
+rótulo ao controle). Selo de categoria/tag = `Tag color icon`. Proporção por tipo =
+`Progress.Stacked`. Lista de feed ou resumo com ações = `List.Root selectionMode="none"`
+com `List.Item title description meta actions unread`; grupos = `List.Group`.
+
 Estrutura (D-037): `Card.Root` usa `emphasis` (`low` padrão; `medium` = estrutura),
 `interactive` e `selected`; não existe mais `variant` nem sombra em cartão. O
 orçamento 60/30/10 se ajusta trocando área entre `low` e `medium` (`Card emphasis`,

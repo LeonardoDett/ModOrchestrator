@@ -3,30 +3,36 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
-import { Typography } from "../../primitives/typography";
 import { createStrictContext } from "../../utils/create-strict-context";
 
 type SectionLayout = "stacked" | "split";
+type SectionDensity = "spacious" | "compact";
 
-const [SectionProvider, useSectionContext] = createStrictContext<{ layout: SectionLayout }>(
+const [SectionProvider, useSectionContext] = createStrictContext<{ layout: SectionLayout; density: SectionDensity }>(
   "Section"
 );
 
 const rootVariants = defineRecipe({
-  base: "w-full gap-6 border-b border-border py-8 last-of-type:border-b-0",
+  base: "w-full border-b border-border last-of-type:border-b-0",
   variants: {
     layout: {
       stacked: "flex flex-col",
       split: "grid grid-cols-1 md:grid-cols-3",
     },
+    /** `spacious`: formulário de página. `compact`: blocos de uma tela densa (ajustes, detalhe). */
+    density: {
+      spacious: "gap-6 py-8",
+      compact: "gap-3 py-4",
+    },
   },
   defaultVariants: {
     layout: "stacked",
+    density: "spacious",
   },
 });
 
 const headerVariants = defineRecipe({
-  base: "flex min-w-0 flex-col gap-1",
+  base: "flex min-w-0 items-start justify-between gap-4",
   variants: {
     layout: {
       stacked: "",
@@ -39,15 +45,20 @@ const headerVariants = defineRecipe({
 });
 
 const bodyVariants = defineRecipe({
-  base: "min-w-0 flex flex-col gap-4",
+  base: "min-w-0 flex flex-col",
   variants: {
     layout: {
       stacked: "",
       split: "md:col-span-2",
     },
+    density: {
+      spacious: "gap-4",
+      compact: "gap-2",
+    },
   },
   defaultVariants: {
     layout: "stacked",
+    density: "spacious",
   },
 });
 
@@ -55,66 +66,69 @@ interface SectionRootProps extends ComponentPropsWithoutRef<"section"> {
   children: ReactNode;
   /** `split` places header left and body right from `md` */
   layout?: SectionLayout;
+  /** `spacious` (padrão) ou `compact`. */
+  density?: SectionDensity;
 }
 
-function SectionRoot({
-  className,
-  layout = "stacked",
-  children,
-  ...props
-}: SectionRootProps) {
+function SectionRoot({ className, layout = "stacked", density = "spacious", children, ...props }: SectionRootProps) {
   return (
-    <SectionProvider value={{ layout }}>
-      <section className={cn(rootVariants({ layout }), className)} {...props}>
+    <SectionProvider value={{ layout, density }}>
+      <section className={cn(rootVariants({ layout, density }), className)} {...props}>
         {children}
       </section>
     </SectionProvider>
   );
 }
 
-function SectionHeader({ className, ...props }: ComponentPropsWithoutRef<"div">) {
-  const { layout } = useSectionContext("Header");
-  return <div className={cn(headerVariants({ layout }), className)} {...props} />;
+interface SectionHeaderProps extends ComponentPropsWithoutRef<"div"> {
+  /** Ações à direita do título (por exemplo "Vale para [jogo]"). */
+  actions?: ReactNode;
 }
 
-function SectionTitle({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+function SectionHeader({ className, actions, children, ...props }: SectionHeaderProps) {
+  const { layout } = useSectionContext("Header");
   return (
-    <div className={className} {...props}>
-      <Typography variant="heading-5" color="fg" className="font-semibold">
-        {children}
-      </Typography>
+    <div className={cn(headerVariants({ layout }), className)} {...props}>
+      <div className="flex min-w-0 flex-col gap-1">{children}</div>
+      {actions ? <div className="flex shrink-0 items-center gap-2">{actions}</div> : null}
     </div>
   );
 }
 
-function SectionDescription({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
+function SectionTitle({ className, children, ...props }: ComponentPropsWithoutRef<"h2">) {
+  const { density } = useSectionContext("Title");
   return (
-    <div className={className} {...props}>
-      <Typography variant="body-sm" color="muted-fg">
-        {children}
-      </Typography>
-    </div>
+    <h2 className={cn("m-0 font-semibold text-fg", density === "compact" ? "text-sm" : "text-title-sm", className)} {...props}>
+      {children}
+    </h2>
+  );
+}
+
+function SectionDescription({ className, children, ...props }: ComponentPropsWithoutRef<"p">) {
+  return (
+    <p className={cn("m-0 text-sm text-fg-muted", className)} {...props}>
+      {children}
+    </p>
   );
 }
 
 function SectionBody({ className, ...props }: ComponentPropsWithoutRef<"div">) {
-  const { layout } = useSectionContext("Body");
-  return <div className={cn(bodyVariants({ layout }), className)} {...props} />;
+  const { layout, density } = useSectionContext("Body");
+  return <div className={cn(bodyVariants({ layout, density }), className)} {...props} />;
 }
 
 /**
- * Section is a generic content block (title, description, body).
- * Use `layout="split"` for two-column forms (header left, fields right).
+ * Section is a generic content block (title, description, actions, body).
+ * Use `layout="split"` for two-column forms and `density="compact"` inside dense screens.
  *
  * @example
  * ```tsx
- * <Section.Root layout="split">
- *   <Section.Header>
- *     <Section.Title>Name</Section.Title>
- *     <Section.Description>Shown on your profile.</Section.Description>
+ * <Section.Root density="compact">
+ *   <Section.Header actions={<Button size="sm">Vale para Skyrim SE</Button>}>
+ *     <Section.Title>Automação</Section.Title>
  *   </Section.Header>
  *   <Section.Body>
- *     <Input.Root>…</Input.Root>
+ *     <SettingRow label="Implantar ao ativar um mod" control={<Switch />} />
  *   </Section.Body>
  * </Section.Root>
  * ```

@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useId, useState, type ComponentPropsWithoutRef } from "react";
+import { forwardRef, useId, useState, type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useControllableState } from "../../hooks/use-controllable-state";
@@ -24,6 +24,12 @@ const checkboxVariants = defineRecipe({
       "enabled:data-[state=indeterminate]:bg-intent-fill enabled:data-[state=indeterminate]:border-intent-fill enabled:data-[state=indeterminate]:text-on-intent",
     ].join(" "),
     label: "text-sm text-fg select-none",
+    card: [
+      "flex w-full items-start gap-3 rounded-card border border-border-strong bg-surface p-4 text-left",
+      "motion-transition",
+      "data-[state=checked]:border-intent-fill data-[state=checked]:bg-intent-subtle",
+      "data-[state=indeterminate]:border-intent-fill",
+    ].join(" "),
   },
   variants: {
     size: {
@@ -77,6 +83,12 @@ interface CheckboxProps
   /** Value for form submission */
   value?: string;
   intent?: Intent;
+  /** `card`: cartão com rótulo, descrição e ação (escolha entre partes, como o Radio em cartão). */
+  variant?: "default" | "card";
+  /** Texto de apoio do cartão. */
+  description?: ReactNode;
+  /** Ação à direita do cartão, fora do controle ("Escolher mods"). */
+  action?: ReactNode;
 }
 
 /**
@@ -87,6 +99,7 @@ interface CheckboxProps
  * <Checkbox label="Accept terms" />
  * <Checkbox checked={isChecked} onCheckedChange={setIsChecked} />
  * <Checkbox indeterminate label="Select all" />
+ * <Checkbox variant="card" label="Regras entre mods" description="27 regras" action={<Button size="sm">Escolher</Button>} />
  * ```
  */
 export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
@@ -103,6 +116,9 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       size,
       disabled = false,
       intent,
+      variant = "default",
+      description,
+      action,
       id: providedId,
       ...props
     },
@@ -117,7 +133,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       onChange: onCheckedChange,
     });
 
-    const { root, checkbox, label: labelClass } = checkboxVariants({ size, disabled });
+    const { root, checkbox, label: labelClass, card } = checkboxVariants({ size, disabled });
 
     const state = indeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked";
 
@@ -135,6 +151,43 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       "text-current transition-transform duration-(--motion-duration) ease-(--motion-ease)",
       isChecked || indeterminate ? "scale-100" : "scale-0"
     );
+
+    if (variant === "card") {
+      const labelId = `${id}-label`;
+      return (
+        <div data-state={state} className={cn(card(), className)} {...intentData(intent ?? "brand")}>
+          <button
+            ref={ref}
+            id={id}
+            type="button"
+            role="checkbox"
+            aria-checked={indeterminate ? "mixed" : isChecked}
+            aria-labelledby={label ? labelId : undefined}
+            data-state={state}
+            disabled={disabled}
+            onClick={handleClick}
+            className={cn(checkbox(), "mt-0.5")}
+            {...props}
+          >
+            {indeterminate ? (
+              <MinusIcon size="xs" strokeWidth={3} trigger="none" playKey={draws.count} className={markClass} />
+            ) : (
+              <CheckIcon size="xs" strokeWidth={3} trigger="none" playKey={draws.count} className={markClass} />
+            )}
+          </button>
+          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+            {label ? (
+              <label id={labelId} htmlFor={id} className={cn(labelClass(), "font-medium")}>
+                {label}
+              </label>
+            ) : null}
+            {description ? <span className="text-xs text-fg-muted">{description}</span> : null}
+          </span>
+          {action ? <span className="flex shrink-0 items-center">{action}</span> : null}
+          {name && <input type="hidden" name={name} value={isChecked ? (value ?? "on") : ""} />}
+        </div>
+      );
+    }
 
     return (
       <div className={cn(root(), className)}>

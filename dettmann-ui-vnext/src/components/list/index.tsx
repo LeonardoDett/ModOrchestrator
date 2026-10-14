@@ -5,16 +5,19 @@ import {
   useId,
   useRef,
   useEffect,
+
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
   type ReactNode,
 } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { rowRecipe } from "../../core/styles/row";
 import { VirtualList } from "../../primitives/virtual-list";
 import { useControllableState } from "../../hooks/use-controllable-state";
 import { getNextRovingIndex, isRovingKey } from "../../hooks/use-roving-tabindex";
 import { createStrictContext } from "../../utils/create-strict-context";
+import { ChevronDownIcon } from "../../icons/glyphs/chevron-down";
 
 export type ListSelectionMode = "none" | "single" | "multiple";
 
@@ -50,10 +53,15 @@ const [ListItemScopeProvider, useListItemScope] =
   createStrictContext<ListItemScopeValue>("List.Item");
 
 const rootVariants = defineRecipe({
-  base: [
-    "overflow-auto rounded-control border border-border bg-surface",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus",
-  ].join(" "),
+  base: "overflow-auto rounded-control border border-border bg-surface",
+  variants: {
+    /** Selecionável: foco no contêiner (anel interno); estática: sem parada de tabulação. */
+    interactive: {
+      true: "focus-ring-inset",
+      false: "",
+    },
+  },
+  defaultVariants: { interactive: true },
 });
 
 interface ListRootProps<T> extends Omit<ComponentPropsWithoutRef<"div">, "children"> {
@@ -63,7 +71,10 @@ interface ListRootProps<T> extends Omit<ComponentPropsWithoutRef<"div">, "childr
   renderItem: (item: T, state: ListItemRenderState) => ReactNode;
   /** Key extractor */
   getItemKey?: (item: T, index: number) => string;
-  /** Selection behavior */
+  /**
+   * Selection behavior. `none` renders a static list (`list`/`listitem`, no tab stop):
+   * use it for feeds and summaries whose rows carry their own actions.
+   */
   selectionMode?: ListSelectionMode;
   /** Controlled selected keys */
   selectedKeys?: string[];
@@ -88,22 +99,8 @@ function defaultGetItemKey<T>(item: T, index: number): string {
 }
 
 /**
- * List.Root is a selectable list. Pass `items` and `renderItem` to customize each row.
- * Set `virtualized` to render large collections.
- *
- * @example
- * ```tsx
- * <List.Root
- *   items={members}
- *   selectionMode="single"
- *   renderItem={(member, { selected }) => (
- *     <List.Item selected={selected}>
- *       <span>{member.name}</span>
- *       <span>{member.email}</span>
- *     </List.Item>
- *   )}
- * />
- * ```
+ * List.Root is a list: selectable (`listbox`) or static (`selectionMode="none"`).
+ * Pass `items` and `renderItem`; set `virtualized` for large collections.
  */
 function ListRoot<T>({
   items,
@@ -121,13 +118,14 @@ function ListRoot<T>({
   ...props
 }: ListRootProps<T>) {
   const listId = useId();
+  const interactive = selectionMode !== "none";
   const [selectedKeys, setSelectedKeys] = useControllableState<string[]>({
     value: controlledSelected,
     defaultValue: defaultSelectedKeys ?? [],
     onChange: onSelectedChange,
   });
   const [focusedIndex, setFocusedIndex] = useControllableState<number>({
-    defaultValue: 0,
+    defaultValue: interactive ? 0 : -1,
   });
 
   const toggle = useCallback(
@@ -148,6 +146,7 @@ function ListRoot<T>({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     onKeyDown?.(event);
+    if (!interactive) return;
 
     if (isRovingKey(event.key, "vertical")) {
       const next = getNextRovingIndex(focusedIndex, items.length, event.key, {
@@ -176,7 +175,7 @@ function ListRoot<T>({
       itemKey,
       index,
       selected: selectedKeys.includes(itemKey),
-      focused: index === focusedIndex,
+      focused: interactive && index === focusedIndex,
     };
 
     return (
@@ -197,12 +196,12 @@ function ListRoot<T>({
       }}
     >
       <div
-        role="listbox"
+        role={interactive ? "listbox" : "list"}
         id={listId}
         aria-multiselectable={selectionMode === "multiple" || undefined}
-        tabIndex={0}
+        tabIndex={interactive ? 0 : undefined}
         onKeyDown={handleKeyDown}
-        className={cn(rootVariants(), virtualized && "overflow-hidden", className)}
+        className={cn(rootVariants({ interactive }), virtualized && "overflow-hidden", className)}
         style={!virtualized ? { maxHeight } : undefined}
         {...props}
       >
@@ -211,7 +210,7 @@ function ListRoot<T>({
             items={items}
             itemHeight={itemHeight}
             maxHeight={maxHeight}
-            scrollToIndex={focusedIndex}
+            scrollToIndex={interactive ? focusedIndex : undefined}
             getItemKey={(item, index) => getItemKey(item, index)}
             renderItem={(item, index) => renderAt(item, index)}
             className="border-0 rounded-none"
@@ -225,61 +224,116 @@ function ListRoot<T>({
   );
 }
 
-const itemVariants = defineRecipe({
-  base: [
-    "flex w-full items-center px-3 py-2 text-sm text-left",
-    "cursor-pointer motion-transition hover:state-layer-hover",
-    "focus-visible:outline-none",
-  ].join(" "),
+const slotVariants = defineRecipe({
+  slots: {
+    start: "flex shrink-0 items-center self-center",
+    text: "flex min-w-0 flex-1 flex-col gap-0.5",
+    title: "truncate text-sm text-fg",
+    description: "truncate text-xs text-fg-muted",
+    meta: "shrink-0 self-center text-xs text-fg-muted tabular-nums",
+    actions: "flex shrink-0 items-center gap-1 self-center",
+    unread: "size-2 shrink-0 self-center rounded-pill bg-brand-fill",
+  },
   variants: {
-    selected: {
-      true: "border-l-2 border-emphasis-border bg-emphasis-subtle text-emphasis-text font-medium",
-      false: "text-fg",
-    },
-    focused: {
-      true: "ring-2 ring-inset ring-focus",
-      false: "",
-    },
-    disabled: {
-      true: "pointer-events-none text-fg-subtle",
-      false: "",
+    unread: {
+      true: { title: "font-semibold" },
+      false: { title: "font-medium" },
     },
   },
-  defaultVariants: {
-    selected: false,
-    focused: false,
-    disabled: false,
-  },
+  defaultVariants: { unread: false },
 });
 
-interface ListItemProps extends Omit<ComponentPropsWithoutRef<"div">, "onSelect"> {
+interface ListItemProps extends Omit<ComponentPropsWithoutRef<"div">, "onSelect" | "title"> {
   /** Override selected state from context */
   selected?: boolean;
   /** Disable this item */
   disabled?: boolean;
+  /** Antes do texto: ícone em quadro (`FeaturedIcon`), avatar. */
+  start?: ReactNode;
+  /** Linha principal. Com ela, o item usa o layout de slots; sem ela, `children` como estão. */
+  title?: ReactNode;
+  /** Linha de apoio abaixo do título. */
+  description?: ReactNode;
+  /** À direita do texto: hora, contagem, estado. */
+  meta?: ReactNode;
+  /** Botões da linha. Só em lista estática (`selectionMode="none"`): uma opção não contém controles. */
+  actions?: ReactNode;
+  /** Não lido: ponto da marca e título em negrito (o nome acessível deve dizer isso). */
+  unread?: boolean;
 }
 
 /**
- * List.Item is a selectable row. Use inside `renderItem`.
+ * List.Item is a row. Use inside `renderItem`. With `title` it lays out the slots
+ * (start, title, description, meta, actions); otherwise it renders `children`.
  */
 function ListItem({
   className,
   selected: selectedProp,
   disabled = false,
   onClick,
+  start,
+  title,
+  description,
+  meta,
+  actions,
+  unread = false,
   children,
   ...props
 }: ListItemProps) {
-  const { toggle, setFocusedIndex } = useListContext("Item");
+  const { toggle, setFocusedIndex, selectionMode } = useListContext("Item");
   const { itemKey, index, selected: selectedFromScope, focused } = useListItemScope("Item");
   const selected = selectedProp ?? selectedFromScope;
+  const interactive = selectionMode !== "none";
   const ref = useRef<HTMLDivElement>(null);
+  const s = slotVariants({ unread });
 
   useEffect(() => {
     if (focused) {
       ref.current?.focus({ preventScroll: true });
     }
   }, [focused]);
+
+  const structured = title !== undefined;
+  const body = structured ? (
+    <>
+      {unread ? <span aria-hidden="true" data-slot="unread" className={s.unread()} /> : null}
+      {start ? <span className={s.start()}>{start}</span> : null}
+      <span className={s.text()}>
+        <span className={s.title()}>{title}</span>
+        {description ? <span className={s.description()}>{description}</span> : null}
+      </span>
+      {meta ? <span className={s.meta()}>{meta}</span> : null}
+      {actions && !interactive ? <span className={s.actions()}>{actions}</span> : null}
+    </>
+  ) : (
+    children
+  );
+
+  const rowClass = rowRecipe({
+    selected: interactive && selected,
+    active: focused,
+    disabled,
+    multiline: structured && Boolean(description),
+  });
+
+  if (!interactive) {
+    return (
+      <div
+        ref={ref}
+        role="listitem"
+        data-list-index={index}
+        className={cn(
+          "flex w-full items-center gap-3 border-b border-border-subtle px-3 py-2 text-sm text-fg last:border-b-0",
+          disabled && "text-fg-subtle",
+          className
+        )}
+        onClick={onClick}
+        {...props}
+      >
+        {body}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -289,7 +343,7 @@ function ListItem({
       aria-disabled={disabled || undefined}
       tabIndex={-1}
       data-list-index={index}
-      className={cn(itemVariants({ selected, focused, disabled }), className)}
+      className={cn(rowClass, "w-full gap-3 text-left", className)}
       onClick={(event) => {
         onClick?.(event);
         if (disabled) return;
@@ -298,30 +352,99 @@ function ListItem({
       }}
       {...props}
     >
-      {children}
+      {body}
     </div>
   );
 }
 
+interface ListGroupProps extends Omit<ComponentPropsWithoutRef<"section">, "title"> {
+  title: ReactNode;
+  /** Contagem ao lado do título. */
+  count?: number;
+  /** Recolhível pelo cabeçalho. */
+  collapsible?: boolean;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Ícone ou marcador antes do título (por exemplo o glifo da gravidade). */
+  icon?: ReactNode;
+}
+
 /**
- * List is a customizable selectable list with optional virtualization.
- * Custom row content goes through `List.Root`'s `renderItem` prop.
+ * List.Group titles a run of rows (a `List.Root` or anything else) and can collapse it.
+ *
+ * @example
+ * ```tsx
+ * <List.Group title="Avisos" count={4} icon={<TriangleAlertIcon size="sm" />} collapsible>
+ *   <List.Root selectionMode="none" items={warnings} renderItem={…} />
+ * </List.Group>
+ * ```
+ */
+function ListGroup({
+  title,
+  count,
+  collapsible = false,
+  open: openProp,
+  defaultOpen = true,
+  onOpenChange,
+  icon,
+  className,
+  children,
+  ...props
+}: ListGroupProps) {
+  const [open, setOpen] = useControllableState({ value: openProp, defaultValue: defaultOpen, onChange: onOpenChange });
+  const contentId = useId();
+  const heading = (
+    <>
+      {icon ? <span className="inline-flex shrink-0">{icon}</span> : null}
+      <span className="min-w-0 flex-1 truncate text-left">{title}</span>
+      {count !== undefined ? <span className="tabular-nums text-fg-muted">{count}</span> : null}
+    </>
+  );
+  return (
+    <section className={cn("flex flex-col gap-1", className)} {...props}>
+      {collapsible ? (
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={contentId}
+          className="flex h-control-sm items-center gap-2 rounded-control px-2 text-xs font-semibold uppercase tracking-wide text-fg-muted motion-transition hover:bg-state-hover focus-ring-inset"
+          onClick={() => setOpen(!open)}
+        >
+          <ChevronDownIcon size="xs" className={cn("motion-transition", !open && "-rotate-90")} />
+          {heading}
+        </button>
+      ) : (
+        <h3 className="m-0 flex h-control-sm items-center gap-2 px-2 text-xs font-semibold uppercase tracking-wide text-fg-muted">
+          {heading}
+        </h3>
+      )}
+      <div id={contentId} hidden={!open}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+/**
+ * List is a selectable or static list with optional virtualization, slot rows and groups.
  *
  * @example
  * ```tsx
  * <List.Root
  *   items={members}
  *   selectionMode="single"
- *   renderItem={(member, { selected }) => (
- *     <List.Item selected={selected}>
- *       <strong>{member.name}</strong>
- *       <span>{member.email}</span>
- *     </List.Item>
- *   )}
+ *   renderItem={(member) => <List.Item title={member.name} description={member.email} />}
+ * />
+ * <List.Root
+ *   items={activity}
+ *   selectionMode="none"
+ *   renderItem={(a) => <List.Item start={<FeaturedIcon … />} title={a.text} meta={a.when} actions={<Button size="sm">Abrir</Button>} />}
  * />
  * ```
  */
 export const List = {
   Root: ListRoot,
   Item: ListItem,
+  Group: ListGroup,
 };

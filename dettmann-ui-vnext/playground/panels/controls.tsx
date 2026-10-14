@@ -5,6 +5,12 @@ import {
   Badge,
   Button,
   CATEGORY_COLORS,
+  FilterChip,
+  List,
+  Progress,
+  SettingRow,
+  StatTile,
+  SwatchPicker,
   ButtonGroup,
   Checkbox,
   Inline,
@@ -122,6 +128,40 @@ export function ControlsPanel() {
           <Avatar key={color} shape="square" size="xs" fallback={color.slice(0, 2)} color={color} label={color} />
         ))}
       </Inline>
+      {/* Redesign das telas, lote 2: conteúdo */}
+      <Inline gap="sm" wrap>
+        <Tag color="violet" icon={PackageIcon}>Gráficos</Tag>
+        <Tag color="amber" size="sm">essencial</Tag>
+        <FilterChip.Group aria-label="Área" defaultValue={["deploy"]}>
+          <FilterChip value="deploy" count={3}>Implantação</FilterChip>
+          <FilterChip value="plugins" count={0}>Plugins</FilterChip>
+          <FilterChip value="tex" color="blue" count={52}>Texturas</FilterChip>
+        </FilterChip.Group>
+      </Inline>
+      <Progress.Stacked label="Arquivos por tipo" legend segments={[{ label: ".dds", value: 742 }, { label: ".nif", value: 418 }, { label: "outros", value: 44 }]} />
+      <StatTile.Grid columns={4}>
+        <StatTile label="Mods" value="142" unit="de 380" href="#" />
+        <StatTile label="Plugins" value="287" description="198 + 89 leves" />
+        <StatTile label="Conflitos" value="38" intent="warning" icon={TriangleAlertIcon} />
+        <StatTile label="Em disco" value="48 GB" loading />
+      </StatTile.Grid>
+      <SwatchPicker
+        aria-label="Cor da categoria"
+        columns={8}
+        defaultValue="blue"
+        options={CATEGORY_COLORS.map((c) => ({ value: c, label: c }))}
+        renderSwatch={(o) => <span data-category={o.value} className="size-4 rounded-chip bg-intent-fill" />}
+      />
+      <div>
+        <SettingRow label="Plugins" description="Lista e ativação de plugins do jogo." status="Efetivo" controlId="pg-plugins" control={<Switch id="pg-plugins" defaultChecked />} />
+        <SettingRow label="Ordem de carga" description="Depende de Plugins." status="Bloqueado: precisa de Plugins" controlId="pg-lo" control={<Switch id="pg-lo" disabled />} disabled />
+      </div>
+      <Checkbox variant="card" label="Regras entre mods" description="27 regras, viram regras de conflito" defaultChecked action={<Button size="sm">Escolher</Button>} />
+      <List.Root
+        selectionMode="none"
+        items={[{ id: "1", text: "Implantação concluída, 1.842 arquivos", when: "há 2 horas" }, { id: "2", text: "Importou Lanternas de Skyrim II", when: "ontem" }]}
+        renderItem={(it) => <List.Item title={it.text} description="Skyrim SE" meta={it.when} unread={it.id === "1"} />}
+      />
       <Alert.Root compact variant="info" action={<Button size="sm">Abrir o passo a passo</Button>} onDismiss={() => {}} dismissLabel="Dispensar a dica">
         <Alert.Description>Não sabe por onde começar? A ajuda mostra o caminho.</Alert.Description>
       </Alert.Root>

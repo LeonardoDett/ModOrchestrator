@@ -4,8 +4,8 @@ Levels follow Atomic Design (D-032): a component imports only its own level or b
 
 | Level | Components |
 |---|---|
-| Atoms | every primitive, `Button`, `Checkbox`, `Radio`, `Switch`, `Badge`, `Tag`, `Indicator`, `Loader`, `Avatar`, `FeaturedIcon`, `MediaImage`, `Progress`, `Rating`, `Slider`, `Surface`, `Tooltip` |
-| Molecules | `Input`, `ButtonGroup`, `SegmentedControl`, `StatusToggle`, `Accordion`, `ActionBar`, `Alert`, `Breadcrumbs`, `Card`, `ContextMenu`, `DatePicker`, `Drawer`, `EmptyPlaceholder`, `EmptyState`, `FloatingButton`, `List`, `Menu`, `Modal`, `PageContainer`, `Pagination`, `Popover`, `Section`, `SplitPane`, `Stepper`, `Tabs`, `Toast`, `Toolbar` |
+| Atoms | every primitive, `Button`, `Checkbox`, `Radio`, `Switch`, `Badge`, `Tag`, `FilterChip`, `Indicator`, `Loader`, `Avatar`, `FeaturedIcon`, `MediaImage`, `Progress`, `Rating`, `Slider`, `Surface`, `Tooltip` |
+| Molecules | `Input`, `ButtonGroup`, `SegmentedControl`, `StatusToggle`, `StatTile`, `SwatchPicker`, `SettingRow`, `Accordion`, `ActionBar`, `Alert`, `Breadcrumbs`, `Card`, `ContextMenu`, `DatePicker`, `Drawer`, `EmptyPlaceholder`, `EmptyState`, `FloatingButton`, `List`, `Menu`, `Modal`, `PageContainer`, `Pagination`, `Popover`, `Section`, `SplitPane`, `Stepper`, `Tabs`, `Toast`, `Toolbar` |
 | Organisms | `DataTable`, `Table`, `Tree`, `ReorderableList`, `Command`, `Inspector`, `FilterBar`, `DiffViewer`, `LogViewer`, `FileList`, `FileBrowser`, `Gallery`, `MediaGallery`, `Lightbox`, `Carousel`, `MasterDetail`, `ResourcePage` |
 | Templates | everything in `src/templates` |
 
@@ -38,6 +38,8 @@ Wave 2 (D-035): `Modal` and `Drawer` animate entrance and exit (the panel is `in
 `Table`, `DataTable`, `DataTableColumnPicker`, `List`, `Badge`, `Tag`, `Alert`, `Progress`, `Rating`, `Breadcrumbs`, `ActionBar`, `Toolbar`, `FilterBar`, `Inspector`, `LogViewer`, `DiffViewer`
 
 Wave 3 (D-036): `DataTable` rows are 32/28 px with one state variant (idle, selected, dragged, group) and slide on reorder, sort and filter; `Table` is compact with a structural header; `Tabs` show the brand indicator on the active tab and animate the panel entrance; `FilterBar` (`filtersLabel`) and the `Inspector` header are structural `medium` layers.
+
+Redesign batch 2 (D-039): `FilterChip` (+ `Group`), `StatTile` (+ `Grid`), `SwatchPicker`, `SettingRow` are new; `Tag` gains `color` and `icon`; `Progress.Stacked`; `Checkbox variant="card"`; `Section` gains `density` and header `actions`; `List` gains a static mode, slot rows (`title`, `description`, `meta`, `actions`, `unread`) and `List.Group`.
 
 Redesign batch 1 (D-038): `Indicator variant="chip"` (value and label visible, for page headers); `Alert` gains `action`, `onDismiss`/`dismissLabel` and `compact`; `Avatar` gains `shape="square"` (monograms), `color` from the category palette, `emphasis` and `label`; `Button` gains `badge`, `progress` and `tooltip`.
 

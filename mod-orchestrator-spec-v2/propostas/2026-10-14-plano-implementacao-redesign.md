@@ -151,7 +151,9 @@ Concluída em 2026-10-14: D122 no app, D-038 na lib. Lib com 1.959 testes, `them
 - **Pronto quando:** `npm run typecheck && npm test -- --run && npm run theme && npm run build` na lib; arquivos novos em `WAVE_FILES` e `LEVELS`; o app compila sem mudança de comportamento.
 - **Sem a capability:** o destaque tem padrão do app para jogo que não declara cor (todo jogo personalizado). Teste: tema sem destaque declarado passa no contraste.
 
-### RD3. Lib, lote 2: dados e telas
+### RD3. Lib, lote 2: dados e telas ✅
+
+Concluída em 2026-10-14 (D-039 na lib, sem decisão nova no app): `FilterChip`, `StatTile`, `SwatchPicker`, `SettingRow` novos; `Tag`, `Progress`, `Checkbox`, `Section` e `List` estendidos. Coube num commit.
 
 - **Objetivo:** os componentes das telas de conteúdo.
 - **Entregáveis:** C7 a C12, C14, C16, C17 conforme as fichas; `SplitPane` e outros da seção 1.3 que as fichas apontarem; pendências P4 e P5 da lib nos arquivos tocados. Pode virar dois commits (3a: C7 a C12; 3b: C14, C16, C17) se o lote ficar grande.

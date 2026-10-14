@@ -211,3 +211,17 @@ First batch of the Mod Orchestrator screen redesign (design v1; inventory in `do
 - **AppShell.** `layout="topbar"`: the bar spans the window, the sidebar sits below it and only the content scrolls (desktop app). The wrapper no longer declares `data-layer` (the Sidebar and the Navbar do, D-037).
 - **Navbar.** `bg-structure` with `border-border` (was `bg-selected`), `size` `compact` (48 px) or `regular` (64 px, default) and a `windowControls` slot flush right. `UserMenu` takes `label`.
 - **Workspace.** Formatted; declares the structure layer on its column, default width 232 px, content scrolls inside.
+
+## D-039 — Screen redesign, batch 2: content
+
+Second batch of the Mod Orchestrator screen redesign (inventory in `docs/plans/2026-10-14-redesign-components.md`). `FilterChip`, `StatTile`, `SwatchPicker`, `SettingRow`, `Section` and `List` join `WAVE_FILES`.
+
+- **New atom `FilterChip`** (and `FilterChip.Group`, `single` | `multiple`): toggle chip with `aria-pressed`, optional `count` (zero is dimmed but focusable) and `color` dot from the category palette; pressed changes border and fill, not color alone; arrows move focus in a group. Different from `SegmentedControl`: several choices, wraps.
+- **New molecule `StatTile`** (and `StatTile.Grid`): label, pre-formatted value, unit, description, icon and intent; with `href` or `onClick` the whole tile is the link or button; `loading` swaps the value for a skeleton.
+- **New molecule `SwatchPicker`**: grid radio group of small swatches; the consumer draws each one (`renderSwatch`), so it serves colors and icons. One tab stop, arrows in two dimensions skipping disabled options, Home/End, Space/Enter. Checked = 2 px `border-fg` plus `bg-selected` (shape, not color).
+- **New molecule `SettingRow`**: label and description left, `status` and `control` right; `controlId` turns the label into `<label for>`; the row is a named group described by its description. It never saves.
+- **`Tag`** takes `color` (category palette; exclusive with `intent`) and `icon`.
+- **`Progress.Stacked`**: labelled proportion bar, one `img` whose name lists every part; parts take a category color or follow the palette order; optional legend.
+- **`Checkbox variant="card"`** with `description` and `action` (outside the control), like `Radio`'s card.
+- **`Section`** left the 1.3 backlog: `density` (`spacious` | `compact`), `Section.Header actions`, the title is an `h2` sized by density (no `Typography` heading).
+- **`List`** left the 1.3 backlog: `selectionMode="none"` renders a static `list`/`listitem` without a tab stop; selectable rows use `rowRecipe` (the hand-written ring and the emphasis-filled selection are gone); `List.Item` takes slots (`start`, `title`, `description`, `meta`, `actions`, `unread`; actions only in static lists, an option never holds controls); `List.Group` titles and optionally collapses a run of rows.
