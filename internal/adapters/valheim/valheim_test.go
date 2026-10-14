@@ -226,3 +226,19 @@ func TestFrameworkMissing(t *testing.T) {
 		t.Fatalf("no enabled user: %+v", got)
 	}
 }
+
+// D125: the manifest dependencies are package requirements, read as
+// "Author-Name-version"; the framework pack and malformed entries are left
+// out, and the package names itself.
+func TestPackageDependenciesFromManifest(t *testing.T) {
+	manifest := map[string]string{"manifest.json": `{"name":"Plans_Plus","version_number":"1.0.0","dependencies":[
+		"denikson-BepInExPack_Valheim-5.4.2202", "ValheimModding-Jotunn-2.20.0", "Some-Author-Multi-Dash_Name-1.0.0", "broken", "ValheimModding-Jotunn-2.21.0"]}`}
+	p := plan(t, manifest, "manifest.json", "Plans.dll")
+	want := []mod.PackageRef{{Name: "Jotunn", Version: "2.20.0"}, {Name: "Author-Multi-Dash_Name", Version: "1.0.0"}}
+	if p.Package.Name != "Plans_Plus" || !slices.Equal(p.Package.Requires, want) {
+		t.Fatalf("package = %+v", p.Package)
+	}
+	if p := plan(t, nil, "manifest.json", "Plans.dll"); p.Package.Name != "" || len(p.Package.Requires) != 0 {
+		t.Fatalf("package without the manifest = %+v", p.Package)
+	}
+}

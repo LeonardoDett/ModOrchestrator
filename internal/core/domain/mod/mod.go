@@ -68,6 +68,9 @@ type Mod struct {
 	// Content is what the adapter detected in the footprint (plugins,
 	// textures...). Calculated at install time and stored with the mod.
 	Content []ContentFlag
+	// Package is the identity and the required packages the mod declares
+	// in its own metadata, from its latest installation (D125).
+	Package Package
 	// Installation is the current valid installation. It stays set while a
 	// reinstall runs, so a failed reinstall never leaves a half-installed mod.
 	Installation InstallationID

@@ -347,29 +347,45 @@ func (s *Service) addRequirements(ctx context.Context, tx ports.Tx, m *mod.Mod, 
 	if len(reqs) == 0 {
 		return nil
 	}
-	set, err := tx.Rules().Get(ctx, m.Instance)
-	if errors.Is(err, ports.ErrNotFound) {
-		set, err = rules.New(m.Instance)
-	}
+	set, err := instanceRules(ctx, tx, m.Instance)
 	if err != nil {
 		return err
 	}
 	for _, r := range reqs {
-		if r.Mod == "" || r.Mod == m.ID || slices.ContainsFunc(set.DependencyRules(), func(d rules.DependencyRule) bool {
-			return d.Mod == m.ID && d.Target == r.Mod && d.Kind == rules.Requires
-		}) {
-			continue
-		}
-		id := rules.ID(s.IDs.NewID())
-		if err := set.AddDependency(rules.DependencyRule{
-			ID: id, Mod: m.ID, Target: r.Mod, Kind: rules.Requires, Source: rules.SourceMetadata,
-			Note: r.File, CreatedAt: s.Clock.Now(),
-		}); err != nil {
+		if err := s.requireByMetadata(tx, set, m.ID, r.Mod, r.File, op); err != nil {
 			return err
 		}
-		tx.Emit(s.newEvent(eventRuleCreated, subjectInstance, string(m.Instance), op, map[string]string{
-			"rule": string(id), "kind": string(rules.Requires), "mod": string(m.ID), "target": string(r.Mod), "source": string(rules.SourceMetadata),
-		}))
 	}
 	return tx.Rules().Save(ctx, set)
+}
+
+// instanceRules loads the rule set of the instance, empty when it has none.
+func instanceRules(ctx context.Context, tx ports.Tx, instance game.InstanceID) (*rules.Set, error) {
+	set, err := tx.Rules().Get(ctx, instance)
+	if errors.Is(err, ports.ErrNotFound) {
+		set, err = rules.New(instance)
+	}
+	return set, err
+}
+
+// requireByMetadata adds a "requires" rule with source metadata from m to
+// target, unless m already has one to it (whatever its source or state:
+// a rule the user disabled stays disabled).
+func (s *Service) requireByMetadata(tx ports.Tx, set *rules.Set, m, target mod.ID, note string, op operation.ID) error {
+	if target == "" || target == m || slices.ContainsFunc(set.DependencyRules(), func(d rules.DependencyRule) bool {
+		return d.Mod == m && d.Target == target && d.Kind == rules.Requires
+	}) {
+		return nil
+	}
+	id := rules.ID(s.IDs.NewID())
+	if err := set.AddDependency(rules.DependencyRule{
+		ID: id, Mod: m, Target: target, Kind: rules.Requires, Source: rules.SourceMetadata,
+		Note: note, CreatedAt: s.Clock.Now(),
+	}); err != nil {
+		return err
+	}
+	tx.Emit(s.newEvent(eventRuleCreated, subjectInstance, string(set.Instance()), op, map[string]string{
+		"rule": string(id), "kind": string(rules.Requires), "mod": string(m), "target": string(target), "source": string(rules.SourceMetadata),
+	}))
+	return nil
 }

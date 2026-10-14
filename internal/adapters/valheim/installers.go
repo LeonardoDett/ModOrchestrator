@@ -9,6 +9,7 @@ import (
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/installer"
+	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/relpath"
 )
 
@@ -32,6 +33,12 @@ const (
 const OptionFolder = "folder"
 
 const manifestFile = "manifest.json"
+
+// frameworkPackage is the package name of the framework pack on the mod
+// sites of the game. Mods list it as a dependency; the framework is checked
+// by the adapter's own health check (loader requirement), so it never
+// becomes a package requirement of a mod.
+const frameworkPackage = "BepInExPack_Valheim"
 
 func isDLL(p string) bool { return strings.HasSuffix(strings.ToLower(p), ".dll") }
 
@@ -129,35 +136,56 @@ func (Package) Supports(entries []installer.Entry, _ installer.Context) (bool, s
 
 var unsafeFolder = regexp.MustCompile(`[^A-Za-z0-9_.-]+`)
 
-// readManifest reads what the package manifest says about the mod; empty
+// readManifest reads what the package manifest says about the mod: its
+// metadata, its package name and the packages it depends on (D125); empty
 // before the archive is extracted or when the manifest cannot be read. The
 // manifest does not name the author.
-func readManifest(ctx installer.Context) installer.Metadata {
+func readManifest(ctx installer.Context) (installer.Metadata, mod.Package) {
 	if ctx.Content == nil {
-		return installer.Metadata{}
+		return installer.Metadata{}, mod.Package{}
 	}
 	p, err := relpath.Parse(manifestFile)
 	if err != nil {
-		return installer.Metadata{}
+		return installer.Metadata{}, mod.Package{}
 	}
 	data, err := ctx.Content(p)
 	if err != nil {
-		return installer.Metadata{}
+		return installer.Metadata{}, mod.Package{}
 	}
 	var m struct {
-		Name        string `json:"name"`
-		Version     string `json:"version_number"`
-		Description string `json:"description"`
-		Website     string `json:"website_url"`
+		Name         string   `json:"name"`
+		Version      string   `json:"version_number"`
+		Description  string   `json:"description"`
+		Website      string   `json:"website_url"`
+		Dependencies []string `json:"dependencies"`
 	}
 	// Manifests are often saved with a byte order mark.
 	if json.Unmarshal([]byte(strings.TrimPrefix(string(data), "\xef\xbb\xbf")), &m) != nil {
-		return installer.Metadata{}
+		return installer.Metadata{}, mod.Package{}
+	}
+	pkg := mod.Package{Name: strings.TrimSpace(m.Name)}
+	for _, d := range m.Dependencies {
+		if ref, ok := parseDependency(d); ok && !strings.EqualFold(ref.Name, frameworkPackage) {
+			pkg.Requires = append(pkg.Requires, ref)
+		}
 	}
 	return installer.Metadata{
 		Name: strings.TrimSpace(m.Name), Version: strings.TrimSpace(m.Version),
 		Description: strings.TrimSpace(m.Description), Website: strings.TrimSpace(m.Website),
+	}, pkg
+}
+
+// parseDependency reads a manifest dependency, "Author-Name-1.2.3": the
+// name is what lies between the first and the last dash. The author is not
+// kept: the manifest of the required package does not name it, so the name
+// is what matches.
+func parseDependency(dep string) (mod.PackageRef, bool) {
+	dep = strings.TrimSpace(dep)
+	first, last := strings.Index(dep, "-"), strings.LastIndex(dep, "-")
+	if first <= 0 || last <= first+1 || last == len(dep)-1 {
+		return mod.PackageRef{}, false
 	}
+	return mod.PackageRef{Name: dep[first+1 : last], Version: dep[last+1:]}, true
 }
 
 // packageFolder is the folder of the mod: the recorded one on a reinstall,
@@ -186,11 +214,11 @@ func (Package) Plan(entries []installer.Entry, ctx installer.Context, opts insta
 	if !hasFile(entries, manifestFile) {
 		return installer.Result{}, installer.ErrUnsupported
 	}
-	meta := readManifest(ctx)
+	meta, pkg := readManifest(ctx)
 	folder := packageFolder(entries, meta, opts)
 	// The name of a package uses "_" for spaces.
 	meta.Name = strings.ReplaceAll(meta.Name, "_", " ")
-	plan := &installer.Plan{Installer: PackageID, ModType: game.DefaultModType, Options: installer.Options{OptionFolder: folder}, Metadata: meta}
+	plan := &installer.Plan{Installer: PackageID, ModType: game.DefaultModType, Options: installer.Options{OptionFolder: folder}, Metadata: meta, Package: pkg}
 	for _, e := range entries {
 		if e.Dir {
 			continue

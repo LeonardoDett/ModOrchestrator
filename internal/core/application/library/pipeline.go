@@ -771,6 +771,7 @@ func (p *pipeline) commit(ctx context.Context) error {
 			m.Attributes.Tags = mergeTags(m.Attributes.Tags, p.organize.Tags)
 		}
 		m.Content = p.env.adapter.ContentFlags(p.env.inst.Game, inst.Footprint())
+		m.Package = p.plan.Package
 		if err := m.CompleteInstall(inst, now); err != nil {
 			return err
 		}
@@ -789,6 +790,9 @@ func (p *pipeline) commit(ctx context.Context) error {
 			return err
 		}
 		if err := p.s.addRequirements(ctx, tx, m, p.requirements, opID); err != nil {
+			return err
+		}
+		if err := p.s.linkPackages(ctx, tx, m, opID); err != nil {
 			return err
 		}
 		evType := EventModInstalled

@@ -1194,3 +1194,20 @@ Status: vigente (detalha D038 e D065; executa a RD5 do plano do redesign)
 Motivo: o desenho da fila tem "Instalar" por item e "Instalar todos" que pula os que pedem escolhas sem travar os outros, e o resumo do FOMOD tem categoria e tags.
 
 Alternativa rejeitada: instalar os FOMOD com as opções padrão no "instalar todos" (decidiria pelo usuário, contra D036 e o espírito de D030).
+
+## D125 — Dependências entre pacotes declaradas pelo instalador
+Status: vigente (detalha D118 e core/03 §2; fecha core/16 §8; executa a RD6 do plano do redesign)
+
+1. **Contrato**: `installer.Plan` ganha `Package` (`mod.Package`): a identidade de pacote que o mod declara e os pacotes que ele exige (`PackageRef`: nome e versão mínima). Fica separado de `Plan.Requirements`, que continua sendo de arquivos (FOMOD) e pede confirmação no resumo. Só o instalador do adapter preenche; o `generic` e o FOMOD não declaram pacote.
+2. **Guardado no mod**: `Mod.Package` vem da instalação mais recente (reinstalar atualiza; instalador que não declara limpa).
+3. **Casamento**: na transação da instalação, cada pacote exigido vira `DependencyRule` `requires` com `source=metadata` para o mod presente que declara aquele nome (sem diferenciar maiúsculas; havendo vários, o mais antigo, por causa das variantes), com nota "Nome versão". Instalar um pacote também liga os mods que já o exigiam. Regra que já existe entre os dois, de qualquer origem ou estado, não é repetida: reinstalar não duplica e regra desativada pelo usuário continua desativada.
+4. **Requisito sem dono**: pacote exigido que nenhum mod da biblioteca declara aparece como `mod_requirement_missing` (catálogo atual, `target` = nome do pacote, `version` quando houver), só enquanto o mod que exige está ativo, com a ação de importar. Some quando um mod declara o pacote. O resumo do mod (B13) conta esses pacotes no total de requisitos.
+5. **Versão** é guardada e mostrada, não comparada: os formatos de versão variam por site e uma comparação errada geraria problema falso.
+6. **Valheim**: o pacote é o `name` do `manifest.json` e as dependências são `Autor-Nome-versão` (o nome fica entre o primeiro e o último hífen). O pacote do framework (`BepInExPack_Valheim`) não vira requisito: a presença do framework já é o diagnóstico do próprio adapter.
+7. **Autor pelo nome do archive**: fica fora. O instalador não recebe o nome do archive, e o manifesto não traz o autor; trazer exigiria contrato novo no `installer.Context`.
+
+Motivo: o design v1 mostra requisitos do mod e o Valheim publica dependências só por pacote, nunca por arquivo.
+
+Alternativas rejeitadas: misturar pacote em `Plan.Requirements` (arquivo pede confirmação, pacote não; dois significados no mesmo campo); casar pelo autor também (o manifesto do pacote exigido não diz o autor); criar regra para pacote ainda ausente (a regra precisa de um mod alvo).
+
+Consequências: outro jogo com pacotes declara do mesmo jeito no seu adapter. A tela de Regras e o detalhe do mod mostram essas regras na RD9 e na RD11.

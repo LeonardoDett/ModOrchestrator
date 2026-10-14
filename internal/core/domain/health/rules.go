@@ -42,6 +42,7 @@ const (
 	evidenceRequirement  = "requirement"
 	evidenceCycleMember  = "cycle_member"
 	evidenceIncompatible = "incompatible_mod"
+	subjectPackage       = "package"
 )
 
 // ModFact is what the rule checks need to know about a mod of the library.
@@ -50,6 +51,9 @@ type ModFact struct {
 	Name    string
 	State   mod.State
 	Enabled bool
+	// Package is the package identity and the required packages the mod
+	// declares (D125).
+	Package mod.Package
 }
 
 // present reports whether the mod is still in the library (not removed).
@@ -117,6 +121,11 @@ func RuleChecks(set *rules.Set, mods Mods) ([]diagnostic.Diagnostic, error) {
 			continue
 		}
 		if err := add(requirementSpec(r, res, mods)); err != nil {
+			return nil, err
+		}
+	}
+	for _, s := range packageSpecs(set, mods) {
+		if err := add(s); err != nil {
 			return nil, err
 		}
 	}
@@ -197,6 +206,61 @@ func incompatibleSpec(r rules.IncompatibilityRule, mods Mods) diagnostic.Spec {
 		Blocks:  []operation.Kind{OperationDeploy},
 		Related: []event.EntityRef{a, b, ruleRef},
 	}
+}
+
+// MissingPackages lists the packages mod id requires that no mod of the
+// library declares (D125). A package a present mod declares is a rule
+// matter: the library linked it, or the user removed that rule. A rule of
+// the mod to a removed mod that declared the package already reports it.
+func MissingPackages(set *rules.Set, mods Mods, id mod.ID) []mod.PackageRef {
+	declared := func(name string, present bool) func(mod.ID) bool {
+		return func(o mod.ID) bool {
+			f, ok := mods[o]
+			return ok && (!present || f.present()) && f.Package.Is(name)
+		}
+	}
+	var out []mod.PackageRef
+	for _, want := range mods[id].Package.Requires {
+		found := false
+		for o := range mods {
+			if o != id && declared(want.Name, true)(o) {
+				found = true
+				break
+			}
+		}
+		if found || slices.ContainsFunc(set.DependencyRules(), func(d rules.DependencyRule) bool {
+			return d.Mod == id && d.Kind == rules.Requires && declared(want.Name, false)(d.Target)
+		}) {
+			continue
+		}
+		out = append(out, want)
+	}
+	return out
+}
+
+// packageSpecs reports the missing packages of the enabled mods as
+// mod_requirement_missing (D125).
+func packageSpecs(set *rules.Set, mods Mods) []diagnostic.Spec {
+	var out []diagnostic.Spec
+	for _, id := range sortedModIDs(mods) {
+		if !mods.enabled(id) {
+			continue
+		}
+		for _, want := range MissingPackages(set, mods, id) {
+			src, pkg := event.EntityRef{Kind: subjectMod, ID: string(id)}, event.EntityRef{Kind: subjectPackage, ID: strings.ToLower(want.Name)}
+			params := diagnostic.Params{"mod": mods.name(id), "target": want.Name, "status": string(dependency.StatusMissing), "source": string(rules.SourceMetadata)}
+			if want.Version != "" {
+				params["version"] = want.Version
+			}
+			out = append(out, diagnostic.Spec{
+				Code: diagnostic.CodeModRequirementMissing, Severity: diagnostic.SeverityError, Params: params,
+				Evidence: []diagnostic.Evidence{{Kind: evidenceRequirement, Ref: &pkg, Params: diagnostic.Params{"status": params["status"], "package": want.Name, "version": want.Version}}},
+				Actions:  []diagnostic.Action{{ID: ActionImport, NavigateTo: NavigateImport, Params: diagnostic.Params{"mod": want.Name}}},
+				Related:  []event.EntityRef{src, pkg},
+			})
+		}
+	}
+	return out
 }
 
 func requirementSpec(r rules.DependencyRule, res dependency.Result, mods Mods) diagnostic.Spec {
@@ -284,6 +348,15 @@ func orphanSpec(set *rules.Set, id rules.ID, mods Mods) (diagnostic.Spec, bool) 
 		Actions:  []diagnostic.Action{action},
 		Related:  []event.EntityRef{ruleRef},
 	}, true
+}
+
+func sortedModIDs(m Mods) []mod.ID {
+	out := make([]mod.ID, 0, len(m))
+	for id := range m {
+		out = append(out, id)
+	}
+	slices.Sort(out)
+	return out
 }
 
 func sortedIDs(m map[rules.ID]bool) []rules.ID {

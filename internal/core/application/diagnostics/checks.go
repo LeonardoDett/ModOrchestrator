@@ -264,7 +264,7 @@ func (s *Service) modFacts(ctx context.Context, instance game.InstanceID) (healt
 	}
 	facts := health.Mods{}
 	for _, m := range list {
-		facts[m.ID] = health.ModFact{ID: m.ID, Name: m.DisplayName(), State: m.State, Enabled: p.IsEnabled(m.ID)}
+		facts[m.ID] = health.ModFact{ID: m.ID, Name: m.DisplayName(), State: m.State, Enabled: p.IsEnabled(m.ID), Package: m.Package}
 	}
 	return facts, nil
 }
@@ -453,8 +453,9 @@ func (s *Service) adapterChecks(ctx context.Context, inst game.Instance) ([]diag
 }
 
 // Requirements counts the requirements of a mod (DependencyRule "requires")
-// and how many are satisfied now, for the summary of the mod (B13). Optional
-// recommendations are not counted.
+// and the packages it requires that no mod declares (D125), and how many are
+// satisfied now, for the summary of the mod (B13). Optional recommendations
+// are not counted.
 type Requirements struct {
 	Total, Present int
 }
@@ -468,12 +469,12 @@ func (s *Service) ModRequirements(ctx context.Context, instance game.InstanceID,
 	}
 	set, err := s.Rules.Get(ctx, instance)
 	if errors.Is(err, ports.ErrNotFound) {
-		return Requirements{}, nil
+		set, err = rules.New(instance)
 	}
 	if err != nil {
 		return Requirements{}, err
 	}
-	var out Requirements
+	out := Requirements{Total: len(health.MissingPackages(set, facts, m))}
 	for _, r := range set.DependencyRules() {
 		if r.Mod != m || r.Kind != rules.Requires {
 			continue

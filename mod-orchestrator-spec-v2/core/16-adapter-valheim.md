@@ -49,7 +49,7 @@ Perguntados depois do FOMOD e antes do básico. Só produzem plano.
 | `bepinex-package` | 30 | `manifest.json` na raiz do archive | `plugins/<pasta>/…`, `patchers/<pasta>/…`, `config/…`; o resto (DLLs na raiz, `manifest.json`, `icon.png`, `README.md`) em `plugins/<pasta>/` |
 | `bepinex-loose` | 40 | DLL sem `manifest.json` e sem nenhuma pasta do framework | `plugins/<pasta>/…`, sem a pasta invólucro |
 
-O instalador de pacote também devolve os metadados do `manifest.json` (D118): nome (com `_` trocado por espaço), versão, descrição e site.
+O instalador de pacote também devolve os metadados do `manifest.json` (D118): nome (com `_` trocado por espaço), versão, descrição e site. Desde a D125 devolve ainda o pacote: o `name` como identidade e as `dependencies` (`Autor-Nome-versão`) como pacotes exigidos, menos o `BepInExPack_Valheim`, que é o framework. Eles viram `DependencyRule` de `source=metadata` ao instalar e, enquanto nenhum mod declara o pacote, `mod_requirement_missing`.
 
 `<pasta>` é o `name` do `manifest.json` (aceita BOM); sem ele, o nome da primeira DLL. Fica gravada em `Installation.options["folder"]`, então a reinstalação cai no mesmo lugar. Um `BepInEx/` no começo do caminho é removido. Archive já no layout do framework (`BepInEx/plugins/...`) fica com o instalador básico, pelas dicas de root `plugins`, `patchers`, `config`, `core`.
 
@@ -74,10 +74,11 @@ Diferença conhecida para o r2modman: ele nomeia a pasta `Autor-Nome`, com o aut
 - Importar profiles do r2modman e provider da Thunderstore (core/15).
 - Implantação fora da pasta do jogo, como o r2modman faz: o Mod Orchestrator implanta na pasta do jogo. Os dois gerenciadores não devem gerenciar a mesma instalação ao mesmo tempo.
 
-- Autor do mod: o `manifest.json` não o informa (ele está só no nome do arquivo baixado).
+- Autor do mod: o `manifest.json` não o informa (ele está só no nome do arquivo baixado) e o instalador não recebe esse nome (D125, item 7).
 
 ## 9. Critérios de aceite
 
 - O registro aceita o adapter ao lado de `generic` e `skyrimse` (D112) e o workspace não tem Plugins nem Load Order.
 - Pacote com `manifest.json`, pacote do framework, DLL solta e archive no layout do framework caem nos destinos da tabela (`valheim_test.go`).
+- Dependências do manifesto viram regra ao instalar o pacote exigido, aparecem como requisito ausente antes disso e não se repetem ao reinstalar; no `generic` nada nasce (`integration/packages_test.go`, D125).
 - Proxy sem preloader gera `framework_missing`; framework presente ou gerenciado, não.

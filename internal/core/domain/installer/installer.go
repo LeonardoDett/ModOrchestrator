@@ -15,6 +15,7 @@ import (
 
 	"modorchestrator/internal/core/domain/fomod"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/relpath"
 )
 
@@ -206,6 +207,12 @@ type Plan struct {
 	// moduleDependencies); they become DependencyRules only when the user
 	// confirms them (core/03 §2).
 	Requirements []string
+	// Package is the package identity and the packages the mod declares
+	// it requires, read by the adapter's installer (D125). Unlike
+	// Requirements they need no confirmation: the library turns them into
+	// DependencyRules against the installed mods that declare that
+	// identity.
+	Package mod.Package
 	// Metadata is what the installer read about the mod in the archive (a
 	// package manifest): name, version, author. It takes precedence over
 	// what the archive name and fomod/info.xml say, never over the user's
@@ -313,6 +320,7 @@ func Finish(p *Plan) (*Plan, error) {
 	out := *p
 	out.Files = files
 	out.Options = maps.Clone(p.Options)
+	out.Package = p.Package.Clean()
 	return &out, nil
 }
 

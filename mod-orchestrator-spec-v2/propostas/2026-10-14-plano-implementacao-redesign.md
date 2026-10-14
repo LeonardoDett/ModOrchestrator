@@ -37,7 +37,7 @@ D119 a D121 estão registradas. Daí em diante a numeração é provisória: val
 | D122 | **Cor de destaque por jogo** e paleta de categorias no tema. Registrada | Detalha D043 | RD2 ✅ |
 | D123 | **Categoria com cor e ícone, e tags** como conceito separado; preferência de visão da lista por instância. Registrada | Detalha D026, `core/02` §9 | RD5 ✅ |
 | D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação. Registrada | Detalha D038, D065 | RD5 ✅ |
-| D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Requirements` passa a aceitar pacote, não só arquivo) | Detalha D118; fecha `core/16` §8 | RD6 |
+| D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Package`, ao lado de `Plan.Requirements`, que segue de arquivos). Registrada | Detalha D118; fecha `core/16` §8 | RD6 ✅ |
 | D126 | **Sugestão de vencedor** em conflito: de onde vem, e que nunca cria regra sozinha | Detalha D004, D027 | RD7 |
 | D127 | **Importar de Vortex e MO2** entra neste plano (hoje V1.x em `core/15`); copiar por padrão | Emenda D047; detalha D035, D048 | RD15 |
 | D128 | **Assistente de jogo**: reconhecimento de pasta, modelos e target criável | Detalha D117 | RD14 |
@@ -195,7 +195,9 @@ Concluída em 2026-10-14 (D123, D124; migração 0011). Feito: cor e ícone de c
 - **Pronto quando:** testes de domínio e de repositório; integração: instalar em lote com um FOMOD no meio não trava os outros e respeita o lock da instância (D038); migração 0011 testada a partir de banco na 0010.
 - **Sem a capability:** vale para todo jogo. Categorias iniciais vêm de `default_categories`: no `generic` a lista começa vazia e tudo funciona. B8 foi escolhida por não depender de ContentFlags, que o `generic` não tem. B9 devolve vazio para mod sem FOMOD. Teste de integração com instância `generic` percorrendo todos os comandos novos.
 
-### RD6. Backend: dependências do Valheim
+### RD6. Backend: dependências do Valheim ✅
+
+Concluída em 2026-10-14 (D125). Feito: `Plan.Package` e `Mod.Package` (campo à parte de `Plan.Requirements`, que segue de arquivos); o Valheim lê `name` e `dependencies` do manifesto, sem o pacote do framework; regras `requires` de origem metadata nos dois sentidos ao instalar, sem duplicar; `mod_requirement_missing` para pacote que nenhum mod declara; o resumo do mod conta esses pacotes. A versão é guardada, não comparada. O autor pelo nome do archive ficou fora (exigiria contrato novo). Testes: `valheim_test.go`, `integration/packages_test.go` (Valheim e `generic`); fixtures do FOMOD inalteradas.
 
 - **Objetivo:** fechar `core/16` §8: `dependencies` do `manifest.json` viram `DependencyRule` com `source=metadata`.
 - **Entregáveis:** `installer.Plan.Requirements` passa a carregar referência de pacote (nome e versão mínima), além de arquivo (D125); o adapter do Valheim lê `Autor-Nome-versão`; o casamento usa os metadados que a D118 já grava; diagnóstico de requisito ausente pelo catálogo atual; autor do mod a partir do nome do archive, se couber sem contrato novo.

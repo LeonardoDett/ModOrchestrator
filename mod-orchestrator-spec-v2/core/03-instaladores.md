@@ -28,6 +28,7 @@ Saída (**plano de instalação**, puro dado):
 - `files[]`: origem (entrada do archive) → destino (Location relativa ao mod) com prioridade de instrução (FOMOD `priority`);
 - `modType` sugerido;
 - `metadata` detectada (nome, versão, autor, descrição, imagem): `Plan.Metadata` desde a D118 (sem imagem); vale mais que `fomod/info.xml` e que o nome do archive, e menos que os atributos do usuário;
+- `package` (D125): identidade de pacote e pacotes exigidos, com versão mínima, quando o instalador do adapter os lê; viram `DependencyRule` de `source=metadata` sem confirmação, ao contrário de `requirements`;
 - `options` a gravar;
 - `warnings[]` (ex.: "o FOMOD referencia arquivo inexistente X, ignorado");
 - `requirements[]` detectados (viram DependencyRules com `source=metadata`, somente se o usuário confirmar no resumo);
