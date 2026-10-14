@@ -409,7 +409,7 @@ describe("Mods screen (F4)", () => {
     await user.click(screen.getByRole("button", { name: "Install queue, 1 item" }));
     const queue = await screen.findByRole("dialog", { name: "Install queue" });
     expect(within(queue).getByText("Pending")).toBeInTheDocument();
-    await user.click(within(queue).getByRole("button", { name: "Install 1" }));
+    await user.click(within(queue).getByRole("button", { name: "Install all" }));
     await waitFor(() => expect(state.calls).toContain("installAll:m3"));
   });
 

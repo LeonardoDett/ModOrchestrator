@@ -4,21 +4,35 @@ import { useRef, type ComponentPropsWithoutRef, type KeyboardEvent, type ReactNo
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { useControllableState } from "../../hooks/use-controllable-state";
+import type { CategoryColor } from "../../theme/engine";
 
 const swatchVariants = defineRecipe({
   base: [
-    "inline-flex size-8 items-center justify-center rounded-control border bg-surface",
+    "inline-flex items-center justify-center rounded-control border",
     "motion-transition motion-press focus-ring",
     "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
   ].join(" "),
   variants: {
     /** Marcado: borda forte de 2 px e fundo de seleção (forma, não só cor). */
     checked: {
-      true: "border-2 border-fg bg-selected",
+      true: "border-2",
       false: "border-border hover:state-layer-hover",
     },
+    /** `square` 32 px; `sm`/`md` preenchem a coluna com 34/40 px de altura (pranchas de Organização). */
+    size: {
+      square: "size-8",
+      sm: "h-8.5 w-full",
+      md: "h-10 w-full gap-1.5 px-1 text-[0.6875rem] font-medium",
+    },
+    /** Pintada pela paleta categórica (`data-category` no botão). */
+    tinted: { true: "bg-intent-subtle text-intent-text", false: "" },
   },
-  defaultVariants: { checked: false },
+  compoundVariants: [
+    { checked: true, tinted: false, class: "border-fg bg-selected" },
+    { checked: true, tinted: true, class: "border-intent-fill" },
+    { checked: false, tinted: false, class: "bg-surface" },
+  ],
+  defaultVariants: { checked: false, size: "square", tinted: false },
 });
 
 export interface SwatchOption {
@@ -37,6 +51,13 @@ export interface SwatchPickerProps extends Omit<ComponentPropsWithoutRef<"div">,
   renderSwatch: (option: SwatchOption, state: { checked: boolean }) => ReactNode;
   /** Colunas da grade (setas para cima e para baixo pulam uma linha). Padrão 8. */
   columns?: number;
+  /** `square` (padrão): amostras de 32 px; `sm`/`md`: amostras que preenchem colunas iguais. */
+  size?: "square" | "sm" | "md";
+  /**
+   * Pinta pela paleta categórica: `"self"` usa o valor de cada opção como cor (escolher a
+   * cor), uma cor fixa pinta só a marcada (escolher o ícone na cor já escolhida).
+   */
+  tint?: "self" | CategoryColor;
   "aria-label": string;
 }
 
@@ -59,6 +80,8 @@ export function SwatchPicker({
   onValueChange,
   renderSwatch,
   columns = 8,
+  size = "square",
+  tint,
   className,
   style,
   ...props
@@ -92,11 +115,12 @@ export function SwatchPicker({
     <div
       role="radiogroup"
       className={cn("grid gap-1.5", className)}
-      style={{ gridTemplateColumns: `repeat(${columns}, max-content)`, ...style }}
+      style={{ gridTemplateColumns: `repeat(${columns}, ${size === "square" ? "max-content" : "minmax(0, 1fr)"})`, ...style }}
       {...props}
     >
       {options.map((option, index) => {
         const checked = option.value === value;
+        const color = tint === "self" ? option.value : checked ? tint : undefined;
         return (
           <button
             key={option.value}
@@ -111,7 +135,8 @@ export function SwatchPicker({
             disabled={option.disabled}
             tabIndex={index === tabStop ? 0 : -1}
             data-state={checked ? "checked" : "unchecked"}
-            className={swatchVariants({ checked })}
+            data-category={color}
+            className={swatchVariants({ checked, size, tinted: Boolean(color) })}
             onClick={() => setValue(option.value)}
             onKeyDown={(event) => {
               if (event.key === " " || event.key === "Enter") {

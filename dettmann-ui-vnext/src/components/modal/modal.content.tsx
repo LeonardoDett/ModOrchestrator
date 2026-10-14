@@ -24,6 +24,8 @@ const modalContentVariants = defineRecipe({
       "2xl": "w-full max-w-2xl",
       wide: "w-full max-w-[min(68.75rem,90vw)] h-[min(85vh,85dvh)]",
       full: "w-full max-w-[calc(100vw-2rem)] h-[calc(100vh-2rem)]",
+      /** D-040: the screen gives width and height (`className`), as its board measures them. */
+      custom: "",
     },
   },
   defaultVariants: {

@@ -4,9 +4,10 @@ import { cn } from "../../utils/cn";
 
 const modalHeaderVariants = defineRecipe({
   base: [
-    "flex items-center justify-between gap-4",
-    "px-6 pt-6 pb-4",
-    "border-b border-border",
+    "flex shrink-0 items-center justify-between gap-4",
+    "px-6 pt-5 pb-4",
+    // D-040: header and footer are structure bands around the raised body (boards).
+    "border-b border-border bg-structure",
   ].join(" "),
 });
 
@@ -22,7 +23,7 @@ export function ModalHeader({
   ...props
 }: ModalHeaderProps) {
   return (
-    <div className={cn(modalHeaderVariants(), className)} {...props}>
+    <div data-layer="medium" className={cn(modalHeaderVariants(), className)} {...props}>
       {children}
     </div>
   );

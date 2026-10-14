@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { DataTable } from "../components/data-table";
 import { ResourcePage } from "../components/resource-page";
 import { Switch } from "../components/switch";
+import { SwatchPicker } from "../components/swatch-picker";
 import { Tag } from "../components/tag";
 
 // D-040: props that the approved screen boards need (dense switch, tag with
@@ -57,5 +58,35 @@ describe("board fidelity props (D-040)", () => {
     expect(line).toHaveTextContent("142 de 380 ativos");
     expect(line).toHaveTextContent("Adicionar mods");
     expect(screen.getByRole("main")).toHaveTextContent("conteúdo");
+  });
+
+  it("SwatchPicker md fills equal columns and tints every color swatch by its own value", () => {
+    render(
+      <SwatchPicker
+        aria-label="Cor"
+        size="md"
+        tint="self"
+        value="green"
+        options={[
+          { value: "blue", label: "Azul" },
+          { value: "green", label: "Verde" },
+        ]}
+        renderSwatch={(o) => o.label}
+      />,
+    );
+    const blue = screen.getByRole("radio", { name: "Azul" });
+    const green = screen.getByRole("radio", { name: "Verde" });
+    expect(blue).toHaveAttribute("data-category", "blue");
+    expect(green).toHaveAttribute("data-category", "green");
+    expect(green.className).toContain("border-intent-fill");
+    expect(screen.getByRole("radiogroup").style.gridTemplateColumns).toContain("minmax(0, 1fr)");
+  });
+
+  it("SwatchPicker with a fixed tint colors only the checked swatch", () => {
+    render(
+      <SwatchPicker aria-label="Ícone" size="sm" tint="green" value="b" options={[{ value: "a", label: "A" }, { value: "b", label: "B" }]} renderSwatch={(o) => o.label} />,
+    );
+    expect(screen.getByRole("radio", { name: "A" })).not.toHaveAttribute("data-category");
+    expect(screen.getByRole("radio", { name: "B" })).toHaveAttribute("data-category", "green");
   });
 });

@@ -2234,7 +2234,7 @@ export const en = {
   "mods.queue.running": "Installing",
   "mods.queue.pending": "Waiting",
   "mods.queue.choose": "Choose options",
-  "mods.queue.imported": "Imported, not installed · {size}",
+  "mods.queue.imported": "{size} · imported, not installed",
   "mods.queue.installAll.one": "Install {count}",
   "mods.queue.installAll.other": "Install all {count}",
   "mods.queue.installAllHelp": "\"Install all\" skips the mods that ask for choices. They stay in the queue without blocking the others.",
@@ -2398,6 +2398,13 @@ export const en = {
   "mods.group.info": "{enabled} of {count} enabled",
   "mods.filter.button": "Filters",
   "mods.deploy.runningPercent": "Deploying {percent}%",
+  "mods.queue.remove": "Remove {name} from the queue",
+  "mods.queue.installAllSkips.one": "\"Install all\" skips the {count} mod that asks for choices. It stays in the queue without blocking the others.",
+  "mods.queue.installAllSkips.other": "\"Install all\" skips the {count} mods that ask for choices. They stay in the queue without blocking the others.",
+  "mods.organize.helpGame": "Applies only to {game}. It does not change the deployment.",
+  "mods.organize.asSeparator": "As a separator",
+  "mods.organize.asTab": "As a tab",
+  "mods.organize.sampleMod": "A mod with this tag",
 } as const;
 
 export type MessageKey = keyof typeof en;

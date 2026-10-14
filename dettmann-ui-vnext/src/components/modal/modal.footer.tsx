@@ -4,9 +4,9 @@ import { cn } from "../../utils/cn";
 
 const modalFooterVariants = defineRecipe({
   base: [
-    "flex items-center justify-end gap-2",
-    "px-6 pt-4 pb-6",
-    "border-t border-border",
+    "flex min-h-15 shrink-0 items-center justify-end gap-2",
+    "px-6 py-3",
+    "border-t border-border bg-structure",
   ].join(" "),
 });
 
@@ -22,7 +22,7 @@ export function ModalFooter({
   ...props
 }: ModalFooterProps) {
   return (
-    <div data-budget-region="modal-footer" className={cn(modalFooterVariants(), className)} {...props}>
+    <div data-budget-region="modal-footer" data-layer="medium" className={cn(modalFooterVariants(), className)} {...props}>
       {children}
     </div>
   );
