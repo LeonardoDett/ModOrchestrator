@@ -258,6 +258,8 @@ Concluída em 2026-10-14. Feito: DLG-06 reescrito; passos com a linha do que foi
 - **Pronto quando:** aceite da regra 5; `TestConflictDemonstration` passa; demonstração: dois mods sobrepostos, vencedor por par e depois um arquivo pelo outro.
 - **Sem a capability:** vale para todo jogo. Sem sugestão disponível o selo não aparece. Nenhum texto fala de extensão ou pasta de jogo. Teste da página com `generic`.
 
+Concluída em 2026-10-14 (`5dcfa9b`), já pela regra da D127: tela comparada com a prancha em 1440 × 900. Feito: `ui/telas/conflicts.md` §2 reescrito; cabeçalho com chips e "Limpar regras" / "Usar sugestões em tudo"; lista de mods em painel; linha com as duas opções, "Sugerido", trava; "Para todos os N"; barra de mudanças não salvas. Saíram "Recalcular" e "Mostrar desativados", que a prancha não tem. Antes desta fase, a casca, Mods, fila, Organização, detalhe do mod e FOMOD foram refeitos pela prancha (`4b09f95`, `b756285`, `4745846`, `7e5dd5f`).
+
 ### RD12. Plugins e Ordem de carga
 
 - **Objetivo:** as duas telas no desenho novo.
