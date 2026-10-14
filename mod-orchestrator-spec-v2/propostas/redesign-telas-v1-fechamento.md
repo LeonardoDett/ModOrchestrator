@@ -20,32 +20,32 @@ Casca do espaço do jogo:
 
 ## 2. Telas do canvas
 
-Estados: **Aprovada** (o Leonardo disse que está ok), **Aguardando** (desenhada, sem resposta), **Reservada** (espaço para o futuro, sem compromisso de escopo).
+Estados: **Aprovada** (o Leonardo disse que está ok; "em 2026-10-14" marca as liberadas em conjunto com "pode fazer todas as telas"), **Reservada** (espaço para o futuro, sem compromisso de escopo).
 
 ### Nível do app
 
 | Artboard | Tela | Estado |
 |---|---|---|
-| `Main` | Mapa de navegação | Aguardando |
-| `Biblioteca` | Biblioteca de jogos | Aguardando |
-| `Inicio` | Início (dash global) | Aguardando |
-| `JogosSuportados` | Adicionar jogo: suportados, personalizados e pasta | Aguardando |
-| `ImportarOferta` | Adicionar jogo: importar de Vortex ou MO2 | Aguardando |
-| `ImportarEscolha` | Adicionar jogo: escolher o que importar | Aguardando |
+| `Main` | Mapa de navegação | Aprovada em 2026-10-14 |
+| `Biblioteca` | Biblioteca de jogos | Aprovada em 2026-10-14 |
+| `Inicio` | Início (dash global) | Aprovada em 2026-10-14 |
+| `JogosSuportados` | Adicionar jogo: suportados, personalizados e pasta | Aprovada em 2026-10-14 |
+| `ImportarOferta` | Adicionar jogo: importar de Vortex ou MO2 | Aprovada em 2026-10-14 |
+| `ImportarEscolha` | Adicionar jogo: escolher o que importar | Aprovada em 2026-10-14 |
 
 ### Espaço do jogo
 
 | Artboard | Tela | Estado |
 |---|---|---|
-| `JogoVisaoGeral` | Visão geral | Aguardando (ajustada pelos comentários) |
-| `JogoGenerico` | Visão geral de jogo com menos capacidades | Aguardando (ajustada pelos comentários) |
+| `JogoVisaoGeral` | Visão geral | Aprovada em 2026-10-14 (ajustada pelos comentários) |
+| `JogoGenerico` | Visão geral de jogo com menos capacidades | Aprovada em 2026-10-14 (ajustada pelos comentários) |
 | `JogoMods` | Mods, visão 1 Lista | Aprovada; depois ajustada pelos comentários |
 | `JogoModsAninhada` | Mods, visão 2 Aninhada (categorias viram separadores) | Aprovada; idem |
 | `JogoModsAbas` | Mods, visão 3 Abas por categoria | Aprovada; idem |
-| `JogoFilaInstalacao` | Fila de instalação (modal) | Aguardando |
-| `JogoMenuRecolhido` | Menu lateral recolhido | Aguardando |
-| `JogoOrganizacao` | Organização, aba Categorias | Aguardando |
-| `JogoOrganizacaoTags` | Organização, aba Tags | Aguardando |
+| `JogoFilaInstalacao` | Fila de instalação (modal) | Aprovada em 2026-10-14 |
+| `JogoMenuRecolhido` | Menu lateral recolhido | Aprovada em 2026-10-14 |
+| `JogoOrganizacao` | Organização, aba Categorias | Aprovada em 2026-10-14 |
+| `JogoOrganizacaoTags` | Organização, aba Tags | Aprovada em 2026-10-14 |
 | `JogoModDetalhe` | Detalhe do mod (modal), aba Resumo | Aprovada |
 | `JogoModConflitos` | Detalhe do mod, aba Conflitos | Aprovada; depois ajustada pelos comentários |
 | `JogoModArquivos` | Detalhe do mod, aba Arquivos | Aprovada; depois ajustada pelos comentários |
@@ -54,9 +54,9 @@ Estados: **Aprovada** (o Leonardo disse que está ok), **Aguardando** (desenhada
 | `JogoFomod` | Instalador FOMOD, passo de escolhas | Aprovada; depois ajustada pelos comentários |
 | `JogoFomodResumo` | Instalador FOMOD, resumo final | Aprovada; depois ajustada pelos comentários |
 | `JogoConflitos` | Conflitos | Aprovada; depois ajustada pelos comentários |
-| `JogoPlugins` | Plugins | Aguardando |
-| `JogoOrdemDeCarga` | Ordem de carga | Aguardando |
-| `JogoAjustesRecursos` | Ajustes da instância, recursos | Aguardando |
+| `JogoPlugins` | Plugins | Aprovada em 2026-10-14 |
+| `JogoOrdemDeCarga` | Ordem de carga | Aprovada em 2026-10-14 |
+| `JogoAjustesRecursos` | Ajustes da instância, recursos | Aprovada em 2026-10-14 |
 
 ### Espaços reservados
 
@@ -137,7 +137,7 @@ Decisões que faltam do Leonardo:
 2. **Onde o Ctrl K aparece.** A busca saiu do menu lateral e o atalho ficou sem indicação visível.
 3. **Sugestão de conflito (B2):** definir a origem ou tirar o selo.
 4. **Importação:** perfis e categorias do Vortex entram no escopo? Não estão na spec.
-5. **Aprovação** das telas marcadas como "Aguardando", em especial Plugins, Ordem de carga, a área de jogos (`JogosSuportados`, `JogoAjustesRecursos`) e as telas novas dos comentários.
+5. ~~Aprovação das telas que estavam aguardando.~~ Resolvido em 2026-10-14: o Leonardo liberou todas as telas desenhadas. As telas reservadas e as não desenhadas continuam fora.
 6. **"Adicionar mods" e "Importar":** foram tratados como ação principal e como trazer de pasta ou de outro gerenciador. Falta confirmar.
 
 Pendências de processo:
