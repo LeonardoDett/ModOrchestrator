@@ -23,6 +23,7 @@
 @source inline("rounded-{control,chip,card,panel,pill} h-control-{sm,md,lg} shadow-{raised,overlay,modal}");
 @source inline("text-{caption,label,body,body-lg,title-sm,title,display,display-lg} font-{sans,mono} motion-transition motion-press");
 @source inline("focus-ring focus-ring-inset focus-bare");
+@source inline("{bg,text,border}-category-{blue,green,amber,coral,pink,violet,teal,gray,cyan,lime,orange,red,indigo,graphite,magenta,olive}-{dot,subtle,text,border}");
 @import "./../styles/theme/themes.generated.css";
 @import "./../styles/theme/foundations.css";
 @import "./../styles/fonts/fonts.css";
@@ -98,6 +99,70 @@
   --color-danger-text: var(--ui-danger-text);
   --color-danger-border: var(--ui-danger-border);
   --color-overlay: var(--ui-overlay);
+  --color-category-blue-dot: var(--ui-category-blue-dot);
+  --color-category-blue-subtle: var(--ui-category-blue-subtle);
+  --color-category-blue-text: var(--ui-category-blue-text);
+  --color-category-blue-border: var(--ui-category-blue-border);
+  --color-category-green-dot: var(--ui-category-green-dot);
+  --color-category-green-subtle: var(--ui-category-green-subtle);
+  --color-category-green-text: var(--ui-category-green-text);
+  --color-category-green-border: var(--ui-category-green-border);
+  --color-category-amber-dot: var(--ui-category-amber-dot);
+  --color-category-amber-subtle: var(--ui-category-amber-subtle);
+  --color-category-amber-text: var(--ui-category-amber-text);
+  --color-category-amber-border: var(--ui-category-amber-border);
+  --color-category-coral-dot: var(--ui-category-coral-dot);
+  --color-category-coral-subtle: var(--ui-category-coral-subtle);
+  --color-category-coral-text: var(--ui-category-coral-text);
+  --color-category-coral-border: var(--ui-category-coral-border);
+  --color-category-pink-dot: var(--ui-category-pink-dot);
+  --color-category-pink-subtle: var(--ui-category-pink-subtle);
+  --color-category-pink-text: var(--ui-category-pink-text);
+  --color-category-pink-border: var(--ui-category-pink-border);
+  --color-category-violet-dot: var(--ui-category-violet-dot);
+  --color-category-violet-subtle: var(--ui-category-violet-subtle);
+  --color-category-violet-text: var(--ui-category-violet-text);
+  --color-category-violet-border: var(--ui-category-violet-border);
+  --color-category-teal-dot: var(--ui-category-teal-dot);
+  --color-category-teal-subtle: var(--ui-category-teal-subtle);
+  --color-category-teal-text: var(--ui-category-teal-text);
+  --color-category-teal-border: var(--ui-category-teal-border);
+  --color-category-gray-dot: var(--ui-category-gray-dot);
+  --color-category-gray-subtle: var(--ui-category-gray-subtle);
+  --color-category-gray-text: var(--ui-category-gray-text);
+  --color-category-gray-border: var(--ui-category-gray-border);
+  --color-category-cyan-dot: var(--ui-category-cyan-dot);
+  --color-category-cyan-subtle: var(--ui-category-cyan-subtle);
+  --color-category-cyan-text: var(--ui-category-cyan-text);
+  --color-category-cyan-border: var(--ui-category-cyan-border);
+  --color-category-lime-dot: var(--ui-category-lime-dot);
+  --color-category-lime-subtle: var(--ui-category-lime-subtle);
+  --color-category-lime-text: var(--ui-category-lime-text);
+  --color-category-lime-border: var(--ui-category-lime-border);
+  --color-category-orange-dot: var(--ui-category-orange-dot);
+  --color-category-orange-subtle: var(--ui-category-orange-subtle);
+  --color-category-orange-text: var(--ui-category-orange-text);
+  --color-category-orange-border: var(--ui-category-orange-border);
+  --color-category-red-dot: var(--ui-category-red-dot);
+  --color-category-red-subtle: var(--ui-category-red-subtle);
+  --color-category-red-text: var(--ui-category-red-text);
+  --color-category-red-border: var(--ui-category-red-border);
+  --color-category-indigo-dot: var(--ui-category-indigo-dot);
+  --color-category-indigo-subtle: var(--ui-category-indigo-subtle);
+  --color-category-indigo-text: var(--ui-category-indigo-text);
+  --color-category-indigo-border: var(--ui-category-indigo-border);
+  --color-category-graphite-dot: var(--ui-category-graphite-dot);
+  --color-category-graphite-subtle: var(--ui-category-graphite-subtle);
+  --color-category-graphite-text: var(--ui-category-graphite-text);
+  --color-category-graphite-border: var(--ui-category-graphite-border);
+  --color-category-magenta-dot: var(--ui-category-magenta-dot);
+  --color-category-magenta-subtle: var(--ui-category-magenta-subtle);
+  --color-category-magenta-text: var(--ui-category-magenta-text);
+  --color-category-magenta-border: var(--ui-category-magenta-border);
+  --color-category-olive-dot: var(--ui-category-olive-dot);
+  --color-category-olive-subtle: var(--ui-category-olive-subtle);
+  --color-category-olive-text: var(--ui-category-olive-text);
+  --color-category-olive-border: var(--ui-category-olive-border);
 }
 
 /*
@@ -186,6 +251,171 @@
 }
 
 /*
+ * Paleta categórica (categories.ts): `data-category="<cor>"` reaponta o contrato de
+ * intent para a cor escolhida. Sem significado de status; exclusiva com um intent de cor
+ * (as regras abaixo vencem por ordem). `bg-intent-fill` = ponto/amostra.
+ */
+[data-category="blue"] {
+  --intent-fill: var(--ui-category-blue-dot);
+  --intent-fill-hover: var(--ui-category-blue-dot);
+  --intent-fill-pressed: var(--ui-category-blue-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-blue-subtle);
+  --intent-text: var(--ui-category-blue-text);
+  --intent-border: var(--ui-category-blue-border);
+}
+
+[data-category="green"] {
+  --intent-fill: var(--ui-category-green-dot);
+  --intent-fill-hover: var(--ui-category-green-dot);
+  --intent-fill-pressed: var(--ui-category-green-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-green-subtle);
+  --intent-text: var(--ui-category-green-text);
+  --intent-border: var(--ui-category-green-border);
+}
+
+[data-category="amber"] {
+  --intent-fill: var(--ui-category-amber-dot);
+  --intent-fill-hover: var(--ui-category-amber-dot);
+  --intent-fill-pressed: var(--ui-category-amber-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-amber-subtle);
+  --intent-text: var(--ui-category-amber-text);
+  --intent-border: var(--ui-category-amber-border);
+}
+
+[data-category="coral"] {
+  --intent-fill: var(--ui-category-coral-dot);
+  --intent-fill-hover: var(--ui-category-coral-dot);
+  --intent-fill-pressed: var(--ui-category-coral-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-coral-subtle);
+  --intent-text: var(--ui-category-coral-text);
+  --intent-border: var(--ui-category-coral-border);
+}
+
+[data-category="pink"] {
+  --intent-fill: var(--ui-category-pink-dot);
+  --intent-fill-hover: var(--ui-category-pink-dot);
+  --intent-fill-pressed: var(--ui-category-pink-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-pink-subtle);
+  --intent-text: var(--ui-category-pink-text);
+  --intent-border: var(--ui-category-pink-border);
+}
+
+[data-category="violet"] {
+  --intent-fill: var(--ui-category-violet-dot);
+  --intent-fill-hover: var(--ui-category-violet-dot);
+  --intent-fill-pressed: var(--ui-category-violet-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-violet-subtle);
+  --intent-text: var(--ui-category-violet-text);
+  --intent-border: var(--ui-category-violet-border);
+}
+
+[data-category="teal"] {
+  --intent-fill: var(--ui-category-teal-dot);
+  --intent-fill-hover: var(--ui-category-teal-dot);
+  --intent-fill-pressed: var(--ui-category-teal-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-teal-subtle);
+  --intent-text: var(--ui-category-teal-text);
+  --intent-border: var(--ui-category-teal-border);
+}
+
+[data-category="gray"] {
+  --intent-fill: var(--ui-category-gray-dot);
+  --intent-fill-hover: var(--ui-category-gray-dot);
+  --intent-fill-pressed: var(--ui-category-gray-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-gray-subtle);
+  --intent-text: var(--ui-category-gray-text);
+  --intent-border: var(--ui-category-gray-border);
+}
+
+[data-category="cyan"] {
+  --intent-fill: var(--ui-category-cyan-dot);
+  --intent-fill-hover: var(--ui-category-cyan-dot);
+  --intent-fill-pressed: var(--ui-category-cyan-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-cyan-subtle);
+  --intent-text: var(--ui-category-cyan-text);
+  --intent-border: var(--ui-category-cyan-border);
+}
+
+[data-category="lime"] {
+  --intent-fill: var(--ui-category-lime-dot);
+  --intent-fill-hover: var(--ui-category-lime-dot);
+  --intent-fill-pressed: var(--ui-category-lime-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-lime-subtle);
+  --intent-text: var(--ui-category-lime-text);
+  --intent-border: var(--ui-category-lime-border);
+}
+
+[data-category="orange"] {
+  --intent-fill: var(--ui-category-orange-dot);
+  --intent-fill-hover: var(--ui-category-orange-dot);
+  --intent-fill-pressed: var(--ui-category-orange-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-orange-subtle);
+  --intent-text: var(--ui-category-orange-text);
+  --intent-border: var(--ui-category-orange-border);
+}
+
+[data-category="red"] {
+  --intent-fill: var(--ui-category-red-dot);
+  --intent-fill-hover: var(--ui-category-red-dot);
+  --intent-fill-pressed: var(--ui-category-red-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-red-subtle);
+  --intent-text: var(--ui-category-red-text);
+  --intent-border: var(--ui-category-red-border);
+}
+
+[data-category="indigo"] {
+  --intent-fill: var(--ui-category-indigo-dot);
+  --intent-fill-hover: var(--ui-category-indigo-dot);
+  --intent-fill-pressed: var(--ui-category-indigo-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-indigo-subtle);
+  --intent-text: var(--ui-category-indigo-text);
+  --intent-border: var(--ui-category-indigo-border);
+}
+
+[data-category="graphite"] {
+  --intent-fill: var(--ui-category-graphite-dot);
+  --intent-fill-hover: var(--ui-category-graphite-dot);
+  --intent-fill-pressed: var(--ui-category-graphite-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-graphite-subtle);
+  --intent-text: var(--ui-category-graphite-text);
+  --intent-border: var(--ui-category-graphite-border);
+}
+
+[data-category="magenta"] {
+  --intent-fill: var(--ui-category-magenta-dot);
+  --intent-fill-hover: var(--ui-category-magenta-dot);
+  --intent-fill-pressed: var(--ui-category-magenta-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-magenta-subtle);
+  --intent-text: var(--ui-category-magenta-text);
+  --intent-border: var(--ui-category-magenta-border);
+}
+
+[data-category="olive"] {
+  --intent-fill: var(--ui-category-olive-dot);
+  --intent-fill-hover: var(--ui-category-olive-dot);
+  --intent-fill-pressed: var(--ui-category-olive-dot);
+  --on-intent: var(--ui-fg);
+  --intent-subtle: var(--ui-category-olive-subtle);
+  --intent-text: var(--ui-category-olive-text);
+  --intent-border: var(--ui-category-olive-border);
+}
+
+/*
  * State layers (spec 4.4): overlays sobre a base do nó. A base é fg em
  * superfícies neutras e a cor do intent em superfícies tingidas. As variáveis
  * são recalculadas onde a base ou o tema/modo mudam (escopos aninhados);
@@ -208,6 +438,14 @@
 [data-ui-mode],
 .dark,
 [data-intent] {
+  --state-hover: color-mix(in oklab, var(--state-base) 6%, transparent);
+  --state-pressed: color-mix(in oklab, var(--state-base) 10%, transparent);
+  --state-selected: color-mix(in oklab, var(--state-base) 14%, transparent);
+}
+
+/* Cor categórica: a camada de estado usa a cor escolhida (vem depois dos intents). */
+[data-category] {
+  --state-base: var(--intent-fill);
   --state-hover: color-mix(in oklab, var(--state-base) 6%, transparent);
   --state-pressed: color-mix(in oklab, var(--state-base) 10%, transparent);
   --state-selected: color-mix(in oklab, var(--state-base) 14%, transparent);

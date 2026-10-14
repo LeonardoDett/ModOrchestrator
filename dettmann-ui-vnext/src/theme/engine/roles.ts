@@ -1,5 +1,6 @@
 import { apcaContrast, wcagContrast } from "./color/contrast";
 import { oklchToRgb, parseColor, toHex } from "./color/convert";
+import { buildCategories, CATEGORY_COLORS, CATEGORY_ROLE_NAMES, categoryRole } from "./categories";
 import { buildIntents, COLOR_INTENTS, neutralTone, subtleChroma } from "./palette";
 import { CONTRAST_TARGETS, snap, solveLightness, targetMetric, type ContrastKind } from "./solve";
 import type { ColorIntent, ContrastLevel, Mode, NormalizedConfig, Oklch, RoleName } from "./types";
@@ -45,6 +46,7 @@ export const ROLE_NAMES: readonly RoleName[] = [
     `${x}-text`,
     `${x}-border`,
   ]),
+  ...CATEGORY_ROLE_NAMES,
   "overlay",
 ];
 
@@ -67,6 +69,13 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
     { fg: `on-${x}`, bg: [`${x}-fill`, `${x}-fill-hover`], kind: "on-fill" },
     { fg: `${x}-text`, bg: [`${x}-subtle`, "surface", "canvas"], kind: "intent-text" },
   ]),
+  ...CATEGORY_COLORS.map(
+    (color): ContrastPair => ({
+      fg: categoryRole(color, "text"),
+      bg: [categoryRole(color, "subtle"), "surface", "canvas"],
+      kind: "intent-text",
+    }),
+  ),
   { fg: "border-strong", bg: ["surface", "canvas"], kind: "control-border" },
   { fg: "focus", bg: ["canvas", "surface"], kind: "focus" },
 ];
@@ -197,6 +206,7 @@ export function buildRoles(config: NormalizedConfig, mode: Mode): { roles: Recor
     c[`${x}-text`] = set.text;
     c[`${x}-border`] = set.border;
   }
+  Object.assign(c, buildCategories(config, mode, [surface, canvas]));
   for (const suffix of INTENT_SUFFIXES) c[`emphasis-${suffix}`] = c[`brand-${suffix}`];
   c["on-emphasis"] = c["on-brand"];
 

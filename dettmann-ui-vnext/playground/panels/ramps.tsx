@@ -1,4 +1,4 @@
-import { COLOR_INTENTS, Stack, Typography, type Mode, type ResolvedTheme, type RoleName } from "../../src";
+import { CATEGORY_COLORS, COLOR_INTENTS, Stack, Typography, type Mode, type ResolvedTheme, type RoleName } from "../../src";
 
 const INTENT_LABELS: Record<string, string> = {
   brand: "Marca",
@@ -34,6 +34,9 @@ const GROUPS: { title: string; roles: RoleName[] }[] = [
     title: INTENT_LABELS[x] ?? x,
     roles: [`${x}-fill`, `${x}-fill-hover`, `${x}-fill-pressed`, `on-${x}`, `${x}-subtle`, `${x}-text`, `${x}-border`] as RoleName[],
   })),
+  { title: "Paleta categórica: pontos", roles: CATEGORY_COLORS.map((c) => `category-${c}-dot` as RoleName) },
+  { title: "Paleta categórica: fundo sutil", roles: CATEGORY_COLORS.map((c) => `category-${c}-subtle` as RoleName) },
+  { title: "Paleta categórica: texto", roles: CATEGORY_COLORS.map((c) => `category-${c}-text` as RoleName) },
 ];
 
 /** Amostra de cada papel do modo, pintada pela variável do escopo e rotulada com o hex gerado. */

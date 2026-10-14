@@ -4,6 +4,8 @@ export * from "./color/convert";
 export * from "./color/contrast";
 export * from "./motion";
 export * from "./palette";
+export * from "./categories";
+export * from "./seed";
 export * from "./solve";
 export * from "./roles";
 export * from "./primitives";

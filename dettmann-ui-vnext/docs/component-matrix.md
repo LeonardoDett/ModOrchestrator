@@ -39,6 +39,8 @@ Wave 2 (D-035): `Modal` and `Drawer` animate entrance and exit (the panel is `in
 
 Wave 3 (D-036): `DataTable` rows are 32/28 px with one state variant (idle, selected, dragged, group) and slide on reorder, sort and filter; `Table` is compact with a structural header; `Tabs` show the brand indicator on the active tab and animate the panel entrance; `FilterBar` (`filtersLabel`) and the `Inspector` header are structural `medium` layers.
 
+Redesign batch 1 (D-038): `Indicator variant="chip"` (value and label visible, for page headers); `Alert` gains `action`, `onDismiss`/`dismissLabel` and `compact`; `Avatar` gains `shape="square"` (monograms), `color` from the category palette, `emphasis` and `label`; `Button` gains `badge`, `progress` and `tooltip`.
+
 Wave 4 (D-037): `Card.Root` takes `emphasis` (`low` | `medium`), `interactive` and `selected` (no `variant`, no shadow); `Toolbar`, `ActionBar` and `Sidebar` are `bg-structure` medium layers.
 
 ## Files and media
@@ -48,3 +50,5 @@ Wave 4 (D-037): `Card.Root` takes `emphasis` (`low` | `medium`), `interactive` a
 ## Templates
 
 `Workspace`, `ResourcePage`, `MasterDetail`, `ConfirmDialog`, `AppShell`, `Sidebar`, `Navbar`, `Calendar`
+
+Redesign batch 1 (D-038): `AppShell layout="topbar"` (bar across the window, only the content scrolls); `Navbar size="compact"` with `windowControls`; `Sidebar` items take `count`, `countLabel` and `attention`, collapsed items get a tooltip, `footer` can be a function of `{ collapsed }`, `heading` labels the collapse row, widths come from `--sidebar-width`/`--sidebar-width-collapsed`.

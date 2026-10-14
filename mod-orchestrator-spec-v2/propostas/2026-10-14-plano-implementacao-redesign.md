@@ -34,7 +34,7 @@ D119 a D121 estão registradas. Daí em diante a numeração é provisória: val
 | D119 | **O design v1 é o layout base.** Registrada | Substitui D042 | RD0 ✅ |
 | D120 | **Dois níveis: app e espaço do jogo.** Barra superior com "‹ Biblioteca", jogo, perfil, sino e ajuda; menu lateral em grupos com recolher; "Jogar" e o cartão de implantação no rodapé do menu; status e problemas viram contagem no sino | Emenda D023, D045 (Play sai da barra de título), D054 e `ui/00` §2 | RD0 ✅ |
 | D121 | **Detalhe do mod em modal grande com abas**, no lugar do Inspector lateral | Emenda `ui/03` §4 ("modal só para decisão curta") | RD0 ✅ |
-| D122 | **Cor de destaque por jogo** no tema, declarada pela definição do jogo e com padrão do app | Emenda D043, D056 | RD2 |
+| D122 | **Cor de destaque por jogo** e paleta de categorias no tema. Registrada | Detalha D043 | RD2 ✅ |
 | D123 | **Categoria com cor e ícone, e tags** como conceito separado; preferência de visão da lista por instância | Detalha D026, `core/02` §9 | RD5 |
 | D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação | Detalha D038, D065 | RD5 |
 | D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Requirements` passa a aceitar pacote, não só arquivo) | Detalha D118; fecha `core/16` §8 | RD6 |
@@ -141,7 +141,9 @@ Concluída em 2026-10-14: `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-comp
 - **Pronto quando:** todo artboard aprovado tem seus componentes classificados; a tabela da seção 4 deste plano está confirmada ou corrigida; cada novo passa nos quatro critérios (genérico, recorrente, sem equivalente, tem nível).
 - **Sem a capability:** componente não conhece capability. A ficha de qualquer um que mostre lista ou contagem inclui o estado vazio, que é o que o `generic` exibe.
 
-### RD2. Lib, lote 1: tema por jogo e casca
+### RD2. Lib, lote 1: tema por jogo e casca ✅
+
+Concluída em 2026-10-14: D122 no app, D-038 na lib. Lib com 1.959 testes, `theme` e build verdes; app com typecheck, 90 testes, `go test` e `wails build`.
 
 - **Objetivo:** tudo o que a casca precisa, pronto e testado na lib.
 - **Entregáveis:** destaque por jogo no motor de tema (D122; escopo CSS trocável em runtime, contraste verificado pelo `theme:lint`); `AppShell`, `Navbar`, `Workspace` e `Tooltip` passados pelo redesenho; C1 a C6 e C18; playground; `component-matrix.md`; decisões D-038 em diante na lib; skills reinstaladas.

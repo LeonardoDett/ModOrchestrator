@@ -1,7 +1,10 @@
 import { useState } from "react";
 import {
+  Alert,
+  Avatar,
   Badge,
   Button,
+  CATEGORY_COLORS,
   ButtonGroup,
   Checkbox,
   Inline,
@@ -15,7 +18,7 @@ import {
   Switch,
   Tag,
 } from "../../src";
-import { DownloadIcon, PlusIcon, TrashIcon, TriangleAlertIcon } from "../../src/icons";
+import { BellIcon, DownloadIcon, PackageIcon, PlusIcon, TrashIcon, TriangleAlertIcon } from "../../src/icons";
 
 const CATEGORIES = [
   { value: "tex", label: "Texturas", description: "Retexturas e upscales" },
@@ -99,6 +102,29 @@ export function ControlsPanel() {
         <Kbd>Ctrl</Kbd>
         <Kbd>K</Kbd>
       </Inline>
+
+      {/* Redesign das telas, lote 1: casca */}
+      <Inline gap="sm" wrap>
+        <Button size="icon" emphasis="low" aria-label="Notificações, 2 novas" tooltip="Notificações" badge={2} badgeIntent="warning">
+          <BellIcon size="sm" />
+        </Button>
+        <Button size="icon" emphasis="low" aria-label="Fila de instalação, 3 itens" tooltip="Fila de instalação" badge={3}>
+          <PackageIcon size="sm" />
+        </Button>
+        <Button size="icon" emphasis="low" aria-label="Implantando, 64%" tooltip="Implantando 64%" progress={64}>
+          <span className="text-caption font-semibold">64</span>
+        </Button>
+        <Indicator variant="chip" icon={PackageIcon} value="142" label="de 380 ativos" />
+        <Indicator variant="chip" icon={TriangleAlertIcon} intent="warning" value="12" label="pares a decidir" />
+        <Avatar shape="square" size="xs" fallback="SSE" intent="brand" emphasis="high" label="Skyrim Special Edition" />
+        <Avatar shape="square" size="lg" fallback="SSE" intent="brand" label="Skyrim Special Edition" />
+        {CATEGORY_COLORS.map((color) => (
+          <Avatar key={color} shape="square" size="xs" fallback={color.slice(0, 2)} color={color} label={color} />
+        ))}
+      </Inline>
+      <Alert.Root compact variant="info" action={<Button size="sm">Abrir o passo a passo</Button>} onDismiss={() => {}} dismissLabel="Dispensar a dica">
+        <Alert.Description>Não sabe por onde começar? A ajuda mostra o caminho.</Alert.Description>
+      </Alert.Root>
 
       <div className="grid grid-cols-2 gap-4">
         <Input.Root name="name" value={name} onChange={setName} fullWidth>

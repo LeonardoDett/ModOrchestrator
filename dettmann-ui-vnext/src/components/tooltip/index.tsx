@@ -9,6 +9,7 @@ import {
   cloneElement,
   isValidElement,
   type ReactElement,
+  type Ref,
 } from "react";
 import {
   useFloating,
@@ -27,6 +28,9 @@ import {
 import { OverlayScope } from "../../primitives/portal";
 import { defineRecipe, type VariantProps } from "../../core/recipe";
 import { cn } from "../../utils/cn";
+import { mergeRefs } from "../../utils/merge-refs";
+import { Presence } from "../../motion/presence";
+import { fadeEnter } from "../../motion/overlay-keyframes";
 
 // Context
 interface TooltipContextValue {
@@ -91,6 +95,8 @@ function TooltipRoot({
     open: isOpen,
     onOpenChange: setIsOpen,
     placement,
+    // Posiciona por left/top: o `transform` fica livre para a entrada animada.
+    transform: false,
     middleware: [offset(offsetValue), flip(), shift({ padding: 8 })],
     whileElementsMounted: autoUpdate,
   });
@@ -138,10 +144,12 @@ function TooltipTrigger({ children, className }: TooltipTriggerProps) {
     throw new Error("<Tooltip.Trigger> must have a single React element child");
   }
 
-  const childProps = children.props as { className?: string };
+  const childProps = children.props as { className?: string; ref?: Ref<Element> };
+  // Preserva o ref do filho (React 19: `props.ref`; React 18: `element.ref`).
+  const childRef = childProps.ref ?? (children as unknown as { ref?: Ref<Element> }).ref;
 
   return cloneElement(children, {
-    ref: refs.setReference,
+    ref: mergeRefs<Element>([childRef, refs.setReference]),
     ...getReferenceProps(),
     className: cn(childProps.className, className),
   } as Record<string, unknown>);
@@ -150,9 +158,9 @@ function TooltipTrigger({ children, className }: TooltipTriggerProps) {
 // Content
 const tooltipContentVariants = defineRecipe({
   base: [
-    "z-tooltip px-3 py-1.5 rounded-control",
-    "bg-fg text-canvas text-sm",
-    "shadow-raised",
+    "z-tooltip px-2 py-1 rounded-control",
+    "bg-fg text-canvas text-caption font-medium",
+    "shadow-overlay",
     "max-w-xs",
   ].join(" "),
 });
@@ -177,33 +185,35 @@ function TooltipContent({
   return (
     <FloatingPortal>
       <OverlayScope>
-        <div
-          ref={refs.setFloating}
-          role="tooltip"
-          style={{ ...floatingStyles, ...style }}
-          className={cn(tooltipContentVariants(), className)}
-          {...getFloatingProps()}
-          {...props}
-        >
-          {children}
-        </div>
+        <Presence show enter={fadeEnter}>
+          <div
+            ref={refs.setFloating}
+            role="tooltip"
+            data-motion="responsive"
+            style={{ ...floatingStyles, ...style }}
+            className={cn(tooltipContentVariants(), className)}
+            {...getFloatingProps()}
+            {...props}
+          >
+            {children}
+          </div>
+        </Presence>
       </OverlayScope>
     </FloatingPortal>
   );
 }
 
 /**
- * Tooltip is a compound component for hover/focus-triggered hints.
+ * Tooltip is a compound component for hover/focus-triggered hints. The trigger keeps
+ * its own ref, so a forwarded-ref component (like `Button`) can be wrapped directly.
  *
  * @example
  * ```tsx
- * <Tooltip.Root open={open} onOpenChange={setOpen}>
+ * <Tooltip.Root>
  *   <Tooltip.Trigger>
- *     <Button>Hover me</Button>
+ *     <Button size="icon" aria-label="Notificações">…</Button>
  *   </Tooltip.Trigger>
- *   <Tooltip.Content>
- *     Helpful tooltip text
- *   </Tooltip.Content>
+ *   <Tooltip.Content>Notificações</Tooltip.Content>
  * </Tooltip.Root>
  * ```
  */

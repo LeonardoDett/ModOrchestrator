@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { createTheme, ROLE_NAMES } from "../engine";
+import { CATEGORY_COLORS, createTheme, ROLE_NAMES } from "../engine";
 import { DEFAULT_PRESET, PRESETS, renderPresetsCSS, type PresetId } from "./index";
 
 // Sem @types/node no projeto: especificador não literal, tipado localmente.
@@ -69,6 +69,21 @@ test("state layers re-resolve in nested theme, mode and intent scopes", () => {
   for (const rule of [base, tinted, layers]) expect(tokens).toContain(rule);
   // Intents tingidos vencem por especificidade (0,2,0 > 0,1,0) e também vêm depois.
   expect(tokens.indexOf(tinted)).toBeGreaterThan(tokens.indexOf(base));
+});
+
+test("tokens.css maps every category color to the intent contract and its state layer", () => {
+  const tokens = read("../tokens.css");
+  for (const color of CATEGORY_COLORS) {
+    const block = tokens.split(`\n[data-category="${color}"] {`)[1]?.split("}")[0];
+    expect(block, color).toContain(`--intent-fill: var(--ui-category-${color}-dot);`);
+    expect(block, color).toContain(`--intent-subtle: var(--ui-category-${color}-subtle);`);
+    expect(block, color).toContain(`--intent-text: var(--ui-category-${color}-text);`);
+    expect(block, color).toContain(`--intent-border: var(--ui-category-${color}-border);`);
+  }
+  const layer = "[data-category] {\n  --state-base: var(--intent-fill);";
+  expect(tokens).toContain(layer);
+  // vem depois das camadas genéricas, para vencer `[data-intent]` no mesmo nó
+  expect(tokens.indexOf(layer)).toBeGreaterThan(tokens.indexOf("[data-intent] {\n  --state-hover"));
 });
 
 /** Expansão de chaves sem aninhamento, como `@source inline` do Tailwind. */

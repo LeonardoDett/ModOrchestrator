@@ -1,4 +1,4 @@
-import { type ComponentPropsWithoutRef, type ComponentType } from "react";
+import { type ComponentPropsWithoutRef, type ComponentType, type ReactNode } from "react";
 import { defineRecipe } from "../../core/recipe";
 import { cn } from "../../utils/cn";
 import { intentData } from "../../theme/emphasis";
@@ -23,6 +23,14 @@ const indicatorVariants = defineRecipe({
 const ICON_SIZE = { sm: "h-3.5 w-3.5", md: "h-4 w-4" } as const;
 
 export interface IndicatorProps extends Omit<ComponentPropsWithoutRef<"span">, "children" | "role"> {
+  /**
+   * `icon` (padrão): ícone + contagem para células densas, com nome acessível.
+   * `chip`: ícone, valor em destaque e rótulo visíveis dentro de um chip com borda
+   * ("142 de 380 ativos"), para cabeçalhos de página. O texto é lido como está.
+   */
+  variant?: "icon" | "chip";
+  /** Valor em destaque da variação `chip` (padrão: `count`). */
+  value?: ReactNode;
   /** Icon that carries the meaning (never color alone). */
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
   /** Accessible name and tooltip text ("3 problems", "Wins 12 files"). */
@@ -42,10 +50,42 @@ export interface IndicatorProps extends Omit<ComponentPropsWithoutRef<"span">, "
  * @example
  * ```tsx
  * <Indicator icon={AlertTriangle} intent="warning" count={3} label="3 problems" />
+ * <Indicator variant="chip" icon={Package} value="142" label="de 380 ativos" />
  * ```
  */
-export function Indicator({ icon: Icon, label, count, intent = "neutral", size = "sm", className, title, ...props }: IndicatorProps) {
+export function Indicator({
+  icon: Icon,
+  label,
+  count,
+  intent = "neutral",
+  size = "sm",
+  variant = "icon",
+  value,
+  className,
+  title,
+  ...props
+}: IndicatorProps) {
   const chromatic = intent !== "neutral" && intent !== "subtle";
+  if (variant === "chip") {
+    const shown = value ?? count;
+    return (
+      <span
+        data-slot="indicator-chip"
+        title={title}
+        className={cn(
+          "inline-flex h-control-sm shrink-0 items-center gap-2 whitespace-nowrap rounded-control border border-border bg-surface px-2.5 text-xs text-fg-muted tabular-nums",
+          className,
+        )}
+        {...props}
+      >
+        <span className={cn("inline-flex", chromatic ? "text-intent-text" : "text-fg-muted")} {...intentData(chromatic ? intent : undefined)}>
+          <Icon aria-hidden="true" className={ICON_SIZE.md} />
+        </span>
+        {shown !== undefined ? <span className="font-semibold text-fg">{shown}</span> : null}
+        <span>{label}</span>
+      </span>
+    );
+  }
   return (
     <span
       role="img"

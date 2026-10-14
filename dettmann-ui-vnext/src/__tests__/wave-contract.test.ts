@@ -65,6 +65,12 @@ export const WAVE_FILES: string[] = [
   ...folderFiles("components/empty-state"),
   ...folderFiles("components/featured-icon"),
   ...folderFiles("templates/sidebar"),
+  // Redesign das telas, lote 1 (2026-10-14): casca
+  ...folderFiles("components/avatar"),
+  ...folderFiles("components/tooltip"),
+  ...folderFiles("templates/app-shell"),
+  ...folderFiles("templates/navbar"),
+  ...folderFiles("templates/workspace"),
 ];
 
 /** Glifos lucide sem equivalente no catálogo, por arquivo. Todo import fora daqui é achado. */

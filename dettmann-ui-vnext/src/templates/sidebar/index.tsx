@@ -5,6 +5,7 @@ import {
   useState,
   type ComponentPropsWithoutRef,
   type KeyboardEvent,
+  type ReactElement,
   type ReactNode,
 } from "react";
 import { MenuIcon } from "../../icons/glyphs/menu";
@@ -16,6 +17,7 @@ import { Icon, type IconComponent } from "../../primitives/icon";
 import { Button } from "../../components/button";
 import { Accordion } from "../../components/accordion";
 import { Drawer } from "../../components/drawer";
+import { Tooltip } from "../../components/tooltip";
 import { getNextRovingIndex, isRovingKey } from "../../hooks/use-roving-tabindex";
 import { useControllableState } from "../../hooks/use-controllable-state";
 
@@ -30,6 +32,15 @@ export interface SidebarItem {
   disabled?: boolean;
   /** Trailing slot, typically a Badge. Hidden while the column is collapsed. */
   badge?: ReactNode;
+  /**
+   * Contagem do item: pílula no fim da linha e selo sobre o ícone com a coluna recolhida.
+   * Use `countLabel` para o texto lido junto do nome ("12 a decidir").
+   */
+  count?: number;
+  /** Texto da contagem para leitores de tela e para a dica da coluna recolhida. */
+  countLabel?: string;
+  /** Pede atenção (âmbar, selo preenchido). Quem usa decide quando; o item só desenha. */
+  attention?: boolean;
 }
 
 /** A titled group of items. `end` sections are pinned to the bottom of the column. */
@@ -73,6 +84,30 @@ const asideVariants = defineRecipe({
   },
 });
 
+/**
+ * Larguras pela variável do consumidor, com o padrão do design (14,5rem e 3,75rem):
+ * `style={{ "--sidebar-width": "13.75rem" }}`.
+ */
+const WIDTH = {
+  open: "w-[var(--sidebar-width,14.5rem)]",
+  collapsed: "w-[var(--sidebar-width-collapsed,3.75rem)]",
+} as const;
+
+const countVariants = defineRecipe({
+  base: "inline-flex h-4 min-w-4 items-center justify-center rounded-pill text-caption font-semibold leading-none tabular-nums",
+  variants: {
+    attention: {
+      true: "bg-intent-fill text-on-intent",
+      false: "bg-fill-neutral text-fg-muted",
+    },
+    overlay: {
+      true: "pointer-events-none absolute -right-0.5 top-0 px-1",
+      false: "shrink-0 px-1.5",
+    },
+  },
+  defaultVariants: { attention: false, overlay: false },
+});
+
 const itemVariants = defineRecipe({
   base: [
     "relative flex w-full items-center gap-2 rounded-chip px-2 text-left text-sm min-h-control-sm",
@@ -96,18 +131,31 @@ const itemVariants = defineRecipe({
       true: "",
       false: "",
     },
+    /** Pede atenção: linha tingida pelo intent `warning` (o nó declara `data-intent`). */
+    attention: {
+      true: "",
+      false: "",
+    },
   },
   compoundVariants: [
+    {
+      attention: true,
+      current: false,
+      disabled: false,
+      class: "bg-intent-subtle text-intent-text hover:state-layer-hover active:state-layer-pressed",
+    },
     {
       variant: "strong",
       current: false,
       disabled: false,
+      attention: false,
       class: "text-fg hover:bg-state-hover active:bg-state-pressed",
     },
     {
       variant: "subtle",
       current: false,
       disabled: false,
+      attention: false,
       class: "text-fg hover:bg-state-hover active:bg-state-pressed",
     },
     {
@@ -119,6 +167,7 @@ const itemVariants = defineRecipe({
     current: false,
     variant: "strong",
     disabled: false,
+    attention: false,
   },
 });
 
@@ -150,7 +199,13 @@ interface SidebarRootProps extends Omit<ComponentPropsWithoutRef<"div">, "childr
   header?: ReactNode;
   /** Replaces `header` on the collapsed desktop column (for example a mark instead of a wordmark). */
   collapsedHeader?: ReactNode;
-  footer?: ReactNode;
+  /**
+   * Preso no fim da coluna (cartão de progresso, ação principal). Uma função recebe o
+   * estado da coluna, para trocar o conteúdo quando ela está recolhida.
+   */
+  footer?: ReactNode | ((state: { collapsed: boolean }) => ReactNode);
+  /** Rótulo visível ao lado do botão de recolher, com a coluna aberta ("Menu"). */
+  heading?: ReactNode;
 }
 
 function SidebarLeaf({
@@ -164,11 +219,20 @@ function SidebarLeaf({
   current: boolean;
   variant: SidebarVariant;
 }) {
+  const hasCount = item.count !== undefined;
+  const attention = Boolean(item.attention) && !item.disabled;
+  const countText = item.countLabel ?? (hasCount ? String(item.count) : undefined);
   const content = (
     <>
       {item.icon ? <Icon icon={item.icon} size="sm" color="current" /> : null}
       {!collapsed ? <span className="min-w-0 flex-1 truncate">{item.label}</span> : null}
+      {countText !== undefined && !collapsed ? <span className="sr-only">{`, ${countText}`}</span> : null}
       {!collapsed && item.badge ? <span className="shrink-0">{item.badge}</span> : null}
+      {hasCount ? (
+        <span aria-hidden="true" className={countVariants({ attention, overlay: collapsed })}>
+          {item.count}
+        </span>
+      ) : null}
     </>
   );
 
@@ -177,7 +241,20 @@ function SidebarLeaf({
     current: item.disabled ? false : current,
     variant,
     disabled: Boolean(item.disabled),
+    attention,
   });
+  const intentAttrs = attention ? { "data-intent": "warning" as const } : {};
+  // Recolhida: o nome (com a contagem) vai no aria-label e numa dica à direita.
+  const collapsedName = countText !== undefined ? `${item.label}, ${countText}` : item.label;
+  const withTip = (node: ReactElement<{ className?: string }>) =>
+    collapsed ? (
+      <Tooltip.Root placement="right">
+        <Tooltip.Trigger>{node}</Tooltip.Trigger>
+        <Tooltip.Content>{collapsedName}</Tooltip.Content>
+      </Tooltip.Root>
+    ) : (
+      node
+    );
 
   if (item.disabled) {
     return (
@@ -195,26 +272,30 @@ function SidebarLeaf({
   }
 
   if (item.href) {
-    return (
+    return withTip(
       <a
         href={item.href}
         className={className}
-        title={item.label}
+        title={collapsed ? undefined : item.label}
+        aria-label={collapsed ? collapsedName : undefined}
         aria-current={current ? "page" : undefined}
         onClick={item.onClick}
+        {...intentAttrs}
       >
         {content}
       </a>
     );
   }
 
-  return (
+  return withTip(
     <button
       type="button"
       className={className}
-      title={item.label}
+      title={collapsed ? undefined : item.label}
+      aria-label={collapsed ? collapsedName : undefined}
       aria-current={current ? "page" : undefined}
       onClick={item.onClick}
+      {...intentAttrs}
     >
       {content}
     </button>
@@ -395,6 +476,7 @@ function SidebarRoot({
   header,
   collapsedHeader,
   footer,
+  heading,
   variant = "strong",
   className,
   ...props
@@ -425,7 +507,11 @@ function SidebarRoot({
         <Icon icon={MenuIcon} size="sm" />
       </Button>
 
-      <aside data-layer="medium" className={cn(asideVariants({ collapsed, variant }), "overflow-hidden")}>
+      <aside
+        data-layer="medium"
+        data-collapsed={collapsed || undefined}
+        className={cn(asideVariants({ collapsed, variant }), collapsed ? WIDTH.collapsed : WIDTH.open, "overflow-hidden")}
+      >
         {(collapsed ? collapsedHeader : header) ? (
           <div
             className={cn(
@@ -436,7 +522,17 @@ function SidebarRoot({
             {collapsed ? collapsedHeader : header}
           </div>
         ) : null}
-        <div className={cn("flex shrink-0 p-2", collapsed ? "justify-center" : "justify-end")}>
+        <div
+          className={cn(
+            "flex shrink-0 items-center p-2",
+            collapsed ? "justify-center" : heading ? "justify-between" : "justify-end"
+          )}
+        >
+          {heading && !collapsed ? (
+            <span className="min-w-0 truncate pl-2 text-xs font-semibold uppercase tracking-wide text-fg-subtle">
+              {heading}
+            </span>
+          ) : null}
           <Button
             type="button"
             emphasis="low"
@@ -459,7 +555,14 @@ function SidebarRoot({
           variant={variant}
           label={navigationLabel}
         />
-        {footer}
+        {footer ? (
+          <div
+            data-slot="sidebar-footer"
+            className={cn("flex shrink-0 flex-col gap-2 p-2", collapsed && "items-center")}
+          >
+            {typeof footer === "function" ? footer({ collapsed }) : footer}
+          </div>
+        ) : null}
       </aside>
 
       <Drawer.Root open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -495,6 +598,13 @@ function SidebarRoot({
  * @example
  * ```tsx
  * <Sidebar.Root items={[{ id: "home", label: "Home", href: "/" }]} />
+ * <Sidebar.Root
+ *   heading="Menu"
+ *   sections={[{ id: "content", label: "Conteúdo", items: [
+ *     { id: "conflicts", label: "Conflitos", icon: GitMergeIcon, count: 12, countLabel: "12 a decidir", attention: true },
+ *   ] }]}
+ *   footer={({ collapsed }) => (collapsed ? <DeployRing /> : <DeployCard />)}
+ * />
  * ```
  */
 export const Sidebar = {

@@ -287,7 +287,7 @@ Status: substituída por D119 (substituía a orientação "não copiar cegamente
 Diretriz do usuário: onde o Vortex já resolveu o problema, reproduzir a distribuição de elementos (se ele usa select, usar select; se usa modal, usar modal). Divergências só são permitidas se listadas em `ui/00-principios-e-shell.md` › Divergências aprovadas, cada uma com motivo. Divergências aprovadas nesta revisão: tela dedicada de Conflicts, tela Load Order separada de Plugins, tela Diagnostics, Profiles sempre visível (D037), Overview do jogo, linguagem "X vence Y" (D025).
 
 ## D043 — Tema do produto
-Status: vigente
+Status: vigente (detalhada por D122: cor de destaque por jogo e paleta categórica)
 
 O produto usa um tema registrado na dettmann-ui (`orchestrator`, derivado de `forest`), escuro por padrão, com orçamento 60/30/10 mapeado para os papéis semânticos da lib (`ui/04-tema-60-30-10.md`). Status nunca é comunicado só por cor (sempre ícone + rótulo), porque verde é ao mesmo tempo marca e sucesso. Modo claro existe, mas não é foco de ajuste fino na V1.
 
@@ -1155,3 +1155,16 @@ O que não muda: o detalhe continua abrindo sem trocar de página, e a lista con
 Alternativa rejeitada: página de detalhe com rota própria (perderia a posição e a seleção na lista).
 
 Consequências: o Inspector de Mods é removido na fase RD9 do plano; `ui/telas/mods.md` §6 é reescrito nela.
+
+## D122 — Cor de destaque por jogo e paleta de categorias no tema
+Status: vigente (detalha D043 e D120 item 6; executa a RD2 do plano do redesign; detalhes da lib em `dettmann-ui-vnext/docs/decisions.md` D-038)
+
+1. **Cor do jogo.** O espaço do jogo usa o tema `orchestrator` com outra semente de marca: `withSeed(PRESETS.orchestrator, corDoJogo, id)` passado a um `ThemeScope` que envolve o espaço do jogo. Forma, densidade, movimento e neutros continuam os do app; o motor recalcula os papéis e garante as mesmas metas de contraste para qualquer semente (teste de propriedade). Semente ausente ou inválida volta ao tema do app. O nível do app continua com a cor da marca.
+2. **De onde vem a cor.** É dado da definição do jogo, servido pelo backend com padrão do app para quem não declara (jogo personalizado). O campo entra na RD4, junto com a casca; a UI nunca escolhe a cor por id de jogo.
+3. **Paleta de categorias.** Categorias e tags usam 16 cores sem significado de status, geradas pelo motor (`CATEGORY_COLORS`), com contraste de texto garantido e vizinhas diferentes também em luminosidade. O usuário escolhe pelo id da cor; o app nunca grava hex. Status continua só nos intents (`success`, `warning`, `danger`, `info`).
+
+Motivo: o design v1 troca o teal do app pela cor do jogo dentro do espaço do jogo e pinta categorias e tags com uma paleta própria. Sem isso no motor, o app teria de escrever cores à mão, o que a lib proíbe (D016, D043).
+
+Alternativas rejeitadas: um preset por jogo (não serve a jogo personalizado nem a cor declarada por dados); reaproveitar os intents de status para categorias (uma categoria "vermelha" seria lida como erro); hex livre escolhido pelo usuário (sem garantia de contraste nos dois modos).
+
+Consequências: o id da cor de categoria é o que o backend guarda (RD5). A largura padrão da `Sidebar` passou a 232 px aberta e 60 px recolhida, os valores do design; o app atual herda isso até a RD4.

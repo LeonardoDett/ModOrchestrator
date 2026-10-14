@@ -4,6 +4,8 @@ import { cn } from "../../utils/cn";
 import { createStrictContext } from "../../utils/create-strict-context";
 import { intentData } from "../../theme/emphasis";
 import { intentIcon } from "../../icons/intent-icon";
+import { XIcon } from "../../icons/glyphs/x";
+import { Button } from "../button";
 import type { Intent } from "../../theme/engine";
 
 const alertSurface = "bg-intent-subtle text-intent-text border border-intent-border";
@@ -25,7 +27,15 @@ interface AlertContextValue {
 const [AlertProvider, useAlertContext] = createStrictContext<AlertContextValue>("Alert");
 
 const rootVariants = defineRecipe({
-  base: "flex w-full items-start gap-3 rounded-card p-3 text-sm",
+  base: "flex w-full gap-3 rounded-card text-sm",
+  variants: {
+    /** `compact`: uma linha (dica, aviso curto), conteúdo e ações centralizados. */
+    compact: {
+      true: "items-center px-3 py-2",
+      false: "items-start p-3",
+    },
+  },
+  defaultVariants: { compact: false },
 });
 
 interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
@@ -36,9 +46,28 @@ interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
   intent?: Intent;
   /** Glifo de status. Padrão: o do intent (status nunca só por cor); `null` remove. */
   icon?: ReactNode | null;
+  /** Ações à direita do texto (por exemplo um `Button`). */
+  action?: ReactNode;
+  /** Mostra o botão de dispensar, último na ordem de foco. Exige `dismissLabel`. */
+  onDismiss?: () => void;
+  /** Nome acessível e dica do botão de dispensar. */
+  dismissLabel?: string;
+  /** Uma linha, com conteúdo e ações centralizados. */
+  compact?: boolean;
 }
 
-function AlertRoot({ children, className, variant = "default", intent, icon, ...props }: AlertRootProps) {
+function AlertRoot({
+  children,
+  className,
+  variant = "default",
+  intent,
+  icon,
+  action,
+  onDismiss,
+  dismissLabel = "Dismiss",
+  compact = false,
+  ...props
+}: AlertRootProps) {
   const resolved = intent ?? alertIntent[variant];
   const StatusIcon = intentIcon(resolved);
   const glyph = icon === undefined ? <StatusIcon size="sm" trigger="none" /> : icon;
@@ -46,16 +75,33 @@ function AlertRoot({ children, className, variant = "default", intent, icon, ...
     <AlertProvider value={{ variant }}>
       <div
         role="alert"
-        className={cn(rootVariants(), alertSurface, className)}
+        className={cn(rootVariants({ compact }), alertSurface, className)}
         {...intentData(resolved)}
         {...props}
       >
         {glyph ? (
-          <span data-slot="alert-icon" aria-hidden="true" className="mt-0.5 flex shrink-0">
+          <span data-slot="alert-icon" aria-hidden="true" className={cn("flex shrink-0", !compact && "mt-0.5")}>
             {glyph}
           </span>
         ) : null}
         <div className="flex min-w-0 flex-1 flex-col items-start gap-1">{children}</div>
+        {action ? (
+          <div data-slot="alert-action" className="flex shrink-0 items-center gap-2">
+            {action}
+          </div>
+        ) : null}
+        {onDismiss ? (
+          <Button
+            size="icon-sm"
+            emphasis="low"
+            aria-label={dismissLabel}
+            tooltip={dismissLabel}
+            onClick={onDismiss}
+            className="-my-1 shrink-0"
+          >
+            <XIcon size="sm" />
+          </Button>
+        ) : null}
       </div>
     </AlertProvider>
   );
@@ -79,6 +125,11 @@ function AlertDescription({ className, ...props }: ComponentPropsWithoutRef<"div
  * <Alert.Root variant="success">
  *   <Alert.Title>Saved</Alert.Title>
  *   <Alert.Description>Your changes are live.</Alert.Description>
+ * </Alert.Root>
+ *
+ * <Alert.Root compact variant="info" action={<Button size="sm">Abrir o passo a passo</Button>}
+ *   onDismiss={hide} dismissLabel="Dispensar a dica">
+ *   <Alert.Description>Não sabe por onde começar?</Alert.Description>
  * </Alert.Root>
  * ```
  */

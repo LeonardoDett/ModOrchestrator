@@ -136,6 +136,18 @@ Feedback e overlays (D-035): `Alert.Root` e toasts já mostram o ícone do inten
 saída sozinhos (não envolva em `Presence`); `Command` tem `loading`/`loadingLabel`;
 item destrutivo de `ContextMenu` é `destructive: true`, nunca classe de cor.
 
+Casca do redesign (D-038): área com cor própria (espaço de um jogo) = `<ThemeScope theme={withSeed(configDoApp, corDoJogo, id)}>`,
+nunca cor local. Cor escolhida pelo usuário (categoria, tag) = paleta categórica:
+`data-category="<cor>"` (ou a prop `color` de `Avatar`), ids em `CATEGORY_COLORS`;
+não use intent de status para isso. Botão só com ícone: `aria-label` obrigatório,
+`tooltip` com o mesmo texto, e `badge`/`progress` são decorativos (o nome acessível
+diz a contagem ou o valor). Chip de número no cabeçalho = `Indicator variant="chip"`.
+Monograma de jogo = `Avatar shape="square"` com `label`. Dica ou aviso de uma linha
+com ação = `Alert.Root compact action onDismiss dismissLabel`. Menu lateral com
+contagem e atenção = `Sidebar` (`count`, `countLabel`, `attention`, `footer` como
+função de `{ collapsed }`); app de desktop = `AppShell layout="topbar"` +
+`Navbar size="compact" windowControls`.
+
 Estrutura (D-037): `Card.Root` usa `emphasis` (`low` padrão; `medium` = estrutura),
 `interactive` e `selected`; não existe mais `variant` nem sombra em cartão. O
 orçamento 60/30/10 se ajusta trocando área entre `low` e `medium` (`Card emphasis`,

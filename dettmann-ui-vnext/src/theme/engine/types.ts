@@ -64,8 +64,10 @@ export type IntentRole<X extends string = ColorIntent> =
   | `${X}-subtle`
   | `${X}-text`
   | `${X}-border`;
+/** Papéis da paleta categórica (`category-<cor>-<parte>`, ver `categories.ts`). */
+export type CategoryRoleName = import("./categories").CategoryRole;
 /** Todos os papéis L3 gerados pelo motor. */
-export type RoleName = LowRole | MediumRole | HighRole | IntentRole | "overlay";
+export type RoleName = LowRole | MediumRole | HighRole | IntentRole | CategoryRoleName | "overlay";
 export type RoleOverrides = Partial<Record<RoleName, string>>;
 
 export type NeutralTemperature = "cool" | "neutral" | "warm";

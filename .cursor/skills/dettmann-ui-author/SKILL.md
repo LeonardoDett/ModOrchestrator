@@ -47,6 +47,8 @@ Violar a letra destas regras é violar o espírito delas.
 
 Arquivo redesenhado entra em `WAVE_FILES` (`src/__tests__/wave-contract.test.ts`), que rejeita: `shadow-raised` (sombra só em overlay: `shadow-overlay`/`shadow-modal`), `opacity-40/50/60`, `rounded-full|sm|md|lg|xl`, `duration-<n>`/`transition-all|colors|opacity`/`animate-*`, foco escrito à mão e lucide com equivalente no catálogo. Linha selecionável (opção, item de menu, linha de tabela/árvore) = `rowRecipe({ selected, active, disabled, indicator, multiline, tone })` de `src/core/styles/row.ts`; não reescreva altura, camada de estado nem indicador. Estrutura declara `data-layer="medium"` em `bg-structure`.
 
+Paleta categórica (D-038): cor sem significado de status (categoria, tag, série) vem de `CATEGORY_COLORS` por `data-category="<cor>"`, que reaponta o contrato de intent; componente que aceita cor de usuário recebe `color?: CategoryColor`, exclusiva com `intent`. Papel novo da paleta = algoritmo em `engine/categories.ts`, com teste de propriedade em `categories.test.ts`.
+
 Estrutura (D-037): peça de estrutura = `bg-structure` + `data-layer="medium"` juntos (declarar a camada sobre `bg-surface` engana o `BudgetInspector`).
 
 Dados (D-036): linha com vários estados (selecionada, arrastada, grupo, desabilitada) = **uma** variante `state` no recipe, nunca classes somadas; lista virtualizada usa altura em px e pode usar `useFlip` (anima `translate`, o virtualizador usa `transform`).
