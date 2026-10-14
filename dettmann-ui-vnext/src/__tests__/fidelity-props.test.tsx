@@ -5,9 +5,14 @@ import { DataTable } from "../components/data-table";
 import { ResourcePage } from "../components/resource-page";
 import { Switch } from "../components/switch";
 import { SwatchPicker } from "../components/swatch-picker";
+import { Alert } from "../components/alert";
+import { Checkbox } from "../components/checkbox";
 import { Modal } from "../components/modal";
+import { Radio } from "../components/radio";
 import { ModalFooter } from "../components/modal/modal.footer";
+import { ModalBody } from "../components/modal/modal.body";
 import { ModalHeader } from "../components/modal/modal.header";
+import { Stepper } from "../components/stepper";
 import { StatTile } from "../components/stat-tile";
 import { Table } from "../components/table";
 import { Tabs } from "../components/tabs";
@@ -212,5 +217,87 @@ describe("board fidelity props (D-040)", () => {
     const cell = screen.getByRole("cell", { name: "Neve" });
     expect(cell.className).toContain("px-4");
     expect(cell.parentElement!.className).toContain("h-12");
+  });
+
+  it("Modal.Header bar is one 76 px line and Modal.Footer lg a 64 px bar", () => {
+    render(
+      <>
+        <ModalHeader layout="bar">h</ModalHeader>
+        <ModalFooter size="lg">f</ModalFooter>
+      </>,
+    );
+    expect(screen.getByText("h").className).toContain("h-19");
+    expect(screen.getByText("f").className).toContain("h-16");
+  });
+
+  it("Alert band runs edge to edge with only the bottom line", () => {
+    render(
+      <Alert.Root band intent="info">
+        <Alert.Description>Escolhas anteriores carregadas.</Alert.Description>
+      </Alert.Root>,
+    );
+    const band = screen.getByRole("alert");
+    expect(band.className).toContain("border-b");
+    expect(band.className).not.toContain("rounded-card");
+    expect(band).toHaveAttribute("data-intent", "info");
+  });
+
+  it("Radio and Checkbox rows are 44 px bordered options with an end slot", () => {
+    render(
+      <>
+        <Radio.Group name="g" value="b" onValueChange={() => {}}>
+          <Radio.Item variant="row" value="a" label="Leves" />
+          <Radio.Item variant="row" value="b" label="Fortes" action={<span>Recomendado</span>} />
+        </Radio.Group>
+        <Checkbox variant="row" label="Auroras" checked action={<span>Anterior</span>} />
+      </>,
+    );
+    const strong = screen.getByRole("radio", { name: /Fortes/ });
+    expect(strong.className).toContain("min-h-11");
+    expect(strong).toHaveAttribute("data-state", "checked");
+    expect(screen.getByText("Recomendado")).toBeInTheDocument();
+    const box = screen.getByRole("checkbox", { name: "Auroras" });
+    expect(box.parentElement!.className).toContain("min-h-11");
+    expect(screen.getByText("Anterior")).toBeInTheDocument();
+  });
+
+  it("Stepper list draws rows without connectors and a green check on done steps", () => {
+    const { container } = render(
+      <Stepper.Root variant="list" orientation="vertical" value={1}>
+        <Stepper.Step index={0}>
+          <Stepper.StepIndicator data-testid="done" />
+          <Stepper.StepLabel>Base</Stepper.StepLabel>
+        </Stepper.Step>
+        <Stepper.Step index={1}>
+          <Stepper.StepIndicator />
+          <Stepper.StepLabel>Clima</Stepper.StepLabel>
+        </Stepper.Step>
+      </Stepper.Root>,
+    );
+    expect(screen.getByTestId("done")).toHaveAttribute("data-intent", "success");
+    const current = container.querySelector("[aria-current=step]") as HTMLElement;
+    expect(current.className).toContain("bg-selected");
+    expect(container.querySelector("[role=separator], hr")).toBeNull();
+  });
+
+  it("StatTile inline puts the icon square beside the number", () => {
+    const Doc = forwardRef<SVGSVGElement>((props, ref) => <svg ref={ref} data-testid="doc" {...props} />);
+    render(<StatTile layout="inline" icon={Doc} label="arquivos" value="386" />);
+    const root = screen.getByText("386").closest("[data-intent]") as HTMLElement;
+    expect(root.className).toContain("flex-row");
+    expect(screen.getByTestId("doc").closest("span.size-8")).not.toBeNull();
+  });
+
+  it("Modal.Body padding none leaves layout and scroll to the screen", () => {
+    render(
+      <Modal.Root open onOpenChange={() => {}}>
+        <Modal.Content aria-describedby={undefined}>
+          <ModalBody padding="none">corpo</ModalBody>
+        </Modal.Content>
+      </Modal.Root>,
+    );
+    const body = screen.getByText("corpo");
+    expect(body.className).toContain("overflow-hidden");
+    expect(body.className).not.toContain("px-6");
   });
 });

@@ -10,14 +10,16 @@ const modalFooterVariants = defineRecipe({
       md: "min-h-15 justify-end px-6 py-3",
       /** A 48 px status line: text on the left, small actions on the right (boards). */
       sm: "h-12 justify-between pl-6 pr-4 text-xs text-fg-muted",
+      /** A 64 px action bar (wizard boards): put a spacer between left and right actions. */
+      lg: "h-16 gap-2.5 pl-6 pr-5",
     },
   },
   defaultVariants: { size: "md" },
 });
 
 interface ModalFooterProps extends ComponentPropsWithoutRef<"div"> {
-  /** `md` (default) for actions, `sm` for a status line with navigation. */
-  size?: "md" | "sm";
+  /** `md` (default) for actions, `sm` for a status line with navigation, `lg` for a wizard's action bar. */
+  size?: "md" | "sm" | "lg";
 }
 
 /**

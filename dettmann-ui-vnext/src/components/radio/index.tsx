@@ -66,6 +66,15 @@ const radioVariants = defineRecipe({
       "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
       "enabled:data-[state=checked]:border-intent-fill enabled:data-[state=checked]:bg-intent-subtle",
     ].join(" "),
+    /** D-040: a 44 px bordered option row (installer options on the boards). */
+    row: [
+      "flex min-h-11 w-full items-center gap-3 rounded-control border px-3.5 py-1.5 text-left",
+      "motion-transition",
+      "focus-ring",
+      "data-[state=unchecked]:border-border enabled:data-[state=unchecked]:hover:bg-state-hover",
+      "data-[state=checked]:border-intent-fill data-[state=checked]:bg-intent-subtle",
+      "disabled:cursor-not-allowed disabled:bg-sunken disabled:text-fg-subtle",
+    ].join(" "),
   },
   variants: {
     size: {
@@ -168,8 +177,10 @@ interface RadioItemProps
   value: string;
   /** Label text */
   label?: string;
-  /** Card wraps the whole control; use children for extra copy */
-  variant?: "default" | "card";
+  /** Card wraps the whole control; use children for extra copy. `row`: a 44 px bordered option row. */
+  variant?: "default" | "card" | "row";
+  /** End of a `row` (badges, an image mark). */
+  action?: ReactNode;
   children?: ReactNode;
   /** Sobrescreve o intent do grupo; sem ele, o item herda o do `Radio.Group` (padrão `brand`). */
   intent?: Intent;
@@ -188,6 +199,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
     children,
     disabled: itemDisabled,
     intent,
+    action,
     id: providedId,
     ...props
   },
@@ -211,6 +223,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
     indicator,
     label: labelClass,
     card,
+    row,
   } = radioVariants({ size, disabled });
 
   const handleClick = () => {
@@ -219,7 +232,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
   };
 
   const glyph = (
-    <span data-state={state} className={radio()} aria-hidden={variant === "card"}>
+    <span data-state={state} className={radio()} aria-hidden={variant !== "default"}>
       <span data-state={state} className={indicator()} />
     </span>
   );
@@ -231,7 +244,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
     </span>
   );
 
-  if (variant === "card") {
+  if (variant === "card" || variant === "row") {
     return (
       <button
         ref={ref}
@@ -242,12 +255,13 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
         data-state={state}
         disabled={disabled}
         onClick={handleClick}
-        className={cn(card(), className)}
+        className={cn(variant === "row" ? row() : card(), className)}
         {...intentData(intent)}
         {...props}
       >
         {glyph}
         {copy}
+        {variant === "row" && action ? <span className="flex shrink-0 items-center gap-1.5">{action}</span> : null}
       </button>
     );
   }

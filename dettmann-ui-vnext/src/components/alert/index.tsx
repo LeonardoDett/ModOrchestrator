@@ -8,7 +8,7 @@ import { XIcon } from "../../icons/glyphs/x";
 import { Button } from "../button";
 import type { Intent } from "../../theme/engine";
 
-const alertSurface = "bg-intent-subtle text-intent-text border border-intent-border";
+const alertSurface = "bg-intent-subtle text-intent-text border-intent-border";
 
 const alertIntent: Record<AlertVariant, Intent> = {
   default: "neutral",
@@ -27,15 +27,21 @@ interface AlertContextValue {
 const [AlertProvider, useAlertContext] = createStrictContext<AlertContextValue>("Alert");
 
 const rootVariants = defineRecipe({
-  base: "flex w-full gap-3 rounded-card text-sm",
+  base: "flex w-full gap-3 text-sm",
   variants: {
     /** `compact`: uma linha (dica, aviso curto), conteúdo e ações centralizados. */
-    compact: {
-      true: "items-center px-3 py-2",
-      false: "items-start p-3",
+    compact: { true: "", false: "" },
+    /** `band`: faixa de ponta a ponta sob o cabeçalho de um diálogo, só com a linha de baixo (D-040). */
+    band: {
+      true: "items-center border-b py-2.5 pl-6 pr-5",
+      false: "rounded-card border",
     },
   },
-  defaultVariants: { compact: false },
+  compoundVariants: [
+    { band: false, compact: true, class: "items-center px-3 py-2" },
+    { band: false, compact: false, class: "items-start p-3" },
+  ],
+  defaultVariants: { compact: false, band: false },
 });
 
 interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
@@ -54,6 +60,8 @@ interface AlertRootProps extends ComponentPropsWithoutRef<"div"> {
   dismissLabel?: string;
   /** Uma linha, com conteúdo e ações centralizados. */
   compact?: boolean;
+  /** Faixa de ponta a ponta (sem cantos, só a linha de baixo), numa linha. */
+  band?: boolean;
 }
 
 function AlertRoot({
@@ -66,6 +74,7 @@ function AlertRoot({
   onDismiss,
   dismissLabel = "Dismiss",
   compact = false,
+  band = false,
   ...props
 }: AlertRootProps) {
   const resolved = intent ?? alertIntent[variant];
@@ -75,12 +84,12 @@ function AlertRoot({
     <AlertProvider value={{ variant }}>
       <div
         role="alert"
-        className={cn(rootVariants({ compact }), alertSurface, className)}
+        className={cn(rootVariants({ compact, band }), alertSurface, className)}
         {...intentData(resolved)}
         {...props}
       >
         {glyph ? (
-          <span data-slot="alert-icon" aria-hidden="true" className={cn("flex shrink-0", !compact && "mt-0.5")}>
+          <span data-slot="alert-icon" aria-hidden="true" className={cn("flex shrink-0", !compact && !band && "mt-0.5")}>
             {glyph}
           </span>
         ) : null}

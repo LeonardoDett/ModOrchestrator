@@ -2369,8 +2369,8 @@ export const ptBR: Record<MessageKey, string> = {
   "mods.fomod.change": "Alterar",
   "mods.fomod.changeStep": "Alterar {step}",
   "mods.fomod.hasImage": "Tem imagem",
-  "mods.fomod.kpiFiles": "Arquivos",
-  "mods.fomod.kpiSize": "Em disco",
+  "mods.fomod.kpiFiles": "arquivos",
+  "mods.fomod.kpiSize": "em disco",
   "mods.fomod.nothingChosen": "Nenhum",
   "mods.fomod.organize": "Organizar este mod",
   "mods.fomod.previousChoice": "Escolha anterior",
@@ -2462,4 +2462,6 @@ export const ptBR: Record<MessageKey, string> = {
   "mods.detail.expandStep": "Mostrar o passo {name}",
   "mods.detail.collapseStep": "Esconder o passo {name}",
   "mods.detail.quickActions": "Ações rápidas",
+  "mods.fomod.stepsMayChange": "Os passos podem aparecer ou sumir conforme o que você escolhe.",
+  "mods.fomod.panelHelp": "O painel segue a opção sob o mouse ou em foco pelo teclado. Opção sem imagem mostra só o texto.",
 };

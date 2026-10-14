@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FileText, HardDrive, Image as ImageGlyph, ImageOff } from "lucide-react";
-import { FolderIcon, HistoryIcon, PlusIcon } from "dettmann-ui/icons";
-import { Alert, Button, Checkbox, Input, Lightbox, MediaImage, Modal, Radio, Stack, StatTile, Stepper, Tag, Typography, Icon } from "dettmann-ui";
+import { ChevronLeftIcon, ChevronRightIcon, CircleAlertIcon, FolderIcon, HistoryIcon, LockIcon, XIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, Input, Lightbox, MediaImage, Modal, Radio, StatTile, Stepper, Tag, TagAdd, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
 import { useCategories, useTags } from "../../bridge/queries";
@@ -53,7 +53,7 @@ function FomodImage({ load, image, alt, onOpen, className }: { load: (image: str
   const img = <MediaImage src={src} alt={alt} fit="contain" radius="md" className={className} fallback={<Icon icon={ImageOff} size="lg" className="text-fg-muted" />} />;
   if (!onOpen) return img;
   return (
-    <button type="button" className="block w-full rounded-control focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus" aria-label={t("mods.fomod.enlarge", { name: alt })} onClick={() => onOpen(src)}>
+    <button type="button" className="focus-ring block w-full rounded-control" aria-label={t("mods.fomod.enlarge", { name: alt })} onClick={() => onOpen(src)}>
       {img}
     </button>
   );
@@ -167,152 +167,170 @@ export function FomodWizard({ instance, item, onClose }: { instance: string; ite
   const focusedOption: FomodOption | undefined = step && focus ? step.groups[focus.group]?.options[focus.option] : undefined;
   const summary = view?.summary;
 
+  let stepTitle = t("mods.fomod.summary");
+  if (step) stepTitle = step.name || t("mods.fomod.unnamedStep", { n: position + 1 });
+  let center: React.ReactNode;
+  if (!view) {
+    center = <p className="text-sm text-fg-muted">{t("mods.fomod.loading")}</p>;
+  } else if (step) {
+    center = (
+      <>
+        <h2 className="text-xl font-semibold text-fg">{stepTitle}</h2>
+        {step.groups.map((g) => (
+          <GroupField
+            key={g.index}
+            group={g}
+            stepIndex={step.index}
+            selected={effective(step.index, g.index)}
+            previous={previous.get(groupKey(step.index, g.index))}
+            problem={showProblems ? g.problem : undefined}
+            onChoose={(options) => choose(step.index, g, options)}
+            onFocus={(option) => setFocus({ group: g.index, option })}
+          />
+        ))}
+      </>
+    );
+  } else {
+    center = (
+      <Summary
+        view={view}
+        visible={visible}
+        effective={effective}
+        previous={previous}
+        onChange={goTo}
+        requirements={requirements}
+        onRequirement={(file, on) =>
+          setRequirements((r) => {
+            const n = new Set(r);
+            if (on) n.add(file);
+            else n.delete(file);
+            return n;
+          })
+        }
+      />
+    );
+  }
+
+  let aside: React.ReactNode;
+  if (current === SUMMARY && summary) {
+    aside = <SummaryAside instance={instance} target={summary.target} files={summary.files} size={summary.size} folders={summary.folders} category={category} onCategory={setCategory} tags={tags} onTags={setTags} />;
+  } else if (focusedOption) {
+    aside = (
+      <>
+        {focusedOption.image ? <FomodImage load={loadImage} image={focusedOption.image} alt={focusedOption.name} onOpen={setLightbox} className="h-50 w-full" /> : null}
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="text-base font-semibold text-fg">{focusedOption.name}</span>
+          {focusedOption.type === "Recommended" ? (
+            <Tag size="sm" outline={false} intent="success">
+              {t("mods.fomod.recommended")}
+            </Tag>
+          ) : null}
+        </span>
+        <p className="whitespace-pre-line text-[0.8125rem] leading-relaxed text-fg-muted">{focusedOption.description || t("mods.fomod.noDescription")}</p>
+        <p className="mt-auto text-xs leading-normal text-fg-muted">{t("mods.fomod.panelHelp")}</p>
+      </>
+    );
+  } else {
+    aside = <p className="text-xs leading-normal text-fg-muted">{current === SUMMARY ? t("mods.fomod.summaryHelp") : t("mods.fomod.panelHelp")}</p>;
+  }
+
+  let primary: React.ReactNode;
+  if (current === SUMMARY) {
+    primary = (
+      <Button emphasis="high" disabled={busy || !summary} loading={busy} onClick={install} title={view?.planError ? t(`error.${view.planError}` as MessageKey, { name: item.label }) : undefined}>
+        {t("mods.decision.install")}
+      </Button>
+    );
+  } else {
+    primary = (
+      <Button emphasis="high" disabled={busy || !view} endIcon={<ChevronRightIcon size="sm" />} onClick={next}>
+        {t("mods.fomod.next")}
+      </Button>
+    );
+  }
+
   return (
-    <Modal.Root open onOpenChange={(open) => !open && !busy && cancel()}>
-      <Modal.Content size="wide" aria-describedby={undefined} className="flex flex-col">
-        <Modal.Header>
-          <div className="flex items-center gap-3">
-            {decision.hasImage ? (
-              <div className="h-12 w-24 shrink-0">
-                <FomodImage load={loadImage} image="" alt={decision.module} onOpen={setLightbox} className="h-12 w-24" />
-              </div>
-            ) : null}
-            <div className="min-w-0">
-              <Modal.Title>{decision.module || item.label}</Modal.Title>
-              <Typography variant="caption" color="muted-fg">
-                {current === SUMMARY ? t("mods.fomod.summary") : t("mods.fomod.stepOf", { step: position + 1, total: visible.length })}
-              </Typography>
+    <Modal.Root open onOpenChange={(open) => !open && !busy && onClose()}>
+      <Modal.Content size="custom" aria-describedby={undefined} className="flex h-[min(50rem,95vh)] w-full max-w-[min(72.5rem,96vw)] flex-col">
+        <Modal.Header layout="bar">
+          {decision.hasImage ? (
+            <div className="h-13 w-26 shrink-0 overflow-hidden rounded-control border border-border">
+              <FomodImage load={loadImage} image="" alt={decision.module} onOpen={setLightbox} className="h-13 w-26" />
             </div>
+          ) : null}
+          <div className="flex min-w-0 flex-1 flex-col gap-0.75">
+            <Modal.Title className="truncate">{decision.module || item.label}</Modal.Title>
+            <span className="text-[0.8125rem] text-fg-muted">{current === SUMMARY ? t("mods.fomod.summary") : t("mods.fomod.stepOf", { step: position + 1, total: visible.length })}</span>
           </div>
+          <Button size="icon" emphasis="low" aria-label={t("common.close")} title={t("common.close")} disabled={busy} onClick={onClose}>
+            <XIcon size="sm" />
+          </Button>
         </Modal.Header>
-        <Modal.Body className="min-h-0 flex-1">
-          <Stack gap="md" className="h-full">
-            {decision.previous.length > 0 ? (
-              <Alert.Root intent="info">
-                <Alert.Description>
-                  <span className="flex flex-wrap items-center justify-between gap-2">
-                    {t("mods.fomod.previousLoaded")}
-                    <Button size="sm" startIcon={<HistoryIcon size="sm" />} disabled={busy} onClick={usePrevious}>
-                      {t("mods.fomod.usePrevious")}
-                    </Button>
-                  </span>
-                </Alert.Description>
-              </Alert.Root>
-            ) : null}
-            {decision.warnings.map((w, i) => (
-              <Alert.Root key={i} intent="warning">
-                <Alert.Description>{fomodWarning(i18n, w)}</Alert.Description>
-              </Alert.Root>
-            ))}
-            {error ? (
-              <Alert.Root intent="danger">
-                <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
-              </Alert.Root>
-            ) : null}
+        {decision.previous.length > 0 ? (
+          <Alert.Root
+            band
+            intent="info"
+            action={
+              <Button size="sm" disabled={busy} onClick={usePrevious}>
+                {t("mods.fomod.usePrevious")}
+              </Button>
+            }
+          >
+            <Alert.Description>{t("mods.fomod.previousLoaded")}</Alert.Description>
+          </Alert.Root>
+        ) : null}
+        {decision.warnings.map((w, i) => (
+          <Alert.Root key={i} band intent="warning">
+            <Alert.Description>{fomodWarning(i18n, w)}</Alert.Description>
+          </Alert.Root>
+        ))}
+        {error ? (
+          <Alert.Root band intent="danger">
+            <Alert.Description>{errorMessage(i18n, error)}</Alert.Description>
+          </Alert.Root>
+        ) : null}
 
-            <div className="grid min-h-0 flex-1 grid-cols-[minmax(10rem,14rem)_minmax(0,1fr)_minmax(12rem,18rem)] gap-4">
-              <nav aria-label={t("mods.fomod.steps")} className="min-h-0 overflow-auto border-r border-border pr-3">
-                <Stepper.Root value={position} orientation="vertical" interactive onValueChange={(p) => goTo(p === visible.length ? SUMMARY : visible[p]!.index)}>
-                  {[
-                    ...visible.map((s) => (
-                      <Stepper.Step key={s.index} index={visible.indexOf(s)} disabled={!seen.has(s.index)}>
-                        <Stepper.StepIndicator />
-                        <Stepper.StepLabel>
-                          <span className="flex min-w-0 flex-col">
-                            <span>{s.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(s) + 1 })}</span>
-                            {seen.has(s.index) && s.index !== current ? (
-                              <span className="truncate text-xs font-normal text-fg-muted">{stepNote(s, effective, t("mods.fomod.nothingChosen"))}</span>
-                            ) : null}
-                          </span>
-                        </Stepper.StepLabel>
-                      </Stepper.Step>
-                    )),
-                    <Stepper.Step key="summary" index={visible.length} disabled={!seen.has(SUMMARY)}>
-                      <Stepper.StepIndicator />
-                      <Stepper.StepLabel>{t("mods.fomod.summary")}</Stepper.StepLabel>
-                    </Stepper.Step>,
-                  ]}
-                </Stepper.Root>
-              </nav>
+        <Modal.Body padding="none" className="grid grid-cols-[14.375rem_minmax(0,1fr)_21.25rem]">
+          <nav aria-label={t("mods.fomod.steps")} className="flex min-h-0 flex-col overflow-auto border-r border-border bg-sunken px-3.5 py-4.5">
+            <Stepper.Root variant="list" value={position} orientation="vertical" interactive onValueChange={(p) => goTo(p === visible.length ? SUMMARY : visible[p]!.index)}>
+              {[
+                ...visible.map((s) => (
+                  <Stepper.Step key={s.index} index={visible.indexOf(s)} disabled={!seen.has(s.index)}>
+                    <Stepper.StepIndicator />
+                    <Stepper.StepLabel>
+                      <span className="truncate">{s.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(s) + 1 })}</span>
+                      {seen.has(s.index) && s.index !== current ? (
+                        <span className="truncate text-xs font-normal text-fg-muted">{stepNote(s, effective, t("mods.fomod.nothingChosen"))}</span>
+                      ) : null}
+                    </Stepper.StepLabel>
+                  </Stepper.Step>
+                )),
+                <Stepper.Step key="summary" index={visible.length} disabled={!seen.has(SUMMARY)}>
+                  <Stepper.StepIndicator />
+                  <Stepper.StepLabel>{t("mods.fomod.summary")}</Stepper.StepLabel>
+                </Stepper.Step>,
+              ]}
+            </Stepper.Root>
+            <p className="mt-auto px-2.5 pt-4 text-xs leading-normal text-fg-muted">{t("mods.fomod.stepsMayChange")}</p>
+          </nav>
 
-              <section aria-label={step?.name || t("mods.fomod.summary")} className="min-h-0 overflow-auto">
-                {!view ? (
-                  <Typography variant="body-sm" color="muted-fg">
-                    {t("mods.fomod.loading")}
-                  </Typography>
-                ) : step ? (
-                  <Stack gap="lg">
-                    {step.groups.map((g) => (
-                      <GroupField
-                        key={g.index}
-                        group={g}
-                        stepIndex={step.index}
-                        selected={effective(step.index, g.index)}
-                        previous={previous.get(groupKey(step.index, g.index))}
-                        problem={showProblems ? g.problem : undefined}
-                        onChoose={(options) => choose(step.index, g, options)}
-                        onFocus={(option) => setFocus({ group: g.index, option })}
-                      />
-                    ))}
-                  </Stack>
-                ) : (
-                  <Summary
-                    view={view}
-                    visible={visible}
-                    effective={effective}
-                    previous={previous}
-                    onChange={goTo}
-                    requirements={requirements}
-                    onRequirement={(file, on) =>
-                      setRequirements((r) => {
-                        const n = new Set(r);
-                        if (on) n.add(file);
-                        else n.delete(file);
-                        return n;
-                      })
-                    }
-                  />
-                )}
-              </section>
+          <section aria-label={stepTitle} className="flex min-h-0 min-w-0 flex-col gap-5 overflow-auto px-6 py-5">
+            {center}
+          </section>
 
-              <aside aria-label={t("mods.fomod.details")} className="min-h-0 overflow-auto border-l border-border pl-3">
-                {current === SUMMARY && summary ? (
-                  <SummaryAside instance={instance} target={summary.target} files={summary.files} size={summary.size} folders={summary.folders} category={category} onCategory={setCategory} tags={tags} onTags={setTags} />
-                ) : focusedOption ? (
-                  <Stack gap="sm">
-                    {focusedOption.image ? <FomodImage load={loadImage} image={focusedOption.image} alt={focusedOption.name} onOpen={setLightbox} className="max-h-60 w-full" /> : null}
-                    <Typography variant="heading-6" color="fg">
-                      {focusedOption.name}
-                    </Typography>
-                    <Typography variant="body-sm" color="muted-fg" className="whitespace-pre-line">
-                      {focusedOption.description || t("mods.fomod.noDescription")}
-                    </Typography>
-                  </Stack>
-                ) : (
-                  <Typography variant="body-sm" color="muted-fg">
-                    {current === SUMMARY ? t("mods.fomod.summaryHelp") : t("mods.fomod.focusHelp")}
-                  </Typography>
-                )}
-              </aside>
-            </div>
-          </Stack>
+          <aside aria-label={current === SUMMARY ? t("mods.fomod.byFolder") : t("mods.fomod.details")} className="flex min-h-0 min-w-0 flex-col gap-3.5 overflow-auto border-l border-border bg-sunken p-5">
+            {aside}
+          </aside>
         </Modal.Body>
-        <Modal.Footer>
-          <Button disabled={busy} onClick={cancel}>
+        <Modal.Footer size="lg">
+          <Button emphasis="low" disabled={busy} onClick={cancel}>
             {t("mods.decision.cancelImport")}
           </Button>
-          <Button disabled={busy || position === 0} onClick={back}>
+          <span className="flex-1" />
+          <Button disabled={busy || position === 0} startIcon={<ChevronLeftIcon size="sm" />} onClick={back}>
             {t("mods.fomod.back")}
           </Button>
-          {current === SUMMARY ? (
-            <Button emphasis="high" disabled={busy || !summary} loading={busy} onClick={install} title={view?.planError ? t(`error.${view.planError}` as MessageKey, { name: item.label }) : undefined}>
-              {t("mods.decision.install")}
-            </Button>
-          ) : (
-            <Button emphasis="high" disabled={busy || !view} onClick={next}>
-              {t("mods.fomod.next")}
-            </Button>
-          )}
+          {primary}
         </Modal.Footer>
       </Modal.Content>
       <Lightbox open={lightbox !== null} items={lightbox ? [{ id: "image", src: lightbox, alt: decision.module }] : []} onClose={() => setLightbox(null)} />
@@ -320,7 +338,7 @@ export function FomodWizard({ instance, item, onClose }: { instance: string; ite
   );
 }
 
-/** One group: radios for single choice (with "None" when optional), checkboxes otherwise. */
+/** One group (board JogoFomod): 44 px option rows, radios for single choice (with "None" when optional), checkboxes otherwise. */
 function GroupField({
   group,
   stepIndex,
@@ -343,73 +361,72 @@ function GroupField({
   const id = `fomod-${stepIndex}-${group.index}`;
   const single = group.type === "SelectExactlyOne" || group.type === "SelectAtMostOne";
   const hint = t(`mods.fomod.group.${group.type}` as MessageKey);
-  const tags = (o: FomodOption) => (
+  const badges = (o: FomodOption) => (
     <>
       {previous?.includes(o.index) ? (
-        <Tag size="sm" intent="info" icon={HistoryIcon}>
+        <Tag size="sm" outline={false} intent="info" icon={HistoryIcon}>
           {t("mods.fomod.previousChoice")}
         </Tag>
       ) : null}
-      {o.type === "Recommended" || o.type === "Required" ? (
-        <Tag size="sm" {...(o.type === "Recommended" ? { intent: "success" as const } : {})}>
-          {t(o.type === "Recommended" ? "mods.fomod.recommended" : "mods.fomod.required")}
+      {o.type === "Recommended" ? (
+        <Tag size="sm" outline={false} intent="success">
+          {t("mods.fomod.recommended")}
         </Tag>
       ) : null}
-      {o.image ? <Icon icon={ImageGlyph} size="sm" className="text-fg-muted" label={t("mods.fomod.hasImage")} /> : null}
+      {o.type === "Required" ? (
+        <Tag size="sm" outline={false} icon={LockIcon}>
+          {t("mods.fomod.required")}
+        </Tag>
+      ) : null}
+      <span className="flex w-4 justify-center text-fg-muted">{o.image ? <Icon icon={ImageGlyph} size="sm" label={t("mods.fomod.hasImage")} /> : null}</span>
     </>
   );
-  const notUsable = (o: FomodOption) =>
-    o.disabled ? (
-      <Typography variant="caption" color="muted-fg">
-        {t("mods.fomod.notUsable")}
-      </Typography>
-    ) : null;
-  return (
-    <fieldset aria-describedby={`${id}-hint`} className="min-w-0">
-      <legend className="mb-1">
-        <Typography variant="heading-6" color="fg">
-          {group.name || t("mods.fomod.unnamedGroup")}
-        </Typography>
-      </legend>
-      <Typography id={`${id}-hint`} variant="caption" color="muted-fg">
-        {hint}
-      </Typography>
-      <div className="mt-2">
-        {single ? (
-          <Radio.Group name={id} value={selected.length ? String(selected[0]) : NONE} onValueChange={(v) => onChoose(v === NONE ? [] : [Number(v)])}>
-            {group.options.map((o) => (
-              <div key={o.index} onMouseEnter={() => onFocus(o.index)} onFocus={() => onFocus(o.index)} title={o.disabled ? t("mods.fomod.notUsable") : undefined}>
-                <Radio.Item value={String(o.index)} label={o.name} disabled={o.disabled || (o.locked && !o.selected)}>
-                  <span className="flex flex-col items-start gap-0.5">
-                    <span className="flex flex-wrap items-center gap-1">{tags(o)}</span>
-                    {notUsable(o)}
-                  </span>
-                </Radio.Item>
-              </div>
-            ))}
-            {group.type === "SelectAtMostOne" ? <Radio.Item value={NONE} label={t("mods.fomod.none")} disabled={group.options.some((o) => o.locked)} /> : null}
-          </Radio.Group>
-        ) : (
-          <Stack gap="xs">
-            {group.options.map((o) => (
-              <div key={o.index} className="flex flex-col" onMouseEnter={() => onFocus(o.index)} onFocus={() => onFocus(o.index)} title={o.disabled ? t("mods.fomod.notUsable") : undefined}>
-                <span className="flex items-center gap-2">
-                  <Checkbox
-                    label={o.name}
-                    checked={o.selected}
-                    disabled={o.disabled || o.locked}
-                    onCheckedChange={(on) => onChoose(on ? [...selected, o.index] : selected.filter((i) => i !== o.index))}
-                  />
-                  {tags(o)}
-                </span>
-                <span className="pl-7">{notUsable(o)}</span>
-              </div>
-            ))}
-          </Stack>
-        )}
+  let options: React.ReactNode;
+  if (single) {
+    options = (
+      <Radio.Group name={id} value={selected.length ? String(selected[0]) : NONE} onValueChange={(v) => onChoose(v === NONE ? [] : [Number(v)])}>
+        {group.options.map((o) => (
+          <div key={o.index} onMouseEnter={() => onFocus(o.index)} onFocus={() => onFocus(o.index)}>
+            <Radio.Item variant="row" value={String(o.index)} label={o.name} aria-label={o.name} disabled={o.disabled || (o.locked && !o.selected)} action={badges(o)}>
+              {o.disabled ? <span className="text-xs text-fg-muted">{t("mods.fomod.notUsable")}</span> : null}
+            </Radio.Item>
+          </div>
+        ))}
+        {group.type === "SelectAtMostOne" ? <Radio.Item variant="row" value={NONE} label={t("mods.fomod.none")} aria-label={t("mods.fomod.none")} disabled={group.options.some((o) => o.locked)} /> : null}
+      </Radio.Group>
+    );
+  } else {
+    options = (
+      <div className="flex flex-col gap-1.5">
+        {group.options.map((o) => (
+          <div key={o.index} onMouseEnter={() => onFocus(o.index)} onFocus={() => onFocus(o.index)}>
+            <Checkbox
+              variant="row"
+              label={o.name}
+              checked={o.selected}
+              disabled={o.disabled || o.locked}
+              description={o.disabled ? t("mods.fomod.notUsable") : undefined}
+              action={badges(o)}
+              onCheckedChange={(on) => onChoose(on ? [...selected, o.index] : selected.filter((i) => i !== o.index))}
+            />
+          </div>
+        ))}
       </div>
+    );
+  }
+  return (
+    <fieldset aria-describedby={`${id}-hint`} className="flex min-w-0 flex-col gap-1.5">
+      <legend className="contents">
+        <span className="flex items-baseline gap-2.5 pb-1">
+          <span className="text-sm font-semibold text-fg">{group.name || t("mods.fomod.unnamedGroup")}</span>
+          <span id={`${id}-hint`} className="text-xs text-fg-muted">
+            {hint}
+          </span>
+        </span>
+      </legend>
+      {options}
       {problem ? (
-        <Alert.Root intent="danger" className="mt-2">
+        <Alert.Root intent="danger" className="mt-1">
           <Alert.Description>{t(`mods.fomod.problem.${problem}` as MessageKey)}</Alert.Description>
         </Alert.Root>
       ) : null}
@@ -417,7 +434,16 @@ function GroupField({
   );
 }
 
-/** The last page: files by destination, warnings, requirements (DLG-06). */
+/** Small uppercase title of a block (boards). */
+function BlockTitle({ id, children }: { id?: string; children: React.ReactNode }) {
+  return (
+    <h3 id={id} className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-fg-muted">
+      {children}
+    </h3>
+  );
+}
+
+/** The last page (board JogoFomodResumo): your choices by step, warnings, requirements (DLG-06). */
 function Summary({
   view,
   visible,
@@ -446,19 +472,18 @@ function Summary({
     );
   }
   return (
-    <Stack gap="lg">
-      <Typography variant="body-sm" color="muted-fg">
-        {t("mods.fomod.summaryIntro")}
-      </Typography>
-      <section aria-labelledby="fomod-choices">
-        <Typography id="fomod-choices" variant="heading-6" color="fg" className="mb-1">
-          {t("mods.fomod.yourChoices")}
-        </Typography>
-        <ul className="overflow-hidden rounded-card border border-border text-sm">
+    <div className="flex flex-col gap-4.5">
+      <div className="flex flex-col gap-1">
+        <h2 className="text-xl font-semibold text-fg">{t("mods.fomod.summary")}</h2>
+        <p className="text-[0.8125rem] text-fg-muted">{t("mods.fomod.summaryIntro")}</p>
+      </div>
+      <section aria-labelledby="fomod-choices" className="flex flex-col gap-2">
+        <BlockTitle id="fomod-choices">{t("mods.fomod.yourChoices")}</BlockTitle>
+        <ul className="overflow-hidden rounded-card border border-border">
           {visible.map((st) => (
-            <li key={st.index} className="grid grid-cols-[9rem_minmax(0,1fr)_auto] items-start gap-4 border-b border-border-subtle px-4 py-3 last:border-b-0">
-              <span className="font-semibold text-fg">{st.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(st) + 1 })}</span>
-              <span className="flex min-w-0 flex-col gap-2">
+            <li key={st.index} className="grid grid-cols-[8.75rem_minmax(0,1fr)_auto] items-start gap-4 border-b border-border-subtle px-4 py-2.75 last:border-b-0">
+              <span className="text-[0.8125rem] font-semibold text-fg">{st.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(st) + 1 })}</span>
+              <span className="flex min-w-0 flex-col gap-2.5">
                 {st.groups.map((g) => {
                   const chosen = effective(st.index, g.index);
                   const before = previous.get(groupKey(st.index, g.index));
@@ -466,10 +491,10 @@ function Summary({
                   return (
                     <span key={g.index} className="flex flex-col gap-0.5">
                       <span className="text-xs text-fg-muted">{g.name || t("mods.fomod.unnamedGroup")}</span>
-                      <span className="flex flex-wrap items-center gap-2 font-medium text-fg">
+                      <span className="flex flex-wrap items-center gap-2 text-sm font-medium leading-snug text-fg">
                         {chosen.length ? chosen.map((o) => g.options[o]?.name ?? "").join(", ") : t("mods.fomod.nothingChosen")}
                         {same && previous.size > 0 ? (
-                          <Tag size="sm" intent="info" icon={HistoryIcon}>
+                          <Tag size="xs" intent="info" icon={HistoryIcon}>
                             {t("mods.fomod.previousChoice")}
                           </Tag>
                         ) : null}
@@ -478,7 +503,7 @@ function Summary({
                   );
                 })}
               </span>
-              <Button size="sm" emphasis="low" onClick={() => onChange(st.index)} aria-label={t("mods.fomod.changeStep", { step: st.name })}>
+              <Button size="sm" emphasis="low" intent="brand" onClick={() => onChange(st.index)} aria-label={t("mods.fomod.changeStep", { step: st.name })}>
                 {t("mods.fomod.change")}
               </Button>
             </li>
@@ -486,43 +511,37 @@ function Summary({
         </ul>
       </section>
       {s.warnings.length > 0 ? (
-        <section aria-labelledby="fomod-warnings">
-          <Typography id="fomod-warnings" variant="heading-6" color="fg" className="mb-1">
-            {t("mods.fomod.warnings")}
-          </Typography>
-          <Stack gap="xs">
-            {s.warnings.map((w, i) => (
-              <Alert.Root key={i} intent="warning">
-                <Alert.Description>{fomodWarning(i18n, w)}</Alert.Description>
-              </Alert.Root>
-            ))}
-          </Stack>
+        <section aria-labelledby="fomod-warnings" className="flex flex-col gap-2">
+          <BlockTitle id="fomod-warnings">{t("mods.fomod.warnings")}</BlockTitle>
+          {s.warnings.map((w, i) => (
+            <Alert.Root key={i} intent="warning">
+              <Alert.Description>{fomodWarning(i18n, w)}</Alert.Description>
+            </Alert.Root>
+          ))}
         </section>
       ) : null}
       {s.requirements.length > 0 ? (
-        <section aria-labelledby="fomod-requirements">
-          <Typography id="fomod-requirements" variant="heading-6" color="fg" className="mb-1">
-            {t("mods.fomod.requirements")}
-          </Typography>
-          <Stack gap="xs">
-            {s.requirements.map((r) =>
-              r.mod ? (
-                <Checkbox
-                  key={r.file}
-                  checked={requirements.has(r.file)}
-                  onCheckedChange={(on) => onRequirement(r.file, on)}
-                  label={t("mods.fomod.createRequirement", { file: r.file, mod: r.modName ?? "" })}
-                />
-              ) : (
-                <Typography key={r.file} variant="body-sm" color="muted-fg">
-                  {t("mods.fomod.requirementNotFound", { file: r.file })}
-                </Typography>
-              ),
-            )}
-          </Stack>
+        <section aria-labelledby="fomod-requirements" className="flex flex-col gap-2">
+          <BlockTitle id="fomod-requirements">{t("mods.fomod.requirements")}</BlockTitle>
+          {s.requirements.map((r) =>
+            r.mod ? (
+              <Checkbox
+                key={r.file}
+                size="sm"
+                checked={requirements.has(r.file)}
+                onCheckedChange={(on) => onRequirement(r.file, on)}
+                label={t("mods.fomod.createRequirement", { file: r.file, mod: r.modName ?? "" })}
+              />
+            ) : (
+              <span key={r.file} className="flex items-center gap-2.5 text-[0.8125rem] text-fg-muted">
+                <CircleAlertIcon size="sm" />
+                {t("mods.fomod.requirementNotFound", { file: r.file })}
+              </span>
+            ),
+          )}
         </section>
       ) : null}
-    </Stack>
+    </div>
   );
 }
 
@@ -533,9 +552,9 @@ function stepNote(step: FomodStep, effective: (step: number, group: number) => n
 }
 
 /**
- * Right side of the summary: the two numbers, files by destination (the
- * target comes from the instance definition) and the category and tags the
- * mod gets when the install completes (B10).
+ * Right side of the summary (board JogoFomodResumo): the two numbers, files
+ * by destination (the target comes from the instance definition) and the
+ * category and tags the mod gets when the install completes (B10).
  */
 function SummaryAside({
   instance,
@@ -563,26 +582,62 @@ function SummaryAside({
   const categories = useCategories(instance);
   const defs = useTags(instance);
   const index = tagIndex(defs.status === "ready" ? defs.data : []);
+  const [adding, setAdding] = useState(false);
   const [draft, setDraft] = useState("");
   const add = () => {
     const name = draft.trim();
     setDraft("");
+    setAdding(false);
     if (name && !tags.some((x) => x.toLowerCase() === name.toLowerCase())) onTags([...tags, name]);
   };
   const where = (folder: string) => [target, folder].filter(Boolean).join("/") || t("mods.fomod.modRoot");
+  let adder: React.ReactNode;
+  if (adding) {
+    adder = (
+      <Input.Root value={draft} onChange={setDraft}>
+        <Input.Box className="h-6 w-32">
+          <Input.Field
+            autoFocus
+            aria-label={t("mods.detail.newTag")}
+            list="fomod-tags"
+            onBlur={add}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") add();
+              if (e.key === "Escape") {
+                e.stopPropagation();
+                setAdding(false);
+                setDraft("");
+              }
+            }}
+          />
+        </Input.Box>
+        <datalist id="fomod-tags">
+          {[...index.values()].map((d) => (
+            <option key={d.name} value={d.name} />
+          ))}
+        </datalist>
+      </Input.Root>
+    );
+  } else {
+    adder = (
+      <TagAdd size="md" onClick={() => setAdding(true)}>
+        + {t("mods.detail.addTag").toLowerCase()}
+      </TagAdd>
+    );
+  }
   return (
-    <Stack gap="md" className="h-full">
-      <StatTile.Grid columns={2}>
-        <StatTile size="sm" icon={FileText} label={t("mods.fomod.kpiFiles")} value={i18n.formatNumber(files)} />
-        <StatTile size="sm" icon={HardDrive} label={t("mods.fomod.kpiSize")} value={formatSize(i18n.language, size)} />
-      </StatTile.Grid>
-      <section aria-labelledby="fomod-folders" className="flex flex-col gap-1">
-        <Typography id="fomod-folders" variant="caption" color="muted-fg" className="uppercase tracking-wide">
-          {t("mods.fomod.byFolder")}
-        </Typography>
-        <ul className="flex flex-col text-sm">
+    <>
+      <div className="grid grid-cols-2 gap-2.5 pb-3.5">
+        <StatTile layout="inline" icon={FileText} label={t("mods.fomod.kpiFiles")} value={i18n.formatNumber(files)} />
+        <StatTile layout="inline" icon={HardDrive} label={t("mods.fomod.kpiSize")} value={formatSize(i18n.language, size)} />
+      </div>
+      <section aria-labelledby="fomod-folders" className="flex flex-col">
+        <span className="pb-1.5">
+          <BlockTitle id="fomod-folders">{t("mods.fomod.byFolder")}</BlockTitle>
+        </span>
+        <ul className="flex flex-col">
           {folders.map((f) => (
-            <li key={f.folder} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle py-1.5">
+            <li key={f.folder} className="grid h-9 grid-cols-[1rem_minmax(0,1fr)_auto] items-center gap-2.5 border-b border-border-subtle">
               <FolderIcon size="sm" className="text-fg-muted" />
               <span className="truncate font-mono text-xs text-fg">{f.folder ? where(f.folder) : t("mods.fomod.targetRoot", { target: target ?? "" })}</span>
               <span className="text-xs tabular-nums text-fg-muted">{tp("mods.fomod.files", f.files)}</span>
@@ -590,43 +645,31 @@ function SummaryAside({
           ))}
         </ul>
       </section>
-      <section aria-labelledby="fomod-organize" className="mt-auto flex flex-col gap-3 border-t border-border-subtle pt-3">
-        <Typography id="fomod-organize" variant="caption" color="muted-fg" className="uppercase tracking-wide">
-          {t("mods.fomod.organize")}
-        </Typography>
-        <Input.Root fullWidth value={category} onChange={onCategory}>
-          <Input.Label>{t("mods.field.category")}</Input.Label>
-          <Input.Select options={[{ value: "", label: t("mods.noCategory") }, ...(categories.status === "ready" ? categoryOptions(categories.data) : [])]} />
-        </Input.Root>
+      <section aria-labelledby="fomod-organize" className="mt-auto flex flex-col gap-3 border-t border-border-subtle pt-3.5">
+        <BlockTitle id="fomod-organize">{t("mods.fomod.organize")}</BlockTitle>
         <div className="flex flex-col gap-1.5">
-          <Typography variant="label" color="muted-fg">
-            {t("mods.organize.tags")}
-          </Typography>
+          <span className="text-xs text-fg-muted">{t("mods.field.category")}</span>
+          <Input.Root fullWidth value={category} onChange={onCategory}>
+            <Input.Box className="h-8.5">
+              <Input.Select aria-label={t("mods.field.category")} options={[{ value: "", label: t("mods.noCategory") }, ...(categories.status === "ready" ? categoryOptions(categories.data) : [])]} />
+            </Input.Box>
+          </Input.Root>
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <span className="text-xs text-fg-muted">{t("mods.organize.tags")}</span>
           <span className="flex flex-wrap items-center gap-1.5">
             {tags.map((g) => {
               const c = paletteColor(index.get(g.toLowerCase())?.color);
               return (
-                <Tag key={g} size="sm" value={g} {...(c ? { color: c } : {})} removeLabel={t("mods.detail.removeTag", { name: g })} onRemove={(v) => onTags(tags.filter((x) => x !== v))}>
+                <Tag key={g} outline={false} dot value={g} {...(c ? { color: c } : {})} removeLabel={t("mods.detail.removeTag", { name: g })} onRemove={(v) => onTags(tags.filter((x) => x !== v))}>
                   {g}
                 </Tag>
               );
             })}
-            <Input.Root value={draft} onChange={setDraft}>
-              <Input.Box className="h-7 w-36">
-                <Input.Field aria-label={t("mods.detail.newTag")} list="fomod-tags" onKeyDown={(e) => e.key === "Enter" && add()} />
-              </Input.Box>
-              <datalist id="fomod-tags">
-                {[...index.values()].map((d) => (
-                  <option key={d.name} value={d.name} />
-                ))}
-              </datalist>
-            </Input.Root>
-            <Button size="icon-sm" emphasis="low" aria-label={t("mods.detail.addTag")} tooltip={t("mods.detail.addTag")} disabled={!draft.trim()} onClick={add}>
-              <PlusIcon size="sm" />
-            </Button>
+            {adder}
           </span>
         </div>
       </section>
-    </Stack>
+    </>
   );
 }

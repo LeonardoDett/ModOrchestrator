@@ -243,5 +243,6 @@ The approved boards are the specification of each screen. What a board needs and
 - `Table density="relaxed"`: 48 px rows, 36 px header, 16 px cell padding.
 - `Tree variant="rows"`: edge-to-edge 34 px rows with a line between them, for a tree with columns under a header.
 - `SwatchPicker size` (`square`, `sm`, `md`) and `tint` (`"self"` or a palette color).
+- Wizard boards: `Modal.Header layout="bar"` (76 px), `Modal.Footer size="lg"` (64 px), `Modal.Body padding="none"`, `Alert band` (edge-to-edge strip under a header), `Radio.Item`/`Checkbox variant="row"` (44 px bordered option rows with an `action` end), `Stepper variant="list"` (step rows without connectors, done steps with a green check), `StatTile layout="inline"`.
 
 Tests: `src/__tests__/fidelity-props.test.tsx`.

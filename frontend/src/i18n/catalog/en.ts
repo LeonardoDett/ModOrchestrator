@@ -2373,8 +2373,8 @@ export const en = {
   "mods.fomod.change": "Change",
   "mods.fomod.changeStep": "Change {step}",
   "mods.fomod.hasImage": "Has an image",
-  "mods.fomod.kpiFiles": "Files",
-  "mods.fomod.kpiSize": "On disk",
+  "mods.fomod.kpiFiles": "files",
+  "mods.fomod.kpiSize": "on disk",
   "mods.fomod.nothingChosen": "None",
   "mods.fomod.organize": "Organize this mod",
   "mods.fomod.previousChoice": "Previous choice",
@@ -2466,6 +2466,8 @@ export const en = {
   "mods.detail.expandStep": "Show step {name}",
   "mods.detail.collapseStep": "Hide step {name}",
   "mods.detail.quickActions": "Quick actions",
+  "mods.fomod.stepsMayChange": "Steps may appear or disappear depending on what you choose.",
+  "mods.fomod.panelHelp": "The panel follows the option under the mouse or in keyboard focus. An option without an image shows only the text.",
 } as const;
 
 export type MessageKey = keyof typeof en;

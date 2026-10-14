@@ -11,14 +11,16 @@ const modalHeaderVariants = defineRecipe({
       inline: "items-center justify-between gap-4 px-6 pt-5 pb-4",
       /** Rows stacked 16 px apart, the last one (tabs) touching the bottom line. */
       stacked: "flex-col items-stretch gap-4 px-6 pt-5",
+      /** One 76 px line: image or icon, title block, actions (wizard boards). */
+      bar: "h-19 items-center gap-4 pl-6 pr-5",
     },
   },
   defaultVariants: { layout: "inline" },
 });
 
 interface ModalHeaderProps extends ComponentPropsWithoutRef<"div"> {
-  /** `inline` (default) or `stacked`, for a header with tabs under it. */
-  layout?: "inline" | "stacked";
+  /** `inline` (default), `stacked` (a header with tabs under it) or `bar` (one 76 px line). */
+  layout?: "inline" | "stacked" | "bar";
 }
 
 /**

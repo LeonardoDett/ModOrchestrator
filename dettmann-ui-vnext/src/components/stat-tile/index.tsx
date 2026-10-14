@@ -24,6 +24,11 @@ const tileVariants = defineRecipe({
       /** Painel de detalhe: ícone num quadrado de 24 px, número de 28 px (D-040). */
       lg: { root: "gap-2.5 px-4 py-3.5", label: "gap-2", value: "gap-2 text-[1.75rem] leading-none", unit: "text-[0.8125rem] font-normal" },
     },
+    /** `inline`: ícone de 32 px à esquerda, número e rótulo empilhados ao lado (resumo de assistente). */
+    layout: {
+      stack: {},
+      inline: { root: "flex-row items-center gap-2.5 p-3", value: "text-lg leading-tight", label: "order-last" },
+    },
     /** Borda na cor do intent: o número que pede atenção. */
     outlined: {
       true: { root: "border-intent-border" },
@@ -34,7 +39,7 @@ const tileVariants = defineRecipe({
       false: {},
     },
   },
-  defaultVariants: { size: "md", interactive: false, outlined: false },
+  defaultVariants: { size: "md", interactive: false, outlined: false, layout: "stack" },
 });
 
 interface StatTileBaseProps {
@@ -53,6 +58,8 @@ interface StatTileBaseProps {
   size?: "sm" | "md" | "lg";
   /** Pinta a borda com o `intent` (exige `intent`). */
   outlined?: boolean;
+  /** `stack` (padrão) ou `inline`: ícone num quadrado de 32 px ao lado do número, rótulo embaixo. */
+  layout?: "stack" | "inline";
   /** Carregando: o valor vira um esqueleto. */
   loading?: boolean;
   className?: string;
@@ -78,11 +85,27 @@ export interface StatTileProps extends StatTileBaseProps {
  * </StatTile.Grid>
  * ```
  */
-function StatTileRoot({ label, value, unit, description, icon, intent, size, outlined = false, loading = false, href, onClick, className, style }: StatTileProps) {
+function StatTileRoot({ label, value, unit, description, icon, intent, size, outlined = false, layout = "stack", loading = false, href, onClick, className, style }: StatTileProps) {
   const interactive = Boolean(href || onClick);
   const tinted = intent !== undefined && intent !== "neutral";
-  const s = tileVariants({ size, interactive, outlined: outlined && tinted });
+  const s = tileVariants({ size, interactive, outlined: outlined && tinted, layout });
   const large = size === "lg";
+  if (layout === "inline") {
+    const common = { className: cn(s.root(), className), style, ...intentData(intent ?? "brand") };
+    return (
+      <div {...common}>
+        {icon ? (
+          <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-control bg-intent-subtle text-intent-text">
+            <Icon icon={icon} size="sm" color="current" />
+          </span>
+        ) : null}
+        <span className="flex min-w-0 flex-col gap-px">
+          <span className={s.value()}>{loading ? <Skeleton className="h-5 w-12" /> : value}</span>
+          <span className="text-xs text-fg-muted">{label}</span>
+        </span>
+      </div>
+    );
+  }
   let glyph: ReactNode = null;
   if (icon && large) {
     glyph = (

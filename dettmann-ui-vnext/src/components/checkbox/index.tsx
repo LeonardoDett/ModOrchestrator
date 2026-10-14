@@ -30,6 +30,15 @@ const checkboxVariants = defineRecipe({
       "data-[state=checked]:border-intent-fill data-[state=checked]:bg-intent-subtle",
       "data-[state=indeterminate]:border-intent-fill",
     ].join(" "),
+    /** D-040: a 44 px bordered option row (installer options on the boards). */
+    row: [
+      "flex min-h-11 w-full items-center gap-3 rounded-control border px-3.5 py-1.5 text-left",
+      "motion-transition",
+      "data-[state=unchecked]:border-border data-[state=unchecked]:hover:bg-state-hover",
+      "data-[state=checked]:border-intent-fill data-[state=checked]:bg-intent-subtle",
+      "data-[state=indeterminate]:border-intent-fill",
+      "data-[disabled]:bg-sunken",
+    ].join(" "),
   },
   variants: {
     size: {
@@ -83,8 +92,11 @@ interface CheckboxProps
   /** Value for form submission */
   value?: string;
   intent?: Intent;
-  /** `card`: cartão com rótulo, descrição e ação (escolha entre partes, como o Radio em cartão). */
-  variant?: "default" | "card";
+  /**
+   * `card`: cartão com rótulo, descrição e ação (escolha entre partes, como o Radio em cartão).
+   * `row`: linha de opção de 44 px com borda; `action` vira a ponta direita (selos).
+   */
+  variant?: "default" | "card" | "row";
   /** Texto de apoio do cartão. */
   description?: ReactNode;
   /** Ação à direita do cartão, fora do controle ("Escolher mods"). */
@@ -133,7 +145,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       onChange: onCheckedChange,
     });
 
-    const { root, checkbox, label: labelClass, card } = checkboxVariants({ size, disabled });
+    const { root, checkbox, label: labelClass, card, row } = checkboxVariants({ size, disabled });
 
     const state = indeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked";
 
@@ -152,10 +164,15 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       isChecked || indeterminate ? "scale-100" : "scale-0"
     );
 
-    if (variant === "card") {
+    if (variant === "card" || variant === "row") {
       const labelId = `${id}-label`;
       return (
-        <div data-state={state} className={cn(card(), className)} {...intentData(intent ?? "brand")}>
+        <div
+          data-state={state}
+          data-disabled={disabled || undefined}
+          className={cn(variant === "row" ? row() : card(), className)}
+          {...intentData(intent ?? "brand")}
+        >
           <button
             ref={ref}
             id={id}
@@ -166,7 +183,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
             data-state={state}
             disabled={disabled}
             onClick={handleClick}
-            className={cn(checkbox(), "mt-0.5")}
+            className={cn(checkbox(), variant === "card" && "mt-0.5")}
             {...props}
           >
             {indeterminate ? (

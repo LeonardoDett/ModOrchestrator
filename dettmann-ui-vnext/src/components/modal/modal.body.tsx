@@ -6,10 +6,20 @@ import { cn } from "../../utils/cn";
 import { useModalContext } from "./modal.context";
 
 const modalBodyVariants = defineRecipe({
-  base: "flex-1 overflow-y-auto px-6 py-4 text-fg",
+  base: "flex-1 text-fg",
+  variants: {
+    /** `md` (default): padded, scrolls. `none`: the screen lays out its own columns and scrolls (boards). */
+    padding: {
+      md: "overflow-y-auto px-6 py-4",
+      none: "min-h-0 overflow-hidden",
+    },
+  },
+  defaultVariants: { padding: "md" },
 });
 
-interface ModalBodyProps extends ComponentPropsWithoutRef<"div"> {}
+interface ModalBodyProps extends ComponentPropsWithoutRef<"div"> {
+  padding?: "md" | "none";
+}
 
 /**
  * Modal.Body is the main content area of the modal.
@@ -18,6 +28,7 @@ interface ModalBodyProps extends ComponentPropsWithoutRef<"div"> {}
 export function ModalBody({
   children,
   className,
+  padding,
   ...props
 }: ModalBodyProps) {
   const { descriptionId } = useModalContext("Body");
@@ -25,7 +36,7 @@ export function ModalBody({
   return (
     <div
       id={descriptionId}
-      className={cn(modalBodyVariants(), className)}
+      className={cn(modalBodyVariants({ padding }), className)}
       {...props}
     >
       {children}

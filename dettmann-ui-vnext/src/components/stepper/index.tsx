@@ -20,11 +20,14 @@ import { createStrictContext } from "../../utils/create-strict-context";
 type StepperOrientation = "horizontal" | "vertical";
 type StepStatus = "completed" | "current" | "upcoming";
 
+type StepperVariant = "line" | "list";
+
 interface StepperContextValue {
   value: number;
   onChange: (index: number) => void;
   orientation: StepperOrientation;
   interactive: boolean;
+  variant: StepperVariant;
 }
 
 const [StepperProvider, useStepperContext] =
@@ -63,6 +66,12 @@ interface StepperRootProps extends Omit<ComponentPropsWithoutRef<"div">, "defaul
   orientation?: StepperOrientation;
   /** Allow clicking a step to activate it */
   interactive?: boolean;
+  /**
+   * `line` (default): indicators joined by a connector. `list` (vertical, D-040):
+   * rows without connectors, the current one on a selected background, done
+   * steps with a green check (wizard boards).
+   */
+  variant?: StepperVariant;
 }
 
 /**
@@ -76,6 +85,7 @@ function StepperRoot({
   onValueChange,
   orientation = "horizontal",
   interactive = false,
+  variant = "line",
   ...props
 }: StepperRootProps) {
   const [value, setValue] = useControllableState({
@@ -91,10 +101,11 @@ function StepperRoot({
         onChange: setValue,
         orientation,
         interactive,
+        variant,
       }}
     >
       <div
-        className={cn(rootVariants({ orientation }), className)}
+        className={cn(rootVariants({ orientation }), variant === "list" && "gap-1", className)}
         {...props}
       >
         {Children.map(children, (child, i) => {
@@ -149,7 +160,8 @@ function StepperStep({
   onKeyDown,
   ...props
 }: StepperStepProps) {
-  const { value, onChange, orientation, interactive } = useStepperContext("Step");
+  const { value, onChange, orientation, interactive, variant } = useStepperContext("Step");
+  const list = variant === "list";
 
   const status: StepStatus =
     index < value ? "completed" : index === value ? "current" : "upcoming";
@@ -181,8 +193,8 @@ function StepperStep({
     <StepProvider value={{ index, status }}>
       <div
         className={cn(
-          stepVariants({ orientation, interactive }),
-          !isLast && orientation === "horizontal" && "relative",
+          list ? listStepVariants({ status, interactive }) : stepVariants({ orientation, interactive }),
+          !list && !isLast && orientation === "horizontal" && "relative",
           className
         )}
         data-status={status}
@@ -192,7 +204,7 @@ function StepperStep({
         {...props}
       >
         {children}
-        {!isLast && (
+        {!isLast && !list && (
           <Divider
             decorative
             orientation={orientation === "horizontal" ? "horizontal" : "vertical"}
@@ -208,6 +220,37 @@ function StepperStep({
     </StepProvider>
   );
 }
+
+const listStepVariants = defineRecipe({
+  base: "flex flex-row items-center gap-3 rounded-control p-2.5",
+  variants: {
+    status: {
+      completed: "",
+      current: "bg-selected",
+      upcoming: "",
+    },
+    interactive: {
+      true: "cursor-pointer motion-transition focus-ring-inset aria-disabled:cursor-not-allowed",
+      false: "",
+    },
+  },
+  compoundVariants: [
+    { status: "completed", interactive: true, class: "hover:bg-state-hover" },
+  ],
+  defaultVariants: { status: "upcoming", interactive: false },
+});
+
+const listIndicatorVariants = defineRecipe({
+  base: "flex size-6.5 shrink-0 items-center justify-center rounded-pill border text-xs font-bold",
+  variants: {
+    status: {
+      completed: "border-intent-border bg-intent-subtle text-intent-text",
+      current: "border-transparent bg-brand-fill text-on-brand",
+      upcoming: "border-border text-fg-subtle",
+    },
+  },
+  defaultVariants: { status: "upcoming" },
+});
 
 const indicatorVariants = defineRecipe({
   base: [
@@ -234,16 +277,19 @@ interface StepperStepIndicatorProps extends ComponentPropsWithoutRef<"div"> {}
  */
 function StepperStepIndicator({ className, children, ...props }: StepperStepIndicatorProps) {
   const { index, status } = useStepContext("StepIndicator");
+  const { variant } = useStepperContext("StepIndicator");
+  const list = variant === "list";
 
   return (
     <div
-      className={cn(indicatorVariants({ status }), className)}
+      className={cn(list ? listIndicatorVariants({ status }) : indicatorVariants({ status }), className)}
+      data-intent={list && status === "completed" ? "success" : undefined}
       aria-hidden={children ? undefined : true}
       {...props}
     >
       {children ??
         (status === "completed" ? (
-          <Icon icon={CheckIcon} size="sm" />
+          <Icon icon={CheckIcon} size={list ? "xs" : "sm"} />
         ) : (
           index + 1
         ))}
@@ -270,6 +316,18 @@ const labelVariants = defineRecipe({
   },
 });
 
+const listLabelVariants = defineRecipe({
+  base: "flex min-w-0 flex-col gap-px text-left text-sm",
+  variants: {
+    status: {
+      completed: "font-medium text-fg",
+      current: "font-semibold text-fg",
+      upcoming: "font-medium text-fg-subtle",
+    },
+  },
+  defaultVariants: { status: "upcoming" },
+});
+
 interface StepperStepLabelProps extends ComponentPropsWithoutRef<"span"> {
   children: ReactNode;
 }
@@ -279,10 +337,11 @@ interface StepperStepLabelProps extends ComponentPropsWithoutRef<"span"> {
  */
 function StepperStepLabel({ className, children, ...props }: StepperStepLabelProps) {
   const { status } = useStepContext("StepLabel");
-  const { orientation } = useStepperContext("StepLabel");
+  const { orientation, variant } = useStepperContext("StepLabel");
+  const label = variant === "list" ? listLabelVariants({ status }) : labelVariants({ status, orientation });
 
   return (
-    <span className={cn(labelVariants({ status, orientation }), className)} {...props}>
+    <span className={cn(label, className)} {...props}>
       {children}
     </span>
   );

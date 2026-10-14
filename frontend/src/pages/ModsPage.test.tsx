@@ -287,6 +287,7 @@ describe("Mods screen (F4)", () => {
     // The mod can be organized before it is installed (B10).
     await user.click(within(dialog).getByRole("combobox", { name: "Category" }));
     await user.click(await screen.findByRole("option", { name: "Interface" }));
+    await user.click(within(dialog).getByRole("button", { name: "+ tag" }));
     await user.type(within(dialog).getByRole("combobox", { name: "New tag" }), "4K{Enter}");
     expect(within(dialog).getByText("The installer refers to extras/readme.txt, which is not in the archive; it was skipped.")).toBeInTheDocument();
     // No rule without an explicit action (INV-CON-02): unchecked by default.

@@ -47,8 +47,9 @@ Nome, pasta do jogo, lista editável de targets (id em minúsculas + pasta relat
 Duas opções exclusivas: manter staging e arquivos (padrão) ou apagá-los; apagar exige digitar o nome da instância. Instância com algo implantado mostra o aviso e o botão fica desabilitado (o backend também recusa) até o purge existir (F7).
 
 ### DLG-06 Assistente FOMOD
-Redesenho v1 (pranchas `JogoFomod` e `JogoFomodResumo`, RD10).
-- Cabeçalho: imagem do módulo (clique amplia), nome e "Passo N de M" (só os visíveis) ou "Resumo".
+Redesenho v1 (pranchas `JogoFomod` e `JogoFomodResumo`, RD10, D127). Modal de 1160 × 800: cabeçalho de 76 px, colunas fixas de 230 px (passos), centro e 340 px (detalhe), rodapé de 64 px.
+- Cabeçalho: imagem do módulo (clique amplia), nome e "Passo N de M" (só os visíveis) ou "Resumo", e fechar. Fechar (X ou Esc) só fecha: a importação continua na fila esperando as escolhas; quem descarta é "Cancelar importação".
+- Opções em linhas de 44 px com borda (marcada na cor da marca); selos à direita.
 - Reinstalação: faixa "As escolhas da instalação anterior foram carregadas" com "Instalar com as escolhas anteriores".
 - Coluna esquerda: passos (Stepper vertical), cada passo já visitado com uma linha do que foi escolhido; passos ainda não visitados ficam desabilitados (D087); nota de que passos aparecem e somem conforme as escolhas.
 - Centro: grupos do passo com o tipo de seleção dito por extenso ("Escolha uma", "Escolha quantas quiser"...). `SelectExactlyOne`/`SelectAtMostOne` = Radio (AtMostOne com "Nenhum"); `SelectAtLeastOne`/`SelectAny` = Checkbox; `SelectAll` e `Required` travados marcados; `NotUsable` desabilitado com o motivo; `Recommended` com selo "Recomendado". Na reinstalação a opção escolhida antes leva o selo "Escolha anterior". Opção com imagem leva um ícone de imagem.
