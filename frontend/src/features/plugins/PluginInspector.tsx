@@ -1,251 +1,218 @@
 import { useState } from "react";
-import { LockIcon, LockOpenIcon, PackageIcon, PlusIcon, TrashIcon } from "dettmann-ui/icons";
-import { Button, Inline, Input, Inspector, Loader, Stack, Tag, Typography } from "dettmann-ui";
+import { CheckIcon, LockIcon, LockOpenIcon, TrashIcon, XIcon } from "dettmann-ui/icons";
+import { Alert, Button, Input, Loader, TagAdd } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { usePluginDetails, usePluginRules } from "../../bridge/queries";
-import type { PluginDetails } from "../../bridge/types";
-import { useI18n, type MessageKey } from "../../i18n/i18n";
+import type { PluginDetails, PluginMaster } from "../../bridge/types";
+import { useI18n } from "../../i18n/i18n";
 import { useNavigation } from "../../shell/navigation";
-import { diagnosticTitle, actionLabel } from "../diagnostics/diagnostic-labels";
+import { actionLabel, diagnosticTitle } from "../diagnostics/diagnostic-labels";
 import { useDiagnosticAction } from "../diagnostics/use-diagnostic-action";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
-import { FlagTags, originLabel } from "./plugin-labels";
+import { originLabel } from "./plugin-labels";
 
-interface PluginInspectorProps {
+interface PluginPanelProps {
   instance: string;
   name: string;
   onClose: () => void;
 }
 
+/** Small uppercase title of a block (boards). */
+function BlockTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-fg-muted">{children}</h3>;
+}
+
 /**
- * Inspector of a plugin (ui/telas/plugins.md §4): header, masters with
- * their state and actions, dependents, rules, group, position and
- * problems. Everything shown is read from the backend; actions are
- * commands that the backend validates.
+ * Panel of a plugin (board JogoPlugins): name and origin, the problem,
+ * masters with their state and the action that fixes them, the rules it
+ * loads after, dependents and position, "Travar posição" and "Ver na
+ * ordem". Everything shown is read from the backend; actions are commands
+ * that the backend validates.
  */
-export function PluginInspector({ instance, name, onClose }: PluginInspectorProps) {
+export function PluginPanel({ instance, name, onClose }: PluginPanelProps) {
   const i18n = useI18n();
   const { t } = i18n;
   const details = usePluginDetails(instance, name);
+  const p = details.status === "ready" ? details.data : null;
+  let sub = "";
+  if (p) {
+    const from = p.modName ? t("plugins.panel.from", { mod: p.modName }) : originLabel(i18n, p.origin);
+    sub = p.index ? `${from} · ${t("plugins.panel.index", { index: p.index })}` : `${from} · ${t("plugins.inactive")}`;
+  }
   return (
-    <Inspector
-      sticky={false}
-      aria-label={name}
-      title={name}
-      description={details.status === "ready" && details.data ? originLabel(i18n, details.data.origin) : undefined}
-      className="flex w-[24rem] shrink-0 flex-col overflow-auto rounded-card border"
-      onClose={onClose}
-      closeLabel={t("common.close")}
-    >
-      {details.status === "loading" ? <Loader label={t("common.loading")} /> : null}
-      {details.status === "error" ? <ErrorAlert title="plugins.loadError" error={details.error} onRetry={details.reload} /> : null}
-      {details.status === "ready" && details.data ? <Body instance={instance} p={details.data} /> : null}
-    </Inspector>
-  );
-}
-
-function Section({ title, children }: { title: MessageKey; children: React.ReactNode }) {
-  const { t } = useI18n();
-  return (
-    <section className="flex flex-col gap-2">
-      <Typography variant="heading-6" color="fg">
-        {t(title)}
-      </Typography>
-      {children}
-    </section>
+    <aside aria-label={t("plugins.panel.label")} className="flex min-h-0 min-w-0 flex-col overflow-hidden rounded-card border border-border bg-surface">
+      <div data-layer="medium" className="flex shrink-0 flex-col gap-1 border-b border-border bg-structure px-4 py-3.5">
+        <div className="flex items-start justify-between gap-2">
+          <h2 className="break-all text-[0.9375rem] font-semibold text-fg">{name}</h2>
+          <Button size="icon-sm" emphasis="low" aria-label={t("plugins.panel.close")} title={t("plugins.panel.close")} onClick={onClose}>
+            <XIcon size="sm" />
+          </Button>
+        </div>
+        {sub ? <span className="text-xs text-fg-muted">{sub}</span> : null}
+      </div>
+      <div className="min-h-0 flex-1 overflow-auto">
+        {details.status === "loading" ? <Loader label={t("common.loading")} /> : null}
+        {details.status === "error" ? (
+          <div className="p-4">
+            <ErrorAlert title="plugins.loadError" error={details.error} onRetry={details.reload} />
+          </div>
+        ) : null}
+        {p ? <Body instance={instance} p={p} /> : null}
+      </div>
+    </aside>
   );
 }
 
 function Body({ instance, p }: { instance: string; p: PluginDetails }) {
   const i18n = useI18n();
-  const { t } = i18n;
+  const { t, tp } = i18n;
   const backend = useBackend();
   const run = useAction();
   const act = useDiagnosticAction();
   const { navigate } = useNavigation();
   const rules = usePluginRules(instance);
+  const [adding, setAdding] = useState(false);
   const [after, setAfter] = useState("");
-  const groups = rules.status === "ready" ? rules.data.groups : [];
   const others = rules.status === "ready" ? rules.data.plugins.filter((n) => n.toLowerCase() !== p.name.toLowerCase()) : [];
 
+  const masterState = (m: PluginMaster) => {
+    if (!m.present) return { key: "plugins.master.missing" as const, ok: false };
+    if (!m.active) return { key: "plugins.master.inactive" as const, ok: false };
+    if (!m.before) return { key: "plugins.master.after" as const, ok: false };
+    return { key: "plugins.master.active" as const, ok: true };
+  };
+
+  let adder: React.ReactNode;
+  if (adding) {
+    adder = (
+      <div className="flex items-center gap-2">
+        <Input.Root value={after} onChange={setAfter} className="min-w-0 flex-1">
+          <Input.Select aria-label={t("plugins.rule.after")} placeholder={t("plugins.rule.after")} options={others.map((n) => ({ value: n, label: n }))} />
+        </Input.Root>
+        <Button
+          size="sm"
+          disabled={!after}
+          onClick={() =>
+            void run(() => backend.createPluginRule(instance, p.name, after)).then((r) => {
+              if (r.ok) {
+                setAfter("");
+                setAdding(false);
+              }
+            })
+          }
+        >
+          {t("plugins.rule.add")}
+        </Button>
+      </div>
+    );
+  } else {
+    adder = (
+      <TagAdd size="md" className="self-start rounded-control" onClick={() => setAdding(true)}>
+        + {t("plugins.rule.add")}
+      </TagAdd>
+    );
+  }
+
+  let position = t("plugins.panel.free");
+  if (p.implicit) position = t("plugins.implicitFixed");
+  else if (p.locked) position = t("plugins.panel.locked");
+
   return (
-    <Stack gap="lg">
-      {p.diagnostics.length > 0 ? (
-        <Section title="plugins.inspector.problems">
-          <ul className="flex flex-col gap-2">
-            {p.diagnostics.map((d) => (
-              <li key={d.key} className="rounded-control border border-border bg-surface p-2 text-sm">
-                <span className="text-fg">{diagnosticTitle(i18n, d)}</span>
-                <Inline gap="xs" className="mt-1 flex-wrap">
-                  {d.actions.map((a, i) => (
-                    <Button key={`${a.id}:${i}`} size="sm" onClick={() => void act(d, i)}>
-                      {actionLabel(i18n, a)}
-                    </Button>
-                  ))}
-                </Inline>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
+    <div className="flex flex-col gap-4 px-4 py-3.5 text-[0.8125rem]">
+      {p.diagnostics.map((d) => (
+        <Alert.Root
+          key={d.key}
+          intent="danger"
+          action={
+            d.actions.length > 0 ? (
+              <span className="flex flex-col gap-1">
+                {d.actions.map((a, i) => (
+                  <Button key={`${a.id}:${i}`} size="sm" onClick={() => void act(d, i)}>
+                    {actionLabel(i18n, a)}
+                  </Button>
+                ))}
+              </span>
+            ) : undefined
+          }
+        >
+          <Alert.Description>{diagnosticTitle(i18n, d)}</Alert.Description>
+        </Alert.Root>
+      ))}
+      {p.headerError ? <p className="text-fg-muted">{t("plugins.inspector.headerError")}</p> : null}
 
-      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-sm">
-        <dt className="text-fg-muted">{t("plugins.column.flags")}</dt>
-        <dd className="min-w-0">
-          <FlagTags row={p} i18n={i18n} />
-        </dd>
-        <dt className="text-fg-muted">{t("plugins.inspector.position")}</dt>
-        <dd className="text-fg">
-          {p.position}
-          {p.index ? ` · ${p.index}` : ` · ${t("plugins.inactive")}`}
-        </dd>
-        {p.author ? (
-          <>
-            <dt className="text-fg-muted">{t("plugins.column.author")}</dt>
-            <dd className="text-fg">{p.author}</dd>
-          </>
-        ) : null}
-        {p.version ? (
-          <>
-            <dt className="text-fg-muted">{t("plugins.column.version")}</dt>
-            <dd className="text-fg">{p.version}</dd>
-          </>
-        ) : null}
-        <dt className="text-fg-muted">{t("plugins.inspector.file")}</dt>
-        <dd className="break-all font-mono text-xs text-fg">{p.path}</dd>
-        {p.modName ? (
-          <>
-            <dt className="text-fg-muted">{t("plugins.column.mod")}</dt>
-            <dd>
-              <Button size="sm" emphasis="low" startIcon={<PackageIcon size="sm" />} onClick={() => navigate({ view: "mods", focusMod: p.mod })}>
-                {p.modName}
+      <section className="flex flex-col gap-2">
+        <BlockTitle>{t("plugins.inspector.masters")}</BlockTitle>
+        {p.mastersList.length === 0 ? <p className="text-fg-muted">{t("plugins.inspector.noMasters")}</p> : null}
+        {p.mastersList.map((m) => {
+          const s = masterState(m);
+          let fix: React.ReactNode = null;
+          if (m.present && !m.active) {
+            fix = (
+              <Button size="sm" onClick={() => void run(() => backend.setPluginsEnabled(instance, [m.name], true))}>
+                {t("plugins.action.activate")}
               </Button>
-            </dd>
-          </>
-        ) : null}
-      </dl>
-      {p.description ? (
-        <Typography variant="body-sm" color="muted-fg" className="whitespace-pre-wrap">
-          {p.description}
-        </Typography>
-      ) : null}
-      {p.headerError ? (
-        <Typography variant="body-sm" color="muted-fg">
-          {t("plugins.inspector.headerError")}
-        </Typography>
-      ) : null}
+            );
+          } else if (!m.present && m.disabled && m.mod) {
+            fix = (
+              <Button size="sm" onClick={() => void run(() => backend.setModsEnabled(instance, [m.mod], true))}>
+                {t("plugins.action.enableMod", { mod: m.modName })}
+              </Button>
+            );
+          }
+          return (
+            <div key={m.name} className="flex items-center gap-2">
+              <span data-intent={s.ok ? "success" : "danger"} className="text-intent-text">
+                {s.ok ? <CheckIcon size="sm" /> : <XIcon size="sm" />}
+              </span>
+              <span className="min-w-0 flex-1 truncate font-mono text-xs text-fg" title={m.name}>
+                {m.name}
+              </span>
+              <span data-intent={s.ok ? "success" : "danger"} className="text-xs text-intent-text">
+                {t(s.key)}
+              </span>
+              {fix}
+            </div>
+          );
+        })}
+      </section>
 
-      <Section title="plugins.inspector.masters">
-        {p.mastersList.length === 0 ? (
-          <Typography variant="body-sm" color="muted-fg">
-            {t("plugins.inspector.noMasters")}
-          </Typography>
-        ) : (
-          <ul className="flex flex-col gap-1.5">
-            {p.mastersList.map((m) => (
-              <li key={m.name} className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="font-medium text-fg">{m.name}</span>
-                <Tag size="sm">{t(m.present ? (m.active ? "plugins.master.active" : "plugins.master.inactive") : "plugins.master.missing")}</Tag>
-                {m.present && !m.before ? <Tag size="sm">{t("plugins.master.after")}</Tag> : null}
-                {m.present && !m.active ? (
-                  <Button size="sm" onClick={() => void run(() => backend.setPluginsEnabled(instance, [m.name], true))}>
-                    {t("plugins.action.activate")}
-                  </Button>
-                ) : null}
-                {!m.present && m.disabled && m.mod ? (
-                  <Button size="sm" onClick={() => void run(() => backend.setModsEnabled(instance, [m.mod], true))}>
-                    {t("plugins.action.enableMod", { mod: m.modName })}
-                  </Button>
-                ) : null}
-                {m.mod ? (
-                  <Button size="sm" emphasis="low" onClick={() => navigate({ view: "mods", focusMod: m.mod })}>
-                    {t("plugins.action.showMod")}
-                  </Button>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        )}
-      </Section>
-
-      <Section title="plugins.inspector.dependents">
-        {p.dependents.length === 0 ? (
-          <Typography variant="body-sm" color="muted-fg">
-            {t("plugins.inspector.noDependents")}
-          </Typography>
-        ) : (
-          <Inline gap="xs" className="flex-wrap">
-            {p.dependents.map((d) => (
-              <Tag key={d} size="sm">
-                {d}
-              </Tag>
-            ))}
-          </Inline>
-        )}
-      </Section>
-
-      <Section title="plugins.inspector.rules">
-        <ul className="flex flex-col gap-1">
-          {p.ruleList.map((r) => (
-            <li key={r.id} className="flex items-center gap-2 text-sm text-fg">
-              <span className="min-w-0 flex-1 truncate">{t("plugins.rule.sentence", { plugin: r.plugin, after: r.after })}</span>
-              {r.orphan ? <Tag size="sm">{t("plugins.rule.orphan")}</Tag> : null}
-              <Button
-                size="icon-sm"
-                emphasis="low"
-                aria-label={t("plugins.rule.remove")}
-                disabled={r.source !== "user"}
-                onClick={() => void run(() => backend.removePluginRule(instance, r.id))}
-              >
+      <section className="flex flex-col gap-2">
+        <BlockTitle>{t("plugins.inspector.rules")}</BlockTitle>
+        {p.ruleList.map((r) => (
+          <div key={r.id} className="flex items-center gap-2">
+            <span className="min-w-0 flex-1 truncate font-mono text-xs text-fg">{r.after}</span>
+            <span className="text-xs text-fg-muted">{t(r.orphan ? "plugins.rule.orphan" : r.source === "user" ? "plugins.panel.ruleYours" : "plugins.panel.ruleProvider")}</span>
+            {r.source === "user" ? (
+              <Button size="icon-sm" emphasis="low" aria-label={t("plugins.rule.remove")} title={t("plugins.rule.remove")} onClick={() => void run(() => backend.removePluginRule(instance, r.id))}>
                 <TrashIcon size="sm" />
               </Button>
-            </li>
-          ))}
-        </ul>
-        <Inline gap="xs" className="items-end">
-          <Input.Root value={after} onChange={setAfter} className="min-w-0 flex-1">
-            <Input.Select
-              aria-label={t("plugins.rule.after")}
-              placeholder={t("plugins.rule.after")}
-              options={others.map((n) => ({ value: n, label: n }))}
-            />
-          </Input.Root>
-          <Button
-            size="sm"
-           
-            startIcon={<PlusIcon size="sm" />}
-            disabled={!after}
-            onClick={() =>
-              void run(() => backend.createPluginRule(instance, p.name, after)).then((r) => {
-                if (r.ok) setAfter("");
-              })
-            }
-          >
-            {t("plugins.rule.add")}
-          </Button>
-        </Inline>
-      </Section>
+            ) : null}
+          </div>
+        ))}
+        {adder}
+      </section>
 
-      <Section title="plugins.column.group">
-        <Input.Root disabled={p.implicit} value={p.group} onChange={(g: string) => g !== p.group && void run(() => backend.setPluginGroup(instance, [p.name], g))}>
-          <Input.Select aria-label={t("plugins.column.group")} options={groups.map((g) => ({ value: g.name, label: g.default ? t("plugins.group.default") : g.name }))} />
-        </Input.Root>
-      </Section>
+      <dl className="grid grid-cols-[6rem_minmax(0,1fr)] gap-x-3 gap-y-2">
+        <dt className="text-fg-muted">{t("plugins.inspector.dependents")}</dt>
+        <dd className="text-fg">{p.dependents.length === 0 ? t("plugins.panel.noDependents") : tp("plugins.panel.dependents", p.dependents.length, { names: p.dependents.join(", ") })}</dd>
+        <dt className="text-fg-muted">{t("plugins.inspector.lock")}</dt>
+        <dd className="text-fg">{position}</dd>
+      </dl>
 
-      <Section title="plugins.inspector.lock">
-        <div>
-          <Button
-            size="sm"
-           
-            disabled={p.implicit}
-            startIcon={p.locked ? <LockOpenIcon size="sm" /> : <LockIcon size="sm" />}
-            onClick={() => void run(() => backend.setIndexLock(instance, [p.name], !p.locked))}
-          >
-            {t(p.implicit ? "plugins.implicitFixed" : p.locked ? "plugins.action.unlock" : "plugins.action.lock")}
-          </Button>
-        </div>
-      </Section>
-    </Stack>
+      <div className="flex gap-2">
+        <Button
+          size="sm"
+          disabled={p.implicit}
+          startIcon={p.locked ? <LockOpenIcon size="sm" /> : <LockIcon size="sm" />}
+          onClick={() => void run(() => backend.setIndexLock(instance, [p.name], !p.locked))}
+        >
+          {t(p.locked ? "plugins.action.unlock" : "plugins.action.lock")}
+        </Button>
+        <Button size="sm" onClick={() => navigate({ view: "load_order", plugin: p.name })}>
+          {t("plugins.panel.seeInOrder")}
+        </Button>
+      </div>
+    </div>
   );
 }

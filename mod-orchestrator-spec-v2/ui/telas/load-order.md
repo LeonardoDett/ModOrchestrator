@@ -6,20 +6,11 @@ Core: 08, 12. Vortex: página Load Order baseada em arquivo (`file_based_loadord
 
 Ver e ajustar a **ordem** de carregamento: por que cada plugin está onde está, o que o sort vai mudar, e se a ordem aplicada no jogo é a do profile. Divergência aprovada 2.
 
-## 2. Layout
+## 2. Layout (prancha `JogoOrdemDeCarga`, D127)
 
-```
-Toolbar: [Ordenar agora] [Auto-sort ●] | [Desfazer última ordenação] [Restaurar load order anterior] | [Comparar com aplicada] [Exportar ▾]
-Estado: "Ordem do profile aplicada no jogo" ✓   |   "Diferente da aplicada (12 movimentos)" [Aplicar]
-Info: "Arraste para ajustar. Restrições (masters, regras, grupos) são respeitadas automaticamente."
-┌───────────────────────────────────────────────────────────┬────────────────────┐
-│ ReorderableList (L2)                                      │ INSPECTOR          │
-│  #   Índice  Plugin              Grupo      🔒  ↳ regras   │ Por que está aqui: │
-│  1   00      Skyrim.esm          fixo       🔒             │ - depois de X (master)
-│  …                                                         │ - grupo "Patches"  │
-│  48  2F      Patch.esp           Patches        ↳ 2        │ - regra do usuário │
-└───────────────────────────────────────────────────────────┴────────────────────┘
-```
+- Linha de cabeçalho de 76 px: "Ordem de carga" e o estado do arquivo do jogo em chip ("Diferente da aplicada no jogo · N diferenças" em âmbar com "Comparar"; "Ordem do perfil aplicada no jogo" em verde; "Alterada fora do app" em vermelho com "Revisar"); à direita "Mais ações" (restaurar a anterior, comparar, copiar lista, importar ordem), "Desfazer ordenação" e "Aplicar no jogo".
+- Linha de 48 px: "Buscar plugin", "Mostrar plugins inativos" (desligado por padrão), a dica "Arraste para ajustar. Masters, regras e grupos são respeitados sozinhos."; à direita "Ordenação automática" e "Ordenar agora".
+- Lista de arrastar em linhas de 44 px (alça, Índice, Plugin, Grupo, Regras, Trava) e, ao lado, o painel "Por que está aqui" (360 px): posição, índice e grupo; cada restrição em duas linhas (o quê e o tipo: master, regra, grupo); "Quem depende dele"; a nota de que um movimento que quebra restrição é recusado com a posição válida mais próxima; "Travar posição" e "Adicionar regra".
 
 ## 3. Comportamento
 

@@ -62,3 +62,43 @@ export function violationText(i18n: Translator, r: PluginReason): string {
   const kind = i18n.has(`plugins.reason.kind.${r.kind}`) ? i18n.t(`plugins.reason.kind.${r.kind}` as MessageKey, { group: r.group, after: r.afterGroup }) : r.kind;
   return i18n.t("plugins.reason.violation", { plugin: r.plugin, other: r.other, kind });
 }
+
+/** Name of a limit kind ("Completos", "Light"); the kinds come from the adapter. */
+export function limitLabel(i18n: Translator, l: PluginLimit): string {
+  const key = `plugins.limit.${l.kind}`;
+  return i18n.has(key) ? i18n.t(key) : l.kind;
+}
+
+/** The short name of the main problem, beside the plugin name ("Master ausente"). */
+export function problemShort(i18n: Translator, row: PluginRow): string {
+  if (row.problems === 0 || !row.problem) return "";
+  const key = `plugins.problemShort.${row.problem}`;
+  return i18n.has(key) ? i18n.t(key) : diagnosticTitle(i18n, { code: row.problem, params: { plugin: row.name } });
+}
+
+/**
+ * Flags under the name (board JogoPlugins): adapter flags, "Do jogo, sempre
+ * ativo" for implicit plugins and "Posição travada", as small square tags.
+ */
+export function PluginFlags({ row, i18n }: { row: PluginRow; i18n: Translator }) {
+  if (row.flags.length === 0 && !row.implicit && !row.locked) return null;
+  return (
+    <span className="flex min-w-0 flex-wrap items-center gap-1.5">
+      {row.flags.map((f) => (
+        <Tag key={f} size="xs" shape="rounded">
+          {flagLabel(i18n, f)}
+        </Tag>
+      ))}
+      {row.implicit ? (
+        <Tag size="xs" shape="rounded" icon={LockIcon}>
+          {i18n.t("plugins.flag.implicit")}
+        </Tag>
+      ) : null}
+      {row.locked && !row.implicit ? (
+        <Tag size="xs" shape="rounded" icon={LockIcon}>
+          {i18n.t("plugins.locked")}
+        </Tag>
+      ) : null}
+    </span>
+  );
+}

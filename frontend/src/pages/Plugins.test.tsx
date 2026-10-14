@@ -127,12 +127,15 @@ describe("Plugins screen (F11)", () => {
     const { backend, calls } = world();
     render(<App backend={backend} />);
     await open(user, "Plugins");
-    expect(await screen.findByText("3 plugins · 3 active · Full 3/254 · Light 0/4,096 · 1 with errors")).toBeInTheDocument();
-    // The problem is identifiable without opening anything (icon + count).
-    expect(screen.getByRole("img", { name: /1 problem: A plugin is missing a master/ })).toBeInTheDocument();
+    // Header chips (board JogoPlugins): active, each limit of the adapter, errors.
+    expect(await screen.findByText("of 3 active")).toBeInTheDocument();
+    expect(screen.getByText("Full")).toBeInTheDocument();
+    expect(screen.getByText("with errors")).toBeInTheDocument();
+    // The problem is identifiable without opening anything, beside the name.
+    expect(screen.getByText("Missing master")).toBeInTheDocument();
     // The implicit plugin cannot be turned off.
-    expect(screen.getByRole("switch", { name: "Skyrim.esm is always active" })).toHaveAttribute("aria-disabled", "true");
-    await user.click(screen.getByRole("switch", { name: "Activate Lib.esm" }));
+    expect(screen.getByRole("switch", { name: "Skyrim.esm is always active" })).toBeDisabled();
+    await user.click(screen.getByRole("switch", { name: "Deactivate Lib.esm" }));
     expect(calls).toContain("enabled:Lib.esm:false");
     await user.click(screen.getByText("Patch.esp"));
     await user.click(await screen.findByRole("button", { name: "Enable Missing Mod" }));
@@ -148,11 +151,13 @@ describe("Load Order screen (F11)", () => {
     const { backend, calls } = world();
     render(<App backend={backend} />);
     await open(user, "Load Order");
-    expect(await screen.findByText("Different from the applied order (2 differences)")).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Apply" }));
+    expect(await screen.findByText("Different from the one applied in the game")).toBeInTheDocument();
+    expect(screen.getByText("2 differences")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Apply in the game" }));
     expect(calls).toContain("apply");
     await user.click(screen.getByText("Patch.esp"));
-    expect(await screen.findByText("after Lib.esm (master)")).toBeInTheDocument();
+    expect(await screen.findByText("After Lib.esm")).toBeInTheDocument();
+    expect(screen.getByText("master: this plugin needs it")).toBeInTheDocument();
     // Sorting an order that is already valid says so and moves nothing.
     await user.click(screen.getByRole("button", { name: "Sort now" }));
     expect(await screen.findByText("The order already respects every constraint; nothing moved.")).toBeInTheDocument();

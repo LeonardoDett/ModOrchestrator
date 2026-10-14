@@ -6,38 +6,19 @@ Core: 08, 12. Vortex: página Plugins do Gamebryo (`PluginList`, `PluginFlags`, 
 
 Inventário e estado dos plugins do profile ativo: quais existem, de onde vêm, quais estão ativos, quais têm problema e por quê. A **ordem** é trabalhada na tela Load Order (divergência 2); aqui a ordem aparece só como coluna informativa (índice).
 
-## 2. Layout
+## 2. Layout (prancha `JogoPlugins`, D127)
 
-```
-Toolbar: [Ordenar agora] [Auto-sort: ● ligado] | [Regras] [Grupos] | [Ativar todos] [Desativar todos] | [Abrir ▾]
-Resumo: 312 plugins · 287 ativos · Completos 198/254 · Light 89/4096 · 2 com erro
-FilterBar: [busca] [Status: Ativo|Inativo] [Flags: Master|Light|Nenhuma] [Origem: Mod|Jogo base|Não gerenciado] [Problemas]
-DataTable ─────────────────────────────────────────────────────────── │ INSPECTOR
- ● Índice  Plugin               Flags   Grupo     Mod de origem   ⚠   │
- ● 00      Skyrim.esm           M 🔒    (fixo)    Jogo base            │
- ● 1A      SomeMod.esp          —       default   Some Mod        1    │
- ● FE:003  Tiny.esl             M L     default   Tiny Mod             │
-```
+- Linha de cabeçalho de 76 px: "Plugins", chips "N de M ativos", um chip por limite do adapter ("Completos 198 de 254", "Light 89 de 4096"; com uma barra de uso âmbar a partir de 75 % e vermelha no limite) e "N com erro" em vermelho; à direita "Regras", "Grupos" e "Mais ações" (ativar todos, desativar todos, abrir a pasta do jogo, abrir a Ordem de carga).
+- Linha de 48 px: "Buscar plugin ou mod" (280 px), "Filtros" (flags, origem, plugins de mods desabilitados), filtro rápido Todos / Ativos / Inativos / Com problemas com contagens; à direita "Ordenação automática" e "Ordenar agora".
+- Tabela e, ao lado, o painel do plugin escolhido (330 px). Rótulos de flags e limites vêm do adapter; nada fixo no frontend.
 
 ## 3. Colunas
 
-| Coluna | Conteúdo |
-|---|---|
-| Status | toggle ativo; implícitos travados ligados |
-| Índice | formato do adapter (`1A`, `FE:003`); vazio se inativo |
-| Plugin | nome + ícone de tipo |
-| Flags | Master, Light, (outras do adapter), Travado (IndexLock), Implícito |
-| Grupo | select inline |
-| Mod de origem | link que seleciona o mod na tela Mods |
-| Problemas | contagem; tooltip com o principal |
-| Masters | contagem (oculta por padrão) |
-| Autor, Versão, Descrição | ocultas por padrão |
+Ativo (switch; o do jogo fica travado ligado) · Índice (formato do adapter) · Plugin (nome, problema principal ao lado em vermelho, flags embaixo: as do adapter, "Do jogo, sempre ativo" e "Posição travada") · Grupo · Mod de origem (link para o mod; "Jogo base" ou "Não gerenciado" sem link). Linhas de 54 px. Mudar de grupo, travar e "Ver na ordem" ficam no menu da linha.
 
-Ordenação padrão: pela load order (índice); outras colunas ordenáveis.
+## 4. Painel do plugin
 
-## 4. Inspector
-
-Descrição, autor, versão, arquivo (caminho), origem; **Masters** (lista com estado: presente, ativo, antes deste; ações "Ativar", "Mostrar mod"); **Dependentes** (quem usa este como master); **Regras** ("carrega depois de": adicionar/remover); **Grupo**; **Posição** (índice, travar/destravar); problemas com ações.
+Nome e "de {mod} · índice X"; o problema com as ações que o resolvem; Masters com estado (ativo, inativo, ausente, carrega depois) e a ação que conserta (ativar, habilitar o mod); "Carrega depois de" com as regras (sua ou do provedor) e "+ Adicionar regra"; Dependentes; Posição (livre, travada, fixa do jogo); "Travar posição" e "Ver na ordem".
 
 ## 5. Multi-seleção
 

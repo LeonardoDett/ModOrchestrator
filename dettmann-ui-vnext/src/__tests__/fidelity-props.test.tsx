@@ -346,4 +346,12 @@ describe("board fidelity props (D-040)", () => {
     expect(link.className).toContain("h-auto");
     expect(link.className).not.toContain("h-control");
   });
+
+  it("Indicator chip takes a lead text and a limit meter", () => {
+    render(<Indicator variant="chip" lead="Completos" value="198" label="de 254" meter={0.78} meterIntent="warning" />);
+    expect(screen.getByText("Completos")).toBeInTheDocument();
+    const meter = screen.getByRole("img", { name: "78%" });
+    expect((meter.firstElementChild as HTMLElement).style.width).toBe("78%");
+    expect(meter.firstElementChild).toHaveAttribute("data-intent", "warning");
+  });
 });

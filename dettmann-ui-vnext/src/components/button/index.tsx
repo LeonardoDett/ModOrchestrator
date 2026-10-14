@@ -10,7 +10,7 @@ import type { Emphasis, Intent, MotionLevel } from "../../theme/engine";
 
 const buttonVariants = defineRecipe({
   base: [
-    "inline-flex items-center justify-center gap-2",
+    "inline-flex items-center gap-2",
     "text-sm font-semibold",
     "rounded-control",
     "motion-transition motion-press",
@@ -20,14 +20,14 @@ const buttonVariants = defineRecipe({
   variants: {
     /** Size variant: altura pelas primitivas de controle. */
     size: {
-      sm: "h-control-sm px-3 text-xs",
-      md: "h-control-md px-4 text-sm",
-      lg: "h-control-lg px-5 text-md",
-      icon: "size-control-md p-0",
-      "icon-sm": "size-control-sm p-0",
-      "icon-lg": "size-control-lg p-0",
+      sm: "h-control-sm justify-center px-3 text-xs",
+      md: "h-control-md justify-center px-4 text-sm",
+      lg: "h-control-lg justify-center px-5 text-md",
+      icon: "size-control-md justify-center p-0",
+      "icon-sm": "size-control-sm justify-center p-0",
+      "icon-lg": "size-control-lg justify-center p-0",
       /** D-040: a link inside text ("2 arquivos", "Alterar"): no box, the size of the text around it. */
-      inline: "h-auto rounded-chip px-0.5 py-0 font-medium underline-offset-2 hover:underline",
+      inline: "h-auto justify-start rounded-chip px-0.5 py-0 font-medium underline-offset-2 hover:underline",
     },
     /** Full width */
     fullWidth: {

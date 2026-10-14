@@ -31,8 +31,14 @@ export interface IndicatorProps extends Omit<ComponentPropsWithoutRef<"span">, "
   variant?: "icon" | "chip";
   /** Valor em destaque da variação `chip` (padrão: `count`). */
   value?: ReactNode;
-  /** Icon that carries the meaning (never color alone). */
-  icon: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  /** Icon that carries the meaning (never color alone). A `chip` with `lead` may go without. */
+  icon?: ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  /** `chip`: text before the value ("Completos" 198 de 254), in place of the icon. */
+  lead?: ReactNode;
+  /** `chip`: a 44 px meter after the label, as a fraction 0..1 (a limit in use). */
+  meter?: number;
+  /** Color of the meter; `warning` near a limit. Default `brand`. */
+  meterIntent?: Intent;
   /** Accessible name and tooltip text ("3 problems", "Wins 12 files"). */
   label: string;
   /** Optional count shown next to the icon. */
@@ -61,6 +67,9 @@ export function Indicator({
   size = "sm",
   variant = "icon",
   value,
+  lead,
+  meter,
+  meterIntent = "brand",
   className,
   title,
   ...props
@@ -81,11 +90,19 @@ export function Indicator({
         {...intentData(chromatic ? intent : undefined)}
         {...props}
       >
-        <span className={cn("inline-flex", chromatic ? "text-intent-text" : "text-fg-muted")} {...intentData(chromatic ? intent : undefined)}>
-          <Icon aria-hidden="true" className={ICON_SIZE.md} />
-        </span>
+        {Icon ? (
+          <span className={cn("inline-flex", chromatic ? "text-intent-text" : "text-fg-muted")} {...intentData(chromatic ? intent : undefined)}>
+            <Icon aria-hidden="true" className={ICON_SIZE.md} />
+          </span>
+        ) : null}
+        {lead ? <span>{lead}</span> : null}
         {shown !== undefined ? <span className="font-semibold text-fg">{shown}</span> : null}
         <span>{label}</span>
+        {meter !== undefined ? (
+          <span role="img" aria-label={`${Math.round(Math.min(1, Math.max(0, meter)) * 100)}%`} className="flex h-1.25 w-11 overflow-hidden rounded-pill bg-sunken">
+            <span data-intent={meterIntent} className="bg-intent-fill" style={{ width: `${Math.min(1, Math.max(0, meter)) * 100}%` }} />
+          </span>
+        ) : null}
       </span>
     );
   }
@@ -98,7 +115,7 @@ export function Indicator({
       {...intentData(chromatic ? intent : undefined)}
       {...props}
     >
-      <Icon aria-hidden="true" className={ICON_SIZE[size]} />
+      {Icon ? <Icon aria-hidden="true" className={ICON_SIZE[size]} /> : null}
       {count !== undefined ? <span aria-hidden="true">{count}</span> : null}
     </span>
   );
