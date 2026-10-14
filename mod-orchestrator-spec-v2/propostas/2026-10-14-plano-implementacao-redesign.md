@@ -38,7 +38,7 @@ D119 a D121 estão registradas. Daí em diante a numeração é provisória: val
 | D123 | **Categoria com cor e ícone, e tags** como conceito separado; preferência de visão da lista por instância. Registrada | Detalha D026, `core/02` §9 | RD5 ✅ |
 | D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação. Registrada | Detalha D038, D065 | RD5 ✅ |
 | D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Package`, ao lado de `Plan.Requirements`, que segue de arquivos). Registrada | Detalha D118; fecha `core/16` §8 | RD6 ✅ |
-| D126 | **Sugestão de vencedor** em conflito: de onde vem, e que nunca cria regra sozinha | Detalha D004, D027 | RD7 |
+| D126 | **Sugestão de vencedor** em conflito: de onde vem, e que nunca cria regra sozinha; par travado. Registrada | Detalha D004, D027 | RD7 ✅ |
 | D127 | **Importar de Vortex e MO2** entra neste plano (hoje V1.x em `core/15`); copiar por padrão | Emenda D047; detalha D035, D048 | RD15 |
 | D128 | **Assistente de jogo**: reconhecimento de pasta, modelos e target criável | Detalha D117 | RD14 |
 
@@ -205,7 +205,9 @@ Concluída em 2026-10-14 (D125). Feito: `Plan.Package` e `Mod.Package` (campo à
 - **Pronto quando:** pacote real da Thunderstore com dependências gera as regras; requisito ausente aparece em Diagnóstico e some ao instalar; reinstalar não duplica regra; o teste real opcional (`MO_E2E_VALHEIM_PACKAGE`) continua passando.
 - **Sem a capability:** depende de `adapter_installers`. No `generic`, nenhum instalador declara pacote e nenhuma regra nasce (teste). No Skyrim, o FOMOD continua declarando arquivos, sem mudança de comportamento (teste de regressão com as fixtures existentes). Nome de pacote e formato `Autor-Nome-versão` ficam só em `internal/adapters/valheim`.
 
-### RD7. Backend: conflitos (sugestão, lote, travado)
+### RD7. Backend: conflitos (sugestão, lote, travado) ✅
+
+Concluída em 2026-10-14 (D126). Feito: sugestão por dependência e por regra de metadados, com motivo e regra, nunca gravada; o par e o adversário trazem `suggestion` e `lock`; o travamento traz o caminho de regras pelos outros mods. B3 não precisou de comando: a regra do par já decide todos os arquivos (teste). Testes: `rules/pairs_test.go`, `integration/suggestion_test.go`.
 
 - **Objetivo:** o que a tela de Conflitos pede além do que existe.
 - **Entregáveis:**

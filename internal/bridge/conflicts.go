@@ -7,6 +7,7 @@ import (
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/override"
 	"modorchestrator/internal/core/domain/relpath"
+	"modorchestrator/internal/core/domain/rules"
 )
 
 // Conflicts bridge (ui/telas/conflicts.md §6, ui/telas/mods.md §10,
@@ -49,6 +50,22 @@ type ConflictPairDTO struct {
 	NeedsReview bool           `json:"needsReview"`
 	Potential   bool           `json:"potential"`
 	Rule        *PairRuleDTO   `json:"rule,omitempty"`
+	Suggestion  *SuggestionDTO `json:"suggestion,omitempty"`
+	Lock        *PairLockDTO   `json:"lock,omitempty"`
+}
+
+// SuggestionDTO is the suggested winner of a pair and the fact behind it
+// (D126): reason requires | metadata_rule, rule its id.
+type SuggestionDTO struct {
+	Winner string `json:"winner"`
+	Reason string `json:"reason"`
+	Rule   string `json:"rule"`
+}
+
+// PairLockDTO names the rules that decide a pair through other mods (B4).
+type PairLockDTO struct {
+	Winner string         `json:"winner"`
+	Rules  []CycleRuleDTO `json:"rules"`
 }
 
 type ConflictTotalsDTO struct {
@@ -106,6 +123,8 @@ type ConflictOpponentDTO struct {
 	Reviewed    bool           `json:"reviewed"`
 	NeedsReview bool           `json:"needsReview"`
 	Rule        *PairRuleDTO   `json:"rule,omitempty"`
+	Suggestion  *SuggestionDTO `json:"suggestion,omitempty"`
+	Lock        *PairLockDTO   `json:"lock,omitempty"`
 }
 
 type ModConflictsDTO struct {
@@ -166,6 +185,27 @@ func toLocationDTO(l game.Location) LocationDTO {
 	return LocationDTO{Target: string(l.Target), Path: l.Path.String()}
 }
 
+func toSuggestion(s *rules.Suggestion) *SuggestionDTO {
+	if s == nil {
+		return nil
+	}
+	return &SuggestionDTO{Winner: string(s.Winner), Reason: string(s.Reason), Rule: string(s.Rule)}
+}
+
+func toPairLock(l *conflicts.Lock) *PairLockDTO {
+	if l == nil {
+		return nil
+	}
+	out := &PairLockDTO{Winner: string(l.Winner), Rules: []CycleRuleDTO{}}
+	for _, r := range l.Rules {
+		out.Rules = append(out.Rules, CycleRuleDTO{
+			ID: string(r.ID), Source: string(r.Source),
+			Winner: NamedModDTO{ID: string(r.Winner.ID), Name: r.Winner.Name}, Loser: NamedModDTO{ID: string(r.Loser.ID), Name: r.Loser.Name},
+		})
+	}
+	return out
+}
+
 func toPairRule(r *profiles.PairRule) *PairRuleDTO {
 	if r == nil {
 		return nil
@@ -177,7 +217,7 @@ func toPairDTO(p conflicts.PairView) ConflictPairDTO {
 	return ConflictPairDTO{
 		A: toConflictMod(p.A), B: toConflictMod(p.B), Winner: string(p.Winner().ID), Files: p.Files, WinsA: p.WinsA, WinsB: p.WinsB,
 		Redundant: p.Redundant, Decision: string(p.Decision), Reviewed: p.Reviewed, NeedsReview: p.NeedsReview,
-		Potential: p.Potential, Rule: toPairRule(p.Rule),
+		Potential: p.Potential, Rule: toPairRule(p.Rule), Suggestion: toSuggestion(p.Suggestion), Lock: toPairLock(p.Lock),
 	}
 }
 
@@ -241,7 +281,7 @@ func (a *App) ModConflicts(instance, modID string) (ModConflictsDTO, error) {
 	for _, o := range v.Opponents {
 		out.Opponents = append(out.Opponents, ConflictOpponentDTO{
 			Opponent: toConflictMod(o.Opponent), Files: o.Files, Wins: o.Wins, Loses: o.Loses, Redundant: o.Redundant,
-			Decision: string(o.Decision), Reviewed: o.Reviewed, NeedsReview: o.NeedsReview, Rule: toPairRule(o.Rule),
+			Decision: string(o.Decision), Reviewed: o.Reviewed, NeedsReview: o.NeedsReview, Rule: toPairRule(o.Rule), Suggestion: toSuggestion(o.Suggestion), Lock: toPairLock(o.Lock),
 		})
 	}
 	return out, nil

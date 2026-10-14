@@ -73,13 +73,14 @@ Para o profile em questão:
 Conflitos entre mods desabilitados não são mostrados por padrão, mas a consulta "conflitos potenciais" (incluindo desabilitados) existe para a tela Conflicts com filtro.
 
 ### 5.2 Agregações (consultas)
-- **Por par** (A, B): Locations disputadas, quantas cada um vence, como foi decidido, revisado ou não.
+- **Por par** (A, B): Locations disputadas, quantas cada um vence, como foi decidido, revisado ou não; a sugestão de vencedor com o motivo, quando um fato a dá (dependência entre os dois ou regra de metadados, D126); e, quando regras através de outros mods decidem o par, o travamento com essas regras (D126).
 - **Por mod** (visão MO2): "Vence" (Locations em que ganha de alguém), "Perde" (em que perde), "Sem conflito", "Redundante"; e o indicador resumido para a tabela: `nenhum`, `vence tudo`, `perde tudo`, `misto`, `totalmente sobrescrito` (todos os arquivos perdem: mod inútil na configuração atual, alerta), `só redundante`.
 - **Por arquivo**: providers em ordem de prioridade, vencedor, motivo.
 
 ### 5.3 Overrides e exclusões
 - **Escolher vencedor de um arquivo** cria/atualiza FileOverride. "Voltar ao padrão" remove.
 - **Escolher vencedor em lote**: selecionar vários arquivos (ou uma pasta) de um par e escolher; cria um override por Location (sem wildcard na V1; a UI agrupa por pasta).
+- **Decidir todos os arquivos do par** é a regra de ordem do par (D126): ela decide todas as Locations disputadas pelos dois. Aceitar a sugestão é o mesmo comando.
 - **Ocultar arquivo do mod** cria FileExclusion. Útil para remover um arquivo problemático sem editar o mod (MO2 "hide").
 - Override/exclusão órfãos ou obsoletos: diagnóstico `override_stale` com ações remover/reescolher.
 
@@ -112,4 +113,6 @@ Só podem existir por regras de metadados (D028). Quando existem:
 - Arrastar mod para posição inválida: recusado com alternativas; nenhuma mudança parcial.
 - Override em arquivo: só aquela Location muda de vencedor; indicador do mod mostra "misto".
 - Dois mods com arquivo idêntico: conflito marcado redundante.
+- Sugestão de vencedor determinística, nunca aplicada sozinha; sem fato, sem sugestão; aceitar sugestão que fecharia ciclo é recusado (D126, `rules/pairs_test.go`, `integration/suggestion_test.go`).
+- Par decidido por regras através de outros mods traz o caminho dessas regras (D126).
 - 200.000 Locations e 1.000 mods: recálculo após habilitar um mod dentro da meta de `00-visao-e-escopo.md`.

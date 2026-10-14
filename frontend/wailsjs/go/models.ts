@@ -882,6 +882,104 @@ export namespace bridge {
 	        this.enabled = source["enabled"];
 	    }
 	}
+	export class NamedModDTO {
+	    id: string;
+	    name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new NamedModDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	    }
+	}
+	export class CycleRuleDTO {
+	    id: string;
+	    winner: NamedModDTO;
+	    loser: NamedModDTO;
+	    source: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new CycleRuleDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.winner = this.convertValues(source["winner"], NamedModDTO);
+	        this.loser = this.convertValues(source["loser"], NamedModDTO);
+	        this.source = source["source"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class PairLockDTO {
+	    winner: string;
+	    rules: CycleRuleDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new PairLockDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.winner = source["winner"];
+	        this.rules = this.convertValues(source["rules"], CycleRuleDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class SuggestionDTO {
+	    winner: string;
+	    reason: string;
+	    rule: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SuggestionDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.winner = source["winner"];
+	        this.reason = source["reason"];
+	        this.rule = source["rule"];
+	    }
+	}
 	export class PairRuleDTO {
 	    id: string;
 	    winner: string;
@@ -910,6 +1008,8 @@ export namespace bridge {
 	    reviewed: boolean;
 	    needsReview: boolean;
 	    rule?: PairRuleDTO;
+	    suggestion?: SuggestionDTO;
+	    lock?: PairLockDTO;
 	
 	    static createFrom(source: any = {}) {
 	        return new ConflictOpponentDTO(source);
@@ -926,6 +1026,8 @@ export namespace bridge {
 	        this.reviewed = source["reviewed"];
 	        this.needsReview = source["needsReview"];
 	        this.rule = this.convertValues(source["rule"], PairRuleDTO);
+	        this.suggestion = this.convertValues(source["suggestion"], SuggestionDTO);
+	        this.lock = this.convertValues(source["lock"], PairLockDTO);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -959,6 +1061,8 @@ export namespace bridge {
 	    needsReview: boolean;
 	    potential: boolean;
 	    rule?: PairRuleDTO;
+	    suggestion?: SuggestionDTO;
+	    lock?: PairLockDTO;
 	
 	    static createFrom(source: any = {}) {
 	        return new ConflictPairDTO(source);
@@ -978,6 +1082,8 @@ export namespace bridge {
 	        this.needsReview = source["needsReview"];
 	        this.potential = source["potential"];
 	        this.rule = this.convertValues(source["rule"], PairRuleDTO);
+	        this.suggestion = this.convertValues(source["suggestion"], SuggestionDTO);
+	        this.lock = this.convertValues(source["lock"], PairLockDTO);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -1133,56 +1239,7 @@ export namespace bridge {
 	
 	
 	
-	export class NamedModDTO {
-	    id: string;
-	    name: string;
 	
-	    static createFrom(source: any = {}) {
-	        return new NamedModDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.name = source["name"];
-	    }
-	}
-	export class CycleRuleDTO {
-	    id: string;
-	    winner: NamedModDTO;
-	    loser: NamedModDTO;
-	    source: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new CycleRuleDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.winner = this.convertValues(source["winner"], NamedModDTO);
-	        this.loser = this.convertValues(source["loser"], NamedModDTO);
-	        this.source = source["source"];
-	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice && a.map) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
 	export class DashletDTO {
 	    id: string;
 	    hidden: boolean;
@@ -3763,6 +3820,7 @@ export namespace bridge {
 	        this.choice = source["choice"];
 	    }
 	}
+	
 	export class PairRefDTO {
 	    a: string;
 	    b: string;
@@ -4850,6 +4908,7 @@ export namespace bridge {
 	        this.reason = source["reason"];
 	    }
 	}
+	
 	
 	
 	

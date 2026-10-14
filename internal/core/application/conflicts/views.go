@@ -47,6 +47,49 @@ type PairView struct {
 	Potential bool
 	// Rule is the direct order rule between the two, if any.
 	Rule *profiles.PairRule
+	// Suggestion is the winner the rules point at, with its reason; nil
+	// without a fact (D126).
+	Suggestion *rules.Suggestion
+	// Lock is set when no enabled direct rule decides the pair but rules
+	// through other mods do (B4).
+	Lock *Lock
+}
+
+// Lock says which rules decide a pair through other mods (B4): choosing
+// the other winner here would close a cycle, so the change is made on the
+// pairs of those rules.
+type Lock struct {
+	Winner mod.ID
+	// Rules from the loser up to the winner, in order.
+	Rules []LockRule
+}
+
+// LockRule is one order rule of a lock.
+type LockRule struct {
+	ID            rules.ID
+	Loser, Winner ModRef
+	Source        rules.Source
+}
+
+// decision returns the suggestion and the lock of the pair a, b.
+func (st *state) decision(a, b mod.ID, direct *profiles.PairRule) (*rules.Suggestion, *Lock) {
+	var sug *rules.Suggestion
+	if s, ok := st.rules.Suggest(a, b); ok {
+		sug = &s
+	}
+	if direct != nil && !direct.Disabled {
+		return sug, nil
+	}
+	for _, w := range [][2]mod.ID{{a, b}, {b, a}} {
+		if chain := st.rules.Chain(w[0], w[1]); len(chain) > 0 {
+			l := &Lock{Winner: w[1]}
+			for _, r := range chain {
+				l.Rules = append(l.Rules, LockRule{ID: r.ID, Loser: st.ref(r.Before), Winner: st.ref(r.After), Source: r.Source})
+			}
+			return sug, l
+		}
+	}
+	return sug, nil
 }
 
 // Winner is the mod deploying most of the pair's locations.
@@ -145,6 +188,7 @@ func (st *state) pairView(ps conflict.PairSummary) PairView {
 	if rs := profiles.PairRules(st.rules, ps.Pair.A, ps.Pair.B); len(rs) > 0 {
 		v.Rule = &rs[0]
 	}
+	v.Suggestion, v.Lock = st.decision(ps.Pair.A, ps.Pair.B, v.Rule)
 	return v
 }
 
@@ -290,6 +334,8 @@ type OpponentView struct {
 	Decision                      Decision
 	Reviewed, NeedsReview         bool
 	Rule                          *profiles.PairRule
+	Suggestion                    *rules.Suggestion
+	Lock                          *Lock
 }
 
 // ModConflicts is the conflict summary of one mod.
@@ -319,7 +365,7 @@ func (s *Service) ModConflicts(ctx context.Context, instance game.InstanceID, m 
 			continue
 		}
 		pv := st.pairView(ps)
-		o := OpponentView{Files: pv.Files, Redundant: pv.Redundant, Decision: pv.Decision, Reviewed: pv.Reviewed, NeedsReview: pv.NeedsReview, Rule: pv.Rule}
+		o := OpponentView{Files: pv.Files, Redundant: pv.Redundant, Decision: pv.Decision, Reviewed: pv.Reviewed, NeedsReview: pv.NeedsReview, Rule: pv.Rule, Suggestion: pv.Suggestion, Lock: pv.Lock}
 		if ps.Pair.A == m {
 			o.Opponent, o.Wins, o.Loses = pv.B, ps.WinsA, ps.WinsB
 		} else {

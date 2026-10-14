@@ -1211,3 +1211,18 @@ Motivo: o design v1 mostra requisitos do mod e o Valheim publica dependências s
 Alternativas rejeitadas: misturar pacote em `Plan.Requirements` (arquivo pede confirmação, pacote não; dois significados no mesmo campo); casar pelo autor também (o manifesto do pacote exigido não diz o autor); criar regra para pacote ainda ausente (a regra precisa de um mod alvo).
 
 Consequências: outro jogo com pacotes declara do mesmo jeito no seu adapter. A tela de Regras e o detalhe do mod mostram essas regras na RD9 e na RD11.
+
+## D126 — Sugestão de vencedor e par travado em conflitos
+Status: vigente (detalha D004, D027 e D028; executa a RD7 do plano do redesign; resposta à pergunta 1 do plano)
+
+1. **Sugestão** (`rules.Set.Suggest`): o vencedor que os fatos indicam para um par, calculado a cada leitura e nunca gravado. Os fatos, nesta ordem: (a) regra de dependência ativa entre os dois (`requires` ou `recommends`), em que vence o mod que depende, porque patch e complemento existem para sobrescrever a base; (b) regra de ordem ativa de `source=metadata` entre os dois, em que vence o vencedor dela. Regra do usuário é decisão, não fato. Sem fato, ou com fatos que discordam, não há sugestão (e a tela não mostra o selo). Cada sugestão traz o motivo (`requires` ou `metadata_rule`) e a regra que é o fato.
+2. **Aceitar** é o mesmo comando das decisões por par (`ApplyPairDecisions`): cria a regra de ordem do par, que é recusada como qualquer outra se fecharia um ciclo. Nada é criado sozinho.
+3. **Decidir todos os arquivos de um par (B3)** já é a regra de ordem do par: ela decide toda Location que os dois disputam. Override por arquivo continua valendo mais e o par fica "misto". Não há comando novo.
+4. **Par travado (B4)**: sem regra direta ativa, mas com regras ativas que põem um abaixo do outro através de outros mods (`rules.Set.Chain`, caminho mais curto, desempate por id), o par traz `Lock` com o vencedor e as regras do caminho, cada uma com os dois mods. Escolher o outro vencedor ali fecharia ciclo; a tela manda alterar pelas regras do caminho.
+5. As visões por par e por adversário (`PairView`, `OpponentView`) trazem `Suggestion` e `Lock`; a ponte expõe `suggestion` e `lock`.
+
+Motivo: o design v1 tem o selo "Sugerido", o "Para todos os N" e a linha travada com "altere por lá".
+
+Alternativas rejeitadas: sugerir pelo mais novo, pelo maior ou por tipo de arquivo (palpite, não fato; levaria a regra errada aceita no automático); gravar a sugestão (ficaria velha quando as regras mudassem); comando em lote novo para o par (a regra do par já cobre).
+
+Consequências: vale para todo jogo e não lê plugin. No `generic` sem regras de dependência não há sugestão. Conforme a RD6 traz dependências de pacote e o Skyrim traz masters como regra de metadados, as sugestões aparecem sem nada novo.

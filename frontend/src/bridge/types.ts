@@ -1366,6 +1366,19 @@ export type ConflictDecision = "order" | "rule" | "override" | "mixed" | "redund
 /** How the winner of one location was decided (core/05 §5.1). */
 export type ConflictResolution = "order" | "rule" | "override" | "redundant";
 
+/** Suggested winner of a conflict pair; computed, never stored (D126). */
+export interface WinnerSuggestion {
+  winner: string;
+  reason: 'requires' | 'metadata_rule';
+  rule: string;
+}
+
+/** The pair is decided by rules through other mods; change it there (B4). */
+export interface PairLock {
+  winner: string;
+  rules: { id: string; winner: NamedMod; loser: NamedMod; source: string }[];
+}
+
 export interface ConflictPair {
   a: ConflictMod;
   b: ConflictMod;
@@ -1380,6 +1393,10 @@ export interface ConflictPair {
   needsReview: boolean;
   potential: boolean;
   rule?: PairRule;
+  /** Winner the rules point at, with the fact behind it (D126). */
+  suggestion?: WinnerSuggestion;
+  /** Rules that decide the pair through other mods (B4). */
+  lock?: PairLock;
 }
 
 export interface ConflictTotals {
@@ -1438,6 +1455,10 @@ export interface ConflictOpponent {
   reviewed: boolean;
   needsReview: boolean;
   rule?: PairRule;
+  /** Winner the rules point at, with the fact behind it (D126). */
+  suggestion?: WinnerSuggestion;
+  /** Rules that decide the pair through other mods (B4). */
+  lock?: PairLock;
 }
 
 export type ConflictIndicatorKind = "none" | "wins_all" | "loses_all" | "mixed" | "fully_overwritten" | "redundant_only";
