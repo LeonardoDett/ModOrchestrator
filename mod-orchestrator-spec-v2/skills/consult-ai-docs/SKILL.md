@@ -15,7 +15,7 @@ Reduzir o custo de planejamento e impedir decisões contraditórias, lendo **o n
 2. **Base fixa** (sempre): `docs-ia/00-manifesto.md`, `01-glossario.md`, `02-invariantes.md`, `03-fontes-de-verdade.md`, `anti-patterns.md`; em `decisoes.md`, as decisões vigentes/emendadas que o prompt da fase ou os documentos citam.
 3. **Documentos da fase**: exatamente os listados em `prompts/01-fases.md` para a fase.
 4. **Se a tarefa muda um contrato**: `docs-ia/04-mapa-de-impacto.md`, e então a skill `maintain-ai-docs`.
-5. **Se envolve fluxo ou layout**: as referências Vortex/MO2 citadas nos documentos (não a pasta inteira).
+5. **Se envolve fluxo**: as referências Vortex/MO2 citadas nos documentos (não a pasta inteira). **Se envolve layout**: o artboard da tela no design v1, apontado em `ui/01-mapa-de-telas.md` (D119).
 6. **Se envolve `frontend/`**: skill `dettmann-ui-use` (`.claude/skills/`; `dettmann-ui-author` para criar componente na lib; `dettmann-ui-improve` antes de concluir) e `ui/03-componentes-e-padroes.md` (D095, D107).
 7. **Resumo de restrições** (escreva antes de implementar):
    - estados alterados → dono → fonte de verdade;

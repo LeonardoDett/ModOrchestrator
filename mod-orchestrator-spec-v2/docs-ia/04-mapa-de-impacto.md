@@ -35,7 +35,8 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Launch (Play) | core/11 §6, core/04 §9, core/10 (coluna "launch (aviso)"), D045, D090 | INV-DEP-06 | barra de título, DLG-26, Overview, Dashboard |
 | Persistência / schema | core/14, migrations | — | — |
 | Integração dettmann-ui / tema | ui/03, ui/04, todos ui/telas | — | todas |
-| Distribuição de tela (vs Vortex) | ui/00 (divergências), ui/telas/*, references/vortex | — | a tela |
+| Distribuição de tela (design v1) | D119; artboard no canvas e `propostas/redesign-telas-v1-fechamento.md`; ui/01 (artboard e fase), o `ui/telas/*.md` da tela; mudança de layout começa pelo artboard aprovado | — | a tela |
+| Shell: níveis, barra superior, menu do jogo, sino, "Jogar" | ui/00 §2, D120, D045, core/11 §5–6 (navegação e launch), core/10 §2 (notificações), consulta `Workspace()` do bridge | — | todas |
 | Texto de UI / idioma | catálogo i18n (`frontend/src/i18n/catalog/`) | INV-OPS-05 | todas |
 | Código de erro do bridge | core/00 §6, `internal/bridge/errors.go`, catálogo i18n (`error.<code>`) | INV-OPS-05 | todas |
 | Log técnico (formato, rotação, filtros) | core/10 §4, core/13 (`app.logLevel`), ui/telas/diagnostics | — | Diagnostics › Log |

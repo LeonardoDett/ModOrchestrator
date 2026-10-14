@@ -1,6 +1,6 @@
 # MO2 — Referência de comportamento
 
-Mod Organizer 2 (https://github.com/ModOrganizer2/modorganizer). Referência de **isolamento, prioridade e transparência de conflitos**. Não é referência de layout (D042: layout vem do Vortex).
+Mod Organizer 2 (https://github.com/ModOrganizer2/modorganizer). Referência de **isolamento, prioridade e transparência de conflitos**. Não é referência de layout (D119: o layout vem do design v1).
 
 ## Conceitos e decisão
 

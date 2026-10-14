@@ -30,4 +30,10 @@ Ver `06-revisao-2026-09-30.md` para os gaps encontrados. Resumo:
 - plano reordenado em fatias verticais (D024);
 - prompts e skills independentes de ferramenta (Claude Code/Cursor), skills com frontmatter.
 
+## Redesign das telas (2026-10-14)
+
+- D119 substitui a D042: o design v1 (canvas, fechamento em `propostas/redesign-telas-v1-fechamento.md`) é o layout base; o Vortex fica como referência de fluxo.
+- D120 e D121: dois níveis (app e espaço do jogo) e detalhe do mod em modal.
+- `ui/00` reescrito; `ui/01` ganhou o mapa do design v1; os `ui/telas/*.md` são reescritos fase a fase pelo plano `propostas/2026-10-14-plano-implementacao-redesign.md` (RD0 a RD18).
+
 Cópia integral da v2.0: `_historico/v2.0-original/` (somente consulta; não é autoridade).

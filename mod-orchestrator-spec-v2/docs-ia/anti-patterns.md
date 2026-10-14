@@ -50,7 +50,7 @@ Numeração estável: novos itens entram no fim. Cada item diz **por que** é pr
 12. **Fazer o usuário editar arquivos de configuração manualmente para operações normais.**
 17. **Criar componentes visuais novos quando dettmann-ui já possui equivalente**, ou criar componente genérico dentro do app em vez de na lib (D016).
 18. **Adicionar funcionalidade futura como botão quebrado.** Áreas futuras são reservadas no layout sem aparecer como ação disponível.
-34. **Reinventar a distribuição de uma tela que o Vortex já resolveu sem divergência aprovada.** (D042)
+34. **Reinventar a distribuição de uma tela sem artboard aprovado**, ou implementar tela nova sem artboard. (D119; até 2026-10-14 a régua era o Vortex, D042)
 35. **Comunicar status só por cor.** Sempre ícone + rótulo/tooltip (D043).
 36. **Texto de interface fixo no código.** Todo texto vem do catálogo i18n (D044).
 37. **Toast como único aviso de problema persistente.** Problema que continua existindo é diagnóstico.

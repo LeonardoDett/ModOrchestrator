@@ -195,6 +195,10 @@ Estado: implementada (D103, D105; D104 e D106 aguardam confirmação). Instalado
 
 ---
 
+## Redesign das telas (design v1)
+
+Plano próprio, aprovado em 2026-10-14: `propostas/2026-10-14-plano-implementacao-redesign.md` (fases RD0 a RD18, D119 em diante). Ele reescreve as telas entregues nas F2 a F13 sobre o backend das F3 a F12, e traz backend novo (organização de mods, dependências do Valheim, sugestão em conflitos, importação de Vortex e MO2). A RD0 (decisões e spec do shell) está concluída.
+
 ## Depois da V1.0
 
 V1.x e V2 em `00-visao-e-escopo.md` e `core/15-futuro.md`. Cada item vira fase própria com o mesmo formato, depois de revisar decisões e contratos afetados.

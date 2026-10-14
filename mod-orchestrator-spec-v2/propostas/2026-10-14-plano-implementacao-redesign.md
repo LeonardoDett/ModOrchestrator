@@ -1,6 +1,6 @@
 # Plano de implementação do redesign (design v1)
 
-Status: **proposta, aguardando o ok do Leonardo**. Nenhuma fase começa sem esse ok. Este arquivo não é autoridade: as decisões só valem depois de registradas em `docs-ia/decisoes.md` (a partir da D119).
+Status: **aprovado pelo Leonardo em 2026-10-14** ("Tudo ok"), com as recomendações da seção 6. **RD0 concluída** (D119, D120, D121). As demais decisões só valem depois de registradas em `docs-ia/decisoes.md`, cada uma na fase indicada.
 
 Data: 2026-10-14. Convenção: um commit por fase no master, push só a pedido.
 
@@ -27,14 +27,14 @@ Estado das telas: todas as **desenhadas** estão aprovadas (as quatro primeiras 
 
 ## 3. Decisões novas
 
-Numeração provisória: vale a ordem em que forem registradas.
+D119 a D121 estão registradas. Daí em diante a numeração é provisória: vale a ordem em que forem registradas.
 
 | # | Decisão | Substitui ou emenda | Fase |
 |---|---|---|---|
-| D119 | **O design v1 é o layout base.** Texto na seção 3.1 | Substitui D042 | RD0 |
-| D120 | **Dois níveis: app e espaço do jogo.** Barra superior com "‹ Biblioteca", jogo, perfil, sino e ajuda; menu lateral em grupos com recolher; "Jogar" e o cartão de implantação no rodapé do menu; status e problemas viram contagem no sino | Emenda D023, D045 (Play sai da barra de título), D054 e `ui/00` §2 | RD0 |
-| D121 | **Cor de destaque por jogo** no tema, declarada pela definição do jogo e com padrão do app | Emenda D043, D056 | RD2 |
-| D122 | **Detalhe do mod em modal grande com abas**, no lugar do Inspector lateral | Emenda `ui/03` §4 ("nunca navegar para detalhe"; "modal só para decisão curta") | RD0 |
+| D119 | **O design v1 é o layout base.** Registrada | Substitui D042 | RD0 ✅ |
+| D120 | **Dois níveis: app e espaço do jogo.** Barra superior com "‹ Biblioteca", jogo, perfil, sino e ajuda; menu lateral em grupos com recolher; "Jogar" e o cartão de implantação no rodapé do menu; status e problemas viram contagem no sino | Emenda D023, D045 (Play sai da barra de título), D054 e `ui/00` §2 | RD0 ✅ |
+| D121 | **Detalhe do mod em modal grande com abas**, no lugar do Inspector lateral | Emenda `ui/03` §4 ("modal só para decisão curta") | RD0 ✅ |
+| D122 | **Cor de destaque por jogo** no tema, declarada pela definição do jogo e com padrão do app | Emenda D043, D056 | RD2 |
 | D123 | **Categoria com cor e ícone, e tags** como conceito separado; preferência de visão da lista por instância | Detalha D026, `core/02` §9 | RD5 |
 | D124 | **Fila de instalação em lote** e categoria e tags informadas junto com a instalação | Detalha D038, D065 | RD5 |
 | D125 | **Dependências entre pacotes** vindas do instalador (`Plan.Requirements` passa a aceitar pacote, não só arquivo) | Detalha D118; fecha `core/16` §8 | RD6 |
@@ -43,6 +43,8 @@ Numeração provisória: vale a ordem em que forem registradas.
 | D128 | **Assistente de jogo**: reconhecimento de pasta, modelos e target criável | Detalha D117 | RD14 |
 
 ### 3.1 D119, texto proposto
+
+Registrada em `docs-ia/decisoes.md` com ajustes de redação; vale o texto de lá. O que segue é a proposta original.
 
 > **D119 — O design v1 é o layout base das telas.** Status: vigente (substitui D042).
 >
@@ -119,10 +121,12 @@ Tamanho: P (até um dia), M (alguns dias), G (uma semana ou mais).
 
 Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não dependem da lib e podem ser intercaladas com RD2 e RD3 (uma fase por vez no checkout).
 
-### RD0. Decisões de base e spec do shell
+### RD0. Decisões de base e spec do shell ✅
+
+Concluída em 2026-10-14. Além dos entregáveis abaixo, foram atualizados as referências à D042 (README, anti-pattern 34, core/13, `references/`), o protocolo e as duas skills da spec.
 
 - **Objetivo:** tirar a D042 do caminho e deixar o contrato da casca escrito.
-- **Entregáveis:** D119, D120 e D122 em `decisoes.md` (D042 marcada "substituída por D119"); `ui/00` reescrito (§1, §2, §5, §6); `ui/01` com as telas novas, as renomeadas e a fase RD de cada uma; `ui/03` §2 e §4; `docs-ia/04-mapa-de-impacto.md`; ponteiro para este plano em `plano-de-desenvolvimento.md`; respostas da seção 6 registradas.
+- **Entregáveis:** D119, D120 e D121 em `decisoes.md` (D042 marcada "substituída por D119"); `ui/00` reescrito (§1, §2, §5, §6); `ui/01` com as telas novas, as renomeadas e a fase RD de cada uma; `ui/03` §2 e §4; `docs-ia/04-mapa-de-impacto.md`; ponteiro para este plano em `plano-de-desenvolvimento.md`; respostas da seção 6 registradas.
 - **Dependências:** ok do Leonardo neste plano e nas perguntas 1 e 2 da seção 6.
 - **Pronto quando:** nenhum documento vigente manda seguir o layout do Vortex; `ui/00` descreve os dois níveis; nenhum código mudou.
 - **Sem a capability:** `ui/00` passa a dizer que grupos e itens do menu vêm do backend pelas capabilities **efetivas**; grupo sem item não aparece (é o caso de Plugins e Ordem de carga no `generic` e no Valheim).
@@ -138,7 +142,7 @@ Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não d
 ### RD2. Lib, lote 1: tema por jogo e casca
 
 - **Objetivo:** tudo o que a casca precisa, pronto e testado na lib.
-- **Entregáveis:** destaque por jogo no motor de tema (D121; escopo CSS trocável em runtime, contraste verificado pelo `theme:lint`); `AppShell`, `Navbar`, `Workspace` e `Tooltip` passados pelo redesenho; C1 a C6 e C18; playground; `component-matrix.md`; decisões D-038 em diante na lib; skills reinstaladas.
+- **Entregáveis:** destaque por jogo no motor de tema (D122; escopo CSS trocável em runtime, contraste verificado pelo `theme:lint`); `AppShell`, `Navbar`, `Workspace` e `Tooltip` passados pelo redesenho; C1 a C6 e C18; playground; `component-matrix.md`; decisões D-038 em diante na lib; skills reinstaladas.
 - **Dependências:** RD1.
 - **Pronto quando:** `npm run typecheck && npm test -- --run && npm run theme && npm run build` na lib; arquivos novos em `WAVE_FILES` e `LEVELS`; o app compila sem mudança de comportamento.
 - **Sem a capability:** o destaque tem padrão do app para jogo que não declara cor (todo jogo personalizado). Teste: tema sem destaque declarado passa no contraste.
@@ -211,7 +215,7 @@ Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não d
 
 ### RD9. Modal do mod (cinco abas)
 
-- **Objetivo:** trocar o Inspector lateral pelo modal (D122).
+- **Objetivo:** trocar o Inspector lateral pelo modal (D121).
 - **Entregáveis:** `ui/telas/mods.md` §6 reescrito; abas Resumo (KPIs de B13), Conflitos (linhas com estado travado, B4), Arquivos (barra por extensão, B8), Histórico e Instalação (escolhas do FOMOD e Reinstalar, B9); Esc fecha e devolve o foco à linha.
 - **Dependências:** RD8, RD7.
 - **Pronto quando:** aceite da regra 5; tudo navegável por teclado; o Inspector antigo de Mods é removido.
@@ -311,6 +315,8 @@ Caminho mais curto até algo visível: RD0, RD1, RD2, RD4. RD5, RD6 e RD7 não d
 - **Sem a capability:** o teste "instância `generic` percorre todos os comandos do bridge" (`docs-ia/09` §7, item 3) passa a incluir os comandos criados neste plano: cada um devolve resultado ou erro de capability ausente, nunca `internal`.
 
 ## 6. Perguntas para o Leonardo
+
+**Respondidas em 2026-10-14:** o Leonardo aprovou o plano com "Tudo ok", o que foi lido como aceite das nove recomendações abaixo. A 2 já está na D120; as demais são registradas na decisão da fase que travam, e cada fase as repete no resumo do protocolo antes de codar, onde ainda podem ser revistas.
 
 | # | Pergunta | Recomendação | Trava |
 |---|---|---|---|

@@ -1,6 +1,6 @@
 # Referências de comportamento: Vortex
 
-Esta pasta contém **somente comportamento de referência do Vortex**. Não são requisitos automáticos: o que vale para o produto está em `core/`, `ui/` e `docs-ia/decisoes.md`. Para o layout, o Vortex é a base (D042).
+Esta pasta contém **somente comportamento de referência do Vortex**. Não são requisitos automáticos: o que vale para o produto está em `core/`, `ui/` e `docs-ia/decisoes.md`. Para fluxo e comportamento, o Vortex é a referência (D001). Para o layout não é mais: vale o design v1 (D119, que substituiu a D042); as seções de layout destes documentos ficam só como registro.
 
 ## Como interpretar
 

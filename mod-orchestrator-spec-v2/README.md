@@ -11,7 +11,7 @@ Gerenciador de mods para PC (Windows, Go + Wails + React/dettmann-ui) que entreg
 3. **Ordem explícita + regras como restrição** (D025): quem vence é sempre visível e explicável.
 4. **Core agnóstico de jogo**: tudo específico entra por adapter e capability (D011, D031).
 5. **Importação local na V1**; providers/downloads por contrato (D013).
-6. **UX de triagem** com layout do Vortex (D014, D042).
+6. **UX de triagem** com o layout do design v1 (D014, D119); o Vortex é referência de fluxo, não de layout.
 7. **Modularidade real**: domínio puro, ports, UI sem regra de negócio (D017).
 8. **dettmann-ui obrigatória** (D016).
 
@@ -25,6 +25,7 @@ Gerenciador de mods para PC (Windows, Go + Wails + React/dettmann-ui) que entreg
 | `ui/` | princípios e shell, mapa de telas, fluxos, componentes, tema, e `telas/` (uma por tela + diálogos) |
 | `references/vortex/`, `references/mo2/` | comportamento observado, com ADOPT/ADAPT/DEFER/REJECT |
 | `plano-de-desenvolvimento.md` | fases F0–F15 em fatias verticais |
+| `propostas/` | propostas e fechamentos de frente; não são autoridade até virarem decisão. Inclui o plano do redesign (`2026-10-14-plano-implementacao-redesign.md`, fases RD0 a RD18) |
 | `plano-de-publicacao.md` | licença, contribuição, empacotamento, assinatura, canais e atualização (D076, D077) |
 | `prompts/` | protocolo universal e prompt por fase |
 | `skills/` | `consult-ai-docs` (ler/considerar) e `maintain-ai-docs` (criar/manter) |

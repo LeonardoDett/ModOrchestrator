@@ -7,7 +7,7 @@ Status possíveis: `vigente`, `emendada por Dxxx` (continua valendo com o ajuste
 ---
 
 ## D001 — Vortex como referência operacional
-Status: vigente (reforçada por D042)
+Status: vigente (a D042, que a estendia ao layout, foi substituída por D119: o Vortex é referência de fluxo e comportamento, não de distribuição de tela)
 
 Vortex é a principal referência para fluxos de usuário, deploy/purge, regras, triagem, extensibilidade e organização da aplicação. Não significa copiar a implementação interna.
 
@@ -136,7 +136,7 @@ Pendência conhecida (não é decisão de produto): na versão atual da bibliote
 Atualização (F2): pendência resolvida na biblioteca. O recipe engine passou a tipar variantes por chave (sem assinatura de índice), o typecheck da lib está limpo e `npm run build` volta a gerar `.d.ts`. O tema `forest` foi trocado pelo `orchestrator` (D043).
 
 ## D023 — Navegação inicial
-Status: vigente
+Status: emendada por D120 (a seção global virou o nível do app; continua valendo: sem jogo ativo não há espaço do jogo, e área reservada não vira item navegável)
 
 Na F0 a sidebar contém apenas a seção global (Dashboard, Games, Extensions, Settings), cada uma com empty state honesto e sem ações. A seção de workspace do jogo só aparece com jogo ativo e é derivada de capabilities (F2/F3 do plano atual). Áreas reservadas (Downloads, Tools, Collections) não aparecem como itens navegáveis (anti-pattern 18); teste de navegação protege isso.
 
@@ -282,7 +282,7 @@ Status: vigente (revisável)
 O sort da V1 é nativo (D029) e usa: masters implícitos, masters antes de dependentes, flag ESM, regras e grupos do usuário, locks. A integração com dados do LOOT (masterlist: grupos, load-after, mensagens de plugin sujo) entra na V1.x como **provedor de restrições**, não como algoritmo, com revisão de licença. Motivo: libloot é C++ e o valor principal (dados) pode ser consumido sem acoplar o core ao algoritmo.
 
 ## D042 — Distribuição de telas e elementos segue o Vortex
-Status: vigente (substitui a orientação "não copiar cegamente" da UI v2)
+Status: substituída por D119 (substituía a orientação "não copiar cegamente" da UI v2)
 
 Diretriz do usuário: onde o Vortex já resolveu o problema, reproduzir a distribuição de elementos (se ele usa select, usar select; se usa modal, usar modal). Divergências só são permitidas se listadas em `ui/00-principios-e-shell.md` › Divergências aprovadas, cada uma com motivo. Divergências aprovadas nesta revisão: tela dedicada de Conflicts, tela Load Order separada de Plugins, tela Diagnostics, Profiles sempre visível (D037), Overview do jogo, linguagem "X vence Y" (D025).
 
@@ -297,7 +297,7 @@ Status: vigente
 Todo texto de interface vem de catálogo i18n desde a F2. Idiomas V1: `en` e `pt-BR`. Códigos de erro, IDs de diagnóstico e eventos são estáveis e independentes de idioma; o backend envia código + parâmetros, e a UI traduz.
 
 ## D045 — Launch do jogo na V1; hotbar de tools reservada
-Status: vigente
+Status: emendada por D120 (o "Play" sai da barra de título e vai para o rodapé do menu do jogo; as regras de pré-lançamento não mudam)
 
 A barra de título tem o lançador do jogo ("Play"), como o `titlebar-launcher` do Vortex. Antes de lançar: deploy pendente é oferecido (ou executado, se auto-deploy estiver ligado), diagnósticos bloqueantes impedem o launch com explicação. Cadastro de ferramentas externas (hotbar/Starter) fica reservado: o espaço existe no layout, mas não aparece como ação até ser implementado (anti-pattern 18).
 
@@ -353,7 +353,7 @@ Detalha D044 e INV-OPS-05 no transporte. Uma chamada do bridge que falha rejeita
 Motivo: o Wails só transporta a string do erro; sem um formato estruturado a UI mostraria texto em inglês vindo do Go. Alternativa rejeitada: retornar `{ok, error}` em todo DTO, que duplica o canal de erro que o Wails já tem (rejeição da promise).
 
 ## D054 — Shell da F2: slots reservados e Diagnostics fora da sidebar
-Status: vigente
+Status: emendada por D120 (a barra de título com lançador e a topbar com status de deploy, problemas e operações deixam de existir; continua valendo: cada área só mostra o que já funciona)
 
 Na F2 o shell de ui/00 §2 existe por completo, mas cada área só mostra o que já funciona (anti-pattern 18):
 - Barra de título: área do lançador com o estado "nenhum jogo selecionado" (select de jogo e Play chegam com F3/F12); área de tools reservada e vazia; controles da janela só quando a janela é frameless (`ui.customTitleBar`, lido na inicialização porque exige reinício).
@@ -1106,3 +1106,52 @@ Motivo: no Skyrim `Data/` sempre existe, e o nome do mod vem do FOMOD ou do padr
 Alternativas rejeitadas: criar qualquer target ausente (perderia a proteção contra pasta ou unidade que sumiu); o adapter usar a raiz como target único com caminhos prefixados (esconde o limite, e o jogo declarado ou personalizado cairia no mesmo caso); registrar a pasta criada como entrada do manifesto (a `Location` não representa a raiz de um target).
 
 Consequências: jogo declarado ou personalizado pode usar o mesmo campo quando o manifesto de jogo (D116) o expuser; isso não foi feito aqui. O adapter do Valheim declara `bepinex` como criável e devolve os metadados do `manifest.json`.
+
+## D119 — O design v1 é o layout base das telas
+Status: vigente (substitui D042; aprovada pelo usuário em 2026-10-14 junto com `propostas/2026-10-14-plano-implementacao-redesign.md`)
+
+A distribuição de telas e elementos passa a seguir o design v1 aprovado (canvas "Redesign das telas do Mod Orchestrator", fechamento em `propostas/redesign-telas-v1-fechamento.md`), transcrito tela a tela em `ui/telas/`. O Vortex deixa de ser a referência de layout e continua sendo a referência de fluxo e comportamento (D001); o MO2 continua a de isolamento e prioridade (D002).
+
+1. Onde o design e o Vortex divergem, vale o design. A tabela "Divergências aprovadas" de `ui/00` §6 deixa de existir: diferença de layout em relação ao Vortex não precisa mais de justificativa.
+2. Tela sem artboard aprovado mantém o layout atual dentro da casca nova até ganhar um. Tela nova sem artboard não é implementada.
+3. O que o design mostra e o backend não entrega não vira dado inventado: ou entra como fase com contrato, ou sai da tela (anti-pattern 18).
+4. O canvas é a referência visual; o contrato de cada tela é o seu documento em `ui/telas/`, reescrito a partir do artboard antes de a tela ser implementada. Os mockups não entram no repositório.
+5. Continuam valendo sem mudança: a UI não decide (D021), status nunca só por cor (D043), tudo por teclado, i18n (D044), dettmann-ui obrigatória (D016).
+
+Motivo: a D042 mandava reproduzir o Vortex elemento por elemento. O redesign aprovado em 2026-10-13 e 2026-10-14 organiza o app em biblioteca e espaço do jogo, troca o Inspector lateral do mod por modal com abas e a toolbar de ícone e rótulo por ações só com ícone, o que a D042 classificaria como bug de UI.
+
+Alternativas rejeitadas: manter a D042 e listar o redesign inteiro como divergências (a tabela deixaria de ser exceção e viraria a regra); tratar o canvas como contrato direto (ele traz dados de exemplo e não diz o que vem do backend; o documento da tela diz).
+
+Consequências: `ui/00` reescrito; `ui/01` passa a apontar o artboard e a fase do plano de cada tela; cada `ui/telas/*.md` é reescrito na fase que implementa a tela e, até lá, descreve a tela atual. O anti-pattern 34 muda de sentido (reinventar tela sem artboard aprovado). A paridade com o Vortex (`docs-ia/08`) passa a ser de recurso, não de layout. A organização das abas de Settings (core/13) fica como está até o artboard de Configurações ser aprovado.
+
+## D120 — Dois níveis: app e espaço do jogo
+Status: vigente (emenda D023, D045 e D054; detalha D119; contrato em `ui/00` §2)
+
+O app passa a ter dois níveis de navegação, no lugar de uma sidebar única com seção global e seção do jogo.
+
+1. **Nível do app**: Início, Biblioteca (com Adicionar jogo), Extensões e Configurações. Vale para todos os jogos e usa a cor da marca.
+2. **Espaço do jogo**: ao entrar num jogo, a janela inteira olha só para ele. Barra superior com "‹ Biblioteca", seletor de jogo, seletor de perfil, sino com contagem, ajuda e controles da janela. Menu lateral recolhível, em grupos (Visão geral; Conteúdo; Setup; Saúde).
+3. **O backend monta o menu.** Grupos, itens, selos e nível de atenção de cada item vêm da consulta do workspace, pelas capabilities efetivas da instância (D115). A UI não testa capability (D112).
+4. **"Jogar" e implantação no rodapé do menu.** O botão "Jogar" sai da barra de título; o cartão "Implantando" fica preso acima dele. As regras de pré-lançamento da D045 e do core/11 §6 não mudam.
+5. **O sino concentra o que pede atenção.** O status de deploy, o contador de problemas e o indicador de operações da topbar deixam de existir como elementos próprios: viram notificação com contagem, ou estado do cartão de implantação. Diagnóstico, notificação, histórico e log continuam sendo conceitos separados (core/10); muda só onde aparecem.
+6. **Cor de destaque por jogo** no espaço do jogo, com padrão do app. O contrato de tema é decisão própria, junto com o componente.
+7. **Paleta de comandos** (`Ctrl+K`) ganha um botão só com ícone na barra superior, com a dica do atalho, já que a busca saiu do menu lateral (resposta do usuário em 2026-10-14).
+
+Motivo: com vários jogos gerenciados, a seção do jogo dentro de uma sidebar global misturava o que é do app com o que é do jogo ativo, e a barra de título acumulava lançador, status e contadores.
+
+Alternativas rejeitadas: manter o lançador na barra de título (o desenho aprovado usa a barra para contexto e navegação, e o "Jogar" precisa ficar junto do estado de implantação que o condiciona); manter contadores separados de problemas e operações ao lado do sino (três indicadores para a mesma pergunta, "algo pede minha atenção?").
+
+Consequências: o `frontend/` muda na fase RD4 do plano; até lá roda o shell anterior. A consulta do workspace passa a devolver grupos, selos e atenção. O drawer de operações continua existindo, aberto a partir do cartão de implantação e das notificações. Sem jogo gerenciado só existe o nível do app. O ponto de entrada dos Ajustes da instância é fixado quando a Visão geral for transcrita (RD13).
+
+## D121 — Detalhe do mod em modal com abas
+Status: vigente (emenda `ui/03` §4; detalha D119)
+
+O detalhe de um mod deixa de ser o Inspector lateral e passa a ser um modal grande com cinco abas: Resumo, Conflitos, Arquivos, Histórico e Instalação. Esc fecha e devolve o foco à linha.
+
+Motivo: o conteúdo do mod (conflitos por arquivo, árvore de arquivos, escolhas do instalador) não cabe num painel estreito sem rolagem em dois eixos, e é o desenho aprovado.
+
+O que não muda: o detalhe continua abrindo sem trocar de página, e a lista continua atrás. Telas cujo artboard mostra painel lateral (Plugins, Ordem de carga, Diagnóstico) seguem com painel. A regra "modal só para decisão curta, destrutiva ou assistente" de `ui/03` §4 ganha esta exceção, e só esta.
+
+Alternativa rejeitada: página de detalhe com rota própria (perderia a posição e a seleção na lista).
+
+Consequências: o Inspector de Mods é removido na fase RD9 do plano; `ui/telas/mods.md` §6 é reescrito nela.

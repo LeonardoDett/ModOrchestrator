@@ -1,6 +1,6 @@
 # Componentes e padrões (dettmann-ui)
 
-Referências: D016, D022, D043; skills da lib v2 em `.claude/skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`; D095, D107); `dettmann-ui-vnext/docs/component-matrix.md`.
+Referências: D016, D022, D043, D119, D121; skills da lib v2 em `.claude/skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`; D095, D107); `dettmann-ui-vnext/docs/component-matrix.md`.
 
 ## 1. Regra
 
@@ -10,7 +10,7 @@ Toda UI usa dettmann-ui. Se falta algo **genérico**, cria-se na lib (`dettmann-
 
 | Necessidade | Componente(s) da lib |
 |---|---|
-| Shell, sidebar, topbar | `AppShell`, `Sidebar`, `Navbar`, `Workspace` |
+| Shell: barra superior e menu lateral dos dois níveis (D120) | `AppShell`, `Sidebar`, `Navbar`, `Workspace` (os componentes novos do design v1 são levantados na fase RD1 do plano) |
 | Página com toolbar + conteúdo + inspector | `ResourcePage`, `Toolbar`, `MasterDetail`, `Inspector`, `SplitPane` |
 | Tabela densa | `Table` (layout `virtual`) + `VirtualList` — ver lacuna L1 |
 | Filtros e busca | `FilterBar`, `Input` (+ `Input.Select`, `Input.Combobox`, `Input.MultiSelect`), `SegmentedControl` |
@@ -48,8 +48,8 @@ Antes de cada fase, conferir a lib: a lacuna pode ter sido resolvida.
 ## 4. Padrões
 
 - **Tabela** para alta densidade; **cards** só onde o item é visual e poucos (Games, Profiles, dashlets).
-- **Inspector** para detalhes sem perder contexto; nunca navegar para página de detalhe de um mod.
-- **Modal** só para decisões curtas, destrutivas ou assistentes; nunca para mostrar informação que caberia no Inspector.
+- **Detalhe sem perder contexto**: nunca navegar para página de detalhe. O mod abre em modal grande com abas (D121); as telas cujo artboard mostra painel lateral usam painel; as ainda sem artboard, o `Inspector` atual.
+- **Modal** só para decisões curtas, destrutivas ou assistentes, com a exceção do detalhe do mod (D121); nunca para mostrar informação que caberia num painel.
 - **Confirmação** só para destrutivo/irreversível (anti-pattern 38): remover mod, excluir profile, purge, parar de gerenciar jogo, restaurar backup. Habilitar/desabilitar/ordenar não confirmam (desfazer existe).
 - **Toast** para resultado transitório; **sino** para o que precisa ser lido; **diagnóstico** para o que persiste.
 - **Empty state** sempre com próxima ação.

@@ -1,5 +1,7 @@
 # Checklist de paridade com o Vortex (F15)
 
+> Desde a D119 (2026-10-14) a paridade com o Vortex é de **recurso**, não de layout: as menções a "divergência N" abaixo se referem à tabela que existia em `ui/00` §6 pela D042.
+
 Conferência item a item de `references/vortex/VORTEX-12-feature-inventory.md`: todo item **ADOPT** ou **ADAPT** da V1 está presente? Feita em 2026-10-09 sobre o código do `master` (depois da F14) e os testes das fases. "Onde" aponta o código e o teste que comprovam; "fase" é a fase que entregou.
 
 Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente (registrada no `plano-de-desenvolvimento.md` da fase) · — fora da V1 por decisão (DEFER, REJECT, N/A).

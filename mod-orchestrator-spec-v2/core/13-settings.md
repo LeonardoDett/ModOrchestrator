@@ -1,6 +1,6 @@
 # Catálogo de settings
 
-Referências: D036, D037, D042, D044. Vortex: `settings_interface` (SettingsInterface), `settings_application` (SettingsVortex), `mod_management/views/Settings` e `Workarounds`, `gamebryo_plugin_management/views/Settings`, `recovery/Workarounds`, `theme-switcher`, `download_management` (Download).
+Referências: D036, D037, D044, D119. Vortex: `settings_interface` (SettingsInterface), `settings_application` (SettingsVortex), `mod_management/views/Settings` e `Workarounds`, `gamebryo_plugin_management/views/Settings`, `recovery/Workarounds`, `theme-switcher`, `download_management` (Download).
 
 Regras:
 - Todo setting tem chave estável, escopo, tipo, default, release e dono (módulo). Setting novo exige linha aqui.
@@ -9,7 +9,7 @@ Regras:
 - Mudança que exige reinício mostra aviso com "Reiniciar agora".
 - Settings avançados/perigosos ficam sob "Modo avançado" (setting `ui.advancedMode`, paridade Vortex "Enable Advanced Mode").
 
-A organização das abas segue o Vortex (D042): **Interface · Aplicação · Mods · Plugins · Download (reservada) · Workarounds · Tema**.
+A organização das abas é a herdada do Vortex (D042, substituída por D119) e fica assim até o artboard de Configurações ser aprovado (D119 item 2): **Interface · Aplicação · Mods · Plugins · Download (reservada) · Workarounds · Tema**.
 
 ## Interface
 

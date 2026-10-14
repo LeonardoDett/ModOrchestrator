@@ -11,7 +11,7 @@ description: Mantém a especificação do Mod Orchestrator sincronizada quando u
 - nova decisão arquitetural ou de produto;
 - invariante novo, alterado ou removido;
 - novo anti-pattern descoberto (falha que pode reaparecer);
-- fluxo de UX ou distribuição de tela alterados (divergência do Vortex);
+- fluxo de UX ou distribuição de tela alterados (o layout segue o artboard aprovado, D119);
 - setting, HealthCheck, código de erro ou evento novos;
 - mudança de escopo de release;
 - fato externo confirmado (itens "(verificar)").
@@ -22,7 +22,7 @@ description: Mantém a especificação do Mod Orchestrator sincronizada quando u
 2. **Mapa de impacto**: encontre a linha em `docs-ia/04-mapa-de-impacto.md`; se não existir, acrescente-a.
 3. **Decisão**: registre em `docs-ia/decisoes.md` com o próximo ID, status, motivo, alternativas rejeitadas e consequências. Se muda uma decisão antiga, marque a antiga `emendada por Dxxx` ou `substituída por Dxxx` **sem apagar o texto e a motivação originais**.
 4. **Invariantes**: altere `02-invariantes.md` somente com decisão citada.
-5. **Documentos afetados**: atualize todos os `core/`, `ui/`, `references/` (ADOPT/ADAPT/DEFER/REJECT) e catálogos (settings em core/13, checks em core/10 §1.1, diálogos em ui/telas/dialogos.md, divergências em ui/00 §6).
+5. **Documentos afetados**: atualize todos os `core/`, `ui/`, `references/` (ADOPT/ADAPT/DEFER/REJECT) e catálogos (settings em core/13, checks em core/10 §1.1, diálogos em ui/telas/dialogos.md, artboard e fase em ui/01).
 6. **Glossário**: termo novo ou renomeado entra em `01-glossario.md`; termo abandonado vai para "Termos proibidos".
 7. **Anti-pattern**: se a falha pode se repetir, acrescente no fim da lista (numeração estável).
 8. **Prompts**: atualize `prompts/01-fases.md` se mudaram documentos obrigatórios ou pré-condições de uma fase.
