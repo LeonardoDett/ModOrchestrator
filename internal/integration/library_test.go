@@ -85,6 +85,8 @@ type envOptions struct {
 	// generic manages a user-defined game (no plugins, no load order, no
 	// adapter launch) instead of Skyrim.
 	generic bool
+	// targets replace the single "mods" target of the generic game.
+	targets []game.TargetSpec
 	// adapters are registered next to generic and skyrimse; setup, when
 	// set, is the game to manage (given the folder of the test).
 	adapters []ports.GameAdapter
@@ -225,7 +227,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		e.write(filepath.Join(root, "Mods", "keep.txt"), "x")
 		res, err := e.games.Manage(ctx, games.Setup{
 			Game: generic.GameID, Name: "Game", Root: root, Method: o.method,
-			Targets: []game.TargetSpec{{ID: "mods", Path: "Mods"}},
+			Targets: genericTargets(o.targets),
 			Folders: games.Folders{
 				Staging: filepath.Join(dir, "mo", "staging"), ArchiveStore: filepath.Join(dir, "mo", "archives"),
 				BackupStore: filepath.Join(dir, "mo", "backups"),
@@ -761,4 +763,11 @@ func TestCleanTemp(t *testing.T) {
 	if len(e.rows()) != 1 || len(e.files(e.only().ID)) == 0 {
 		t.Fatal("mods untouched")
 	}
+}
+
+func genericTargets(t []game.TargetSpec) []game.TargetSpec {
+	if len(t) > 0 {
+		return t
+	}
+	return []game.TargetSpec{{ID: "mods", Path: "Mods"}}
 }

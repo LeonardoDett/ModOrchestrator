@@ -47,15 +47,16 @@ Nome, pasta do jogo, lista editável de targets (id em minúsculas + pasta relat
 Duas opções exclusivas: manter staging e arquivos (padrão) ou apagá-los; apagar exige digitar o nome da instância. Instância com algo implantado mostra o aviso e o botão fica desabilitado (o backend também recusa) até o purge existir (F7).
 
 ### DLG-06 Assistente FOMOD
-- Cabeçalho: imagem e nome do módulo; passo N de M (só visíveis).
-- Coluna esquerda: lista de passos (Stepper vertical), navegável para passos já visitados.
-- Centro: grupos do passo; `SelectExactlyOne`/`SelectAtMostOne` = Radio (AtMostOne com opção "Nenhum"); `SelectAtLeastOne`/`SelectAny` = Checkbox; `SelectAll` = Checkbox travados. Opções `Required` travadas marcadas; `NotUsable` desabilitadas com tooltip do motivo; `Recommended` com tag "Recomendado".
-- Direita: imagem (MediaImage, clique abre Lightbox) e descrição da opção em foco/hover.
-- Rodapé: Cancelar · Voltar · Próximo / Instalar; validação do grupo mostrada inline ao tentar avançar.
-- Reinstall: faixa "Escolhas anteriores carregadas" + botão "Instalar com as escolhas anteriores".
-- Último passo → tela de resumo (arquivos por destino, avisos, requisitos detectados com checkbox "criar regra de requisito") → Instalar.
-- Cada clique consulta o backend para reavaliar condições (a UI não avalia, anti-pattern 1); resposta deve ser < 50 ms percebidos.
-- Implementação (F10): a UI envia só os grupos visitados (`FomodState`); visibilidade, tipos, padrões, travas, problemas e resumo vêm do backend. Requisitos detectados vêm desmarcados (INV-CON-02). Passos ainda não visitados ficam desabilitados no Stepper (D087).
+Redesenho v1 (pranchas `JogoFomod` e `JogoFomodResumo`, RD10).
+- Cabeçalho: imagem do módulo (clique amplia), nome e "Passo N de M" (só os visíveis) ou "Resumo".
+- Reinstalação: faixa "As escolhas da instalação anterior foram carregadas" com "Instalar com as escolhas anteriores".
+- Coluna esquerda: passos (Stepper vertical), cada passo já visitado com uma linha do que foi escolhido; passos ainda não visitados ficam desabilitados (D087); nota de que passos aparecem e somem conforme as escolhas.
+- Centro: grupos do passo com o tipo de seleção dito por extenso ("Escolha uma", "Escolha quantas quiser"...). `SelectExactlyOne`/`SelectAtMostOne` = Radio (AtMostOne com "Nenhum"); `SelectAtLeastOne`/`SelectAny` = Checkbox; `SelectAll` e `Required` travados marcados; `NotUsable` desabilitado com o motivo; `Recommended` com selo "Recomendado". Na reinstalação a opção escolhida antes leva o selo "Escolha anterior". Opção com imagem leva um ícone de imagem.
+- Direita: imagem e descrição da opção em foco ou sob o mouse; sem imagem, só o texto.
+- Resumo (último passo): "Suas escolhas" por passo e grupo, com "Escolha anterior" e "Alterar" (volta ao passo); avisos; requisitos declarados com checkbox "Criar regra de requisito", desmarcado (INV-CON-02). À direita, os dois números (arquivos e espaço em disco), "Arquivos por destino" com o target da definição da instância (vem do backend; nunca um nome fixo) e "Organizar este mod": categoria e tags que o mod recebe ao concluir a instalação (B10, D124).
+- Rodapé: Cancelar importação · Voltar · Próximo / Instalar; validação do grupo inline ao tentar avançar.
+- Cada clique consulta o backend para reavaliar condições (a UI não avalia, anti-pattern 1); resposta < 50 ms percebidos.
+- Implementação (F10, RD10): a UI envia só os grupos visitados (`FomodState`); visibilidade, tipos, padrões, travas, problemas, resumo e target vêm do backend. FOMOD é instalador de formato e vale para qualquer jogo que tenha o arquivo (teste com instância `generic` de dois targets).
 
 ### DLG-08 Editor de conflitos do mod
 Tabela: mod oponente · arquivos em conflito · quem vence hoje e por quê · **select** "Este vence" / "O outro vence" / "Pela ordem (sem regra)" · link "arquivos…" (abre DLG-09 filtrado). Salvar cria/remove OrderRules e marca pares como revisados; prévia de movimentos na ordem se houver.

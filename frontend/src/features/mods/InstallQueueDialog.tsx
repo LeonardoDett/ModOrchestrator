@@ -46,7 +46,7 @@ export function InstallQueueDialog({
   const cancellable = items.filter((i) => i.cancellable);
   return (
     <Modal.Root open onOpenChange={(o) => !o && onClose()}>
-      <Modal.Content size="lg" aria-describedby="install-queue-summary">
+      <Modal.Content size="xl" aria-describedby="install-queue-summary">
         <Modal.Header>
           <Modal.Title>{t("mods.queue.dialogTitle")}</Modal.Title>
           <Typography id="install-queue-summary" variant="body-sm" color="muted-fg">
@@ -126,7 +126,7 @@ export function InstallQueueDialog({
               disabled={waiting.length === 0}
               onClick={() => void run(() => backend.installAll(instance, waiting.map((m) => m.id)), { success: "mods.queue.installAllToast" })}
             >
-              {tp("mods.queue.installAll", waiting.length)}
+              {waiting.length > 0 ? tp("mods.queue.installAll", waiting.length) : t("mods.queue.installAllEmpty")}
             </Button>
           </span>
         </Modal.Footer>

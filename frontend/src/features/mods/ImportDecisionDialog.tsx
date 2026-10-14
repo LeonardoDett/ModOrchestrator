@@ -26,7 +26,7 @@ function folderTree(folders: readonly string[]): TreeNode<string>[] {
  * FOMOD wizard (DLG-06). It only collects the answer; the backend validates
  * it.
  */
-export function ImportDecisionDialog({ item, onClose }: { item: QueueItem | null; onClose: () => void }) {
+export function ImportDecisionDialog({ instance, item, onClose }: { instance: string; item: QueueItem | null; onClose: () => void }) {
   const i18n = useI18n();
   const { t } = i18n;
   const backend = useBackend();
@@ -49,7 +49,7 @@ export function ImportDecisionDialog({ item, onClose }: { item: QueueItem | null
   }, [decision]);
   const nodes = useMemo(() => folderTree(decision?.folders ?? []), [decision]);
   if (!item || !decision) return null;
-  if (decision.kind === "fomod" && decision.fomod) return <FomodWizard key={item.operationId} item={item} onClose={onClose} />;
+  if (decision.kind === "fomod" && decision.fomod) return <FomodWizard key={item.operationId} instance={instance} item={item} onClose={onClose} />;
 
   const answer = async (a: ImportAnswer) => {
     setBusy(true);

@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ImageOff } from "lucide-react";
-import { HistoryIcon } from "dettmann-ui/icons";
-import { Alert, Button, Checkbox, Lightbox, MediaImage, Modal, Radio, Stack, Stepper, Tag, Typography, Icon } from "dettmann-ui";
+import { FileText, HardDrive, Image as ImageGlyph, ImageOff } from "lucide-react";
+import { FolderIcon, HistoryIcon, PlusIcon } from "dettmann-ui/icons";
+import { Alert, Button, Checkbox, Input, Lightbox, MediaImage, Modal, Radio, Stack, StatTile, Stepper, Tag, Typography, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
-import type { FomodGroup, FomodOption, FomodSelection, FomodView, FomodWarning, ImportAnswer, QueueItem } from "../../bridge/types";
+import { useCategories, useTags } from "../../bridge/queries";
+import type { FomodGroup, FomodOption, FomodSelection, FomodStep, FomodView, FomodWarning, ImportAnswer, QueueItem } from "../../bridge/types";
 import { useI18n, type MessageKey, type Translator } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
-import { formatSize } from "./mod-labels";
+import { categoryOptions, formatSize } from "./mod-labels";
+import { paletteColor, tagIndex } from "./category-look";
 
 const SUMMARY = -1;
 const NONE = "none";
@@ -63,7 +65,7 @@ function FomodImage({ load, image, alt, onOpen, className }: { load: (image: str
  * visibility, option types, defaults, locks, problems, the summary — comes
  * from the backend, which evaluates each change (anti-pattern 1).
  */
-export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () => void }) {
+export function FomodWizard({ instance, item, onClose }: { instance: string; item: QueueItem; onClose: () => void }) {
   const i18n = useI18n();
   const { t } = i18n;
   const backend = useBackend();
@@ -82,6 +84,10 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
   const [error, setError] = useState<UIError | null>(null);
   const [busy, setBusy] = useState(false);
   const [lightbox, setLightbox] = useState<string | null>(null);
+  // Organize the mod when the install completes (B10, D124).
+  const [category, setCategory] = useState("");
+  const [tags, setTags] = useState<readonly string[]>([]);
+  const previous = useMemo(() => new Map(decision.previous.map((s) => [groupKey(s.step, s.group), s.options])), [decision.previous]);
 
   const selection = useMemo<FomodSelection[]>(
     () => [...visited].map(([k, options]) => ({ step: Number(k.split(":")[0]), group: Number(k.split(":")[1]), options })),
@@ -153,8 +159,9 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
     if (result.ok) onClose();
     else setError(result.error);
   };
-  const install = () => void answer({ choice: "install", fomod: selection, requirements: [...requirements] });
-  const usePrevious = () => void answer({ choice: "install", fomod: decision.previous });
+  const organize = { ...(category ? { category } : {}), ...(tags.length ? { tags: [...tags] } : {}) };
+  const install = () => void answer({ choice: "install", fomod: selection, requirements: [...requirements], ...organize });
+  const usePrevious = () => void answer({ choice: "install", fomod: decision.previous, ...organize });
   const cancel = () => void answer({ choice: "cancel" });
 
   const focusedOption: FomodOption | undefined = step && focus ? step.groups[focus.group]?.options[focus.option] : undefined;
@@ -210,7 +217,14 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
                     ...visible.map((s) => (
                       <Stepper.Step key={s.index} index={visible.indexOf(s)} disabled={!seen.has(s.index)}>
                         <Stepper.StepIndicator />
-                        <Stepper.StepLabel>{s.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(s) + 1 })}</Stepper.StepLabel>
+                        <Stepper.StepLabel>
+                          <span className="flex min-w-0 flex-col">
+                            <span>{s.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(s) + 1 })}</span>
+                            {seen.has(s.index) && s.index !== current ? (
+                              <span className="truncate text-xs font-normal text-fg-muted">{stepNote(s, effective, t("mods.fomod.nothingChosen"))}</span>
+                            ) : null}
+                          </span>
+                        </Stepper.StepLabel>
                       </Stepper.Step>
                     )),
                     <Stepper.Step key="summary" index={visible.length} disabled={!seen.has(SUMMARY)}>
@@ -234,6 +248,7 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
                         group={g}
                         stepIndex={step.index}
                         selected={effective(step.index, g.index)}
+                        previous={previous.get(groupKey(step.index, g.index))}
                         problem={showProblems ? g.problem : undefined}
                         onChoose={(options) => choose(step.index, g, options)}
                         onFocus={(option) => setFocus({ group: g.index, option })}
@@ -243,6 +258,10 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
                 ) : (
                   <Summary
                     view={view}
+                    visible={visible}
+                    effective={effective}
+                    previous={previous}
+                    onChange={goTo}
                     requirements={requirements}
                     onRequirement={(file, on) =>
                       setRequirements((r) => {
@@ -257,7 +276,9 @@ export function FomodWizard({ item, onClose }: { item: QueueItem; onClose: () =>
               </section>
 
               <aside aria-label={t("mods.fomod.details")} className="min-h-0 overflow-auto border-l border-border pl-3">
-                {focusedOption ? (
+                {current === SUMMARY && summary ? (
+                  <SummaryAside instance={instance} target={summary.target} files={summary.files} size={summary.size} folders={summary.folders} category={category} onCategory={setCategory} tags={tags} onTags={setTags} />
+                ) : focusedOption ? (
                   <Stack gap="sm">
                     {focusedOption.image ? <FomodImage load={loadImage} image={focusedOption.image} alt={focusedOption.name} onOpen={setLightbox} className="max-h-60 w-full" /> : null}
                     <Typography variant="heading-6" color="fg">
@@ -305,12 +326,15 @@ function GroupField({
   stepIndex,
   selected,
   problem,
+  previous,
   onChoose,
   onFocus,
 }: {
   group: FomodGroup;
   stepIndex: number;
   selected: readonly number[];
+  /** Options of this group in the previous installation (reinstall). */
+  previous?: readonly number[];
   problem?: string;
   onChoose: (options: number[]) => void;
   onFocus: (option: number) => void;
@@ -319,10 +343,21 @@ function GroupField({
   const id = `fomod-${stepIndex}-${group.index}`;
   const single = group.type === "SelectExactlyOne" || group.type === "SelectAtMostOne";
   const hint = t(`mods.fomod.group.${group.type}` as MessageKey);
-  const tags = (o: FomodOption) =>
-    o.type === "Recommended" || o.type === "Required" ? (
-      <Tag size="sm">{t(o.type === "Recommended" ? "mods.fomod.recommended" : "mods.fomod.required")}</Tag>
-    ) : null;
+  const tags = (o: FomodOption) => (
+    <>
+      {previous?.includes(o.index) ? (
+        <Tag size="sm" intent="info" icon={HistoryIcon}>
+          {t("mods.fomod.previousChoice")}
+        </Tag>
+      ) : null}
+      {o.type === "Recommended" || o.type === "Required" ? (
+        <Tag size="sm" {...(o.type === "Recommended" ? { intent: "success" as const } : {})}>
+          {t(o.type === "Recommended" ? "mods.fomod.recommended" : "mods.fomod.required")}
+        </Tag>
+      ) : null}
+      {o.image ? <Icon icon={ImageGlyph} size="sm" className="text-fg-muted" label={t("mods.fomod.hasImage")} /> : null}
+    </>
+  );
   const notUsable = (o: FomodOption) =>
     o.disabled ? (
       <Typography variant="caption" color="muted-fg">
@@ -346,7 +381,7 @@ function GroupField({
               <div key={o.index} onMouseEnter={() => onFocus(o.index)} onFocus={() => onFocus(o.index)} title={o.disabled ? t("mods.fomod.notUsable") : undefined}>
                 <Radio.Item value={String(o.index)} label={o.name} disabled={o.disabled || (o.locked && !o.selected)}>
                   <span className="flex flex-col items-start gap-0.5">
-                    {tags(o)}
+                    <span className="flex flex-wrap items-center gap-1">{tags(o)}</span>
                     {notUsable(o)}
                   </span>
                 </Radio.Item>
@@ -383,9 +418,25 @@ function GroupField({
 }
 
 /** The last page: files by destination, warnings, requirements (DLG-06). */
-function Summary({ view, requirements, onRequirement }: { view: FomodView; requirements: ReadonlySet<string>; onRequirement: (file: string, on: boolean) => void }) {
+function Summary({
+  view,
+  visible,
+  effective,
+  previous,
+  onChange,
+  requirements,
+  onRequirement,
+}: {
+  view: FomodView;
+  visible: readonly FomodStep[];
+  effective: (step: number, group: number) => number[];
+  previous: ReadonlyMap<string, number[]>;
+  onChange: (step: number) => void;
+  requirements: ReadonlySet<string>;
+  onRequirement: (file: string, on: boolean) => void;
+}) {
   const i18n = useI18n();
-  const { t, tp } = i18n;
+  const { t } = i18n;
   const s = view.summary;
   if (!s) {
     return (
@@ -396,18 +447,40 @@ function Summary({ view, requirements, onRequirement }: { view: FomodView; requi
   }
   return (
     <Stack gap="lg">
-      <Typography variant="body-sm" color="fg">
-        {tp("mods.fomod.files", s.files)} · {formatSize(i18n.language, s.size)}
+      <Typography variant="body-sm" color="muted-fg">
+        {t("mods.fomod.summaryIntro")}
       </Typography>
-      <section aria-labelledby="fomod-folders">
-        <Typography id="fomod-folders" variant="heading-6" color="fg" className="mb-1">
-          {t("mods.fomod.byFolder")}
+      <section aria-labelledby="fomod-choices">
+        <Typography id="fomod-choices" variant="heading-6" color="fg" className="mb-1">
+          {t("mods.fomod.yourChoices")}
         </Typography>
-        <ul className="flex flex-col gap-0.5 text-sm">
-          {s.folders.map((f) => (
-            <li key={f.folder} className="flex justify-between gap-4">
-              <span className="truncate text-fg">{f.folder || t("mods.fomod.modRoot")}</span>
-              <span className="tabular-nums text-fg-muted">{tp("mods.fomod.files", f.files)}</span>
+        <ul className="overflow-hidden rounded-card border border-border text-sm">
+          {visible.map((st) => (
+            <li key={st.index} className="grid grid-cols-[9rem_minmax(0,1fr)_auto] items-start gap-4 border-b border-border-subtle px-4 py-3 last:border-b-0">
+              <span className="font-semibold text-fg">{st.name || t("mods.fomod.unnamedStep", { n: visible.indexOf(st) + 1 })}</span>
+              <span className="flex min-w-0 flex-col gap-2">
+                {st.groups.map((g) => {
+                  const chosen = effective(st.index, g.index);
+                  const before = previous.get(groupKey(st.index, g.index));
+                  const same = before !== undefined && before.length === chosen.length && before.every((o) => chosen.includes(o));
+                  return (
+                    <span key={g.index} className="flex flex-col gap-0.5">
+                      <span className="text-xs text-fg-muted">{g.name || t("mods.fomod.unnamedGroup")}</span>
+                      <span className="flex flex-wrap items-center gap-2 font-medium text-fg">
+                        {chosen.length ? chosen.map((o) => g.options[o]?.name ?? "").join(", ") : t("mods.fomod.nothingChosen")}
+                        {same && previous.size > 0 ? (
+                          <Tag size="sm" intent="info" icon={HistoryIcon}>
+                            {t("mods.fomod.previousChoice")}
+                          </Tag>
+                        ) : null}
+                      </span>
+                    </span>
+                  );
+                })}
+              </span>
+              <Button size="sm" emphasis="low" onClick={() => onChange(st.index)} aria-label={t("mods.fomod.changeStep", { step: st.name })}>
+                {t("mods.fomod.change")}
+              </Button>
             </li>
           ))}
         </ul>
@@ -449,6 +522,111 @@ function Summary({ view, requirements, onRequirement }: { view: FomodView; requi
           </Stack>
         </section>
       ) : null}
+    </Stack>
+  );
+}
+
+/** The choices of a step in one line, for the step list. */
+function stepNote(step: FomodStep, effective: (step: number, group: number) => number[], none: string): string {
+  const names = step.groups.flatMap((g) => effective(step.index, g.index).map((o) => g.options[o]?.name ?? ""));
+  return names.filter(Boolean).join(", ") || none;
+}
+
+/**
+ * Right side of the summary: the two numbers, files by destination (the
+ * target comes from the instance definition) and the category and tags the
+ * mod gets when the install completes (B10).
+ */
+function SummaryAside({
+  instance,
+  target,
+  files,
+  size,
+  folders,
+  category,
+  onCategory,
+  tags,
+  onTags,
+}: {
+  instance: string;
+  target?: string;
+  files: number;
+  size: number;
+  folders: readonly { folder: string; files: number }[];
+  category: string;
+  onCategory: (id: string) => void;
+  tags: readonly string[];
+  onTags: (tags: readonly string[]) => void;
+}) {
+  const i18n = useI18n();
+  const { t, tp } = i18n;
+  const categories = useCategories(instance);
+  const defs = useTags(instance);
+  const index = tagIndex(defs.status === "ready" ? defs.data : []);
+  const [draft, setDraft] = useState("");
+  const add = () => {
+    const name = draft.trim();
+    setDraft("");
+    if (name && !tags.some((x) => x.toLowerCase() === name.toLowerCase())) onTags([...tags, name]);
+  };
+  const where = (folder: string) => [target, folder].filter(Boolean).join("/") || t("mods.fomod.modRoot");
+  return (
+    <Stack gap="md" className="h-full">
+      <StatTile.Grid columns={2}>
+        <StatTile size="sm" icon={FileText} label={t("mods.fomod.kpiFiles")} value={i18n.formatNumber(files)} />
+        <StatTile size="sm" icon={HardDrive} label={t("mods.fomod.kpiSize")} value={formatSize(i18n.language, size)} />
+      </StatTile.Grid>
+      <section aria-labelledby="fomod-folders" className="flex flex-col gap-1">
+        <Typography id="fomod-folders" variant="caption" color="muted-fg" className="uppercase tracking-wide">
+          {t("mods.fomod.byFolder")}
+        </Typography>
+        <ul className="flex flex-col text-sm">
+          {folders.map((f) => (
+            <li key={f.folder} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 border-b border-border-subtle py-1.5">
+              <FolderIcon size="sm" className="text-fg-muted" />
+              <span className="truncate font-mono text-xs text-fg">{f.folder ? where(f.folder) : t("mods.fomod.targetRoot", { target: target ?? "" })}</span>
+              <span className="text-xs tabular-nums text-fg-muted">{tp("mods.fomod.files", f.files)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+      <section aria-labelledby="fomod-organize" className="mt-auto flex flex-col gap-3 border-t border-border-subtle pt-3">
+        <Typography id="fomod-organize" variant="caption" color="muted-fg" className="uppercase tracking-wide">
+          {t("mods.fomod.organize")}
+        </Typography>
+        <Input.Root fullWidth value={category} onChange={onCategory}>
+          <Input.Label>{t("mods.field.category")}</Input.Label>
+          <Input.Select options={[{ value: "", label: t("mods.noCategory") }, ...(categories.status === "ready" ? categoryOptions(categories.data) : [])]} />
+        </Input.Root>
+        <div className="flex flex-col gap-1.5">
+          <Typography variant="label" color="muted-fg">
+            {t("mods.organize.tags")}
+          </Typography>
+          <span className="flex flex-wrap items-center gap-1.5">
+            {tags.map((g) => {
+              const c = paletteColor(index.get(g.toLowerCase())?.color);
+              return (
+                <Tag key={g} size="sm" value={g} {...(c ? { color: c } : {})} removeLabel={t("mods.detail.removeTag", { name: g })} onRemove={(v) => onTags(tags.filter((x) => x !== v))}>
+                  {g}
+                </Tag>
+              );
+            })}
+            <Input.Root value={draft} onChange={setDraft}>
+              <Input.Box className="h-7 w-36">
+                <Input.Field aria-label={t("mods.detail.newTag")} list="fomod-tags" onKeyDown={(e) => e.key === "Enter" && add()} />
+              </Input.Box>
+              <datalist id="fomod-tags">
+                {[...index.values()].map((d) => (
+                  <option key={d.name} value={d.name} />
+                ))}
+              </datalist>
+            </Input.Root>
+            <Button size="icon-sm" emphasis="low" aria-label={t("mods.detail.addTag")} tooltip={t("mods.detail.addTag")} disabled={!draft.trim()} onClick={add}>
+              <PlusIcon size="sm" />
+            </Button>
+          </span>
+        </div>
+      </section>
     </Stack>
   );
 }

@@ -1111,6 +1111,8 @@ export interface FomodStep {
 }
 
 export interface FomodSummary {
+  /** Deployment target the files land in (RD10); absent from older backends. */
+  target?: string;
   files: number;
   size: number;
   folders: { folder: string; files: number }[];

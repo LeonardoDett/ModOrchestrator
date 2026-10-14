@@ -2235,6 +2235,7 @@ export const en = {
   "mods.queue.installAllHelp": "\"Install all\" skips the mods that ask for choices. They stay in the queue without blocking the others.",
   "mods.queue.installAllToast": "Installing the mods that need no choices.",
   "mods.queue.clear": "Clear queue",
+  "mods.queue.installAllEmpty": "Install all",
   "mods.queue.open": "Open queue",
   "mods.queue.waitingChoice.one": "{count} mod is waiting for your choice.",
   "mods.queue.waitingChoice.other": "{count} mods are waiting for your choice.",
@@ -2362,6 +2363,19 @@ export const en = {
   "mods.detail.position": "Mod {index} of {total} · Esc closes",
   "mods.detail.previous": "Previous",
   "mods.detail.next": "Next",
+
+  // FOMOD wizard of the redesign (RD10).
+  "mods.fomod.change": "Change",
+  "mods.fomod.changeStep": "Change {step}",
+  "mods.fomod.hasImage": "Has an image",
+  "mods.fomod.kpiFiles": "Files",
+  "mods.fomod.kpiSize": "On disk",
+  "mods.fomod.nothingChosen": "None",
+  "mods.fomod.organize": "Organize this mod",
+  "mods.fomod.previousChoice": "Previous choice",
+  "mods.fomod.summaryIntro": "Review what will be installed and choose Install.",
+  "mods.fomod.targetRoot": "{target} (root)",
+  "mods.fomod.yourChoices": "Your choices",
 } as const;
 
 export type MessageKey = keyof typeof en;

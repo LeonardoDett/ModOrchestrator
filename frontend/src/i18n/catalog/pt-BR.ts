@@ -2231,6 +2231,7 @@ export const ptBR: Record<MessageKey, string> = {
   "mods.queue.installAllHelp": "\"Instalar todos\" pula os mods que pedem escolhas. Eles ficam na fila sem travar os outros.",
   "mods.queue.installAllToast": "Instalando os mods que não pedem escolhas.",
   "mods.queue.clear": "Esvaziar fila",
+  "mods.queue.installAllEmpty": "Instalar todos",
   "mods.queue.open": "Abrir fila",
   "mods.queue.waitingChoice.one": "{count} mod espera a sua escolha.",
   "mods.queue.waitingChoice.other": "{count} mods esperam a sua escolha.",
@@ -2358,4 +2359,17 @@ export const ptBR: Record<MessageKey, string> = {
   "mods.detail.position": "Mod {index} de {total} · Esc fecha",
   "mods.detail.previous": "Anterior",
   "mods.detail.next": "Próximo",
+
+  // FOMOD wizard of the redesign (RD10).
+  "mods.fomod.change": "Alterar",
+  "mods.fomod.changeStep": "Alterar {step}",
+  "mods.fomod.hasImage": "Tem imagem",
+  "mods.fomod.kpiFiles": "Arquivos",
+  "mods.fomod.kpiSize": "Em disco",
+  "mods.fomod.nothingChosen": "Nenhum",
+  "mods.fomod.organize": "Organizar este mod",
+  "mods.fomod.previousChoice": "Escolha anterior",
+  "mods.fomod.summaryIntro": "Revise o que será instalado e escolha Instalar.",
+  "mods.fomod.targetRoot": "{target} (raiz)",
+  "mods.fomod.yourChoices": "Suas escolhas",
 };

@@ -2207,6 +2207,7 @@ export namespace bridge {
 	    files: number;
 	    size: number;
 	    folders: FomodFolderDTO[];
+	    target: string;
 	    warnings: FomodWarningDTO[];
 	    requirements: FomodRequirementDTO[];
 	
@@ -2219,6 +2220,7 @@ export namespace bridge {
 	        this.files = source["files"];
 	        this.size = source["size"];
 	        this.folders = this.convertValues(source["folders"], FomodFolderDTO);
+	        this.target = source["target"];
 	        this.warnings = this.convertValues(source["warnings"], FomodWarningDTO);
 	        this.requirements = this.convertValues(source["requirements"], FomodRequirementDTO);
 	    }

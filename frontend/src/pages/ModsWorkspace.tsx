@@ -629,7 +629,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         ) : null}
       </div>
 
-      <ImportDecisionDialog item={deciding ? (items.find((i) => i.operationId === deciding.operationId) ?? null) : null} onClose={() => setDeciding(null)} />
+      <ImportDecisionDialog instance={instance} item={deciding ? (items.find((i) => i.operationId === deciding.operationId) ?? null) : null} onClose={() => setDeciding(null)} />
       <ModDetailDialog
         instance={instance}
         id={inspectedRow ? inspectedRow.id : null}

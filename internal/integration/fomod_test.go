@@ -7,6 +7,7 @@ import (
 
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/domain/fomod"
+	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
@@ -292,5 +293,38 @@ func TestFomodWizardCancel(t *testing.T) {
 	e.lib.Wait()
 	if got := e.files(m.ID); !slices.Equal(got, []string{"data:textures/wizard.dds", "data:WizardMod.esp"}) {
 		t.Fatalf("files = %v", got)
+	}
+}
+
+// RD10: FOMOD is a format installer and works for any game. In a generic
+// game with two targets, the summary names the target the files land in
+// (the one of the default mod type in the instance definition), never a
+// fixed name, and the install goes there.
+func TestFomodSummaryTargetComesFromTheDefinition(t *testing.T) {
+	e := newEnvWith(t, envOptions{generic: true, targets: []game.TargetSpec{{ID: "content", Path: "Content"}, {ID: "config", Path: "Config"}}})
+	config := `<config><moduleName>Any Game Mod</moduleName><installSteps order="Explicit"><installStep name="Look">
+<optionalFileGroups order="Explicit"><group name="Style" type="SelectExactlyOne"><plugins order="Explicit">
+<plugin name="Dark"><description>dark</description><files><folder source="dark" destination="" /></files><typeDescriptor><type name="Optional"/></typeDescriptor></plugin>
+<plugin name="Light"><description>light</description><files><folder source="light" destination="" /></files><typeDescriptor><type name="Optional"/></typeDescriptor></plugin>
+</plugins></group></optionalFileGroups></installStep></installSteps></config>`
+	archive := e.zipFile("Any Game Mod.zip", "fomod/ModuleConfig.xml", config, "dark/ui/theme.cfg", "dark", "light/ui/theme.cfg", "light")
+	ids, err := e.lib.ImportFiles(ctx, e.inst.ID, []string{archive})
+	if err != nil {
+		t.Fatal(err)
+	}
+	e.waitDecision(ids[0])
+	v, err := e.lib.FomodState(ctx, ids[0], nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if v.Summary == nil || v.Summary.Target != "content" || len(v.Summary.Folders) == 0 {
+		t.Fatalf("summary = %+v", v.Summary)
+	}
+	if err := e.lib.Resolve(ids[0], library.Answer{Choice: library.ChoiceInstall, Fomod: fomod.Selection{{Step: 0, Group: 0}: {0}}}); err != nil {
+		t.Fatal(err)
+	}
+	e.lib.Wait()
+	if r := e.modNamed("Any Game Mod"); r.State != mod.StateInstalled {
+		t.Fatalf("state = %s", r.State)
 	}
 }

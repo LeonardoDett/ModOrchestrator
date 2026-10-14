@@ -237,6 +237,7 @@ describe("Mods screen (F4)", () => {
         ],
         problems: [],
         summary: {
+          target: "data",
           files: chosen.includes(1) ? 3 : 2,
           size: 2048,
           folders: [
@@ -278,7 +279,15 @@ describe("Mods screen (F4)", () => {
 
     await user.click(within(dialog).getByRole("button", { name: "Next" }));
     expect(await within(dialog).findByText("Files by destination")).toBeInTheDocument();
-    expect(within(dialog).getByText(/^3 files ·/)).toBeInTheDocument();
+    // Your choices by step, the two numbers and the files by destination.
+    expect(within(dialog).getByText("Your choices")).toBeInTheDocument();
+    expect(within(dialog).getAllByText("4K").length).toBeGreaterThan(0);
+    expect(within(dialog).getByText("3")).toBeInTheDocument();
+    expect(within(dialog).getByText("data/textures")).toBeInTheDocument();
+    // The mod can be organized before it is installed (B10).
+    await user.click(within(dialog).getByRole("combobox", { name: "Category" }));
+    await user.click(await screen.findByRole("option", { name: "Interface" }));
+    await user.type(within(dialog).getByRole("combobox", { name: "New tag" }), "4K{Enter}");
     expect(within(dialog).getByText("The installer refers to extras/readme.txt, which is not in the archive; it was skipped.")).toBeInTheDocument();
     // No rule without an explicit action (INV-CON-02): unchecked by default.
     const requirement = within(dialog).getByRole("checkbox", { name: "Create a requirement rule: this mod requires SkyUI (SkyUI_SE.esp)" });
@@ -293,6 +302,8 @@ describe("Mods screen (F4)", () => {
           { step: 0, group: 1, options: [] },
         ],
         requirements: ["SkyUI_SE.esp"],
+        category: "c1",
+        tags: ["4K"],
       },
     ]);
   });
@@ -325,6 +336,8 @@ describe("Mods screen (F4)", () => {
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText("The choices of the previous installation are loaded.")).toBeInTheDocument();
     expect(await within(dialog).findByRole("radio", { name: "SE" })).toHaveAttribute("aria-checked", "true");
+    // The option chosen last time is marked, so changing it is a clear decision.
+    expect(within(dialog).getByText("Previous choice")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Install with the previous choices" }));
     expect(state.answers).toEqual([{ choice: "install", fomod: previous }]);
   });

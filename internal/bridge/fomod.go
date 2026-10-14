@@ -69,9 +69,11 @@ type FomodRequirementDTO struct {
 }
 
 type FomodSummaryDTO struct {
-	Files        int                   `json:"files"`
-	Size         int64                 `json:"size"`
-	Folders      []FomodFolderDTO      `json:"folders"`
+	Files   int              `json:"files"`
+	Size    int64            `json:"size"`
+	Folders []FomodFolderDTO `json:"folders"`
+	// Target is the deployment target the files land in (RD10).
+	Target       string                `json:"target"`
 	Warnings     []FomodWarningDTO     `json:"warnings"`
 	Requirements []FomodRequirementDTO `json:"requirements"`
 }
@@ -139,7 +141,7 @@ func toFomodViewDTO(v library.FomodView) FomodViewDTO {
 		out.Problems = append(out.Problems, FomodSelectionDTO{Step: p.Step, Group: p.Group, Options: []int{}})
 	}
 	if s := v.Summary; s != nil {
-		sum := &FomodSummaryDTO{Files: s.Files, Size: s.Size, Folders: []FomodFolderDTO{}, Warnings: toFomodWarnings(s.Warnings), Requirements: []FomodRequirementDTO{}}
+		sum := &FomodSummaryDTO{Target: string(s.Target), Files: s.Files, Size: s.Size, Folders: []FomodFolderDTO{}, Warnings: toFomodWarnings(s.Warnings), Requirements: []FomodRequirementDTO{}}
 		for _, f := range s.Folders {
 			sum.Folders = append(sum.Folders, FomodFolderDTO{Folder: f.Folder, Files: f.Files})
 		}

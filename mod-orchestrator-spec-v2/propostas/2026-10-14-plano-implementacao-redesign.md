@@ -239,7 +239,9 @@ Concluída em 2026-10-14 (D121). Feito: `ModDetailDialog` no lugar do Inspector 
 - **Pronto quando:** aceite da regra 5; tudo navegável por teclado; o Inspector antigo de Mods é removido.
 - **Sem a capability:** a aba Instalação mostra instalador e origem para qualquer mod; a lista de escolhas só existe quando há FOMOD. Seções de plugin do mod só com `plugins`. Teste com mod de instância `generic`.
 
-### RD10. FOMOD
+### RD10. FOMOD ✅
+
+Concluída em 2026-10-14. Feito: DLG-06 reescrito; passos com a linha do que foi escolhido; selos "Escolha anterior", "Recomendado" e ícone de imagem nas opções; resumo com "Suas escolhas" e "Alterar", os dois números, arquivos por destino com o target que o backend agora informa (`FomodSummary.Target`, pela definição da instância) e categoria e tags na instalação (B10). Testes: `integration/fomod_test.go` (FOMOD numa instância `generic` de dois targets), fixtures reais sem mudança, `ModsPage.test.tsx` (organizar no resumo, escolha anterior na reinstalação). A demonstração com 5 FOMODs reais fica para a RD18.
 
 - **Objetivo:** o assistente no desenho novo.
 - **Entregáveis:** `ui/telas/dialogos.md` (DLG-06) reescrito; passo de escolhas (tipo de seleção, "Escolha anterior", imagem e descrição no foco); resumo final com os dois KPIs, arquivos por destino, categoria e tags (B10).

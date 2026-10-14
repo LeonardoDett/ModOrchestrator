@@ -56,6 +56,9 @@ type FomodView struct {
 // FomodSummary is the last page of the wizard: files by destination,
 // warnings and the requirements the module declares.
 type FomodSummary struct {
+	// Target is where the files land: the target of the plan's mod type in
+	// the definition of the instance, never a fixed name (RD10).
+	Target       game.TargetID
 	Files        int
 	Size         int64
 	Folders      []FolderCount
@@ -191,6 +194,11 @@ func (s *Service) fomodSession(id operation.ID) (*fomodSession, error) {
 // requirements to installed mods.
 func (s *Service) fomodSummary(ctx context.Context, sess *fomodSession, plan *installer.Plan) *FomodSummary {
 	sum := &FomodSummary{Warnings: plan.Warnings, Requirements: []FomodRequirement{}, Folders: []FolderCount{}}
+	if mt, ok := sess.ictx.Definition.ModType(plan.ModType); ok {
+		sum.Target = mt.Target
+	} else if mt, ok := sess.ictx.Definition.ModType(game.DefaultModType); ok {
+		sum.Target = mt.Target
+	}
 	if sum.Warnings == nil {
 		sum.Warnings = []installer.Warning{}
 	}
