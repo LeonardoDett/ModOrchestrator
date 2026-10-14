@@ -229,7 +229,9 @@ Concluída em 2026-10-14. Feito: `ui/telas/mods.md` reescrito; cabeçalho com ch
 - **Pronto quando:** aceite da regra 5; critérios do `mods.md` novo; 2.000 mods rolam sem travar nas três visões; `ModsPage.test.tsx` reescrito; demonstração: arrastar 10 archives, instalar todos, categorizar, alternar as visões.
 - **Sem a capability:** vale para todo jogo. No `generic`: sem categorias iniciais (a visão Abas mostra só "Sem categoria" e o convite para criar), sem ContentFlags, e nenhuma coluna de plugin. Teste da página com workspace `generic`.
 
-### RD9. Modal do mod (cinco abas)
+### RD9. Modal do mod (cinco abas) ✅
+
+Concluída em 2026-10-14 (D121). Feito: `ModDetailDialog` no lugar do Inspector lateral (removido); cabeçalho com categoria, tags editáveis e toggle; Resumo com os números de B13 e os dados do mod; Conflitos com a linha travada (B4); Arquivos com a barra por extensão (B8); Instalação com as escolhas do FOMOD (B9); Histórico; Anterior e Próximo; Esc devolve o foco à tabela. `mods.md` §6 reescrito; testes em `ModsPage.test.tsx` (inclui mod sem FOMOD) e `F13.test.tsx`. Os números do Resumo contam mods, não arquivos como na prancha, porque é o que B13 entrega.
 
 - **Objetivo:** trocar o Inspector lateral pelo modal (D121).
 - **Entregáveis:** `ui/telas/mods.md` §6 reescrito; abas Resumo (KPIs de B13), Conflitos (linhas com estado travado, B4), Arquivos (barra por extensão, B8), Histórico e Instalação (escolhas do FOMOD e Reinstalar, B9); Esc fecha e devolve o foco à linha.

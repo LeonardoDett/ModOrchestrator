@@ -46,6 +46,8 @@ export interface Translator {
   /** Time of day only, for dense logs. */
   formatTime: (iso: string | undefined) => string;
   formatDuration: (ms: number) => string;
+  /** A count with the language's grouping (1.204). */
+  formatNumber: (n: number) => string;
 }
 
 export interface TranslatorOptions {
@@ -65,6 +67,7 @@ export function createTranslator(language: Language, options: TranslatorOptions 
   const seconds = new Intl.NumberFormat(language, { style: "unit", unit: "second", unitDisplay: "narrow", maximumFractionDigits: 1 });
   const minutes = new Intl.NumberFormat(language, { style: "unit", unit: "minute", unitDisplay: "narrow", maximumFractionDigits: 1 });
   const time = new Intl.DateTimeFormat(language, { timeStyle: "medium" });
+  const integer = new Intl.NumberFormat(language, { maximumFractionDigits: 0 });
   const format = (formatter: Intl.DateTimeFormat, iso: string | undefined) => {
     const date = iso ? new Date(iso) : null;
     return !date || Number.isNaN(date.getTime()) ? catalog["common.empty"] : formatter.format(date);
@@ -106,6 +109,7 @@ export function createTranslator(language: Language, options: TranslatorOptions 
       return relative.format(Math.round(diff / (365 * 86400_000)), "year");
     },
     formatTime: (iso) => format(time, iso),
+    formatNumber: (n) => integer.format(n),
     formatDuration: (ms) => (ms < 60_000 ? seconds.format(ms / 1000) : minutes.format(ms / 60_000)),
   };
 }

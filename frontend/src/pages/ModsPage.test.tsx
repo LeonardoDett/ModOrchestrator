@@ -72,9 +72,30 @@ function world() {
       notify();
       return "c2";
     },
-    modDetails: async (id): Promise<ModDetails> => ({ ...state.mods.find((m) => m.id === id)!, description: "", notes: "", tags: [], modTypes: [] }),
+    modDetails: async (id): Promise<ModDetails> => ({
+      ...state.mods.find((m) => m.id === id)!,
+      description: "",
+      notes: "",
+      tags: state.mods.find((m) => m.id === id)!.tags ?? [],
+      modTypes: [],
+      installation: {
+        id: "in1",
+        installer: id === "m1" ? "fomod" : "basic",
+        options: {},
+        files: 1160,
+        size: 1,
+        createdAt: "2026-10-01T00:00:00Z",
+        ...(id === "m1" ? { choices: [{ step: 0, stepName: "Base", group: 0, groupName: "Resolution", names: ["2K"] }] } : {}),
+      },
+    }),
     modFiles: async () => ({ total: 0, files: [] }),
     modHistory: async () => [],
+    modSummary: async () => ({ conflicts: { opponents: 3, winsAgainst: 2, losesTo: 1 }, requirements: { total: 2, present: 1 } }),
+    modExtensions: async () => [
+      { ext: ".dds", files: 742, size: 1 },
+      { ext: ".nif", files: 418, size: 1 },
+    ],
+    modConflicts: async (_i, id) => ({ mod: { id, name: id, priority: 1, enabled: true }, indicator: "none", opponents: [] }),
     setModsEnabled: async (_i, ids, enabled) => {
       state.calls.push(`enable:${ids.join(",")}:${enabled}`);
       state.mods = state.mods.map((m) => (ids.includes(m.id) ? { ...m, enabled } : m));
@@ -313,9 +334,11 @@ describe("Mods screen (F4)", () => {
     const { state, backend } = world();
     render(<App backend={backend} />);
     await openMods(user);
-    await user.click(await screen.findByText("SkyUI"));
-    const inspector = await screen.findByRole("complementary", { name: "SkyUI" });
-    await user.click(within(inspector).getByRole("button", { name: "Remove…" }));
+    await screen.findByText("SkyUI");
+    screen.getByRole("grid").focus();
+    await user.keyboard("{Enter}");
+    const detail = await screen.findByRole("dialog", { name: "SkyUI" });
+    await user.click(within(detail).getByRole("button", { name: "Remove…" }));
     const dialog = await screen.findByRole("dialog");
     expect(await within(dialog).findByText(/1 rule mentions these mods/)).toBeInTheDocument();
     await user.click(within(dialog).getByRole("checkbox", { name: /Also remove the original files/ }));
@@ -393,5 +416,32 @@ describe("Mods screen (F4)", () => {
     await user.click(within(dialog).getByRole("radio", { name: "Image" }));
     await user.click(within(dialog).getByRole("button", { name: "Save category" }));
     await waitFor(() => expect(state.calls).toContain("category:Textures::green:image"));
+  });
+
+  it("opens the mod detail with its numbers, files by type, installer choices and Next (D121)", async () => {
+    const user = userEvent.setup();
+    const { backend } = world();
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    screen.getByRole("grid").focus();
+    await user.keyboard("{Enter}");
+    const detail = await screen.findByRole("dialog", { name: "SkyUI" });
+    expect(await within(detail).findByText("1/2")).toBeInTheDocument();
+    expect(within(detail).getByText("essencial")).toBeInTheDocument();
+    expect(within(detail).getByText("Mod 1 of 3 · Esc closes")).toBeInTheDocument();
+
+    await user.click(within(detail).getByRole("tab", { name: /Files/ }));
+    expect(await within(detail).findByRole("img", { name: /Files by type/ })).toBeInTheDocument();
+
+    await user.click(within(detail).getByRole("tab", { name: "Installation" }));
+    expect(await within(detail).findByText("Choices in the mod installer")).toBeInTheDocument();
+    expect(within(detail).getByText("2K")).toBeInTheDocument();
+
+    await user.click(within(detail).getByRole("button", { name: "Next" }));
+    const next = await screen.findByRole("dialog", { name: "Textures" });
+    await user.click(within(next).getByRole("tab", { name: "Installation" }));
+    // Without a wizard there are no recorded choices (generic installer).
+    await waitFor(() => expect(within(next).queryByText("Choices in the mod installer")).not.toBeInTheDocument());
   });
 });

@@ -103,7 +103,7 @@ describe("F13: keyboard and page states", () => {
     expect(grid).toHaveFocus();
   });
 
-  it("Escape closes the Inspector opened from the table", async () => {
+  it("Escape closes the mod detail opened from the table and gives the focus back (D121)", async () => {
     const user = userEvent.setup();
     const { backend } = world();
     render(<App backend={backend} />);
@@ -111,9 +111,10 @@ describe("F13: keyboard and page states", () => {
     await screen.findByText("Textures");
     grid.focus();
     await user.keyboard("{Enter}");
-    expect(await screen.findByRole("complementary", { name: "SkyUI" })).toBeInTheDocument();
+    expect(await screen.findByRole("dialog", { name: "SkyUI" })).toBeInTheDocument();
     await user.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("complementary", { name: "SkyUI" })).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole("dialog", { name: "SkyUI" })).not.toBeInTheDocument());
+    await waitFor(() => expect(grid.contains(document.activeElement) || grid === document.activeElement).toBe(true));
   });
 
   it("Ctrl+2 opens the second screen of the game and moves the focus to the content; Ctrl+F finds its search", async () => {

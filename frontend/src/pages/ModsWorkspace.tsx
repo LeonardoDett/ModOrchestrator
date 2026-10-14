@@ -11,7 +11,7 @@ import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
 import { ImportDecisionDialog } from "../features/mods/ImportDecisionDialog";
 import { InstallQueueDialog, waitingMods } from "../features/mods/InstallQueueDialog";
-import { ModInspector } from "../features/mods/ModInspector";
+import { ModDetailDialog } from "../features/mods/ModDetailDialog";
 import { RemoveModsDialog } from "../features/mods/ModDialogs";
 import { OrganizationDialog, type OrganizationTab } from "../features/mods/OrganizationDialog";
 import { DEFAULT_HIDDEN, ModsTable, PRIORITY_SORT, sortRows, useModColumns } from "../features/mods/ModsTable";
@@ -192,11 +192,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
     }
   }, [focusMod, rows]);
 
-  // The Inspector follows the focused mod row.
-  useEffect(() => {
-    if (focused && rows.some((r) => r.id === focused)) setInspected(focused);
-  }, [focused, rows]);
   const inspectedRow = inspected ? rows.find((r) => r.id === inspected) : undefined;
+  // Header actions about "the selected mod" follow the focused row.
+  const focusedRow = focused ? rows.find((r) => r.id === focused) : undefined;
+  const inspectedPriority = useMemo(() => {
+    if (!inspected || !modOrder) return undefined;
+    const listed = modRows(rows, modOrder).filter((r) => r.kind === "mod" && r.priority != null);
+    const own = listed.find((r) => r.id === inspected);
+    return own && own.kind === "mod" && own.priority != null ? { value: own.priority, of: listed.length } : undefined;
+  }, [inspected, rows, modOrder]);
 
   // Ctrl+Z reverts the latest order change through history (ui/02 F-04).
   const undo = modOrder?.undo;
@@ -376,15 +380,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
               <Menu.Item onSelect={() => setSeparatorEdit({})}>{t("mods.action.newSeparator")}</Menu.Item>
               <Menu.Item onSelect={() => setHistoryOpen(true)}>{t("mods.orderHistory.title")}</Menu.Item>
               <Menu.Item
-                onSelect={() => navigate({ view: "diagnostics", tab: "history", mod: inspectedRow ? { id: inspectedRow.id, name: inspectedRow.name } : undefined })}
+                onSelect={() => navigate({ view: "diagnostics", tab: "history", mod: focusedRow ? { id: focusedRow.id, name: focusedRow.name } : undefined })}
               >
                 {t("mods.toolbar.history")}
               </Menu.Item>
               <Menu.Item onSelect={() => openFolder("game")}>{t("mods.open.game")}</Menu.Item>
               <Menu.Item onSelect={() => openFolder("staging")}>{t("mods.open.staging")}</Menu.Item>
               <Menu.Item onSelect={() => openFolder("archives")}>{t("mods.open.archives")}</Menu.Item>
-              {inspectedRow?.state === "installed" ? (
-                <Menu.Item onSelect={() => void run(() => backend.openModFolder(inspectedRow.id))}>{t("mods.open.mod", { name: inspectedRow.name })}</Menu.Item>
+              {focusedRow?.state === "installed" ? (
+                <Menu.Item onSelect={() => void run(() => backend.openModFolder(focusedRow.id))}>{t("mods.open.mod", { name: focusedRow.name })}</Menu.Item>
               ) : null}
             </Menu.Content>
           </Menu.Root>
@@ -618,14 +622,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   }
                 />
               </ContextMenu>
-              {inspectedRow ? <ModInspector
-                  instance={instance}
-                  id={inspectedRow.id}
-                  onClose={() => setInspected(null)}
-                  onRemove={setRemoving}
-                  onEditConflicts={setEditingConflicts}
-                  onChooseWinner={setFilesPair}
-                /> : null}
+
             </div>
             {dropzone(false)}
           </>
@@ -633,6 +630,24 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       </div>
 
       <ImportDecisionDialog item={deciding ? (items.find((i) => i.operationId === deciding.operationId) ?? null) : null} onClose={() => setDeciding(null)} />
+      <ModDetailDialog
+        instance={instance}
+        id={inspectedRow ? inspectedRow.id : null}
+        order={visible.flatMap((r) => (r.kind === "mod" ? [r.mod.id] : []))}
+        priority={inspectedPriority}
+        onNavigate={setInspected}
+        onClose={() => setInspected(null)}
+        onRemove={(ids) => {
+          setInspected(null);
+          setRemoving(ids);
+        }}
+        onEditConflicts={setEditingConflicts}
+        onChooseWinner={setFilesPair}
+        onOpenConflictsPage={() => {
+          setInspected(null);
+          navigate({ view: "conflicts" });
+        }}
+      />
       <RemoveModsDialog
         instance={instance}
         ids={removing}

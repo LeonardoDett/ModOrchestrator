@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Equal } from "lucide-react";
-import { ArrowDownIcon, ArrowUpIcon, EyeOffIcon } from "dettmann-ui/icons";
+import { ArrowDownIcon, ArrowUpIcon, EyeOffIcon, LockIcon } from "dettmann-ui/icons";
 import { Button, Indicator, Input, Loader, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useModConflictFiles, useModConflicts } from "../../bridge/queries";
@@ -49,11 +49,20 @@ export function InspectorConflicts({ instance, mod, onEdit }: { instance: string
             </Typography>
             <ul className="flex flex-col gap-1 text-sm">
               {g.list.map((o) => (
-                <li key={o.opponent.id} className="flex items-center justify-between gap-2">
-                  <span className="min-w-0 truncate text-fg">{modLabel(t, o.opponent)}</span>
-                  <span className="shrink-0 text-xs text-fg-muted">
-                    {tp("conflicts.files", g.count(o))} · {text.decision(o.decision)}
+                <li key={o.opponent.id} className="flex flex-col gap-0.5">
+                  <span className="flex items-center justify-between gap-2">
+                    <span className="min-w-0 truncate text-fg">{modLabel(t, o.opponent)}</span>
+                    <span className="shrink-0 text-xs text-fg-muted">
+                      {tp("conflicts.files", g.count(o))} · {text.decision(o.decision)}
+                    </span>
                   </span>
+                  {o.lock ? (
+                    // B4: decided by rules through other mods; changed there.
+                    <span className="flex items-center gap-1 text-xs text-fg-muted">
+                      <LockIcon size="xs" />
+                      {t("conflicts.inspector.locked", { rules: o.lock.rules.map((r) => t("conflicts.inspector.lockRule", { winner: r.winner.name, loser: r.loser.name })).join(", ") })}
+                    </span>
+                  ) : null}
                 </li>
               ))}
             </ul>

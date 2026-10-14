@@ -47,6 +47,16 @@ export function useModFiles(id: string, filter: string) {
   return useBackendQuery((b) => b.modFiles(id, filter, 0, 2000), [id, filter], { onOperationEvents: true });
 }
 
+/** Conflict and requirement numbers of a mod (B13). */
+export function useModSummary(instance: string, id: string) {
+  return useBackendQuery((b) => b.modSummary(instance, id), [instance, id], { onOperationEvents: true });
+}
+
+/** Files of the current installation grouped by extension (B8). */
+export function useModExtensions(id: string) {
+  return useBackendQuery(async (b) => (await b.modExtensions(id)) ?? [], [id], { onOperationEvents: true });
+}
+
 export function useModHistory(id: string) {
   return useBackendQuery(async (b) => (await b.modHistory(id)) ?? [], [id], { onOperationEvents: true });
 }

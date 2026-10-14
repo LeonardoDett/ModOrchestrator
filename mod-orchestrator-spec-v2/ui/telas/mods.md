@@ -98,17 +98,20 @@ Modal "Organização dos mods" aberto por Mais ações › Categorias e tags, co
 ### 5.5 Menu de contexto da linha
 Habilitar/Desabilitar · Instalar (se não instalado) · Reinstalar · Editar conflitos… · Regras… · Mover… · Categoria ▸ · Tipo de mod ▸ (Avançado) · Destacar ▸ · Abrir pasta · Abrir archive · Renomear · Remover…
 
-## 6. Inspector (um mod)
+## 6. Detalhe do mod (modal, D121)
 
-Abas:
-1. **Visão geral**: nome (editável), versão, autor, categoria (select de árvore), notas (textarea), destaque, tipo (Avançado), origem, tamanho, datas, conteúdo, variante. Ações: Habilitar/Desabilitar, Reinstalar, Remover.
-2. **Arquivos**: árvore do footprint (FileBrowser) com marcas por arquivo: vence / perde para X / redundante / ocultado; ações por arquivo: "Escolher vencedor…", "Ocultar arquivo", "Mostrar", "Abrir".
-3. **Conflitos**: listas "Vence", "Perde", "Redundante" agrupadas por mod oponente, com contagens e ação "Editar conflitos…".
-4. **Regras**: regras deste mod (vence/perde, requer/recomenda, incompatível) com origem; adicionar/remover; estado de cada requisito.
-5. **Instalação**: archive, installer usado, opções escolhidas (FOMOD: passos e opções), avisos da instalação, "Reinstalar com outras opções".
-6. **Histórico**: entradas do mod.
+Pranchas `JogoModDetalhe`, `JogoModConflitos`, `JogoModArquivos`, `JogoModInstalacao`, `JogoModHistorico` (RD9). Abre com Enter ou duplo clique na linha e por "Detalhes" no menu da linha; substitui o Inspector lateral, que saiu.
 
-Vários selecionados: resumo (contagem, tamanho total, habilitados) + ações em lote.
+- **Cabeçalho**: ícone da categoria (cor e ícone da paleta), nome, selo da categoria, tags do mod (tirar com o X, pôr com "+ Tag", que sugere as tags já definidas) e o toggle Ativo.
+- **Abas**: Resumo, Conflitos (contagem de mods envolvidos; `warning` com par não revisado), Arquivos (contagem), Instalação, Histórico.
+- **Resumo**: números do mod (B13: perde para, vence de, mods envolvidos, requisitos presentes sobre o total; parte que não pôde ser lida mostra "—") com "Abrir na página de Conflitos"; dados do mod (versão, tamanho, arquivos, prioridade "N de M", autor, instalado há, tipo, origem); ações (Habilitar/Instalar, Reinstalar, Abrir pasta, Remover…); edição de nome, versão, autor, categoria, destaque e notas; descrição e conteúdo.
+- **Conflitos**: adversários por Vence, Perde e Redundante com a decisão; par decidido por regras através de outros mods aparece travado com essas regras e "Altere por lá" (B4, D126); "Editar conflitos…" e o atalho para a página de Conflitos.
+- **Arquivos**: barra de arquivos por extensão (B8, `Progress.Stacked`, vale para qualquer jogo) e a árvore do footprint com a marca de cada arquivo e "Escolher vencedor…", "Ocultar"/"Mostrar".
+- **Instalação**: archive, instalador, pasta raiz, arquivos e data; as escolhas do FOMOD por passo e grupo (B9) só existem quando o mod veio de um assistente; Abrir archive e Reinstalar.
+- **Histórico**: eventos do mod.
+- **Rodapé**: "Mod N de M · Esc fecha", Anterior e Próximo pela ordem da lista visível. Esc fecha e devolve o foco à tabela.
+
+Ações do cabeçalho da tela que falam de "o mod selecionado" (abrir a pasta do mod, histórico) seguem a linha em foco.
 
 ## 7. Multi-seleção
 
