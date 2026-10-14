@@ -6,23 +6,12 @@ Core: 05. Vortex: indicadores de conflito na tabela, notificação "Unsolved fil
 
 Visão geral de **todos** os conflitos do profile ativo: quem vence quem, por quê, o que não foi revisado, e onde escolher vencedores por par ou por arquivo. Divergência aprovada 1: o Vortex não tem essa tela. Os diálogos por mod do Vortex também existem (`dialogos.md`).
 
-## 2. Layout (split view)
+## 2. Layout (prancha `JogoConflitos`, D127)
 
-```
-Toolbar: [Marcar selecionados como revisados] [Mostrar conflitos de mods desabilitados ☐] [Recalcular]
-Resumo: 38 pares em conflito · 12 não revisados · 4 com override · 9 redundantes   [Filtro: Todos|Não revisados|Por regra|Por ordem|Override|Redundante]
-┌──────────────────────────────┬──────────────────────────────────────────────────────┐
-│ PARES (DataTable)            │ DETALHE DO PAR                                       │
-│ Vencedor ▸ Perdedor  Arquivos│ "Mod B vence Mod A em 34 de 40 arquivos"             │
-│ B ▸ A        40   ● não rev. │  Decidido por: ordem (B #120 > A #45)                │
-│ C ▸ A        12   regra      │  [B vence A (criar regra)] [A vence B (criar regra)] │
-│ ...                          │  [Marcar como revisado]                              │
-│                              │ ─ Arquivos ────────────────────────────────────────  │
-│ Agrupar: [Par | Mod]         │  Tree: pasta/arquivo   Vencedor [select]  Motivo     │
-│                              │   meshes/armor/…       [B ▾]              ordem      │
-│                              │   textures/x.dds       [A ▾]              override   │
-└──────────────────────────────┴──────────────────────────────────────────────────────┘
-```
+- Linha de cabeçalho de 72 px: "Conflitos", chips "N pares a decidir" (âmbar quando > 0) e "N decididos"; à direita "Limpar regras" (remove, após confirmar, as regras de par que o usuário criou; regras dos dados dos mods ficam) e "Usar sugestões em tudo" (prepara a sugestão de cada par a decidir sem trava, D126).
+- Abaixo, de ponta a ponta: coluna de 320 px com "Buscar mod", "Ocultar resolvidos" e os mods com conflito em linhas de 56 px (nome, "contra N mods", contagem âmbar de pares a decidir); à direita, o mod escolhido: nome, "Disputa arquivos com N mods. Em cada linha, clique no mod que deve vencer.", a faixa "Para todos os N" ("X vence" / "Os outros vencem") e a tabela "Disputa com" / "Quem vence?" em linhas de 68 px com as duas opções de 44 px (a escolhida em verde com "vence"; "Sugerido" na sugestão). Par travado por regras através de outros mods aparece desabilitado com cadeado e "altere por lá" (B4). "N arquivos" abre a escolha por arquivo.
+- Escolhas ficam preparadas até "Salvar" na barra de 60 px ao pé do painel, que diz quantas mudanças e o que a ordem vai mover (D004); "Descartar" desfaz.
+- Faixa de aviso para intenções obsoletas (override ou ocultação que perdeu o sentido), com remover e reescolher.
 
 ## 3. Lista de pares
 

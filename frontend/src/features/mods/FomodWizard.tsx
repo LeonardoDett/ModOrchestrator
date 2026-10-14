@@ -503,7 +503,7 @@ function Summary({
                   );
                 })}
               </span>
-              <Button size="sm" emphasis="low" intent="brand" onClick={() => onChange(st.index)} aria-label={t("mods.fomod.changeStep", { step: st.name })}>
+              <Button size="inline" emphasis="low" intent="brand" onClick={() => onChange(st.index)} aria-label={t("mods.fomod.changeStep", { step: st.name })}>
                 {t("mods.fomod.change")}
               </Button>
             </li>

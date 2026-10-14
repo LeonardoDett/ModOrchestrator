@@ -78,10 +78,11 @@ describe("Indicator chip", () => {
     expect(screen.queryByRole("img")).toBeNull();
   });
 
-  test("chromatic chip tints only the icon", () => {
+  test("chromatic chip is tinted as a whole (D-040, board JogoConflitos)", () => {
     const { container } = render(<Indicator variant="chip" icon={Glyph} intent="warning" count={12} label="pares a decidir" />);
-    expect(container.querySelector('[data-intent="warning"]')).toContainElement(screen.getByTestId("glyph"));
-    expect(container.querySelector('[data-slot="indicator-chip"]')).not.toHaveAttribute("data-intent");
+    const chip = container.querySelector('[data-slot="indicator-chip"]');
+    expect(chip).toHaveAttribute("data-intent", "warning");
+    expect(chip).toContainElement(screen.getByTestId("glyph"));
   });
 });
 

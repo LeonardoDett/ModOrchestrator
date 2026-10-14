@@ -244,5 +244,6 @@ The approved boards are the specification of each screen. What a board needs and
 - `Tree variant="rows"`: edge-to-edge 34 px rows with a line between them, for a tree with columns under a header.
 - `SwatchPicker size` (`square`, `sm`, `md`) and `tint` (`"self"` or a palette color).
 - Wizard boards: `Modal.Header layout="bar"` (76 px), `Modal.Footer size="lg"` (64 px), `Modal.Body padding="none"`, `Alert band` (edge-to-edge strip under a header), `Radio.Item`/`Checkbox variant="row"` (44 px bordered option rows with an `action` end), `Stepper variant="list"` (step rows without connectors, done steps with a green check), `StatTile layout="inline"`.
+- Split panes (Conflicts board): `ResourcePage layout="workspace" bleed` (72 px header, content edge to edge under a line), `List density="pane"` (56 px rows edge to edge), `Indicator variant="chip"` tinted as a whole when it has a status intent, `Button size="inline"` (a link inside text).
 
 Tests: `src/__tests__/fidelity-props.test.tsx`.

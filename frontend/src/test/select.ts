@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import type { UserEvent } from "@testing-library/user-event";
 
 /**
@@ -8,5 +8,9 @@ import type { UserEvent } from "@testing-library/user-event";
  */
 export async function chooseOption(user: UserEvent, combobox: HTMLElement, option: string | RegExp) {
   await user.click(combobox);
-  await user.click(await screen.findByRole("option", { name: option }));
+  // Scoped to the select's own listbox: the page may have other listboxes.
+  const id = combobox.getAttribute("aria-controls");
+  const listbox = id ? document.getElementById(id) : null;
+  const scope = listbox ? within(listbox) : screen;
+  await user.click(await scope.findByRole("option", { name: option }));
 }

@@ -6,7 +6,10 @@ import { ResourcePage } from "../components/resource-page";
 import { Switch } from "../components/switch";
 import { SwatchPicker } from "../components/swatch-picker";
 import { Alert } from "../components/alert";
+import { Button } from "../components/button";
 import { Checkbox } from "../components/checkbox";
+import { Indicator } from "../components/indicator";
+import { List } from "../components/list";
 import { Modal } from "../components/modal";
 import { Radio } from "../components/radio";
 import { ModalFooter } from "../components/modal/modal.footer";
@@ -299,5 +302,48 @@ describe("board fidelity props (D-040)", () => {
     const body = screen.getByText("corpo");
     expect(body.className).toContain("overflow-hidden");
     expect(body.className).not.toContain("px-6");
+  });
+
+  it("ResourcePage workspace bleed runs the content edge to edge under a line", () => {
+    render(
+      <ResourcePage layout="workspace" bleed title="Conflitos">
+        <div>painéis</div>
+      </ResourcePage>,
+    );
+    const main = screen.getByRole("main");
+    expect(main.className).not.toContain("px-7");
+    expect(screen.getByText("painéis").parentElement!.className).toContain("border-t");
+  });
+
+  it("Indicator chip with a status intent is tinted as a whole", () => {
+    const Swords = ({ className }: { className?: string }) => <svg className={className} />;
+    render(<Indicator variant="chip" intent="warning" icon={Swords} value="12" label="pares a decidir" />);
+    const chip = screen.getByText("pares a decidir").parentElement as HTMLElement;
+    expect(chip).toHaveAttribute("data-intent", "warning");
+    expect(chip.className).toContain("bg-intent-subtle");
+  });
+
+  it("List pane has 56 px rows edge to edge with the selection bar", () => {
+    render(
+      <List.Root
+        density="pane"
+        aria-label="Mods com conflito"
+        items={[{ id: "a", name: "Rochas A" }, { id: "b", name: "Rochas B" }]}
+        selectedKeys={["a"]}
+        renderItem={(m) => <List.Item title={m.name} description="contra 2 mods" meta="1" />}
+      />,
+    );
+    const list = screen.getByRole("listbox");
+    expect(list.className).not.toContain("rounded-control");
+    const row = screen.getByRole("option", { name: /Rochas A/ });
+    expect(row.className).toContain("h-14");
+    expect(row.className).toContain("bg-selected");
+  });
+
+  it("Button inline is a link inside text, with no box height", () => {
+    render(<Button size="inline" emphasis="low" intent="brand">2 arquivos</Button>);
+    const link = screen.getByRole("button", { name: "2 arquivos" });
+    expect(link.className).toContain("h-auto");
+    expect(link.className).not.toContain("h-control");
   });
 });

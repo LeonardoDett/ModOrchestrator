@@ -26,6 +26,8 @@ const buttonVariants = defineRecipe({
       icon: "size-control-md p-0",
       "icon-sm": "size-control-sm p-0",
       "icon-lg": "size-control-lg p-0",
+      /** D-040: a link inside text ("2 arquivos", "Alterar"): no box, the size of the text around it. */
+      inline: "h-auto rounded-chip px-0.5 py-0 font-medium underline-offset-2 hover:underline",
     },
     /** Full width */
     fullWidth: {

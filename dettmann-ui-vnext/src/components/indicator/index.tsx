@@ -73,9 +73,12 @@ export function Indicator({
         data-slot="indicator-chip"
         title={title}
         className={cn(
-          "inline-flex h-control-sm shrink-0 items-center gap-2 whitespace-nowrap rounded-control border border-border bg-surface px-2.5 text-xs text-fg-muted tabular-nums",
+          "inline-flex h-control-sm shrink-0 items-center gap-2 whitespace-nowrap rounded-control border px-2.5 text-xs tabular-nums",
+          // D-040: a chip with a status intent is tinted as a whole ("12 pares a decidir").
+          chromatic ? "border-intent-border bg-intent-subtle text-intent-text" : "border-border bg-surface text-fg-muted",
           className,
         )}
+        {...intentData(chromatic ? intent : undefined)}
         {...props}
       >
         <span className={cn("inline-flex", chromatic ? "text-intent-text" : "text-fg-muted")} {...intentData(chromatic ? intent : undefined)}>

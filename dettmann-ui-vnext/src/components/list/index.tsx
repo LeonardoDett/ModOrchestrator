@@ -38,7 +38,11 @@ interface ListContextValue {
   selectedKeys: string[];
   toggle: (itemKey: string) => void;
   setFocusedIndex: (index: number) => void;
+  density: ListDensity;
 }
+
+/** `compact` (default): rounded box of 32 px rows. `pane`: a side pane of 56 px rows edge to edge (D-040). */
+export type ListDensity = "compact" | "pane";
 
 const [ListProvider, useListContext] = createStrictContext<ListContextValue>("List");
 
@@ -53,15 +57,19 @@ const [ListItemScopeProvider, useListItemScope] =
   createStrictContext<ListItemScopeValue>("List.Item");
 
 const rootVariants = defineRecipe({
-  base: "overflow-auto rounded-control border border-border bg-surface",
+  base: "overflow-auto",
   variants: {
+    density: {
+      compact: "rounded-control border border-border bg-surface",
+      pane: "min-h-0 flex-1",
+    },
     /** Selecionável: foco no contêiner (anel interno); estática: sem parada de tabulação. */
     interactive: {
       true: "focus-ring-inset",
       false: "",
     },
   },
-  defaultVariants: { interactive: true },
+  defaultVariants: { interactive: true, density: "compact" },
 });
 
 interface ListRootProps<T> extends Omit<ComponentPropsWithoutRef<"div">, "children"> {
@@ -88,6 +96,8 @@ interface ListRootProps<T> extends Omit<ComponentPropsWithoutRef<"div">, "childr
   itemHeight?: number;
   /** Max height of the list viewport */
   maxHeight?: number;
+  /** `compact` (default) or `pane`: 56 px rows edge to edge, filling a side pane. */
+  density?: ListDensity;
 }
 
 function defaultGetItemKey<T>(item: T, index: number): string {
@@ -113,6 +123,7 @@ function ListRoot<T>({
   virtualized = false,
   itemHeight = 40,
   maxHeight = 320,
+  density = "compact",
   className,
   onKeyDown,
   ...props
@@ -193,6 +204,7 @@ function ListRoot<T>({
         selectedKeys,
         toggle,
         setFocusedIndex,
+        density,
       }}
     >
       <div
@@ -201,8 +213,8 @@ function ListRoot<T>({
         aria-multiselectable={selectionMode === "multiple" || undefined}
         tabIndex={interactive ? 0 : undefined}
         onKeyDown={handleKeyDown}
-        className={cn(rootVariants({ interactive }), virtualized && "overflow-hidden", className)}
-        style={!virtualized ? { maxHeight } : undefined}
+        className={cn(rootVariants({ interactive, density }), virtualized && "overflow-hidden", className)}
+        style={!virtualized && density === "compact" ? { maxHeight } : undefined}
         {...props}
       >
         {virtualized ? (
@@ -280,7 +292,7 @@ function ListItem({
   children,
   ...props
 }: ListItemProps) {
-  const { toggle, setFocusedIndex, selectionMode } = useListContext("Item");
+  const { toggle, setFocusedIndex, selectionMode, density } = useListContext("Item");
   const { itemKey, index, selected: selectedFromScope, focused } = useListItemScope("Item");
   const selected = selectedProp ?? selectedFromScope;
   const interactive = selectionMode !== "none";
@@ -309,12 +321,23 @@ function ListItem({
     children
   );
 
-  const rowClass = rowRecipe({
+  let rowClass = rowRecipe({
     selected: interactive && selected,
     active: focused,
     disabled,
     multiline: structured && Boolean(description),
   });
+  if (density === "pane") {
+    // Pane rows: 56 px, edge to edge, a line between them; selection keeps the brand bar.
+    let state = "hover:bg-state-hover";
+    if (disabled) state = "text-fg-subtle cursor-not-allowed";
+    else if (selected) state = "bg-selected before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-brand-fill";
+    else if (focused) state = "bg-state-hover";
+    rowClass = cn(
+      "relative flex h-14 shrink-0 cursor-pointer items-center border-b border-border-subtle px-3.5 text-sm text-fg motion-transition focus-ring-inset",
+      state,
+    );
+  }
 
   if (!interactive) {
     return (

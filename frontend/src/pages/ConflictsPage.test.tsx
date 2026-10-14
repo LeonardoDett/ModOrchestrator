@@ -3,7 +3,7 @@ import { openScreen } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
-import type { Backend, ConflictFile, ConflictPair, ConflictPairs, PairDecision } from "../bridge/types";
+import type { Backend, ConflictFile, ConflictOpponent, ConflictPair, ConflictPairs, PairDecision } from "../bridge/types";
 import { buildFileTree } from "../features/conflicts/PairFiles";
 import { chooseOption } from "../test/select";
 
@@ -34,7 +34,7 @@ const PAIR: ConflictPair = {
   potential: false,
 };
 
-function world() {
+function world(opponent: Partial<ConflictOpponent> = {}) {
   const calls: string[] = [];
   const decisions: PairDecision[][] = [];
   const pairs: ConflictPairs = {
@@ -43,6 +43,17 @@ function world() {
     stale: [],
     pendingHashes: 0,
   };
+  const opponentOf = (mod: string): ConflictOpponent => ({
+    opponent: mod === "a" ? B : A,
+    files: 2,
+    wins: mod === "a" ? 0 : 2,
+    loses: mod === "a" ? 2 : 0,
+    redundant: 0,
+    decision: "order",
+    reviewed: false,
+    needsReview: true,
+    ...opponent,
+  });
   const backend: Backend = {
     ...createOfflineBackend(),
     connected: true,
@@ -52,6 +63,7 @@ function world() {
     listAppSettings: async () => [],
     workspace: async () => ({ active: { id: "i1", name: "Skyrim", gameName: "Skyrim" }, instances: [{ id: "i1", name: "Skyrim", gameName: "Skyrim" }], items: ["overview", "mods", "conflicts"] }),
     conflictPairs: async () => pairs,
+    modConflicts: async (_i, mod) => ({ mod: mod === "a" ? A : B, indicator: "loses_all", opponents: [opponentOf(mod)] }),
     conflictPairDetail: async () => ({ pair: PAIR, files: [file("textures/armor.dds", "b"), file("textures/sky.dds", "b")], pendingHashes: 0 }),
     setFileOverrides: async (_i, winner, locations) => {
       calls.push(`override:${winner}:${locations.map((l) => l.path).join(",")}`);
@@ -71,34 +83,73 @@ async function openConflicts(user: ReturnType<typeof userEvent.setup>) {
   await openScreen(user, "Conflicts");
 }
 
-describe("Conflicts screen (F6)", () => {
+describe("Conflicts screen (F6, RD11)", () => {
   beforeEach(() => localStorage.clear());
 
-  it("explains the winner and chooses another winner for a single file", async () => {
+  it("lists the mods with conflicts and chooses another winner for a single file", async () => {
     const user = userEvent.setup();
     const { backend, calls } = world();
     render(<App backend={backend} />);
     await openConflicts(user);
-    expect(await screen.findByText("Texture B wins Texture A in 2 of 2 files")).toBeInTheDocument();
-    expect(screen.getByText("Decided by: priority (Texture B #2 > Texture A #1)")).toBeInTheDocument();
-    const select = await screen.findByRole("combobox", { name: "Winner of data: textures/sky.dds" });
+    const mods = await screen.findByRole("complementary", { name: "Mods with conflicts" });
+    expect(within(mods).getByText("Texture A")).toBeInTheDocument();
+    expect(within(mods).getAllByText("against 1 mod").length).toBe(2);
+    const section = await screen.findByRole("region", { name: "Conflicts of Texture A" });
+    expect(await within(section).findByText("to decide")).toBeInTheDocument();
+    await user.click(within(section).getByRole("button", { name: "2 files" }));
+    const dialog = await screen.findByRole("dialog");
+    const select = await within(dialog).findByRole("combobox", { name: "Winner of data: textures/sky.dds" });
     await chooseOption(user, select, /Texture A/);
     expect(calls).toContain("override:a:textures/sky.dds");
     // No rule exists just because the mods conflict (D004).
     expect(calls.some((c) => c.startsWith("rule"))).toBe(false);
   });
 
-  it("shows the order impact before creating a pair rule", async () => {
+  it("stages a winner and saves it after showing what moves in the order", async () => {
     const user = userEvent.setup();
     const { backend, decisions } = world();
     render(<App backend={backend} />);
     await openConflicts(user);
-    await user.click(await screen.findByRole("button", { name: "Texture A wins Texture B (create rule)" }));
-    const dialog = await screen.findByRole("dialog");
-    expect(within(dialog).getByText("Texture A goes from #1 to #2")).toBeInTheDocument();
+    const section = await screen.findByRole("region", { name: "Conflicts of Texture A" });
+    const group = await within(section).findByRole("radiogroup", { name: "Who wins between Texture A and Texture B" });
+    await user.click(within(group).getByRole("radio", { name: /Texture A/ }));
+    const bar = await screen.findByRole("region", { name: "Unsaved changes" });
+    expect(await within(bar).findByText("1 unsaved change. Saving moves 1 mod in the order.")).toBeInTheDocument();
     expect(decisions).toHaveLength(0);
-    await user.click(within(dialog).getByRole("button", { name: "Save and move" }));
+    await user.click(within(bar).getByRole("button", { name: "Save" }));
     expect(decisions).toEqual([[{ mod: "a", opponent: "b", choice: "wins" }]]);
+  });
+
+  it("marks the suggested winner with its reason and uses the suggestions everywhere (D126)", async () => {
+    const user = userEvent.setup();
+    const { backend } = world({ suggestion: { winner: "a", reason: "requires", rule: "d1" } });
+    backend.conflictPairs = async () => ({
+      pairs: [{ ...PAIR, suggestion: { winner: "a", reason: "requires", rule: "d1" } }],
+      totals: { pairs: 1, unreviewed: 1, override: 0, redundant: 0, rule: 0, order: 1, mixed: 0 },
+      stale: [],
+      pendingHashes: 0,
+    });
+    render(<App backend={backend} />);
+    await openConflicts(user);
+    const section = await screen.findByRole("region", { name: "Conflicts of Texture A" });
+    expect(await within(section).findByText("Suggested")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Use the suggestions everywhere" }));
+    expect(await screen.findByRole("region", { name: "Unsaved changes" })).toBeInTheDocument();
+    expect(within(section).getByText("not saved")).toBeInTheDocument();
+  });
+
+  it("shows a pair decided through other mods as locked, without a suggestion when there is no fact", async () => {
+    const user = userEvent.setup();
+    const { backend } = world({
+      needsReview: false,
+      lock: { winner: "b", rules: [{ id: "r1", winner: { id: "m", name: "Middle" }, loser: { id: "a", name: "Texture A" }, source: "user" }] },
+    });
+    render(<App backend={backend} />);
+    await openConflicts(user);
+    const section = await screen.findByRole("region", { name: "Conflicts of Texture A" });
+    expect(await within(section).findByText(/decided by rules through other mods \(Middle wins Texture A\); change it there/)).toBeInTheDocument();
+    expect(within(section).getByRole("radio", { name: /Texture A/ })).toBeDisabled();
+    expect(within(section).queryByText("Suggested")).not.toBeInTheDocument();
   });
 });
 

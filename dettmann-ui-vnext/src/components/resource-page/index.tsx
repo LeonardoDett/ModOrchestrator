@@ -18,6 +18,11 @@ export interface ResourcePageProps extends Omit<ComponentPropsWithoutRef<"main">
    * actions, 28 px side margins, and the content stretching to the bottom.
    */
   layout?: "document" | "workspace";
+  /**
+   * Workspace only: the content runs edge to edge under a line (a split view
+   * of panes, as in the Conflicts board); the header line is 72 px.
+   */
+  bleed?: boolean;
   children: ReactNode;
 }
 
@@ -42,6 +47,7 @@ export function ResourcePage({
   toolbar,
   meta,
   layout = "document",
+  bleed = false,
   children,
   className,
   ...props
@@ -54,6 +60,20 @@ export function ResourcePage({
         {primaryActions}
       </div>
     ) : null;
+  if (layout === "workspace" && bleed) {
+    return (
+      <main className={cn("flex min-h-0 min-w-0 flex-1 flex-col", className)} {...props}>
+        {breadcrumbs}
+        <div className="flex min-h-18 shrink-0 flex-wrap items-center gap-2.5 px-7 py-3">
+          <h1 className="mr-2 text-2xl font-semibold text-fg">{title}</h1>
+          {meta}
+          <span className="flex-1" />
+          {actions}
+        </div>
+        <div className="flex min-h-0 flex-1 flex-col border-t border-border">{children}</div>
+      </main>
+    );
+  }
   if (layout === "workspace") {
     return (
       <main className={cn("flex min-h-0 min-w-0 flex-1 flex-col px-7", className)} {...props}>

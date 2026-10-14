@@ -356,7 +356,7 @@ function Summary({
       <section aria-labelledby="mod-numbers" className="flex flex-col gap-2.5">
         <div className="flex items-baseline justify-between">
           <SectionTitle id="mod-numbers">{t("mods.detail.numbers")}</SectionTitle>
-          <Button size="sm" emphasis="low" intent="brand" onClick={onOpenConflictsPage}>
+          <Button size="inline" emphasis="low" intent="brand" onClick={onOpenConflictsPage}>
             {t("mods.detail.openConflicts")}
           </Button>
         </div>
