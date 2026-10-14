@@ -1,6 +1,64 @@
 # Proposta: núcleo agnóstico de jogo, capacidades por jogo e extensões
 
-Status: **fase A aprovada e aplicada** (2026-10-13, D112); o adapter do Valheim (§10, item 2) foi escrito (D114, core/16); fases C e D continuam proposta. O diagnóstico abaixo descreve o código de antes da fase A: os itens 5, 6 e 13 da tabela de acoplamentos foram resolvidos por ela. Ficaram para depois, da fase A: o item 9 (decisões por capability na UI), que espera o subprojeto de componentes liberar as telas, e a exposição de `GameSupport` no bridge, que entra com a R1 do registro de jogos.
+Status: **estado final desta frente em 2026-10-13** na seção 0. As seções 1 a 9 são o diagnóstico e a proposta originais e descrevem o código de **antes** da fase A; as seções 10 e 11 registram o Valheim e o teste real.
+
+## 0. Estado final (para o plano de implementação)
+
+### Feito
+
+| Decisão | Commit | O que entrou |
+|---|---|---|
+| D112 | `4aa3757` | Regra de escopo de jogo no protocolo e no `AGENTS.md`. Capability e interface opcional em relação 1:1, validada no registro. Quatro capabilities novas. `Registry.Support()`. Teste de literais vigia nomes de arquivo e extensões de jogo. `plugins.txt` fora do núcleo. Teste do caminho "sem capability" com o `generic`. |
+| D114 | `4e5fe99` | Adapter do Valheim (`internal/adapters/valheim`, core/16): sem plugins nem load order, três instaladores próprios, `framework_missing` para o BepInEx, launch e detecção de execução. Sem mudança no núcleo. |
+| — | `e5b17f0` | Teste de ponta a ponta opcional contra a instalação real (`MO_E2E_VALHEIM_PACKAGE`). |
+| D118 | `155afac` | `Definition.CreatableTargets` (o deploy cria a pasta do target declarado e a remove, vazia, no purge) e `Plan.Metadata` (o instalador informa nome, versão, descrição e site). |
+
+Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c75748`, descoberta como dado; resolve o item 12), D115 (`c7aabfe`, recursos ligáveis por instância), D116 (`6d5626b`, manifesto de jogo), D117 (`5b7b665`, jogo personalizado como entrada; o manifesto aceita target criável).
+
+### Situação de cada acoplamento
+
+| # | Acoplamento | Situação |
+|---|---|---|
+| 1 | Plugin com forma Bethesda | **Aberto.** O Valheim não tem ordem de carga, então não guiou a generalização. |
+| 2 | Núcleo desejado/aplicado importa `domain/plugin` | Aberto (fase C). |
+| 3 | Fiação manual do serviço de plugins | Aberto (fase C). |
+| 4 | Catálogo fechado de diagnósticos | **Aberto.** O Valheim reutilizou `framework_missing`; um diagnóstico realmente novo ainda exige editar núcleo e i18n. |
+| 5 | `plugins.txt` no núcleo | Resolvido (D112). |
+| 6 | Capability sem validação | Resolvido (D112). |
+| 7 | Adapters importam `internal/` | Aberto (fase C). |
+| 8 | Texto de jogo no catálogo i18n do app | **Piorou um pouco:** sete rótulos do BepInEx entraram no catálogo do app (D114). |
+| 9 | UI decide por capability | **Aberto.** `SettingsPage.tsx`, `WorkspacePages.tsx`, `WorkaroundsTab.tsx`. Espera o subprojeto de componentes; a R5 do registro de jogos depende disso. |
+| 10 | Settings `plugins.*` para toda instância | Aberto (baixo). |
+| 11 | FOMOD e padrão de nome do Nexus no domínio | Aberto (baixo); `Plan.Metadata` já dá ao adapter o caminho próprio. |
+| 12 | `RegistryHints`/`VersionFile` obrigatórios | Resolvido (D113). |
+| 13 | Teste de literais sem vocabulário de formato | Resolvido (D112). |
+| 14 | Deploy exige target existente | Resolvido (D118). |
+| 15 | Adapter não informa metadados do mod | Resolvido (D118), exceto o autor, que o `manifest.json` não traz. |
+
+### Adiado, com dono
+
+| Item | Depende de |
+|---|---|
+| Tirar da UI as decisões por capability (item 9) | Subprojeto de componentes liberar as telas. |
+| Dependências do `manifest.json` como `DependencyRule` (core/16 §8) | Contrato novo: `Plan.Requirements` hoje carrega arquivos, não pacotes. |
+| Autor do mod no Valheim | Levar o nome do archive ao contexto do instalador. |
+| Importar profiles do r2modman; provider da Thunderstore | core/15 (V1.x/V2). |
+| Possível instabilidade em `TestDeployPurgeDeploy` com a máquina carregada | Observada duas vezes pela outra frente; não reproduzida aqui. |
+
+### Próximas fases propostas
+
+| Fase | Conteúdo | Tamanho | Pré-requisito |
+|---|---|---|---|
+| A2 | Item 9: o backend passa a dizer quais abas e seções existem; a UI só renderiza. | Pequeno | Telas liberadas pelo subprojeto de componentes. |
+| B | Ordem de carga genérica (`ordered_units` + `unit_headers`, §5), guiada por um jogo que **tenha** ordem de carga editável. | Médio a grande | Escolher esse jogo. Sem ele, não fazer. |
+| C1 | Textos e diagnósticos do adapter vêm com o adapter (itens 4 e 8): catálogo de códigos e rótulos extensível por adapter. | Médio | Nenhum. É o próximo passo de maior retorno: já dói com dois jogos. |
+| C2 | Pontos de contribuição no lugar da fiação manual (itens 2 e 3): N0 deixa de importar `plugin`. | Médio | C1. |
+| C3 | Pacote `sdk/` fora de `internal/`; adapters embutidos passam a importar só ele (item 7), com teste de arquitetura. | Médio | C1 e C2. Coincide com a R6 do registro de jogos (contrato de extensão por jogo): fazer como uma coisa só. |
+| D | Host de extensões: manifesto, carregador, isolamento, permissões, tela Extensions. | Grande | C3. V2 (D012). |
+
+Ordem sugerida: **C1 → A2 (quando as telas liberarem) → C2 → C3/R6 → D**, com a fase B entrando quando houver o jogo que a justifique.
+
+O que os dois jogos já provaram: um adapter novo, sem os processos do Skyrim, entrou sem mudar o núcleo (D114); as duas suposições do núcleo que o teste real achou foram corrigidas com um campo declarativo cada (D118). O que ainda **não** está provado é a ordem de carga genérica e a fronteira pública do SDK.
 
 Pergunta que este documento responde: o Mod Orchestrator começa pelo Skyrim, mas não será só dele. O código segmenta o que é de um jogo e o que é de todos? Se um processo não existe em outro jogo, isso gera problema? E o que falta para um SDK de plugins no estilo do VS Code?
 
