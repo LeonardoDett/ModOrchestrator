@@ -130,8 +130,9 @@ describe("App shell", () => {
   it("rereads operations from the backend on events instead of merging them (INV-OPS-04)", async () => {
     const fake = fakeBackend([op("a", "interrupted")]);
     render(<App backend={fake.backend} />);
-    expect(await screen.findByText("kind-a")).toBeInTheDocument();
+    // Home (board Inicio) lists only what is running; an interrupted one shows in the banner.
     expect(await screen.findByText("Interrupted operations")).toBeInTheDocument();
+    expect(screen.queryByText("kind-a")).not.toBeInTheDocument();
     expect(await screen.findByText("v1.2.3")).toBeInTheDocument();
 
     // The event carries a status the backend does not confirm: the UI must

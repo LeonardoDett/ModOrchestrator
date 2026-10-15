@@ -19,9 +19,11 @@ Ponto de partida global: o que precisa de atenção em qualquer jogo, o que foi 
 
 Reservados (não renderizados): Ferramentas (Starter, V1.x), Notícias/Mods em destaque (V2, dependem de provider).
 
-## 3. Layout e personalização
+## 3. Layout e personalização (prancha `Inicio`, D127)
 
-Grid responsivo de Cards; "Personalizar" (toolbar) liga modo de edição: ocultar/mostrar, reordenar por arrastar; persistido em `ui.dashboard.dashlets`. "Precisa de atenção" não pode ser ocultado quando há `blocking`.
+- Cabeçalho "Início" com "N itens pedem atenção em M jogos" e "Personalizar".
+- Duas colunas fixas. Esquerda: "Primeiros passos" enquanto incompleto, "Precisa de atenção" de todos os jogos (uma linha por item, com o jogo e a gravidade embaixo e a ação principal; no fim, os jogos sem pendência) e "Atividade recente" (linhas de 40 px com o evento, o jogo e "há X", "Ver histórico"). Direita (400 px): "Em andamento" só enquanto algo roda, "Jogos recentes" (quadrado na cor do jogo, "Entrar" e Jogar no jogo ativo) e "Novidades da versão".
+- O dashlet "Status do jogo ativo" saiu (a prancha não tem); "Personalizar" liga, desliga e reordena os demais em `ui.dashboard.dashlets`. Downloads é reservado e não aparece.
 
 ## 4. Estados
 

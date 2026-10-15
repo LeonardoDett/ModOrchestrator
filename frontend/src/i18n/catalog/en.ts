@@ -2696,6 +2696,16 @@ export const en = {
   "addGame.deleteTitle": "Delete {name}?",
   "addGame.deleteDescription": "The game leaves the list. Nothing in its folder is touched.",
   "addGame.deleteInUse": "An instance uses this game; stop managing it first.",
+  "home.allGood": "Nothing needs attention",
+  "home.clean": "{games}: nothing pending.",
+  "home.byGame": "grouped by game",
+  "home.running": "In progress",
+  "home.progress": "{current} of {total}",
+  "home.items.one": "{count} item needs attention",
+  "home.items.other": "{count} items need attention",
+  "home.inGames.one": "in {count} game",
+  "home.inGames.other": "in {count} games",
+  "home.news": "New in version {version}",
 } as const;
 
 export type MessageKey = keyof typeof en;
