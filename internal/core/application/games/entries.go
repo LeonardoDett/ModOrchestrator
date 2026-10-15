@@ -3,6 +3,7 @@ package games
 import (
 	"context"
 	"errors"
+	"io"
 	"slices"
 	"strings"
 	"sync"
@@ -264,4 +265,35 @@ func (r *memoryEntries) Delete(_ context.Context, id game.ID) error {
 		return ports.ErrNotFound
 	}
 	return nil
+}
+
+// maxEntryFile bounds a manifest read from disk: a game description is a
+// few kilobytes; anything far larger is not one.
+const maxEntryFile = 1 << 20
+
+// ExportEntryToFile writes the manifest of a user entry to path (R5c), the
+// file ImportEntryFromFile reads on this or another PC.
+func (s *Service) ExportEntryToFile(ctx context.Context, id game.ID, path string) error {
+	data, err := s.ExportEntry(ctx, id)
+	if err != nil {
+		return err
+	}
+	return s.FS.WriteFile(ctx, path, data)
+}
+
+// ImportEntryFromFile reads a manifest from path and adds the game (R5c).
+func (s *Service) ImportEntryFromFile(ctx context.Context, path string) (game.ID, error) {
+	f, err := s.FS.Open(ctx, path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	data, err := io.ReadAll(io.LimitReader(f, maxEntryFile+1))
+	if err != nil {
+		return "", err
+	}
+	if len(data) > maxEntryFile {
+		return "", fail(CodeEntryInvalid, nil, "detail", "file too large")
+	}
+	return s.ImportEntry(ctx, data)
 }

@@ -303,3 +303,35 @@ func (a *App) ModSummary(instance, modID string) (ModSummaryDTO, error) {
 	}
 	return out, nil
 }
+
+// LibraryGameDTO is one card of the Library (B14).
+type LibraryGameDTO struct {
+	Instance  ManagedGameDTO       `json:"instance"`
+	LastUsed  string               `json:"lastUsed,omitempty"`
+	Status    *DeployStatusDTO     `json:"status,omitempty"`
+	Mods      *ModsSummaryDTO      `json:"mods,omitempty"`
+	Conflicts *ConflictsSummaryDTO `json:"conflicts,omitempty"`
+	Problems  *DiagnosticCountsDTO `json:"problems,omitempty"`
+}
+
+// LibraryGames returns the figures of every managed game for the Library,
+// most recently used first, without entering any of them.
+func (a *App) LibraryGames() ([]LibraryGameDTO, error) {
+	list, err := a.c.Overview.LibraryGames(a.context())
+	if err != nil {
+		return nil, a.fail("library games", err, nil)
+	}
+	out := make([]LibraryGameDTO, 0, len(list))
+	for _, g := range list {
+		dto := LibraryGameDTO{Instance: toManagedDTO(g.Instance), LastUsed: optTime(g.LastUsed), Mods: modsDTO(g.Mods), Conflicts: conflictsDTO(g.Conflicts)}
+		if g.Status != nil {
+			st := toDeployStatusDTO(*g.Status)
+			dto.Status = &st
+		}
+		if g.Problems != nil {
+			dto.Problems = &DiagnosticCountsDTO{Blocking: g.Problems.Blocking, Errors: g.Problems.Errors, Warnings: g.Problems.Warnings}
+		}
+		out = append(out, dto)
+	}
+	return out, nil
+}

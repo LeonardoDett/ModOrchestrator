@@ -75,6 +75,18 @@ func TestOverviewAndFirstSteps(t *testing.T) {
 	if err != nil || len(recent) != 1 || recent[0].LastUsed.IsZero() {
 		t.Fatalf("recent = %+v %v", recent, err)
 	}
+	// B14: the Library reads the figures of each game without entering it.
+	lib, err := ov.LibraryGames(ctx)
+	if err != nil || len(lib) != 1 {
+		t.Fatalf("library = %+v %v", lib, err)
+	}
+	g := lib[0]
+	if g.Mods == nil || g.Mods.Enabled != 2 || g.Conflicts == nil || g.Conflicts.Unreviewed != 1 || g.Status == nil || g.Problems == nil || g.LastUsed.IsZero() {
+		t.Fatalf("library game = %+v", g)
+	}
+	if g.Problems.Infos != 0 {
+		t.Fatalf("library problems count infos: %+v", g.Problems)
+	}
 }
 
 // D120: the game menu badges come from their owners on each read. Unreviewed

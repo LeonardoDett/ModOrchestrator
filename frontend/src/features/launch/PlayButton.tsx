@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { OctagonX, Square } from "lucide-react";
-import { ChevronDownIcon, FolderOpenIcon, PlayIcon, TriangleAlertIcon, UploadIcon } from "dettmann-ui/icons";
-import { Button, ContextMenu, Icon, Loader, Menu, type ContextMenuItem } from "dettmann-ui";
+import { PlayIcon, TriangleAlertIcon, UploadIcon } from "dettmann-ui/icons";
+import { Button, ContextMenu, Icon, Loader, type ContextMenuItem } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useLaunchCheck, useWorkspace } from "../../bridge/queries";
 import type { LaunchCheck, LaunchRequest } from "../../bridge/types";
@@ -44,7 +44,7 @@ function stateHint(i18n: Translator, c: LaunchCheck): string {
  * them; while the game runs Play becomes "Em execução". The menu has the
  * other launch options and the game folder.
  */
-export function PlayButton({ layout = "split" }: { layout?: "split" | "block" | "icon" } = {}) {
+export function PlayButton({ layout = "inline" }: { layout?: "inline" | "block" | "icon" } = {}) {
   const i18n = useI18n();
   const { t } = i18n;
   const backend = useBackend();
@@ -118,41 +118,20 @@ export function PlayButton({ layout = "split" }: { layout?: "split" | "block" | 
     );
   }
 
+  // A card of a screen (boards Biblioteca, Inicio): one button, the other
+  // launch options and the game folder on its context menu, like the block.
+  const options: ContextMenuItem[] = [
+    ...others.map((o) => ({ id: o.id, label: launchOptionLabel(i18n, o.id), disabled, onSelect: () => play(o.id) })),
+    { id: "folder", label: t("launch.openGameFolder"), onSelect: () => void run(() => backend.openInstanceFolder(instance, "game")) },
+  ];
   return (
-    <div className="flex items-center">
-      <Button
-        size="sm"
-        intent={intent}
-        emphasis={emphasis}
-        disabled={disabled}
-        startIcon={icon}
-        title={hint}
-        aria-label={label}
-        className="rounded-r-none"
-        onClick={() => play("")}
-      >
-        {t(c.state === "running" ? "launch.running" : "launch.play")}
-      </Button>
-      <Menu.Root placement="bottom-end">
-        <Menu.Trigger>
-          <Button size="sm" className="rounded-l-none border-l-0 px-1.5" aria-label={t("launch.menu")}>
-            <ChevronDownIcon size="sm" />
-          </Button>
-        </Menu.Trigger>
-        <Menu.Content>
-          {others.map((o) => (
-            <Menu.Item key={o.id} label={launchOptionLabel(i18n, o.id)} disabled={disabled} onSelect={() => play(o.id)}>
-              <PlayIcon size="sm" />
-              {launchOptionLabel(i18n, o.id)}
-            </Menu.Item>
-          ))}
-          <Menu.Item label={t("launch.openGameFolder")} onSelect={() => void run(() => backend.openInstanceFolder(instance, "game"))}>
-            <FolderOpenIcon size="sm" />
-            {t("launch.openGameFolder")}
-          </Menu.Item>
-        </Menu.Content>
-      </Menu.Root>
+    <>
+      <ContextMenu items={options}>
+        <Button intent={intent} emphasis={emphasis} disabled={disabled} startIcon={icon} title={hint} aria-label={label} onClick={() => play("")}>
+          {t(c.state === "running" ? "launch.running" : "launch.play")}
+        </Button>
+      </ContextMenu>
       {dialogNode}
-    </div>
+    </>
   );
 }

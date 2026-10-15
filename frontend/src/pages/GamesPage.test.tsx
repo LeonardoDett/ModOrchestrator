@@ -68,6 +68,12 @@ function fakeWorld(over: Partial<World> = {}) {
       hiddenCount: 0,
     }),
     gameInstanceDetails: async (id) => world.instances.find((i) => i.id === id)!,
+    // B14: the Library figures follow the managed list.
+    libraryGames: async () => world.instances.map((instance) => ({ instance, problems: { blocking: 0, errors: 0, warnings: 0, infos: 0 } })),
+    gamesSupport: async () => [
+      { gameId: "skyrimse", gameName: SKYRIM.gameName, adapter: "skyrimse", adapterVersion: "1", support: "full", stores: ["steam"], custom: false, features: [] },
+    ],
+    gameEntries: async () => [],
     workspace: async (): Promise<Workspace> => {
       const active = world.instances.find((i) => i.active);
       return {
@@ -141,7 +147,8 @@ describe("Games screen and assistant (F3)", () => {
     await openGames(user);
 
     expect(await screen.findByText(SKYRIM.gameName)).toBeInTheDocument();
-    expect(screen.getByText(/Discovered \(1\)/)).toBeInTheDocument();
+    // Board Biblioteca: found games sit in their own block, not managed.
+    expect(screen.getByRole("region", { name: "Found on this PC, not managed yet" })).toBeInTheDocument();
     expect(world.calls).toEqual([]);
     // No workspace without a managed game (D023).
     expect(within(sidebar()).queryByRole("button", { name: "Mods" })).not.toBeInTheDocument();
@@ -190,11 +197,13 @@ describe("Games screen and assistant (F3)", () => {
   it("refuses a wrong folder with the reason and keeps Next disabled", async () => {
     const user = userEvent.setup();
     const { backend } = fakeWorld({ discovered: [] });
-    // Supported (not found) games are listed by the backend; emulate one.
-    backend.gamesView = async () => ({ managed: [], discovered: [], supported: [{ gameId: "skyrimse", gameName: SKYRIM.gameName, hidden: false }], scanned: true, hiddenCount: 0 });
     render(<App backend={backend} />);
     await openGames(user);
-    await user.click(await screen.findByRole("button", { name: "Locate manually…" }));
+    // Add game (board JogosSuportados): the chosen game, then Manage asks for its folder.
+    await user.click(await screen.findByRole("button", { name: "Add game" }));
+    const list = await screen.findByRole("dialog", { name: "Add game" });
+    await user.click(await within(list).findByRole("option", { name: new RegExp(SKYRIM.gameName) }));
+    await user.click(within(list).getByRole("button", { name: "Manage" }));
     const dialog = await screen.findByRole("dialog");
     const folder = within(dialog).getByLabelText("Game folder");
     await user.type(folder, "D:\\Wrong folder");
@@ -241,8 +250,8 @@ describe("Games screen and assistant (F3)", () => {
     const user = userEvent.setup();
     render(<App backend={backend} />);
     await openGames(user);
-    expect(await screen.findByText("Other manager")).toBeInTheDocument();
-    expect(screen.getByText("Active")).toBeInTheDocument();
+    // Another manager's deployment counts as a problem on the card band.
+    expect(await screen.findByText("1 problem")).toBeInTheDocument();
   });
 
   it("stopping management keeps the files by default and deleting them needs the name typed", async () => {

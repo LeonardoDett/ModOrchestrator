@@ -94,6 +94,14 @@ func TestEntriesAreExportedImportedAndDeleted(t *testing.T) {
 	if _, err := e.svc.ImportEntry(ctx, data); code(t, err) != games.CodeEntryExists {
 		t.Fatalf("importing an existing id: %v", err)
 	}
+	// R5c: the same document through a file, to carry the game to another PC.
+	e.fs.AddDir(`D:\Share`)
+	if err := e.svc.ExportEntryToFile(ctx, inst.Game, `D:\Share\valheim.json`); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := e.svc.ImportEntryFromFile(ctx, `D:\Share\valheim.json`); code(t, err) != games.CodeEntryExists {
+		t.Fatalf("importing the exported file back: %v", err)
+	}
 	if err := e.svc.DeleteEntry(ctx, inst.Game); code(t, err) != games.CodeEntryInUse {
 		t.Fatalf("deleting an entry in use: %v", err)
 	}

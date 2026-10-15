@@ -12,6 +12,7 @@ import (
 	"context"
 	"errors"
 	"slices"
+	"strings"
 	"time"
 
 	"modorchestrator/internal/core/application/conflicts"
@@ -409,4 +410,78 @@ func (s *Service) Mod(ctx context.Context, instance game.InstanceID, m mod.ID) M
 		out.Requirements = &r
 	}
 	return out
+}
+
+// LibraryGame is one card of the Library (B14, board Biblioteca): the
+// figures of a managed game read without entering it. A nil part could not
+// be read.
+type LibraryGame struct {
+	Instance games.Managed
+	// LastUsed is when the game was last entered or played (zero: never).
+	LastUsed  time.Time
+	Status    *deployment.StatusView
+	Mods      *ModsSummary
+	Conflicts *ConflictsSummary
+	// Problems counts the visible problems (info excluded).
+	Problems *diagnostics.Counts
+}
+
+// LibraryGames summarises every managed game for the Library, most recently
+// used first, then by name.
+func (s *Service) LibraryGames(ctx context.Context) ([]LibraryGame, error) {
+	list, err := s.Instances.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	used := map[game.InstanceID]time.Time{}
+	if recent, err := s.Games.Recent(ctx, len(list)+1); err == nil {
+		for _, r := range recent {
+			used[r.Instance.ID] = r.LastUsed
+		}
+	}
+	out := make([]LibraryGame, 0, len(list))
+	for _, inst := range list {
+		d, err := s.Games.Details(ctx, inst.ID)
+		if err != nil {
+			if errors.Is(err, ports.ErrNotFound) {
+				continue
+			}
+			return nil, err
+		}
+		g := LibraryGame{Instance: d, LastUsed: used[inst.ID]}
+		if st, err := s.Deploy.Status(ctx, inst.ID); err == nil {
+			g.Status = &st
+		}
+		if rows, err := s.Library.ModList(ctx, inst.ID); err == nil {
+			m := &ModsSummary{}
+			for _, r := range rows {
+				if r.State != mod.StateInstalled {
+					continue
+				}
+				m.Total++
+				if r.Enabled {
+					m.Enabled++
+				}
+				m.Size += r.Size
+				m.Files += r.Files
+			}
+			g.Mods = m
+		}
+		if pv, err := s.Conflicts.Pairs(ctx, inst.ID, false, ""); err == nil {
+			g.Conflicts = &ConflictsSummary{Pairs: pv.Totals.Pairs, Unreviewed: pv.Totals.Unreviewed, Overrides: pv.Totals.Override}
+		}
+		if p, err := s.Diagnostics.Problems(ctx, inst.ID); err == nil {
+			c := p.Counts
+			c.Infos = 0
+			g.Problems = &c
+		}
+		out = append(out, g)
+	}
+	slices.SortStableFunc(out, func(a, b LibraryGame) int {
+		if c := b.LastUsed.Compare(a.LastUsed); c != 0 {
+			return c
+		}
+		return strings.Compare(strings.ToLower(a.Instance.Instance.DisplayName), strings.ToLower(b.Instance.Instance.DisplayName))
+	})
+	return out, nil
 }

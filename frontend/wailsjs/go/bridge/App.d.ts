@@ -144,6 +144,8 @@ export function Launch(arg1:string,arg2:bridge.LaunchRequestDTO):Promise<string>
 
 export function LaunchCheck(arg1:string):Promise<bridge.LaunchCheckDTO>;
 
+export function LibraryGames():Promise<Array<bridge.LibraryGameDTO>>;
+
 export function ListAppSettings():Promise<Array<bridge.SettingDTO>>;
 
 export function ListInstanceSettings(arg1:string):Promise<Array<bridge.SettingDTO>>;
@@ -201,6 +203,8 @@ export function Notifications(arg1:number):Promise<Array<bridge.NotificationDTO>
 export function OpenBackupsFolder():Promise<void>;
 
 export function OpenDataFolder():Promise<void>;
+
+export function OpenGameEntryFile(arg1:string):Promise<string>;
 
 export function OpenInstanceFolder(arg1:string,arg2:string):Promise<void>;
 
@@ -309,6 +313,8 @@ export function RuleCycle(arg1:string):Promise<bridge.RuleCycleDTO>;
 export function RunHealthChecks(arg1:string):Promise<void>;
 
 export function SaveCategory(arg1:string,arg2:bridge.CategoryDTO):Promise<string>;
+
+export function SaveGameEntryFile(arg1:string,arg2:string,arg3:string):Promise<string>;
 
 export function SaveTag(arg1:string,arg2:bridge.TagInputDTO):Promise<string>;
 

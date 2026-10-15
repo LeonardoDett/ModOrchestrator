@@ -1,180 +1,154 @@
 import { useMemo, useState, type ReactNode } from "react";
-import { Gamepad2, LayoutGrid, List } from "lucide-react";
-import { ChevronDownIcon, EyeIcon, EyeOffIcon, FolderOpenIcon, PlusIcon, SearchIcon, TriangleAlertIcon, XIcon } from "dettmann-ui/icons";
-import { Alert, Badge, Button, Checkbox, EmptyState, FeaturedIcon, Input, Menu, SegmentedControl, Stack, Typography, Icon } from "dettmann-ui";
+import { CheckIcon, CircleAlertIcon, EyeIcon, EyeOffIcon, FolderOpenIcon, MoreHorizontalIcon, PlusIcon, UploadIcon } from "dettmann-ui/icons";
+import { Alert, Button, Icon, Menu, SegmentedControl, type IconComponent } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useGamesView } from "../bridge/queries";
-import type { DiscoveredGame, GamesView, InstanceFolder, ManagedGame, SupportedGame } from "../bridge/types";
+import { useGamesView, useLibraryGames } from "../bridge/queries";
+import type { DiscoveredGame, InstanceFolder, LibraryGame, ManagedGame } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
-import { DiscoveredDetails, ManagedDetails, useStoreLabel } from "../features/games/GameDetails";
-import { GameTile, type TileAction } from "../features/games/GameTile";
+import { AddGameDialog } from "../features/games/AddGameDialog";
+import { GameAccent } from "../features/games/GameAccent";
+import { useStoreLabel } from "../features/games/GameDetails";
+import { gameInitials } from "../features/games/GameSwitcher";
 import { GenericGameDialog } from "../features/games/GenericGameDialog";
 import { RelocateDialog, RenameDialog, UnmanageDialog } from "../features/games/InstanceDialogs";
 import { ManageGameWizard, type WizardStart } from "../features/games/ManageGameWizard";
 import { ScanFooter } from "../features/games/ScanFooter";
 import { useAction } from "../features/games/use-action";
+import { PlayButton } from "../features/launch/PlayButton";
 import { useI18n } from "../i18n/i18n";
-import { useNavigation } from "../shell/navigation";
-import { LoadingState, PageBody } from "./PageBody";
+import { MAIN_ID, useNavigation } from "../shell/navigation";
+import { LoadingState } from "./PageBody";
 
-const LAYOUT_KEY = "mo.games.layout";
-type Layout = "grid" | "list";
+type LibraryFilter = "all" | "problems" | "hidden";
 
-/** Grid/list is presentation state (docs-ia/03 rule 1): kept per viewer. */
-function readLayout(): Layout {
-  try {
-    return localStorage.getItem(LAYOUT_KEY) === "list" ? "list" : "grid";
-  } catch {
-    return "grid";
-  }
+/** Problems of a game that the Library shows: visible diagnostics, a missing folder, another manager. */
+function problemCount(g: LibraryGame): number {
+  const p = g.problems;
+  const n = p ? p.blocking + p.errors + p.warnings : 0;
+  return n + (g.instance.rootMissing ? 1 : 0) + (g.instance.foreign.length > 0 ? 1 : 0);
 }
 
 /**
- * Games (ui/telas/games.md): managed, discovered and supported games with
- * search, grid/list, quick/full search and the assistant. Everything shown
- * comes from GamesView; nothing is managed without a click on Manage.
+ * Library (ui/telas/games.md, board Biblioteca): the managed games with
+ * their figures (B14), the most recent one as "Continuar de onde parou",
+ * and the games found on this PC that are not managed yet. "Adicionar
+ * jogo" opens the list of games the app serves (board JogosSuportados).
+ * Nothing is managed without a click on Gerenciar.
  */
 export function GamesPage() {
   const { t } = useI18n();
-  const [layout, setLayout] = useState<Layout>(readLayout);
-  const [showHidden, setShowHidden] = useState(false);
-  const view = useGamesView(showHidden);
-  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<LibraryFilter>("all");
+  const view = useGamesView(filter === "hidden");
+  const library = useLibraryGames();
   const [wizard, setWizard] = useState<WizardStart | null>(null);
+  const [adding, setAdding] = useState(false);
   const [genericOpen, setGenericOpen] = useState(false);
   const [renaming, setRenaming] = useState<ManagedGame | null>(null);
   const [relocating, setRelocating] = useState<ManagedGame | null>(null);
   const [unmanaging, setUnmanaging] = useState<ManagedGame | null>(null);
 
-  const changeLayout = (next: Layout) => {
-    setLayout(next);
-    try {
-      localStorage.setItem(LAYOUT_KEY, next);
-    } catch {
-      // Storage is optional.
-    }
-  };
-
-  let body: ReactNode;
-  switch (view.status) {
-    case "loading":
-      body = <LoadingState rows={3} />;
-      break;
-    case "unavailable":
-      body = (
-        <Alert.Root intent="info">
-          <Alert.Description>{t("app.offlineHint")}</Alert.Description>
-        </Alert.Root>
-      );
-      break;
-    case "error":
-      body = <ErrorAlert title="games.loadError" error={view.error} onRetry={view.reload} />;
-      break;
-    case "ready":
-      body = (
-        <GamesBody
-          data={view.data}
-          layout={layout}
-          search={search}
-          onManage={setWizard}
-          onGeneric={() => setGenericOpen(true)}
-          onRename={setRenaming}
-          onRelocate={setRelocating}
-          onUnmanage={setUnmanaging}
-        />
-      );
+  let body: ReactNode = null;
+  if (view.status === "loading" || library.status === "loading") body = <LoadingState rows={3} />;
+  else if (view.status === "unavailable") {
+    body = (
+      <Alert.Root intent="info">
+        <Alert.Description>{t("app.offlineHint")}</Alert.Description>
+      </Alert.Root>
+    );
+  } else if (view.status === "error") body = <ErrorAlert title="games.loadError" error={view.error} onRetry={view.reload} />;
+  else if (library.status === "error") body = <ErrorAlert title="games.loadError" error={library.error} onRetry={library.reload} />;
+  else if (view.status === "ready" && library.status === "ready") {
+    body = (
+      <LibraryBody
+        games={library.data}
+        managed={view.data.managed}
+        discovered={view.data.discovered}
+        filter={filter}
+        onManage={setWizard}
+        onGeneric={() => setGenericOpen(true)}
+        onRename={setRenaming}
+        onRelocate={setRelocating}
+        onUnmanage={setUnmanaging}
+      />
+    );
   }
 
   return (
-    <PageBody>
-      <Stack gap="lg">
-        <GamesToolbar
-          layout={layout}
-          onLayout={changeLayout}
-          showHidden={showHidden}
-          onShowHidden={setShowHidden}
-          search={search}
-          onSearch={setSearch}
-          onGeneric={() => setGenericOpen(true)}
-          hiddenCount={view.status === "ready" ? view.data.hiddenCount : 0}
-        />
-        {body}
-        <ScanFooter />
-      </Stack>
+    <main id={MAIN_ID} tabIndex={-1} className="flex min-h-0 flex-1 flex-col gap-6 overflow-auto px-9 py-7 focus:outline-none">
+      <LibraryHeader
+        managed={view.status === "ready" ? view.data.managed.length : 0}
+        discovered={view.status === "ready" ? view.data.discovered.length : 0}
+        filter={filter}
+        onFilter={setFilter}
+        onAdd={() => setAdding(true)}
+      />
+      {body}
+      <ScanFooter />
+      <AddGameDialog
+        open={adding}
+        onClose={() => setAdding(false)}
+        onManage={(start) => {
+          setAdding(false);
+          setWizard(start);
+        }}
+        onCreate={() => {
+          setAdding(false);
+          setGenericOpen(true);
+        }}
+      />
       <ManageGameWizard start={wizard} onClose={() => setWizard(null)} />
       <GenericGameDialog open={genericOpen} onOpenChange={setGenericOpen} onContinue={setWizard} />
       <RenameDialog game={renaming} onClose={() => setRenaming(null)} />
       <RelocateDialog game={relocating} onClose={() => setRelocating(null)} />
       <UnmanageDialog game={unmanaging} onClose={() => setUnmanaging(null)} />
-    </PageBody>
+    </main>
   );
 }
 
-interface ToolbarProps {
-  layout: Layout;
-  onLayout: (l: Layout) => void;
-  showHidden: boolean;
-  onShowHidden: (v: boolean) => void;
-  search: string;
-  onSearch: (v: string) => void;
-  onGeneric: () => void;
-  hiddenCount: number;
-}
-
-function GamesToolbar({ layout, onLayout, showHidden, onShowHidden, search, onSearch, onGeneric }: ToolbarProps) {
-  const { t } = useI18n();
+function LibraryHeader({ managed, discovered, filter, onFilter, onAdd }: { managed: number; discovered: number; filter: LibraryFilter; onFilter: (f: LibraryFilter) => void; onAdd: () => void }) {
+  const { t, tp } = useI18n();
   const backend = useBackend();
   const run = useAction();
   const [scanning, setScanning] = useState(false);
-
-  const scan = async (mode: "quick" | "full") => {
+  const scan = async () => {
     setScanning(true);
-    await run(() => backend.scanGames(mode), { success: mode === "quick" ? "games.scan.quickDone" : undefined });
+    await run(() => backend.scanGames("quick"), { success: "games.scan.quickDone" });
     setScanning(false);
   };
-
   return (
-    <div className="flex flex-wrap items-center gap-3">
-      <Menu.Root>
-        <Menu.Trigger>
-          <Button emphasis="high" loading={scanning} startIcon={<SearchIcon size="sm" />} endIcon={<ChevronDownIcon size="sm" />}>
-            {t("games.scan")}
-          </Button>
-        </Menu.Trigger>
-        <Menu.Content>
-          <Menu.Item onSelect={() => void scan("quick")}>{t("games.scan.quick")}</Menu.Item>
-          <Menu.Item onSelect={() => void scan("full")}>{t("games.scan.full")}</Menu.Item>
-        </Menu.Content>
-      </Menu.Root>
-      <Button startIcon={<PlusIcon size="sm" />} onClick={onGeneric}>
-        {t("games.addGeneric")}
-      </Button>
-      <div className="ml-auto flex flex-wrap items-center gap-3">
-        <Input.Root value={search} onChange={onSearch}>
-          <Input.Box>
-            <Input.Field type="search" data-page-search aria-label={t("games.search")} placeholder={t("games.search")} />
-          </Input.Box>
-        </Input.Root>
-        <Checkbox checked={showHidden} onCheckedChange={onShowHidden} label={t("games.showHidden")} />
-        <SegmentedControl<Layout>
-          aria-label={t("games.layout")}
+    <div className="flex items-center justify-between gap-4">
+      <div className="flex min-w-0 flex-col gap-1">
+        <h1 className="text-2xl font-semibold text-fg">{t("nav.games")}</h1>
+        <span className="text-sm text-fg-muted">{[tp("library.managed", managed), tp("library.discovered", discovered)].join(" · ")}</span>
+      </div>
+      <div className="flex shrink-0 items-center gap-2.5">
+        <SegmentedControl<LibraryFilter>
           size="sm"
-          value={layout}
-          onChange={onLayout}
+          aria-label={t("library.filter")}
+          value={filter}
+          onChange={onFilter}
           options={[
-            { value: "grid", label: <Icon icon={LayoutGrid} size="sm" label={t("games.layout.grid")} /> },
-            { value: "list", label: <Icon icon={List} size="sm" label={t("games.layout.list")} /> },
+            { value: "all", label: t("library.filter.all") },
+            { value: "problems", label: t("library.filter.problems") },
+            { value: "hidden", label: t("library.filter.hidden") },
           ]}
         />
+        <Button loading={scanning} onClick={() => void scan()}>
+          {t("library.scan")}
+        </Button>
+        <Button emphasis="high" startIcon={<PlusIcon size="sm" />} onClick={onAdd}>
+          {t("library.add")}
+        </Button>
       </div>
     </div>
   );
 }
 
 interface BodyProps {
-  data: GamesView;
-  layout: Layout;
-  search: string;
+  games: readonly LibraryGame[];
+  managed: readonly ManagedGame[];
+  discovered: readonly DiscoveredGame[];
+  filter: LibraryFilter;
   onManage: (start: WizardStart) => void;
   onGeneric: () => void;
   onRename: (g: ManagedGame) => void;
@@ -182,210 +156,259 @@ interface BodyProps {
   onUnmanage: (g: ManagedGame) => void;
 }
 
-function GamesBody({ data, layout, search, onManage, onGeneric, onRename, onRelocate, onUnmanage }: BodyProps) {
+function LibraryBody({ games, managed, discovered, filter, onManage, onGeneric, onRename, onRelocate, onUnmanage }: BodyProps) {
   const { t } = useI18n();
-  const backend = useBackend();
-  const run = useAction();
-  const { navigate } = useNavigation();
-  const needle = search.trim().toLowerCase();
-  const matches = (...texts: string[]) => needle === "" || texts.some((x) => x.toLowerCase().includes(needle));
+  // GamesView decides what is hidden; the Library figures follow it.
+  const shown = useMemo(() => {
+    const ids = new Set(managed.map((m) => m.id));
+    return games.filter((g) => {
+      if (!ids.has(g.instance.id)) return false;
+      if (filter === "problems") return problemCount(g) > 0;
+      if (filter === "hidden") return g.instance.hidden;
+      return true;
+    });
+  }, [games, managed, filter]);
+  const hero = filter === "all" ? shown.find((g) => g.lastUsed) : undefined;
 
-  const managed = useMemo(() => data.managed.filter((g) => matches(g.name, g.gameName)), [data.managed, needle]);
-  const discovered = useMemo(() => data.discovered.filter((g) => matches(g.gameName)), [data.discovered, needle]);
-  const supported = useMemo(() => data.supported.filter((g) => matches(g.gameName)), [data.supported, needle]);
-
-  const nothingFound = data.scanned && data.managed.length === 0 && data.discovered.length === 0;
-
-  return (
-    <Stack gap="xl">
-      {nothingFound ? (
-        <EmptyState.Root className="rounded-card border border-border bg-surface">
-          <EmptyState.Icon>
-            <FeaturedIcon icon={Gamepad2} intent="neutral" />
-          </EmptyState.Icon>
-          <EmptyState.Title>{t("games.noneFoundTitle")}</EmptyState.Title>
-          <EmptyState.Description>{t("games.noneFoundDescription")}</EmptyState.Description>
-          <EmptyState.Actions>
-            <Button onClick={onGeneric}>
-              {t("games.addGeneric")}
-            </Button>
-          </EmptyState.Actions>
-        </EmptyState.Root>
-      ) : null}
-
-      <Section title="games.section.managed" count={managed.length} layout={layout}>
-        {managed.map((g) => (
-          <ManagedTile
-            key={g.id}
-            game={g}
-            layout={layout}
-            onOpenWorkspace={async () => {
-              if (!g.active) await run(() => backend.setActiveInstance(g.id));
-              navigate({ view: "overview" });
-            }}
-            onActivate={() => void run(() => backend.setActiveInstance(g.id))}
-            onAnother={() =>
-              g.custom ? onGeneric() : onManage({ gameId: g.gameId, gameName: g.gameName })
-            }
-            onRename={() => onRename(g)}
-            onRelocate={() => onRelocate(g)}
-            onUnmanage={() => onUnmanage(g)}
-          />
-        ))}
-      </Section>
-
-      <Section title="games.section.discovered" count={discovered.length} layout={layout}>
-        {discovered.map((g) => (
-          <DiscoveredTile key={`${g.gameId}|${g.root}`} game={g} layout={layout} onManage={onManage} />
-        ))}
-      </Section>
-
-      <Section title="games.section.supported" count={supported.length} layout={layout}>
-        {supported.map((g) => (
-          <SupportedTile key={g.gameId} game={g} layout={layout} onLocate={onManage} />
-        ))}
-      </Section>
-    </Stack>
-  );
-}
-
-function Section({ title, count, layout, children }: { title: Parameters<ReturnType<typeof useI18n>["t"]>[0]; count: number; layout: Layout; children: ReactNode }) {
-  const { t } = useI18n();
-  if (count === 0) return null;
-  return (
-    <Stack as="section" gap="sm" aria-label={t(title)}>
-      <Typography variant="heading-6" color="fg">
-        {t(title)} ({count})
-      </Typography>
-      <div className={layout === "grid" ? "grid grid-cols-[repeat(auto-fill,minmax(18rem,1fr))] gap-4" : "flex flex-col gap-2"}>{children}</div>
-    </Stack>
-  );
-}
-
-function StatusBadges({ game }: { game: ManagedGame }) {
-  const { t } = useI18n();
   return (
     <>
-      {game.active ? <Badge intent="success">{t("games.status.active")}</Badge> : null}
-      {game.foreign.length > 0 ? (
-        <Badge intent="warning">
-          <TriangleAlertIcon size="xs" className="mr-1 inline" />
-          {t("games.status.foreign")}
-        </Badge>
-      ) : null}
-      {game.rootMissing ? (
-        <Badge intent="danger">
-          <XIcon size="xs" className="mr-1 inline" />
-          {t("games.status.rootMissing")}
-        </Badge>
-      ) : null}
-      {game.unavailable ? <Badge emphasis="low">{t("games.status.unavailable")}</Badge> : null}
-      {game.hidden ? <Badge emphasis="low">{t("games.status.hidden")}</Badge> : null}
+      {hero ? <ContinueCard game={hero} /> : null}
+      {shown.length > 0 ? (
+        <section aria-label={t("library.managedLabel")} className="grid grid-cols-4 gap-4">
+          {shown.map((g) => (
+            <GameCard
+              key={g.instance.id}
+              game={g}
+              onAnother={() => (g.instance.custom ? onGeneric() : onManage({ gameId: g.instance.gameId, gameName: g.instance.gameName }))}
+              onRename={() => onRename(g.instance)}
+              onRelocate={() => onRelocate(g.instance)}
+              onUnmanage={() => onUnmanage(g.instance)}
+            />
+          ))}
+        </section>
+      ) : (
+        <p className="text-sm text-fg-muted">{t(filter === "all" ? "library.empty" : "library.emptyFilter")}</p>
+      )}
+      {filter === "all" && discovered.length > 0 ? <Detected games={discovered} onManage={onManage} /> : null}
     </>
   );
 }
 
-interface ManagedTileProps {
-  game: ManagedGame;
-  layout: Layout;
-  onOpenWorkspace: () => void;
-  onActivate: () => void;
+/** Enters a game: makes it the active one, then opens its Overview. */
+function useEnter() {
+  const backend = useBackend();
+  const run = useAction();
+  const { navigate } = useNavigation();
+  return async (g: ManagedGame) => {
+    if (!g.active) {
+      const r = await run(() => backend.setActiveInstance(g.id));
+      if (!r.ok) return;
+    }
+    navigate({ view: "overview" });
+  };
+}
+
+/** One small figure of the "Continuar" card. */
+function Figure({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-0.5 rounded-control border border-border-subtle bg-sunken px-3 py-2.5">
+      <span className="text-xs text-fg-muted">{label}</span>
+      {children}
+    </div>
+  );
+}
+
+function StateValue({ icon, intent, text }: { icon: IconComponent; intent: "success" | "info" | "warning" | "danger" | "neutral"; text: string }) {
+  return (
+    <span data-intent={intent === "neutral" ? undefined : intent} className={`flex h-6.5 items-center gap-1.5 text-[0.9375rem] font-semibold ${intent === "neutral" ? "text-fg" : "text-intent-text"}`}>
+      <Icon icon={icon} size="sm" />
+      {text}
+    </span>
+  );
+}
+
+/** "Continuar de onde parou" (board Biblioteca): the most recently used game. */
+function ContinueCard({ game }: { game: LibraryGame }) {
+  const i18n = useI18n();
+  const { t, tp } = i18n;
+  const store = useStoreLabel();
+  const enter = useEnter();
+  const g = game.instance;
+  const line = [store(g.store), g.version ? t("overview.version", { version: g.version }) : "", game.status ? t("library.profile", { name: game.status.activeProfile.name }) : "", game.lastUsed ? t("library.used", { when: i18n.formatAgo(game.lastUsed) }) : ""]
+    .filter(Boolean)
+    .join(" · ");
+  const p = game.problems;
+  let problems = <StateValue icon={CheckIcon} intent="success" text={t("library.noProblems")} />;
+  if (p && p.blocking + p.errors > 0) problems = <StateValue icon={CircleAlertIcon} intent="danger" text={tp("library.errors", p.blocking + p.errors)} />;
+  else if (p && p.warnings > 0) problems = <StateValue icon={CircleAlertIcon} intent="warning" text={tp("library.warnings", p.warnings)} />;
+  return (
+    <GameAccent id={g.id} accent={g.accent} className="shrink-0">
+      <section aria-label={t("library.continue")} className="flex items-stretch overflow-hidden rounded-card border border-border bg-surface">
+        <span data-intent="brand" className="flex w-75 shrink-0 items-end border-r border-intent-border bg-intent-subtle p-5">
+          <span className="text-[4rem] font-bold leading-none tracking-[-0.04em] text-intent-text">{gameInitials(g.gameName || g.name)}</span>
+        </span>
+        <div className="flex min-w-0 flex-1 flex-col gap-3.5 px-6 py-5">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex min-w-0 flex-col gap-1">
+              <span className="text-xs font-semibold uppercase tracking-[0.08em] text-fg-muted">{t("library.continue")}</span>
+              <h2 className="truncate text-[1.375rem] font-semibold text-fg">{g.name}</h2>
+              <span className="truncate text-[0.8125rem] text-fg-muted">{line}</span>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button onClick={() => void enter(g)}>{t("library.enter")}</Button>
+              {g.active ? <PlayButton /> : null}
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-3">
+            <Figure label={t("library.modsActive")}>
+              <span className="text-lg font-semibold text-fg">
+                {game.mods ? i18n.formatNumber(game.mods.enabled) : t("common.empty")}{" "}
+                {game.mods ? <span className="text-[0.8125rem] font-normal text-fg-muted">{t("library.of", { total: i18n.formatNumber(game.mods.total) })}</span> : null}
+              </span>
+            </Figure>
+            <Figure label={t("library.deploy")}>
+              <DeployValue game={game} />
+            </Figure>
+            <Figure label={t("library.conflictsToReview")}>
+              <span className="text-lg font-semibold text-fg">{game.conflicts ? i18n.formatNumber(game.conflicts.unreviewed) : t("common.empty")}</span>
+            </Figure>
+            <Figure label={t("library.problems")}>{problems}</Figure>
+          </div>
+        </div>
+      </section>
+    </GameAccent>
+  );
+}
+
+function DeployValue({ game }: { game: LibraryGame }) {
+  const { t } = useI18n();
+  const kind = game.status?.kind;
+  if (kind === "in_sync") return <StateValue icon={CheckIcon} intent="success" text={t("library.deployInSync")} />;
+  if (kind === "pending" || kind === "never_deployed") return <StateValue icon={UploadIcon} intent="info" text={t("library.deployPending")} />;
+  if (kind === "failed" || kind === "blocked") return <StateValue icon={CircleAlertIcon} intent="danger" text={t("library.deployProblem")} />;
+  return <span className="text-lg font-semibold text-fg-muted">{t("common.empty")}</span>;
+}
+
+/** The pill on the band of a card: problems first, then a pending deploy, else ready. */
+function CardStatus({ game }: { game: LibraryGame }) {
+  const { t, tp } = useI18n();
+  const n = problemCount(game);
+  let intent: "danger" | "info" | "success" = "success";
+  let icon: IconComponent = CheckIcon;
+  let text = t("library.ready");
+  if (n > 0) {
+    intent = "danger";
+    icon = CircleAlertIcon;
+    text = tp("library.problemCount", n);
+  } else if (game.status?.kind === "pending" || game.status?.kind === "never_deployed") {
+    intent = "info";
+    icon = UploadIcon;
+    text = t("library.toDeploy");
+  }
+  return (
+    <span data-intent={intent} className="flex items-center gap-1.25 rounded-pill bg-sunken px-2.25 py-0.75 text-xs font-semibold text-intent-text">
+      <Icon icon={icon} size="xs" />
+      {text}
+    </span>
+  );
+}
+
+interface CardProps {
+  game: LibraryGame;
   onAnother: () => void;
   onRename: () => void;
   onRelocate: () => void;
   onUnmanage: () => void;
 }
 
-function ManagedTile({ game, layout, onOpenWorkspace, onActivate, onAnother, onRename, onRelocate, onUnmanage }: ManagedTileProps) {
-  const { t } = useI18n();
+/** One managed game (board Biblioteca): accent band with the monogram and status, name, store, mods, Entrar and more. */
+function GameCard({ game, onAnother, onRename, onRelocate, onUnmanage }: CardProps) {
+  const i18n = useI18n();
+  const { t, tp } = i18n;
   const backend = useBackend();
   const run = useAction();
   const store = useStoreLabel();
-  const open = (folder: InstanceFolder) => void run(() => backend.openInstanceFolder(game.id, folder));
-
-  const menu: TileAction[] = [
-    { id: "workspace", label: t("games.action.openWorkspace"), onSelect: onOpenWorkspace },
-    { id: "open-game", label: t("games.action.openGameFolder"), icon: FolderOpenIcon, onSelect: () => open("game") },
-    { id: "open-staging", label: t("games.action.openStaging"), icon: FolderOpenIcon, onSelect: () => open("staging") },
-    { id: "open-archives", label: t("games.action.openArchives"), icon: FolderOpenIcon, onSelect: () => open("archives") },
-    { id: "relocate", label: t("games.action.relocate"), onSelect: onRelocate },
-    { id: "rename", label: t("games.action.rename"), onSelect: onRename },
-    { id: "another", label: t("games.action.another"), onSelect: onAnother },
-    {
-      id: "hide",
-      label: game.hidden ? t("games.action.show") : t("games.action.hide"),
-      icon: game.hidden ? EyeIcon : EyeOffIcon,
-      onSelect: () => void run(() => backend.hideInstance(game.id, !game.hidden)),
-    },
-    { id: "unmanage", label: t("games.action.unmanage"), onSelect: onUnmanage },
-  ];
-
+  const enter = useEnter();
+  const g = game.instance;
+  const open = (folder: InstanceFolder) => void run(() => backend.openInstanceFolder(g.id, folder));
   return (
-    <GameTile
-      layout={layout}
-      title={game.name}
-      subtitle={game.custom ? t("games.generic") : game.name === game.gameName ? undefined : game.gameName}
-      meta={[store(game.store), game.version ?? ""].filter(Boolean)}
-      badges={<StatusBadges game={game} />}
-      primary={game.active ? { label: t("games.action.openWorkspace"), onClick: onOpenWorkspace, emphasis: "medium" } : { label: t("games.action.activate"), onClick: onActivate }}
-      menu={menu}
-      details={<ManagedDetails game={game} />}
-      dimmed={game.hidden}
-    />
+    <GameAccent id={g.id} accent={g.accent}>
+      <article aria-label={g.name} className={`flex h-full flex-col overflow-hidden rounded-card border border-border bg-surface ${g.hidden ? "opacity-70" : ""}`}>
+        <div data-intent="brand" className="flex h-26 items-end justify-between border-b border-intent-border bg-intent-subtle px-3.5 py-3">
+          <span className="text-[2.5rem] font-bold leading-none tracking-[-0.04em] text-intent-text">{gameInitials(g.gameName || g.name)}</span>
+          <CardStatus game={game} />
+        </div>
+        <div className="flex flex-col gap-2.5 p-3.5">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="truncate text-[0.9375rem] font-semibold text-fg">{g.name}</span>
+            <span className="truncate text-xs text-fg-muted">{[g.custom ? t("games.generic") : "", store(g.store), g.version ?? ""].filter(Boolean).join(" · ")}</span>
+          </div>
+          <div className="flex items-center justify-between gap-2">
+            <span className="truncate text-[0.8125rem] text-fg-muted">{game.mods ? tp("library.modsCount", game.mods.enabled) : ""}</span>
+            <div className="flex shrink-0 gap-1.5">
+              <Button size="sm" onClick={() => void enter(g)}>
+                {t("library.enter")}
+              </Button>
+              <Menu.Root placement="bottom-end">
+                <Menu.Trigger>
+                  <Button size="icon-sm" emphasis="low" aria-label={t("games.moreActions", { name: g.name })} title={t("games.moreActions", { name: g.name })}>
+                    <MoreHorizontalIcon size="sm" />
+                  </Button>
+                </Menu.Trigger>
+                <Menu.Content>
+                  <Menu.Item onSelect={() => open("game")}>
+                    <FolderOpenIcon size="sm" />
+                    {t("games.action.openGameFolder")}
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => open("staging")}>
+                    <FolderOpenIcon size="sm" />
+                    {t("games.action.openStaging")}
+                  </Menu.Item>
+                  <Menu.Item onSelect={() => open("archives")}>
+                    <FolderOpenIcon size="sm" />
+                    {t("games.action.openArchives")}
+                  </Menu.Item>
+                  <Menu.Item onSelect={onRelocate}>{t("games.action.relocate")}</Menu.Item>
+                  <Menu.Item onSelect={onRename}>{t("games.action.rename")}</Menu.Item>
+                  <Menu.Item onSelect={onAnother}>{t("games.action.another")}</Menu.Item>
+                  <Menu.Item onSelect={() => void run(() => backend.hideInstance(g.id, !g.hidden))}>
+                    {g.hidden ? <EyeIcon size="sm" /> : <EyeOffIcon size="sm" />}
+                    {t(g.hidden ? "games.action.show" : "games.action.hide")}
+                  </Menu.Item>
+                  <Menu.Item onSelect={onUnmanage}>{t("games.action.unmanage")}</Menu.Item>
+                </Menu.Content>
+              </Menu.Root>
+            </div>
+          </div>
+        </div>
+      </article>
+    </GameAccent>
   );
 }
 
-function DiscoveredTile({ game, layout, onManage }: { game: DiscoveredGame; layout: Layout; onManage: (s: WizardStart) => void }) {
+/** "Detectados neste PC, ainda não gerenciados": dashed rows with Gerenciar. */
+function Detected({ games, onManage }: { games: readonly DiscoveredGame[]; onManage: (s: WizardStart) => void }) {
   const { t } = useI18n();
-  const backend = useBackend();
-  const run = useAction();
-  const store = useStoreLabel();
   return (
-    <GameTile
-      layout={layout}
-      title={game.gameName}
-      subtitle={game.root}
-      meta={[store(game.store), game.version ?? ""].filter(Boolean)}
-      badges={game.hidden ? <Badge emphasis="low">{t("games.status.hidden")}</Badge> : null}
-      primary={{
-        label: t("games.action.manage"),
-        onClick: () => onManage({ gameId: game.gameId, gameName: game.gameName, root: game.root, store: game.store, version: game.version }),
-      }}
-      menu={[
-        {
-          id: "hide",
-          label: game.hidden ? t("games.action.show") : t("games.action.hide"),
-          icon: game.hidden ? EyeIcon : EyeOffIcon,
-          onSelect: () => void run(() => backend.hideGame(game.gameId, !game.hidden)),
-        },
-      ]}
-      details={<DiscoveredDetails game={game} />}
-      dimmed={game.hidden}
-    />
+    <section aria-label={t("library.detected")} className="flex flex-col gap-2.5">
+      <h2 className="text-[0.8125rem] font-semibold text-fg-muted">{t("library.detected")}</h2>
+      <div className="grid grid-cols-2 gap-3">
+        {games.map((g) => (
+          <div key={`${g.gameId}|${g.root}`} className="flex items-center gap-3 rounded-control border border-dashed border-border-strong px-3.5 py-2.5">
+            <span className="flex size-8 shrink-0 items-center justify-center rounded-control bg-sunken text-xs font-bold text-fg-muted">{gameInitials(g.gameName)}</span>
+            <div className="flex min-w-0 flex-1 flex-col gap-px">
+              <span className="truncate text-sm font-medium text-fg">{g.gameName}</span>
+              <span className="truncate text-xs text-fg-muted" title={g.root}>
+                {g.root}
+              </span>
+            </div>
+            <Button size="sm" onClick={() => onManage({ gameId: g.gameId, gameName: g.gameName, root: g.root, store: g.store, version: g.version })}>
+              {t("games.action.manage")}
+            </Button>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
-function SupportedTile({ game, layout, onLocate }: { game: SupportedGame; layout: Layout; onLocate: (s: WizardStart) => void }) {
-  const { t } = useI18n();
-  const backend = useBackend();
-  const run = useAction();
-  return (
-    <GameTile
-      layout={layout}
-      title={game.gameName}
-      subtitle={t("games.notFound")}
-      meta={[]}
-      badges={game.hidden ? <Badge emphasis="low">{t("games.status.hidden")}</Badge> : null}
-      primary={{ label: t("games.action.locate"), onClick: () => onLocate({ gameId: game.gameId, gameName: game.gameName }), emphasis: "medium" }}
-      menu={[
-        {
-          id: "hide",
-          label: game.hidden ? t("games.action.show") : t("games.action.hide"),
-          icon: game.hidden ? EyeIcon : EyeOffIcon,
-          onSelect: () => void run(() => backend.hideGame(game.gameId, !game.hidden)),
-        },
-      ]}
-      dimmed={game.hidden}
-    />
-  );
-}

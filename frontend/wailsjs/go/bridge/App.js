@@ -286,6 +286,10 @@ export function LaunchCheck(arg1) {
   return window['go']['bridge']['App']['LaunchCheck'](arg1);
 }
 
+export function LibraryGames() {
+  return window['go']['bridge']['App']['LibraryGames']();
+}
+
 export function ListAppSettings() {
   return window['go']['bridge']['App']['ListAppSettings']();
 }
@@ -400,6 +404,10 @@ export function OpenBackupsFolder() {
 
 export function OpenDataFolder() {
   return window['go']['bridge']['App']['OpenDataFolder']();
+}
+
+export function OpenGameEntryFile(arg1) {
+  return window['go']['bridge']['App']['OpenGameEntryFile'](arg1);
 }
 
 export function OpenInstanceFolder(arg1, arg2) {
@@ -616,6 +624,10 @@ export function RunHealthChecks(arg1) {
 
 export function SaveCategory(arg1, arg2) {
   return window['go']['bridge']['App']['SaveCategory'](arg1, arg2);
+}
+
+export function SaveGameEntryFile(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SaveGameEntryFile'](arg1, arg2, arg3);
 }
 
 export function SaveTag(arg1, arg2) {

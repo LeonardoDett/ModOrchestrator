@@ -6,26 +6,16 @@ Core: 11, 12. Vortex: página Games (`gamemode_management`: GamePicker com seç�
 
 Ver os jogos gerenciados, descobrir novos, começar a gerenciar e manter a localização/instâncias.
 
-## 2. Layout (paridade Vortex)
+## 2. Layout (prancha `Biblioteca`, D127)
 
-```
-Toolbar: [Buscar jogos ▾ (Rápida | Completa)] [Adicionar jogo genérico] | Visualização: [Grade|Lista] | [Mostrar ocultos ☐]  [busca]
-▼ Gerenciados (2)
-  [card Skyrim SE  ● ativo]  [card Skyrim SE — Teste]
-▼ Descobertos (1)          ← instalados e suportados, ainda não gerenciados
-  [card Fallout 4 (sem adapter: não aparece)] …
-▼ Suportados (n)           ← suportados pelo app, instalação não encontrada
-  [card Skyrim SE]  "Instalação não encontrada · Localizar manualmente"
-Rodapé de progresso durante a busca completa (paridade ProgressFooter), com Cancelar.
-```
+- Cabeçalho: "Biblioteca", "N jogos gerenciados · M detectados neste PC"; à direita o filtro Todos / Com problema / Ocultos, "Procurar jogos no PC" (busca rápida; a completa segue na barra de progresso) e "Adicionar jogo".
+- "Continuar de onde parou": o jogo usado por último, com o quadrado de iniciais na cor do jogo (D122), loja, versão, perfil e "usado há X", "Entrar" e Jogar (só no jogo ativo), e quatro números: mods ativos, implantação, conflitos a revisar e problemas (B14: `LibraryGames`, lido sem entrar no jogo).
+- Cards dos jogos gerenciados em quatro colunas: faixa na cor do jogo com as iniciais e o estado (Pronto, Implantar, N problemas; outro gerenciador e pasta ausente contam como problema), nome, loja e versão, "N mods ativos", "Entrar" e o menu (pastas, alterar localização, renomear, outra instância, ocultar, parar de gerenciar).
+- "Detectados neste PC, ainda não gerenciados": linhas tracejadas com "Gerenciar". Nada é gerenciado sem esse clique.
 
-## 3. Card (grade) / linha (lista)
+## 3. Adicionar jogo (prancha `JogosSuportados`)
 
-Arte do jogo, nome/nome da instância, loja, versão, contagem de mods (gerenciados), status de deploy.
-Ações (hover e menu ⋯):
-- Gerenciados: **Ativar** (primário se não ativo), Abrir workspace, Abrir pasta ▸ (jogo, staging, arquivos), Detalhes (popover: caminhos, versão, mod types, capabilities), Alterar localização…, Renomear instância, Adicionar outra instância…, Ocultar, **Parar de gerenciar…**.
-- Descobertos: **Gerenciar** (abre assistente), Detalhes, Ocultar.
-- Suportados: **Localizar manualmente…**, Ocultar.
+Modal de 1080 × 780: busca, filtro por nível (Todos, Completo, Declarado, Personalizado) e a lista dos jogos que o app atende e dos que o usuário criou (D117), cada um com lojas e recursos, instâncias e nível; à direita, o escolhido com lojas, suporte, instâncias e "Recursos deste jogo", e "Gerenciar". Jogo personalizado: "Exportar" (salva o arquivo, R5c), "Excluir" (só sem instância). Rodapé: "Importar jogo de arquivo" e "Criar jogo personalizado". O reconhecimento de pasta ("Reconhecemos X nesta pasta", R5d) fica para a RD14b.
 
 ## 4. Diálogos
 

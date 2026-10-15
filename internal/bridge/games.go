@@ -314,3 +314,43 @@ func (a *App) DeleteGameEntry(gameID string) error {
 	a.c.Logger.Info("game entry deleted", "game", gameID)
 	return nil
 }
+
+// SaveGameEntryFile asks where to save a user game and writes its manifest
+// (R5c); it returns the path, or "" when the user cancels.
+func (a *App) SaveGameEntryFile(gameID, title, defaultName string) (string, error) {
+	path, err := runtime.SaveFileDialog(a.context(), runtime.SaveDialogOptions{
+		Title: title, DefaultFilename: defaultName,
+		Filters: []runtime.FileFilter{{DisplayName: "JSON (*.json)", Pattern: "*.json"}},
+	})
+	if err != nil {
+		return "", a.fail("game entry dialog", err, nil)
+	}
+	if path == "" {
+		return "", nil
+	}
+	if err := a.c.Games.ExportEntryToFile(a.context(), game.ID(gameID), path); err != nil {
+		return "", a.fail("export game entry", err, map[string]string{"game": gameID})
+	}
+	a.c.Logger.Info("game entry exported", "game", gameID)
+	return path, nil
+}
+
+// OpenGameEntryFile asks for a game manifest and adds the game (R5c); it
+// returns the new game id, or "" when the user cancels.
+func (a *App) OpenGameEntryFile(title string) (string, error) {
+	path, err := runtime.OpenFileDialog(a.context(), runtime.OpenDialogOptions{
+		Title: title, Filters: []runtime.FileFilter{{DisplayName: "JSON (*.json)", Pattern: "*.json"}},
+	})
+	if err != nil {
+		return "", a.fail("game entry dialog", err, nil)
+	}
+	if path == "" {
+		return "", nil
+	}
+	id, err := a.c.Games.ImportEntryFromFile(a.context(), path)
+	if err != nil {
+		return "", a.fail("import game entry", err, nil)
+	}
+	a.c.Logger.Info("game entry imported", "game", string(id))
+	return string(id), nil
+}

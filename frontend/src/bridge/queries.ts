@@ -32,6 +32,16 @@ export function useInstanceDetails(id: string) {
   return useBackendQuery((b) => b.gameInstanceDetails(id), [id], { onOperationEvents: true });
 }
 
+/** Every managed game with its figures, for the Library (B14). */
+export function useLibraryGames() {
+  return useBackendQuery((b) => b.libraryGames(), [], { onOperationEvents: true });
+}
+
+/** The games the app serves and the ones the user described (R5b, D117). */
+export function useGamesCatalog() {
+  return useBackendQuery(async (b) => ({ support: await b.gamesSupport(), entries: await b.gameEntries() }), [], { onOperationEvents: true });
+}
+
 /** Features of an instance (D115), for Ajustes da instância. */
 export function useInstanceFeatures(id: string) {
   return useBackendQuery((b) => b.instanceFeatures(id), [id], { onOperationEvents: true });

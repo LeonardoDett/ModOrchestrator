@@ -128,6 +128,12 @@ export interface Backend {
   gamesView(showHidden: boolean): Promise<GamesView>;
   gameInstanceDetails(id: string): Promise<ManagedGame>;
   instanceFeatures(id: string): Promise<InstanceFeature[]>;
+  libraryGames(): Promise<LibraryGame[]>;
+  gamesSupport(): Promise<GameSupport[]>;
+  gameEntries(): Promise<GameEntry[]>;
+  saveGameEntryFile(gameId: string, title: string, defaultName: string): Promise<string>;
+  openGameEntryFile(title: string): Promise<string>;
+  deleteGameEntry(gameId: string): Promise<void>;
   setInstanceFeature(id: string, feature: string, enabled: boolean): Promise<void>;
   workspace(): Promise<Workspace>;
   /** "quick" returns "" when done; "full" returns the operation id. */
@@ -974,6 +980,45 @@ export interface MenuBadge {
 
 /** Workspace screens the backend derives from capabilities (core/11 §5). */
 export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "diagnostics" | "instance_settings";
+
+/** One card of the Library (B14): the figures of a game read without entering it. */
+export interface LibraryGame {
+  instance: ManagedGame;
+  lastUsed?: string;
+  status?: DeployStatus;
+  mods?: ModsSummary;
+  conflicts?: ConflictsSummary;
+  problems?: { blocking: number; errors: number; warnings: number; infos: number };
+}
+
+/** A feature as the game offers it (R5b). */
+export interface GameFeature {
+  id: string;
+  status: string;
+  class: string;
+  requires: string[];
+  default: boolean;
+}
+
+/** How the app serves one game of the registry (R5b). */
+export interface GameSupport {
+  gameId: string;
+  gameName: string;
+  adapter: string;
+  adapterVersion: string;
+  /** "full", "declared"… as the registry says. */
+  support: string;
+  stores: string[];
+  custom: boolean;
+  features: GameFeature[];
+}
+
+/** A game the user described (D117) and how many instances use it. */
+export interface GameEntry {
+  gameId: string;
+  gameName: string;
+  instances: number;
+}
 
 /** One feature of an instance (D115): offered by the game, chosen by the user, in effect. */
 export interface InstanceFeature {
