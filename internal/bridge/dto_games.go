@@ -105,6 +105,8 @@ type SetupDTO struct {
 	ArchiveStore string          `json:"archiveStore"`
 	BackupStore  string          `json:"backupStore"`
 	Method       string          `json:"method"`
+	// CreateTargets lets the app create missing target folders (D129).
+	CreateTargets bool `json:"createTargets"`
 }
 
 type FoldersDTO struct {
@@ -230,7 +232,7 @@ func toSetup(d SetupDTO) games.Setup {
 	su := games.Setup{
 		Game: game.ID(d.GameID), Name: d.Name, Root: d.Root, Store: d.Store, Executable: d.Executable,
 		Folders: games.Folders{Staging: d.Staging, ArchiveStore: d.ArchiveStore, BackupStore: d.BackupStore},
-		Method:  game.DeploymentMethod(d.Method),
+		Method:  game.DeploymentMethod(d.Method), CreateTargets: d.CreateTargets,
 	}
 	for _, t := range d.Targets {
 		su.Targets = append(su.Targets, game.TargetSpec{ID: game.TargetID(t.ID), Path: t.Path})

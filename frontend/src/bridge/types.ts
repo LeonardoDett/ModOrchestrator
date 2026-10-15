@@ -134,6 +134,8 @@ export interface Backend {
   saveGameEntryFile(gameId: string, title: string, defaultName: string): Promise<string>;
   openGameEntryFile(title: string): Promise<string>;
   deleteGameEntry(gameId: string): Promise<void>;
+  recognizeGameFolder(root: string): Promise<FolderRecognition[]>;
+  gameTemplates(): Promise<GameTemplate[]>;
   setInstanceFeature(id: string, feature: string, enabled: boolean): Promise<void>;
   workspace(): Promise<Workspace>;
   /** "quick" returns "" when done; "full" returns the operation id. */
@@ -911,6 +913,8 @@ export interface GameSetup {
   archiveStore: string;
   backupStore: string;
   method: string;
+  /** Lets the app create target folders that do not exist yet (D129). */
+  createTargets?: boolean;
 }
 
 export interface GameFolders {
@@ -1011,6 +1015,22 @@ export interface GameSupport {
   stores: string[];
   custom: boolean;
   features: GameFeature[];
+}
+
+/** A game a chosen folder holds (R5d). */
+export interface FolderRecognition {
+  gameId: string;
+  gameName: string;
+  marker: string;
+  version?: string;
+}
+
+/** A ready-made layout of a custom game (D129). */
+export interface GameTemplate {
+  id: string;
+  /** Proper name of a loader layout, from the adapter; absent when the UI names it. */
+  name?: string;
+  targets: TargetSpec[];
 }
 
 /** A game the user described (D117) and how many instances use it. */

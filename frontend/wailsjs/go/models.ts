@@ -2347,6 +2347,54 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class TargetSpecDTO {
+	    id: string;
+	    path: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new TargetSpecDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.path = source["path"];
+	    }
+	}
+	export class GameTemplateDTO {
+	    id: string;
+	    name?: string;
+	    targets: TargetSpecDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new GameTemplateDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.targets = this.convertValues(source["targets"], TargetSpecDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class SupportedGameDTO {
 	    gameId: string;
 	    gameName: string;
@@ -4525,6 +4573,24 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class RecognitionDTO {
+	    gameId: string;
+	    gameName: string;
+	    marker: string;
+	    version?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new RecognitionDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.gameId = source["gameId"];
+	        this.gameName = source["gameName"];
+	        this.marker = source["marker"];
+	        this.version = source["version"];
+	    }
+	}
 	export class RecoveryBackupDTO {
 	    id: string;
 	    kind: string;
@@ -4782,20 +4848,6 @@ export namespace bridge {
 	        this.restartRequired = source["restartRequired"];
 	    }
 	}
-	export class TargetSpecDTO {
-	    id: string;
-	    path: string;
-	
-	    static createFrom(source: any = {}) {
-	        return new TargetSpecDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.path = source["path"];
-	    }
-	}
 	export class SetupDTO {
 	    gameId: string;
 	    name: string;
@@ -4807,6 +4859,7 @@ export namespace bridge {
 	    archiveStore: string;
 	    backupStore: string;
 	    method: string;
+	    createTargets: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new SetupDTO(source);
@@ -4824,6 +4877,7 @@ export namespace bridge {
 	        this.archiveStore = source["archiveStore"];
 	        this.backupStore = source["backupStore"];
 	        this.method = source["method"];
+	        this.createTargets = source["createTargets"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

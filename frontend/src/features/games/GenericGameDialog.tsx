@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FolderOpenIcon, PlusIcon, TrashIcon } from "dettmann-ui/icons";
-import { Alert, Button, Input, Modal, Stack, Typography } from "dettmann-ui";
+import { Alert, Button, Input, Modal, SegmentedControl, Stack, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { problemMessage, toUIError, type UIError } from "../../bridge/errors";
-import type { Problem, TargetSpec } from "../../bridge/types";
-import { useI18n } from "../../i18n/i18n";
+import type { GameTemplate, Problem, TargetSpec } from "../../bridge/types";
+import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import type { WizardStart } from "./ManageGameWizard";
 
@@ -36,6 +36,20 @@ export function GenericGameDialog({ open, onOpenChange, onContinue }: Props) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [error, setError] = useState<UIError | null>(null);
   const [busy, setBusy] = useState(false);
+  // D129, answer 8: ready-made layouts from the generic adapter.
+  const [templates, setTemplates] = useState<GameTemplate[]>([]);
+  const [template, setTemplate] = useState("");
+  useEffect(() => {
+    if (!open) return;
+    backend.gameTemplates().then(setTemplates, () => setTemplates([]));
+  }, [open, backend]);
+  const applyTemplate = (id: string) => {
+    setTemplate(id);
+    const chosen = templates.find((tp) => tp.id === id);
+    if (!chosen) return;
+    setRows(chosen.targets.map((tg, i) => ({ key: nextKey + i, id: tg.id, path: tg.path })));
+    setNextKey((k) => k + chosen.targets.length);
+  };
 
   const reset = () => {
     setName("");
@@ -142,6 +156,18 @@ export function GenericGameDialog({ open, onOpenChange, onContinue }: Props) {
               <Typography variant="body-sm" color="muted-fg">
                 {t("generic.targetsHelp")}
               </Typography>
+              {templates.length > 0 ? (
+                <SegmentedControl<string>
+                  size="sm"
+                  aria-label={t("generic.template")}
+                  value={template}
+                  onChange={applyTemplate}
+                  options={[
+                    ...templates.map((tp) => ({ value: tp.id, label: tp.name || (i18n.has(`generic.template.${tp.id}`) ? t(`generic.template.${tp.id}` as MessageKey) : tp.id) })),
+                    { value: "", label: t("generic.template.none") },
+                  ]}
+                />
+              ) : null}
               {rows.map((row, index) => (
                 <div key={row.key} className="grid grid-cols-[10rem_1fr_auto] items-end gap-2">
                   <Input.Root fullWidth value={row.id} onChange={(v: string) => update(row.key, { id: v })}>

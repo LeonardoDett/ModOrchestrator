@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
-import { CheckIcon, FileIcon, MinusIcon, PlusIcon, SearchIcon, XIcon } from "dettmann-ui/icons";
-import { Button, ConfirmDialog, Input, Loader, Modal, SegmentedControl, Tag, useToast } from "dettmann-ui";
+import { CheckIcon, FileIcon, FolderOpenIcon, MinusIcon, PlusIcon, SearchIcon, XIcon } from "dettmann-ui/icons";
+import { Alert, Button, ConfirmDialog, Input, Loader, Modal, SegmentedControl, Tag, useToast } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useGamesCatalog, useGamesView } from "../../bridge/queries";
-import type { GameSupport } from "../../bridge/types";
+import type { FolderRecognition, GameSupport } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useStoreLabel } from "./GameDetails";
@@ -73,6 +73,15 @@ function Body({ onClose, onManage, onCreate }: Omit<AddGameDialogProps, "open">)
   const [level, setLevel] = useState<LevelFilter>("all");
   const [chosen, setChosen] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<GameSupport | null>(null);
+  // R5d: a folder chosen by hand and the games it holds.
+  const [folder, setFolder] = useState<{ root: string; found: FolderRecognition[] } | null>(null);
+  const pointFolder = async () => {
+    const picked = await run(() => backend.pickFolder(t("addGame.pickFolder")), { quiet: true });
+    if (!picked.ok || !picked.value) return;
+    const root = picked.value;
+    const found = await run(() => backend.recognizeGameFolder(root), { quiet: true });
+    if (found.ok) setFolder({ root, found: found.value });
+  };
 
   const managedBy = useMemo(() => {
     const m = new Map<string, number>();
@@ -131,7 +140,9 @@ function Body({ onClose, onManage, onCreate }: Omit<AddGameDialogProps, "open">)
       </Modal.Header>
       <Modal.Body padding="none" className="grid grid-cols-[minmax(0,1fr)_26.25rem]">
         <div className="flex min-h-0 min-w-0 flex-col border-r border-border">
-          <div className="flex items-center gap-2.5 pb-3 pl-6 pr-5 pt-4">
+          <div className="flex flex-col gap-3 pb-3 pl-6 pr-5 pt-4">
+          {folder ? <FolderBanner folder={folder} onOther={() => void pointFolder()} onManage={onManage} onCreate={onCreate} /> : null}
+          <div className="flex items-center gap-2.5">
             <Input.Root fullWidth value={query} onChange={setQuery}>
               <Input.Box>
                 <SearchIcon size="sm" className="text-fg-muted" />
@@ -145,6 +156,12 @@ function Body({ onClose, onManage, onCreate }: Omit<AddGameDialogProps, "open">)
               onChange={setLevel}
               options={(["all", "full", "declared", "custom"] as const).map((v) => ({ value: v, label: t(`addGame.level.${v}` as MessageKey) }))}
             />
+            {folder ? null : (
+              <Button startIcon={<FolderOpenIcon size="sm" />} className="shrink-0 whitespace-nowrap" onClick={() => void pointFolder()}>
+                {t("addGame.pointFolder")}
+              </Button>
+            )}
+          </div>
           </div>
           {catalog.status === "loading" ? <Loader label={t("common.loading")} /> : null}
           {catalog.status === "error" ? (
@@ -296,5 +313,67 @@ function Details({
         </Button>
       </div>
     </div>
+  );
+}
+
+/**
+ * The folder chosen by hand (board JogosSuportados, R5d): the game it
+ * holds with the marker that proves it, "Outra pasta" and "Gerenciar"; a
+ * folder with no known game offers "Criar jogo personalizado".
+ */
+function FolderBanner({
+  folder,
+  onOther,
+  onManage,
+  onCreate,
+}: {
+  folder: { root: string; found: FolderRecognition[] };
+  onOther: () => void;
+  onManage: (start: WizardStart) => void;
+  onCreate: () => void;
+}) {
+  const { t } = useI18n();
+  const g = folder.found[0];
+  if (!g) {
+    return (
+      <Alert.Root
+        intent="warning"
+        action={
+          <span className="flex gap-2">
+            <Button size="sm" onClick={onOther}>
+              {t("addGame.otherFolder")}
+            </Button>
+            <Button size="sm" emphasis="high" onClick={onCreate}>
+              {t("addGame.create")}
+            </Button>
+          </span>
+        }
+      >
+        <Alert.Title>{t("addGame.notRecognized")}</Alert.Title>
+        <Alert.Description>
+          <span className="font-mono text-xs">{folder.root}</span>
+        </Alert.Description>
+      </Alert.Root>
+    );
+  }
+  return (
+    <Alert.Root
+      intent="success"
+      action={
+        <span className="flex gap-2">
+          <Button size="sm" onClick={onOther}>
+            {t("addGame.otherFolder")}
+          </Button>
+          <Button size="sm" emphasis="high" onClick={() => onManage({ gameId: g.gameId, gameName: g.gameName, root: folder.root, store: "manual", version: g.version })}>
+            {t("games.action.manage")}
+          </Button>
+        </span>
+      }
+    >
+      <Alert.Title>{t("addGame.recognized", { name: g.gameName })}</Alert.Title>
+      <Alert.Description>
+        <span className="font-mono text-xs">{t("addGame.recognizedBy", { root: folder.root, marker: g.marker })}</span>
+      </Alert.Description>
+    </Alert.Root>
   );
 }

@@ -1248,3 +1248,14 @@ Motivo: as pranchas aprovadas.
 
 Consequências: `games.WorkspaceItems` sempre inclui `instance_settings`; o teste da navegação fixa o grupo Saúde com os dois itens.
 
+## D129 — Assistente de jogo: reconhecimento de pasta, modelos e pasta criável
+Status: vigente (2026-10-15; executa a RD14b; respostas 7 e 8 do plano do redesign)
+
+1. **Reconhecimento (R5d)**: "Apontar a pasta" em Adicionar jogo lê só a pasta escolhida (não desce) e diz que jogo ela tem: um jogo do registro cujo arquivo marcador está ali e cujo adapter aceita a pasta (`games.Recognize`, ponte `RecognizeGameFolder`). Sem jogo conhecido, a faixa oferece "Criar jogo personalizado".
+2. **Modelos (resposta 8)**: "Pasta Mods" e "BepInEx", dados do adapter `generic` (`ports.TemplateProvider`); o formulário de jogo personalizado preenche os destinos com eles. Nome próprio de carregador vem do adapter (D112).
+3. **Pasta criável (resposta 7)**: destino que ainda não existe é aviso (`target_missing`), não problema. "O app pode criar as pastas que faltam" fica desligado por padrão; ligado, o Gerenciar cria as pastas e as desfaz se o resto falhar.
+
+Motivo: prancha `JogosSuportados` e as respostas do Leonardo ao plano.
+
+Consequências: vale para todo jogo; o reconhecimento usa os marcadores que a busca no PC já usa.
+

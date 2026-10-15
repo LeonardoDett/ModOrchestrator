@@ -31,6 +31,9 @@ type Setup struct {
 	Executable string
 	Folders
 	Method game.DeploymentMethod
+	// CreateTargets lets the app create target folders that do not exist
+	// yet (D129: "o app pode criar esta pasta", off by default).
+	CreateTargets bool
 }
 
 // Folders are the three folders the manager owns for an instance.
@@ -218,6 +221,14 @@ func (s *Service) Verify(ctx context.Context, su Setup) (Verification, error) {
 		}
 	}
 
+	// D129: a target folder that does not exist yet is a warning; the
+	// user may let the app create it when the instance is managed.
+	for _, tg := range targets {
+		if info, err := s.FS.Stat(ctx, tg.Path); err == nil && !info.Exists {
+			v.Warnings = append(v.Warnings, problem(CodeTargetMissing, "target", string(tg.ID), "path", tg.Path))
+		}
+	}
+
 	v.Methods = s.methods(ctx, v.Folders.Staging, targets)
 	if !v.Methods[0].Available {
 		v.Warnings = append(v.Warnings, problem("hardlink_unavailable", "reason", v.Methods[0].Reason))
@@ -286,6 +297,12 @@ func (s *Service) Manage(ctx context.Context, su Setup) (Result, error) {
 			if err != nil {
 				s.undo(ctx, prepared)
 				return err
+			}
+			if su.CreateTargets {
+				if err := s.createTargets(ctx, inst, &prepared); err != nil {
+					s.undo(ctx, prepared)
+					return err
+				}
 			}
 			if err := t.CompleteStep(ctx, stepFolders); err != nil {
 				s.undo(ctx, prepared)
@@ -369,6 +386,25 @@ func (s *Service) prepareFolders(ctx context.Context, inst game.Instance) (prepa
 		p.markers = append(p.markers, marker)
 	}
 	return p, nil
+}
+
+// createTargets makes the target folders that do not exist yet (D129).
+// They are recorded so a failure later removes them again while empty.
+func (s *Service) createTargets(ctx context.Context, inst game.Instance, p *prepared) error {
+	for _, tg := range inst.Targets {
+		info, err := s.FS.Stat(ctx, tg.Path)
+		if err != nil {
+			return err
+		}
+		if info.Exists {
+			continue
+		}
+		if err := s.FS.MkdirAll(ctx, tg.Path); err != nil {
+			return err
+		}
+		p.dirs = append(p.dirs, tg.Path)
+	}
+	return nil
 }
 
 // undo removes what prepareFolders created: its markers and the folders it

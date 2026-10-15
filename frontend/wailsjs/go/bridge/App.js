@@ -210,6 +210,10 @@ export function GameInstanceDetails(arg1) {
   return window['go']['bridge']['App']['GameInstanceDetails'](arg1);
 }
 
+export function GameTemplates() {
+  return window['go']['bridge']['App']['GameTemplates']();
+}
+
 export function GamesSupport() {
   return window['go']['bridge']['App']['GamesSupport']();
 }
@@ -508,6 +512,10 @@ export function RebuildPluginHeaderCache() {
 
 export function RecentGames() {
   return window['go']['bridge']['App']['RecentGames']();
+}
+
+export function RecognizeGameFolder(arg1) {
+  return window['go']['bridge']['App']['RecognizeGameFolder'](arg1);
 }
 
 export function ReconcileDeploy(arg1) {

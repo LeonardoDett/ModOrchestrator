@@ -225,3 +225,42 @@ func TestLegacyCustomInstancesAreMigrated(t *testing.T) {
 		t.Fatalf("migrating writes nothing on disk: %v", e.fs.Writes)
 	}
 }
+
+// D129: a target folder that does not exist is a warning; it is created
+// only when the user lets the app do it.
+func TestMissingTargetsAreCreatedOnlyWhenAllowed(t *testing.T) {
+	e := newEnv()
+	root := `C:\Games\Fresh`
+	e.fs.AddFile(root+`\game.exe`, "")
+	su := customSetup("Fresh", root)
+	v, err := e.svc.Verify(ctx, su)
+	if err != nil || len(v.Problems) != 0 {
+		t.Fatalf("verify = %+v, %v", v.Problems, err)
+	}
+	missing := 0
+	for _, w := range v.Warnings {
+		if w.Code == games.CodeTargetMissing {
+			missing++
+		}
+	}
+	if missing != 2 {
+		t.Fatalf("warnings = %+v", v.Warnings)
+	}
+	if _, err := e.svc.Manage(ctx, su); err != nil {
+		t.Fatal(err)
+	}
+	if info, _ := e.fs.Stat(ctx, root+`\Mods`); info.Exists {
+		t.Fatal("a target folder was created without permission")
+	}
+
+	other := `D:\Games\Fresh`
+	e.fs.AddFile(other+`\game.exe`, "")
+	su = customSetup("Fresh 2", other)
+	su.CreateTargets = true
+	if _, err := e.svc.Manage(ctx, su); err != nil {
+		t.Fatal(err)
+	}
+	if info, _ := e.fs.Stat(ctx, other+`\BepInEx\plugins`); !info.Exists {
+		t.Fatal("the allowed target folder was not created")
+	}
+}

@@ -2706,6 +2706,18 @@ export const en = {
   "home.inGames.one": "in {count} game",
   "home.inGames.other": "in {count} games",
   "home.news": "New in version {version}",
+  "generic.template": "Layout",
+  "generic.template.mods_folder": "Mods folder",
+  "generic.template.none": "Fill by hand",
+  "wizard.verification.createTargets": "The app may create the missing folders",
+  "warning.target_missing": "The folder {path} does not exist yet.",
+  "addGame.pickFolder": "Choose the game folder",
+  "addGame.pointFolder": "Point to the folder",
+  "addGame.otherFolder": "Another folder",
+  "addGame.recognized": "We recognize {name} in this folder",
+  "addGame.recognizedBy": "{root} · found {marker}",
+  "addGame.notRecognized": "No known game in this folder",
+  "error.target_missing": "The folder {path} does not exist yet.",
 } as const;
 
 export type MessageKey = keyof typeof en;

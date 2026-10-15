@@ -28,6 +28,8 @@ export function createOfflineBackend(): Backend {
     saveGameEntryFile: unavailable,
     openGameEntryFile: unavailable,
     deleteGameEntry: unavailable,
+    recognizeGameFolder: unavailable,
+    gameTemplates: unavailable,
     setInstanceFeature: unavailable,
     workspace: unavailable,
     scanGames: unavailable,

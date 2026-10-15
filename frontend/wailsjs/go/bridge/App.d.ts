@@ -106,6 +106,8 @@ export function GameEntries():Promise<Array<bridge.GameEntryDTO>>;
 
 export function GameInstanceDetails(arg1:string):Promise<bridge.ManagedGameDTO>;
 
+export function GameTemplates():Promise<Array<bridge.GameTemplateDTO>>;
+
 export function GamesSupport():Promise<Array<bridge.GameSupportDTO>>;
 
 export function GamesView(arg1:boolean):Promise<bridge.GamesViewDTO>;
@@ -255,6 +257,8 @@ export function Purge(arg1:string):Promise<string>;
 export function RebuildPluginHeaderCache():Promise<void>;
 
 export function RecentGames():Promise<Array<bridge.RecentGameDTO>>;
+
+export function RecognizeGameFolder(arg1:string):Promise<Array<bridge.RecognitionDTO>>;
 
 export function ReconcileDeploy(arg1:string):Promise<string>;
 

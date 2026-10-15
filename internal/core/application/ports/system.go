@@ -410,3 +410,19 @@ type DatabaseBackups interface {
 	Inspect(ctx context.Context, path string) (schema int, err error)
 	CopyFile(ctx context.Context, src, dst string) error
 }
+
+// GameTemplate is a ready-made description of a custom game (D129, R5d):
+// the targets a common mod layout uses. Templates are adapter data; the
+// app never names a loader or a game itself.
+type GameTemplate struct {
+	ID string
+	// Name is the proper name of a loader layout ("BepInEx"); empty when the
+	// UI names the template itself (a plain "Mods" folder).
+	Name    string
+	Targets []game.TargetSpec
+}
+
+// TemplateProvider is implemented by the adapter that serves custom games.
+type TemplateProvider interface {
+	Templates() []GameTemplate
+}

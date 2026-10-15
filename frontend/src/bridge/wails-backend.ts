@@ -175,6 +175,8 @@ import {
   SaveGameEntryFile as SaveGameEntryFileCall,
   OpenGameEntryFile as OpenGameEntryFileCall,
   DeleteGameEntry as DeleteGameEntryCall,
+  RecognizeGameFolder as RecognizeGameFolderCall,
+  GameTemplates as GameTemplatesCall,
   SetInstanceFeature as SetInstanceFeatureCall,
   GamesView,
   GetAppInfo,
@@ -204,6 +206,8 @@ import type { bridge } from "../../wailsjs/go/models";
 import { EventsOn, OnFileDrop, OnFileDropOff, Quit, WindowMinimise, WindowToggleMaximise } from "../../wailsjs/runtime/runtime";
 import type {
   InstanceFeature,
+  FolderRecognition,
+  GameTemplate,
   LibraryGame,
   GameSupport,
   GameEntry,
@@ -317,6 +321,8 @@ export function createWailsBackend(): Backend {
     saveGameEntryFile: (gameId, title, defaultName) => SaveGameEntryFileCall(gameId, title, defaultName),
     openGameEntryFile: (title) => OpenGameEntryFileCall(title),
     deleteGameEntry: (gameId) => DeleteGameEntryCall(gameId),
+    recognizeGameFolder: async (root) => ((await RecognizeGameFolderCall(root)) ?? []) as unknown as FolderRecognition[],
+    gameTemplates: async () => ((await GameTemplatesCall()) ?? []) as unknown as GameTemplate[],
     workspace: () => Workspace() as unknown as Promise<WorkspaceT>,
     scanGames: (mode) => ScanGames(mode),
     cancelOperation: (id) => CancelOperation(id),

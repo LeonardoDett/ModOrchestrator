@@ -212,6 +212,20 @@ describe("Games screen and assistant (F3)", () => {
     expect(within(dialog).getByRole("button", { name: "Next" })).toBeDisabled();
   });
 
+  it("recognizes a folder chosen by hand and manages that game from it (R5d)", async () => {
+    const user = userEvent.setup();
+    const { backend } = fakeWorld({ discovered: [] });
+    backend.pickFolder = async () => "D:\Games\Skyrim";
+    backend.recognizeGameFolder = async () => [{ gameId: "skyrimse", gameName: SKYRIM.gameName, marker: "SkyrimSE.exe" }];
+    render(<App backend={backend} />);
+    await openGames(user);
+    await user.click(await screen.findByRole("button", { name: "Add game" }));
+    const list = await screen.findByRole("dialog", { name: "Add game" });
+    await user.click(within(list).getByRole("button", { name: "Point to the folder" }));
+    expect(await within(list).findByText(`We recognize ${SKYRIM.gameName} in this folder`)).toBeInTheDocument();
+    expect(within(list).getByText(/found SkyrimSE.exe/)).toBeInTheDocument();
+  });
+
   it("warns about another manager and does not preselect copy when hardlinks are unavailable", async () => {
     const user = userEvent.setup();
     const foreign: ForeignFinding[] = [{ kind: "vortex", target: "data", name: "vortex.deployment.json" }];

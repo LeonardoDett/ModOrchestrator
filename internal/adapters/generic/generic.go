@@ -217,3 +217,13 @@ func (a Adapter) Processes(id game.ID) []string {
 	m, _ := a.manifest(id)
 	return m.Discovery.Processes
 }
+
+// Templates are the ready-made layouts offered when the user creates a
+// game (D129, answer 8): a "Mods" folder in the game folder, and BepInEx,
+// the loader most Unity games use for plugins.
+func (Adapter) Templates() []ports.GameTemplate {
+	return []ports.GameTemplate{
+		{ID: "mods_folder", Targets: []game.TargetSpec{{ID: "mods", Path: "Mods"}}},
+		{ID: "bepinex", Name: "BepInEx", Targets: []game.TargetSpec{{ID: "plugins", Path: "BepInEx/plugins"}, {ID: "config", Path: "BepInEx/config"}, {ID: "patchers", Path: "BepInEx/patchers"}}},
+	}
+}

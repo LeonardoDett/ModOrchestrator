@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CircleCheckIcon, FolderOpenIcon } from "dettmann-ui/icons";
-import { Alert, Button, Input, Modal, Radio, Loader, Stack, Stepper, Typography } from "dettmann-ui";
+import { Alert, Button, Checkbox, Input, Modal, Radio, Loader, Stack, Stepper, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { problemMessage, toUIError, type UIError } from "../../bridge/errors";
 import type { GameFolders, GameSetup, Problem, SetupVerification, TargetSpec } from "../../bridge/types";
@@ -59,6 +59,8 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
   const [folders, setFolders] = useState<GameFolders | null>(null);
   const [verification, setVerification] = useState<SetupVerification | null>(null);
   const [method, setMethod] = useState("");
+  // D129: create missing target folders only when the user allows it.
+  const [createTargets, setCreateTargets] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<UIError | null>(null);
   const [done, setDone] = useState<{ instanceId: string } | null>(null);
@@ -77,8 +79,9 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
       archiveStore: f?.archiveStore ?? "",
       backupStore: f?.backupStore ?? "",
       method,
+      createTargets,
     }),
-    [start.gameId, start.store, name, root, generic, method],
+    [start.gameId, start.store, name, root, generic, method, createTargets],
   );
 
   const pick = async (): Promise<string> => {
@@ -284,7 +287,7 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
             {step === 2 ? (
               <Stack gap="md">
                 {busy && !verification ? <Loader label={t("wizard.verifying")} /> : null}
-                {verification ? <VerificationView v={verification} method={method} onMethod={setMethod} /> : null}
+                {verification ? <VerificationView v={verification} method={method} onMethod={setMethod} createTargets={createTargets} onCreateTargets={setCreateTargets} /> : null}
               </Stack>
             ) : null}
 
@@ -359,7 +362,19 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
   );
 }
 
-function VerificationView({ v, method, onMethod }: { v: SetupVerification; method: string; onMethod: (m: string) => void }) {
+function VerificationView({
+  v,
+  method,
+  onMethod,
+  createTargets,
+  onCreateTargets,
+}: {
+  v: SetupVerification;
+  method: string;
+  onMethod: (m: string) => void;
+  createTargets: boolean;
+  onCreateTargets: (on: boolean) => void;
+}) {
   const i18n = useI18n();
   const { t } = i18n;
   return (
@@ -374,6 +389,9 @@ function VerificationView({ v, method, onMethod }: { v: SetupVerification; metho
           <Alert.Description>{problemMessage(i18n, p, "warning")}</Alert.Description>
         </Alert.Root>
       ))}
+      {v.warnings.some((p) => p.code === "target_missing") ? (
+        <Checkbox checked={createTargets} onCheckedChange={onCreateTargets} label={t("wizard.verification.createTargets")} />
+      ) : null}
       <ForeignAlert findings={v.foreign} />
       {v.problems.length === 0 ? (
         <Stack gap="sm">

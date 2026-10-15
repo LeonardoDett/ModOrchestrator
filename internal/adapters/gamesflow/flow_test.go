@@ -503,3 +503,27 @@ func TestInstanceBusyIsRefusedNotQueued(t *testing.T) {
 	close(release)
 	<-done
 }
+
+// R5d: a folder chosen by hand is recognized by the marker of a game and
+// only when its adapter accepts the folder; an unrelated folder is no game.
+func TestRecognizeFolder(t *testing.T) {
+	e := newEnv()
+	root := e.skyrim(`D:\Games\Skyrim Anywhere`)
+	got, err := e.svc.Recognize(ctx, root)
+	if err != nil || len(got) != 1 || got[0].Game != "skyrimse" || got[0].Marker == "" || got[0].Name == "" {
+		t.Fatalf("recognize = %+v, %v", got, err)
+	}
+	e.fs.AddDir(`D:\Empty`)
+	if none, err := e.svc.Recognize(ctx, `D:\Empty`); err != nil || len(none) != 0 {
+		t.Fatalf("empty folder = %+v, %v", none, err)
+	}
+}
+
+// D129, answer 8: the custom-game templates come from the generic adapter.
+func TestTemplatesComeFromTheAdapter(t *testing.T) {
+	e := newEnv()
+	got := e.svc.Templates()
+	if len(got) != 2 || got[0].ID != "mods_folder" || got[1].ID != "bepinex" || len(got[1].Targets) == 0 {
+		t.Fatalf("templates = %+v", got)
+	}
+}

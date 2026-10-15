@@ -354,3 +354,44 @@ func (a *App) OpenGameEntryFile(title string) (string, error) {
 	a.c.Logger.Info("game entry imported", "game", string(id))
 	return string(id), nil
 }
+
+// RecognitionDTO is a game a chosen folder holds (R5d).
+type RecognitionDTO struct {
+	GameID   string `json:"gameId"`
+	GameName string `json:"gameName"`
+	Marker   string `json:"marker"`
+	Version  string `json:"version,omitempty"`
+}
+
+// RecognizeGameFolder tells which games a folder chosen by hand holds.
+func (a *App) RecognizeGameFolder(root string) ([]RecognitionDTO, error) {
+	list, err := a.c.Games.Recognize(a.context(), root)
+	if err != nil {
+		return nil, a.fail("recognize folder", err, map[string]string{"root": root})
+	}
+	out := make([]RecognitionDTO, 0, len(list))
+	for _, r := range list {
+		out = append(out, RecognitionDTO{GameID: string(r.Game), GameName: r.Name, Marker: r.Marker, Version: r.Version})
+	}
+	return out, nil
+}
+
+// GameTemplateDTO is a ready-made layout of a custom game (D129).
+type GameTemplateDTO struct {
+	ID      string          `json:"id"`
+	Name    string          `json:"name,omitempty"`
+	Targets []TargetSpecDTO `json:"targets"`
+}
+
+// GameTemplates lists the ready-made layouts for "Criar jogo personalizado".
+func (a *App) GameTemplates() []GameTemplateDTO {
+	out := []GameTemplateDTO{}
+	for _, t := range a.c.Games.Templates() {
+		d := GameTemplateDTO{ID: t.ID, Name: t.Name, Targets: []TargetSpecDTO{}}
+		for _, s := range t.Targets {
+			d.Targets = append(d.Targets, TargetSpecDTO{ID: string(s.ID), Path: s.Path})
+		}
+		out = append(out, d)
+	}
+	return out
+}
