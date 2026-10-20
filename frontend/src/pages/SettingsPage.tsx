@@ -4,8 +4,8 @@ import { CheckIcon, FolderOpenIcon, UndoIcon } from "dettmann-ui/icons";
 import { Alert, Button, Input, Loader, ResourcePage, Stack, Switch, Tabs, Typography, useToast, Icon } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { useBackend } from "../bridge/backend-context";
-import { useGamesView, useInstanceSettings, useSuppressions, useWorkspace } from "../bridge/queries";
-import type { ManagedGame } from "../bridge/types";
+import { useGamesView, useInstanceSettings, useSettingsTabs, useSuppressions, useWorkspace } from "../bridge/queries";
+import type { ManagedGame, SettingsTab } from "../bridge/types";
 import { DeployMethodSection, GameFoldersSection } from "../features/deploy/DeploySettings";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
@@ -19,43 +19,37 @@ import { useRefresh } from "../bridge/use-backend-query";
 
 /**
  * Settings (ui/telas/settings-extensions.md, core/13) in the Vortex tab
- * order: Interface · Aplicação · Mods · Plugins* · Workarounds · Tema
- * (* only when a managed game has the `plugins` capability; Download is
- * reserved and hidden, D013). Per-game sections have the game select at
- * the top. Where each setting is shown is presentation; values, defaults
- * and validation come from the backend catalog.
+ * order: Interface · Aplicação · Mods · Plugins* · Workarounds · Tema.
+ * The backend lists the tabs (D135): the core ones and the ones optional
+ * modules contribute (* Plugins, from the plugins module). A tab gated by a
+ * section is shown while a managed game offers that section, and its game
+ * select lists only those games. Download is reserved and never listed
+ * (D013). The core tabs keep their layout from the board; a module tab
+ * shows its settings for the chosen game. Values, defaults and validation
+ * come from the backend catalog.
  */
-type TabId = "interface" | "application" | "mods" | "plugins" | "workarounds" | "theme";
-
-const TAB_LABEL: Record<TabId, MessageKey> = {
-  interface: "settings.tab.interface",
-  application: "settings.tab.application",
-  mods: "settings.tab.mods",
-  plugins: "settings.tab.plugins",
-  workarounds: "settings.tab.workarounds",
-  theme: "settings.tab.theme",
-};
-
 export function SettingsPage() {
-  const { t } = useI18n();
+  const i18n = useI18n();
+  const { t } = i18n;
   const { route } = useNavigation();
   const settings = useSettings();
   const { refresh } = useRefresh();
   const workspace = useWorkspace();
   const gamesView = useGamesView(false);
+  const tabsQuery = useSettingsTabs();
   const games: ManagedGame[] = gamesView.status === "ready" ? gamesView.data.managed : [];
   const active = workspace.status === "ready" ? (workspace.data.active?.id ?? "") : "";
   const [instance, setInstance] = useState("");
   const selected = games.some((g) => g.id === instance) ? instance : games.some((g) => g.id === active) ? active : (games[0]?.id ?? "");
-  const pluginGames = games.filter((g) => g.sections?.includes("settings.plugins"));
-  const tabs: TabId[] = ["interface", "application", "mods", ...(pluginGames.length > 0 ? (["plugins"] as const) : []), "workarounds", "theme"];
-  const [tab, setTab] = useState<TabId>((route.settingsTab as TabId) ?? "interface");
+  const gamesOf = (tab: SettingsTab) => (tab.section ? games.filter((g) => g.sections?.includes(tab.section!)) : games);
+  const tabs = (tabsQuery.status === "ready" ? tabsQuery.data : []).filter((tab) => !tab.section || gamesOf(tab).length > 0);
+  const [tab, setTab] = useState<string>(route.settingsTab ?? "interface");
 
   useEffect(() => {
-    if (route.settingsTab) setTab(route.settingsTab as TabId);
+    if (route.settingsTab) setTab(route.settingsTab);
   }, [route.settingsTab]);
 
-  if (settings.status === "loading") return <PageBody><LoadingState /></PageBody>;
+  if (settings.status === "loading" || tabsQuery.status === "loading") return <PageBody><LoadingState /></PageBody>;
   if (settings.status === "unavailable") {
     return (
       <PageBody>
@@ -72,9 +66,41 @@ export function SettingsPage() {
       </PageBody>
     );
   }
+  if (tabsQuery.status === "error") {
+    return (
+      <PageBody>
+        <ErrorAlert title="settings.loadError" error={tabsQuery.error} onRetry={tabsQuery.reload} />
+      </PageBody>
+    );
+  }
 
-  const current = tabs.includes(tab) ? tab : "interface";
-  const pluginInstance = pluginGames.some((g) => g.id === selected) ? selected : (pluginGames[0]?.id ?? "");
+  const current = tabs.some((x) => x.id === tab) ? tab : (tabs[0]?.id ?? "");
+  const panel = (tab: SettingsTab) => {
+    switch (tab.id) {
+      case "interface":
+        return <InterfaceTab games={games} instance={selected} onInstance={setInstance} />;
+      case "application":
+        return <ApplicationTab />;
+      case "mods":
+        return <ModsTab games={games} instance={selected} onInstance={setInstance} />;
+      case "workarounds":
+        return (
+          <div className="max-w-3xl">
+            <WorkaroundsTab games={games} instance={selected} onInstance={setInstance} />
+          </div>
+        );
+      case "theme":
+        return (
+          <div className="max-w-3xl">
+            <SettingsSection id="theme" title={t("settings.theme.title")}>
+              <AppSettingRows keys={["theme.mode", "theme.id", "theme.fontScale", "theme.density"]} />
+            </SettingsSection>
+          </div>
+        );
+      default:
+        return <ModuleTab tab={tab.id} games={gamesOf(tab)} instance={selected} onInstance={setInstance} />;
+    }
+  };
 
   return (
     <ResourcePage
@@ -92,46 +118,50 @@ export function SettingsPage() {
     >
       <Stack gap="md" className="min-h-0 flex-1 overflow-auto pb-6">
         <RestartBanner />
-        <Tabs.Root value={current} onValueChange={(v) => setTab(v as TabId)}>
+        <Tabs.Root value={current} onValueChange={setTab}>
           <Tabs.List>
-            {tabs.map((id) => (
-              <Tabs.Trigger key={id} value={id}>
-                {t(TAB_LABEL[id])}
+            {tabs.map((x) => (
+              <Tabs.Trigger key={x.id} value={x.id}>
+                {i18nOr(`settings.tab.${x.id}`, x.id)}
               </Tabs.Trigger>
             ))}
           </Tabs.List>
-          <Tabs.Panel value="interface" className="pt-4">
-            <InterfaceTab games={games} instance={selected} onInstance={setInstance} />
-          </Tabs.Panel>
-          <Tabs.Panel value="application" className="pt-4">
-            <ApplicationTab />
-          </Tabs.Panel>
-          <Tabs.Panel value="mods" className="pt-4">
-            <ModsTab games={games} instance={selected} onInstance={setInstance} />
-          </Tabs.Panel>
-          {pluginGames.length > 0 ? (
-            <Tabs.Panel value="plugins" className="pt-4">
-              <Stack gap="lg" className="max-w-3xl">
-                <GameSettingsSelect games={pluginGames} value={pluginInstance} onChange={setInstance} />
-                <InstanceSection id="plugins" title={t("settings.plugins.title")} instance={pluginInstance} keys={["plugins.autoSort", "plugins.enableOnModEnable", "plugins.enableExternallyAdded"]} />
-              </Stack>
+          {tabs.map((x) => (
+            <Tabs.Panel key={x.id} value={x.id} className="pt-4">
+              {panel(x)}
             </Tabs.Panel>
-          ) : null}
-          <Tabs.Panel value="workarounds" className="pt-4">
-            <div className="max-w-3xl">
-              <WorkaroundsTab games={games} instance={selected} onInstance={setInstance} />
-            </div>
-          </Tabs.Panel>
-          <Tabs.Panel value="theme" className="pt-4">
-            <div className="max-w-3xl">
-              <SettingsSection id="theme" title={t("settings.theme.title")}>
-                <AppSettingRows keys={["theme.mode", "theme.id", "theme.fontScale", "theme.density"]} />
-              </SettingsSection>
-            </div>
-          </Tabs.Panel>
+          ))}
         </Tabs.Root>
       </Stack>
     </ResourcePage>
+  );
+
+  function i18nOr(key: string, fallback: string) {
+    return i18n.has(key) ? i18n.t(key as MessageKey) : fallback;
+  }
+}
+
+/**
+ * A tab a module contributes (D135): the game select (only the games the
+ * tab applies to) and the module's settings for that game, the app-scoped
+ * ones first. Labels come from `settings.<key>.label`.
+ */
+function ModuleTab({ tab, games, instance, onInstance }: { tab: string; games: readonly ManagedGame[]; instance: string; onInstance: (id: string) => void }) {
+  const i18n = useI18n();
+  const settings = useSettings();
+  const chosen = games.some((g) => g.id === instance) ? instance : (games[0]?.id ?? "");
+  const appKeys = settings.settings.filter((s) => s.tab === tab).map((s) => s.key);
+  const title = i18n.has(`settings.${tab}.title`) ? i18n.t(`settings.${tab}.title` as MessageKey) : tab;
+  return (
+    <Stack gap="lg" className="max-w-3xl">
+      <GameSettingsSelect games={games} value={chosen} onChange={onInstance} />
+      {appKeys.length > 0 ? (
+        <SettingsSection id={`${tab}-app`} title={title}>
+          <AppSettingRows keys={appKeys} />
+        </SettingsSection>
+      ) : null}
+      <InstanceSection id={tab} title={title} instance={chosen} tab={tab} />
+    </Stack>
   );
 }
 
@@ -140,19 +170,23 @@ function InstanceSection({
   id,
   title,
   instance,
-  keys,
+  keys: listed,
+  tab,
   children,
   actions,
 }: {
   id: string;
   title: string;
   instance: string;
-  keys: string[];
+  /** The settings to show; with `tab` instead, every setting of that tab. */
+  keys?: string[];
+  tab?: string;
   children?: React.ReactNode;
   actions?: React.ReactNode;
 }) {
   const { t } = useI18n();
   const settings = useInstanceSettings(instance);
+  const keys = listed ?? (settings.status === "ready" ? settings.data.filter((s) => s.tab === tab).map((s) => s.key) : []);
   return (
     <SettingsSection id={id} title={title} actions={actions}>
       {settings.status === "loading" ? (

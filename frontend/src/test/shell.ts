@@ -22,3 +22,13 @@ export async function openOperations(user: UserEvent) {
   await user.click(await screen.findByRole("button", { name: "Help" }));
   await user.click(await screen.findByRole("menuitem", { name: "Operations" }));
 }
+
+/** The Settings tabs the backend lists (D135): core ones and the plugins module's. */
+export const SETTINGS_TABS = [
+  { id: "interface" },
+  { id: "application" },
+  { id: "mods" },
+  { id: "plugins", section: "settings.plugins" },
+  { id: "workarounds" },
+  { id: "theme" },
+];

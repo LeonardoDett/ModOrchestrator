@@ -1,6 +1,6 @@
 # Proposta: núcleo agnóstico de jogo, capacidades por jogo e extensões
 
-Status: **estado desta frente na seção 0** (fase A em 2026-10-13, C1, A2, C2 e C3 em 2026-10-20). As seções 1 a 9 são o diagnóstico e a proposta originais e descrevem o código de **antes** da fase A; as seções 10 e 11 registram o Valheim e o teste real.
+Status: **estado desta frente na seção 0** (fase A em 2026-10-13, C1, A2, C2, C3 e o item 10 em 2026-10-20). As seções 1 a 9 são o diagnóstico e a proposta originais e descrevem o código de **antes** da fase A; as seções 10 e 11 registram o Valheim e o teste real.
 
 ## 0. Estado final (para o plano de implementação)
 
@@ -16,6 +16,7 @@ Status: **estado desta frente na seção 0** (fase A em 2026-10-13, C1, A2, C2 e
 | D132 | fase A2 | A UI só renderiza o que o backend lista: o `Workspace()` traz `sections` e `areas` (chips de Problemas) da instância ativa; cada recurso diz a tela que traz ao menu (`screen`) e vem na ordem da prancha. Saíram da UI os testes de `plugins` nos itens do menu e as listas fixas de recursos; um teste do frontend impede que voltem. |
 | D133 | fase C2 | Pontos de contribuição no lugar da fiação por nome: `PostDeploy`, `diagnostics.Module`, `overview.FigureSource`, `profiles.Section`, `library.FileStates`. O perfil guarda seções opacas; o estado de plugins é a seção `plugins` do módulo. `AppliedLoadOrder` foi para `domain/loadorder` e os checks de plugin para `domain/pluginhealth`. Perfis gravados antes são lidos e convertidos. Teste de arquitetura impede o núcleo de importar o módulo. |
 | D134 | fase C3 | SDK do adapter em `modorchestrator/sdk` (fora de `internal/`, `APIVersion` 1.0), por aliases dos tipos do core, com subpacotes de mesmo nome. Os adapters embutidos só importam o SDK; um teste de arquitetura vigia. |
+| D135 | item 10 | Catálogo de settings extensível: o módulo de plugins contribui a aba Plugins e as chaves `plugins.*`, que saem do catálogo do núcleo. `SettingsTabs()` lista as abas em ordem, com a seção que liga cada aba de módulo; Configurações renderiza essa lista e mostra aba de módulo desconhecida com as chaves dela. |
 
 Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c75748`, descoberta como dado; resolve o item 12), D115 (`c7aabfe`, recursos ligáveis por instância), D116 (`6d5626b`, manifesto de jogo), D117 (`5b7b665`, jogo personalizado como entrada; o manifesto aceita target criável).
 
@@ -32,7 +33,7 @@ Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c7
 | 7 | Adapters importam `internal/` | Resolvido (D134): os adapters embutidos só importam o SDK. Os testes deles ainda usam o core. |
 | 8 | Texto de jogo no catálogo i18n do app | Resolvido (D131): rótulos de flags, instaladores e opções de launch vêm do adapter; um teste do frontend impede que voltem. Nome de mod type continua texto único do adapter, sem idioma. |
 | 9 | UI decide por capability | Resolvido (D132): seções, áreas de Problemas e tela de cada recurso vêm do backend; Configurações, Workarounds, Visão geral e Perfis renderizam o que recebem. `WorkspaceItemId` segue como união: é o mapa id → ícone/rótulo, e id desconhecido é ignorado. |
-| 10 | Settings `plugins.*` para toda instância | Aberto (baixo). |
+| 10 | Settings `plugins.*` para toda instância | Resolvido (D135): as chaves e a aba vêm do módulo de plugins; as abas de Configurações vêm do backend. |
 | 11 | FOMOD e padrão de nome do Nexus no domínio | Aberto (baixo); `Plan.Metadata` já dá ao adapter o caminho próprio. |
 | 12 | `RegistryHints`/`VersionFile` obrigatórios | Resolvido (D113). |
 | 13 | Teste de literais sem vocabulário de formato | Resolvido (D112). |

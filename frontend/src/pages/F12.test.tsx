@@ -1,5 +1,5 @@
 import { render, screen, within } from "@testing-library/react";
-import { openScreen } from "../test/shell";
+import { openScreen, SETTINGS_TABS } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "../app/App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -58,6 +58,7 @@ function world(over: Partial<Backend> = {}, check: Partial<LaunchCheck> = {}) {
     getAppInfo: async () => ({ name: "Mod Orchestrator", version: "1.0.0", dataDir: "/d", schemaVersion: 8, interruptedOperations: 0, logsDir: "/l", customTitleBar: false }),
     listRecentOperations: async () => [],
     onOperationEvent: () => () => {},
+    settingsTabs: async () => SETTINGS_TABS,
     listAppSettings: async () => APP_SETTINGS,
     setAppSetting: async (k, v) => {
       calls.push(`set:${k}=${v}`);
@@ -100,6 +101,35 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     await screen.findByRole("tab", { name: "Plugins" });
     expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Interface", "Application", "Mods", "Plugins", "Troubleshooting", "Theme"]);
     expect(tabs.some((t) => /download/i.test(t.textContent ?? ""))).toBe(false);
+  });
+
+  it("Settings renders the tabs the backend lists: a module tab only for the games that offer it (D135)", async () => {
+    const user = userEvent.setup();
+    const plain: ManagedGame = { ...GAME, id: "i2", name: "Valheim", active: false, capabilities: [], sections: [] };
+    const { backend, calls } = world({
+      settingsTabs: async () => [...SETTINGS_TABS, { id: "saves", section: "settings.saves" }],
+      gamesView: async () => ({ managed: [GAME, { ...plain, sections: ["settings.saves"] }], discovered: [], supported: [], scanned: true, hiddenCount: 0 }),
+      listInstanceSettings: async (i) => (i === "i2" ? [setting("saves.backupOnLaunch", "bool", "true", { tab: "saves" })] : [setting("plugins.autoSort", "bool", "true", { tab: "plugins" })]),
+    });
+    render(<App backend={backend} />);
+    await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
+    await screen.findByRole("tab", { name: "Plugins" });
+    expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Interface", "Application", "Mods", "Plugins", "Troubleshooting", "Theme", "saves"]);
+    await user.click(screen.getByRole("tab", { name: "saves" }));
+    const toggle = await screen.findByRole("switch", { name: "saves.backupOnLaunch" });
+    await user.click(toggle);
+    expect(calls).toContain("setInstance:i2:saves.backupOnLaunch=false");
+  });
+
+  it("Settings has no Plugins tab when no managed game offers it", async () => {
+    const user = userEvent.setup();
+    const { backend } = world({
+      gamesView: async () => ({ managed: [{ ...GAME, capabilities: [], sections: [] }], discovered: [], supported: [], scanned: true, hiddenCount: 0 }),
+    });
+    render(<App backend={backend} />);
+    await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
+    await screen.findByRole("tab", { name: "Theme" });
+    expect(screen.queryByRole("tab", { name: "Plugins" })).toBeNull();
   });
 
   it("per-game settings follow the game chosen at the top", async () => {

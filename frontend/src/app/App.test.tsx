@@ -1,5 +1,5 @@
 import { act, render, screen, waitFor, within } from "@testing-library/react";
-import { openOperations } from "../test/shell";
+import { openOperations, SETTINGS_TABS } from "../test/shell";
 import userEvent from "@testing-library/user-event";
 import { App } from "./App";
 import { createOfflineBackend } from "../bridge/offline-backend";
@@ -46,6 +46,7 @@ function fakeBackend(initial: Operation[]) {
       listeners.add(l);
       return () => listeners.delete(l);
     },
+    settingsTabs: async () => SETTINGS_TABS,
     listAppSettings: async () => [
       setting("ui.language", values["ui.language"]!, ["en", "pt-BR"]),
       setting("theme.mode", values["theme.mode"]!, ["dark", "light", "system"]),

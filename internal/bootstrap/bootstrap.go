@@ -180,6 +180,10 @@ func New(ctx context.Context) (c *Container, err error) {
 
 	settingsSvc := appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1)
 	settingsSvc.DataDir, settingsSvc.Prefs = paths.Root, system.Preferences{}
+	// Optional modules add their tabs and settings to the catalog (D135).
+	if err := settingsSvc.Contribute(plugins.SettingsContribution()); err != nil {
+		return nil, err
+	}
 	if lv, err := settingsSvc.AppValue(ctx, "app.logLevel"); err == nil {
 		level.Set(logging.ParseLevel(lv.Value))
 	}

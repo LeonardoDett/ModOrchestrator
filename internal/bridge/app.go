@@ -141,6 +141,23 @@ func (a *App) ListAppSettings() ([]SettingDTO, error) {
 	return out, nil
 }
 
+// SettingsTabDTO is one Settings tab. Section, when set, is the instance
+// section a managed game must offer for the tab to apply to it.
+type SettingsTabDTO struct {
+	ID      string `json:"id"`
+	Section string `json:"section,omitempty"`
+}
+
+// SettingsTabs returns the Settings tabs in order: the core ones and the
+// ones optional modules contribute (D135). The UI renders this list.
+func (a *App) SettingsTabs() []SettingsTabDTO {
+	out := []SettingsTabDTO{}
+	for _, t := range a.c.Settings.Tabs() {
+		out = append(out, SettingsTabDTO{ID: string(t.ID), Section: t.Section})
+	}
+	return out
+}
+
 // SetAppSetting stores an app-scoped value; the UI rereads the settings.
 func (a *App) SetAppSetting(key, value string) error {
 	if err := a.c.Settings.SetApp(a.context(), key, value); err != nil {

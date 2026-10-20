@@ -148,3 +148,32 @@ func TestDerivedDefaultsReadOnlyAndRestart(t *testing.T) {
 		t.Fatalf("pending: %v", p)
 	}
 }
+
+// A module key is unknown until the module contributes it; a refused
+// contribution keeps the catalog as it was (D135).
+func TestContributeAddsModuleSettings(t *testing.T) {
+	ctx := context.Background()
+	s, _ := newService("en")
+	if err := s.SetInstance(ctx, "i1", "mod.flag", "true"); !errors.Is(err, ErrUnknown) {
+		t.Fatalf("before contributing: %v", err)
+	}
+	ok := domain.Contribution{
+		Tabs: []domain.TabDef{{ID: "mod", After: domain.TabMods}},
+		Defs: []domain.Def{{Key: "mod.flag", Scope: domain.ScopeInstance, Type: domain.TypeBool, Tab: "mod", Release: domain.V1, Default: "false"}},
+	}
+	if err := s.Contribute(ok); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.SetInstance(ctx, "i1", "mod.flag", "true"); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.Contribute(ok, ok); err == nil {
+		t.Fatal("a repeated contribution must be refused")
+	}
+	if _, err := s.InstanceValue(ctx, "i1", "mod.flag"); err != nil {
+		t.Fatalf("a refused contribution must keep the catalog: %v", err)
+	}
+	if tabs := s.Tabs(); len(tabs) != 6 || tabs[3].ID != "mod" {
+		t.Fatalf("tabs = %+v", tabs)
+	}
+}

@@ -235,6 +235,11 @@ export function useBackupStatus() {
   return useBackendQuery((b) => b.backupStatus(), [], { onOperationEvents: true });
 }
 
+/** Settings tabs in order (D135); the page renders this list. */
+export function useSettingsTabs() {
+  return useBackendQuery((b) => b.settingsTabs(), []);
+}
+
 export function useWorkarounds() {
   return useBackendQuery((b) => b.workarounds(), []);
 }

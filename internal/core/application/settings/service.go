@@ -43,15 +43,35 @@ type Service struct {
 	repo    ports.Settings
 	locale  ports.SystemLocale
 	release domain.Release
+	catalog *domain.Catalog
 	// DataDir is the application data folder (app.dataDir, shown only).
 	DataDir string
 	// Prefs gives the OS preferences (nil: none known).
 	Prefs Preferences
 }
 
-// NewService wires the service; only settings of release r are exposed.
+// NewService wires the service over the core catalog; only settings of
+// release r are exposed. Modules add theirs with Contribute.
 func NewService(repo ports.Settings, locale ports.SystemLocale, r domain.Release) *Service {
-	return &Service{repo: repo, locale: locale, release: r}
+	return &Service{repo: repo, locale: locale, release: r, catalog: domain.Core()}
+}
+
+// Contribute rebuilds the catalog with the settings optional modules
+// contribute (D135); the composition root calls it once, before use. On
+// error the catalog is left as it was.
+func (s *Service) Contribute(contribs ...domain.Contribution) error {
+	c, err := domain.NewCatalog(contribs...)
+	if err != nil {
+		return err
+	}
+	s.catalog = c
+	return nil
+}
+
+// Tabs returns the Settings tabs in order, with the instance section that
+// gates each module tab (D135).
+func (s *Service) Tabs() []domain.TabDef {
+	return s.catalog.Tabs(s.release)
 }
 
 // App returns every available app-scoped setting, in catalog order.
@@ -65,7 +85,7 @@ func (s *Service) App(ctx context.Context) ([]Effective, error) {
 		explicit[v.Key] = v.Value
 	}
 	var out []Effective
-	for _, d := range domain.Available(s.release) {
+	for _, d := range s.catalog.Available(s.release) {
 		if d.Scope != domain.ScopeApp {
 			continue
 		}
@@ -98,7 +118,7 @@ func (s *Service) SetApp(ctx context.Context, key, value string) error {
 	} else if d.ReadOnly {
 		return fmt.Errorf("%w: %q", ErrReadOnly, key)
 	}
-	v, err := domain.NewValue(domain.ScopeApp, "", key, value)
+	v, err := s.catalog.NewValue(domain.ScopeApp, "", key, value)
 	if err != nil {
 		return err
 	}
@@ -114,7 +134,7 @@ func (s *Service) ResetApp(ctx context.Context, key string) error {
 }
 
 func (s *Service) appDef(key string) (domain.Def, error) {
-	for _, d := range domain.Available(s.release) {
+	for _, d := range s.catalog.Available(s.release) {
 		if d.Key == key && d.Scope == domain.ScopeApp {
 			return d, nil
 		}
@@ -202,7 +222,7 @@ func (s *Service) Instance(ctx context.Context, instance string, keys []string) 
 		explicit[v.Key] = v.Value
 	}
 	var out []Effective
-	for _, d := range domain.Available(s.release) {
+	for _, d := range s.catalog.Available(s.release) {
 		if d.Scope == domain.ScopeInstance && !d.ByOperation && (keys == nil || slices.Contains(keys, d.Key)) {
 			out = append(out, s.effective(d, explicit))
 		}
@@ -217,7 +237,7 @@ func (s *Service) SetInstance(ctx context.Context, instance, key, value string) 
 	} else if d.ByOperation {
 		return fmt.Errorf("%w: %q", ErrReadOnly, key)
 	}
-	v, err := domain.NewValue(domain.ScopeInstance, instance, key, value)
+	v, err := s.catalog.NewValue(domain.ScopeInstance, instance, key, value)
 	if err != nil {
 		return err
 	}
@@ -233,7 +253,7 @@ func (s *Service) ResetInstance(ctx context.Context, instance, key string) error
 }
 
 func (s *Service) instanceDef(key string) (domain.Def, error) {
-	for _, d := range domain.Available(s.release) {
+	for _, d := range s.catalog.Available(s.release) {
 		if d.Key == key && d.Scope == domain.ScopeInstance {
 			return d, nil
 		}
@@ -285,7 +305,7 @@ func (s *Service) RestartPending(ctx context.Context, startup map[string]string)
 		return nil, err
 	}
 	var out []string
-	for _, d := range domain.Available(s.release) {
+	for _, d := range s.catalog.Available(s.release) {
 		if v, ok := now[d.Key]; ok && startup[d.Key] != v {
 			out = append(out, d.Key)
 		}

@@ -15,6 +15,7 @@ export function createOfflineBackend(): Backend {
     getOperationEvents: unavailable,
     onOperationEvent: () => () => {},
     listAppSettings: unavailable,
+    settingsTabs: unavailable,
     setAppSetting: unavailable,
     resetAppSetting: unavailable,
     logTail: unavailable,

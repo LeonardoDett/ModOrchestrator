@@ -750,6 +750,10 @@ export function SetSeparatorBlockEnabled(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetSeparatorBlockEnabled'](arg1, arg2, arg3);
 }
 
+export function SettingsTabs() {
+  return window['go']['bridge']['App']['SettingsTabs']();
+}
+
 export function SortPlugins(arg1) {
   return window['go']['bridge']['App']['SortPlugins'](arg1);
 }

@@ -125,3 +125,46 @@ func TestBridgeSettingsLogAndCodedErrors(t *testing.T) {
 		t.Fatalf("each failed call is logged once: %+v", warns)
 	}
 }
+
+// The Settings tabs come from the catalog: the plugins module contributes
+// its tab after Mods, gated by the settings.plugins section, and its keys
+// are instance settings like any other (D135).
+func TestBridgeSettingsTabsIncludeModuleTabs(t *testing.T) {
+	t.Setenv(appdata.EnvDataDir, t.TempDir())
+	c, err := bootstrap.New(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	app := NewApp(c)
+
+	got := app.SettingsTabs()
+	want := []SettingsTabDTO{{ID: "interface"}, {ID: "application"}, {ID: "mods"}, {ID: "plugins", Section: "settings.plugins"}, {ID: "workarounds"}, {ID: "theme"}}
+	if len(got) != len(want) {
+		t.Fatalf("tabs = %+v", got)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Fatalf("tabs = %+v, want %+v", got, want)
+		}
+	}
+	if err := app.SetInstanceSetting("i1", "plugins.autoSort", "false"); err != nil {
+		t.Fatal(err)
+	}
+	all, err := app.ListInstanceSettings("i1")
+	if err != nil {
+		t.Fatal(err)
+	}
+	found := false
+	for _, s := range all {
+		if s.Key == "plugins.autoSort" {
+			found = s.Tab == "plugins" && s.Value == "false"
+		}
+		if s.Key == "plugins.lootProvider" {
+			t.Fatal("a reserved module setting is not listed in V1")
+		}
+	}
+	if !found {
+		t.Fatalf("plugins.autoSort missing or wrong: %+v", all)
+	}
+}

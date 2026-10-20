@@ -191,6 +191,7 @@ import {
   HideGame,
   HideInstance,
   ListAppSettings,
+  SettingsTabs,
   ListRecentOperations,
   LogTail,
   ManageGame,
@@ -265,6 +266,7 @@ import type {
   OperationEvent,
   RootCheck,
   Setting,
+  SettingsTab,
   SetupVerification,
   Workspace as WorkspaceT,
   ModOrder as ModOrderT,
@@ -317,6 +319,7 @@ export function createWailsBackend(): Backend {
     onOperationEvent: (listener) =>
       EventsOn(OPERATION_EVENT_CHANNEL, (event: OperationEvent) => listener(event)),
     listAppSettings: () => ListAppSettings() as unknown as Promise<Setting[]>,
+    settingsTabs: async () => ((await SettingsTabs()) ?? []) as SettingsTab[],
     setAppSetting: (key, value) => SetAppSetting(key, value),
     resetAppSetting: (key) => ResetAppSetting(key),
     logTail: (filter) => LogTail(filter as bridge.LogFilterDTO) as unknown as Promise<LogEntry[]>,

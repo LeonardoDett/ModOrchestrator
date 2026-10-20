@@ -8,6 +8,7 @@ Regras:
 - Settings **por jogo** aparecem na mesma aba do Vortex, com o seletor do jogo ativo no topo ("A maioria das opções aqui pode ser configurada por jogo", paridade Vortex).
 - Mudança que exige reinício mostra aviso com "Reiniciar agora".
 - Settings avançados/perigosos ficam sob "Modo avançado" (setting `ui.advancedMode`, paridade Vortex "Enable Advanced Mode").
+- Catálogo extensível (D135): o núcleo tem as abas e chaves deste documento, menos as de módulo. Um módulo opcional (hoje, o de plugins) contribui sua aba, a posição dela e as suas chaves (`settings.Contribution`); o catálogo em vigor recusa chave ou aba repetida, aba desconhecida e default inválido. A aba de módulo diz a seção de instância que a liga (`settings.plugins`): aparece enquanto algum jogo gerenciado oferece a seção, e o seletor de jogo lista só esses. A UI renderiza as abas que `SettingsTabs()` lista.
 
 A organização das abas é a herdada do Vortex (D042, substituída por D119) e fica assim até o artboard de Configurações ser aprovado (D119 item 2): **Interface · Aplicação · Mods · Plugins · Download (reservada) · Workarounds · Tema**.
 
@@ -68,6 +69,8 @@ Não existe `profiles.enabled` (D037).
 | `order.snapshotMoveThreshold` | app | int | 20 | V1 | core/05 §4 |
 
 ## Plugins (aparece se algum jogo gerenciado tem `plugins`)
+
+Aba e chaves do módulo de plugins (`plugins.SettingsContribution`, D135), depois de Mods, ligada à seção `settings.plugins`.
 
 | Chave | Escopo | Tipo | Default | Release |
 |---|---|---|---|---|

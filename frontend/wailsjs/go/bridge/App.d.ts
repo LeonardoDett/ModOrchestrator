@@ -376,6 +376,8 @@ export function SetRuleDisabled(arg1:string,arg2:string,arg3:boolean):Promise<vo
 
 export function SetSeparatorBlockEnabled(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
+export function SettingsTabs():Promise<Array<bridge.SettingsTabDTO>>;
+
 export function SortPlugins(arg1:string):Promise<bridge.SortResultDTO>;
 
 export function SortPreview(arg1:string):Promise<bridge.SortPreviewDTO>;

@@ -5035,6 +5035,20 @@ export namespace bridge {
 	        this.restartRequired = source["restartRequired"];
 	    }
 	}
+	export class SettingsTabDTO {
+	    id: string;
+	    section?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SettingsTabDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.section = source["section"];
+	    }
+	}
 	export class SetupDTO {
 	    gameId: string;
 	    name: string;

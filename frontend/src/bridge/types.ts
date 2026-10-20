@@ -67,6 +67,16 @@ export interface OperationEvent {
   data?: Record<string, string>;
 }
 
+/**
+ * One Settings tab, in the order the backend lists it (D135): the core
+ * tabs and the ones optional modules contribute. `section`, when set, is
+ * the instance section a managed game must offer for the tab to apply.
+ */
+export interface SettingsTab {
+  id: string;
+  section?: string;
+}
+
 /** One catalog setting (core/13) with its effective value. */
 export interface Setting {
   key: string;
@@ -119,6 +129,7 @@ export interface Backend {
   getOperationEvents(id: string): Promise<OperationEvent[]>;
   onOperationEvent(listener: (event: OperationEvent) => void): () => void;
   listAppSettings(): Promise<Setting[]>;
+  settingsTabs(): Promise<SettingsTab[]>;
   setAppSetting(key: string, value: string): Promise<void>;
   resetAppSetting(key: string): Promise<void>;
   logTail(filter: LogFilter): Promise<LogEntry[]>;

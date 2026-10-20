@@ -22,7 +22,7 @@ func TestSettingsRepositoryRoundTrip(t *testing.T) {
 	if _, err := repo.Get(ctx, settings.ScopeApp, "", "ui.language"); !errors.Is(err, ports.ErrNotFound) {
 		t.Fatalf("unset value: err = %v, want ErrNotFound", err)
 	}
-	v, _ := settings.NewValue(settings.ScopeApp, "", "ui.language", "pt-BR")
+	v, _ := settings.Core().NewValue(settings.ScopeApp, "", "ui.language", "pt-BR")
 	if err := repo.Save(ctx, v); err != nil {
 		t.Fatal(err)
 	}
@@ -30,7 +30,7 @@ func TestSettingsRepositoryRoundTrip(t *testing.T) {
 	if err := repo.Save(ctx, v); err != nil {
 		t.Fatal(err)
 	}
-	mode, _ := settings.NewValue(settings.ScopeApp, "", "theme.mode", "light")
+	mode, _ := settings.Core().NewValue(settings.ScopeApp, "", "theme.mode", "light")
 	if err := repo.Save(ctx, mode); err != nil {
 		t.Fatal(err)
 	}

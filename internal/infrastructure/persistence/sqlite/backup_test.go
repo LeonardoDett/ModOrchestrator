@@ -19,7 +19,7 @@ func TestBackupRestoreRoundTrip(t *testing.T) {
 		t.Fatal(err)
 	}
 	repo := NewSettingsRepository(db)
-	v, _ := settings.NewValue(settings.ScopeApp, "", "ui.language", "pt-BR")
+	v, _ := settings.Core().NewValue(settings.ScopeApp, "", "ui.language", "pt-BR")
 	if err := repo.Save(ctx, v); err != nil {
 		t.Fatal(err)
 	}
