@@ -1,6 +1,6 @@
 # Proposta: registro de jogos suportados, recursos por jogo e jogo personalizado
 
-Status: **R1 a R4 concluídas em 2026-10-13** (backend e bridge, no master); **R5 e R6 pendentes**, a entrar como fases do plano de implementação. Estado final na seção 0. As seções 2 e 3 descrevem o desenho como foi aprovado; onde a implementação divergiu, vale a decisão citada.
+Status: **R1 a R4 concluídas em 2026-10-13** (backend e bridge); **R5a a R5e entregues pelo redesign** (RD13, RD14, RD14b e A2, conferido em 2026-10-20); **R6** com a parte de contrato feita (D134) e o resto na fase D do SDK. Estado final na seção 0. As seções 2 e 3 descrevem o desenho como foi aprovado; onde a implementação divergiu, vale a decisão citada.
 
 Referências: D011, D012, D031, D040, D057, core/11, core/13, core/15, anti-patterns 1, 3, 18, 24.
 
@@ -23,24 +23,22 @@ Nenhum push foi feito. Validação em cada fase: `go vet ./...`, `go test ./...`
 - Instâncias de jogo genérico existentes são migradas ao abrir o app.
 - Um jogo importado com id de loja e marcador é encontrado pela busca.
 
-### Pendente
+### R5: entregue pelas fases do redesign (conferido em 2026-10-20)
 
-| Fase | O que falta | Depende de | Já pronto no backend |
+| Fase | Onde entrou | Decisão | Como ficou |
 |---|---|---|---|
-| **R5a. Recursos por jogo** | Seção "Recursos" na área do jogo: chave só nos opcionais, motivo quando bloqueado por dependência, base e não aplicável sem chave. | Telas novas do redesign (área do jogo / Settings por jogo). | `InstanceFeatures`, `SetInstanceFeature`; erros `feature_unavailable`, `feature_locked`, `feature_requires` traduzidos. |
-| **R5b. Lista de suportados** | Mostrar nível de suporte, lojas e recursos de cada jogo. | Tela nova de escolha de jogo do redesign. | `GamesSupport`. |
-| **R5c. Jogo personalizado** | Exportar, importar e excluir; diálogos de arquivo (o bridge troca texto JSON, falta abrir/salvar arquivo). | Tela nova de Jogos; um método de bridge para ler/gravar o arquivo escolhido. | `GameEntries`, `ExportGameEntry`, `ImportGameEntry`, `DeleteGameEntry`; erros `entry_*` traduzidos. |
-| **R5d. Assistente** | Reconhecer a pasta escolhida (bate com entrada do registro ou com instalação de loja) e modelos prontos de targets; opção de marcar target como criável. | R5c; decisão sobre quais modelos entram. | Falta backend: consulta "que jogo é esta pasta" e catálogo de modelos no adapter `generic`. |
-| **R5e. UI deixa de decidir por capability** | `SettingsPage`, `WorkspacePages` e `WorkaroundsTab` ainda fazem `capabilities.includes(...)` (acoplamento 9 do relatório de desacoplamento). Hoje recebem as efetivas, então funcionam, mas a regra pede que o backend decida. | Reescrita dessas telas no redesign. | `Workspace()` já devolve os itens por capability efetiva. |
-| **R6. Extensão por jogo** | Contrato de contribuição ancorado no id do jogo, com `provider` em cada recurso, e um módulo embutido como prova. | Contrato público do adapter feito na C3 (D134); `provider` por recurso e o módulo de prova seguem com a fase D do SDK (`docs-ia/09-proposta-multi-jogo-e-extensoes.md`). | Ids estáveis de jogo, catálogo de capabilities aberto, tabela de escolhas por id de recurso. |
-
-Ordem sugerida para o plano: R5e junto com a reescrita das telas (não é fase separada), depois R5a e R5b (só leitura e uma chave), depois R5c, depois R5d. R6 fora desta frente.
+| **R5a. Recursos por jogo** | RD13 (`9bc6619`) | D130, D132 | Ajustes da instância › Recursos: opcionais com chave e estado (ligado, desligado, bloqueado, não se aplica), "Sempre ligados" sem chave, prévia do menu e "Ligar X" no recurso bloqueado. Tudo de `InstanceFeatures`, na ordem da prancha. |
+| **R5b. Lista de suportados** | RD14 (`08a55f5`) | D127 | Adicionar jogo lista nível de suporte, lojas e recursos de cada jogo (`GamesSupport`); o resumo do jogo sai dos recursos que trazem tela (D132). |
+| **R5c. Jogo personalizado** | RD14 (`08a55f5`) | D127 | Exportar, importar e excluir pela tela, com diálogos de arquivo (`SaveGameEntryFile`, `OpenGameEntryFile`). |
+| **R5d. Assistente** | RD14b (`c34458c`) | D129 | Reconhecimento da pasta escolhida (`RecognizeGameFolder`), modelos "Pasta Mods" e "BepInEx" do `generic` e a opção de pasta criável, desligada por padrão. |
+| **R5e. UI deixa de decidir por capability** | A2 (`96f163c`) e item 10 (`39ff58d`) | D132, D135 | Seções, áreas de Problemas, tela de cada recurso e as abas de Configurações vêm do backend; um teste do frontend recusa tela que teste capability. |
+| **R6. Extensão por jogo** | C3 (`2e64203`) | D134 | Contrato público do adapter feito. `provider` por recurso e o módulo de prova seguem com a fase D do SDK (`docs-ia/09-proposta-multi-jogo-e-extensoes.md`). |
 
 ### Pontos em aberto para o plano
 
-1. **Entradas criadas pelo assistente não marcam target como criável**, para não mudar o comportamento de quem já usa. Se a pasta `Mods` de um jogo personalizado ainda não existe, o deploy continua bloqueando. Decidir na R5d se o assistente oferece essa opção.
+1. ~~Entradas criadas pelo assistente não marcam target como criável.~~ Decidido na D129: o assistente oferece a opção, desligada por padrão.
 2. **Nenhum jogo `declared` embutido existe.** Skyrim e Valheim têm adapter próprio. O nível existe e está testado pelo caminho do jogo importado; o primeiro jogo embutido só de dados fica para quando houver um candidato.
-3. **`Instance.Executable` ficou redundante** para entradas (o lançamento vem do manifesto). Remover exige mexer no DTO e na tela de detalhes; fazer junto com a R5c.
+3. **`Instance.Executable` ficou redundante** para entradas (o lançamento vem do manifesto). Remover exige mexer no DTO e na tela de detalhes; não entrou na RD14 e segue aberto.
 4. **Instância `generic` com target fora da raiz não é migrada** e segue pelo caminho antigo. Não há caso conhecido; o código do caminho antigo pode sair quando isso for confirmado.
 5. **Falha intermitente na suíte Go.** Duas execuções com a máquina carregada falharam (uma em `TestDeployPurgeDeploy`) e não se repetiram em quatro execuções seguidas. Não é desta frente, mas o plano deveria prever investigar antes de fechar a V1.
 
