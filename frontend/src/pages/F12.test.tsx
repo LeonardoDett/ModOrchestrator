@@ -98,7 +98,7 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
     const tabs = await screen.findAllByRole("tab");
     await screen.findByRole("tab", { name: "Plugins" });
-    expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Interface", "Application", "Mods", "Plugins", "Workarounds", "Theme"]);
+    expect(screen.getAllByRole("tab").map((t) => t.textContent)).toEqual(["Interface", "Application", "Mods", "Plugins", "Troubleshooting", "Theme"]);
     expect(tabs.some((t) => /download/i.test(t.textContent ?? ""))).toBe(false);
   });
 
@@ -107,12 +107,12 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     const { backend, calls } = world();
     render(<App backend={backend} />);
     await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
-    const game = await screen.findByRole("combobox", { name: "Game" });
-    const toggle = await screen.findByRole("switch", { name: "Deploy mods when enabled" });
+    const game = await screen.findByRole("combobox", { name: "Applies to" });
+    const toggle = await screen.findByRole("switch", { name: "Deploy when enabling or disabling a mod" });
     expect(toggle).toHaveAttribute("aria-checked", "true");
     await chooseOption(user, game, "Skyrim 2");
-    expect(await screen.findByRole("switch", { name: "Deploy mods when enabled" })).toHaveAttribute("aria-checked", "false");
-    await user.click(screen.getByRole("switch", { name: "Deploy mods when enabled" }));
+    expect(await screen.findByRole("switch", { name: "Deploy when enabling or disabling a mod" })).toHaveAttribute("aria-checked", "false");
+    await user.click(screen.getByRole("switch", { name: "Deploy when enabling or disabling a mod" }));
     expect(calls).toContain("setInstance:i2:automation.deployOnChange=true");
   });
 
@@ -140,7 +140,7 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     });
     render(<App backend={backend} />);
     await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
-    expect(await screen.findByText(/Custom window title bar/, { selector: "span" })).toBeInTheDocument();
+    expect(await screen.findByText(/Own title bar/, { selector: "span" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Restart now" }));
     expect(calls).toContain("restart");
   });
@@ -162,7 +162,7 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     });
     render(<App backend={backend} />);
     await user.click(within(sidebar()).getByRole("button", { name: "Settings" }));
-    await user.click(await screen.findByRole("tab", { name: "Workarounds" }));
+    await user.click(await screen.findByRole("tab", { name: "Troubleshooting" }));
     await user.click(await screen.findByRole("button", { name: "Restore…" }));
     const dialog = await screen.findByRole("dialog", { name: "Restore a backup" });
     expect(within(dialog).getByText("The current state is backed up first.")).toBeInTheDocument();

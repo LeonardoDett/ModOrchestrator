@@ -159,7 +159,8 @@ describe("App shell", () => {
     expect(document.documentElement.lang).toBe("pt-BR");
     const nav = screen.getAllByRole("navigation", { name: "Navegação principal" })[0]!;
     expect(within(nav).getByRole("button", { name: "Biblioteca" })).toBeInTheDocument();
-  });
+    // The whole app renders twice (both languages) with role queries over it.
+  }, 30000);
 
   it("translates coded backend errors (INV-OPS-05)", async () => {
     const user = userEvent.setup();

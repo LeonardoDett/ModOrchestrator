@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ScrollText } from "lucide-react";
-import { FolderOpenIcon, UndoIcon } from "dettmann-ui/icons";
-import { Alert, Button, Loader, Stack, Switch, Tabs, Typography, useToast, Icon } from "dettmann-ui";
+import { CheckIcon, FolderOpenIcon, UndoIcon } from "dettmann-ui/icons";
+import { Alert, Button, Input, Loader, ResourcePage, Stack, Switch, Tabs, Typography, useToast, Icon } from "dettmann-ui";
 import { useSettings } from "../app/settings-context";
 import { useBackend } from "../bridge/backend-context";
 import { useGamesView, useInstanceSettings, useSuppressions, useWorkspace } from "../bridge/queries";
@@ -13,7 +13,7 @@ import { AppSettingRows, GameSettingsSelect, InstanceSettingRows, RestartBanner,
 import { UpdateSection } from "../features/settings/UpdateSection";
 import { WorkaroundsTab } from "../features/settings/WorkaroundsTab";
 import { useI18n, type MessageKey } from "../i18n/i18n";
-import { useNavigation } from "../shell/navigation";
+import { MAIN_ID, useNavigation } from "../shell/navigation";
 import { LoadingState, PageBody } from "./PageBody";
 import { useRefresh } from "../bridge/use-backend-query";
 
@@ -77,8 +77,20 @@ export function SettingsPage() {
   const pluginInstance = pluginGames.some((g) => g.id === selected) ? selected : (pluginGames[0]?.id ?? "");
 
   return (
-    <PageBody>
-      <Stack gap="md">
+    <ResourcePage
+      id={MAIN_ID}
+      tabIndex={-1}
+      layout="workspace"
+      className="focus:outline-none"
+      title={t("nav.settings")}
+      primaryActions={
+        <span className="flex items-center gap-1.5 text-xs text-fg-muted">
+          <CheckIcon size="sm" className="text-success" />
+          {t("settings.instantNote")}
+        </span>
+      }
+    >
+      <Stack gap="md" className="min-h-0 flex-1 overflow-auto pb-6">
         <RestartBanner />
         <Tabs.Root value={current} onValueChange={(v) => setTab(v as TabId)}>
           <Tabs.List>
@@ -119,16 +131,30 @@ export function SettingsPage() {
           </Tabs.Panel>
         </Tabs.Root>
       </Stack>
-    </PageBody>
+    </ResourcePage>
   );
 }
 
 /** Instance settings of one game in a section. */
-function InstanceSection({ id, title, instance, keys, children }: { id: string; title: string; instance: string; keys: string[]; children?: React.ReactNode }) {
+function InstanceSection({
+  id,
+  title,
+  instance,
+  keys,
+  children,
+  actions,
+}: {
+  id: string;
+  title: string;
+  instance: string;
+  keys: string[];
+  children?: React.ReactNode;
+  actions?: React.ReactNode;
+}) {
   const { t } = useI18n();
   const settings = useInstanceSettings(instance);
   return (
-    <SettingsSection id={id} title={title}>
+    <SettingsSection id={id} title={title} actions={actions}>
       {settings.status === "loading" ? (
         <div className="px-4 py-3">
           <Loader label={t("common.loading")} />
@@ -145,37 +171,58 @@ function InstanceSection({ id, title, instance, keys, children }: { id: string; 
   );
 }
 
+/**
+ * Interface (board Configuracoes): two columns of sections. "Idioma e
+ * exibição" and "Notificações" on the left; "Automação", with "Vale para
+ * [jogo]" in its header (the settings of one game), and "Avançado" on the
+ * right.
+ */
 function InterfaceTab({ games, instance, onInstance }: { games: readonly ManagedGame[]; instance: string; onInstance: (id: string) => void }) {
   const { t } = useI18n();
+  const appliesTo =
+    games.length > 0 ? (
+      <span className="flex items-center gap-2 text-xs text-fg-muted">
+        {t("settings.appliesTo")}
+        <Input.Root name="settings-game" value={instance} onChange={(v: string) => onInstance(v)} className="w-52">
+          <Input.Box padding="sm">
+            <Input.Select aria-label={t("settings.appliesTo")} options={games.map((g) => ({ value: g.id, label: g.name }))} />
+          </Input.Box>
+        </Input.Root>
+      </span>
+    ) : null;
   return (
-    <Stack gap="lg" className="max-w-3xl">
-      <SettingsSection id="language" title={t("settings.section.language")}>
-        <AppSettingRows keys={["ui.language"]} />
-      </SettingsSection>
-      {games.length > 0 ? <GameSettingsSelect games={games} value={instance} onChange={onInstance} /> : null}
-      {instance ? (
-        <InstanceSection id="automation" title={t("settings.section.automation")} instance={instance} keys={["automation.deployOnChange", "automation.enableOnInstall"]}>
-          <AppSettingRows keys={["automation.deployDelayMs"]} />
-        </InstanceSection>
-      ) : (
-        <SettingsSection id="automation" title={t("settings.section.automation")}>
-          <AppSettingRows keys={["automation.deployDelayMs"]} />
-          <NoGameLine />
+    <div className="grid items-start gap-4 lg:grid-cols-2">
+      <div className="flex flex-col gap-4">
+        <SettingsSection id="display" title={t("settings.section.languageDisplay")}>
+          <AppSettingRows keys={["ui.language", "ui.relativeTimes", "ui.compactHeaders", "ui.reduceMotion", "ui.customTitleBar"]} />
         </SettingsSection>
-      )}
-      <SettingsSection id="notifications" title={t("settings.section.notifications")}>
-        <AppSettingRows keys={["ui.desktopNotifications"]} />
-        <SuppressedLine />
-      </SettingsSection>
-      {instance ? <InstanceSection id="diagnostics" title={t("settings.section.diagnostics")} instance={instance} keys={["diagnostics.showUnreviewedConflicts"]} /> : null}
-      <SettingsSection id="display" title={t("settings.section.display")}>
-        <AppSettingRows keys={["ui.customTitleBar", "ui.hideTopLevelCategory", "ui.relativeTimes", "ui.reduceMotion", "ui.compactHeaders"]} />
-      </SettingsSection>
-      <DashboardSection />
-      <SettingsSection id="advanced" title={t("settings.section.advanced")}>
-        <AppSettingRows keys={["ui.advancedMode"]} />
-      </SettingsSection>
-    </Stack>
+        <SettingsSection id="notifications" title={t("settings.section.notifications")}>
+          <AppSettingRows keys={["ui.desktopNotifications"]} />
+          <SuppressedLine />
+        </SettingsSection>
+      </div>
+      <div className="flex flex-col gap-4">
+        {instance ? (
+          <InstanceSection
+            id="automation"
+            title={t("settings.section.automation")}
+            instance={instance}
+            keys={["automation.deployOnChange", "automation.enableOnInstall", "diagnostics.showUnreviewedConflicts"]}
+            actions={appliesTo}
+          >
+            <AppSettingRows keys={["automation.deployDelayMs"]} />
+          </InstanceSection>
+        ) : (
+          <SettingsSection id="automation" title={t("settings.section.automation")}>
+            <AppSettingRows keys={["automation.deployDelayMs"]} />
+            <NoGameLine />
+          </SettingsSection>
+        )}
+        <SettingsSection id="advanced" title={t("settings.section.advanced")}>
+          <AppSettingRows keys={["ui.advancedMode"]} />
+        </SettingsSection>
+      </div>
+    </div>
   );
 }
 
@@ -205,7 +252,7 @@ function SuppressedLine() {
   if (suppressions.status !== "ready") return null;
   return (
     <SettingLine label={t("settings.suppressed.title")} description={tp("settings.suppressed.description", count)}>
-      <Button size="sm" disabled={count === 0} startIcon={<UndoIcon size="sm" />} onClick={() => void reset()}>
+      <Button size="sm" disabled={count === 0} onClick={() => void reset()}>
         {t("settings.suppressed.reset")}
       </Button>
     </SettingLine>
@@ -298,6 +345,7 @@ function ApplicationTab() {
         <AppSettingRows keys={["app.logLevel", "app.anonymizeSupportBundle"]} />
       </SettingsSection>
       <UpdateSection />
+      <DashboardSection />
       <SettingsSection id="performance" title={t("settings.section.performance")}>
         <AppSettingRows keys={["app.gpuAcceleration"]} />
       </SettingsSection>
@@ -328,6 +376,9 @@ function ModsTab({ games, instance, onInstance }: { games: readonly ManagedGame[
       </SettingsSection>
       <SettingsSection id="order" title={t("settings.section.order")}>
         <AppSettingRows keys={["order.snapshotMoveThreshold"]} />
+      </SettingsSection>
+      <SettingsSection id="list" title={t("settings.section.display")}>
+        <AppSettingRows keys={["ui.hideTopLevelCategory"]} />
       </SettingsSection>
     </Stack>
   );

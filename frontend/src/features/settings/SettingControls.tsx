@@ -19,12 +19,12 @@ import { useAction } from "../games/use-action";
  */
 export function SettingsSection({ id, title, description, children, actions }: { id: string; title: string; description?: string; children: ReactNode; actions?: ReactNode }) {
   return (
-    <section aria-labelledby={`settings-${id}`} className="rounded-card border border-border bg-surface">
-      <div className="flex flex-wrap items-start gap-3 border-b border-border px-4 py-3">
+    <section aria-labelledby={`settings-${id}`} className="overflow-hidden rounded-card border border-border bg-surface">
+      <div data-layer="medium" className="flex min-h-11 flex-wrap items-center gap-3 border-b border-border bg-structure px-4 py-2">
         <div className="min-w-0 flex-1">
-          <Typography id={`settings-${id}`} variant="heading-6" color="fg">
+          <h2 id={`settings-${id}`} className="text-sm font-semibold text-fg">
             {title}
-          </Typography>
+          </h2>
           {description ? (
             <Typography variant="body-sm" color="muted-fg">
               {description}
