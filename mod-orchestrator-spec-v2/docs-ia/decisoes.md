@@ -277,7 +277,7 @@ Status: vigente
 Para jogos com capability `load_order`, a ordem aplicada é o que o adapter serializa (Skyrim SE: `plugins.txt`). Mudanças externas nesse arquivo (launcher, Creation Club, outra ferramenta) são ExternalChange do tipo `load_order` com triagem (importar para o profile / restaurar a do profile). Nunca são sobrescritas silenciosamente.
 
 ## D041 — Sorter nativo na V1; LOOT como provedor de dados depois
-Status: vigente (revisável)
+Status: emendada por D140 (o provedor LOOT entra antes da v1)
 
 O sort da V1 é nativo (D029) e usa: masters implícitos, masters antes de dependentes, flag ESM, regras e grupos do usuário, locks. A integração com dados do LOOT (masterlist: grupos, load-after, mensagens de plugin sujo) entra na V1.x como **provedor de restrições**, não como algoritmo, com revisão de licença. Motivo: libloot é C++ e o valor principal (dados) pode ser consumido sem acoplar o core ao algoritmo.
 
@@ -1400,3 +1400,17 @@ Motivo: o scan já observava só o que mudava (D102), mas plano, manifesto e inv
 Alternativas rejeitadas: plano incremental completo, com estado desejado guardado entre deploys e recálculo só dos mods mudados (mais risco no invariante central, e a meta foi atingida sem ele); aceitar a meta só até 100 mil arquivos.
 
 Consequências: vale para todo jogo. Teste de equivalência (`TestIncrementalPlanMatchesFullPlan`: 200 cenários aleatórios, plano restrito igual ao completo em ações e resumo, inclusive limpeza de pastas e alvos com prefixo comum), comparação de ordem (`TestLocKeyCompareMatchesJoinedKey`) e o perfil de CPU do benchmark (`MO_BENCH_PROFILE`).
+
+## D140 — Lacunas do levantamento MO2/Vortex entram antes da v1
+Status: vigente (2026-10-20; decisão do usuário sobre `propostas/2026-10-20-levantamento-mo2-vortex.md`; emenda D041 e o escopo V1.x de `00-visao-e-escopo.md`)
+
+1. Todos os itens do levantamento (A1–A4, M1–M11, B1–B13) entram antes da v1, seguindo as sugestões do documento, na ordem alta → média → baixa, uma thread por fase (`propostas/2026-10-20-plano-lacunas-mo2-vortex.md`, fases LV1–LV15).
+2. O LOOT pode ser usado: o provedor de dados do LOOT (D041) sai da V1.x e entra antes da v1, ainda como provedor de restrições e mensagens, sem trocar o motor nativo (D029). A forma de obter a masterlist e a licença são revisadas no início da fase LV2.
+3. Saem da V1.x para antes da v1: saves por perfil (`save_games`), configurações do jogo por perfil (`game_settings`), ferramentas externas (`tools`), conflitos dentro de BSA/BA2.
+
+Motivo: o levantamento do código do MO2 e do Vortex mostrou regras e checagens que afetam o uso real (instância única, BSA de outro jogo, ordem sem LOOT, saves compartilhados entre perfis) e o usuário quer a v1 sem essas lacunas.
+
+Alternativas rejeitadas: manter LOOT, saves e INIs em V1.x com um aviso na v1.
+
+Consequências: cada fase registra as próprias decisões e atualiza `08-paridade-vortex-v1.md` quando um item DEFER virar presente. Telas que não existem no design v1 (Saves, Ferramentas, árvore final, BAIN) precisam de prancha aprovada antes de implementar (D127).
+

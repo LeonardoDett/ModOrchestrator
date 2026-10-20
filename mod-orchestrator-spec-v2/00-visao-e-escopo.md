@@ -48,6 +48,8 @@ Plataforma: Windows 10/11 x64 (D039). Adapters: `generic` e `skyrimse` (D031). I
 
 ### V1.x: aprofundamento sem mudar contratos
 
+> D140 (2026-10-20): saves por perfil, configurações do jogo por perfil, dados do LOOT, conflitos dentro de BSA/BA2 e ferramentas externas foram antecipados para antes da v1 (plano em `propostas/2026-10-20-plano-lacunas-mo2-vortex.md`).
+
 - Saves por profile e tela Saves (capability `save_games`).
 - Configurações de jogo (INI) por profile (capability `game_settings`).
 - Dados do LOOT como provedor de restrições e mensagens (D041).

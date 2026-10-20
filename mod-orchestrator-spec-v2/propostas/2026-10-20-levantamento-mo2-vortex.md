@@ -1,6 +1,6 @@
 # Levantamento: o que o MO2 e o Vortex fazem e o Mod Orchestrator ainda não
 
-Status: **levantamento** (2026-10-20). Nenhuma decisão tomada; cada item que for aceito vira decisão em `docs-ia/decisoes.md` e fase própria.
+Status: **levantamento** (2026-10-20). Decidido na D140: todos os itens entram antes da v1; plano em `propostas/2026-10-20-plano-lacunas-mo2-vortex.md`.
 
 ## Fonte e método
 
