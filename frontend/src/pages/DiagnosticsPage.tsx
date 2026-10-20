@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Activity, Gamepad2 } from "lucide-react";
-import { CopyIcon, FolderOpenIcon, RefreshIcon, SearchIcon } from "dettmann-ui/icons";
+import { CopyIcon, FileArchiveIcon, FolderOpenIcon, RefreshIcon, SearchIcon } from "dettmann-ui/icons";
 import {
   Alert,
   Button,
   Inline,
   Input,
+  Indicator,
   Inspector,
   LogViewer,
+  ResourcePage,
   SegmentedControl,
   Tabs,
   Tag,
@@ -18,7 +20,7 @@ import {
 } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { errorMessage, toUIError } from "../bridge/errors";
-import { useLogTail, useOperations } from "../bridge/queries";
+import { useLogTail, useOperations, useProblems } from "../bridge/queries";
 import type { LogEntry, LogLevel } from "../bridge/types";
 import { ErrorAlert, useCopy } from "../features/feedback/ErrorAlert";
 import { OperationDetails } from "../features/operations/OperationDetails";
@@ -27,9 +29,11 @@ import { operationKindLabel } from "../features/operations/operation-labels";
 import { useDeploy } from "../features/deploy/DeployContext";
 import { HistoryPanel } from "../features/diagnostics/HistoryPanel";
 import { ProblemsPanel } from "../features/diagnostics/ProblemsPanel";
+import { SEVERITY_LOOK } from "../features/diagnostics/diagnostic-labels";
+import { useAction } from "../features/games/use-action";
 import { useI18n } from "../i18n/i18n";
-import { useNavigation, type DiagnosticsTab } from "../shell/navigation";
-import { HonestEmpty, LoadingState, PageBody } from "./PageBody";
+import { MAIN_ID, useNavigation, type DiagnosticsTab } from "../shell/navigation";
+import { HonestEmpty, LoadingState } from "./PageBody";
 
 /**
  * Diagnostics (ui/telas/diagnostics.md): Problems and History of the active
@@ -37,36 +41,88 @@ import { HonestEmpty, LoadingState, PageBody } from "./PageBody";
  * Problems and History tabs explain that they are per game (D023, D054).
  */
 export function DiagnosticsPage() {
-  const { t } = useI18n();
+  const i18n = useI18n();
+  const { t, tp } = i18n;
   const { route, navigate } = useNavigation();
   const { instance } = useDeploy();
+  const backend = useBackend();
+  const run = useAction();
+  const { addToast } = useToast();
   const tab: DiagnosticsTab = route.tab ?? (instance ? "problems" : "operations");
+  const problems = useProblems(instance);
+  const counts = problems.status === "ready" ? (problems.data?.counts ?? null) : null;
+  const total = problems.status === "ready" ? (problems.data?.items.length ?? 0) : 0;
+  const [checking, setChecking] = useState(false);
+
+  const checkNow = async () => {
+    setChecking(true);
+    await run(() => backend.runHealthChecks(instance), { success: "diag.checkNowDone" });
+    setChecking(false);
+  };
+  const exportBundle = async () => {
+    const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+    const result = await run(() => backend.exportSupportBundle(t("diag.exportBundleTitle"), `mod-orchestrator-diagnostics-${stamp}.zip`));
+    if (result.ok && result.value) addToast({ title: t("diag.exportBundleDone", { path: result.value }), variant: "success" });
+  };
+
+  // Board JogoDiagnostico: the counts by severity beside the title.
+  const meta = counts ? (
+    <>
+      {counts.blocking > 0 ? (
+        <Indicator variant="chip" intent="danger" icon={SEVERITY_LOOK.blocking.icon} value={i18n.formatNumber(counts.blocking)} label={tp("diag.count.blocking", counts.blocking)} />
+      ) : null}
+      <Indicator variant="chip" icon={SEVERITY_LOOK.error.icon} value={i18n.formatNumber(counts.errors)} label={tp("diag.count.errors", counts.errors)} />
+      <Indicator variant="chip" icon={SEVERITY_LOOK.warning.icon} value={i18n.formatNumber(counts.warnings)} label={tp("diag.count.warnings", counts.warnings)} />
+    </>
+  ) : null;
 
   return (
-    <PageBody fill>
+    <ResourcePage
+      id={MAIN_ID}
+      tabIndex={-1}
+      layout="workspace"
+      className="focus:outline-none"
+      title={t("nav.diagnostics")}
+      meta={meta}
+      primaryActions={
+        <>
+          <Button startIcon={<FileArchiveIcon size="sm" />} disabled={!backend.connected} onClick={() => void exportBundle()}>
+            {t("diag.exportBundle")}
+          </Button>
+          {instance ? (
+            <Button emphasis="high" startIcon={<RefreshIcon size="sm" />} loading={checking} disabled={!backend.connected} onClick={() => void checkNow()}>
+              {t("diag.checkNow")}
+            </Button>
+          ) : null}
+        </>
+      }
+    >
       <Tabs.Root value={tab} onValueChange={(value) => navigate({ view: "diagnostics", tab: value as DiagnosticsTab })}>
         <div className="flex min-h-0 flex-1 flex-col">
-        <Tabs.List>
-          <Tabs.Trigger value="problems">{t("diagnostics.tab.problems")}</Tabs.Trigger>
-          <Tabs.Trigger value="history">{t("diagnostics.tab.history")}</Tabs.Trigger>
-          <Tabs.Trigger value="operations">{t("diagnostics.tab.operations")}</Tabs.Trigger>
-          <Tabs.Trigger value="log">{t("diagnostics.tab.log")}</Tabs.Trigger>
-        </Tabs.List>
-        <Tabs.Panel value="problems" className="flex min-h-0 flex-1 flex-col pt-4">
-          {instance ? <ProblemsPanel instance={instance} /> : <HonestEmpty icon={Gamepad2} title="diag.noGameTitle" description="diag.noGameDescription" />}
-        </Tabs.Panel>
-        <Tabs.Panel value="history" className="flex min-h-0 flex-1 flex-col pt-4">
-          {instance ? <HistoryPanel instance={instance} /> : <HonestEmpty icon={Gamepad2} title="diag.noGameTitle" description="history.noGame" />}
-        </Tabs.Panel>
-        <Tabs.Panel value="operations" className="flex min-h-0 flex-1 flex-col pt-4">
-          <OperationsPanel />
-        </Tabs.Panel>
-        <Tabs.Panel value="log" className="flex min-h-0 flex-1 flex-col pt-4">
-          <LogPanel operation={route.operation} />
-        </Tabs.Panel>
+          <Tabs.List>
+            <Tabs.Trigger value="problems">
+              {t("diagnostics.tab.problems")}
+              {instance && problems.status === "ready" ? <span className="ml-2 text-xs text-fg-muted">{i18n.formatNumber(total)}</span> : null}
+            </Tabs.Trigger>
+            <Tabs.Trigger value="history">{t("diagnostics.tab.history")}</Tabs.Trigger>
+            <Tabs.Trigger value="operations">{t("diagnostics.tab.operations")}</Tabs.Trigger>
+            <Tabs.Trigger value="log">{t("diagnostics.tab.log")}</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Panel value="problems" className="flex min-h-0 flex-1 flex-col">
+            {instance ? <ProblemsPanel instance={instance} /> : <HonestEmpty icon={Gamepad2} title="diag.noGameTitle" description="diag.noGameDescription" />}
+          </Tabs.Panel>
+          <Tabs.Panel value="history" className="flex min-h-0 flex-1 flex-col pb-6 pt-4">
+            {instance ? <HistoryPanel instance={instance} /> : <HonestEmpty icon={Gamepad2} title="diag.noGameTitle" description="history.noGame" />}
+          </Tabs.Panel>
+          <Tabs.Panel value="operations" className="flex min-h-0 flex-1 flex-col pb-6 pt-4">
+            <OperationsPanel />
+          </Tabs.Panel>
+          <Tabs.Panel value="log" className="flex min-h-0 flex-1 flex-col pb-6 pt-4">
+            <LogPanel operation={route.operation} />
+          </Tabs.Panel>
         </div>
       </Tabs.Root>
-    </PageBody>
+    </ResourcePage>
   );
 }
 

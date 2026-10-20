@@ -8,12 +8,12 @@ Um lugar para tudo que explica o estado: problemas atuais, o que aconteceu, oper
 
 ## 2. Abas
 
+Cabeçalho da tela (prancha `JogoDiagnostico`, RD17d): "Diagnóstico" com chips de contagem (bloqueantes, em vermelho, só quando há; erros; avisos), "Exportar pacote de diagnóstico" e "Verificar agora" (principal; reroda health checks e scan leve). Abas Problemas (com a contagem), Histórico, Operações e Log.
+
 ### Problemas (padrão)
-- Lista agrupada por severidade (Bloqueante, Erro, Aviso, Informação), filtros por módulo (Deploy, Conflitos, Regras, Plugins, Biblioteca, Jogo), busca.
-- Linha: ícone + título (i18n) + sujeito (mod/plugin/caminho) + "novo" se surgiu desde a última visita.
-- Inspector: resumo, **evidência** (lista estruturada: caminhos, regras, plugins), **impacto**, **ações** (botões), "Ignorar este" / "Não mostrar este tipo" (não disponível para bloqueante).
-- Seção recolhível "Suprimidos (n)" com Reativar.
-- Toolbar: "Verificar agora" (reroda health checks e scan leve), "Exportar pacote de diagnóstico".
+- Busca de 260 px e chips de área com contagem: Todos, Implantação, Conflitos, Regras, Plugins, Biblioteca, Jogo.
+- Lista com grupos por severidade (Bloqueante, Erros, Avisos, Informações; cabeçalho de 34 px com ícone e contagem); linha de 58 px com título, sujeito (mod, plugin ou caminho), "Novo" se surgiu desde a última visita e a área. "Ignorados (n)" no pé da lista, recolhível, com Reativar.
+- Detalhe ao lado (420 px): selo da severidade e título; **O que isso causa** (impacto e o que bloqueia); **O que encontramos** (evidências em cartões, quando foi encontrado); **Como resolver** (texto `diag.resolve.<código>` quando existe e os botões das ações, a primeira em destaque); no pé, "Ignorar este" / "Não mostrar este tipo", ou "Problemas bloqueantes não podem ser ignorados."
 
 ### Histórico
 - DataTable: quando, quem (usuário/automático), ação, alvo, profile. Filtros: jogo, profile, mod, tipo, período, origem.

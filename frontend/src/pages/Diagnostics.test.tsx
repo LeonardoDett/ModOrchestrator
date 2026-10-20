@@ -117,7 +117,7 @@ function world() {
 async function openProblems(user: ReturnType<typeof userEvent.setup>) {
   // The count of the game menu comes from the backend (D120).
   await openScreen(user, /^Diagnostics, 2 problems$/);
-  return screen.findByRole("grid", { name: "Problems" });
+  return screen.findByRole("list", { name: "Problems" });
 }
 
 describe("Diagnostics (F9)", () => {
@@ -136,6 +136,17 @@ describe("Diagnostics (F9)", () => {
     expect(await screen.findByText("Required mod: Base (disabled)")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Enable Base" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Ignore this" })).toBeInTheDocument();
+  });
+
+  it("shows the area chips of the board, without Plugins in a game without plugins (generic)", async () => {
+    const user = userEvent.setup();
+    const { backend } = world();
+    render(<App backend={backend} />);
+    await openProblems(user);
+    const areas = screen.getByRole("group", { name: "Module" });
+    expect(within(areas).getByRole("button", { name: /^All/ })).toHaveAttribute("aria-pressed", "true");
+    expect(within(areas).queryByRole("button", { name: /^Plugins/ })).not.toBeInTheDocument();
+    expect(within(areas).getByRole("button", { name: /^Rules/ })).toBeInTheDocument();
   });
 
   it("executes an action and the solved problem leaves the list", async () => {
@@ -177,7 +188,7 @@ describe("Diagnostics (F9)", () => {
     expect(within(list).getByText("Alpha and Beta are incompatible; disable one of them or the rule before deploying.")).toBeInTheDocument();
     await user.click(within(list).getByRole("button", { name: "See the problem" }));
     expect(calls).toContain("read:n1");
-    expect(await screen.findByRole("grid", { name: "Problems" })).toBeInTheDocument();
+    expect(await screen.findByRole("list", { name: "Problems" })).toBeInTheDocument();
   });
 
   it("reverts from the history, confirming above 10 items", async () => {

@@ -316,7 +316,7 @@ Concluída em 2026-10-20: DLG-31 em `ui/telas/dialogos.md`. A oferta aparece no 
 ### RD17. Telas desenhadas depois da liberação
 
 - **Objetivo:** levar Perfis, Diagnóstico, Notificações, os menus de Mods e as Configurações para o desenho novo.
-- **Estado:** pranchas revisadas pelo Leonardo em 2026-10-20 ("pode continuar"). 17a ✅ (painel de Notificações), 17b ✅ (menus Filtros e Mais ações), 17c ✅ (Perfis). Nenhuma parte começa antes de a prancha dela ser aprovada. Elas seguem a spec existente (`ui/telas/profiles.md`, `diagnostics.md`, `settings-extensions.md`, `mods.md` §5.1, `core/10`, `core/13`) e não criam contrato novo no backend (B18).
+- **Estado:** pranchas revisadas pelo Leonardo em 2026-10-20 ("pode continuar"). 17a ✅ (painel de Notificações), 17b ✅ (menus Filtros e Mais ações), 17c ✅ (Perfis), 17d ✅ (Diagnóstico › Problemas). Nenhuma parte começa antes de a prancha dela ser aprovada. Elas seguem a spec existente (`ui/telas/profiles.md`, `diagnostics.md`, `settings-extensions.md`, `mods.md` §5.1, `core/10`, `core/13`) e não criam contrato novo no backend (B18).
 - **Entregáveis, um commit por parte:**
 
   | Parte | Prancha | Conteúdo | Componentes | Depende de |
