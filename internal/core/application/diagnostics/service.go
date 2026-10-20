@@ -242,7 +242,7 @@ func (s *Service) Problems(ctx context.Context, instance game.InstanceID) (View,
 		shown[d.Key] = true
 	}
 	for _, d := range ds {
-		it := Item{Diagnostic: d, Instance: instance, Module: diagnostic.ModuleOf(d.Code)}
+		it := Item{Diagnostic: d, Instance: instance, Module: s.Registry.Diagnostics().ModuleOf(d.Code)}
 		if t, ok := first[d.Key]; ok {
 			it.FirstSeen = t
 			it.New = !visited.IsZero() && t.After(visited)

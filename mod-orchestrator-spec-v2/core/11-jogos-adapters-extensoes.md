@@ -17,6 +17,7 @@ Um adapter é registrado no bootstrap e implementa o port `GameAdapter`. Ele **d
 | `rootHints()` | Nomes de pastas/extensões que indicam a raiz do target padrão (core/02 §4). |
 | `contentFlags(footprint)` | Classificação do conteúdo do mod. |
 | `healthChecks()` | Checks próprios (ex.: framework ausente, versão do jogo). |
+| `catalog()` | Códigos de diagnóstico próprios e textos, por idioma, dos ids que o adapter define (D131). |
 | `launch()` | Executável, argumentos, pasta de trabalho, e como detectar "jogo em execução". |
 | `plugins` (capability) | Reconhecer plugins, ler cabeçalho, flags, implícitos, limites, restrições rígidas, formato de índice. |
 | `loadOrder` (capability) | Serializar/ler o arquivo de load order; se ordem manual é permitida. |
@@ -74,6 +75,10 @@ Cada capability servida por código do adapter tem **uma** interface opcional, e
 As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`save_games`, `game_settings`, `tools`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
 
 `Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Desde a D113 a mesma consulta traz o nível de suporte, as lojas onde o jogo é procurado e, por recurso, classe, dependências e padrão; o bridge a expõe em `GamesSupport()`.
+
+### Catálogo do adapter (D131)
+
+O que o adapter mostra ao usuário vem com ele, por `ports.CatalogProvider` (`Catalog()`): os códigos de diagnóstico que só ele emite (`diagnostic.CodeSpec`: código, módulo, aviso antes do launch) e os textos por idioma das chaves `mods.content.<flag>`, `mods.installer.<id>`, `launch.option.<id>` e `diag.{code,impact,evidence,action}.*`. Não é capability: descreve o adapter e não liga processo nenhum; sem ela a UI mostra os textos do app e, para id que não conhece, o id. O registro recusa catálogo sem `en`, idioma sem as chaves do `en`, texto vazio, chave fora desses prefixos, código sem `diag.code.<código>`, código repetido (do core ou de outro adapter) e chave de dois adapters com textos diferentes. O bridge serve os textos em `AdapterMessages(idioma)`, com `en` para o idioma que o adapter não traduz; a UI os lê **depois** do catálogo do app, então um adapter nunca troca texto do app. O catálogo do app fica só com texto do app: `launch.option.game`, `mods.installer.basic` e `mods.installer.imported` são ids do core.
 
 ### Regras
 - O core decide por capability (D011). Se uma tela depende de capability ausente, ela não aparece na navegação do workspace (core/11 §5).

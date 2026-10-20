@@ -130,6 +130,8 @@ export interface Backend {
   instanceFeatures(id: string): Promise<InstanceFeature[]>;
   libraryGames(): Promise<LibraryGame[]>;
   gamesSupport(): Promise<GameSupport[]>;
+  /** Texts the game adapters declare, in a language (D131). */
+  adapterMessages(language: string): Promise<Record<string, string>>;
   gameEntries(): Promise<GameEntry[]>;
   saveGameEntryFile(gameId: string, title: string, defaultName: string): Promise<string>;
   openGameEntryFile(title: string): Promise<string>;

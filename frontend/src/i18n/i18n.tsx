@@ -54,6 +54,12 @@ export interface TranslatorOptions {
   /** ui.relativeTimes (core/13). */
   relativeTimes?: boolean;
   now?: () => number;
+  /**
+   * Texts the game adapters declare (AdapterMessages, D131): labels of their
+   * ids and texts of their diagnostics. They are read after the app catalog,
+   * so they never change a text of the app.
+   */
+  adapterMessages?: Readonly<Record<string, string>>;
 }
 
 const RELATIVE_LIMIT_MS = 7 * 24 * 3600_000;
@@ -72,8 +78,11 @@ export function createTranslator(language: Language, options: TranslatorOptions 
     const date = iso ? new Date(iso) : null;
     return !date || Number.isNaN(date.getTime()) ? catalog["common.empty"] : formatter.format(date);
   };
-  const has = (key: string): key is MessageKey => Object.prototype.hasOwnProperty.call(catalog, key);
-  const t = (key: MessageKey, params?: Params) => interpolate(catalog[key] ?? key, params, language);
+  const extra = options.adapterMessages ?? {};
+  const own = (table: object, key: string) => Object.prototype.hasOwnProperty.call(table, key);
+  const has = (key: string): key is MessageKey => own(catalog, key) || own(extra, key);
+  const text = (key: string) => (own(catalog, key) ? catalog[key as MessageKey] : own(extra, key) ? extra[key]! : key);
+  const t = (key: MessageKey, params?: Params) => interpolate(text(key), params, language);
   return {
     language,
     t,
@@ -116,8 +125,18 @@ export function createTranslator(language: Language, options: TranslatorOptions 
 
 const I18nContext = createContext<Translator>(createTranslator("en"));
 
-export function I18nProvider({ language, relativeTimes = false, children }: { language: Language; relativeTimes?: boolean; children: ReactNode }) {
-  const translator = useMemo(() => createTranslator(language, { relativeTimes }), [language, relativeTimes]);
+export function I18nProvider({
+  language,
+  relativeTimes = false,
+  adapterMessages,
+  children,
+}: {
+  language: Language;
+  relativeTimes?: boolean;
+  adapterMessages?: Readonly<Record<string, string>>;
+  children: ReactNode;
+}) {
+  const translator = useMemo(() => createTranslator(language, { relativeTimes, adapterMessages }), [language, relativeTimes, adapterMessages]);
   useEffect(() => {
     document.documentElement.lang = language;
   }, [language]);

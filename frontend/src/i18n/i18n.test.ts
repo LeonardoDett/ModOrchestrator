@@ -44,6 +44,22 @@ describe("i18n catalogs (D044)", () => {
     expect(pt.has("operation.kind.nope")).toBe(false);
   });
 
+  it("reads adapter texts after its own catalog (D131)", () => {
+    const pt = createTranslator("pt-BR", {
+      adapterMessages: { "mods.content.loader_plugin": "Plugin do carregador", "launch.option.game": "Outro texto" },
+    });
+    expect(pt.has("mods.content.loader_plugin")).toBe(true);
+    expect(pt.t("mods.content.loader_plugin" as never)).toBe("Plugin do carregador");
+    expect(pt.t("launch.option.game")).toBe("Lançar o executável do jogo");
+    expect(createTranslator("pt-BR").has("mods.content.loader_plugin")).toBe(false);
+  });
+
+  it("keeps no label of an id a game adapter defines (D131)", () => {
+    const shared = new Set(["mods.installer.basic", "mods.installer.imported", "launch.option.game"]);
+    const gameKeys = keys.filter((k) => /^(mods\.content|mods\.installer|launch\.option)\./.test(k) && !shared.has(k));
+    expect(gameKeys).toEqual([]);
+  });
+
   it("translates coded errors and falls back to the code (INV-OPS-05)", () => {
     const pt = createTranslator("pt-BR");
     const coded = toUIError(new Error(JSON.stringify({ code: "setting_unknown", params: { key: "x.y" } })));

@@ -19,6 +19,8 @@ Um HealthCheck tem ID estável, escopo (app / instância / profile), gatilhos (e
 
 Severidade no modelo é `error` / `warning` / `info`, mais a lista `blocks[]` de operações impedidas (core/01). Na tabela e na UI, **blocking** = `error` com `blocks` não vazio; a coluna "Bloqueia" é o conteúdo de `blocks`.
 
+Esta tabela é o catálogo **do core**. Um check que só um jogo tem declara o seu código no catálogo do adapter (D131, core/11 §1): módulo (um dos desta tabela), se avisa antes do launch e os textos por idioma. O catálogo em vigor (`diagnostic.Catalog`, servido por `games.Registry.Diagnostics()`) é este mais os códigos dos adapters registrados; código emitido fora dele faz a avaliação falhar em vez de aparecer sem texto.
+
 | checkId | Severidade | Bloqueia | Módulo | Ação principal |
 |---|---|---|---|---|
 | `staging_missing` | blocking | deploy | deployment | Localizar staging / Settings |

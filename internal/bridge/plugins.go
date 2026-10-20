@@ -3,7 +3,6 @@ package bridge
 import (
 	"modorchestrator/internal/core/application/diagnostics"
 	"modorchestrator/internal/core/application/plugins"
-	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/plugin"
 )
@@ -263,7 +262,7 @@ func (a *App) PluginDetails(instance, name string) (PluginDetailsDTO, error) {
 		out.RuleList = append(out.RuleList, toPluginRule(r))
 	}
 	for _, dg := range d.Diagnostics {
-		out.Diagnostics = append(out.Diagnostics, toDiagnosticDTO(diagnostics.Item{Diagnostic: dg, Instance: game.InstanceID(instance), Module: diagnostic.ModuleOf(dg.Code)}))
+		out.Diagnostics = append(out.Diagnostics, toDiagnosticDTO(diagnostics.Item{Diagnostic: dg, Instance: game.InstanceID(instance), Module: a.module(dg.Code)}))
 	}
 	return out, nil
 }

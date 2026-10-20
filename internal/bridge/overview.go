@@ -42,7 +42,12 @@ type LaunchRequestDTO struct {
 	Confirmed bool   `json:"confirmed"`
 }
 
-func toLaunchCheckDTO(c launchsvc.Check) LaunchCheckDTO {
+// module is the module of a code in the catalog in effect (D131).
+func (a *App) module(c diagnostic.Code) diagnostic.Module {
+	return a.c.Games.Registry.Diagnostics().ModuleOf(c)
+}
+
+func (a *App) toLaunchCheckDTO(c launchsvc.Check) LaunchCheckDTO {
 	dto := LaunchCheckDTO{
 		Instance: string(c.Instance), State: string(c.State), Options: []LaunchOptionDTO{},
 		DeployKind: string(c.Deploy.Kind), DeployReason: string(c.Deploy.Reason), DeployNeeded: c.DeployNeeded,
@@ -54,10 +59,10 @@ func toLaunchCheckDTO(c launchsvc.Check) LaunchCheckDTO {
 		dto.Options = append(dto.Options, LaunchOptionDTO{ID: o.ID, Exe: o.Exe, Default: o.Default})
 	}
 	for _, d := range c.Blocking {
-		dto.Blocking = append(dto.Blocking, toDiagnosticDTO(diagnostics.Item{Diagnostic: d, Instance: c.Instance, Module: diagnostic.ModuleOf(d.Code)}))
+		dto.Blocking = append(dto.Blocking, toDiagnosticDTO(diagnostics.Item{Diagnostic: d, Instance: c.Instance, Module: a.module(d.Code)}))
 	}
 	for _, d := range c.Warnings {
-		dto.Warnings = append(dto.Warnings, toDiagnosticDTO(diagnostics.Item{Diagnostic: d, Instance: c.Instance, Module: diagnostic.ModuleOf(d.Code)}))
+		dto.Warnings = append(dto.Warnings, toDiagnosticDTO(diagnostics.Item{Diagnostic: d, Instance: c.Instance, Module: a.module(d.Code)}))
 	}
 	return dto
 }
@@ -68,7 +73,7 @@ func (a *App) LaunchCheck(instance string) (LaunchCheckDTO, error) {
 	if err != nil {
 		return LaunchCheckDTO{}, a.fail("launch check", err, map[string]string{"instance": instance})
 	}
-	return toLaunchCheckDTO(c), nil
+	return a.toLaunchCheckDTO(c), nil
 }
 
 // Launch starts the launch operation with the user's choice in DLG-26.
@@ -156,7 +161,7 @@ func (a *App) InstanceOverview(instance string) (InstanceOverviewDTO, error) {
 	for _, g := range v.Attention {
 		dto.Attention = append(dto.Attention, AttentionGroupDTO{
 			Code: string(g.Code), Severity: string(g.Severity), Blocking: g.Blocking, Count: g.Count,
-			First: toDiagnosticDTO(diagnostics.Item{Diagnostic: g.First, Instance: v.Instance.Instance.ID, Module: diagnostic.ModuleOf(g.Code)}),
+			First: toDiagnosticDTO(diagnostics.Item{Diagnostic: g.First, Instance: v.Instance.Instance.ID, Module: a.module(g.Code)}),
 		})
 	}
 	if p := v.Plugins; p != nil {

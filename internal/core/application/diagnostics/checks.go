@@ -3,6 +3,7 @@ package diagnostics
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -448,6 +449,12 @@ func (s *Service) adapterChecks(ctx context.Context, inst game.Instance) ([]diag
 	specs, err := hc.HealthChecks(ctx, s.FS, inst, mods)
 	if err != nil {
 		return nil, err
+	}
+	// A code outside the catalog would have no module and no text (D131).
+	for _, sp := range specs {
+		if !s.Registry.Diagnostics().Has(sp.Code) {
+			return nil, fmt.Errorf("diagnostics: adapter %s emitted undeclared code %q", inst.Adapter, sp.Code)
+		}
 	}
 	return build(specs...)
 }

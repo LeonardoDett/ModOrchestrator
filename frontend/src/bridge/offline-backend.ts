@@ -24,6 +24,7 @@ export function createOfflineBackend(): Backend {
     instanceFeatures: unavailable,
     libraryGames: unavailable,
     gamesSupport: unavailable,
+    adapterMessages: unavailable,
     gameEntries: unavailable,
     saveGameEntryFile: unavailable,
     openGameEntryFile: unavailable,

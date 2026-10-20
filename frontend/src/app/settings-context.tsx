@@ -56,6 +56,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const languageValue = get("ui.language")?.value;
   const language: Language = isLanguage(languageValue) ? languageValue : FALLBACK.language;
   const density: Density = get("theme.density")?.value === "compact" ? "compact" : FALLBACK.density;
+  // Texts of the game adapters (D131); without them the UI shows ids.
+  const adapterQuery = useBackendQuery((b) => b.adapterMessages(language), [language]);
+  const adapterMessages = adapterQuery.status === "ready" ? adapterQuery.data : undefined;
 
   const value = useMemo<SettingsContextValue>(
     () => ({
@@ -79,7 +82,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         compactHeaders={get("ui.compactHeaders")?.value === "true"}
         fontScale={Number(get("theme.fontScale")?.value ?? "100") || 100}
       />
-      <I18nProvider language={language} relativeTimes={relativeTimes}>
+      <I18nProvider language={language} relativeTimes={relativeTimes} adapterMessages={adapterMessages}>
         {children}
       </I18nProvider>
     </SettingsContext.Provider>

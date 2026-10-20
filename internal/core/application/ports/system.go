@@ -326,6 +326,35 @@ type HealthCheckProvider interface {
 	HealthChecks(ctx context.Context, fs FileReader, inst game.Instance, mods []ModContent) ([]diagnostic.Spec, error)
 }
 
+// AdapterCatalog is what an adapter shows to the user that the core cannot
+// know (D131): the diagnostic codes of its own checks and the texts of its
+// ids, by language. The catalog of the app keeps only text of the app.
+type AdapterCatalog struct {
+	// Diagnostics are codes only this adapter emits. A check may also emit
+	// a code of the core (framework_missing) without declaring it.
+	Diagnostics []diagnostic.CodeSpec
+	// Messages maps a language ("en", "pt-BR") to key and text. Keys live in
+	// the namespaces of AdapterMessagePrefixes ("mods.content.<flag>",
+	// "launch.option.<id>", "diag.code.<code>"...); "en" is required and
+	// every language has the same keys.
+	Messages map[string]map[string]string
+}
+
+// AdapterMessagePrefixes are the namespaces of the keys an adapter may
+// declare: the labels of ids it defines and the texts of its diagnostics.
+var AdapterMessagePrefixes = []string{
+	"mods.content.", "mods.installer.", "launch.option.",
+	"diag.code.", "diag.impact.", "diag.evidence.", "diag.action.",
+}
+
+// CatalogProvider is implemented by adapters with texts or diagnostic codes
+// of their own. It describes the adapter and enables no process of the
+// game, so no capability declares it (D131); without it the UI shows the
+// texts of the app and, for ids it does not know, the id.
+type CatalogProvider interface {
+	Catalog() AdapterCatalog
+}
+
 // PluginSupport is implemented by adapters with the `plugins` capability
 // (core/11 §1, core/08 §1). The adapter recognises plugins, reads their
 // headers and declares the hard constraints, the indexes and the limits;

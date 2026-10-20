@@ -238,6 +238,14 @@ func (a *App) GamesSupport() []GameSupportDTO {
 	return out
 }
 
+// AdapterMessages returns the texts the adapters declare (labels of their
+// content flags, installers and launch options, texts of their
+// diagnostics) in a language, "en" when they lack it (D131). The UI looks
+// them up after its own catalog.
+func (a *App) AdapterMessages(language string) map[string]string {
+	return a.c.Games.Registry.Messages(language)
+}
+
 // InstanceFeatures lists the features of an instance: what the game offers,
 // what the user chose and what is in effect (D115).
 func (a *App) InstanceFeatures(id string) ([]InstanceFeatureDTO, error) {

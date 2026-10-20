@@ -6,6 +6,8 @@ export function ActivateProfile(arg1:string):Promise<void>;
 
 export function ActiveGameStatus():Promise<bridge.ActiveGameDTO>;
 
+export function AdapterMessages(arg1:string):Promise<Record<string, string>>;
+
 export function AddDependencyRule(arg1:string,arg2:string,arg3:string,arg4:string):Promise<string>;
 
 export function AddIncompatibilityRule(arg1:string,arg2:string,arg3:string):Promise<string>;

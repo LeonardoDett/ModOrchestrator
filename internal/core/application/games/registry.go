@@ -7,6 +7,7 @@ import (
 	"sync"
 
 	"modorchestrator/internal/core/application/ports"
+	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 )
 
@@ -16,8 +17,11 @@ import (
 // (ports.EntryHost) change with SetEntries (D117).
 type Registry struct {
 	adapters []ports.GameAdapter
+	// diagnostics and texts come from the adapters' catalogs (D131).
+	diagnostics diagnostic.Catalog
+	texts       adapterTexts
 
-	mu     sync.RWMutex
+	mu    sync.RWMutex
 	byGame map[game.ID]ports.GameAdapter
 	defs   []game.Definition
 }
@@ -32,6 +36,10 @@ func NewRegistry(adapters ...ports.GameAdapter) (*Registry, error) {
 		}
 		names[a.Name()] = true
 		r.adapters = append(r.adapters, a)
+	}
+	var err error
+	if r.diagnostics, r.texts, err = buildCatalogs(r.adapters); err != nil {
+		return nil, err
 	}
 	if err := r.rebuild(); err != nil {
 		return nil, err

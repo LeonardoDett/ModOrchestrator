@@ -254,7 +254,7 @@ func (s *Service) Check(ctx context.Context, instance game.InstanceID) (Check, e
 		switch {
 		case it.BlocksOperation(KindLaunch):
 			c.Blocking = append(c.Blocking, it.Diagnostic)
-		case diagnostic.WarnsBeforeLaunch(it.Code):
+		case s.Registry.Diagnostics().WarnsBeforeLaunch(it.Code):
 			c.Warnings = append(c.Warnings, it.Diagnostic)
 		}
 	}

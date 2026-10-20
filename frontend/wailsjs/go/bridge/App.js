@@ -10,6 +10,10 @@ export function ActiveGameStatus() {
   return window['go']['bridge']['App']['ActiveGameStatus']();
 }
 
+export function AdapterMessages(arg1) {
+  return window['go']['bridge']['App']['AdapterMessages'](arg1);
+}
+
 export function AddDependencyRule(arg1, arg2, arg3, arg4) {
   return window['go']['bridge']['App']['AddDependencyRule'](arg1, arg2, arg3, arg4);
 }

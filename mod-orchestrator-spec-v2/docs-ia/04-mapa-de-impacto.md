@@ -25,7 +25,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Deploy (plano, métodos, journal, manifesto) | core/04, core/09, core/10, core/14, D078/D079 | INV-DEP-*, INV-EXT-01 | topbar, Mods, Overview, Settings › Mods, DLG-14/16/17/18 |
 | External changes / arquivos gerados | core/09, core/04, core/10, core/12 §9 (saídas conhecidas), D080/D081 | INV-EXT-*, INV-DEP-01 | DLG-14/15, topbar, Overview, Diagnostics |
 | Plugins / LoadOrder / sorter | core/08, core/12, core/09 (load_order change) | INV-PLG-*, INV-ORD-05/06 | Plugins, Load Order |
-| HealthCheck / Diagnostic | core/10 e o core do módulo que emite; ação nova = comando em `diagnostics.Commands()` ou lugar em `diagnostics.Places()` + `PLACES` da UI; texto `diag.*` no catálogo i18n; D082/D083 | INV-OPS-06 | Diagnostics, Dashboard, Overview, Mods (faixas), topbar, sidebar, sino |
+| HealthCheck / Diagnostic | core/10 e o core do módulo que emite; ação nova = comando em `diagnostics.Commands()` ou lugar em `diagnostics.Places()` + `PLACES` da UI; texto `diag.*` no catálogo i18n; código de um só jogo vai no catálogo do adapter (`ports.CatalogProvider`, D131); D082/D083 | INV-OPS-06 | Diagnostics, Dashboard, Overview, Mods (faixas), topbar, sidebar, sino |
 | Notification (geração, agregação, desktop) | core/10 §2, `ui.desktopNotifications`, D082/D083 | INV-OPS-01 | sino, desktop do Windows |
 | Operation / Event | core/00, core/10, bridge; evento reversível precisa carregar o inverso no payload (D082) | INV-OPS-01/03 | operation center, histórico |
 | Histórico (projeção, filtros, reversão) | core/10 §3, `history.retentionDays`, D070/D082 | — | Diagnostics › Histórico, Mods (toolbar) |
@@ -37,7 +37,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Integração dettmann-ui / tema | ui/03, ui/04, todos ui/telas | — | todas |
 | Distribuição de tela (design v1) | D119; artboard no canvas e `propostas/redesign-telas-v1-fechamento.md`; ui/01 (artboard e fase), o `ui/telas/*.md` da tela; mudança de layout começa pelo artboard aprovado | — | a tela |
 | Shell: níveis, barra superior, menu do jogo, sino, "Jogar" | ui/00 §2, D120, D045, core/11 §5–6 (navegação e launch), core/10 §2 (notificações), consulta `Workspace()` do bridge | — | todas |
-| Texto de UI / idioma | catálogo i18n (`frontend/src/i18n/catalog/`) | INV-OPS-05 | todas |
+| Texto de UI / idioma | catálogo i18n (`frontend/src/i18n/catalog/`); rótulo de id de um jogo (flag de conteúdo, instalador, opção de launch) e texto de diagnóstico do adapter no catálogo do adapter (`Catalog()`, servido por `AdapterMessages`, D131) | INV-OPS-05 | todas |
 | Código de erro do bridge | core/00 §6, `internal/bridge/errors.go`, catálogo i18n (`error.<code>`) | INV-OPS-05 | todas |
 | Log técnico (formato, rotação, filtros) | core/10 §4, core/13 (`app.logLevel`), ui/telas/diagnostics | — | Diagnostics › Log |
 | Escopo de release | 00-visao-e-escopo, plano, core/15 | — | — |
