@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 
+	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 )
 
@@ -43,13 +44,50 @@ func TestWorkspaceGroupsFollowCapabilities(t *testing.T) {
 }
 
 // A game without plugins (generic, Valheim, or plugins switched off) lists no
-// plugin section; one with plugins lists the three.
+// plugin section; one with plugins lists them all.
 func TestSectionsFollowCapabilities(t *testing.T) {
 	if got := Sections(game.NewCapabilities()); len(got) != 0 {
 		t.Fatalf("no plugins: %v", got)
 	}
-	want := []string{SectionSettingsPlugins, SectionPluginCache, SectionOverviewPlugins}
+	want := []string{SectionSettingsPlugins, SectionPluginCache, SectionOverviewPlugins, SectionProfilesPlugins}
 	if got := Sections(game.NewCapabilities(game.CapPlugins)); !reflect.DeepEqual(got, want) {
 		t.Fatalf("plugins: %v", got)
+	}
+}
+
+// D132: the Problems areas come from the backend; without the plugins
+// capability (generic, Valheim) there is no Plugins area.
+func TestDiagnosticAreasFollowCapabilities(t *testing.T) {
+	bare := []diagnostic.Module{diagnostic.ModuleDeploy, diagnostic.ModuleConflicts, diagnostic.ModuleRules, diagnostic.ModuleLibrary, diagnostic.ModuleGame}
+	if got := DiagnosticAreas(game.NewCapabilities()); !reflect.DeepEqual(got, bare) {
+		t.Fatalf("no plugins: %v", got)
+	}
+	full := []diagnostic.Module{diagnostic.ModuleDeploy, diagnostic.ModuleConflicts, diagnostic.ModuleRules, diagnostic.ModulePlugins, diagnostic.ModuleLibrary, diagnostic.ModuleGame}
+	if got := DiagnosticAreas(game.NewCapabilities(game.CapPlugins)); !reflect.DeepEqual(got, full) {
+		t.Fatalf("plugins: %v", got)
+	}
+}
+
+// D132: a feature names the screen it brings, so the UI keeps no list of
+// its own; the menu and the features agree.
+func TestFeatureScreensMatchTheMenu(t *testing.T) {
+	if FeatureScreen(game.CapPlugins) != ItemPlugins || FeatureScreen(game.CapLoadOrder) != ItemLoadOrder {
+		t.Fatal("plugins and load order bring their screens")
+	}
+	for _, c := range []game.Capability{game.CapLaunch, game.CapInstaller, game.CapSaveGames} {
+		if s := FeatureScreen(c); s != "" {
+			t.Fatalf("%s brings no screen, got %q", c, s)
+		}
+	}
+	all := game.NewCapabilities(game.Catalog()...)
+	for _, it := range WorkspaceItems(all) {
+		found := false
+		for _, c := range game.Catalog() {
+			found = found || FeatureScreen(c) == it
+		}
+		base := it == ItemOverview || it == ItemMods || it == ItemConflicts || it == ItemProfiles || it == ItemDiagnostics || it == ItemInstanceSettings
+		if !found && !base {
+			t.Fatalf("menu item %s has no feature", it)
+		}
 	}
 }

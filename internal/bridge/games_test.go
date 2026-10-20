@@ -86,6 +86,11 @@ func TestBridgeManagesAGenericGameEndToEnd(t *testing.T) {
 	if slices.Contains(ws.Items, "plugins") || slices.Contains(ws.Items, "load_order") || !slices.Contains(ws.Items, "mods") {
 		t.Fatalf("items = %v", ws.Items)
 	}
+	// D132: without plugins the shared screens get no plugin section nor
+	// Problems area, and the lists are never null for the UI.
+	if ws.Sections == nil || len(ws.Sections) != 0 || slices.Contains(ws.Areas, "plugins") || !slices.Contains(ws.Areas, "deploy") {
+		t.Fatalf("sections = %v, areas = %v", ws.Sections, ws.Areas)
+	}
 	details, err := app.GameInstanceDetails(res.InstanceID)
 	if err != nil || len(details.ModTypes) != 2 || details.ModTypes[0].ID != "default" {
 		t.Fatalf("details = %+v, %v", details, err)

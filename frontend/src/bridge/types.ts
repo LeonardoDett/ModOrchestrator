@@ -1012,6 +1012,8 @@ export interface GameFeature {
   class: string;
   requires: string[];
   default: boolean;
+  /** The game menu screen the feature brings, if any (D132). */
+  screen?: string;
 }
 
 /** How the app serves one game of the registry (R5b). */
@@ -1120,6 +1122,8 @@ export interface InstanceFeature {
   enabled: boolean;
   effective: boolean;
   blockedBy: string[];
+  /** The game menu screen the feature brings, if any (D132). */
+  screen?: string;
 }
 
 export interface Workspace {
@@ -1128,6 +1132,10 @@ export interface Workspace {
   items: WorkspaceItemId[];
   /** The same items arranged as the game menu (D120). */
   groups?: WorkspaceGroup[];
+  /** Capability-bound parts of shared screens of the active instance (D132). */
+  sections?: string[];
+  /** Areas of Diagnostics › Problems the active instance offers, in chip order (D132). */
+  areas?: DiagnosticModule[];
 }
 
 export type InstanceFolder = "game" | "staging" | "archives" | "backups";

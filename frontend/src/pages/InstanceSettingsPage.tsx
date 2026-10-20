@@ -10,21 +10,10 @@ import { gameInitials } from "../features/games/GameSwitcher";
 import { RelocateDialog, RenameDialog } from "../features/games/InstanceDialogs";
 import { useAction } from "../features/games/use-action";
 import { useI18n, type MessageKey } from "../i18n/i18n";
-import { MAIN_ID, useNavigation, type WorkspaceViewId } from "../shell/navigation";
+import { MAIN_ID, VIEWS, isWorkspaceView, useNavigation, type WorkspaceViewId } from "../shell/navigation";
 import { LoadingState, WorkspaceGate } from "./PageBody";
 
 type SettingsTab = "general" | "features" | "folders" | "deploy";
-
-/** Screens a feature brings to the game menu (only the ones that have one). */
-const FEATURE_SCREEN: Record<string, MessageKey | undefined> = {
-  plugins: "nav.plugins",
-  load_order: "nav.loadOrder",
-  save_games: "capability.save_games",
-  tools: "capability.tools",
-};
-
-/** Order of the optional features on the board; others follow. */
-const OPTIONAL_ORDER: readonly string[] = ["plugins", "load_order", "save_games", "game_settings", "tools", "launch"];
 
 /** Screens every game has, whatever its features. */
 const ALWAYS: readonly WorkspaceViewId[] = ["mods", "conflicts", "profiles"];
@@ -84,12 +73,13 @@ function Features({ game }: { game: ManagedGame }) {
   if (features.status === "error") return <ErrorAlert title="games.loadError" error={features.error} onRetry={features.reload} />;
   if (features.status !== "ready") return <LoadingState />;
   const list = features.data;
-  const rank = (id: string) => (OPTIONAL_ORDER.indexOf(id) + OPTIONAL_ORDER.length + 1) % (OPTIONAL_ORDER.length + 1);
-  const optional = list.filter((f) => f.class === "optional").sort((a, b) => rank(a.id) - rank(b.id));
+  // The backend sends the features in the order of the board and names the
+  // screen each one brings to the game menu (D132).
+  const optional = list.filter((f) => f.class === "optional");
   const base = list.filter((f) => f.class !== "optional" && f.status === "available");
-  const byId = new Map(list.map((f) => [f.id, f]));
   const name = (id: string) => (i18n.has(`capability.${id}`) ? t(`capability.${id}` as MessageKey) : id);
   const set = (f: InstanceFeature, on: boolean) => void run(() => backend.setInstanceFeature(game.id, f.id, on));
+  const byId = new Map(list.map((f) => [f.id, f]));
   const blocked = optional.filter((f) => f.status === "available" && f.enabled && !f.effective && f.blockedBy.length > 0);
 
   const state = (f: InstanceFeature): { key: MessageKey; intent?: "success" | "warning"; icon?: typeof CheckIcon } => {
@@ -101,11 +91,9 @@ function Features({ game }: { game: ManagedGame }) {
 
   const menu: { id: string; label: string; on: boolean; note: MessageKey }[] = [
     ...ALWAYS.map((v) => ({ id: v, label: t(`nav.${v}` as MessageKey), on: true, note: "instanceSettings.menu.always" as MessageKey })),
-    ...Object.entries(FEATURE_SCREEN).flatMap(([id, label]) => {
-      const f = byId.get(id);
-      if (!f || f.status !== "available" || !label) return [];
-      const s = state(f);
-      return [{ id, label: t(label), on: f.effective, note: s.key }];
+    ...list.flatMap((f) => {
+      if (f.status !== "available" || !f.screen || !isWorkspaceView(f.screen)) return [];
+      return [{ id: f.id, label: t(VIEWS[f.screen].label), on: f.effective, note: state(f).key }];
     }),
   ];
 

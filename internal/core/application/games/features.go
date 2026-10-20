@@ -2,6 +2,7 @@ package games
 
 import (
 	"context"
+	"slices"
 
 	"modorchestrator/internal/core/domain/game"
 )
@@ -24,10 +25,24 @@ type InstanceFeature struct {
 	Effective bool
 	// BlockedBy lists the required features that are not in effect.
 	BlockedBy []game.Capability
+	// Screen is the screen the feature brings to the game menu, if any.
+	Screen WorkspaceItem
+}
+
+// featureOrder is the order of the features on Ajustes da instância (board
+// JogoAjustesRecursos); the others follow in catalog order (D132).
+var featureOrder = []game.Capability{game.CapPlugins, game.CapLoadOrder, game.CapSaveGames, game.CapGameSettings, game.CapTools, game.CapLaunch}
+
+func featureRank(c game.Capability) int {
+	if i := slices.Index(featureOrder, c); i >= 0 {
+		return i
+	}
+	return len(featureOrder)
 }
 
 // Features lists every feature of the catalog for an instance, with what
-// the game offers, what the user chose and what is in effect.
+// the game offers, what the user chose and what is in effect, in the order
+// of the screen (featureOrder).
 func (s *Service) Features(ctx context.Context, id game.InstanceID) ([]InstanceFeature, error) {
 	inst, err := s.Instances.Get(ctx, id)
 	if err != nil {
@@ -55,7 +70,7 @@ func (s *Service) Features(ctx context.Context, id game.InstanceID) ([]InstanceF
 	out := make([]InstanceFeature, 0, len(ids))
 	for _, c := range ids {
 		spec := game.Describe(c)
-		f := InstanceFeature{ID: c, Status: FeatureNotApplicable, Class: spec.Class, Requires: spec.Requires}
+		f := InstanceFeature{ID: c, Status: FeatureNotApplicable, Class: spec.Class, Requires: spec.Requires, Screen: FeatureScreen(c)}
 		if offered.Capabilities.Has(c) {
 			f.Status = FeatureAvailable
 			f.Enabled = true
@@ -71,6 +86,7 @@ func (s *Service) Features(ctx context.Context, id game.InstanceID) ([]InstanceF
 		}
 		out = append(out, f)
 	}
+	slices.SortStableFunc(out, func(a, b InstanceFeature) int { return featureRank(a.ID) - featureRank(b.ID) })
 	return out, nil
 }
 

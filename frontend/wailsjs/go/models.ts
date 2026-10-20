@@ -1974,6 +1974,7 @@ export namespace bridge {
 	    class: string;
 	    requires: string[];
 	    default: boolean;
+	    screen?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new FeatureDTO(source);
@@ -1986,6 +1987,7 @@ export namespace bridge {
 	        this.class = source["class"];
 	        this.requires = source["requires"];
 	        this.default = source["default"];
+	        this.screen = source["screen"];
 	    }
 	}
 	
@@ -2742,6 +2744,7 @@ export namespace bridge {
 	    enabled: boolean;
 	    effective: boolean;
 	    blockedBy: string[];
+	    screen?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new InstanceFeatureDTO(source);
@@ -2756,6 +2759,7 @@ export namespace bridge {
 	        this.enabled = source["enabled"];
 	        this.effective = source["effective"];
 	        this.blockedBy = source["blockedBy"];
+	        this.screen = source["screen"];
 	    }
 	}
 	export class LimitDTO {
@@ -5476,6 +5480,8 @@ export namespace bridge {
 	    instances: InstanceRefDTO[];
 	    items: string[];
 	    groups: WorkspaceGroupDTO[];
+	    sections: string[];
+	    areas: string[];
 	
 	    static createFrom(source: any = {}) {
 	        return new WorkspaceDTO(source);
@@ -5487,6 +5493,8 @@ export namespace bridge {
 	        this.instances = this.convertValues(source["instances"], InstanceRefDTO);
 	        this.items = source["items"];
 	        this.groups = this.convertValues(source["groups"], WorkspaceGroupDTO);
+	        this.sections = source["sections"];
+	        this.areas = source["areas"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

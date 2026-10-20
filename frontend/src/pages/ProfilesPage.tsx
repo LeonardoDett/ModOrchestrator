@@ -31,8 +31,8 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
   const deploy = useDeploy();
   const profiles = useProfiles(instance);
   const workspace = useWorkspace();
-  // Plugins exist only where the game has them (the menu comes from the backend capabilities).
-  const withPlugins = workspace.status === "ready" && workspace.data.items.includes("plugins");
+  // The plugins figure exists only where the backend lists its section (D132).
+  const withPlugins = workspace.status === "ready" && (workspace.data.sections ?? []).includes("profiles.plugins");
   const list = profiles.status === "ready" ? profiles.data : [];
   const active = list.find((p) => p.active);
   const deployed = list.find((p) => p.deployed);

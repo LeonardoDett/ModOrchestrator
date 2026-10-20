@@ -53,10 +53,9 @@ export function ProblemsPanel({ instance }: { instance: string }) {
   const { route } = useNavigation();
   const act = useDiagnosticAction();
   const problems = useProblems(instance);
-  // The Plugins area exists only where the game has plugins (capability, from the backend).
+  // The areas come from the backend: Plugins only where the game has them (D132).
   const workspace = useWorkspace();
-  const withPlugins = workspace.status === "ready" && workspace.data.items.includes("plugins");
-  const areas = MODULES.filter((m) => m !== "plugins" || withPlugins);
+  const areas = workspace.status === "ready" ? (workspace.data.areas ?? []).filter((m) => MODULES.includes(m)) : [];
   const [module, setModule] = useState("all");
   const [text, setText] = useState("");
   const [selected, setSelected] = useState<string | null>(route.diagnostic ?? null);

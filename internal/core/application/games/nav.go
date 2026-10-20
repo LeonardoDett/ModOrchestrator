@@ -4,6 +4,7 @@ import (
 	"context"
 	"slices"
 
+	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 )
 
@@ -23,17 +24,39 @@ const (
 	ItemInstanceSettings WorkspaceItem = "instance_settings"
 )
 
+// featureScreens are the screens features bring to the game menu, in menu
+// order; a feature without one (launch, installers…) changes behavior only.
+var featureScreens = []struct {
+	Feature game.Capability
+	Screen  WorkspaceItem
+}{
+	{game.CapPlugins, ItemPlugins},
+	{game.CapLoadOrder, ItemLoadOrder},
+}
+
+// FeatureScreen is the screen a feature brings to the game menu, empty when
+// it brings none. Ajustes da instância and Adicionar jogo read it instead of
+// keeping their own list (D132).
+func FeatureScreen(c game.Capability) WorkspaceItem {
+	for _, f := range featureScreens {
+		if f.Feature == c {
+			return f.Screen
+		}
+	}
+	return ""
+}
+
 // WorkspaceItems is the navigation of a workspace, derived from the
 // capabilities of the game (core/11 §5): Overview, Mods, Conflicts, Profiles,
-// Diagnostics and the instance settings always; Plugins and Load Order only when the adapter
-// declares them. Saves arrive with the save_games capability (V1.x).
+// Diagnostics and the instance settings always; the screens of the features
+// (Plugins, Load Order) only when the adapter declares them, in the order of
+// the game menu. Saves arrive with the save_games capability (V1.x).
 func WorkspaceItems(caps game.Capabilities) []WorkspaceItem {
 	items := []WorkspaceItem{ItemOverview, ItemMods}
-	if caps.Has(game.CapPlugins) {
-		items = append(items, ItemPlugins)
-	}
-	if caps.Has(game.CapLoadOrder) {
-		items = append(items, ItemLoadOrder)
+	for _, f := range featureScreens {
+		if caps.Has(f.Feature) {
+			items = append(items, f.Screen)
+		}
 	}
 	return append(items, ItemConflicts, ItemProfiles, ItemDiagnostics, ItemInstanceSettings)
 }
@@ -101,6 +124,10 @@ type Workspace struct {
 	Items     []WorkspaceItem
 	// Groups are the same items arranged as the game menu (D120).
 	Groups []WorkspaceGroup
+	// Sections and Areas are those of the active instance (Sections,
+	// DiagnosticAreas), for the screens that read the workspace (D132).
+	Sections []string
+	Areas    []diagnostic.Module
 }
 
 // Workspace answers the shell navigation query. It is cheap: it does not
@@ -136,6 +163,8 @@ func (s *Service) Workspace(ctx context.Context) (Workspace, error) {
 			if ok {
 				w.Items = WorkspaceItems(def.Capabilities)
 				w.Groups = WorkspaceGroups(w.Items)
+				w.Sections = Sections(def.Capabilities)
+				w.Areas = DiagnosticAreas(def.Capabilities)
 			}
 		}
 	}
@@ -161,6 +190,8 @@ const (
 	SectionPluginCache = "workarounds.pluginCache"
 	// SectionOverviewPlugins is the plugins figure of the Overview.
 	SectionOverviewPlugins = "overview.plugins"
+	// SectionProfilesPlugins is the plugins figure of a profile card.
+	SectionProfilesPlugins = "profiles.plugins"
 )
 
 // Sections lists the capability-bound sections an instance offers, from
@@ -169,7 +200,19 @@ const (
 func Sections(caps game.Capabilities) []string {
 	out := []string{}
 	if caps.Has(game.CapPlugins) {
-		out = append(out, SectionSettingsPlugins, SectionPluginCache, SectionOverviewPlugins)
+		out = append(out, SectionSettingsPlugins, SectionPluginCache, SectionOverviewPlugins, SectionProfilesPlugins)
 	}
 	return out
+}
+
+// DiagnosticAreas lists the areas of Diagnostics › Problems an instance
+// offers, in the order of the filter chips (D132): deploy, conflicts,
+// rules, plugins only with the plugins capability, library and game. The
+// app area is not an instance filter.
+func DiagnosticAreas(caps game.Capabilities) []diagnostic.Module {
+	out := []diagnostic.Module{diagnostic.ModuleDeploy, diagnostic.ModuleConflicts, diagnostic.ModuleRules}
+	if caps.Has(game.CapPlugins) {
+		out = append(out, diagnostic.ModulePlugins)
+	}
+	return append(out, diagnostic.ModuleLibrary, diagnostic.ModuleGame)
 }

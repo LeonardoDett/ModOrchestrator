@@ -1,6 +1,6 @@
 # Proposta: núcleo agnóstico de jogo, capacidades por jogo e extensões
 
-Status: **estado desta frente na seção 0** (fase A em 2026-10-13, C1 em 2026-10-20). As seções 1 a 9 são o diagnóstico e a proposta originais e descrevem o código de **antes** da fase A; as seções 10 e 11 registram o Valheim e o teste real.
+Status: **estado desta frente na seção 0** (fase A em 2026-10-13, C1 e A2 em 2026-10-20). As seções 1 a 9 são o diagnóstico e a proposta originais e descrevem o código de **antes** da fase A; as seções 10 e 11 registram o Valheim e o teste real.
 
 ## 0. Estado final (para o plano de implementação)
 
@@ -13,6 +13,7 @@ Status: **estado desta frente na seção 0** (fase A em 2026-10-13, C1 em 2026-1
 | — | `e5b17f0` | Teste de ponta a ponta opcional contra a instalação real (`MO_E2E_VALHEIM_PACKAGE`). |
 | D118 | `155afac` | `Definition.CreatableTargets` (o deploy cria a pasta do target declarado e a remove, vazia, no purge) e `Plan.Metadata` (o instalador informa nome, versão, descrição e site). |
 | D131 | fase C1 | Catálogo do adapter (`ports.CatalogProvider`): códigos de diagnóstico próprios entram no catálogo em vigor (`diagnostic.Catalog`) e os rótulos de flags, instaladores e opções de launch, mais os textos dos diagnósticos, vêm do adapter por idioma (`AdapterMessages`). Os 23 rótulos do Skyrim e do BepInEx saíram do catálogo do app. |
+| D132 | fase A2 | A UI só renderiza o que o backend lista: o `Workspace()` traz `sections` e `areas` (chips de Problemas) da instância ativa; cada recurso diz a tela que traz ao menu (`screen`) e vem na ordem da prancha. Saíram da UI os testes de `plugins` nos itens do menu e as listas fixas de recursos; um teste do frontend impede que voltem. |
 
 Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c75748`, descoberta como dado; resolve o item 12), D115 (`c7aabfe`, recursos ligáveis por instância), D116 (`6d5626b`, manifesto de jogo), D117 (`5b7b665`, jogo personalizado como entrada; o manifesto aceita target criável).
 
@@ -28,7 +29,7 @@ Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c7
 | 6 | Capability sem validação | Resolvido (D112). |
 | 7 | Adapters importam `internal/` | Aberto (fase C). |
 | 8 | Texto de jogo no catálogo i18n do app | Resolvido (D131): rótulos de flags, instaladores e opções de launch vêm do adapter; um teste do frontend impede que voltem. Nome de mod type continua texto único do adapter, sem idioma. |
-| 9 | UI decide por capability | **Aberto.** `SettingsPage.tsx`, `WorkspacePages.tsx`, `WorkaroundsTab.tsx`. Espera o subprojeto de componentes; a R5 do registro de jogos depende disso. |
+| 9 | UI decide por capability | Resolvido (D132): seções, áreas de Problemas e tela de cada recurso vêm do backend; Configurações, Workarounds, Visão geral e Perfis renderizam o que recebem. `WorkspaceItemId` segue como união: é o mapa id → ícone/rótulo, e id desconhecido é ignorado. |
 | 10 | Settings `plugins.*` para toda instância | Aberto (baixo). |
 | 11 | FOMOD e padrão de nome do Nexus no domínio | Aberto (baixo); `Plan.Metadata` já dá ao adapter o caminho próprio. |
 | 12 | `RegistryHints`/`VersionFile` obrigatórios | Resolvido (D113). |
@@ -40,7 +41,6 @@ Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c7
 
 | Item | Depende de |
 |---|---|
-| Tirar da UI as decisões por capability (item 9) | Subprojeto de componentes liberar as telas. |
 | Dependências do `manifest.json` como `DependencyRule` (core/16 §8) | Contrato novo: `Plan.Requirements` hoje carrega arquivos, não pacotes. |
 | Autor do mod no Valheim | Levar o nome do archive ao contexto do instalador. |
 | Importar profiles do r2modman; provider da Thunderstore | core/15 (V1.x/V2). |
@@ -50,14 +50,14 @@ Da frente de registro de jogos, que fechou pontos deste diagnóstico: D113 (`6c7
 
 | Fase | Conteúdo | Tamanho | Pré-requisito |
 |---|---|---|---|
-| A2 | Item 9: o backend passa a dizer quais abas e seções existem; a UI só renderiza. | Pequeno | Telas liberadas pelo subprojeto de componentes. |
+| A2 | Item 9: o backend passa a dizer quais abas e seções existem; a UI só renderiza. | Pequeno | **Feita (D132).** |
 | B | Ordem de carga genérica (`ordered_units` + `unit_headers`, §5), guiada por um jogo que **tenha** ordem de carga editável. | Médio a grande | Escolher esse jogo. Sem ele, não fazer. |
 | C1 | Textos e diagnósticos do adapter vêm com o adapter (itens 4 e 8): catálogo de códigos e rótulos extensível por adapter. | Médio | **Feita (D131).** |
 | C2 | Pontos de contribuição no lugar da fiação manual (itens 2 e 3): N0 deixa de importar `plugin`. | Médio | C1. |
 | C3 | Pacote `sdk/` fora de `internal/`; adapters embutidos passam a importar só ele (item 7), com teste de arquitetura. | Médio | C1 e C2. Coincide com a R6 do registro de jogos (contrato de extensão por jogo): fazer como uma coisa só. |
 | D | Host de extensões: manifesto, carregador, isolamento, permissões, tela Extensions. | Grande | C3. V2 (D012). |
 
-Ordem sugerida: **C1 → A2 (quando as telas liberarem) → C2 → C3/R6 → D**, com a fase B entrando quando houver o jogo que a justifique.
+Ordem sugerida: **C1 → A2 → C2 → C3/R6 → D** (C1 e A2 feitas), com a fase B entrando quando houver o jogo que a justifique.
 
 O que os dois jogos já provaram: um adapter novo, sem os processos do Skyrim, entrou sem mudar o núcleo (D114); as duas suposições do núcleo que o teste real achou foram corrigidas com um campo declarativo cada (D118). O que ainda **não** está provado é a ordem de carga genérica e a fronteira pública do SDK.
 

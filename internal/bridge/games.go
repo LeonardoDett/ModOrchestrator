@@ -54,7 +54,7 @@ func (a *App) Workspace() (WorkspaceDTO, error) {
 	if err != nil {
 		return WorkspaceDTO{}, a.fail("workspace", err, nil)
 	}
-	out := WorkspaceDTO{Instances: []InstanceRefDTO{}, Items: []string{}, Groups: []WorkspaceGroupDTO{}}
+	out := WorkspaceDTO{Instances: []InstanceRefDTO{}, Items: []string{}, Groups: []WorkspaceGroupDTO{}, Sections: []string{}, Areas: []string{}}
 	for _, r := range w.Instances {
 		out.Instances = append(out.Instances, InstanceRefDTO{ID: string(r.ID), Name: r.Name, GameName: r.GameName, Accent: r.Accent})
 	}
@@ -70,6 +70,10 @@ func (a *App) Workspace() (WorkspaceDTO, error) {
 			dto.Items = append(dto.Items, string(it))
 		}
 		out.Groups = append(out.Groups, dto)
+	}
+	out.Sections = append(out.Sections, w.Sections...)
+	for _, m := range w.Areas {
+		out.Areas = append(out.Areas, string(m))
 	}
 	return out, nil
 }
@@ -227,7 +231,7 @@ func (a *App) GamesSupport() []GameSupportDTO {
 			Support: string(s.Support), Stores: s.Stores, Custom: s.Custom, Features: []FeatureDTO{},
 		}
 		for _, f := range s.Features {
-			fd := FeatureDTO{ID: string(f.ID), Status: string(f.Status), Class: string(f.Class), Default: f.Default, Requires: []string{}}
+			fd := FeatureDTO{ID: string(f.ID), Status: string(f.Status), Class: string(f.Class), Default: f.Default, Requires: []string{}, Screen: string(f.Screen)}
 			for _, r := range f.Requires {
 				fd.Requires = append(fd.Requires, string(r))
 			}
@@ -258,7 +262,7 @@ func (a *App) InstanceFeatures(id string) ([]InstanceFeatureDTO, error) {
 		out = append(out, InstanceFeatureDTO{
 			ID: string(f.ID), Status: string(f.Status), Class: string(f.Class),
 			Requires: capabilityIDs(f.Requires), Enabled: f.Enabled, Effective: f.Effective,
-			BlockedBy: capabilityIDs(f.BlockedBy),
+			BlockedBy: capabilityIDs(f.BlockedBy), Screen: string(f.Screen),
 		})
 	}
 	return out, nil

@@ -182,6 +182,11 @@ type WorkspaceDTO struct {
 	Items     []string         `json:"items"`
 	// Groups arrange Items as the game menu (D120).
 	Groups []WorkspaceGroupDTO `json:"groups"`
+	// Sections and Areas are those of the active instance: the
+	// capability-bound parts of shared screens and the areas of
+	// Diagnostics › Problems (D132).
+	Sections []string `json:"sections"`
+	Areas    []string `json:"areas"`
 }
 
 func toManagedDTO(m games.Managed) ManagedGameDTO {
@@ -265,6 +270,8 @@ type FeatureDTO struct {
 	Class    string   `json:"class"`
 	Requires []string `json:"requires"`
 	Default  bool     `json:"default"`
+	// Screen is the game menu screen the feature brings, if any (D132).
+	Screen string `json:"screen,omitempty"`
 }
 
 // GameSupportDTO is what the app offers for one game of the registry.
@@ -290,6 +297,8 @@ type InstanceFeatureDTO struct {
 	Enabled   bool     `json:"enabled"`
 	Effective bool     `json:"effective"`
 	BlockedBy []string `json:"blockedBy"`
+	// Screen is the game menu screen the feature brings, if any (D132).
+	Screen string `json:"screen,omitempty"`
 }
 
 // GameEntryDTO is a game the user described (D117).

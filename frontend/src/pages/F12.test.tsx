@@ -250,7 +250,7 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
       workspace: async () => ({ active: { id: "i1", name: "Meu jogo", gameName: "Generic" }, instances: [{ id: "i1", name: "Meu jogo", gameName: "Generic" }], items: ["overview", "mods", "instance_settings"] }),
       gameInstanceDetails: async () => generic,
       instanceFeatures: async () => [
-        { id: "plugins", status: "not_applicable", class: "optional", requires: [], enabled: false, effective: false, blockedBy: [] },
+        { id: "plugins", status: "not_applicable", class: "optional", requires: [], enabled: false, effective: false, blockedBy: [], screen: "plugins" },
         { id: "launch", status: "available", class: "optional", requires: [], enabled: true, effective: true, blockedBy: [] },
         { id: "filesystem_mod_target", status: "available", class: "base", requires: [], enabled: true, effective: true, blockedBy: [] },
       ],

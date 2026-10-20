@@ -1289,3 +1289,18 @@ Motivo: com dois jogos, cada rótulo ou diagnóstico novo de um adapter exigia e
 Alternativas rejeitadas: textos por jogo com chave prefixada pelo id do jogo (cada chamada da UI precisaria saber o jogo, e a mesma flag em dois jogos é o caso raro; a colisão com texto diferente já é recusada no registro); capability `catalog` (não habilita processo e obrigaria todo adapter a declarar algo que é só descrição); adapter sobrescrever texto do app (um adapter de terceiro poderia mudar qualquer tela); mover `bsa_without_plugin` e os `plugin_*` para o adapter (são emitidos pelo módulo de plugins do core, por `PluginArchives`; a separação desse módulo é a fase C2).
 
 Consequências: vale para todo jogo; testado com um check próprio declarado e não declarado (`internal/integration/adapter_catalog_test.go`) e com o adapter sem catálogo. Nomes de mod type continuam texto único do adapter (`ModType.Name`), sem idioma. Pendência para C2/C3: os códigos do módulo de plugins e os settings `plugins.*` ainda moram no núcleo.
+
+## D132 — A UI só renderiza o que o backend lista: áreas, seções e a tela de cada recurso
+Status: vigente (2026-10-20; fase A2 de `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, item 9; detalha D115 e D120)
+
+1. **Workspace**: `Workspace()` passa a trazer, da instância ativa, `sections` (`games.Sections`, as mesmas do jogo gerenciado) e `areas` (`games.DiagnosticAreas`: as áreas de Diagnóstico › Problemas na ordem dos chips; Plugins só com a capability `plugins` em vigor; a área do app não é filtro de instância). Problemas e Perfis leem daí, em vez de procurar `plugins` nos itens do menu. Nova seção `profiles.plugins` (número de plugins no cartão do perfil).
+2. **Tela de cada recurso**: o recurso diz a tela que traz ao menu do jogo (`games.FeatureScreen`, campo `screen` em `InstanceFeatures` e em `GamesSupport`); o menu (`WorkspaceItems`) sai da mesma tabela, então menu e recursos não divergem. Ajustes da instância monta a prévia do menu e Adicionar jogo resume o jogo pelos recursos disponíveis que trazem tela; as listas fixas da UI (`FEATURE_SCREEN`, `SUMMARY_FEATURES`) saem.
+3. **Ordem**: `InstanceFeatures` vem na ordem da prancha `JogoAjustesRecursos` (plugins, ordem de carga, saves, settings do jogo, ferramentas, launch; os demais em seguida); `OPTIONAL_ORDER` sai da UI.
+4. **Vigia**: um teste do frontend recusa tela que teste `capabilities.includes/some/indexOf` ou procure `plugins`/`load_order` nos itens do menu.
+
+Motivo: core/11 §5 e ui/00 §1.4 proíbem a UI de decidir por capability; com as telas do redesign fechadas (RD18), as quatro decisões que restavam (chips de Problemas, número de plugins do perfil, prévia do menu e resumo do jogo) passam para o backend.
+
+Alternativas rejeitadas: uma seção por área (`diagnostics.area.*`; mistura lista ordenada com marca de presença); áreas no `ProblemsDTO` (o serviço de diagnósticos não conhece a definição efetiva da instância, e o filtro é navegação, não diagnóstico); listar no backend as chaves de settings de cada aba (o catálogo já tem `Tab`; as chaves `plugins.*` são o item 10, à parte).
+
+Consequências: vale para todo jogo; no `generic` e no Valheim `sections` vem vazio, `areas` sem Plugins e nenhum recurso traz tela (teste no bridge com jogo personalizado e em `games/nav_test.go`). Recurso novo com tela (saves, V1.x) entra na tabela de `FeatureScreen` e aparece no menu, na prévia e no resumo sem mudar a UI além do ícone e do rótulo da tela. Continuam na UI, como apresentação: as abas fixas de Configurações e de Ajustes da instância, as telas "sempre presentes" da prévia e o mapa id → ícone/rótulo do menu.
+

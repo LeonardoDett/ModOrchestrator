@@ -30,9 +30,6 @@ function catalogRows(support: readonly GameSupport[], userIds: ReadonlySet<strin
 
 const LEVEL_INTENT = { full: "success", declared: "info", custom: undefined } as const;
 
-/** Features worth naming in a row, in this order. */
-const SUMMARY_FEATURES = ["plugins", "load_order", "save_games"];
-
 interface AddGameDialogProps {
   open: boolean;
   onClose: () => void;
@@ -109,8 +106,9 @@ function Body({ onClose, onManage, onCreate }: Omit<AddGameDialogProps, "open">)
     if (detected.has(g.gameId)) return t("addGame.detected");
     return g.custom ? t("addGame.noInstance") : "";
   };
+  // A row names the available features that bring a screen (D132).
   const meta = (g: GameSupport) => {
-    const offered = g.features.filter((f) => f.status === "available" && SUMMARY_FEATURES.includes(f.id)).map((f) => featureName(f.id).toLowerCase());
+    const offered = g.features.filter((f) => f.status === "available" && f.screen).map((f) => featureName(f.id).toLowerCase());
     const head = g.custom ? t("addGame.createdByYou") : g.stores.map(store).filter(Boolean).join(", ");
     return [head, offered.length > 0 ? offered.join(", ") : t("addGame.folderMods")].filter(Boolean).join(" · ");
   };

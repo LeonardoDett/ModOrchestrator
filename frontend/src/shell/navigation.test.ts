@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { APP_END, APP_START, DEFAULT_ROUTE, GROUP_LABELS, workspaceGroups } from "./navigation";
 import { en } from "../i18n/catalog/en";
 
@@ -42,5 +44,15 @@ describe("navigation (D120)", () => {
   it("an older backend without groups gets one group with its items", () => {
     expect(workspaceGroups(undefined, ["overview", "mods", "saves"])).toEqual([{ id: "entry", items: ["overview", "mods"] }]);
     expect(workspaceGroups(undefined, undefined)).toEqual([]);
+  });
+
+  it("no screen decides by capability or by a feature id: it renders what the backend lists (D132)", () => {
+    const src = join(import.meta.dirname, "..");
+    const files = (readdirSync(src, { recursive: true }) as string[]).filter((f) => /\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f) && !f.includes("i18n"));
+    const offenders = files.filter((f) => {
+      const code = readFileSync(join(src, f), "utf8");
+      return /capabilities\s*\.\s*(includes|some|indexOf)\(/.test(code) || /items\s*\.\s*includes\(\s*"(plugins|load_order)"/.test(code);
+    });
+    expect(offenders).toEqual([]);
   });
 });

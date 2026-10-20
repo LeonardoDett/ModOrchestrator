@@ -75,7 +75,7 @@ function world() {
     listRecentOperations: async () => [],
     onOperationEvent: () => () => {},
     listAppSettings: async () => [],
-    workspace: async () => ({ active: { id: "i1", name: "Skyrim", gameName: "Skyrim" }, instances: [{ id: "i1", name: "Skyrim", gameName: "Skyrim" }], items: ["overview", "mods", "diagnostics"] }),
+    workspace: async () => ({ active: { id: "i1", name: "Skyrim", gameName: "Skyrim" }, instances: [{ id: "i1", name: "Skyrim", gameName: "Skyrim" }], items: ["overview", "mods", "diagnostics"], areas: ["deploy", "conflicts", "rules", "library", "game"] }),
     profileList: async () => [{ id: "p1", name: "Default", notes: "", active: true, enabled: 2, mods: 3 } as never],
     deployStatus: async () => ({ instance: "i1", kind: "blocked", reason: "mods_incompatible", activeProfile: { id: "p1", name: "Default" }, method: "hardlink", entries: 0, externalChanges: 0, newFiles: 0, foreign: [], failures: [] }),
     pendingDeployDecision: async () => null,
@@ -138,7 +138,7 @@ describe("Diagnostics (F9)", () => {
     expect(screen.getByRole("button", { name: "Ignore this" })).toBeInTheDocument();
   });
 
-  it("shows the area chips of the board, without Plugins in a game without plugins (generic)", async () => {
+  it("shows the area chips the backend lists, without Plugins in a game without plugins (generic)", async () => {
     const user = userEvent.setup();
     const { backend } = world();
     render(<App backend={backend} />);

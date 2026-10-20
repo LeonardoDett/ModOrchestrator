@@ -86,11 +86,13 @@ type Feature struct {
 	Requires []game.Capability
 	// Default is the state of an optional feature in a new instance.
 	Default bool
+	// Screen is the screen the feature brings to the game menu, if any.
+	Screen WorkspaceItem
 }
 
 func feature(c game.Capability, st FeatureStatus) Feature {
 	spec := game.Describe(c)
-	return Feature{ID: c, Status: st, Class: spec.Class, Requires: spec.Requires, Default: st == FeatureAvailable}
+	return Feature{ID: c, Status: st, Class: spec.Class, Requires: spec.Requires, Default: st == FeatureAvailable, Screen: FeatureScreen(c)}
 }
 
 // GameSupport is what the app offers for one game (D112). It is derived
