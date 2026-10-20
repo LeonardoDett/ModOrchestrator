@@ -18,6 +18,8 @@ Regra de dependência: `domain <- application <- infrastructure | adapters`. `br
 
 Adapters dependem de `domain` e `application` (implementam ports como `GameAdapter`), nunca de `infrastructure` diretamente. Se um adapter precisa ler um arquivo, usa o port de filesystem que recebe.
 
+Núcleo e módulos de recurso (D133): o que vale para todo jogo (N0) não importa um módulo de recurso (N1). O módulo de plugins (`domain/plugin`, `domain/pluginhealth`, `domain/loadorder`, `application/plugins`) entra pelos pontos de contribuição que cada serviço declara: `deployment.PostDeploy` (passo `post`), `diagnostics.Module` (checks, ações, lugares, parte do pacote de suporte), `overview.FigureSource` (número da Visão geral), `profiles.Section` (número do cartão e comparação) e `library.FileStates` (arquivo inativo para o FOMOD). O que ele guarda no perfil é uma seção opaca (`profile.Section`), que o núcleo copia, fotografa, restaura e transfere sem ler. O bootstrap passa as listas; `TestCoreDoesNotImportThePluginsModule` impede a volta. `ports` (contratos de adapter até o SDK, fase C3) e `imports` (traz as partes de plugins do Vortex e do MO2) continuam clientes do módulo.
+
 ## 2. Módulos de domínio
 
 Um pacote por módulo em `core/domain`, e um por caso de uso em `core/application` quando crescer. Módulos e seus documentos:
@@ -30,12 +32,14 @@ Categoria de estado de cada pacote (D049) entre parênteses; verificada por `int
 | `ordering` (puro) | motor de ordenação por restrições, compartilhado (D029/D050) | core/05, core/08 | F1 ✅ |
 | `game` (desejado) | Definition, ModType, Instance, Target, Location, Capability | core/11 | F1 ✅ |
 | `mod` (desejado) | Mod, Attributes, Archive, Category/CategoryTree, Installation, File | core/02 | F1 ✅ |
-| `profile` (desejado) | Profile, ModState, ModOrder (Entry), Separator, estado de plugins, LoadOrder, IndexLock, Snapshot | core/07 | F1 ✅ |
+| `profile` (desejado) | Profile, ModState, ModOrder (Entry), Separator, Section (documento opaco de um módulo de recurso, D133), Snapshot | core/07 | F1 ✅ |
 | `rules` (desejado) | OrderRule, DependencyRule, IncompatibilityRule, Set da instância | core/05, core/06 | F1 ✅ |
 | `override` (desejado) | FileOverride, FileExclusion, ConflictReview da instância | core/05 | F1 ✅ |
-| `plugin` (desejado) | Plugin (inventário), Name, Header, Rule, Group, Rules da instância | core/08 | F1 ✅ |
+| `plugin` (desejado) | Plugin (inventário), Name, Header, Rule, Group, Rules da instância; ProfileState (estado de plugins, LoadOrder, IndexLock: a seção `plugins` do perfil, D133) | core/08 | F1 ✅ |
+| `pluginhealth` (calculado) | checks de plugin (core/08 §8), do módulo de plugins (D133) | core/08 | C2 ✅ |
+| `loadorder` (aplicado) | o que o app gravou no arquivo de load order (`Applied`), do módulo de plugins (D133) | core/08 §7 | C2 ✅ |
 | `settings` (desejado) | catálogo de core/13, escopos, validação | core/13 | F1 ✅ |
-| `deployment` (aplicado) | Manifest, Entry (link/backup/dir), Evidence, Observation, Action, Journal, AppliedLoadOrder | core/04 | F1 ✅ |
+| `deployment` (aplicado) | Manifest, Entry (link/backup/dir), Evidence, Observation, Action, Journal | core/04 | F1 ✅ |
 | `conflict` (calculado) | vencedores, conflitos, overrides obsoletos, pares, indicadores | core/05 | F1 ✅ |
 | `deployplan` (calculado) | Desired + fingerprint, plano por diff, plano de purge | core/04 | F1 ✅ |
 | `deploystate` (calculado) | status de deploy | core/04 §7 | F1 ✅ |

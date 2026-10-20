@@ -223,7 +223,7 @@ describe("Diagnostics (F9)", () => {
       join(internal, "core", "application", "diagnostics", "checks.go"),
       join(internal, "core", "domain", "health", "rules.go"),
       join(internal, "core", "application", "conflicts", "diagnostics.go"),
-      join(internal, "core", "domain", "health", "plugins.go"),
+      join(internal, "core", "domain", "pluginhealth", "checks.go"),
     ]
       .map((f) => readFileSync(f, "utf8"))
       .join("\n");

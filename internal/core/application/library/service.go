@@ -21,6 +21,7 @@ import (
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
+	"modorchestrator/internal/core/domain/profile"
 )
 
 // Operation kinds and their steps (core/02 §3, D064).
@@ -103,10 +104,20 @@ type Deps struct {
 	Versions   ports.VersionReader
 	AppVersion string
 	Settings   Settings
+	// FileStates tells which present files the active profile keeps
+	// inactive, for FOMOD conditions (optional; nil: every present file is
+	// active). The plugins module answers it (D133).
+	FileStates FileStates
 	Ops        *operations.Service
 	Locks      *instancelock.Locks
 	IDs        operations.IDGenerator
 	Clock      operations.Clock
+}
+
+// FileStates is a feature module that keeps files of the game inactive in a
+// profile (a plugin recorded as disabled).
+type FileStates interface {
+	Inactive(p *profile.Profile, file string) bool
 }
 
 // Service implements the library use cases. There is deliberately no

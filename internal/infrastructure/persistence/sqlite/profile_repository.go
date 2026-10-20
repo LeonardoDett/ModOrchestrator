@@ -10,6 +10,7 @@ import (
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/profile"
 )
 
@@ -24,11 +25,48 @@ var _ ports.Profiles = (*ProfileRepository)(nil)
 func NewProfileRepository(db *sql.DB) *ProfileRepository { return &ProfileRepository{db: db} }
 
 func restoreProfile(data string) (*profile.Profile, error) {
-	var d profile.Data
-	if err := json.Unmarshal([]byte(data), &d); err != nil {
+	d, err := decodeProfileData([]byte(data))
+	if err != nil {
 		return nil, fmt.Errorf("sqlite: decode profile: %w", err)
 	}
 	return profile.Restore(d)
+}
+
+// legacyPlugins are the plugin fields a profile kept in itself before D133.
+type legacyPlugins struct {
+	PluginsEnabled map[plugin.Name]bool
+	LoadOrder      []plugin.Name
+	IndexLocks     map[plugin.Name]int
+}
+
+// decodeProfileData reads a stored profile or snapshot. One written before
+// D133 keeps its plugin states, load order and locks at the top level: they
+// become the plugins section, and the next save writes the new form.
+func decodeProfileData(raw []byte) (profile.Data, error) {
+	var d profile.Data
+	if err := json.Unmarshal(raw, &d); err != nil {
+		return d, err
+	}
+	var old legacyPlugins
+	if err := json.Unmarshal(raw, &old); err != nil {
+		return d, err
+	}
+	if _, ok := d.Sections[plugin.SectionID]; ok || len(old.PluginsEnabled)+len(old.LoadOrder)+len(old.IndexLocks) == 0 {
+		return d, nil
+	}
+	st, err := plugin.RestoreProfileState(old.PluginsEnabled, old.LoadOrder, old.IndexLocks)
+	if err != nil {
+		return d, err
+	}
+	sec, err := st.Section()
+	if err != nil {
+		return d, err
+	}
+	if d.Sections == nil {
+		d.Sections = map[string]profile.Section{}
+	}
+	d.Sections[plugin.SectionID] = sec
+	return d, nil
 }
 
 func (r *ProfileRepository) Get(ctx context.Context, id profile.ID) (*profile.Profile, error) {
@@ -151,7 +189,7 @@ func (r *ProfileRepository) Snapshots(ctx context.Context, id profile.ID) ([]pro
 		if s.CreatedAt, err = time.Parse(timeLayout, created); err != nil {
 			return nil, err
 		}
-		if err := json.Unmarshal([]byte(data), &s.State); err != nil {
+		if s.State, err = decodeProfileData([]byte(data)); err != nil {
 			return nil, fmt.Errorf("sqlite: decode snapshot %s: %w", sid, err)
 		}
 		out = append(out, s)

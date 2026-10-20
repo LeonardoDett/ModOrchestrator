@@ -193,6 +193,9 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Ops:      e.ops, Locks: locks, IDs: ids, Clock: clock,
 	})
 	t.Cleanup(e.plug.Close)
+	// The plugins module enters through its contribution points (D133).
+	e.prof.Sections = []profilesvc.Section{e.plug}
+	e.lib.FileStates = e.plug
 	e.dep = deploysvc.NewService(deploysvc.Deps{
 		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods,
 		Installations: sqlite.NewInstallationRepository(db), Profiles: profiles, Rules: e.rules,
@@ -201,7 +204,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Publisher: bus, FS: fsys, Foreign: e.games,
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
 		Archives: sqlite.NewArchiveRepository(db), Decisions: sqlite.NewExternalDecisionRepository(db),
-		Hasher: hashing.SHA256{}, Library: e.lib, Exclusions: e.conf, LoadOrder: e.plug,
+		Hasher: hashing.SHA256{}, Library: e.lib, Exclusions: e.conf, PostDeploy: []deploysvc.PostDeploy{e.plug},
 		Ops: e.ops, Locks: locks, IDs: ids, Clock: clock,
 	})
 	e.auto = deploysvc.NewAutoDeployer(e.dep)
@@ -211,7 +214,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Suppressions: sqlite.NewSuppressionRepository(db), Presence: sqlite.NewPresenceRepository(db),
 		Notifs: sqlite.NewNotificationRepository(db), State: sqlite.NewAppState(db), UoW: sqlite.NewUnitOfWork(db),
 		Publisher: bus, FS: fsys, Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
-		Conflicts: e.conf, Deploy: e.dep, Games: e.games, Library: e.lib, Commands: e.prof, Plugins: e.plug, IDs: ids, Clock: clock,
+		Conflicts: e.conf, Deploy: e.dep, Games: e.games, Library: e.lib, Commands: e.prof, Modules: []diagsvc.Module{e.plug}, IDs: ids, Clock: clock,
 	})
 	t.Cleanup(e.diag.Close)
 	e.hist = historysvc.NewService(historysvc.Deps{

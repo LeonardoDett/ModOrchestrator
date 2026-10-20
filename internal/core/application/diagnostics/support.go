@@ -44,10 +44,11 @@ type InstanceReport struct {
 	Profile      string      `json:"activeProfile"`
 	DeployStatus string      `json:"deployStatus"`
 	Mods         []ModReport `json:"mods"`
-	// LoadOrder is the profile's load order in the game's format ("*"
-	// marks active plugins), for games with plugins (core/10 §4).
-	LoadOrder   []string           `json:"loadOrder,omitempty"`
-	Diagnostics []DiagnosticReport `json:"diagnostics"`
+	// Parts are what the feature modules add, by name (core/10 §4): the
+	// load order in the game's format for a game with plugins ("*" marks
+	// active ones). A game without them has none (D133).
+	Parts       map[string][]string `json:"parts,omitempty"`
+	Diagnostics []DiagnosticReport  `json:"diagnostics"`
 }
 
 // ModReport is one mod of the active profile, in priority order.
@@ -168,9 +169,12 @@ func (s *Service) instanceReport(ctx context.Context, inst game.Instance) (Insta
 		})
 	}
 	slices.SortStableFunc(ir.Mods, func(a, b ModReport) int { return a.Priority - b.Priority })
-	if s.Plugins != nil {
-		if text, err := s.Plugins.Export(ctx, inst.ID); err == nil {
-			ir.LoadOrder = strings.Split(strings.TrimSpace(text), "\n")
+	for _, m := range s.Modules {
+		if name, lines, ok := m.Report(ctx, inst.ID); ok {
+			if ir.Parts == nil {
+				ir.Parts = map[string][]string{}
+			}
+			ir.Parts[name] = lines
 		}
 	}
 	ds, _, err := s.Evaluate(ctx, inst.ID)

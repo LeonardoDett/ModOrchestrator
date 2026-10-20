@@ -93,7 +93,7 @@ func (st *state) rows(a arrangement, probs map[string][]diagnostic.Diagnostic) (
 	}
 	idx, limits := st.ps.Indexes(st.inst.Game, active)
 	locks := map[string]bool{}
-	for _, l := range st.profile.IndexLocks() {
+	for _, l := range st.section.IndexLocks() {
 		locks[string(l.Item)] = true
 	}
 	ruleCount := map[string]int{}

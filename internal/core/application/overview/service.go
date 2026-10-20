@@ -21,7 +21,6 @@ import (
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/history"
 	"modorchestrator/internal/core/application/library"
-	"modorchestrator/internal/core/application/plugins"
 	"modorchestrator/internal/core/application/ports"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/diagnostic"
@@ -53,10 +52,9 @@ type Sources struct {
 		Pairs(ctx context.Context, instance game.InstanceID, includeDisabled bool, search string) (conflicts.PairsView, error)
 		ModConflicts(ctx context.Context, instance game.InstanceID, m mod.ID) (conflicts.ModConflicts, error)
 	}
-	Plugins interface {
-		Supported(ctx context.Context, instance game.InstanceID) bool
-		List(ctx context.Context, instance game.InstanceID) (plugins.ListView, error)
-	}
+	// Figures are the feature modules with a number on the Overview
+	// (D133); the service knows none of them by name.
+	Figures []FigureSource
 	History interface {
 		List(ctx context.Context, f history.Filter) ([]history.Entry, error)
 	}
@@ -97,13 +95,23 @@ type ModsSummary struct {
 	Files int
 }
 
-// PluginsSummary counts the active plugins and their limits.
-type PluginsSummary struct {
-	Active int
-	Limits []LimitView
+// FigureSource is a feature module with a number on the Overview of an
+// instance; ok is false when the module does not apply to it or could not
+// be read (the screen then shows no number for it).
+type FigureSource interface {
+	Figure(ctx context.Context, instance game.InstanceID) (f Figure, ok bool)
 }
 
-// LimitView is the use of one plugin limit.
+// Figure is the number of a feature module: Section names the part of the
+// Overview that shows it (games.Sections), Count the number and Limits the
+// limits it is measured against (the active plugins and their limits).
+type Figure struct {
+	Section string
+	Count   int
+	Limits  []LimitView
+}
+
+// LimitView is the use of one limit of a module.
 type LimitView struct {
 	Kind      string
 	Used, Max int
@@ -123,7 +131,7 @@ type InstanceView struct {
 	// AttentionPartial: a group of checks could not run.
 	AttentionPartial bool
 	Mods             *ModsSummary
-	Plugins          *PluginsSummary
+	Figures          []Figure
 	Conflicts        *ConflictsSummary
 	Recent           []history.Entry
 }
@@ -164,13 +172,9 @@ func (s *Service) Instance(ctx context.Context, id game.InstanceID) (InstanceVie
 	if pv, err := s.Conflicts.Pairs(ctx, id, false, ""); err == nil {
 		v.Conflicts = &ConflictsSummary{Pairs: pv.Totals.Pairs, Unreviewed: pv.Totals.Unreviewed, Overrides: pv.Totals.Override}
 	}
-	if s.Plugins != nil && s.Plugins.Supported(ctx, id) {
-		if pl, err := s.Plugins.List(ctx, id); err == nil {
-			p := &PluginsSummary{Active: pl.Active}
-			for _, l := range pl.Limits {
-				p.Limits = append(p.Limits, LimitView{Kind: l.Kind, Used: l.Used, Max: l.Max})
-			}
-			v.Plugins = p
+	for _, f := range s.Figures {
+		if fig, ok := f.Figure(ctx, id); ok {
+			v.Figures = append(v.Figures, fig)
 		}
 	}
 	if es, err := s.History.List(ctx, history.Filter{Instance: id, Limit: recentActivity}); err == nil {

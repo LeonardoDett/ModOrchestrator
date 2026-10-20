@@ -297,7 +297,7 @@ func TestEveryErrorLeadsToResolution(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	commands, places := diagsvc.Commands(), diagsvc.Places()
+	commands, places := e.diag.CommandActions(), e.diag.PlaceTargets()
 	errorsSeen := 0
 	for _, d := range ds {
 		for _, a := range d.Actions {

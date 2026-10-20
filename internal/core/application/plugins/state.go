@@ -12,11 +12,11 @@ import (
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/conflict"
 	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/health"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
 	"modorchestrator/internal/core/domain/override"
 	"modorchestrator/internal/core/domain/plugin"
+	"modorchestrator/internal/core/domain/pluginhealth"
 	"modorchestrator/internal/core/domain/profile"
 	"modorchestrator/internal/core/domain/relpath"
 	"modorchestrator/internal/core/domain/rules"
@@ -30,6 +30,8 @@ type state struct {
 	ps      ports.PluginSupport
 	lo      ports.LoadOrderSupport // nil without the load_order capability
 	profile *profile.Profile
+	// section is the plugins section of the active profile (D133).
+	section *plugin.ProfileState
 	rules   *plugin.Rules
 	// inv is the inventory in its natural order: implicit first, then
 	// plugins of mods by priority, then unmanaged ones by name.
@@ -40,10 +42,10 @@ type state struct {
 	hard     []ordering.Edge
 	// disabled are plugins of installed mods that are not in the
 	// inventory (mod disabled, or its file loses), by key.
-	disabled map[string]health.Provider
+	disabled map[string]pluginhealth.Provider
 	// disabledList keeps them in a stable order for the UI filter.
 	disabledList []DisabledPlugin
-	losing       []health.LosingPlugin
+	losing       []pluginhealth.LosingPlugin
 	modNames     map[mod.ID]string
 	settings     prefs
 	// rootFiles are the file names at the top of the plugin target, in
@@ -118,6 +120,10 @@ func (s *Service) load(ctx context.Context, instance game.InstanceID) (*state, e
 	if err != nil {
 		return nil, err
 	}
+	section, err := plugin.StateOf(p)
+	if err != nil {
+		return nil, err
+	}
 	pr, err := s.PluginRules.Get(ctx, instance)
 	if errors.Is(err, ports.ErrNotFound) {
 		pr, err = plugin.NewRules(instance)
@@ -125,7 +131,7 @@ func (s *Service) load(ctx context.Context, instance game.InstanceID) (*state, e
 	if err != nil {
 		return nil, err
 	}
-	st := &state{inst: inst, def: def, ps: ps, lo: lo, profile: p, rules: pr, disabled: map[string]health.Provider{}, modNames: map[mod.ID]string{}}
+	st := &state{inst: inst, def: def, ps: ps, lo: lo, profile: p, section: section, rules: pr, disabled: map[string]pluginhealth.Provider{}, modNames: map[mod.ID]string{}}
 	st.settings = prefs{
 		autoSort:          s.boolSetting(ctx, instance, "plugins.autoSort", true),
 		enableOnModEnable: s.boolSetting(ctx, instance, "plugins.enableOnModEnable", true),
@@ -222,7 +228,7 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 			}
 		}
 		if len(losers) > 0 {
-			st.losing = append(st.losing, health.LosingPlugin{Name: plugin.Name(c.Location.Path.String()), Winner: w.Mod, WinnerName: st.modNames[w.Mod], Losers: losers})
+			st.losing = append(st.losing, pluginhealth.LosingPlugin{Name: plugin.Name(c.Location.Path.String()), Winner: w.Mod, WinnerName: st.modNames[w.Mod], Losers: losers})
 		}
 	}
 	// Mod plugins in mod priority order (lowest first), as the game would
@@ -253,7 +259,7 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 				continue
 			}
 			if _, ok := st.disabled[k]; !ok {
-				st.disabled[k] = health.Provider{Mod: mid, ModName: st.modNames[mid]}
+				st.disabled[k] = pluginhealth.Provider{Mod: mid, ModName: st.modNames[mid]}
 			}
 			st.disabledList = append(st.disabledList, DisabledPlugin{Name: plugin.Name(f.Dest.Path.String()), Mod: mid, ModName: st.modNames[mid]})
 		}
@@ -400,7 +406,7 @@ func (st *state) enabled(p plugin.Plugin) bool {
 	if p.Implicit {
 		return true
 	}
-	if on, known := st.profile.PluginEnabled(p.Name); known {
+	if on, known := st.section.Enabled(p.Name); known {
 		return on
 	}
 	if p.Origin == plugin.OriginMod {
@@ -413,7 +419,7 @@ func (st *state) enabled(p plugin.Plugin) bool {
 func (st *state) constraints(withLocks bool) plugin.Constraints {
 	c := plugin.Constraints{Hard: st.hard, Soft: st.rules.Edges(st.names()), Fixed: st.implicit, Locks: map[string]int{}}
 	if withLocks {
-		for _, l := range st.profile.IndexLocks() {
+		for _, l := range st.section.IndexLocks() {
 			c.Locks[string(l.Item)] = l.Index
 		}
 	}
@@ -438,7 +444,7 @@ type arrangement struct {
 // order (only hard constraints, or nothing when those cycle); a lock that
 // contradicts the constraints is left out and reported.
 func (st *state) arrange(sort bool) arrangement {
-	merged, added, removed := plugin.Merge(st.profile.LoadOrder(), st.names())
+	merged, added, removed := plugin.Merge(st.section.LoadOrder(), st.names())
 	a := arrangement{before: merged, order: merged, added: added, removed: removed}
 	if c, cyclic := st.rules.Cycle(st.names(), st.hard); cyclic {
 		a.cycle = &c
@@ -452,7 +458,7 @@ func (st *state) arrange(sort bool) arrangement {
 	}
 	res, err := run(st.constraints(true))
 	if err != nil && errors.Is(err, ordering.ErrLockConflict) {
-		for _, l := range st.profile.IndexLocks() {
+		for _, l := range st.section.IndexLocks() {
 			if p, ok := st.plugin(plugin.Name(l.Item)); ok {
 				a.lockConflict = append(a.lockConflict, p.Name)
 			}

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
-	"strings"
+	"slices"
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/diagnostic"
@@ -14,7 +14,6 @@ import (
 	"modorchestrator/internal/core/domain/health"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
-	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/relpath"
 	"modorchestrator/internal/core/domain/rules"
 )
@@ -91,22 +90,6 @@ func (s *Service) Execute(ctx context.Context, instance game.InstanceID, key dia
 		err = s.Commands.RemoveRule(ctx, instance, rules.ID(target()))
 	case health.ActionDisableRule:
 		err = s.Commands.SetRuleDisabled(ctx, instance, rules.ID(target()), true)
-	case health.ActionEnablePlugin, health.ActionDisablePlugin:
-		var names []plugin.Name
-		for _, n := range strings.Split(a.Params["plugin"], ", ") {
-			if n != "" {
-				names = append(names, plugin.Name(n))
-			}
-		}
-		if s.Plugins == nil {
-			return ActionResult{}, fail(CodeActionInvalid, nil, "action", actionID)
-		}
-		err = s.Plugins.SetPluginsEnabled(ctx, instance, names, a.ID == health.ActionEnablePlugin)
-	case health.ActionRemovePluginRule:
-		if s.Plugins == nil {
-			return ActionResult{}, fail(CodeActionInvalid, nil, "action", actionID)
-		}
-		err = s.Plugins.RemovePluginRule(ctx, instance, plugin.RuleID(target()))
 	case ActionDeploy:
 		var op operation.ID
 		op, err = s.Deploy.Deploy(ctx, instance)
@@ -131,7 +114,11 @@ func (s *Service) Execute(ctx context.Context, instance game.InstanceID, key dia
 			err = s.Conflicts.ClearFileOverrides(ctx, instance, []game.Location{{Target: game.TargetID(a.Params["target"]), Path: p}})
 		}
 	default:
-		return ActionResult{}, fail(CodeActionInvalid, nil, "action", actionID)
+		m := s.moduleOf(a.ID)
+		if m == nil {
+			return ActionResult{}, fail(CodeActionInvalid, nil, "action", actionID)
+		}
+		err = m.Execute(ctx, instance, a)
 	}
 	if err != nil {
 		return ActionResult{}, err
@@ -261,22 +248,40 @@ func (s *Service) signal(ctx context.Context, t event.Type, instance game.Instan
 	}
 }
 
-// Commands lists every command action Execute runs; Places lists every
-// navigation target the UI must know (INV-OPS-06: an action that neither
-// runs nor opens anything does not lead to a resolution).
-func Commands() []string {
-	return []string{
-		health.ActionEnableMod, health.ActionDisableMod, health.ActionRemoveRule, health.ActionDisableRule,
-		ActionDeploy, ActionReconcile, ActionRecheck, ActionInstall, ActionReinstall, ActionAcceptStaging,
-		ActionAckVersion, clearOverride, health.ActionEnablePlugin, health.ActionDisablePlugin, health.ActionRemovePluginRule,
+// moduleOf returns the feature module that runs a command action.
+func (s *Service) moduleOf(action string) Module {
+	for _, m := range s.Modules {
+		if slices.Contains(m.Commands(), action) {
+			return m
+		}
 	}
+	return nil
 }
 
-// Places lists the navigation targets of the actions.
-func Places() []string {
-	return []string{
+// CommandActions lists every command action Execute runs, the core's and the
+// modules'; PlaceTargets lists every navigation target the UI must know
+// (INV-OPS-06: an action that neither runs nor opens anything does not
+// lead to a resolution).
+func (s *Service) CommandActions() []string {
+	out := []string{
+		health.ActionEnableMod, health.ActionDisableMod, health.ActionRemoveRule, health.ActionDisableRule,
+		ActionDeploy, ActionReconcile, ActionRecheck, ActionInstall, ActionReinstall, ActionAcceptStaging,
+		ActionAckVersion, clearOverride,
+	}
+	for _, m := range s.Modules {
+		out = append(out, m.Commands()...)
+	}
+	return out
+}
+
+// PlaceTargets lists the navigation targets of the actions.
+func (s *Service) PlaceTargets() []string {
+	out := []string{
 		health.NavigateImport, health.NavigateRules, NavigateDeployPlan, NavigateDeployChanges, NavigateDeployResult,
 		NavigateSettingsMods, NavigateWorkarounds, NavigateGame, NavigateStaging, NavigateGameFolder, "conflicts", "conflicts.mod",
-		health.NavigatePlugins, health.NavigatePluginRules, health.NavigateLoadOrder, health.NavigateLoadOrderCheck,
 	}
+	for _, m := range s.Modules {
+		out = append(out, m.Places()...)
+	}
+	return out
 }

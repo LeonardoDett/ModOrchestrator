@@ -12,7 +12,7 @@ import { useAction } from "../games/use-action";
  * navigation opens the screen or dialog where the problem is solved
  * (INV-OPS-06). Either way the UI rereads afterwards, so a solved problem
  * disappears without a manual reload. The places listed here must match
- * diagnostics.Places() in the backend (checked by diagnostics.test.tsx).
+ * diagnostics.Service.PlaceTargets() in the backend (checked by diagnostics.test.tsx).
  */
 export function useDiagnosticAction() {
   const backend = useBackend();

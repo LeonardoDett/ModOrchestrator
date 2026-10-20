@@ -15,7 +15,6 @@ import (
 )
 
 // Summary is one card of the Profiles screen (ui/telas/profiles.md §2).
-// Deploy status and plugin counts arrive with F7 and F11.
 type Summary struct {
 	ID              profile.ID
 	Name            string
@@ -27,9 +26,9 @@ type Summary struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	LastActivatedAt time.Time
-	// Plugins counts the plugins the profile keeps enabled (0 for a game
-	// without plugins).
-	Plugins int
+	// Counts are the figures of the feature modules, by section id (the
+	// plugins the profile keeps enabled); none for a game without them.
+	Counts map[string]int
 	// Deployed: this profile is what the game folder has (board JogoPerfis,
 	// "Implantado"); false for all when nothing is deployed.
 	Deployed bool
@@ -55,14 +54,12 @@ func (s *Service) List(ctx context.Context, instance game.InstanceID) ([]Summary
 			return nil, err
 		}
 		d := p.Data()
-		plugins := 0
-		for _, on := range d.PluginsEnabled {
-			if on {
-				plugins++
-			}
+		counts := map[string]int{}
+		for _, sec := range s.Sections {
+			counts[sec.SectionID()] = sec.Count(p)
 		}
 		out = append(out, Summary{
-			Plugins: plugins, Deployed: deployed != "" && p.ID() == deployed,
+			Counts: counts, Deployed: deployed != "" && p.ID() == deployed,
 			ID: p.ID(), Name: p.Name(), Notes: p.Notes(), Active: p.ID() == active,
 			Enabled: len(p.EnabledMods()), Mods: len(p.Mods()), Snapshots: len(snaps),
 			CreatedAt: d.CreatedAt, UpdatedAt: d.UpdatedAt, LastActivatedAt: d.LastActivatedAt,
@@ -238,20 +235,13 @@ type PriorityDiff struct {
 	A, B int
 }
 
-// PluginDiff is a plugin whose position differs.
-type PluginDiff struct {
-	Plugin string
-	A, B   int
-}
-
 // Comparison is the result of ProfileCompare (core/07 §5).
 type Comparison struct {
-	A, B             Summary
-	OnlyA, OnlyB     []NamedMod
-	PriorityChanged  []PriorityDiff
-	PluginsOnlyA     []string
-	PluginsOnlyB     []string
-	LoadOrderChanged []PluginDiff
+	A, B            Summary
+	OnlyA, OnlyB    []NamedMod
+	PriorityChanged []PriorityDiff
+	// Sections are the differences of the feature modules, by section id.
+	Sections map[string]SectionDiff
 }
 
 // Compare returns what differs between two profiles of one instance.
@@ -296,14 +286,9 @@ func (s *Service) Compare(ctx context.Context, a, b profile.ID) (Comparison, err
 	for _, d := range c.PriorityChanged {
 		out.PriorityChanged = append(out.PriorityChanged, PriorityDiff{NamedMod: NamedMod{ID: d.Mod, Name: names[d.Mod]}, A: d.A, B: d.B})
 	}
-	for _, n := range c.PluginsOnlyA {
-		out.PluginsOnlyA = append(out.PluginsOnlyA, string(n))
-	}
-	for _, n := range c.PluginsOnlyB {
-		out.PluginsOnlyB = append(out.PluginsOnlyB, string(n))
-	}
-	for _, d := range c.LoadOrderChanged {
-		out.LoadOrderChanged = append(out.LoadOrderChanged, PluginDiff{Plugin: string(d.Plugin), A: d.A, B: d.B})
+	out.Sections = map[string]SectionDiff{}
+	for _, sec := range s.Sections {
+		out.Sections[sec.SectionID()] = sec.Compare(pa, pb)
 	}
 	return out, nil
 }
@@ -339,7 +324,7 @@ func (s *Service) Transfer(ctx context.Context, from, to profile.ID, opts Transf
 			return err
 		}
 		tx.Emit(s.newEvent(EventProfileTransferred, subjectProfile, string(to), map[string]string{
-			"from": string(from), "fromName": src.Name(), "order": strconv.FormatBool(opts.Order), "plugins": strconv.FormatBool(opts.Plugins),
+			"from": string(from), "fromName": src.Name(), "order": strconv.FormatBool(opts.Order), "sections": strconv.FormatBool(opts.Sections),
 		}))
 		if err := s.recordOrder(ctx, tx, dst, before, ReasonTransfer, nil); err != nil {
 			return err

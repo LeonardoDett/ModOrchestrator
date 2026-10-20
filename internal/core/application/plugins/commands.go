@@ -49,6 +49,10 @@ func (s *Service) persist(ctx context.Context, m mutation) (changed bool, err er
 			return err
 		}
 		now := s.Clock.Now()
+		sec, err := plugin.StateOf(p)
+		if err != nil {
+			return err
+		}
 		if m.snapshot != "" {
 			snap := profile.Snapshot{ID: profile.SnapshotID(s.IDs.NewID()), Profile: p.ID(), Reason: m.snapshot, CreatedAt: now, State: before}
 			if err := tx.Profiles().SaveSnapshot(ctx, snap); err != nil {
@@ -59,29 +63,29 @@ func (s *Service) persist(ctx context.Context, m mutation) (changed bool, err er
 			if pl.Implicit {
 				continue
 			}
-			if _, known := p.PluginEnabled(pl.Name); !known {
-				if err := p.SetPluginEnabled(pl.Name, st.enabled(pl), now); err != nil {
+			if _, known := sec.Enabled(pl.Name); !known {
+				if err := sec.SetEnabled(pl.Name, st.enabled(pl)); err != nil {
 					return err
 				}
 				changed = true
 			}
 		}
 		for n, on := range m.states {
-			if cur, known := p.PluginEnabled(n); !known || cur != on {
+			if cur, known := sec.Enabled(n); !known || cur != on {
 				changed = true
 			}
-			if err := p.SetPluginEnabled(n, on, now); err != nil {
+			if err := sec.SetEnabled(n, on); err != nil {
 				return err
 			}
 		}
 		for n, i := range m.locks {
-			if err := p.SetIndexLock(n, i, now); err != nil {
+			if err := sec.SetIndexLock(n, i); err != nil {
 				return fail(CodeIndexLockConflict, err, "plugin", string(n))
 			}
 			changed = true
 		}
-		if !slices.Equal(p.LoadOrder(), m.order) {
-			if err := p.SetLoadOrder(m.order, now); err != nil {
+		if !slices.Equal(sec.LoadOrder(), m.order) {
+			if err := sec.SetLoadOrder(m.order); err != nil {
 				return err
 			}
 			changed = true
@@ -89,6 +93,11 @@ func (s *Service) persist(ctx context.Context, m mutation) (changed bool, err er
 				tx.Emit(s.newEvent(EventInventoryChanged, subjectProfile, string(p.ID()), map[string]string{
 					"instance": string(st.inst.ID), "added": strconv.Itoa(len(a.added)), "removed": strconv.Itoa(len(a.removed)),
 				}))
+			}
+		}
+		if changed {
+			if err := sec.Store(p, now); err != nil {
+				return err
 			}
 		}
 		if changed || len(m.events) > 0 || m.rules {
@@ -168,7 +177,7 @@ func (s *Service) SetPluginsEnabled(ctx context.Context, instance game.InstanceI
 				return fail(CodeImplicitPlugin, nil, "plugin", string(p.Name))
 			}
 			if st.enabled(p) == enabled {
-				if _, known := st.profile.PluginEnabled(p.Name); known {
+				if _, known := st.section.Enabled(p.Name); known {
 					continue
 				}
 			}

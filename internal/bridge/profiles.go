@@ -6,6 +6,7 @@ import (
 	"modorchestrator/internal/core/application/profiles"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
+	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/profile"
 	"modorchestrator/internal/core/domain/rules"
 )
@@ -171,7 +172,7 @@ func toProfileSummaryDTO(s profiles.Summary) ProfileSummaryDTO {
 	return ProfileSummaryDTO{
 		ID: string(s.ID), Name: s.Name, Notes: s.Notes, Active: s.Active, Enabled: s.Enabled, Mods: s.Mods,
 		Snapshots: s.Snapshots, CreatedAt: formatTime(s.CreatedAt), UpdatedAt: formatTime(s.UpdatedAt),
-		LastActivatedAt: optionalTime(s.LastActivatedAt), Plugins: s.Plugins, Deployed: s.Deployed,
+		LastActivatedAt: optionalTime(s.LastActivatedAt), Plugins: s.Counts[plugin.SectionID], Deployed: s.Deployed,
 	}
 }
 
@@ -265,23 +266,25 @@ func (a *App) CompareProfiles(idA, idB string) (ProfileComparisonDTO, error) {
 	if err != nil {
 		return ProfileComparisonDTO{}, a.fail("compare profiles", err, nil)
 	}
+	// The plugins section keeps its own fields for the UI (D133).
+	pd := c.Sections[plugin.SectionID]
 	out := ProfileComparisonDTO{
 		A: toProfileSummaryDTO(c.A), B: toProfileSummaryDTO(c.B), OnlyA: toNamed(c.OnlyA), OnlyB: toNamed(c.OnlyB),
-		PriorityChanged: []PriorityDiffDTO{}, PluginsOnlyA: orNonNil(c.PluginsOnlyA), PluginsOnlyB: orNonNil(c.PluginsOnlyB),
+		PriorityChanged: []PriorityDiffDTO{}, PluginsOnlyA: orNonNil(pd.OnlyA), PluginsOnlyB: orNonNil(pd.OnlyB),
 		LoadOrderChanged: []PluginDiffDTO{},
 	}
 	for _, d := range c.PriorityChanged {
 		out.PriorityChanged = append(out.PriorityChanged, PriorityDiffDTO{NamedModDTO: NamedModDTO{ID: string(d.ID), Name: d.Name}, A: d.A, B: d.B})
 	}
-	for _, d := range c.LoadOrderChanged {
-		out.LoadOrderChanged = append(out.LoadOrderChanged, PluginDiffDTO{Plugin: d.Plugin, A: d.A, B: d.B})
+	for _, d := range pd.Moved {
+		out.LoadOrderChanged = append(out.LoadOrderChanged, PluginDiffDTO{Plugin: d.Item, A: d.A, B: d.B})
 	}
 	return out, nil
 }
 
 // TransferSelection copies the selection of one profile into another.
 func (a *App) TransferSelection(from, to string, opts TransferOptionsDTO) error {
-	err := a.c.Profiles.Transfer(a.context(), profile.ID(from), profile.ID(to), profiles.TransferOptions{Order: opts.Order, Plugins: opts.Plugins})
+	err := a.c.Profiles.Transfer(a.context(), profile.ID(from), profile.ID(to), profiles.TransferOptions{Order: opts.Order, Sections: opts.Plugins})
 	if err != nil {
 		return a.fail("transfer selection", err, nil)
 	}

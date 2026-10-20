@@ -26,7 +26,6 @@ import (
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
-	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/rules"
 )
 
@@ -83,13 +82,20 @@ type Profiles interface {
 	SetRuleDisabled(ctx context.Context, instance game.InstanceID, id rules.ID, disabled bool) error
 }
 
-// Plugins derives the plugin checks (core/08 §8) and runs their actions.
-type Plugins interface {
+// Module is a feature module that contributes to Diagnostics (D133): its
+// checks, the command actions it runs, the places its actions open and its
+// part of the support bundle. The service knows none of them by name; a
+// module that does not apply to an instance returns no diagnostic.
+type Module interface {
 	Diagnostics(ctx context.Context, instance game.InstanceID) ([]diagnostic.Diagnostic, error)
-	SetPluginsEnabled(ctx context.Context, instance game.InstanceID, names []plugin.Name, enabled bool) error
-	RemovePluginRule(ctx context.Context, instance game.InstanceID, id plugin.RuleID) error
-	// Export is the load order as text for the support bundle.
-	Export(ctx context.Context, instance game.InstanceID) (string, error)
+	// Commands lists the command actions Execute runs; Places the
+	// navigation targets of its actions (INV-OPS-06).
+	Commands() []string
+	Places() []string
+	Execute(ctx context.Context, instance game.InstanceID, a diagnostic.Action) error
+	// Report is its part of the support bundle as named lines; ok is false
+	// when the instance has none.
+	Report(ctx context.Context, instance game.InstanceID) (name string, lines []string, ok bool)
 }
 
 // Backups reports the last failed database backup (backup_failed).
@@ -117,11 +123,12 @@ type Deps struct {
 	Games        Games
 	Library      Library
 	Commands     Profiles
-	Plugins      Plugins
+	// Modules are the feature modules that contribute checks and actions.
+	Modules []Module
 	// Backups is optional (nil: backup_failed never appears).
 	Backups Backups
 	IDs     operations.IDGenerator
-	Clock        operations.Clock
+	Clock   operations.Clock
 }
 
 // Service implements the diagnostics use cases.
@@ -184,12 +191,11 @@ func (s *Service) Evaluate(ctx context.Context, instance game.InstanceID) (out [
 		func(ctx context.Context, inst game.Instance) ([]diagnostic.Diagnostic, error) {
 			return s.Conflicts.Diagnostics(ctx, inst.ID)
 		},
-		func(ctx context.Context, inst game.Instance) ([]diagnostic.Diagnostic, error) {
-			if s.Plugins == nil {
-				return nil, nil
-			}
-			return s.Plugins.Diagnostics(ctx, inst.ID)
-		},
+	}
+	for _, m := range s.Modules {
+		groups = append(groups, func(ctx context.Context, inst game.Instance) ([]diagnostic.Diagnostic, error) {
+			return m.Diagnostics(ctx, inst.ID)
+		})
 	}
 	gameMissing := false
 	for i, g := range groups {

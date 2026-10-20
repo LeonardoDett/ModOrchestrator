@@ -8,7 +8,9 @@ import (
 	"go/parser"
 	"go/token"
 	"io/fs"
+	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -65,17 +67,52 @@ var (
 		"core/domain/game", "core/domain/mod", "core/domain/profile", "core/domain/rules",
 		"core/domain/override", "core/domain/plugin", "core/domain/settings",
 	}
-	appliedState    = []string{"core/domain/deployment"}
+	appliedState    = []string{"core/domain/deployment", "core/domain/loadorder"}
 	calculatedState = []string{
 		"core/domain/conflict", "core/domain/deployplan", "core/domain/deploystate",
 		"core/domain/externalchange", "core/domain/diagnostic", "core/domain/dependency",
-		"core/domain/installer", "core/domain/health",
+		"core/domain/installer", "core/domain/health", "core/domain/pluginhealth",
 	}
 	pureAlgorithms = []string{"core/domain/ordering", "core/domain/relpath"}
 )
 
 func TestLayerDependencies(t *testing.T) {
 	checkImports(t, forbidden)
+}
+
+// The plugins module (N1) enters the core through contribution points
+// (D133): no package that serves every game (N0) imports it. Its clients
+// are its own packages, ports (adapter contracts until the SDK, phase C3)
+// and imports (it brings the plugin parts of Vortex and MO2).
+var (
+	pluginModule = []string{
+		"core/domain/plugin", "core/domain/pluginhealth", "core/domain/loadorder", "core/application/plugins",
+	}
+	pluginClients = []string{"core/application/ports", "core/application/imports"}
+)
+
+func TestCoreDoesNotImportThePluginsModule(t *testing.T) {
+	var banned []string
+	for _, p := range pluginModule {
+		banned = append(banned, module+"internal/"+p)
+	}
+	rules := map[string][]string{}
+	for _, layer := range []string{"core/domain", "core/application"} {
+		entries, err := os.ReadDir(layer)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, e := range entries {
+			pkg := layer + "/" + e.Name()
+			if e.IsDir() && !slices.Contains(pluginModule, pkg) && !slices.Contains(pluginClients, pkg) {
+				rules[pkg] = banned
+			}
+		}
+	}
+	if len(rules) < 20 {
+		t.Fatalf("expected the core packages, got %d", len(rules))
+	}
+	checkImports(t, rules)
 }
 
 func TestStateCategories(t *testing.T) {

@@ -3,6 +3,7 @@ package integration_test
 import (
 	"testing"
 
+	"modorchestrator/internal/core/application/games"
 	launchsvc "modorchestrator/internal/core/application/launch"
 	overviewsvc "modorchestrator/internal/core/application/overview"
 	appsettings "modorchestrator/internal/core/application/settings"
@@ -15,7 +16,7 @@ import (
 func (e *env) overview() *overviewsvc.Service {
 	return overviewsvc.NewService(overviewsvc.Sources{
 		Games: e.games, Instances: sqlite.NewGameInstanceRepository(e.db), Deploy: e.dep, Diagnostics: e.diag,
-		Library: e.lib, Conflicts: e.conf, Plugins: e.plug, History: e.hist,
+		Library: e.lib, Conflicts: e.conf, Figures: []overviewsvc.FigureSource{e.plug}, History: e.hist,
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(e.db), system.Locale{}, settings.V1),
 		Facts:    sqlite.NewFacts(e.db),
 	})
@@ -43,8 +44,9 @@ func TestOverviewAndFirstSteps(t *testing.T) {
 	if v.Conflicts == nil || v.Conflicts.Pairs != 1 || v.Conflicts.Unreviewed != 1 {
 		t.Fatalf("conflicts = %+v", v.Conflicts)
 	}
-	if v.Status == nil || v.Plugins == nil || v.Plugins.Active == 0 || len(v.Recent) == 0 {
-		t.Fatalf("status/plugins/recent = %+v %+v %d", v.Status, v.Plugins, len(v.Recent))
+	// The plugins figure comes from the module, under its section (D133).
+	if v.Status == nil || len(v.Figures) != 1 || v.Figures[0].Section != games.SectionOverviewPlugins || v.Figures[0].Count == 0 || len(v.Recent) == 0 {
+		t.Fatalf("status/figures/recent = %+v %+v %d", v.Status, v.Figures, len(v.Recent))
 	}
 	if len(v.Attention) == 0 {
 		t.Fatal("pending deploy and unreviewed conflicts need attention")

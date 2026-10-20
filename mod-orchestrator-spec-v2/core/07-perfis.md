@@ -27,7 +27,7 @@ Não existe setting para "ligar" profiles (D037).
 |---|---|---|
 | ModEntries (habilitado) | copia | |
 | ModOrder e separadores | copia | |
-| PluginStates, LoadOrder, IndexLocks | copia | |
+| PluginStates, LoadOrder, IndexLocks | copia | ficam na seção `plugins` do perfil (D133); toda seção de módulo é copiada |
 | Configurações locais do jogo (V1.x) | copia | arquivos copiados |
 | Saves locais (V1.x) | **não** copia por padrão; opção "copiar saves" | saves podem ser grandes |
 | Snapshots | não copia | |

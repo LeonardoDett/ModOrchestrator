@@ -1,14 +1,17 @@
 // Package profile models a Profile: one named configuration of a game
 // instance (core/07). State category: desired. A profile holds selection and
 // position only: which mods are enabled, the mod order with separators
-// (D025), which plugins are enabled, the load order and index locks. Content
-// decisions (rules, overrides, exclusions, plugin rules and groups) belong to
-// the instance (D026); calculated results and applied state never live here.
+// (D025) and the sections of the feature modules (D133: plugin states, load
+// order and index locks live in the plugins section). Content decisions
+// (rules, overrides, exclusions, plugin rules and groups) belong to the
+// instance (D026); calculated results and applied state never live here.
 package profile
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"maps"
 	"slices"
 	"strings"
 	"time"
@@ -16,7 +19,6 @@ import (
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
-	"modorchestrator/internal/core/domain/plugin"
 )
 
 // ID identifies a profile.
@@ -61,19 +63,27 @@ type ModState struct {
 	EnabledAt time.Time
 }
 
+// Section is the document a feature module keeps in a profile (D133): the
+// core copies, snapshots, restores and transfers it without reading it; the
+// module that owns it decodes and validates Doc and bumps Version when its
+// format changes.
+type Section struct {
+	Version int
+	Doc     json.RawMessage
+}
+
 // Data is the plain representation used to persist and restore a profile.
 type Data struct {
-	ID              ID
-	Instance        game.InstanceID
-	Name            string
-	Notes           string
-	Features        Features
-	Order           []Entry
-	Separators      []Separator
-	Mods            map[mod.ID]ModState
-	PluginsEnabled  map[plugin.Name]bool
-	LoadOrder       []plugin.Name
-	IndexLocks      map[plugin.Name]int
+	ID         ID
+	Instance   game.InstanceID
+	Name       string
+	Notes      string
+	Features   Features
+	Order      []Entry
+	Separators []Separator
+	Mods       map[mod.ID]ModState
+	// Sections are the documents of the feature modules, by section id.
+	Sections        map[string]Section
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	LastActivatedAt time.Time
@@ -91,8 +101,8 @@ func New(id ID, instance game.InstanceID, name string, now time.Time) (*Profile,
 
 // Restore rebuilds a profile from persisted data, enforcing every invariant:
 // each mod appears once in the order and has a state (INV-ORD-02 for the
-// mods the profile knows), separators are declared once, the load order has
-// no duplicates.
+// mods the profile knows), separators are declared once, sections have an
+// id. The content of a section is its module's to validate.
 func Restore(d Data) (*Profile, error) {
 	if d.ID == "" || d.Instance == "" {
 		return nil, fmt.Errorf("%w: profile needs id and instance", ErrInvalid)
@@ -104,11 +114,10 @@ func Restore(d Data) (*Profile, error) {
 	if p.d.Mods == nil {
 		p.d.Mods = map[mod.ID]ModState{}
 	}
-	if p.d.PluginsEnabled == nil {
-		p.d.PluginsEnabled = map[plugin.Name]bool{}
-	}
-	if p.d.IndexLocks == nil {
-		p.d.IndexLocks = map[plugin.Name]int{}
+	for id := range p.d.Sections {
+		if strings.TrimSpace(id) == "" {
+			return nil, fmt.Errorf("%w: section without id", ErrInvalid)
+		}
 	}
 	seps := map[SeparatorID]bool{}
 	for _, s := range p.d.Separators {
@@ -139,9 +148,6 @@ func Restore(d Data) (*Profile, error) {
 	}
 	if len(seenMod) != len(p.d.Mods) || len(seenSep) != len(seps) {
 		return nil, fmt.Errorf("%w: every mod and separator must appear in the order exactly once", ErrInvalid)
-	}
-	if err := plugin.ValidateOrder(p.d.LoadOrder); err != nil {
-		return nil, err
 	}
 	return p, nil
 }
@@ -385,79 +391,31 @@ func (p *Profile) PreviewReorder(edges []ordering.Edge) ([]OrderMove, []Entry, e
 	return moves, p.entries(res.Order), nil
 }
 
-// SetPluginEnabled records the enabled state of a plugin. The state is kept
-// even when the plugin leaves the inventory (core/08 §3).
-func (p *Profile) SetPluginEnabled(n plugin.Name, enabled bool, now time.Time) error {
-	if strings.TrimSpace(string(n)) == "" {
-		return fmt.Errorf("%w: empty plugin name", ErrInvalid)
+// Section returns the document a feature module keeps in the profile.
+func (p *Profile) Section(id string) (Section, bool) {
+	sec, ok := p.d.Sections[id]
+	if !ok {
+		return Section{}, false
 	}
-	for k := range p.d.PluginsEnabled {
-		if k.Key() == n.Key() {
-			delete(p.d.PluginsEnabled, k)
-		}
+	return Section{Version: sec.Version, Doc: slices.Clone(sec.Doc)}, true
+}
+
+// SetSection replaces the document of a feature module; the module has
+// validated it.
+func (p *Profile) SetSection(id string, sec Section, now time.Time) error {
+	if strings.TrimSpace(id) == "" {
+		return fmt.Errorf("%w: section without id", ErrInvalid)
 	}
-	p.d.PluginsEnabled[n] = enabled
+	if p.d.Sections == nil {
+		p.d.Sections = map[string]Section{}
+	}
+	p.d.Sections[id] = Section{Version: sec.Version, Doc: slices.Clone(sec.Doc)}
 	p.touch(now)
 	return nil
-}
-
-// PluginEnabled returns the recorded state of a plugin and whether one
-// exists.
-func (p *Profile) PluginEnabled(n plugin.Name) (enabled, known bool) {
-	for k, v := range p.d.PluginsEnabled {
-		if k.Key() == n.Key() {
-			return v, true
-		}
-	}
-	return false, false
-}
-
-// LoadOrder returns the desired load order.
-func (p *Profile) LoadOrder() []plugin.Name { return slices.Clone(p.d.LoadOrder) }
-
-// SetLoadOrder replaces the desired load order (produced by the ordering
-// engine or a validated manual move; never by the UI directly).
-func (p *Profile) SetLoadOrder(order []plugin.Name, now time.Time) error {
-	if err := plugin.ValidateOrder(order); err != nil {
-		return err
-	}
-	p.d.LoadOrder = slices.Clone(order)
-	p.touch(now)
-	return nil
-}
-
-// SetIndexLock pins a plugin at a position of the load order; a negative
-// index removes the lock.
-func (p *Profile) SetIndexLock(n plugin.Name, index int, now time.Time) error {
-	for k := range p.d.IndexLocks {
-		if k.Key() == n.Key() {
-			delete(p.d.IndexLocks, k)
-		}
-	}
-	if index >= 0 {
-		for k, i := range p.d.IndexLocks {
-			if i == index {
-				return fmt.Errorf("%w: %q is already locked at %d", ErrDuplicate, k, index)
-			}
-		}
-		p.d.IndexLocks[n] = index
-	}
-	p.touch(now)
-	return nil
-}
-
-// IndexLocks returns the locks as ordering locks over plugin keys.
-func (p *Profile) IndexLocks() []ordering.Lock {
-	var out []ordering.Lock
-	for n, i := range p.d.IndexLocks {
-		out = append(out, ordering.Lock{Item: ordering.Item(n.Key()), Index: i})
-	}
-	slices.SortFunc(out, func(a, b ordering.Lock) int { return a.Index - b.Index })
-	return out
 }
 
 // Clone creates a new profile of the same instance (core/07 §3): selection,
-// mod order, separators, plugin states, load order, locks, notes and
+// mod order, separators, the sections of the feature modules, notes and
 // features are copied. Rules and overrides are shared through the instance;
 // snapshots are not copied.
 func (p *Profile) Clone(id ID, name string, now time.Time) (*Profile, error) {
@@ -559,18 +517,21 @@ func cloneData(d Data) Data {
 	c := d
 	c.Order = slices.Clone(d.Order)
 	c.Separators = slices.Clone(d.Separators)
-	c.LoadOrder = slices.Clone(d.LoadOrder)
 	c.Mods = make(map[mod.ID]ModState, len(d.Mods))
 	for k, v := range d.Mods {
 		c.Mods[k] = v
 	}
-	c.PluginsEnabled = make(map[plugin.Name]bool, len(d.PluginsEnabled))
-	for k, v := range d.PluginsEnabled {
-		c.PluginsEnabled[k] = v
-	}
-	c.IndexLocks = make(map[plugin.Name]int, len(d.IndexLocks))
-	for k, v := range d.IndexLocks {
-		c.IndexLocks[k] = v
-	}
+	c.Sections = cloneSections(d.Sections)
 	return c
+}
+
+func cloneSections(in map[string]Section) map[string]Section {
+	if in == nil {
+		return nil
+	}
+	out := maps.Clone(in)
+	for id, sec := range out {
+		out[id] = Section{Version: sec.Version, Doc: slices.Clone(sec.Doc)}
+	}
+	return out
 }

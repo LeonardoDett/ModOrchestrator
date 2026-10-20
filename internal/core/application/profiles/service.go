@@ -78,9 +78,36 @@ type Deps struct {
 	UoW       ports.UnitOfWork
 	Publisher operations.Publisher
 	Settings  Settings
-	Locks     *instancelock.Locks
-	IDs       operations.IDGenerator
-	Clock     operations.Clock
+	// Sections are the feature modules that keep a document in the
+	// profiles (D133); the service reads them only through this contract.
+	Sections []Section
+	Locks    *instancelock.Locks
+	IDs      operations.IDGenerator
+	Clock    operations.Clock
+}
+
+// Section is a feature module that keeps a document in the profiles: the
+// figure of a profile card and what differs between two profiles. Copying,
+// snapshots and transfers need no module, the core carries the document.
+type Section interface {
+	// SectionID is the id of its document in the profile.
+	SectionID() string
+	// Count is the figure of a profile card (the plugins it keeps enabled).
+	Count(p *profile.Profile) int
+	// Compare is what differs in its document between two profiles.
+	Compare(a, b *profile.Profile) SectionDiff
+}
+
+// SectionDiff is what differs in the document of a module (core/07 §5).
+type SectionDiff struct {
+	OnlyA, OnlyB []string
+	Moved        []PositionDiff
+}
+
+// PositionDiff is an item at a different position in two profiles.
+type PositionDiff struct {
+	Item string
+	A, B int
 }
 
 // Service implements the profile and mod order use cases.

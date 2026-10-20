@@ -15,7 +15,6 @@ import (
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
-	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/relpath"
 	"modorchestrator/internal/core/domain/rules"
 )
@@ -339,10 +338,8 @@ func (s *Service) fomodEnv(ctx context.Context, e env, m *fomod.Module, self mod
 			continue
 		}
 		out.Files[key] = fomod.FileActive
-		if pr != nil {
-			if enabled, known := pr.PluginEnabled(plugin.Name(f)); known && !enabled {
-				out.Files[key] = fomod.FileInactive
-			}
+		if pr != nil && s.FileStates != nil && s.FileStates.Inactive(pr, f) {
+			out.Files[key] = fomod.FileInactive
 		}
 	}
 	return out

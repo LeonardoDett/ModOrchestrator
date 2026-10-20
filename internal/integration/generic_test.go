@@ -122,6 +122,28 @@ func TestGameWithoutPluginsWorksAndAnswersUnsupported(t *testing.T) {
 		t.Errorf("mod list text: %q %v", text, err)
 	}
 
+	// D133: through its contribution points the module adds nothing to a
+	// game without plugins: no Overview figure, no support bundle part, no
+	// profile count and no plugins section in the profile.
+	if v, err := e.overview().Instance(ctx, id); err != nil || len(v.Figures) != 0 {
+		t.Errorf("overview figures: %+v %v", v.Figures, err)
+	}
+	if _, _, ok := e.plug.Report(ctx, id); ok {
+		t.Error("no support bundle part without plugins")
+	}
+	if list, err := e.prof.List(ctx, id); err != nil || len(list) == 0 || list[0].Counts[plugin.SectionID] != 0 {
+		t.Errorf("profile counts: %+v %v", list, err)
+	}
+	pid, err := e.profiles.Active(ctx, id)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if p, err := e.profiles.Get(ctx, pid); err != nil {
+		t.Fatal(err)
+	} else if _, ok := p.Section(plugin.SectionID); ok {
+		t.Error("a game without plugins never gets a plugins section")
+	}
+
 	// The lock is released by every refused command.
 	if holder, busy := instancelockHolder(e); busy {
 		t.Fatalf("instance left locked by %s", holder)

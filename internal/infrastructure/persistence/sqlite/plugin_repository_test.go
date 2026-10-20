@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"modorchestrator/internal/core/domain/deployment"
+	"modorchestrator/internal/core/domain/loadorder"
 	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/rules"
 )
@@ -43,7 +43,7 @@ func TestPluginRulesRoundTrip(t *testing.T) {
 	}
 
 	man := NewManifestRepository(db)
-	lo := &deployment.AppliedLoadOrder{Instance: "i1", Profile: "p1", Order: []plugin.Name{"A.esp"}, Enabled: []plugin.Name{"A.esp"}, FileHash: "h1", PendingHash: "h2", PrevOrder: []plugin.Name{"B.esp"}, Original: "load_order/plugins.txt", AppliedAt: now}
+	lo := &loadorder.Applied{Instance: "i1", Profile: "p1", Order: []plugin.Name{"A.esp"}, Enabled: []plugin.Name{"A.esp"}, FileHash: "h1", PendingHash: "h2", PrevOrder: []plugin.Name{"B.esp"}, Original: "load_order/plugins.txt", AppliedAt: now}
 	if err := man.SaveLoadOrder(ctx, lo); err != nil {
 		t.Fatal(err)
 	}

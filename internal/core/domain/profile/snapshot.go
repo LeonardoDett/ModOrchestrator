@@ -40,8 +40,8 @@ func (p *Profile) TakeSnapshot(id SnapshotID, reason SnapshotReason, now time.Ti
 	return Snapshot{ID: id, Profile: p.d.ID, Reason: reason, CreatedAt: now, State: p.Data()}, nil
 }
 
-// RestoreSnapshot replaces selection, mod order, separators, plugin states,
-// load order and locks with the snapshot. Mods the snapshot knows but the
+// RestoreSnapshot replaces selection, mod order, separators and the sections
+// of the feature modules with the snapshot. Mods the snapshot knows but the
 // profile no longer has are ignored and returned; mods added after the
 // snapshot stay, disabled, at the end (core/07 §6). Name, notes and
 // features are not touched.
@@ -72,8 +72,7 @@ func (p *Profile) RestoreSnapshot(s Snapshot, now time.Time) (ignored []mod.ID, 
 			}
 		}
 	}
-	snap := cloneData(s.State)
-	next.PluginsEnabled, next.LoadOrder, next.IndexLocks = snap.PluginsEnabled, snap.LoadOrder, snap.IndexLocks
+	next.Sections = cloneSections(s.State.Sections)
 	next.UpdatedAt = now
 	restored, err := Restore(next)
 	if err != nil {

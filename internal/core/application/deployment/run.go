@@ -814,14 +814,17 @@ func (s *Service) post(ctx context.Context, r *run) error {
 		s.found[r.inst.ID] = next
 	}
 	s.mu.Unlock()
-	// The load order follows the deployed plugins (core/08 §7); a purge
-	// leaves the file as it is (the game ignores missing plugins).
-	if r.kind == KindDeploy && s.LoadOrder != nil && !r.cancelled {
-		if err := s.LoadOrder.AfterDeploy(ctx, r.inst.ID, r.t.ID()); err != nil {
-			// Locations already failed: that is the outcome the user acts
-			// on, and the load order follows the next deploy (F14).
-			if len(real) == 0 {
-				return fileError(err)
+	// The modules follow the deployed files (the load order, core/08 §7);
+	// a purge leaves their files as they are (the game ignores missing
+	// plugins).
+	if r.kind == KindDeploy && !r.cancelled {
+		for _, m := range s.PostDeploy {
+			if err := m.AfterDeploy(ctx, r.inst.ID, r.t.ID()); err != nil {
+				// Locations already failed: that is the outcome the user
+				// acts on, and the module follows the next deploy (F14).
+				if len(real) == 0 {
+					return fileError(err)
+				}
 			}
 		}
 	}

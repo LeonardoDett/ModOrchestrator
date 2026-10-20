@@ -8,7 +8,6 @@ import (
 
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
-	"modorchestrator/internal/core/domain/plugin"
 )
 
 // Anchor says where a block of entries goes, relative to the order without
@@ -166,15 +165,17 @@ func (p *Profile) Violations(edges []ordering.Edge) []ordering.Edge {
 
 // TransferOptions says what TransferFrom copies besides the selection.
 type TransferOptions struct {
-	Order   bool
-	Plugins bool
+	Order bool
+	// Sections copies the documents of the feature modules (plugin states,
+	// load order and locks, D133).
+	Sections bool
 }
 
 // TransferFrom copies the selection of src into p (core/07 §2, Vortex
 // TransferDialog): every mod both profiles know gets the enabled state it
 // has in src. With Order, the mod order and separators of src are copied
 // too (mods only p knows keep their relative place at the end); with
-// Plugins, plugin states, load order and locks. Rules are applied by the
+// Sections, the documents of the feature modules. Rules are applied by the
 // caller afterwards.
 func (p *Profile) TransferFrom(src *Profile, opts TransferOptions, now time.Time) error {
 	if src.d.Instance != p.d.Instance {
@@ -205,9 +206,8 @@ func (p *Profile) TransferFrom(src *Profile, opts TransferOptions, now time.Time
 			return err
 		}
 	}
-	if opts.Plugins {
-		c := cloneData(src.d)
-		p.d.PluginsEnabled, p.d.LoadOrder, p.d.IndexLocks = c.PluginsEnabled, c.LoadOrder, c.IndexLocks
+	if opts.Sections {
+		p.d.Sections = cloneSections(src.d.Sections)
 	}
 	p.touch(now)
 	return nil
@@ -229,25 +229,17 @@ func NewFromOrder(id ID, name string, base *Profile, now time.Time) (*Profile, e
 }
 
 // Comparison is the difference between two profiles (core/07 §5). Mod
-// lists follow the priority order of the profile they come from.
+// lists follow the priority order of the profile they come from; what
+// differs in a section is its module's to tell (D133).
 type Comparison struct {
-	OnlyA, OnlyB     []mod.ID
-	PriorityChanged  []PriorityChange
-	PluginsOnlyA     []plugin.Name
-	PluginsOnlyB     []plugin.Name
-	LoadOrderChanged []LoadOrderChange
+	OnlyA, OnlyB    []mod.ID
+	PriorityChanged []PriorityChange
 }
 
 // PriorityChange is a mod enabled in both profiles at different priorities.
 type PriorityChange struct {
 	Mod  mod.ID
 	A, B int
-}
-
-// LoadOrderChange is a plugin at a different position of the load order.
-type LoadOrderChange struct {
-	Plugin plugin.Name
-	A, B   int
 }
 
 // Compare returns what differs between a and b.
@@ -270,36 +262,6 @@ func Compare(a, b *Profile) Comparison {
 			if pa != pb {
 				c.PriorityChanged = append(c.PriorityChanged, PriorityChange{Mod: m, A: pa, B: pb})
 			}
-		}
-	}
-	active := func(p *Profile) []plugin.Name {
-		var out []plugin.Name
-		for n, on := range p.d.PluginsEnabled {
-			if on {
-				out = append(out, n)
-			}
-		}
-		slices.SortFunc(out, func(x, y plugin.Name) int { return strings.Compare(x.Key(), y.Key()) })
-		return out
-	}
-	pa, pb := active(a), active(b)
-	for _, n := range pa {
-		if on, _ := b.PluginEnabled(n); !on {
-			c.PluginsOnlyA = append(c.PluginsOnlyA, n)
-		}
-	}
-	for _, n := range pb {
-		if on, _ := a.PluginEnabled(n); !on {
-			c.PluginsOnlyB = append(c.PluginsOnlyB, n)
-		}
-	}
-	posB := map[string]int{}
-	for i, n := range b.d.LoadOrder {
-		posB[n.Key()] = i + 1
-	}
-	for i, n := range a.d.LoadOrder {
-		if j, ok := posB[n.Key()]; ok && j != i+1 {
-			c.LoadOrderChanged = append(c.LoadOrderChanged, LoadOrderChange{Plugin: n, A: i + 1, B: j})
 		}
 	}
 	return c

@@ -12,6 +12,7 @@ import (
 	"context"
 	"errors"
 	"modorchestrator/internal/core/domain/externalchange"
+	"modorchestrator/internal/core/domain/loadorder"
 	"time"
 
 	"modorchestrator/internal/core/domain/deployment"
@@ -125,8 +126,8 @@ type Manifests interface {
 	// Save stores m. prev is the manifest it replaces (nil when none): the
 	// store may write only the entries that differ.
 	Save(ctx context.Context, m, prev *deployment.Manifest) error
-	CurrentLoadOrder(ctx context.Context, instance game.InstanceID) (*deployment.AppliedLoadOrder, error)
-	SaveLoadOrder(ctx context.Context, lo *deployment.AppliedLoadOrder) error
+	CurrentLoadOrder(ctx context.Context, instance game.InstanceID) (*loadorder.Applied, error)
+	SaveLoadOrder(ctx context.Context, lo *loadorder.Applied) error
 }
 
 // Journals persists the plan of a running deploy/purge (D035). It is written

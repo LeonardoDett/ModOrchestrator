@@ -33,7 +33,7 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | Início da implantação (base de `unexpected`) | deployment | `state.db` (`app_state`) | sim | — | primeiro deploy / purge completo (D080) |
 | Captura em curso | deployment | `state.db` (`app_state`, `deployment.captures`) | sim (temporário) | — | início/fim da captura (D080) |
 | Plugins (inventário) | plugins | **cálculo** | não (cache de cabeçalho em `<dataDir>/cache/`, chave caminho + tamanho + data, descartável, D088) | vencedores do desejado + base + não gerenciados | mudança de mods/profile, deploy, scan |
-| PluginState, LoadOrder desejada | plugins | `state.db` | sim | — | usuário, sort |
+| PluginState, LoadOrder desejada, IndexLock | plugins | `state.db`, seção `plugins` do perfil (D133) | sim | — | usuário, sort |
 | PluginRule, PluginGroup | plugins | `state.db` | sim | — | usuário, provedores |
 | LoadOrder aplicada | plugins | arquivo do jogo (`plugins.txt`); evidência (hash, hash pendente, ordem anterior) em `applied_load_orders` | no jogo | — | deploy, `apply_load_order`, ferramentas externas (D088) |
 | Diagnostic | diagnostics | **cálculo** (health checks) | não; supressões sim | fatos atuais | qualquer fato |

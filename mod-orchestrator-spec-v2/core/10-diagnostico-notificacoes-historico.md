@@ -92,7 +92,7 @@ Campos em core/01. Regras:
 - Arquivo rotativo no diretório de dados (`logs/`, 10 arquivos × 10 MB), JSON por linha: timestamp, nível, operação, step, instância, entidade, mensagem, erro, campos.
 - Nível configurável (Settings › Aplicação). Sem dados pessoais além de caminhos locais.
 - Visualizador na tela Diagnostics › aba Log (LogViewer da dettmann-ui) com filtro por nível/operação e "Abrir pasta de logs".
-- **Pacote de diagnóstico**: exporta zip com logs, versão, lista de mods (nome, versão, habilitado, prioridade), load order, diagnósticos ativos, resumo de settings (sem caminhos do usuário se o setting "anonimizar caminhos" estiver ligado). Paridade `support_bundle`/`diagnostics_files`.
+- **Pacote de diagnóstico**: exporta zip com logs, versão, lista de mods (nome, versão, habilitado, prioridade), as partes dos módulos de recurso em `parts` (a load order num jogo com plugins, D133), diagnósticos ativos, resumo de settings (sem caminhos do usuário se o setting "anonimizar caminhos" estiver ligado). Paridade `support_bundle`/`diagnostics_files`.
 
 ## 5. Critérios de aceite
 

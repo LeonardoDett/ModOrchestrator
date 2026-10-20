@@ -440,11 +440,19 @@ func (r *run) applyProfiles(ctx context.Context, tx ports.Tx, profiles []*profil
 				return err
 			}
 		}
+		// Plugin states and the load order go to the plugins section of
+		// the profile (D133).
+		sec, err := plugin.StateOf(target)
+		if err != nil {
+			return err
+		}
+		touched := false
 		if r.has(migration.PartPlugins) {
 			for _, ps := range fp.Plugins {
-				if err := target.SetPluginEnabled(plugin.Name(ps.Name), ps.Enabled, now); err != nil {
+				if err := sec.SetEnabled(plugin.Name(ps.Name), ps.Enabled); err != nil {
 					return err
 				}
+				touched = true
 			}
 		}
 		if r.has(migration.PartLoadOrder) && fp.LoadOrder != nil {
@@ -456,11 +464,17 @@ func (r *run) applyProfiles(ctx context.Context, tx ports.Tx, profiles []*profil
 					lo = append(lo, plugin.Name(strings.TrimSpace(n)))
 				}
 			}
-			if err := target.SetLoadOrder(lo, now); err != nil {
+			if err := sec.SetLoadOrder(lo); err != nil {
 				return err
 			}
 			for n, i := range fp.Locks {
-				_ = target.SetIndexLock(plugin.Name(n), i, now)
+				_ = sec.SetIndexLock(plugin.Name(n), i)
+			}
+			touched = true
+		}
+		if touched {
+			if err := sec.Store(target, now); err != nil {
+				return err
 			}
 		}
 		if activate == nil || fp.Active {

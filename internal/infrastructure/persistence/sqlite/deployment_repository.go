@@ -11,6 +11,7 @@ import (
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/loadorder"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/plugin"
@@ -241,7 +242,7 @@ type loadOrderRecord struct {
 	AppliedAt   time.Time `json:"appliedAt"`
 }
 
-func (r *ManifestRepository) CurrentLoadOrder(ctx context.Context, instance game.InstanceID) (*deployment.AppliedLoadOrder, error) {
+func (r *ManifestRepository) CurrentLoadOrder(ctx context.Context, instance game.InstanceID) (*loadorder.Applied, error) {
 	var body string
 	err := r.db.QueryRowContext(ctx, `SELECT body_json FROM applied_load_orders WHERE instance_id = ?`, string(instance)).Scan(&body)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -254,13 +255,13 @@ func (r *ManifestRepository) CurrentLoadOrder(ctx context.Context, instance game
 	if err := json.Unmarshal([]byte(body), &rec); err != nil {
 		return nil, fmt.Errorf("sqlite: decode load order: %w", err)
 	}
-	lo := &deployment.AppliedLoadOrder{Instance: instance, Profile: deployment.ProfileID(rec.Profile), FileHash: rec.FileHash, PendingHash: rec.PendingHash, Original: rec.Original, Operation: operation.ID(rec.Operation), AppliedAt: rec.AppliedAt}
+	lo := &loadorder.Applied{Instance: instance, Profile: loadorder.ProfileID(rec.Profile), FileHash: rec.FileHash, PendingHash: rec.PendingHash, Original: rec.Original, Operation: operation.ID(rec.Operation), AppliedAt: rec.AppliedAt}
 	lo.Order, lo.Enabled = pluginNames(rec.Order), pluginNames(rec.Enabled)
 	lo.PrevOrder, lo.PrevEnabled = pluginNames(rec.PrevOrder), pluginNames(rec.PrevEnabled)
 	return lo, nil
 }
 
-func (r *ManifestRepository) SaveLoadOrder(ctx context.Context, lo *deployment.AppliedLoadOrder) error {
+func (r *ManifestRepository) SaveLoadOrder(ctx context.Context, lo *loadorder.Applied) error {
 	rec := loadOrderRecord{Profile: string(lo.Profile), FileHash: lo.FileHash, PendingHash: lo.PendingHash, Original: lo.Original, Operation: string(lo.Operation), AppliedAt: lo.AppliedAt.UTC()}
 	rec.Order, rec.Enabled = nameStrings(lo.Order), nameStrings(lo.Enabled)
 	rec.PrevOrder, rec.PrevEnabled = nameStrings(lo.PrevOrder), nameStrings(lo.PrevEnabled)

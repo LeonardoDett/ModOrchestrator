@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"modorchestrator/internal/core/domain/mod"
-	"modorchestrator/internal/core/domain/plugin"
 )
 
 func withSeparator(t *testing.T, p *Profile, id SeparatorID, index int) {
@@ -157,20 +156,21 @@ func TestPruneSnapshotsKeepsManualAndNewest(t *testing.T) {
 	}
 }
 
-// INV-ORD-06: ModOrder and LoadOrder share no structure: moving mods never
-// touches the load order, and changing the load order never moves a mod.
+// INV-ORD-06: ModOrder and LoadOrder share no structure. The load order
+// lives in the section of the plugins module (D133): moving mods never
+// touches a section, and changing a section never moves a mod.
 func TestModOrderAndLoadOrderAreIndependent(t *testing.T) {
 	p := newProfile(t, "a", "b")
-	if err := p.SetLoadOrder([]plugin.Name{"x.esp", "y.esp"}, t0); err != nil {
+	if err := p.SetSection("plugins", Section{Version: 1, Doc: []byte(`["x","y"]`)}, t0); err != nil {
 		t.Fatal(err)
 	}
 	if err := p.Move([]Entry{{Mod: "b"}}, 0, nil, t0); err != nil {
 		t.Fatal(err)
 	}
-	if !slices.Equal(p.LoadOrder(), []plugin.Name{"x.esp", "y.esp"}) {
-		t.Fatal("moving a mod changed the load order")
+	if s, _ := p.Section("plugins"); string(s.Doc) != `["x","y"]` {
+		t.Fatal("moving a mod changed a section")
 	}
-	if err := p.SetLoadOrder([]plugin.Name{"y.esp", "x.esp"}, t0); err != nil {
+	if err := p.SetSection("plugins", Section{Version: 1, Doc: []byte(`["y","x"]`)}, t0); err != nil {
 		t.Fatal(err)
 	}
 	if !slices.Equal(p.Mods(), []mod.ID{"b", "a"}) {

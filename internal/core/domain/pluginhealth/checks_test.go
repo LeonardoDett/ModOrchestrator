@@ -1,9 +1,10 @@
-package health
+package pluginhealth
 
 import (
 	"testing"
 
 	"modorchestrator/internal/core/domain/diagnostic"
+	"modorchestrator/internal/core/domain/health"
 	"modorchestrator/internal/core/domain/ordering"
 	"modorchestrator/internal/core/domain/plugin"
 )
@@ -31,7 +32,7 @@ func TestMissingMasterOffersTheDisabledProvider(t *testing.T) {
 	if !ok || d.Params["master"] != "Lib.esm" {
 		t.Fatalf("missing master expected: %+v", ds)
 	}
-	if d.Actions[0].ID != ActionEnableMod || d.Actions[0].Target.ID != "m2" || d.Actions[len(d.Actions)-1].ID != ActionDisablePlugin {
+	if d.Actions[0].ID != health.ActionEnableMod || d.Actions[0].Target.ID != "m2" || d.Actions[len(d.Actions)-1].ID != ActionDisablePlugin {
 		t.Fatalf("actions must enable the provider and offer to deactivate: %+v", d.Actions)
 	}
 }

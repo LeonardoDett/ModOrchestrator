@@ -12,9 +12,9 @@ import (
 
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/deployment"
 	"modorchestrator/internal/core/domain/event"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/loadorder"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/profile"
@@ -35,7 +35,7 @@ type observed struct {
 // observed file (D040).
 type fileState struct {
 	obs     observed
-	applied *deployment.AppliedLoadOrder
+	applied *loadorder.Applied
 	desired []byte
 	// external: the file differs from the last write of the manager (or,
 	// before any write, from what the manager would write). It is never
@@ -145,7 +145,7 @@ func (s *Service) write(ctx context.Context, st *state, op operation.ID, force b
 	if fs.external && !force {
 		return false, errExternal
 	}
-	rec := &deployment.AppliedLoadOrder{Instance: st.inst.ID}
+	rec := &loadorder.Applied{Instance: st.inst.ID}
 	if fs.applied != nil {
 		cp := *fs.applied
 		rec = &cp
@@ -183,7 +183,7 @@ func (s *Service) write(ctx context.Context, st *state, op operation.ID, force b
 	if fs.applied != nil && !slices.Equal(fs.applied.Order, a.order) {
 		rec.PrevOrder, rec.PrevEnabled = fs.applied.Order, fs.applied.Enabled
 	}
-	rec.Profile = deployment.ProfileID(st.profile.ID())
+	rec.Profile = loadorder.ProfileID(st.profile.ID())
 	rec.Order, rec.Enabled = a.order, nil
 	for _, e := range entries {
 		if e.Enabled {
@@ -347,7 +347,7 @@ func (s *Service) ResolveExternalChange(ctx context.Context, instance game.Insta
 		// changed in it is written now, with no new triage.
 		// The external version is kept as found: what the engine changes
 		// in it is written over it.
-		rec := &deployment.AppliedLoadOrder{Instance: instance}
+		rec := &loadorder.Applied{Instance: instance}
 		if fs.applied != nil {
 			cp := *fs.applied
 			rec = &cp
@@ -435,7 +435,7 @@ func (s *Service) ImportLoadOrder(ctx context.Context, instance game.InstanceID,
 		if err != nil {
 			return err
 		}
-		out.Moved = plugin.Moved(before, st2.profile.LoadOrder())
+		out.Moved = plugin.Moved(before, st2.section.LoadOrder())
 		return nil
 	})
 	return out, err

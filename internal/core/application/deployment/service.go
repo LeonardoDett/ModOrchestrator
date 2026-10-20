@@ -33,9 +33,9 @@ import (
 
 // Operation kinds and their steps (core/04 §5–6, §10).
 const (
-	KindDeploy       operation.Kind = "deploy"
-	KindPurge        operation.Kind = "purge"
-	KindMoveStaging  operation.Kind = "move_staging"
+	KindDeploy      operation.Kind = "deploy"
+	KindPurge       operation.Kind = "purge"
+	KindMoveStaging operation.Kind = "move_staging"
 
 	// KindMoveArchives moves the ArchiveStore (core/13).
 
@@ -73,8 +73,8 @@ const (
 	EventExternalChanges event.Type = "deployment.external_changes_detected"
 	EventStagingMoved    event.Type = "staging.moved"
 
-	EventArchivesMoved   event.Type = "archives.moved"
-	EventMethodChanged   event.Type = "deployment.method_changed"
+	EventArchivesMoved event.Type = "archives.moved"
+	EventMethodChanged event.Type = "deployment.method_changed"
 
 	subjectInstance = "instance"
 	holderDeploy    = "deploy"
@@ -82,7 +82,7 @@ const (
 	holderMove      = "move_staging"
 
 	holderMoveArchives = "move_archives"
-	holderMethod    = "change_method"
+	holderMethod       = "change_method"
 )
 
 // Settings is what the engine reads from the settings service.
@@ -101,9 +101,11 @@ type Foreign interface {
 	RunningProcesses(ctx context.Context, inst game.Instance) ([]string, error)
 }
 
-// LoadOrder writes the game's load order file in the post step of a
-// deploy (core/04 §5 step 9, core/08 §7); nil for no plugin support.
-type LoadOrder interface {
+// PostDeploy is a feature module that acts in the post step of a deploy
+// (core/04 §5 step 9, D133): the plugins module writes the game's load order
+// file (core/08 §7). A module that does not apply to the instance does
+// nothing.
+type PostDeploy interface {
 	AfterDeploy(ctx context.Context, instance game.InstanceID, op operation.ID) error
 }
 
@@ -131,7 +133,7 @@ type Deps struct {
 	Library    Library
 	Exclusions Exclusions
 	Ops        *operations.Service
-	LoadOrder  LoadOrder
+	PostDeploy []PostDeploy
 	Locks      *instancelock.Locks
 	IDs        operations.IDGenerator
 	Clock      operations.Clock

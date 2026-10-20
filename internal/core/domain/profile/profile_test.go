@@ -8,7 +8,6 @@ import (
 
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
-	"modorchestrator/internal/core/domain/plugin"
 )
 
 var t0 = time.Date(2026, 1, 1, 12, 0, 0, 0, time.UTC)
@@ -134,22 +133,56 @@ func TestReorderMovesMinimallyAndExplains(t *testing.T) {
 	}
 }
 
-func TestPluginStateAndLocks(t *testing.T) {
-	p := newProfile(t)
-	_ = p.SetPluginEnabled("A.esp", true, t0)
-	_ = p.SetPluginEnabled("a.ESP", false, t0)
-	if on, known := p.PluginEnabled("a.esp"); !known || on {
-		t.Fatal("plugin state is case-insensitive and last write wins")
+// D133: a section is opaque to the core. It is copied by Clone, kept by a
+// snapshot, carried by a transfer only when asked, and needs an id.
+func TestSectionsAreOpaqueAndTravelWithTheProfile(t *testing.T) {
+	p := newProfile(t, "a")
+	doc := Section{Version: 2, Doc: []byte(`{"any":"thing"}`)}
+	if err := p.SetSection("feature", doc, t0); err != nil {
+		t.Fatal(err)
 	}
-	if err := p.SetLoadOrder([]plugin.Name{"a.esp", "A.esp"}, t0); !errors.Is(err, plugin.ErrDuplicate) {
-		t.Fatal("duplicate plugin in load order must be rejected")
+	if err := p.SetSection(" ", doc, t0); !errors.Is(err, ErrInvalid) {
+		t.Fatalf("empty section id: %v", err)
 	}
-	_ = p.SetIndexLock("a.esp", 0, t0)
-	if err := p.SetIndexLock("b.esp", 0, t0); !errors.Is(err, ErrDuplicate) {
-		t.Fatal("two locks on one index must be rejected")
+	got, ok := p.Section("feature")
+	if !ok || got.Version != 2 || string(got.Doc) != `{"any":"thing"}` {
+		t.Fatalf("section = %+v, %v", got, ok)
 	}
-	if l := p.IndexLocks(); len(l) != 1 || l[0].Item != "a.esp" {
-		t.Fatalf("locks = %v", l)
+	got.Doc[0] = 'X'
+	if again, _ := p.Section("feature"); string(again.Doc) != `{"any":"thing"}` {
+		t.Fatal("a read section must not alias the profile")
+	}
+	c, err := p.Clone("p2", "Copy", t0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if s, ok := c.Section("feature"); !ok || s.Version != 2 {
+		t.Fatal("clone copies the sections")
+	}
+	snap, _ := p.TakeSnapshot("s1", SnapshotManual, t0)
+	_ = p.SetSection("feature", Section{Version: 2, Doc: []byte(`{}`)}, t0)
+	if _, err := p.RestoreSnapshot(snap, t0); err != nil {
+		t.Fatal(err)
+	}
+	if s, _ := p.Section("feature"); string(s.Doc) != `{"any":"thing"}` {
+		t.Fatalf("snapshot restores the sections: %s", s.Doc)
+	}
+	other := newProfile(t, "a")
+	other.d.ID = "p3"
+	if err := other.TransferFrom(p, TransferOptions{}, t0); err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := other.Section("feature"); ok {
+		t.Fatal("a transfer without Sections leaves them")
+	}
+	if err := other.TransferFrom(p, TransferOptions{Sections: true}, t0); err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := other.Section("feature"); !ok {
+		t.Fatal("a transfer with Sections copies them")
+	}
+	if _, err := Restore(Data{ID: "x", Instance: "i", Name: "x", Sections: map[string]Section{"": doc}}); !errors.Is(err, ErrInvalid) {
+		t.Fatalf("restore with an empty section id: %v", err)
 	}
 }
 

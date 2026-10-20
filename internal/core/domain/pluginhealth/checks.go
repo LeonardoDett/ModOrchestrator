@@ -1,4 +1,7 @@
-package health
+// Package pluginhealth derives the diagnostics of the plugins module
+// (core/08 §8). State category: calculated. It is part of the plugins
+// module, so the core health checks never see a plugin (D133).
+package pluginhealth
 
 import (
 	"slices"
@@ -7,6 +10,7 @@ import (
 
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/event"
+	"modorchestrator/internal/core/domain/health"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/ordering"
@@ -29,6 +33,7 @@ const (
 	OperationApplyLoadOrder = operation.Kind("apply_load_order")
 	subjectPlugin           = "plugin"
 	subjectPluginRule       = "plugin_rule"
+	subjectMod              = "mod"
 )
 
 // PluginFact is one plugin of the inventory, in load order.
@@ -270,11 +275,11 @@ func missingMasterSpec(p PluginFact, missing []plugin.Name, providers map[string
 		ev = append(ev, diagnostic.Evidence{Kind: "plugin_master", Params: diagnostic.Params{"master": string(m), "state": "missing"}})
 		if prov, ok := providers[m.Key()]; ok && !seen[prov.Mod] {
 			seen[prov.Mod] = true
-			actions = append(actions, diagnostic.Action{ID: ActionEnableMod, Target: &event.EntityRef{Kind: subjectMod, ID: string(prov.Mod)}, Params: diagnostic.Params{"mod": prov.ModName}})
+			actions = append(actions, diagnostic.Action{ID: health.ActionEnableMod, Target: &event.EntityRef{Kind: subjectMod, ID: string(prov.Mod)}, Params: diagnostic.Params{"mod": prov.ModName}})
 		}
 	}
 	if len(actions) == 0 {
-		actions = append(actions, diagnostic.Action{ID: ActionImport, NavigateTo: NavigateImport, Params: diagnostic.Params{"mod": string(missing[0])}})
+		actions = append(actions, diagnostic.Action{ID: health.ActionImport, NavigateTo: health.NavigateImport, Params: diagnostic.Params{"mod": string(missing[0])}})
 	}
 	actions = append(actions, diagnostic.Action{ID: ActionDisablePlugin, Target: ptrRef(pluginRef(p.Name)), Params: diagnostic.Params{"plugin": string(p.Name)}})
 	params := diagnostic.Params{"plugin": string(p.Name), "master": string(missing[0]), "count": strconv.Itoa(len(missing)), "masters": joinNames(missing)}

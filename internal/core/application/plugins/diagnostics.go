@@ -8,8 +8,8 @@ import (
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/health"
 	"modorchestrator/internal/core/domain/plugin"
+	"modorchestrator/internal/core/domain/pluginhealth"
 )
 
 // Diagnostics derives the plugin checks of an instance (core/08 §8). A
@@ -27,7 +27,7 @@ func (s *Service) Diagnostics(ctx context.Context, instance game.InstanceID) ([]
 }
 
 func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]diagnostic.Diagnostic, error) {
-	f := health.PluginFacts{Disabled: st.disabled, Losing: st.losing, Cycle: a.cycle, LockConflict: a.lockConflict}
+	f := pluginhealth.PluginFacts{Disabled: st.disabled, Losing: st.losing, Cycle: a.cycle, LockConflict: a.lockConflict}
 	var active []plugin.Plugin
 	for _, n := range a.order {
 		p, ok := st.plugin(n)
@@ -38,7 +38,7 @@ func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]
 		if on {
 			active = append(active, p)
 		}
-		f.Plugins = append(f.Plugins, health.PluginFact{
+		f.Plugins = append(f.Plugins, pluginhealth.PluginFact{
 			Name: p.Name, Enabled: on, Implicit: p.Implicit, Masters: p.Header.Masters,
 			HeaderError: p.HeaderError, Mod: p.Mod, ModName: st.modNames[p.Mod],
 		})
@@ -86,5 +86,5 @@ func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]
 			f.ExternalViolations = plugin.Violations(uniq, st.hard)
 		}
 	}
-	return health.PluginChecks(f)
+	return pluginhealth.PluginChecks(f)
 }

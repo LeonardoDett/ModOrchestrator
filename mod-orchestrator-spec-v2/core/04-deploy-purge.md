@@ -80,7 +80,7 @@ Steps: `preflight` → `scan` → `plan` → `await_decision`? → `journal` →
    Substituição de arquivo gerenciado usa criação em nome temporário + rename quando o método permite, para nunca deixar a Location vazia se possível.
 7. `verify`: confere cada Location criada/substituída (existe, é link para a origem certa / cópia com size+hash).
 8. `commit`: numa transação, atualiza o manifesto só com o que foi verificado (INV-DEP-05), remove o journal, grava marcador no target, emite eventos.
-9. `post`: adapter aplica a serialização dependente de deploy (ex.: `plugins.txt`, core/08) como sub-step próprio com a mesma disciplina (evidência + external change); health checks; notificação de resultado.
+9. `post`: os módulos de recurso (`deployment.PostDeploy`, D133) aplicam a serialização dependente de deploy (ex.: a load order, core/08) como sub-step próprio com a mesma disciplina (evidência + external change); health checks; notificação de resultado.
 
 Falhas parciais: uma ação que falha (arquivo bloqueado por antivírus, permissão) não aborta o deploy inteiro por padrão; a Location fica registrada como falha, o manifesto reflete o que realmente foi feito, e a operação termina `failed` com lista de Locations e ação "Tentar novamente". O status fica `failed` até um deploy completo.
 

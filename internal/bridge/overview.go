@@ -2,6 +2,7 @@ package bridge
 
 import (
 	"modorchestrator/internal/core/application/diagnostics"
+	"modorchestrator/internal/core/application/games"
 	launchsvc "modorchestrator/internal/core/application/launch"
 	"modorchestrator/internal/core/application/overview"
 	"modorchestrator/internal/core/domain/diagnostic"
@@ -164,9 +165,14 @@ func (a *App) InstanceOverview(instance string) (InstanceOverviewDTO, error) {
 			First: toDiagnosticDTO(diagnostics.Item{Diagnostic: g.First, Instance: v.Instance.Instance.ID, Module: a.module(g.Code)}),
 		})
 	}
-	if p := v.Plugins; p != nil {
-		dto.Plugins = &PluginsSummaryDTO{Active: p.Active, Limits: []LimitDTO{}}
-		for _, l := range p.Limits {
+	// The figures of the feature modules travel by the section that shows
+	// them (D133); the plugins figure keeps its own field for the UI.
+	for _, f := range v.Figures {
+		if f.Section != games.SectionOverviewPlugins {
+			continue
+		}
+		dto.Plugins = &PluginsSummaryDTO{Active: f.Count, Limits: []LimitDTO{}}
+		for _, l := range f.Limits {
 			dto.Plugins.Limits = append(dto.Plugins.Limits, LimitDTO{Kind: l.Kind, Used: l.Used, Max: l.Max})
 		}
 	}

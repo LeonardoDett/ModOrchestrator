@@ -367,12 +367,16 @@ func New(ctx context.Context) (c *Container, err error) {
 		Hasher:        hashing.SHA256{},
 		Library:       librarySvc,
 		Exclusions:    conflictsSvc,
-		LoadOrder:     pluginsSvc,
+		PostDeploy:    []deployment.PostDeploy{pluginsSvc},
 		Ops:           ops,
 		Locks:         locks,
 		IDs:           ids,
 		Clock:         clock,
 	})
+	// The plugins module enters the core through its contribution points
+	// (D133); the services that are built before it get it here.
+	profilesSvc.Sections = []profilesvc.Section{pluginsSvc}
+	librarySvc.FileStates = pluginsSvc
 	// Auto-deploy follows committed changes of the desired state (D036).
 	autoDeploy := deployment.NewAutoDeployer(deploySvc)
 	unsubAuto := bus.Subscribe(autoDeploy.Handle)
@@ -398,7 +402,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Games:        gamesSvc,
 		Library:      librarySvc,
 		Commands:     profilesSvc,
-		Plugins:      pluginsSvc,
+		Modules:      []diagnostics.Module{pluginsSvc},
 		IDs:          ids,
 		Clock:        clock,
 	})
@@ -435,7 +439,7 @@ func New(ctx context.Context) (c *Container, err error) {
 	launchSvc.StartMonitor(2 * time.Second)
 	overviewSvc := overview.NewService(overview.Sources{
 		Games: gamesSvc, Instances: instances, Deploy: deploySvc, Diagnostics: diagSvc,
-		Library: librarySvc, Conflicts: conflictsSvc, Plugins: pluginsSvc, History: historySvc,
+		Library: librarySvc, Conflicts: conflictsSvc, Figures: []overview.FigureSource{pluginsSvc}, History: historySvc,
 		Settings: settingsSvc, Facts: sqlite.NewFacts(db),
 	})
 

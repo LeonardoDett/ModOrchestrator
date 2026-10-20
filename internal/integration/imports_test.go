@@ -21,6 +21,7 @@ import (
 	"modorchestrator/internal/core/domain/migration"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/operation"
+	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/profile"
 )
 
@@ -164,7 +165,11 @@ func TestImportMO2Instance(t *testing.T) {
 	if def.IsEnabled(mods["Charlie"].ID) || !def.IsEnabled(mods["Bravo"].ID) || !def.IsEnabled(mods["Overwrite"].ID) {
 		t.Fatalf("enabled state wrong")
 	}
-	if on, known := def.PluginEnabled("Alpha.esp"); !on || !known {
+	sec, err := plugin.StateOf(def)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if on, known := sec.Enabled("Alpha.esp"); !on || !known {
 		t.Fatalf("plugin state: %v %v", on, known)
 	}
 	second := e.profileNamed("Second")
