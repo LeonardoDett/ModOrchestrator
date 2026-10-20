@@ -1,17 +1,17 @@
 package skyrimse
 
 import (
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/mod"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/mod"
 )
 
-var _ ports.CatalogProvider = Adapter{}
+var _ sdk.CatalogProvider = Adapter{}
 
-// Catalog implements ports.CatalogProvider: the labels of the content
+// Catalog implements sdk.CatalogProvider: the labels of the content
 // flags, the installer and the launch option this adapter defines (D131).
 // The "game" launch option is a label of the app.
-func (Adapter) Catalog() ports.AdapterCatalog {
-	return ports.AdapterCatalog{Messages: map[string]map[string]string{
+func (Adapter) Catalog() sdk.AdapterCatalog {
+	return sdk.AdapterCatalog{Messages: map[string]map[string]string{
 		"en": {
 			content(FlagPlugin):               "Plugins",
 			content(FlagArchive):              "Archives (BSA)",

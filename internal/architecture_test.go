@@ -91,6 +91,44 @@ var (
 	pluginClients = []string{"core/application/ports", "core/application/imports"}
 )
 
+// D134: the built-in adapters import only the SDK (modorchestrator/sdk), the
+// standard library and other adapters, so the contract a third party sees is
+// the one the built-in adapters use. Tests may reach the core. The SDK
+// itself only names the domain and the adapter contracts of ports.
+func TestAdaptersImportOnlyTheSDK(t *testing.T) {
+	fset := token.NewFileSet()
+	check := func(root string, allowed func(imp string) bool) {
+		t.Helper()
+		files := 0
+		err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+			if err != nil || d.IsDir() || !strings.HasSuffix(path, ".go") || strings.HasSuffix(path, "_test.go") {
+				return err
+			}
+			f, err := parser.ParseFile(fset, path, nil, parser.ImportsOnly)
+			if err != nil {
+				return err
+			}
+			files++
+			for _, imp := range f.Imports {
+				p := strings.Trim(imp.Path.Value, `"`)
+				if strings.HasPrefix(p, module) && !allowed(p) {
+					t.Errorf("%s imports %s", filepath.ToSlash(path), p)
+				}
+			}
+			return nil
+		})
+		if err != nil || files == 0 {
+			t.Fatalf("%s: %d files, %v", root, files, err)
+		}
+	}
+	check("adapters", func(p string) bool {
+		return p == module+"sdk" || strings.HasPrefix(p, module+"sdk/") || strings.HasPrefix(p, module+"internal/adapters/")
+	})
+	check(filepath.Join("..", "sdk"), func(p string) bool {
+		return strings.HasPrefix(p, module+"internal/core/domain/") || p == module+"internal/core/application/ports"
+	})
+}
+
 func TestCoreDoesNotImportThePluginsModule(t *testing.T) {
 	var banned []string
 	for _, p := range pluginModule {

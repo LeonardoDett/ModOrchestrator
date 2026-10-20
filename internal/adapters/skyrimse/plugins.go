@@ -13,16 +13,16 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/ordering"
-	"modorchestrator/internal/core/domain/plugin"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/ordering"
+	"modorchestrator/sdk/plugin"
 )
 
 var (
-	_ ports.PluginSupport    = Adapter{}
-	_ ports.LoadOrderSupport = Adapter{}
-	_ ports.PluginArchives   = Adapter{}
+	_ sdk.PluginSupport    = Adapter{}
+	_ sdk.LoadOrderSupport = Adapter{}
+	_ sdk.PluginArchives   = Adapter{}
 )
 
 // Header flags (core/12 §5), normalised for the core.
@@ -132,7 +132,7 @@ func (Adapter) ReadHeader(_ game.ID, name string, r io.Reader) (plugin.Header, e
 
 // Implicit: the base masters, then the Creation Club plugins listed in
 // <root>/Skyrim.ccc in file order, when they exist in Data (core/12 §5).
-func (Adapter) Implicit(ctx context.Context, fs ports.FileReader, inst game.Instance, names []plugin.Name) ([]plugin.Name, error) {
+func (Adapter) Implicit(ctx context.Context, fs sdk.FileReader, inst game.Instance, names []plugin.Name) ([]plugin.Name, error) {
 	present := map[string]plugin.Name{}
 	for _, n := range names {
 		present[n.Key()] = n
@@ -212,7 +212,7 @@ func (Adapter) Indexes(_ game.ID, active []plugin.Plugin) (map[string]string, []
 // Special Edition", with the " GOG" and " EPIC" variants (both confirmed;
 // the Epic one in libloadorder and SKSE64, F15). The variant follows the
 // store the installation was discovered in (D106).
-func (Adapter) LoadOrderFile(inst game.Instance) ports.FileLocation {
+func (Adapter) LoadOrderFile(inst game.Instance) sdk.FileLocation {
 	folder := "Skyrim Special Edition"
 	switch inst.Store {
 	case "gog":
@@ -220,7 +220,7 @@ func (Adapter) LoadOrderFile(inst game.Instance) ports.FileLocation {
 	case "epic":
 		folder += " EPIC"
 	}
-	return ports.FileLocation{Folder: ports.FolderLocalAppData, Path: folder + "/plugins.txt"}
+	return sdk.FileLocation{Folder: sdk.FolderLocalAppData, Path: folder + "/plugins.txt"}
 }
 
 func (Adapter) ManualOrder(game.ID) bool { return true }

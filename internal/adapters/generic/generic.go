@@ -10,9 +10,9 @@ import (
 	"slices"
 	"sync"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/mod"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/mod"
 )
 
 // Name is the adapter id stored in every instance it serves.
@@ -30,7 +30,7 @@ const Version = "2"
 // instances always come with user-declared targets.
 const defaultTarget game.TargetID = "main"
 
-// Adapter implements ports.GameAdapter and ports.EntryHost. The zero value
+// Adapter implements sdk.GameAdapter and sdk.EntryHost. The zero value
 // serves only the template; New returns one that also holds manifests.
 type Adapter struct{ entries *entries }
 
@@ -40,9 +40,9 @@ type entries struct {
 }
 
 var (
-	_ ports.EntryHost       = Adapter{}
-	_ ports.LaunchSupport   = Adapter{}
-	_ ports.ProcessDeclarer = Adapter{}
+	_ sdk.EntryHost       = Adapter{}
+	_ sdk.LaunchSupport   = Adapter{}
+	_ sdk.ProcessDeclarer = Adapter{}
 )
 
 // New returns an adapter that can hold manifests.
@@ -154,7 +154,7 @@ func (a Adapter) InstanceDefinition(id game.ID, targets []game.Target) (game.Def
 // ValidateRoot requires an existing folder and, for a manifest that names
 // markers, each of them: without markers the adapter cannot know what the
 // game looks like.
-func (a Adapter) ValidateRoot(ctx context.Context, fs ports.FileReader, id game.ID, root string) error {
+func (a Adapter) ValidateRoot(ctx context.Context, fs sdk.FileReader, id game.ID, root string) error {
 	info, err := fs.Stat(ctx, root)
 	switch {
 	case err != nil:
@@ -195,19 +195,19 @@ func (a Adapter) Targets(id game.ID, root string, custom []game.TargetSpec) ([]g
 
 // RootHints come from the manifest; without them the basic installer falls
 // back to the archive layout.
-func (a Adapter) RootHints(id game.ID) ports.RootHints {
+func (a Adapter) RootHints(id game.ID) sdk.RootHints {
 	m, _ := a.manifest(id)
-	return ports.RootHints{Dirs: m.Layout.RootHints.Dirs, Extensions: m.Layout.RootHints.Extensions}
+	return sdk.RootHints{Dirs: m.Layout.RootHints.Dirs, Extensions: m.Layout.RootHints.Extensions}
 }
 
 func (Adapter) ContentFlags(game.ID, []game.Location) []mod.ContentFlag { return nil }
 
 // LaunchOptions are the ones the manifest declares.
-func (a Adapter) LaunchOptions(_ context.Context, _ ports.FileReader, inst game.Instance) ([]ports.LaunchOption, error) {
+func (a Adapter) LaunchOptions(_ context.Context, _ sdk.FileReader, inst game.Instance) ([]sdk.LaunchOption, error) {
 	m, _ := a.manifest(inst.Game)
-	out := make([]ports.LaunchOption, 0, len(m.Launch))
+	out := make([]sdk.LaunchOption, 0, len(m.Launch))
 	for _, l := range m.Launch {
-		out = append(out, ports.LaunchOption{ID: l.ID, Exe: l.Exe, Args: l.Args, WorkDir: l.WorkDir, Default: l.Default})
+		out = append(out, sdk.LaunchOption{ID: l.ID, Exe: l.Exe, Args: l.Args, WorkDir: l.WorkDir, Default: l.Default})
 	}
 	return out, nil
 }
@@ -221,8 +221,8 @@ func (a Adapter) Processes(id game.ID) []string {
 // Templates are the ready-made layouts offered when the user creates a
 // game (D129, answer 8): a "Mods" folder in the game folder, and BepInEx,
 // the loader most Unity games use for plugins.
-func (Adapter) Templates() []ports.GameTemplate {
-	return []ports.GameTemplate{
+func (Adapter) Templates() []sdk.GameTemplate {
+	return []sdk.GameTemplate{
 		{ID: "mods_folder", Targets: []game.TargetSpec{{ID: "mods", Path: "Mods"}}},
 		{ID: "bepinex", Name: "BepInEx", Targets: []game.TargetSpec{{ID: "plugins", Path: "BepInEx/plugins"}, {ID: "config", Path: "BepInEx/config"}, {ID: "patchers", Path: "BepInEx/patchers"}}},
 	}

@@ -4,15 +4,15 @@ import (
 	"path"
 	"strings"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/installer"
-	"modorchestrator/internal/core/domain/relpath"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/installer"
+	"modorchestrator/sdk/relpath"
 )
 
 var (
-	_ ports.InstallerProvider = Adapter{}
-	_ ports.CategoryProvider  = Adapter{}
+	_ sdk.InstallerProvider = Adapter{}
+	_ sdk.CategoryProvider  = Adapter{}
 )
 
 // Installers registers the adapter's own installers (core/03 §6).
@@ -97,8 +97,8 @@ func (SKSERuntime) Plan(entries []installer.Entry, _ installer.Context, _ instal
 
 // DefaultCategories is a lean tree inspired by the Nexus categories; the
 // user renames or deletes freely and nothing is fetched (core/02 §10).
-func (Adapter) DefaultCategories(game.ID) []ports.DefaultCategory {
-	return []ports.DefaultCategory{
+func (Adapter) DefaultCategories(game.ID) []sdk.DefaultCategory {
+	return []sdk.DefaultCategory{
 		{Key: "fixes", Name: "Bug Fixes"},
 		{Key: "patches", Name: "Patches"},
 		{Key: "ui", Name: "User Interface"},

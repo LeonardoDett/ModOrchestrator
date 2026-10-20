@@ -1319,3 +1319,17 @@ Alternativas rejeitadas: manter os campos de plugin no perfil com tipo `string` 
 
 Consequências: vale para todo jogo; no `generic` o módulo não acrescenta número na Visão geral, parte no pacote de suporte, contagem no perfil nem seção no perfil (`internal/integration/generic_test.go`). O pacote de suporte troca `loadOrder` por `parts.loadOrder`. O evento `profile.transferred` passa a levar `sections` em vez de `plugins`. Pendências: `ports.PluginSupport`/`LoadOrderSupport` e o tipo `plugin` nos contratos de adapter (fase C3, SDK); settings `plugins.*` no catálogo do núcleo (item 10); ordem de carga genérica (fase B).
 
+## D134 — SDK do adapter fora de `internal/`, por aliases; os adapters embutidos só importam o SDK
+Status: vigente (2026-10-20; fase C3 de `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, item 7; a parte de contrato da R6 do registro de jogos)
+
+1. **Pacote**: `modorchestrator/sdk` traz `APIVersion` ("1.0") e as interfaces do adapter (`GameAdapter` e as opcionais, uma por capability, D112), mais os tipos que elas usam do sistema de arquivos e das lojas. Os subpacotes `sdk/game`, `sdk/mod`, `sdk/plugin`, `sdk/installer`, `sdk/diagnostic`, `sdk/event`, `sdk/health`, `sdk/ordering` e `sdk/relpath` dão o vocabulário, com o mesmo nome de pacote do core, para que um adapter troque só o caminho do import.
+2. **Aliases**: cada nome é alias do tipo, da constante ou do erro do core, e cada função é um repasse. O SDK não tem comportamento e não há cópia a manter. Um módulo de fora usa os tipos pelo alias, embora não possa importar `internal/`.
+3. **Superfície sob demanda**: o SDK expõe o que os três adapters usam (e o que os seus contratos citam). Um nome entra quando um adapter precisa dele, com o número menor de `APIVersion`; nome que sai, ou tipo mudado de forma que o adapter percebe (método de interface, campo que ele preenche), sobe o maior.
+4. **Vigia**: `TestAdaptersImportOnlyTheSDK` recusa arquivo não de teste em `internal/adapters` que importe algo do módulo além do SDK e de outros adapters, e arquivo do SDK que importe algo além do domínio e de `ports`. Os testes dos adapters podem usar o core (fakes, `memfs`, construtores que o SDK não expõe).
+
+Motivo: a palavra `internal` do Go impedia qualquer módulo externo de implementar um adapter (item 7 do diagnóstico multi-jogo); os adapters embutidos passam a ser os primeiros clientes do contrato público, então o que um terceiro vê é o que eles usam.
+
+Alternativas rejeitadas: mover os tipos do domínio para fora de `internal/` (o núcleo inteiro passaria a ser API pública e cada refatoração viraria quebra de contrato); copiar os tipos para o SDK com conversão na fronteira (duas fontes de verdade e conversões em todo contrato); um só pacote `sdk` com todos os nomes (colisões como `plugin.Entry` e `installer.Entry` pediriam prefixos e a troca não seria só de import); expor de uma vez todo o domínio que os contratos alcançam (superfície grande sem cliente).
+
+Consequências: vale para todo jogo; nenhum comportamento muda. Um tipo do core citado pelo SDK passa a ser contrato: mudar seus campos pede olhar `APIVersion`. A parte de R6 que é contrato (um adapter de fora implementa as mesmas interfaces) está feita; o contrato de contribuição de uma extensão para um jogo que não é dela (`provider` por recurso, prova com um módulo embutido) e o host (manifesto, carregador, isolamento) ficam para a fase D (V2, D012).
+

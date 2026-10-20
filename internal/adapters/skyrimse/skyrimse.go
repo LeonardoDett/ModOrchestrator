@@ -9,10 +9,10 @@ import (
 	"slices"
 	"strings"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/mod"
-	"modorchestrator/internal/core/domain/relpath"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/mod"
+	"modorchestrator/sdk/relpath"
 )
 
 const (
@@ -59,10 +59,10 @@ const (
 	FlagINI         mod.ContentFlag = "ini"
 )
 
-// Adapter implements ports.GameAdapter.
+// Adapter implements sdk.GameAdapter.
 type Adapter struct{}
 
-var _ ports.GameAdapter = Adapter{}
+var _ sdk.GameAdapter = Adapter{}
 
 func (Adapter) Name() string    { return Name }
 func (Adapter) Version() string { return Version }
@@ -128,7 +128,7 @@ func (a Adapter) InstanceDefinition(id game.ID, _ []game.Target) (game.Definitio
 	return a.Definitions()[0], nil
 }
 
-func (Adapter) ValidateRoot(ctx context.Context, fs ports.FileReader, _ game.ID, root string) error {
+func (Adapter) ValidateRoot(ctx context.Context, fs sdk.FileReader, _ game.ID, root string) error {
 	info, err := fs.Stat(ctx, root)
 	switch {
 	case err != nil:
@@ -156,8 +156,8 @@ func (Adapter) Targets(_ game.ID, root string, _ []game.TargetSpec) ([]game.Targ
 }
 
 // RootHints lists what marks the root of the Data layout (core/12 §3).
-func (Adapter) RootHints(game.ID) ports.RootHints {
-	return ports.RootHints{
+func (Adapter) RootHints(game.ID) sdk.RootHints {
+	return sdk.RootHints{
 		Dirs: []string{
 			"meshes", "textures", "scripts", "interface", "sound", "music", "seq", "strings",
 			"skse", "shadersfx", "lodsettings", "grass", "video", "calientetools",

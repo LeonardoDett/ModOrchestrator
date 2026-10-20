@@ -5,17 +5,17 @@ import (
 	"slices"
 	"strconv"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/diagnostic"
-	"modorchestrator/internal/core/domain/event"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/health"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/diagnostic"
+	"modorchestrator/sdk/event"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/health"
 )
 
 var (
-	_ ports.ProcessDeclarer     = Adapter{}
-	_ ports.HealthCheckProvider = Adapter{}
-	_ ports.LaunchSupport       = Adapter{}
+	_ sdk.ProcessDeclarer     = Adapter{}
+	_ sdk.HealthCheckProvider = Adapter{}
+	_ sdk.LaunchSupport       = Adapter{}
 )
 
 // Processes are the executables of a running game.
@@ -25,9 +25,9 @@ func (Adapter) Processes(game.ID) []string { return []string{Executable} }
 // proxy in the game root, not by another executable.
 const LaunchGame = "game"
 
-// LaunchOptions implements ports.LaunchSupport.
-func (Adapter) LaunchOptions(context.Context, ports.FileReader, game.Instance) ([]ports.LaunchOption, error) {
-	return []ports.LaunchOption{{ID: LaunchGame, Exe: Executable, Default: true}}, nil
+// LaunchOptions implements sdk.LaunchSupport.
+func (Adapter) LaunchOptions(context.Context, sdk.FileReader, game.Instance) ([]sdk.LaunchOption, error) {
+	return []sdk.LaunchOption{{ID: LaunchGame, Exe: Executable, Default: true}}, nil
 }
 
 // HealthChecks implements framework_missing: an enabled mod carries plugins
@@ -35,8 +35,8 @@ func (Adapter) LaunchOptions(context.Context, ports.FileReader, game.Instance) (
 // not hold the proxy and the preloader (managed or not). Both are needed:
 // the proxy alone, left by another manager, starts nothing. The mods load
 // only through the framework, so it is an error; it never blocks deploy.
-func (Adapter) HealthChecks(ctx context.Context, fs ports.FileReader, inst game.Instance, mods []ports.ModContent) ([]diagnostic.Spec, error) {
-	var users []ports.ModContent
+func (Adapter) HealthChecks(ctx context.Context, fs sdk.FileReader, inst game.Instance, mods []sdk.ModContent) ([]diagnostic.Spec, error) {
+	var users []sdk.ModContent
 	for _, m := range mods {
 		if !m.Enabled {
 			continue

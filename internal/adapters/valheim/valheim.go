@@ -9,10 +9,10 @@ import (
 	"slices"
 	"strings"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/mod"
-	"modorchestrator/internal/core/domain/relpath"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/mod"
+	"modorchestrator/sdk/relpath"
 )
 
 const (
@@ -63,10 +63,10 @@ const (
 	FlagRuntime mod.ContentFlag = "bepinex_runtime"
 )
 
-// Adapter implements ports.GameAdapter.
+// Adapter implements sdk.GameAdapter.
 type Adapter struct{}
 
-var _ ports.GameAdapter = Adapter{}
+var _ sdk.GameAdapter = Adapter{}
 
 func (Adapter) Name() string    { return Name }
 func (Adapter) Version() string { return Version }
@@ -121,7 +121,7 @@ func (a Adapter) InstanceDefinition(id game.ID, _ []game.Target) (game.Definitio
 	return a.Definitions()[0], nil
 }
 
-func (Adapter) ValidateRoot(ctx context.Context, fs ports.FileReader, _ game.ID, root string) error {
+func (Adapter) ValidateRoot(ctx context.Context, fs sdk.FileReader, _ game.ID, root string) error {
 	info, err := fs.Stat(ctx, root)
 	switch {
 	case err != nil:
@@ -151,8 +151,8 @@ func (Adapter) Targets(_ game.ID, root string, _ []game.TargetSpec) ([]game.Targ
 // RootHints lists the folders that mark the root of the framework layout.
 // No extension is a hint: a loose DLL belongs in plugins/, which the
 // adapter's own installer handles.
-func (Adapter) RootHints(game.ID) ports.RootHints {
-	return ports.RootHints{Dirs: []string{dirPlugins, dirPatchers, dirConfig, dirCore}}
+func (Adapter) RootHints(game.ID) sdk.RootHints {
+	return sdk.RootHints{Dirs: []string{dirPlugins, dirPatchers, dirConfig, dirCore}}
 }
 
 // ContentFlags classifies a footprint. Paths are taken relative to the

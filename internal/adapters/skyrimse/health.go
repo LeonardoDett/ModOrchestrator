@@ -5,19 +5,19 @@ import (
 	"slices"
 	"strconv"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/diagnostic"
-	"modorchestrator/internal/core/domain/event"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/health"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/diagnostic"
+	"modorchestrator/sdk/event"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/health"
 )
 
 // Loader is the SKSE loader in the game root (core/12 §7, §8).
 const Loader = "skse64_loader.exe"
 
 var (
-	_ ports.ProcessDeclarer     = Adapter{}
-	_ ports.HealthCheckProvider = Adapter{}
+	_ sdk.ProcessDeclarer     = Adapter{}
+	_ sdk.HealthCheckProvider = Adapter{}
 )
 
 // Processes are the executables of a running game (core/12 §1).
@@ -28,8 +28,8 @@ func (Adapter) Processes(game.ID) []string { return []string{Executable, Loader}
 // not in the game root (managed or not). The plugins load only through
 // SKSE, so it is an error, with "Import framework" as the action; it never
 // blocks deploy (the launch warning is F12).
-func (Adapter) HealthChecks(ctx context.Context, fs ports.FileReader, inst game.Instance, mods []ports.ModContent) ([]diagnostic.Spec, error) {
-	var users []ports.ModContent
+func (Adapter) HealthChecks(ctx context.Context, fs sdk.FileReader, inst game.Instance, mods []sdk.ModContent) ([]diagnostic.Spec, error) {
+	var users []sdk.ModContent
 	for _, m := range mods {
 		if !m.Enabled {
 			continue

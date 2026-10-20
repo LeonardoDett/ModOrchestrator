@@ -80,6 +80,10 @@ As demais são respondidas pela própria definição (`filesystem_mod_target`, `
 
 O que o adapter mostra ao usuário vem com ele, por `ports.CatalogProvider` (`Catalog()`): os códigos de diagnóstico que só ele emite (`diagnostic.CodeSpec`: código, módulo, aviso antes do launch) e os textos por idioma das chaves `mods.content.<flag>`, `mods.installer.<id>`, `launch.option.<id>` e `diag.{code,impact,evidence,action}.*`. Não é capability: descreve o adapter e não liga processo nenhum; sem ela a UI mostra os textos do app e, para id que não conhece, o id. O registro recusa catálogo sem `en`, idioma sem as chaves do `en`, texto vazio, chave fora desses prefixos, código sem `diag.code.<código>`, código repetido (do core ou de outro adapter) e chave de dois adapters com textos diferentes. O bridge serve os textos em `AdapterMessages(idioma)`, com `en` para o idioma que o adapter não traduz; a UI os lê **depois** do catálogo do app, então um adapter nunca troca texto do app. O catálogo do app fica só com texto do app: `launch.option.game`, `mods.installer.basic` e `mods.installer.imported` são ids do core.
 
+### SDK do adapter (D134)
+
+O contrato do adapter é público em `modorchestrator/sdk` (fora de `internal/`, com `sdk.APIVersion`): as interfaces opcionais, uma por capability, e, nos subpacotes `sdk/game`, `sdk/mod`, `sdk/plugin`, `sdk/installer`, `sdk/diagnostic`, `sdk/event`, `sdk/health`, `sdk/ordering` e `sdk/relpath`, o vocabulário que elas usam. Os nomes são aliases dos tipos do core: o SDK não tem comportamento nem cópia a sincronizar. Os adapters embutidos importam só o SDK, a biblioteca padrão e outros adapters (`TestAdaptersImportOnlyTheSDK`; os testes podem usar o core). Um nome entra no SDK quando um adapter precisa dele; nome novo sobe o número menor, nome removido ou tipo mudado de um jeito que o adapter percebe sobe o maior.
+
 ### Regras
 - O core decide por capability (D011). Se uma tela depende de capability ausente, ela não aparece na navegação do workspace (core/11 §5).
 - Todo dado do adapter entra no core como **dado declarativo**; o core não chama o adapter dentro de loops quentes (conflitos, desejado).
@@ -141,6 +145,7 @@ Contrato previsto: manifesto (id, versão, autor, capabilities fornecidas, vers�
 
 - Nenhum `if gameId == …` fora de `internal/adapters`; nenhum literal com nome de jogo, de ferramenta, de arquivo ou extensão de um jogo fora dali (`TestNoGameSpecificLiteralsOutsideAdapters`).
 - Adapter que declara capability sem a interface, ou o contrário, não registra (D112).
+- Adapter embutido não importa nada do módulo além do SDK (`TestAdaptersImportOnlyTheSDK`, D134).
 - Numa instância sem `plugins`, todo comando de plugins responde `plugins_unsupported` e o deploy conclui sem escrever arquivo de load order (`TestGameWithoutPluginsWorksAndAnswersUnsupported`).
 - Skyrim SE instalado pela Steam é encontrado na busca rápida.
 - Pasta errada no "localizar manualmente" é recusada com motivo.

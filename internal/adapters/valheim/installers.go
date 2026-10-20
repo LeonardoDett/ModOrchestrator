@@ -6,14 +6,14 @@ import (
 	"regexp"
 	"strings"
 
-	"modorchestrator/internal/core/application/ports"
-	"modorchestrator/internal/core/domain/game"
-	"modorchestrator/internal/core/domain/installer"
-	"modorchestrator/internal/core/domain/mod"
-	"modorchestrator/internal/core/domain/relpath"
+	"modorchestrator/sdk"
+	"modorchestrator/sdk/game"
+	"modorchestrator/sdk/installer"
+	"modorchestrator/sdk/mod"
+	"modorchestrator/sdk/relpath"
 )
 
-var _ ports.InstallerProvider = Adapter{}
+var _ sdk.InstallerProvider = Adapter{}
 
 // Installers registers the adapter's own installers (core/03 §6): the
 // framework pack, mod packages with a manifest, and loose DLLs.
