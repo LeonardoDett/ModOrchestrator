@@ -13,19 +13,19 @@ var _ ports.CatalogProvider = Adapter{}
 func (Adapter) Catalog() ports.AdapterCatalog {
 	return ports.AdapterCatalog{Messages: map[string]map[string]string{
 		"en": {
-			content(FlagPlugin):              "BepInEx plugin",
-			content(FlagPatcher):             "BepInEx patcher",
-			content(FlagConfig):              "BepInEx configuration",
-			content(FlagRuntime):             "BepInEx",
+			content(FlagPlugin):               "BepInEx plugin",
+			content(FlagPatcher):              "BepInEx patcher",
+			content(FlagConfig):               "BepInEx configuration",
+			content(FlagRuntime):              "BepInEx",
 			"mods.installer." + LoaderPackID:  "BepInEx pack",
 			"mods.installer." + PackageID:     "Mod package (BepInEx)",
 			"mods.installer." + LoosePluginID: "Loose DLL (BepInEx)",
 		},
 		"pt-BR": {
-			content(FlagPlugin):              "Plugin do BepInEx",
-			content(FlagPatcher):             "Patcher do BepInEx",
-			content(FlagConfig):              "Configuração do BepInEx",
-			content(FlagRuntime):             "BepInEx",
+			content(FlagPlugin):               "Plugin do BepInEx",
+			content(FlagPatcher):              "Patcher do BepInEx",
+			content(FlagConfig):               "Configuração do BepInEx",
+			content(FlagRuntime):              "BepInEx",
 			"mods.installer." + LoaderPackID:  "Pacote do BepInEx",
 			"mods.installer." + PackageID:     "Pacote de mod (BepInEx)",
 			"mods.installer." + LoosePluginID: "DLL solta (BepInEx)",

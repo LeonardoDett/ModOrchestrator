@@ -83,7 +83,7 @@ func TestRegistryRefusesBadAdapterCatalogs(t *testing.T) {
 		"language with an extra key": edit(func(c *ports.AdapterCatalog) {
 			c.Messages["pt-BR"]["mods.content.other"] = "Outro"
 		}),
-		"empty text":       edit(func(c *ports.AdapterCatalog) { c.Messages["pt-BR"]["mods.content.loader_plugin"] = " " }),
+		"empty text":        edit(func(c *ports.AdapterCatalog) { c.Messages["pt-BR"]["mods.content.loader_plugin"] = " " }),
 		"code without text": edit(func(c *ports.AdapterCatalog) { c.Diagnostics[0].Code = "loader_missing" }),
 		"core code redefined": edit(func(c *ports.AdapterCatalog) {
 			c.Diagnostics[0].Code = diagnostic.CodeFrameworkMissing
