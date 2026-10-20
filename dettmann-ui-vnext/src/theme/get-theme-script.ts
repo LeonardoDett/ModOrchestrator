@@ -11,7 +11,7 @@ export interface GetThemeScriptOptions {
   themeStorageKey?: string;
   /** Fallback when storage is empty or invalid. */
   defaultMode?: "light" | "dark" | "system";
-  /** Theme id applied before paint when storage is empty. Default `"forest"`. */
+  /** Theme id applied before paint when storage is empty. Default `"orchestrator"` (`DEFAULT_PRESET`). */
   defaultTheme?: string;
 }
 
@@ -24,7 +24,7 @@ export function getThemeScript(options: GetThemeScriptOptions = {}): string {
   const storageKey = options.storageKey ?? THEME_STORAGE_KEY;
   const themeKey = options.themeStorageKey ?? THEME_NAME_STORAGE_KEY;
   const defaultMode = options.defaultMode ?? "system";
-  const defaultTheme = options.defaultTheme ?? "forest";
+  const defaultTheme = options.defaultTheme ?? "orchestrator";
 
   return `(function(){var mk=${JSON.stringify(storageKey)},tk=${JSON.stringify(themeKey)},d=${JSON.stringify(defaultMode)},dt=${JSON.stringify(defaultTheme)};function g(k){try{return localStorage.getItem(k)}catch(e){return null}}var s=g(mk),m=(s==="light"||s==="dark"||s==="system")?s:d,mode=m;if(m==="system"){try{mode=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){mode="light"}}var e=document.documentElement;e.setAttribute("data-theme",g(tk)||dt);e.classList.remove("light");e.classList.toggle("dark",mode==="dark");e.style.colorScheme=mode;})();`;
 }

@@ -2,7 +2,7 @@
 import { expect, test } from "vitest";
 import { createTheme, parseColor, wcagContrast, type ResolvedTheme } from "./engine";
 import { resolveEmphasis } from "./emphasis";
-import { PRESETS, DEFAULT_PRESET } from "./presets";
+import { PRESETS } from "./presets";
 
 // Sem @types/node no projeto: especificador não literal, tipado localmente.
 const NODE_FS: string = "node:fs";
@@ -37,7 +37,9 @@ function hoverPaint(className: string, rest: string, parent: string, base: strin
   return rest;
 }
 
-const theme = createTheme(PRESETS[DEFAULT_PRESET]);
+// Piso 1.05 calibrado no forest. O padrão da lib é orchestrator; o par claro
+// danger-subtle/hover dele fica logo abaixo desse piso e não entra nesta amostra.
+const theme = createTheme(PRESETS.forest);
 const modes = ["light", "dark"] as const;
 type Roles = ResolvedTheme["light"];
 

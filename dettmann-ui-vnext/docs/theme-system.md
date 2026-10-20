@@ -52,7 +52,7 @@ Each text/fill role is solved to the first value that reaches its target. Second
 
 ## Presets
 
-`PRESETS` holds `forest` (default), `graphite`, `orchestrator`, `ember` (warm, expressive) and `ink` (sober, high contrast). Each is 3-8 lines of config. `npm run theme:build` renders them to `src/styles/theme/themes.generated.css` (never edit by hand; a freshness test fails when it is stale). The default preset also applies to `:root`.
+`PRESETS` holds `orchestrator` (default), `forest`, `graphite`, `ember` (warm, expressive) and `ink` (sober, high contrast). Each is 3-8 lines of config. `npm run theme:build` renders them to `src/styles/theme/themes.generated.css` (never edit by hand; a freshness test fails when it is stale). The default preset also applies to `:root`.
 
 Generated CSS selectors:
 

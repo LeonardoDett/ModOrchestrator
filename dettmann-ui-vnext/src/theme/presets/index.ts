@@ -10,7 +10,7 @@ export type PresetId = "forest" | "graphite" | "orchestrator" | "ember" | "ink";
 /** Presets embarcados; a ordem é a ordem de emissão no CSS gerado. */
 export const PRESETS: Record<PresetId, ThemeConfig> = { forest, graphite, orchestrator, ember, ink };
 
-export const DEFAULT_PRESET: PresetId = "forest";
+export const DEFAULT_PRESET: PresetId = "orchestrator";
 
 export const GENERATED_CSS_HEADER = "/* gerado por scripts/theme/generate.ts — não editar */\n";
 

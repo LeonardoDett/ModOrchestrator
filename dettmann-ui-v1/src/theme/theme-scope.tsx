@@ -10,7 +10,7 @@ export interface ThemeScopeProps {
   children: ReactNode;
 }
 
-export function ThemeScope({ theme = "forest", mode = "light", inputs, className, children }: ThemeScopeProps) {
+export function ThemeScope({ theme = "orchestrator", mode = "light", inputs, className, children }: ThemeScopeProps) {
   const style = inputsToStyle(inputs, mode) as CSSProperties | undefined;
   return <div data-theme={theme} data-ui-mode={mode} style={style} className={className}>{children}</div>;
 }

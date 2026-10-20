@@ -67,7 +67,7 @@ Load the library CSS once:
 ## Theme
 
 ```tsx
-<ThemeProvider defaultTheme="forest" defaultMode="dark">
+<ThemeProvider defaultTheme="orchestrator" defaultMode="dark">
   {children}
 </ThemeProvider>
 ```

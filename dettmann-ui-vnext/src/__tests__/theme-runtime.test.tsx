@@ -80,7 +80,7 @@ test("injectTheme replaces content per id and is a no-op without a document", ()
 test("unknown stored theme id falls back to default", () => {
   localStorage.setItem("ui-theme", "removed");
   render(<ThemeProvider><span /></ThemeProvider>);
-  expect(document.documentElement.dataset.theme).toBe("forest");
+  expect(document.documentElement.dataset.theme).toBe("orchestrator");
 });
 
 test("valid stored theme id is applied", () => {
@@ -97,7 +97,7 @@ test("blocked localStorage does not throw", () => {
     throw new Error("blocked");
   });
   expect(() => render(<ThemeProvider><span /></ThemeProvider>)).not.toThrow();
-  expect(document.documentElement.dataset.theme).toBe("forest");
+  expect(document.documentElement.dataset.theme).toBe("orchestrator");
 });
 
 test("invalid config throws ThemeConfigError in dev", () => {
@@ -114,7 +114,7 @@ test("invalid config falls back in prod", () => {
   vi.stubEnv("NODE_ENV", "production");
   const error = vi.spyOn(console, "error").mockImplementation(() => {});
   expect(() => render(<ThemeProvider theme={{ id: "x", label: "X", brand: "nope" }}><span /></ThemeProvider>)).not.toThrow();
-  expect(document.documentElement.dataset.theme).toBe("forest");
+  expect(document.documentElement.dataset.theme).toBe("orchestrator");
   expect(error).toHaveBeenCalledTimes(1);
   expect(String(error.mock.calls[0]![0])).toMatch(/brand/);
 });
@@ -150,6 +150,9 @@ test("ThemeScope inherits the level of an enclosing MotionScope, clamped by its 
 });
 
 test("getThemeScript output is valid JS that sets data-theme", () => {
+  new Function(getThemeScript())();
+  expect(document.documentElement.dataset.theme).toBe("orchestrator");
+  document.documentElement.removeAttribute("data-theme");
   new Function(getThemeScript({ defaultTheme: "ink" }))();
   expect(document.documentElement.dataset.theme).toBe("ink");
 });
@@ -172,7 +175,7 @@ test("scopes inside a forced light island stay light under html.dark", () => {
     ["b", "light"],
     ["c", "light"],
     ["b", "dark"],
-    ["forest", null],
+    ["orchestrator", null],
   ]);
 });
 
@@ -235,7 +238,7 @@ test("unsafe config id is rejected (dev) and falls back once per message (prod)"
   const bad2 = { ...bad, id: "Upper" };
   render(<ThemeProvider theme={bad2}><span /></ThemeProvider>);
   render(<ThemeProvider theme={bad2}><span /></ThemeProvider>);
-  expect(document.documentElement.dataset.theme).toBe("forest");
+  expect(document.documentElement.dataset.theme).toBe("orchestrator");
   expect(document.querySelectorAll("style[data-dettmann-theme]")).toHaveLength(0);
   expect(error).toHaveBeenCalledTimes(1);
 });
@@ -294,7 +297,7 @@ test("ill-typed theme input falls back to the default preset in production", () 
     ({ container } = render(<ThemeScope theme={null as never}><span /></ThemeScope>));
     render(<ThemeScope theme={null as never}><span /></ThemeScope>);
   }).not.toThrow();
-  expect((container.firstElementChild as HTMLElement).dataset.theme).toBe("forest");
+  expect((container.firstElementChild as HTMLElement).dataset.theme).toBe("orchestrator");
   expect(error).toHaveBeenCalledTimes(1);
 });
 

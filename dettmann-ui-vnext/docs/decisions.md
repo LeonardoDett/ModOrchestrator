@@ -261,3 +261,9 @@ Status: accepted (2026-10-20).
 - On close, the focus goes back to the element focused before only when it is still in the panel or on the body: whoever closed the overlay may already have moved it (navigation from a command palette).
 
 Tests: `src/__tests__/focus-trap.test.tsx`, `src/__tests__/menu-keyboard-open.test.tsx`.
+
+## D-042 — Default preset is orchestrator
+
+Status: accepted (2026-10-20).
+
+`DEFAULT_PRESET` is `orchestrator`. `ThemeProvider` (`defaultTheme`), `getThemeScript` and the `:root` block of the generated CSS use it when nothing else is chosen. `forest` stays a selectable preset; only the fallback changed.

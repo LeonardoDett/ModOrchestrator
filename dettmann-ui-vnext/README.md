@@ -78,7 +78,7 @@ const acme: ThemeConfig = { id: "acme", label: "Acme", brand: "#7c3aed", neutral
 <ThemeScope theme="ember" mode="light" density="compact">...</ThemeScope>
 ```
 
-Presets: `forest` (default), `graphite`, `orchestrator`, `ember`, `ink` (`PRESETS`). Only `brand` is required; `accent`, `neutral`, `vibrance`, `contrast`, `shape`, `density`, `motion`, `font` and per-role `overrides` are optional. `createTheme(config)` is pure and `contrastReport(roles, contrast)` lists the measured pairs. Details: `docs/theme-system.md`.
+Presets: `orchestrator` (default), `forest`, `graphite`, `ember`, `ink` (`PRESETS`). Only `brand` is required; `accent`, `neutral`, `vibrance`, `contrast`, `shape`, `density`, `motion`, `font` and per-role `overrides` are optional. `createTheme(config)` is pure and `contrastReport(roles, contrast)` lists the measured pairs. Details: `docs/theme-system.md`.
 
 ## Emphasis x intent
 

@@ -60,9 +60,9 @@ Do not create a theme by globally replacing one color. Theme quality comes from 
 
 ## Registered themes
 
-- `forest`: default of the library (dark + green).
+- `orchestrator`: default of the library. Mod Orchestrator product theme, derived from forest; brand leans teal and success leans lime so they stay distinguishable.
+- `forest`: dark + green preset the product theme was derived from.
 - `graphite`: cooler, product-neutral preset.
-- `orchestrator`: Mod Orchestrator product theme, derived from forest; brand leans teal and success leans lime so they stay distinguishable.
 
 ## Tones
 
@@ -74,7 +74,7 @@ Components choose a tone with `data-tone` and paint with the `tone-*` utilities;
 
 ```tsx
 <ThemeProvider
-  defaultTheme="forest"
+  defaultTheme="orchestrator"
   defaultMode="dark"
 >
   {children}

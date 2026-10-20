@@ -12,8 +12,8 @@ const read = (rel: string) => lf(fs.readFileSync(new URL(rel, import.meta.url), 
 
 const ids = Object.keys(PRESETS) as PresetId[];
 
-test("default preset is forest and all five presets exist", () => {
-  expect(DEFAULT_PRESET).toBe("forest");
+test("default preset is orchestrator and all five presets exist", () => {
+  expect(DEFAULT_PRESET).toBe("orchestrator");
   expect(ids).toEqual(["forest", "graphite", "orchestrator", "ember", "ink"]);
   for (const id of ids) expect(PRESETS[id]).toMatchObject({ id, label: id[0]!.toUpperCase() + id.slice(1) });
 });
@@ -22,11 +22,12 @@ test.each(ids)("preset %s resolves without warnings", (id) => expect(createTheme
 
 test.each(ids)("preset %s matches snapshot", (id) => expect(createTheme(PRESETS[id])).toMatchSnapshot());
 
-test("renderPresetsCSS starts with the header and forest as the root theme", () => {
+test("renderPresetsCSS starts with the header and orchestrator as the root theme", () => {
   const css = renderPresetsCSS();
   expect(css.startsWith("/* gerado por scripts/theme/generate.ts — não editar */\n")).toBe(true);
-  expect(css).toContain(':where(:root),[data-theme="forest"]{');
-  for (const id of ids.slice(1)) {
+  expect(css).toContain(':where(:root),[data-theme="orchestrator"]{');
+  for (const id of ids) {
+    if (id === DEFAULT_PRESET) continue;
     expect(css).toContain(`[data-theme="${id}"]{`);
     expect(css).not.toContain(`:where(:root),[data-theme="${id}"]`);
   }

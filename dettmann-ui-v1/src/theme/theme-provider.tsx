@@ -40,7 +40,7 @@ function isMode(value: string | null): value is ThemeMode {
 export function ThemeProvider({
   children,
   defaultMode = "system",
-  defaultTheme = "forest",
+  defaultTheme = "orchestrator",
   theme: themeProp,
   storageKey = THEME_STORAGE_KEY,
   themeStorageKey = THEME_NAME_STORAGE_KEY,

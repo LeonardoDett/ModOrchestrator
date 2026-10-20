@@ -14,7 +14,7 @@ export interface ThemeProviderProps {
   children: ReactNode;
   /** Tema controlado: id de preset, chave de `themes` ou config inline. Vence o valor salvo. */
   theme?: string | ThemeConfig;
-  /** Id usado quando não há `theme` nem valor salvo válido. Padrão `"forest"`. */
+  /** Id usado quando não há `theme` nem valor salvo válido. Padrão `"orchestrator"`. */
   defaultTheme?: string;
   /** Registro do consumidor (id → config); seus temas são resolvidos e injetados em runtime. */
   themes?: Record<string, ThemeConfig>;

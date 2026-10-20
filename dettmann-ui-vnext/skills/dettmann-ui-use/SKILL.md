@@ -105,7 +105,7 @@ createTheme(roxo).warnings; // [] esperado; verifique num teste ou no console
   resolvido. Botões: `accent`, `neutral` (`cool|neutral|warm`), `vibrance`,
   `contrast` (`standard|high`), `shape` (`precise|balanced|soft`), `density`
   (`compact|comfortable|spacious`), `motion`, `font`.
-- Presets: `forest` (padrão), `graphite`, `orchestrator`, `ember`, `ink`.
+- Presets: `orchestrator` (padrão), `forest`, `graphite`, `ember`, `ink`.
 - `overrides` (por nome de papel) é último recurso; nunca CSS com `--ui-*` à mão.
 - `<ThemeScope theme? mode? density? motion?>`: subárvore com outro tema/modo/
   densidade/movimento. Sempre emite `data-theme` e `data-motion` e herda o modo

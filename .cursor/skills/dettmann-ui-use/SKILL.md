@@ -17,7 +17,7 @@ invente props nem valores: os tipos são a fonte.
 ## Ênfase (`emphasis`) — tabela de decisão
 
 | Elemento | `emphasis` | Observação |
-|---|---|---|
+| --- | --- | --- |
 | A ação principal da região (Salvar, Criar, Implantar) | `high` | **Uma por região.** Sem `intent` vira `brand`. |
 | Ação secundária, padrão de controles | `medium` (padrão) | Omitir a prop = `medium`. |
 | Terciária, cancelar, ícone de toolbar, ação destrutiva fora do foco | `low` | Ex.: `emphasis="low" intent="danger"` para Excluir. |
@@ -98,14 +98,14 @@ const roxo: ThemeConfig = { id: "roxo", label: "Roxo", brand: "#7c3aed" };
 createTheme(roxo).warnings; // [] esperado; verifique num teste ou no console
 
 <ThemeProvider theme={roxo}>…</ThemeProvider>
-// ou registro selecionável: <ThemeProvider themes={{ roxo }} defaultTheme="roxo">
+// ou registro selecionável: <ThemeProvider themes={{ roxo }} defaultTheme="orchestrator">
 ```
 
 - `brand` é a única semente obrigatória; o motor gera light **e** dark com contraste
   resolvido. Botões: `accent`, `neutral` (`cool|neutral|warm`), `vibrance`,
   `contrast` (`standard|high`), `shape` (`precise|balanced|soft`), `density`
   (`compact|comfortable|spacious`), `motion`, `font`.
-- Presets: `forest` (padrão), `graphite`, `orchestrator`, `ember`, `ink`.
+- Presets: `orchestrator` (padrão), `forest`, `graphite`, `ember`, `ink`.
 - `overrides` (por nome de papel) é último recurso; nunca CSS com `--ui-*` à mão.
 - `<ThemeScope theme? mode? density? motion?>`: subárvore com outro tema/modo/
   densidade/movimento. Sempre emite `data-theme` e `data-motion` e herda o modo
@@ -192,7 +192,7 @@ tela já tem ou deixe a prop vazia.
 - Componente genérico paralelo no projeto; props ou valores que os tipos não têm.
 
 | Racionalização | Realidade |
-|---|---|
+| --- | --- |
 | "É só um componente pequeno no projeto" | Duas fontes de verdade; vai para a lib. |
 | "`primary`/`destructive` é o padrão de toda lib" | Aqui é `emphasis` × `intent`. |
 | "Precisa de vida, então `expressive`" | Vida = estados e `responsive`; `expressive` é do 10%. |

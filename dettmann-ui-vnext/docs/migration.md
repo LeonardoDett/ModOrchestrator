@@ -17,16 +17,16 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 ## Theme API
 
 | v1 | v2 |
-|---|---|
+| --- | --- |
 | `ThemeInputs` / hue+chroma overrides | `ThemeConfig` (`brand`, `accent`, `neutral`, `vibrance`, `contrast`, `shape`, `density`, `motion`, `font`, `overrides`) |
 | `themes.css` edited by hand | `PRESETS` + `npm run theme:build` (generated `themes.generated.css`) |
-| `<ThemeProvider defaultTheme="forest">` | unchanged for presets; custom: `theme={config}` or `themes={{ id: config }}` |
+| `<ThemeProvider defaultTheme="orchestrator">` | unchanged for presets; custom: `theme={config}` or `themes={{ id: config }}` |
 | `theme-definitions.ts` metadata | `PRESETS[id].label` |
 
 ## Neutral tokens (v1 → v2)
 
 | old | new |
-|---|---|
+| --- | --- |
 | `bg-page` / `text-page` / `ring-offset-page` | `bg-canvas` / `text-canvas` / `ring-offset-canvas` |
 | `bg-muted` | `bg-sunken` |
 | `bg-hover` / `bg-pressed` | `bg-state-hover` / `bg-state-pressed` on a transparent rest; `hover:state-layer-hover` / `active:state-layer-pressed` on an opaque rest |
@@ -43,7 +43,7 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 ## Tone → intent / emphasis
 
 | old | new |
-|---|---|
+| --- | --- |
 | `bg-tone` / `-hover` / `-pressed` | `bg-intent-fill` / `-hover` / `-pressed` |
 | `text-on-tone` | `text-on-intent` |
 | `bg-tone-subtle` / `bg-tone-subtle-hover` | `bg-intent-subtle` / `hover:state-layer-hover` |
@@ -61,7 +61,7 @@ v2 is a breaking release with no alias layer (D-012). The Mod Orchestrator `fron
 Component props:
 
 | old | new |
-|---|---|
+| --- | --- |
 | `tone?: Tone` (Alert, Avatar, Checkbox, FeaturedIcon, Indicator, Progress, Radio, Slider, StatusToggle, Switch, Spinner, Icon, Typography) | `intent?: Intent`; map `primary` → `brand`, `secondary` → `neutral`, others unchanged |
 | `<Button variant tone>` | `<Button emphasis intent motion>`; default `emphasis="medium"`; `variant="link"` → `emphasis="low"` |
 | `<Badge variant="solid\|soft\|outline" tone>` | `emphasis="high\|medium\|low"` and `intent` |
@@ -77,7 +77,7 @@ Component props:
 When the catalog has the glyph, replace `<Icon icon={Trash2} />` with `<TrashIcon />` (import from `dettmann-ui/icons`). Same `size`, `intent`, `label`; inside a button, menu item or tab it animates with the control by itself (`trigger="auto"`). Glyphs outside the catalog stay `<Icon icon={...} />`. Public props typed `LucideIcon` are now `IconComponent`.
 
 | lucide | catalog |
-|---|---|
+| --- | --- |
 | `X`, `Plus`, `Minus`, `Check`, `Search`, `Filter`, `Upload`, `Menu`, `Info`, `Ban`, `MoreHorizontal`, `Folder`, `FolderOpen`, `File`, `Home`, `Settings` | same name + `Icon` (`XIcon`, `PlusIcon`, `SettingsIcon`...) |
 | `ChevronLeft`, `ChevronRight`, `ChevronUp`, `ChevronDown`, `ChevronFirst`, `ChevronLast` | same name + `Icon` |
 | `ArrowUp`, `ArrowDown`, `ArrowUpDown`, `PanelLeftOpen`, `PanelLeftClose` | same name + `Icon` |
