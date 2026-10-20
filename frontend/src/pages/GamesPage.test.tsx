@@ -212,6 +212,26 @@ describe("Games screen and assistant (F3)", () => {
     expect(within(dialog).getByRole("button", { name: "Next" })).toBeDisabled();
   });
 
+  it("moves through the game list with the arrow keys (listbox, RD18)", async () => {
+    const user = userEvent.setup();
+    const { backend } = fakeWorld({ discovered: [] });
+    const base = backend.gamesSupport;
+    backend.gamesSupport = async () => {
+      const list = await base();
+      return [...list, { ...list[0]!, gameId: "valheim", gameName: "Valheim" }];
+    };
+    render(<App backend={backend} />);
+    await openGames(user);
+    await user.click(await screen.findByRole("button", { name: "Add game" }));
+    const list = await screen.findByRole("listbox");
+    const options = await within(list).findAllByRole("option");
+    expect(options.length).toBeGreaterThan(1);
+    options[0]!.focus();
+    await user.keyboard("{ArrowDown}");
+    expect(within(list).getAllByRole("option")[1]).toHaveAttribute("aria-selected", "true");
+    expect(document.activeElement).toBe(within(list).getAllByRole("option")[1]);
+  });
+
   it("recognizes a folder chosen by hand and manages that game from it (R5d)", async () => {
     const user = userEvent.setup();
     const { backend } = fakeWorld({ discovered: [] });

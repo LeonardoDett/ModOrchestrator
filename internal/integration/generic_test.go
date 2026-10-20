@@ -5,10 +5,13 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
+	"strings"
 	"testing"
 
 	"modorchestrator/internal/core/application/games"
+	"modorchestrator/internal/core/application/imports"
 	pluginsvc "modorchestrator/internal/core/application/plugins"
+	"modorchestrator/internal/core/domain/migration"
 	"modorchestrator/internal/core/domain/operation"
 	"modorchestrator/internal/core/domain/plugin"
 )
@@ -86,6 +89,39 @@ func TestGameWithoutPluginsWorksAndAnswersUnsupported(t *testing.T) {
 			t.Errorf("%s on a game without plugins: want %s, got %v", cmd, pluginsvc.CodeNoPlugins, err)
 		}
 	}
+	// Commands the redesign added (RD5–RD17) answer a game without plugins
+	// with a result or a coded error, never an unmapped ("internal") one.
+	other := map[string]func() error{
+		"TagList":      func() error { _, err := e.lib.TagList(ctx, id); return err },
+		"CategoryList": func() error { _, err := e.lib.CategoryList(ctx, id); return err },
+		"ModListText":  func() error { _, err := e.lib.ModListText(ctx, id); return err },
+		"ModFlags":     func() error { _, err := e.diag.ModFlags(ctx, id); return err },
+		"Features":     func() error { _, err := e.games.Features(ctx, id); return err },
+		"ProfileList":  func() error { _, err := e.prof.List(ctx, id); return err },
+		"Pairs":        func() error { _, err := e.conf.Pairs(ctx, id, false, ""); return err },
+		"ModConflicts": func() error { _, err := e.conf.ModConflicts(ctx, id, ids[0]); return err },
+		"ImportSources": func() error {
+			_, err := e.imp.Sources(ctx, id)
+			return err
+		},
+		"ImportPreview": func() error {
+			_, err := e.imp.Preview(ctx, id, migration.Source{Manager: "nobody", Path: e.dir})
+			var ierr *imports.Error
+			if errors.As(err, &ierr) && ierr.Code() == imports.CodeSourceUnknown {
+				return nil
+			}
+			return err
+		},
+	}
+	for cmd, run := range other {
+		if err := run(); err != nil {
+			t.Errorf("%s on a game without plugins: %v", cmd, err)
+		}
+	}
+	if text, err := e.lib.ModListText(ctx, id); err != nil || !strings.Contains(text, "[x] A") {
+		t.Errorf("mod list text: %q %v", text, err)
+	}
+
 	// The lock is released by every refused command.
 	if holder, busy := instancelockHolder(e); busy {
 		t.Fatalf("instance left locked by %s", holder)

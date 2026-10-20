@@ -2866,6 +2866,7 @@ export const ptBR: Record<MessageKey, string> = {
   "profiles.countNoun.one": "perfil",
   "profiles.countNoun.other": "perfis",
   "profiles.card.createdAgo": "Criado {ago}",
+  "profiles.selectPoints": "Mostrar os pontos de restauração deste perfil",
   "profiles.deployNow": "Implantar",
   "profiles.deployed": "Implantado",
   "profiles.notDeployed": "Não implantado",

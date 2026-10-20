@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { CheckIcon, FileIcon, FolderOpenIcon, MinusIcon, PlusIcon, SearchIcon, XIcon } from "dettmann-ui/icons";
-import { Alert, Button, ConfirmDialog, Input, Loader, Modal, SegmentedControl, Tag, useToast } from "dettmann-ui";
+import { Alert, Button, ConfirmDialog, Input, Loader, Modal, SegmentedControl, Tag, useRovingTabindex, useToast } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { useGamesCatalog, useGamesView } from "../../bridge/queries";
 import type { FolderRecognition, GameSupport } from "../../bridge/types";
@@ -72,6 +72,8 @@ function Body({ onClose, onManage, onCreate }: Omit<AddGameDialogProps, "open">)
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<LevelFilter>("all");
   const [chosen, setChosen] = useState<string | null>(null);
+  // The game list is a listbox: arrows, Home and End move the choice.
+  const roving = useRovingTabindex({ orientation: "vertical", loop: false });
   const [deleting, setDeleting] = useState<GameSupport | null>(null);
   // R5d: a folder chosen by hand and the games it holds.
   const [folder, setFolder] = useState<{ root: string; found: FolderRecognition[] } | null>(null);
@@ -177,11 +179,16 @@ function Body({ onClose, onManage, onCreate }: Omit<AddGameDialogProps, "open">)
               return (
                 <div
                   key={g.gameId}
+                  ref={(el) => (el ? roving.register(g.gameId, el) : roving.unregister(g.gameId))}
                   role="option"
                   aria-selected={on}
-                  tabIndex={0}
+                  tabIndex={on ? 0 : -1}
                   onClick={() => setChosen(g.gameId)}
-                  onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setChosen(g.gameId)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") setChosen(g.gameId);
+                    const next = roving.handleKeyDown(g.gameId, e);
+                    if (next) setChosen(next);
+                  }}
                   className={`focus-ring-inset relative grid h-15 cursor-pointer grid-cols-[2.25rem_minmax(0,1fr)_auto_auto] items-center gap-3.5 border-b border-border-subtle pl-6 pr-5 motion-transition ${on ? "bg-selected before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-brand-fill" : "hover:bg-state-hover"}`}
                 >
                   <span className="flex size-9 items-center justify-center rounded-control border border-border bg-sunken text-[0.6875rem] font-bold text-fg-muted">{gameInitials(g.gameName)}</span>

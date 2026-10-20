@@ -146,6 +146,19 @@ func snapshot(t *testing.T, root string) map[string]string {
 	return out
 }
 
+// withoutMarkerContent keeps the deployment markers of a snapshot but not
+// their content (it carries the time of the deploy).
+func withoutMarkerContent(s map[string]string) map[string]string {
+	out := make(map[string]string, len(s))
+	for k, v := range s {
+		if strings.HasSuffix(k, game.DeploymentMarker) {
+			v = ""
+		}
+		out[k] = v
+	}
+	return out
+}
+
 func diffSnapshots(a, b map[string]string) []string {
 	var out []string
 	for k, v := range a {
@@ -237,8 +250,11 @@ func TestDeployPurgeDeploy(t *testing.T) {
 	}
 
 	// INV-DEP-07: deploy after purge restores the state before the purge.
+	// The deployment marker records when it was applied (to the second), so
+	// only its presence is compared: the content differed whenever the two
+	// deploys fell in different seconds, which made this test flaky (RD18).
 	e.deploy(deploysvc.KindDeploy)
-	if d := diffSnapshots(deployed, snapshot(t, e.inst.Root)); len(d) != 0 {
+	if d := diffSnapshots(withoutMarkerContent(deployed), withoutMarkerContent(snapshot(t, e.inst.Root))); len(d) != 0 {
 		t.Fatalf("purge then deploy differs: %v", d)
 	}
 	_ = alpha

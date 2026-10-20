@@ -2870,6 +2870,7 @@ export const en = {
   "profiles.countNoun.one": "profile",
   "profiles.countNoun.other": "profiles",
   "profiles.card.createdAgo": "Created {ago}",
+  "profiles.selectPoints": "Show the restore points of this profile",
   "profiles.deployNow": "Deploy",
   "profiles.deployed": "Deployed",
   "profiles.notDeployed": "Not deployed",

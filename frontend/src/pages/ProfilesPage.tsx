@@ -99,29 +99,29 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
         {profiles.status === "error" ? <ErrorAlert title="profiles.loadError" error={profiles.error} onRetry={profiles.reload} /> : null}
         {profiles.status === "loading" ? <LoadingState rows={2} /> : null}
 
-        <div role="listbox" aria-label={t("profiles.listLabel")} className="grid shrink-0 grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
+        <div role="list" aria-label={t("profiles.listLabel")} className="grid shrink-0 grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-4">
           {list.map((p) => {
             const blocked = deleteBlock(p);
             const on = selected?.id === p.id;
             return (
               <div
                 key={p.id}
-                role="option"
-                aria-selected={on}
+                role="listitem"
                 aria-current={p.active ? "true" : undefined}
-                tabIndex={0}
                 onClick={() => setSelectedId(p.id)}
-                onKeyDown={(e) => {
-                  if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
-                    e.preventDefault();
-                    setSelectedId(p.id);
-                  }
-                }}
-                className={`focus-ring flex cursor-pointer flex-col overflow-hidden rounded-card border bg-surface motion-transition ${on ? "border-border-strong ring-1 ring-border-strong" : "border-border hover:border-border-strong"}`}
+                className={`flex cursor-pointer flex-col overflow-hidden rounded-card border bg-surface motion-transition ${on ? "border-border-strong ring-1 ring-border-strong" : "border-border hover:border-border-strong"}`}
               >
                 <div className="flex flex-col gap-3 px-4 pb-3.5 pt-4">
                   <div className="flex min-h-5.5 items-center gap-2">
-                    <span className="min-w-0 flex-1 truncate text-md font-semibold text-fg">{p.name}</span>
+                    <button
+                      type="button"
+                      aria-pressed={on}
+                      title={t("profiles.selectPoints")}
+                      onClick={() => setSelectedId(p.id)}
+                      className="focus-ring min-w-0 flex-1 truncate rounded-chip text-left text-md font-semibold text-fg"
+                    >
+                      {p.name}
+                    </button>
                     {p.active ? (
                       <Tag size="md" shape="pill" intent="brand">
                         {t("profiles.active")}

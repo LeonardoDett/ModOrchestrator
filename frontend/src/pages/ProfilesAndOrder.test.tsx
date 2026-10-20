@@ -165,8 +165,8 @@ describe("Profiles (F5)", () => {
     const { state, backend } = world();
     render(<App backend={backend} />);
     await open(user, "Profiles");
-    const list = await screen.findByRole("listbox", { name: "Profiles" });
-    const cards = within(list).getAllByRole("option");
+    const list = await screen.findByRole("list", { name: "Profiles" });
+    const cards = within(list).getAllByRole("listitem");
     expect(cards).toHaveLength(2);
     expect(within(cards[0]!).getByText("Active")).toBeInTheDocument();
     expect(within(cards[0]!).getByText("Not deployed")).toBeInTheDocument();
@@ -191,8 +191,8 @@ describe("Profiles (F5)", () => {
     state.profiles = state.profiles.map((p) => ({ ...p, plugins: 4, deployed: p.id === "p2" }));
     render(<App backend={backend} />);
     await open(user, "Profiles");
-    const list = await screen.findByRole("listbox", { name: "Profiles" });
-    expect(within(within(list).getAllByRole("option")[1]!).getByText("Deployed")).toBeInTheDocument();
+    const list = await screen.findByRole("list", { name: "Profiles" });
+    expect(within(within(list).getAllByRole("listitem")[1]!).getByText("Deployed")).toBeInTheDocument();
     expect(await screen.findByText("The active profile is Default, but the game folder still has Survival. Deploy so the game uses the active profile.")).toBeInTheDocument();
     expect(within(list).queryByText("active plugins")).not.toBeInTheDocument();
   });

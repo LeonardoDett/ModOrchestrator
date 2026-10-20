@@ -6,6 +6,8 @@ Conferência item a item de `references/vortex/VORTEX-12-feature-inventory.md`: 
 
 Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente (registrada no `plano-de-desenvolvimento.md` da fase) · — fora da V1 por decisão (DEFER, REJECT, N/A).
 
+**Revisão de 2026-10-20 (RD18, depois do redesign):** os itens continuam presentes nas telas novas; o detalhe do mod virou modal com abas (D121), os menus de Mods, Perfis, Diagnóstico, Notificações e Configurações seguem as pranchas (RD17) e a importação do MO2 e do Vortex saiu do DEFER (D128). Os testes citados abaixo foram reescritos junto com cada tela e continuam valendo.
+
 **Resultado: todos os itens ADOPT/ADAPT da V1 estão presentes.** Nenhum ficou de fora. As pendências são demonstrações manuais em jogo real (F10–F12) e as lacunas já registradas (D100: redescoberta/adoção depois de perder o banco; D106: variante GOG/Epic de instalação localizada manualmente).
 
 ## 1. Extensões internas do núcleo
@@ -17,7 +19,7 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | `symlink_activator` | ADOPT | ✓ | `deployment/apply.go` (`MethodSymlink`), disponível só com privilégio de symlink · `deploy_test.go` | F7 |
 | `null_activator` | ADAPT (`method_unavailable`) | ✓ | `deployment/desired.go`, `errors.go` | F7 |
 | `installer_fomod_*` | ADOPT (D030) | ✓* | `domain/fomod`, `library/fomod.go` · `integration/fomod_fixtures_test.go` (14 FOMODs reais) | F10 |
-| `category_management` | ADOPT | ✓ | `library/categories.go` · `ModDialogs.tsx` (árvore) | F4 |
+| `category_management` | ADOPT | ✓ | `library/categories.go` · `OrganizationDialog.tsx` (árvore, cor e ícone, D123) | F4, RD5 |
 | `profile_management` | ADAPT (sempre ligado, D037) | ✓ | `application/profiles` · `ProfilesAndOrder.test.tsx` | F5 |
 | `gamemode_management` | ADOPT | ✓ | `application/games`, adapters · `adapters/gamesflow/flow_test.go`, `GamesPage.test.tsx` | F3 |
 | `gamebryo_plugin_management` | ADAPT (sort nativo, D041) | ✓* | `application/plugins`, `adapters/skyrimse/plugins.go` · `integration/plugins_test.go` | F11 |
@@ -56,7 +58,8 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | `theme-switcher` | ADAPT (temas da lib) | ✓ | `theme.mode`, `theme.id` (Settings › Tema) | F12 |
 | `changelog-dashlet` | ADAPT | ✓ | dashlet Novidades (`whats_new`, D091 item 8); notas por versão no `CHANGELOG.md` e no atualizador (D105) | F12, F15 |
 | `extension-dashlet` | DEFER | — | | |
-| `local-gamesettings`, `gamebryo-savegame-management`, `gamebryo-archive-support`, `gamebryo-test-settings`, `mo-import`, `nmm-import-tool`, `common-interpreters` | DEFER | — | | |
+| `mo-import` (e importação do Vortex) | ADOPT (D128) | ✓* | `application/imports`, `infrastructure/managers/{mo2,vortex}` · `integration/imports_test.go`, `ImportDialogs.test.tsx`; falta a demonstração com instalações reais | RD15, RD16 |
+| `local-gamesettings`, `gamebryo-savegame-management`, `gamebryo-archive-support`, `gamebryo-test-settings`, `nmm-import-tool`, `common-interpreters` | DEFER | — | | |
 | `fnis-integration`, `feedback`, `issue-tracker`, `documentation` | REJECT | — | | |
 | `gamebryo-archive-invalidation`, `morrowind-plugin-management`, `mtframework-arc-support`, `quickbms-support` | N/A | — | | |
 

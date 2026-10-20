@@ -333,7 +333,9 @@ Concluída em 2026-10-20: DLG-31 em `ui/telas/dialogos.md`. A oferta aparece no 
 - **Pronto quando:** cada parte tem prancha aprovada, documento reescrito e passou pelo aceite da regra 5; `ProfilesAndOrder.test.tsx`, `Diagnostics.test.tsx` e `F12.test.tsx` reescritos na parte correspondente.
 - **Sem a capability:** o filtro "contém" só aparece quando o adapter classifica arquivos: some no `generic` (teste). A aba Plugins das Configurações e a seção "vale para [jogo]" vêm do backend, como na RD4: sem `plugins`, a aba não existe. Perfis não mostra estado de plugin nem ordem de carga para quem não tem a capability. Diagnóstico lista só os checks que o adapter registra; nenhum código de plugin aparece no `generic` nem no Valheim. Teste de cada tela com workspace `generic`.
 
-### RD18. Fechamento
+### RD18. Fechamento ✅
+
+Concluída em 2026-10-20: relatório em `propostas/2026-10-20-fechamento-redesign.md` (orçamento por tela, auditoria com os P1 corrigidos, falha intermitente explicada, comandos novos no teste do `generic`, paridade e primeiros passos revistos). Ficam com o Leonardo as demonstrações em jogo real, o percurso só com teclado de ponta a ponta e a revisão independente da lib.
 
 - **Objetivo:** consistência do conjunto.
 - **Entregáveis:** medição do orçamento em todas as telas com jogo; revisão independente das ondas 2 a 4 da lib (pendência P3); percurso de todos os fluxos de `ui/02` só com teclado; `docs-ia/08-paridade-vortex-v1.md` revisto; `docs/primeiros-passos.md` e `getting-started.md` com as telas novas; investigação da falha intermitente da suíte Go (`TestDeployPurgeDeploy`); demonstrações manuais pendentes das F10 a F12 refeitas nas telas novas.

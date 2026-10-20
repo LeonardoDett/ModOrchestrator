@@ -157,10 +157,9 @@ export function ProblemsPanel({ instance }: { instance: string }) {
                     {g.rows.map((d) => {
                       const on = current?.key === d.key;
                       return (
+                        <div key={d.key} role="listitem">
                         <button
-                          key={d.key}
                           type="button"
-                          role="listitem"
                           aria-current={on}
                           onClick={() => setSelected(d.key)}
                           className={`focus-ring-inset relative grid h-14.5 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 border-b border-border-subtle px-4 text-left motion-transition ${on ? "bg-selected before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-brand-fill" : "hover:bg-state-hover"}`}
@@ -180,6 +179,7 @@ export function ProblemsPanel({ instance }: { instance: string }) {
                             {moduleLabel(i18n, d.module)}
                           </Tag>
                         </button>
+                        </div>
                       );
                     })}
                   </div>

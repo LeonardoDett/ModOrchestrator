@@ -16,34 +16,36 @@ Portable version: the release `.zip` runs without installing. Data is kept in th
 
 ## 2. Manage the game
 
-1. Open Mod Orchestrator. The **Dashboard** shows **First steps**.
-2. In **Games**, the app already looked for Steam, GOG, Epic and registry installations. Click **Manage** on Skyrim Special Edition. If it is not there, use **Locate manually…** and pick the folder with `SkyrimSE.exe`.
-3. The assistant suggests the game's folders: **staging** (where mods stay isolated), archives and backups of originals. Prefer the game's drive: deploy then uses hardlinks, which are fast and take no extra space.
+1. Open Mod Orchestrator. **Home** shows the **First steps** and what needs attention.
+2. In **Library**, click **Add game**. The list shows the supported games; the app has already looked for installations in Steam, GOG, Epic and the registry. Choose Skyrim Special Edition and click **Manage**. If it is not there, use **Point to the folder** and choose the folder that has `SkyrimSE.exe`: the app tells which game it recognized.
+3. The wizard suggests the game folders: **staging** (where mods stay isolated), archives and backups of originals. Prefer the game's drive: deployment then uses hardlinks, which are fast and take no extra space.
+4. If Vortex or Mod Organizer 2 already manage this game, the app offers **Import everything** (mods, order, rules, profiles and plugins, copied; nothing changes in the other program), **Choose what to import** or **Start from scratch**. You can import later, in **Mods › Import › From another manager…**.
 
-Nothing is written to the game folder in this step.
+Nothing is written to the game folder at this step.
 
-## 3. Import mods
+## 3. Add mods
 
-1. Open **Mods** and use **Import file** (ZIP, 7z or RAR) or **Import folder…**. You can also drop several files on the list.
-2. Mods with a FOMOD installer open the assistant with the author's options. SKSE goes to the game root by itself.
-3. Enable the mods you want. The list order is the priority: the lower a mod, the more file conflicts it wins. Rules ("wins over", "requires", "incompatible") are in **Rules**, and **Conflicts** shows which mod wins each file.
+1. Open **Mods** and use **Add mods** (ZIP, 7z or RAR) or the **Import** menu (file, folder or another manager). You can also drag several files onto the list; they go to the **Install queue**.
+2. Mods with a FOMOD installer open the wizard with the author's options. SKSE goes to the game root by itself.
+3. Enable the mods you want. The order is the profile's priority: the later one wins file conflicts. **Filters** splits by status, category, tags, conflicts and contents; the detail of each mod (click the row) shows files, conflicts and history. Rules are in **More actions › Rules between mods**, and the **Conflicts** screen shows who wins each pair.
 
 ## 4. Deploy
 
-1. Click **Deploy** (status bar or Dashboard). **See what the deploy will do** shows the plan before it runs.
-2. Original game files replaced by a mod are kept outside the game folder and come back on **Purge**. Nothing the app did not put there is deleted.
-3. If another tool changes deployed files, the app tells you and asks for a decision per file in **Review changes**.
+1. With automatic deployment on (the default), the game folder follows the list by itself. Otherwise use the deployment card in the game menu or **Mods › More actions › Deploy now**; the plan shows what will change before it runs.
+2. Original game files a mod replaces are kept outside the game folder and come back with **Clean the deployment**. Nothing the app did not place is deleted.
+3. If another tool changes deployed files, the app warns and asks for a decision per file.
 
 ## 5. Plugins and play
 
-1. In **Plugins**, enable the `.esp`/`.esm`/`.esl` files and use **Sort now** for automatic ordering. `plugins.txt` is written on deploy.
-2. Click **Play**. The app checks that the deploy is current and nothing blocks the game, and launches through `skse64_loader.exe` when SKSE is installed.
+1. In **Plugins**, enable the plugins and use **Sort now** for the automatic order; **Load order** shows why each one is where it is and **Apply in the game** writes the order file.
+2. Click **Play**, at the foot of the game menu. The app checks that the deployment is up to date and that nothing blocks, and launches through `skse64_loader.exe` when SKSE is installed.
 
 ## When something goes wrong
 
-- **Diagnostics** lists problems, from what stops the game from working to what is only informative, each with an action that leads to the fix.
-- **Diagnostics › History** shows what changed and undoes it when possible; **Profiles** keep restore points.
-- To ask for help, use **Export diagnostic package** in Diagnostics › Problems and attach it to a GitHub issue. Logs are in `%APPDATA%\ModOrchestrator\logs`.
+- **Diagnostics** lists the problems by severity; each one says what it causes, what was found and how to solve it, with the action button.
+- **Diagnostics › History** shows what changed and undoes it when possible; **Profiles** keeps restore points.
+- The bell shows the notifications; **Need action** separates the ones that need you.
+- To ask for help, use **Export diagnostic package** in Diagnostics and attach it to the GitHub issue. Logs are in `%APPDATA%\ModOrchestrator\logs`.
 
 ## Updates
 

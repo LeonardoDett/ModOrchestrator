@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { GripVertical } from "lucide-react";
 import { PackageIcon, PlusIcon, XIcon } from "dettmann-ui/icons";
-import { Button, Icon, Input, Modal, SwatchPicker, Tag, Typography } from "dettmann-ui";
+import { Button, Icon, Input, Modal, SwatchPicker, Tag, Typography, useRovingTabindex } from "dettmann-ui";
 import { errorMessage, type UIError } from "../../bridge/errors";
 import { useBackend } from "../../bridge/backend-context";
 import { useCategories, useModList, useTags, useWorkspace } from "../../bridge/queries";
@@ -344,6 +344,8 @@ function TagsEditor({ instance, tags, onShowTag, onClose }: { instance: string; 
   const run = useAction();
   const mods = useModList(instance);
   const [selected, setSelected] = useState<string>(tags[0]?.name ?? NEW);
+  // The tag list is a listbox: arrows, Home and End move the choice.
+  const roving = useRovingTabindex({ orientation: "vertical", loop: false });
   const current = tags.find((x) => x.name === selected);
   const [name, setName] = useState(current?.name ?? "");
   const [color, setColor] = useState(current?.color ?? "");
@@ -387,10 +389,16 @@ function TagsEditor({ instance, tags, onShowTag, onClose }: { instance: string; 
               return (
                 <button
                   key={x.name}
+                  ref={(el) => (el ? roving.register(x.name, el) : roving.unregister(x.name))}
                   type="button"
                   role="option"
                   aria-selected={on}
+                  tabIndex={on || (selected === NEW && x === tags[0]) ? 0 : -1}
                   onClick={() => setSelected(x.name)}
+                  onKeyDown={(e) => {
+                    const next = roving.handleKeyDown(x.name, e);
+                    if (next) setSelected(next);
+                  }}
                   className={`focus-ring-inset flex h-9.5 items-center gap-2.5 rounded-control px-2.5 text-[13px] ${on ? "bg-selected shadow-[inset_2px_0_0_var(--color-brand-fill)]" : "hover:bg-state-hover"}`}
                 >
                   <Tag size="sm" dot {...(c ? { color: c } : {})} className="border-transparent">
