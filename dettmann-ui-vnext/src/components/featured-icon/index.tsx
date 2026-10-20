@@ -53,6 +53,11 @@ interface FeaturedIconProps
   label?: string;
   /** Família de cor (padrão `success`); `neutral` usa papéis de superfície. */
   intent?: Intent;
+  /**
+   * D-040: `tile` is a 32 px tinted square with the icon (the mark of a row in a list
+   * of notifications or problems), in place of the two discs.
+   */
+  shape?: "disc" | "tile";
 }
 
 const sizeToIconSize = {
@@ -81,9 +86,28 @@ export function FeaturedIcon({
   intent = "success",
   size,
   label,
+  shape = "disc",
   className,
   ...props
 }: FeaturedIconProps) {
+  if (shape === "tile") {
+    return (
+      <span
+        className={cn(
+          "inline-flex size-8 shrink-0 items-center justify-center rounded-control",
+          intent === "neutral" ? "bg-sunken text-fg-muted" : "bg-intent-subtle text-intent-text",
+          className,
+        )}
+        role={label ? "img" : undefined}
+        aria-label={label}
+        aria-hidden={label ? undefined : true}
+        {...intentData(intent === "neutral" ? undefined : intent)}
+        {...props}
+      >
+        <Icon icon={icon} size="sm" color="current" />
+      </span>
+    );
+  }
   const styles = featuredIconVariants({ paint: intent === "neutral" ? "neutral" : "tinted", size });
   const iconSize = sizeToIconSize[size ?? "lg"];
 

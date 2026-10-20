@@ -65,7 +65,7 @@ Reservado, não renderizado: Downloads (V2).
 - **‹ Biblioteca**: volta ao nível do app.
 - **Seletor de jogo**: ícone e nome do jogo ativo; troca o jogo sem passar pela Biblioteca.
 - **Seletor de perfil**: perfis da instância e "Gerenciar perfis…". Trocar é ativar (core/07 §4).
-- **Notificações**: sino com contagem. Substitui o indicador de status de deploy, o contador de problemas e o indicador de operações que ficavam na topbar: o que aparecia neles chega como notificação ou como estado do cartão de implantação (§ Menu lateral). O painel aberto está em `JogoNotificacoes` (aguardando revisão; plano, parte 17a).
+- **Notificações**: sino com contagem. Substitui o indicador de status de deploy, o contador de problemas e o indicador de operações que ficavam na topbar: o que aparecia neles chega como notificação ou como estado do cartão de implantação (§ Menu lateral). O painel aberto segue `JogoNotificacoes` (RD17a): 440 px, cabeçalho com "N não lidas" e "Marcar todas como lidas"; filtro Todas, Não lidas e Pedem ação; cada linha com o ponto de não lida, a marca da gravidade (problema) ou do resultado (operação concluída, cancelada, com falha), título, detalhe, a ação da linha ("Ver o problema", "Ver a operação", "Ver a atualização"; operação concluída não tem ação), a idade e "Dispensar"; rodapé com "Ver todos os problemas no Diagnóstico" e "Limpar lidas". "Pedem ação" são as linhas com ação.
 - **Ajuda**: atalhos de teclado, abrir log, pacote de diagnóstico, sobre.
 - **Controles da janela**, quando a janela é sem moldura (`ui.customTitleBar`).
 - Sem campo de busca e sem botão "Jogar": a busca é da tela (`Ctrl+F`) e da paleta (`Ctrl+K`, §5); o "Jogar" fica no rodapé do menu.

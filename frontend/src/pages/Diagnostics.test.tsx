@@ -175,7 +175,7 @@ describe("Diagnostics (F9)", () => {
     expect(within(list).getByText("and 1 more like it")).toBeInTheDocument();
     expect(within(list).getByText("Deploy failed")).toBeInTheDocument();
     expect(within(list).getByText("Alpha and Beta are incompatible; disable one of them or the rule before deploying.")).toBeInTheDocument();
-    await user.click(within(list).getAllByRole("button", { name: "Open" })[0]!);
+    await user.click(within(list).getByRole("button", { name: "See the problem" }));
     expect(calls).toContain("read:n1");
     expect(await screen.findByRole("grid", { name: "Problems" })).toBeInTheDocument();
   });

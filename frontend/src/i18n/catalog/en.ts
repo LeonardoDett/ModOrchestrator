@@ -2811,6 +2811,19 @@ export const en = {
   "mods.rule.source.import": "Imported",
   "import.all.descriptionNoRules": "{mods} mods and {perfis} profiles. Takes {size}, you have {free} free.",
   "import.all.descriptionNoRulesPlugins": "{mods} mods, {perfis} profiles and the plugins. Takes {size}, you have {free} free.",
+  "notif.unreadCount.one": "{count} unread",
+  "notif.unreadCount.other": "{count} unread",
+  "notif.read": "Read",
+  "notif.filter": "Filter",
+  "notif.filter.all": "All",
+  "notif.filter.unread": "Unread",
+  "notif.filter.action": "Need action",
+  "notif.action.problem": "See the problem",
+  "notif.action.update": "See the update",
+  "notif.action.operation": "See the operation",
+  "notif.dismissOne": "Dismiss: {title}",
+  "notif.seeAll": "See every problem in Diagnostics",
+  "notif.clearRead": "Clear read",
 } as const;
 
 export type MessageKey = keyof typeof en;

@@ -29,6 +29,8 @@ const chipVariants = defineRecipe({
     pressed: {
       true: { chip: "border-intent-border bg-intent-subtle text-intent-text hover:state-layer-hover", count: "text-intent-text" },
       false: { chip: "border-border bg-surface text-fg-muted hover:state-layer-hover", count: "text-fg-subtle" },
+      /** D-040: pressed without the brand tint (a view filter in a panel header). */
+      neutral: { chip: "border-border-strong bg-raised text-fg hover:state-layer-hover", count: "text-fg-muted" },
     },
     empty: {
       true: { chip: "text-fg-subtle" },
@@ -58,6 +60,8 @@ export interface FilterChipProps extends Omit<ComponentPropsWithoutRef<"button">
   count?: number;
   /** Ponto colorido da paleta categórica antes do texto. */
   color?: CategoryColor;
+  /** D-040: `neutral` marca o pressionado sem a tinta da marca (filtro de visão num painel). */
+  tone?: "brand" | "neutral";
 }
 
 /**
@@ -75,13 +79,13 @@ export interface FilterChipProps extends Omit<ComponentPropsWithoutRef<"button">
  * ```
  */
 const FilterChipRoot = forwardRef<HTMLButtonElement, FilterChipProps>(function FilterChip(
-  { children, pressed: pressedProp, defaultPressed = false, onPressedChange, value, count, color, className, onClick, ...props },
+  { children, pressed: pressedProp, defaultPressed = false, onPressedChange, value, count, color, tone = "brand", className, onClick, ...props },
   ref,
 ) {
   const group = useContext(GroupContext);
   const [own, setOwn] = useControllableState({ value: pressedProp, defaultValue: defaultPressed, onChange: onPressedChange });
   const pressed = group && value !== undefined ? group.value.includes(value) : own;
-  const s = chipVariants({ pressed, empty: count === 0 });
+  const s = chipVariants({ pressed: pressed && tone === "neutral" ? "neutral" : pressed, empty: count === 0 });
   return (
     <button
       ref={ref}
@@ -89,7 +93,7 @@ const FilterChipRoot = forwardRef<HTMLButtonElement, FilterChipProps>(function F
       aria-pressed={pressed}
       data-state={pressed ? "on" : "off"}
       data-filter-chip=""
-      data-intent={pressed ? "brand" : undefined}
+      data-intent={pressed && tone === "brand" ? "brand" : undefined}
       className={cn(s.chip(), className)}
       onClick={(event) => {
         onClick?.(event);

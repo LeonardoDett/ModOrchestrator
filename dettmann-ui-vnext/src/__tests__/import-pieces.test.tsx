@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { Checkbox } from "../components/checkbox";
+import { FeaturedIcon } from "../components/featured-icon";
+import { FilterChip } from "../components/filter-chip";
+import { BellIcon } from "../icons";
 import { Progress } from "../components/progress";
 import { Radio } from "../components/radio";
 
@@ -45,5 +48,25 @@ describe("import board pieces", () => {
     expect(screen.getByRole("progressbar", { name: "Disco" })).toHaveClass("bg-border");
     render(<Progress.Root value={20} aria-label="Outro" />);
     expect(screen.getByRole("progressbar", { name: "Outro" })).toHaveClass("bg-sunken");
+  });
+
+  it("FeaturedIcon tile is one tinted 32 px square (notification rows)", () => {
+    render(<FeaturedIcon shape="tile" icon={BellIcon} intent="warning" label="Aviso" />);
+    const tile = screen.getByRole("img", { name: "Aviso" });
+    expect(tile).toHaveClass("size-8", "rounded-control", "bg-intent-subtle");
+    expect(tile).toHaveAttribute("data-intent", "warning");
+  });
+
+  it("FilterChip neutral tone presses without the brand tint", () => {
+    render(
+      <FilterChip.Group type="single" aria-label="Filtro" defaultValue={["all"]}>
+        <FilterChip value="all" tone="neutral">Todas</FilterChip>
+        <FilterChip value="unread" tone="neutral">Não lidas</FilterChip>
+      </FilterChip.Group>,
+    );
+    const all = screen.getByRole("button", { name: "Todas" });
+    expect(all).toHaveAttribute("aria-pressed", "true");
+    expect(all).not.toHaveAttribute("data-intent");
+    expect(all).toHaveClass("bg-raised");
   });
 });
