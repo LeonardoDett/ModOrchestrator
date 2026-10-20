@@ -3563,6 +3563,22 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class ModFlagsDTO {
+	    modId: string;
+	    error: boolean;
+	    missingRequirement: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModFlagsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.modId = source["modId"];
+	        this.error = source["error"];
+	        this.missingRequirement = source["missingRequirement"];
+	    }
+	}
 	export class ModHistoryDTO {
 	    id: string;
 	    type: string;

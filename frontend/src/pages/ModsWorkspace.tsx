@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
-import { Eraser, FolderInput, HardDrive, LayoutList, ListChecks, ListTree, PanelsTopLeft, SlidersHorizontal } from "lucide-react";
-import { FolderPlusIcon, MoreHorizontalIcon, PackageIcon, PlusIcon, RocketIcon, SearchIcon, TrashIcon, UndoIcon } from "dettmann-ui/icons";
-import { ActionBar, Alert, Badge, Button, ContextMenu, EmptyState, FeaturedIcon, FileDropzone, Icon, Indicator, Input, Menu, Popover, ResourcePage, SegmentedControl, Stack, Typography, useToast, type ContextMenuItem } from "dettmann-ui";
+import { Eraser, FolderInput, HardDrive, LayoutList, ListChecks, ListTree, PanelsTopLeft } from "lucide-react";
+import { CheckIcon, DownloadIcon, FileSearchIcon, FolderOpenIcon, FolderPlusIcon, GitCompareIcon, HistoryIcon, LayersIcon, ListOrderedIcon, MinusIcon, MoreHorizontalIcon, PackageIcon, PlusIcon, RocketIcon, SearchIcon, TrashIcon, UndoIcon, UploadIcon } from "dettmann-ui/icons";
+import { ActionBar, Alert, Badge, Button, ContextMenu, EmptyState, FeaturedIcon, FileDropzone, Icon, Indicator, Input, Menu, ResourcePage, SegmentedControl, Stack, Typography, useToast, type ContextMenuItem } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
 import { ImportOfferDialog } from "../features/imports/ImportDialogs";
-import { useCategories, useConflictIndicators, useImportQueue, useInstanceSettings, useModList, useModOrder, useOperations, useRuleCycle, useTags, useWorkspace } from "../bridge/queries";
+import { useCategories, useConflictIndicators, useImportQueue, useInstanceSettings, useModList, useModOrder, useOperations, useRuleCycle, useModFlags, useTags, useWorkspace } from "../bridge/queries";
 import type { ConflictIndicator, EntryRef, FileLocation, InstanceFolder, ModRow, QueueItem } from "../bridge/types";
 import { ConflictEditorDialog, CycleDialog, FileWinnersDialog } from "../features/conflicts/ConflictDialogs";
 import { useSettings } from "../app/settings-context";
@@ -16,32 +16,17 @@ import { ModDetailDialog } from "../features/mods/ModDetailDialog";
 import { RemoveModsDialog } from "../features/mods/ModDialogs";
 import { OrganizationDialog, type OrganizationTab } from "../features/mods/OrganizationDialog";
 import { CategoryTile, ModsTable, byPriority, type ModsView } from "../features/mods/ModsTable";
-import { MoveToDialog, OrderHistoryDialog, RulesDialog, useMoveMods } from "../features/mods/OrderDialogs";
+import { MoveToDialog, OrderHistoryDialog, RulesDialog, SeparatorDialog, useMoveMods } from "../features/mods/OrderDialogs";
 import { categoryOptions, formatSize, matchesStatus } from "../features/mods/mod-labels";
 import { tagIndex, topLevel } from "../features/mods/category-look";
+import { ModFiltersControl, NO_CATEGORY, NO_FILTERS, matchesFilters, type ModFilterState } from "../features/mods/ModFilters";
 import { entryOf, modRows, type ListRow } from "../features/mods/mod-order";
 import { useDeploy } from "../features/deploy/DeployContext";
 import { ProblemBand } from "../features/diagnostics/ProblemBand";
-import { useI18n } from "../i18n/i18n";
+import { useI18n, type MessageKey } from "../i18n/i18n";
 import { MAIN_ID, useNavigation } from "../shell/navigation";
 import { BusyBand, LoadingState, NoMatch } from "./PageBody";
 
-type ConflictFilter = "all" | "any" | "unreviewed" | "fully_overwritten";
-const CONFLICT_FILTERS = ["all", "any", "unreviewed", "fully_overwritten"] as const;
-
-/** "Conflitos ▾" filter (ui/telas/mods.md §5.1) over the backend indicators. */
-function matchesConflict(c: ConflictIndicator | undefined, filter: ConflictFilter) {
-  switch (filter) {
-    case "all":
-      return true;
-    case "any":
-      return Boolean(c && c.indicator !== "none");
-    case "unreviewed":
-      return Boolean(c && c.unreviewed > 0);
-    case "fully_overwritten":
-      return c?.indicator === "fully_overwritten";
-  }
-}
 
 /** Quick filter of the list (board JogoMods): all, enabled, disabled. */
 type QuickFilter = "all" | "enabled" | "disabled";
@@ -52,7 +37,9 @@ const VIEW_ICONS = { list: LayoutList, nested: ListTree, tabs: PanelsTopLeft } a
 
 /** Tab of the Abas view: every mod, a top-level category, or mods without one. */
 const ALL_TAB = "\u0000all";
-const NO_CATEGORY = "\u0000none";
+
+/** Columns the user can hide (setting mods.hiddenColumns). */
+const OPTIONAL_COLUMNS = ["category", "conflicts", "updated", "size"] as const;
 
 /** Elements with this property receive native file drops (main.go DragAndDrop). */
 export const DROP_TARGET = { "--wails-drop-target": "drop" } as CSSProperties;
@@ -90,7 +77,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   useEffect(() => {
     if (route.filter === "enabled" || route.filter === "disabled") setStatus(route.filter);
   }, [route.filter]);
-  const [category, setCategory] = useState("");
+  const [filters, setFilters] = useState<ModFilterState>(NO_FILTERS);
   const savedView = instanceSettings.status === "ready" ? instanceSettings.data.find((s) => s.key === "mods.view")?.value : undefined;
   const [view, setView] = useState<ModsView>("list");
   useEffect(() => {
@@ -112,10 +99,23 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const [movingTo, setMovingTo] = useState<EntryRef[] | null>(null);
   const [rulesFor, setRulesFor] = useState<{ mod: string | null } | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
-  const [conflictFilter, setConflictFilter] = useState<ConflictFilter>("all");
   const [editingConflicts, setEditingConflicts] = useState<string | null>(null);
   const [filesPair, setFilesPair] = useState<{ a: string; b: string; focus?: FileLocation } | null>(null);
   const [cycleOpen, setCycleOpen] = useState(false);
+  // Mais ações (board JogoModsMenus).
+  const deploy = useDeploy();
+  const deployBlocked = Boolean(deploy.status?.busy) || deploy.status?.kind === "in_sync" || (deploy.status?.foreign.length ?? 0) > 0;
+  const [separatorEditing, setSeparatorEditing] = useState<{ before?: EntryRef } | null>(null);
+  const savedHidden = instanceSettings.status === "ready" ? instanceSettings.data.find((s) => s.key === "mods.hiddenColumns")?.value : undefined;
+  const [hiddenColumns, setHiddenColumns] = useState<string[]>([]);
+  useEffect(() => {
+    if (savedHidden !== undefined) setHiddenColumns(savedHidden.split(",").filter(Boolean));
+  }, [savedHidden]);
+  const toggleColumn = (c: string) => {
+    const next = hiddenColumns.includes(c) ? hiddenColumns.filter((x) => x !== c) : [...hiddenColumns, c];
+    setHiddenColumns(next);
+    void run(() => backend.setInstanceSetting(instance, "mods.hiddenColumns", next.join(",")), { quiet: true });
+  };
 
   // Native drops (files and folders) go to the import queue (§8).
   useEffect(() => backend.onFileDrop((paths) => void run(() => backend.importFiles(instance, paths))), [backend, run, instance]);
@@ -137,14 +137,17 @@ export function ModsWorkspace({ instance }: { instance: string }) {
 
   // Filtering is presentation of rows the backend returned; the order is the
   // priority of the active profile (board JogoMods has no sort or drag).
-  const filterCount = (category !== "" ? 1 : 0) + (conflictFilter !== "all" ? 1 : 0);
+  const flagList = useModFlags(instance);
+  const facts = useMemo(
+    () => ({ conflicts, flags: new Map(flagList.status === "ready" ? flagList.data.map((f) => [f.modId, f]) : []) }),
+    [conflicts, flagList],
+  );
   const visible = useMemo<readonly ListRow[]>(() => {
     const text = query.trim().toLowerCase();
     const matching = rows.filter(
       (r) =>
         matchesStatus(r, status) &&
-        matchesConflict(conflicts.get(r.id), conflictFilter) &&
-        (category === "" || (category === NO_CATEGORY ? r.category === "" : r.category === category)) &&
+        matchesFilters(r, filters, facts) &&
         (view !== "tabs" || tab === ALL_TAB || (tab === NO_CATEGORY ? r.category === "" : topLevel(cats, r.category)?.id === tab)) &&
         (!text ||
           r.name.toLowerCase().includes(text) ||
@@ -153,7 +156,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
           (r.tags ?? []).some((g) => g.toLowerCase().includes(text))),
     );
     return byPriority(modRows(matching, modOrder));
-  }, [rows, modOrder, query, status, category, conflicts, conflictFilter, view, tab, cats]);
+  }, [rows, modOrder, query, status, filters, facts, view, tab, cats]);
 
   // Tabs of the Abas view: the top-level categories with their counts.
   const tabs = useMemo(() => {
@@ -182,8 +185,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const resetFilters = () => {
     setQuery("");
     setStatus("all");
-    setCategory("");
-    setConflictFilter("all");
+    setFilters(NO_FILTERS);
     setTab(ALL_TAB);
   };
 
@@ -328,19 +330,60 @@ export function ModsWorkspace({ instance }: { instance: string }) {
             <MoreHorizontalIcon size="sm" />
           </Button>
         </Menu.Trigger>
-        <Menu.Content>
-          <Menu.Item onSelect={() => setOrganizing("categories")}>{t("mods.organize.menu")}</Menu.Item>
-          <Menu.Item onSelect={() => setRulesFor({ mod: null })}>{t("mods.toolbar.rules")}</Menu.Item>
-          <Menu.Item onSelect={() => setHistoryOpen(true)}>{t("mods.orderHistory.title")}</Menu.Item>
-          <Menu.Item onSelect={() => navigate({ view: "diagnostics", tab: "history", mod: focusedRow ? { id: focusedRow.id, name: focusedRow.name } : undefined })}>
-            {t("mods.toolbar.history")}
+        {/* Board JogoModsMenus: deployment, organization, the list, then tools. */}
+        <Menu.Content className="w-[16.875rem]">
+          <Menu.Item icon={DownloadIcon} disabled={!deploy.status || deployBlocked} onSelect={() => void deploy.deploy()}>
+            {t("mods.more.deploy")}
           </Menu.Item>
-          <Menu.Item onSelect={() => openFolder("game")}>{t("mods.open.game")}</Menu.Item>
-          <Menu.Item onSelect={() => openFolder("staging")}>{t("mods.open.staging")}</Menu.Item>
-          <Menu.Item onSelect={() => openFolder("archives")}>{t("mods.open.archives")}</Menu.Item>
-          {focusedRow?.state === "installed" ? (
-            <Menu.Item onSelect={() => void run(() => backend.openModFolder(focusedRow.id))}>{t("mods.open.mod", { name: focusedRow.name })}</Menu.Item>
-          ) : null}
+          <Menu.Item icon={TrashIcon} disabled={!deploy.status || Boolean(deploy.status.busy) || deploy.status.entries === 0} onSelect={deploy.openPurge}>
+            {t("mods.more.purge")}
+          </Menu.Item>
+          <Menu.Item icon={CheckIcon} onSelect={deploy.openReview}>
+            {t("mods.more.verifyDeploy")}
+          </Menu.Item>
+          <Menu.Separator />
+          <Menu.Item icon={LayersIcon} onSelect={() => setOrganizing("categories")}>
+            {t("mods.more.organize")}
+          </Menu.Item>
+          <Menu.Item icon={GitCompareIcon} onSelect={() => setRulesFor({ mod: null })}>
+            {t("mods.more.rules")}
+          </Menu.Item>
+          <Menu.Item icon={MinusIcon} onSelect={() => setSeparatorEditing({})}>
+            {t("mods.more.separator")}
+          </Menu.Item>
+          <Menu.Sub icon={ListOrderedIcon} label={t("mods.more.columns")}>
+            {OPTIONAL_COLUMNS.map((c) => (
+              <Menu.Item key={c} checked={!hiddenColumns.includes(c)} onSelect={() => toggleColumn(c)}>
+                {t(`mods.more.column.${c}` as MessageKey)}
+              </Menu.Item>
+            ))}
+          </Menu.Sub>
+          <Menu.Separator />
+          <Menu.Item
+            icon={HistoryIcon}
+            onSelect={() => navigate({ view: "diagnostics", tab: "history", mod: focusedRow ? { id: focusedRow.id, name: focusedRow.name } : undefined })}
+          >
+            {t("mods.more.history")}
+          </Menu.Item>
+          <Menu.Sub icon={FolderOpenIcon} label={t("mods.more.openFolder")}>
+            <Menu.Item onSelect={() => openFolder("game")}>{t("mods.open.game")}</Menu.Item>
+            <Menu.Item onSelect={() => openFolder("staging")}>{t("mods.open.staging")}</Menu.Item>
+            <Menu.Item onSelect={() => openFolder("archives")}>{t("mods.open.archives")}</Menu.Item>
+            {focusedRow?.state === "installed" ? (
+              <Menu.Item onSelect={() => void run(() => backend.openModFolder(focusedRow.id))}>{t("mods.open.mod", { name: focusedRow.name })}</Menu.Item>
+            ) : null}
+          </Menu.Sub>
+          <Menu.Item
+            icon={UploadIcon}
+            onSelect={() => void run(() => backend.saveModListFile(instance, t("mods.more.export"), t("mods.more.exportName")), { quiet: true }).then((r) => {
+              if (r.ok && r.value) addToast({ title: t("mods.more.exported"), variant: "success" });
+            })}
+          >
+            {t("mods.more.export")}
+          </Menu.Item>
+          <Menu.Item icon={FileSearchIcon} onSelect={() => void run(() => backend.runHealthChecks(instance), { success: "mods.more.verifiedToast" })}>
+            {t("mods.more.verifyFiles")}
+          </Menu.Item>
         </Menu.Content>
       </Menu.Root>
     </>
@@ -361,6 +404,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         categoryLastOnly={lastOnly}
         conflicts={conflicts}
         tagDefs={tagDefs}
+        hiddenColumns={hiddenColumns}
         embedded={view === "tabs"}
         groupOf={view === "nested" ? groupOf : undefined}
         renderGroup={(group, count) => {
@@ -457,7 +501,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
 
         {mods.status === "ready" && rows.length > 0 ? (
           <>
-            <div className="flex h-12 shrink-0 items-center gap-2.5">
+            <div className="flex min-h-12 shrink-0 flex-wrap items-center gap-2.5 py-1.5">
               <div className="w-80 shrink-0">
                 <Input.Root fullWidth value={query} onChange={setQuery}>
                   <Input.Box>
@@ -466,26 +510,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
                   </Input.Box>
                 </Input.Root>
               </div>
-              <Popover.Root placement="bottom-start">
-                <Popover.Trigger>
-                  <Button startIcon={<Icon icon={SlidersHorizontal} size="sm" />}>
-                    {t("mods.filter.button")}
-                    {filterCount > 0 ? <Badge intent="info">{filterCount}</Badge> : null}
-                  </Button>
-                </Popover.Trigger>
-                <Popover.Content className="w-80 p-4">
-                  <Stack gap="md">
-                    <Input.Root fullWidth value={category} onChange={setCategory}>
-                      <Input.Label>{t("mods.filter.category")}</Input.Label>
-                      <Input.Select options={[{ value: "", label: t("mods.filter.category.all") }, { value: NO_CATEGORY, label: t("mods.noCategory") }, ...categoryOptions(cats)]} />
-                    </Input.Root>
-                    <Input.Root fullWidth value={conflictFilter} onChange={(v: string) => setConflictFilter(v as ConflictFilter)}>
-                      <Input.Label>{t("mods.filter.conflicts")}</Input.Label>
-                      <Input.Select options={CONFLICT_FILTERS.map((c) => ({ value: c, label: t(`mods.filter.conflicts.${c}`) }))} />
-                    </Input.Root>
-                  </Stack>
-                </Popover.Content>
-              </Popover.Root>
+              <ModFiltersControl
+                rows={rows}
+                categories={cats}
+                tags={tags.status === "ready" ? tags.data : []}
+                facts={facts}
+                value={filters}
+                onChange={setFilters}
+                shown={visible.filter((r) => r.kind === "mod").length}
+              />
               <SegmentedControl<QuickFilter>
                 aria-label={t("mods.quick.label")}
                 className="ml-1.5"
@@ -655,6 +688,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       <FileWinnersDialog instance={instance} pair={filesPair} onClose={() => setFilesPair(null)} />
       <CycleDialog instance={instance} open={cycleOpen} onClose={() => setCycleOpen(false)} />
       {refusalDialog}
+      <SeparatorDialog instance={instance} editing={separatorEditing} onClose={() => setSeparatorEditing(null)} />
       {importingManager ? (
         <ImportOfferDialog
           instance={instance}

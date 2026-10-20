@@ -106,4 +106,39 @@ describe("Menu", () => {
     await user.click(screen.getByRole("button", { name: "Outside" }));
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
+
+  it("D-040: separators, icons, checkable items that stay open and a submenu that closes everything", async () => {
+    const user = userEvent.setup();
+    const onSize = vi.fn();
+    const onGame = vi.fn();
+    render(
+      <Menu.Root>
+        <Menu.Trigger>
+          <button type="button">More</button>
+        </Menu.Trigger>
+        <Menu.Content>
+          <Menu.Item checked onSelect={onSize}>
+            Size
+          </Menu.Item>
+          <Menu.Separator />
+          <Menu.Sub label="Open folder">
+            <Menu.Item onSelect={onGame}>Game</Menu.Item>
+          </Menu.Sub>
+        </Menu.Content>
+      </Menu.Root>,
+    );
+    await user.click(screen.getByRole("button", { name: "More" }));
+    const size = screen.getByRole("menuitemcheckbox", { name: "Size" });
+    expect(size).toHaveAttribute("aria-checked", "true");
+    await user.click(size);
+    expect(onSize).toHaveBeenCalled();
+    expect(screen.getByRole("menuitemcheckbox", { name: "Size" })).toBeInTheDocument();
+    expect(screen.getByRole("separator")).toBeInTheDocument();
+    const sub = screen.getByRole("menuitem", { name: "Open folder" });
+    expect(sub).toHaveAttribute("aria-haspopup", "menu");
+    await user.click(sub);
+    await user.click(await screen.findByRole("menuitem", { name: "Game" }));
+    expect(onGame).toHaveBeenCalled();
+    expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  });
 });

@@ -113,6 +113,8 @@ export function createOfflineBackend(): Backend {
     modConflicts: unavailable,
     modConflictFiles: unavailable,
     conflictIndicators: unavailable,
+    modFlags: unavailable,
+    saveModListFile: unavailable,
     ruleCycle: unavailable,
     setFileOverrides: unavailable,
     clearFileOverrides: unavailable,

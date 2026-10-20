@@ -233,6 +233,10 @@ export interface Backend {
   modConflicts(instance: string, mod: string): Promise<ModConflicts>;
   modConflictFiles(instance: string, mod: string, filter: string, offset: number, limit: number): Promise<ModConflictFiles>;
   conflictIndicators(instance: string): Promise<ConflictIndicator[]>;
+  /** What the visible problems say about each mod (Mods › Filtros, "Situação"). */
+  modFlags(instance: string): Promise<ModFlags[]>;
+  /** "Exportar a lista em texto": asks where and writes; "" when cancelled. */
+  saveModListFile(instance: string, title: string, defaultName: string): Promise<string>;
   ruleCycle(instance: string): Promise<RuleCycle | null>;
   setFileOverrides(instance: string, winner: string, locations: FileLocation[]): Promise<void>;
   clearFileOverrides(instance: string, locations: FileLocation[]): Promise<void>;
@@ -1629,6 +1633,12 @@ export interface ModConflictFile {
 export interface ModConflictFiles {
   total: number;
   files: ModConflictFile[];
+}
+
+export interface ModFlags {
+  modId: string;
+  error: boolean;
+  missingRequirement: boolean;
 }
 
 export interface ConflictIndicator {

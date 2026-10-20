@@ -167,6 +167,40 @@ describe("Mods screen (F4)", () => {
     expect(screen.getByText("Textures")).toBeInTheDocument();
   });
 
+  it("filters with the chips of the Filtros menu and removes a filter from its chip (board JogoModsMenus)", async () => {
+    const user = userEvent.setup();
+    const { backend, state } = world();
+    backend.modFlags = async () => [{ modId: "m2", error: false, missingRequirement: true }];
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    await user.click(screen.getByRole("button", { name: "Filters" }));
+    const menu = await screen.findByRole("dialog", { name: "Filters" });
+    await user.click(within(within(menu).getByRole("group", { name: "Category" })).getByRole("button", { name: /Interface/ }));
+    expect(screen.queryByText("Textures")).not.toBeInTheDocument();
+    expect(within(menu).getByText("of 3 mods")).toBeInTheDocument();
+    await user.click(within(within(menu).getByRole("group", { name: "Status" })).getByRole("button", { name: /Missing a requirement/ }));
+    expect(screen.queryByText("SkyUI")).not.toBeInTheDocument();
+    await user.click(within(menu).getByRole("button", { name: "Close" }));
+    await user.click(screen.getByRole("button", { name: "Remove the filter Category: Interface" }));
+    expect(await screen.findByText("Textures")).toBeInTheDocument();
+    expect(screen.queryByText("SkyUI")).not.toBeInTheDocument();
+    void state;
+  });
+
+  it("has no Contém section when the game classifies no files (generic)", async () => {
+    const user = userEvent.setup();
+    const { backend, state } = world();
+    state.mods = state.mods.map((m) => ({ ...m, content: [] }));
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    await user.click(screen.getByRole("button", { name: "Filters" }));
+    const menu = await screen.findByRole("dialog", { name: "Filters" });
+    expect(within(menu).queryByRole("group", { name: "Contains" })).not.toBeInTheDocument();
+    expect(within(menu).getByRole("group", { name: "Conflicts" })).toBeInTheDocument();
+  });
+
   it("imports dropped files and answers a root decision from the queue", async () => {
     const user = userEvent.setup();
     const { state, backend, notify } = world();
@@ -422,7 +456,7 @@ describe("Mods screen (F4)", () => {
     await openMods(user);
     await screen.findByText("SkyUI");
     await user.click(screen.getByRole("button", { name: "More actions" }));
-    await user.click(await screen.findByRole("menuitem", { name: "Categories and tags" }));
+    await user.click(await screen.findByRole("menuitem", { name: "Organization: categories and tags" }));
     const dialog = await screen.findByRole("dialog", { name: "Mod organization" });
     await user.click(within(dialog).getByRole("button", { name: "New category" }));
     await user.type(within(dialog).getByRole("textbox", { name: "Category name" }), "Textures");

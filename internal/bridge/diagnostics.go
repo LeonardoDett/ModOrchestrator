@@ -409,3 +409,24 @@ func (a *App) EnableImpact(instance string, ids []string, enabling bool) (Enable
 	}
 	return dto, nil
 }
+
+// ModFlagsDTO is what the visible problems say about a mod (Mods ›
+// Filtros, "Situação").
+type ModFlagsDTO struct {
+	ModID              string `json:"modId"`
+	Error              bool   `json:"error"`
+	MissingRequirement bool   `json:"missingRequirement"`
+}
+
+// ModFlags lists the mods the visible problems of the instance are about.
+func (a *App) ModFlags(instance string) ([]ModFlagsDTO, error) {
+	flags, err := a.c.Diagnostics.ModFlags(a.context(), game.InstanceID(instance))
+	if err != nil {
+		return nil, a.fail("mod flags", err, map[string]string{"instance": instance})
+	}
+	out := make([]ModFlagsDTO, 0, len(flags))
+	for id, f := range flags {
+		out = append(out, ModFlagsDTO{ModID: id, Error: f.Error, MissingRequirement: f.MissingRequirement})
+	}
+	return out, nil
+}

@@ -571,3 +571,22 @@ func (a *App) ModExtensions(id string) ([]ExtensionCountDTO, error) {
 	}
 	return out, nil
 }
+
+// SaveModListFile asks where to save the mod list of the active profile as
+// text and writes it ("Exportar a lista em texto"); "" when cancelled.
+func (a *App) SaveModListFile(instance, title, defaultName string) (string, error) {
+	path, err := runtime.SaveFileDialog(a.context(), runtime.SaveDialogOptions{
+		Title: title, DefaultFilename: defaultName,
+		Filters: []runtime.FileFilter{{DisplayName: "Text (*.txt)", Pattern: "*.txt"}},
+	})
+	if err != nil {
+		return "", a.fail("mod list dialog", err, nil)
+	}
+	if path == "" {
+		return "", nil
+	}
+	if err := a.c.Library.ExportModList(a.context(), game.InstanceID(instance), path); err != nil {
+		return "", a.fail("export mod list", err, map[string]string{"instance": instance})
+	}
+	return path, nil
+}

@@ -137,6 +137,10 @@ export function useConflictIndicators(instance: string) {
   return useBackendQuery(async (b) => (await b.conflictIndicators(instance)) ?? [], [instance], { onOperationEvents: true });
 }
 
+export function useModFlags(instance: string) {
+  return useBackendQuery(async (b) => (await b.modFlags(instance).catch(() => [])) ?? [], [instance], { onOperationEvents: true });
+}
+
 export function useRuleCycle(instance: string) {
   return useBackendQuery((b) => b.ruleCycle(instance), [instance], { onOperationEvents: true });
 }

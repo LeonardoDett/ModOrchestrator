@@ -378,6 +378,10 @@ export function ModFiles(arg1, arg2, arg3, arg4) {
   return window['go']['bridge']['App']['ModFiles'](arg1, arg2, arg3, arg4);
 }
 
+export function ModFlags(arg1) {
+  return window['go']['bridge']['App']['ModFlags'](arg1);
+}
+
 export function ModHistory(arg1) {
   return window['go']['bridge']['App']['ModHistory'](arg1);
 }
@@ -652,6 +656,10 @@ export function SaveCategory(arg1, arg2) {
 
 export function SaveGameEntryFile(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SaveGameEntryFile'](arg1, arg2, arg3);
+}
+
+export function SaveModListFile(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SaveModListFile'](arg1, arg2, arg3);
 }
 
 export function SaveTag(arg1, arg2) {

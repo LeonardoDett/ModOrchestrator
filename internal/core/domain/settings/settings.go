@@ -102,6 +102,8 @@ var Catalog = []Def{
 	{Key: "diagnostics.showUnreviewedConflicts", Scope: ScopeInstance, Type: TypeBool, Tab: TabInterface, Release: V1, Default: "true"},
 	// View of the Mods list (D123): list, nested by category, or category tabs.
 	{Key: "mods.view", Scope: ScopeInstance, Type: TypeEnum, Tab: TabInterface, Release: V1, Default: "list", Options: []string{"list", "nested", "tabs"}},
+	// Columns of the Mods list the user hid (Mais ações › Colunas da lista).
+	{Key: "mods.hiddenColumns", Scope: ScopeInstance, Type: TypeList, Tab: TabInterface, Release: V1, Default: "", Options: []string{"category", "conflicts", "updated", "size"}},
 	{Key: "app.runAtStartup", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1x, Default: "false"},
 	{Key: "app.startMinimized", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V1x, Default: "false"},
 	{Key: "automation.installOnDownload", Scope: ScopeApp, Type: TypeBool, Tab: TabInterface, Release: V2, Default: "false"},

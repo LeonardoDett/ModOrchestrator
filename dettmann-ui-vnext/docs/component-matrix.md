@@ -4,7 +4,7 @@ Levels follow Atomic Design (D-032): a component imports only its own level or b
 
 | Level | Components |
 |---|---|
-| Atoms | every primitive, `Button` (sizes `tile`/`tile-lg` with `description`), `Checkbox` (`band`, `band-sm`), `Radio` (`card` with `media`), `FeaturedIcon` (`shape="tile"`), `FilterChip` (`tone="neutral"`), `Switch`, `Badge`, `Tag`, `Indicator`, `Loader`, `Avatar`, `MediaImage`, `Progress`, `Rating`, `Slider`, `Surface`, `Tooltip` |
+| Atoms | every primitive, `Button` (sizes `tile`/`tile-lg` with `description`), `Checkbox` (`band`, `band-sm`), `Radio` (`card` with `media`), `FeaturedIcon` (`shape="tile"`), `FilterChip` (`tone="neutral"`), `Tag` (`size="lg"`), `Switch`, `Badge`, `Tag`, `Indicator`, `Loader`, `Avatar`, `MediaImage`, `Progress`, `Rating`, `Slider`, `Surface`, `Tooltip` |
 | Molecules | `Input`, `ButtonGroup`, `SegmentedControl`, `StatusToggle`, `StatTile`, `SwatchPicker`, `SettingRow`, `Accordion`, `ActionBar`, `Alert`, `Breadcrumbs`, `Card`, `ContextMenu`, `DatePicker`, `Drawer`, `EmptyPlaceholder`, `EmptyState`, `FloatingButton`, `List`, `Menu`, `Modal`, `PageContainer`, `Pagination`, `Popover`, `Section`, `SplitPane`, `Stepper`, `Tabs`, `Toast`, `Toolbar` |
 | Organisms | `DataTable`, `Table`, `Tree`, `ReorderableList`, `Command`, `Inspector`, `FilterBar`, `DiffViewer`, `LogViewer`, `FileList`, `FileBrowser`, `Gallery`, `MediaGallery`, `Lightbox`, `Carousel`, `MasterDetail`, `ResourcePage` |
 | Templates | everything in `src/templates` |

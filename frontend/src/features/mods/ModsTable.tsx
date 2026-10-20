@@ -49,6 +49,8 @@ interface ModsTableProps {
   /** Abas view: the table sits inside a card under the tabs. */
   embedded?: boolean;
   empty?: React.ReactNode;
+  /** Columns the user hid (Mais ações › Colunas da lista). */
+  hiddenColumns?: readonly string[];
 }
 
 /** The colored square with the category icon (boards JogoMods and JogoModsAninhada). */
@@ -184,6 +186,7 @@ export function ModsTable(props: ModsTableProps) {
       columns={columns}
       rows={props.rows}
       getRowId={(row) => row.id}
+      hiddenColumns={props.hiddenColumns}
       density="relaxed"
       selectionMode="multiple"
       selectedIds={props.selected}

@@ -34,7 +34,7 @@ Faixas de escolha pendente, problemas e ciclo aparecem acima da tabela só quand
 | Fila (botão com borda, ícone e contador em pílula) | abre o modal da fila; conta operações na fila e importados sem instalar; a pílula fica `warning` quando alguém pede escolha |
 | Importar (ícone) | "De arquivos…" e "De pasta…" |
 | Implantação | ícone em repouso; implantando, "64%" na cor de informação; menu Implantar, Prévia, Limpar |
-| Mais ações (ícone) | Categorias e tags, Regras, Histórico da ordem, Histórico, abrir pastas |
+| Mais ações (ícone) | Prancha `JogoModsMenus` (RD17b): Implantar agora, Limpar a implantação, Verificar a implantação · Organização: categorias e tags, Regras entre mods, Criar separador, Colunas da lista › (Categoria, Conflitos, Atualizado, Tamanho; setting `mods.hiddenColumns`) · Histórico dos mods, Abrir pasta › (jogo, staging, arquivos, mod em foco), Exportar a lista em texto (perfil ativo, `[x]` ligado), Verificar os arquivos dos mods ("Verificar agora" do Diagnóstico) |
 | **Adicionar mods** (primário, depois de um divisor) | seletor de arquivos |
 
 ## 5. Tabela
@@ -45,7 +45,7 @@ Fixas, sem seletor de colunas e sem ordenação por cabeçalho: **Ativo** (switc
 
 ### 5.1.1 Filtro rápido e busca
 - Busca de 320 px; casa nome, autor, origem e tags.
-- Botão "Filtros" abre um painel com Categoria e Conflitos (com contagem de filtros ativos); o painel definitivo é a prancha `JogoModsMenus`, ainda em revisão.
+- Botão "Filtros" (prancha `JogoModsMenus`, RD17b) abre um painel de 410 px com seções de chips, vários por seção (na seção vale qualquer um; entre seções, todos): Situação (Não instalado, Com erro, Com requisito faltando; os dois últimos vêm do backend, `ModFlags`, pelos problemas visíveis), Categoria, Tags (4 por vez e "Mais N"), Conflitos (Com conflito, Não revisados, Totalmente sobrescrito) e Contém (marcas de conteúdo do adapter; some quando o jogo não classifica arquivos, como no `generic`). Rodapé com "N de M mods", "Limpar filtros" e "Fechar". Cada filtro em uso vira um chip removível ao lado do botão ("Categoria Texturas ×"), seguido de "Limpar".
 - Filtro rápido com contagem: Todos, Ativos, Desligados.
 
 ### 5.1.2 Visões (D123)

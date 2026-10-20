@@ -18,6 +18,8 @@ const tagVariants = defineRecipe({
       xs: "h-4.5 text-[0.6875rem]",
       sm: "h-5",
       md: "h-6",
+      /** D-040: a filter in use beside "Filtros" (28 px, removable; board JogoModsMenus). */
+      lg: "h-7 gap-1.5",
     },
     outline: {
       true: "border-intent-border",
@@ -40,6 +42,8 @@ const tagVariants = defineRecipe({
     { size: "md", dismissible: false, class: "px-2.5" },
     { size: "sm", dismissible: true, class: "pl-2 pr-0.5" },
     { size: "md", dismissible: true, class: "pl-2.5 pr-0.5" },
+    { size: "lg", dismissible: false, class: "px-2.5" },
+    { size: "lg", dismissible: true, class: "pl-2.5 pr-1.5" },
   ],
   defaultVariants: {
     size: "md",

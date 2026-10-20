@@ -190,6 +190,8 @@ export function ModExtensions(arg1:string):Promise<Array<bridge.ExtensionCountDT
 
 export function ModFiles(arg1:string,arg2:string,arg3:number,arg4:number):Promise<bridge.ModFilesDTO>;
 
+export function ModFlags(arg1:string):Promise<Array<bridge.ModFlagsDTO>>;
+
 export function ModHistory(arg1:string):Promise<Array<bridge.ModHistoryDTO>>;
 
 export function ModList(arg1:string):Promise<Array<bridge.ModRowDTO>>;
@@ -327,6 +329,8 @@ export function RunHealthChecks(arg1:string):Promise<void>;
 export function SaveCategory(arg1:string,arg2:bridge.CategoryDTO):Promise<string>;
 
 export function SaveGameEntryFile(arg1:string,arg2:string,arg3:string):Promise<string>;
+
+export function SaveModListFile(arg1:string,arg2:string,arg3:string):Promise<string>;
 
 export function SaveTag(arg1:string,arg2:bridge.TagInputDTO):Promise<string>;
 
