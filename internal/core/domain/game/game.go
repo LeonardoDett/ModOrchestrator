@@ -309,8 +309,10 @@ type Instance struct {
 	// AdapterVersion is the adapter version that created the instance, kept
 	// for migrations (core/11 §1).
 	AdapterVersion string
-	// Executable is the optional game executable relative to Root (generic
-	// games; adapters that know their executable declare it themselves).
+	// Executable is the game executable relative to Root of an instance
+	// from before D117 that still belongs to the template game. A user
+	// game keeps it in its entry manifest (D136); adapters that know their
+	// executable declare it themselves.
 	Executable string
 	// Features holds the optional features the user turned on or off for
 	// this instance (D115). A feature not listed keeps its default: on.

@@ -26,7 +26,8 @@ type Setup struct {
 	Name  string
 	Root  string
 	Store string
-	// Targets and Executable are used by games with CustomTargets.
+	// Targets and Executable are used by games with CustomTargets; the
+	// executable goes to the entry manifest, not to the instance (D136).
 	Targets    []game.TargetSpec
 	Executable string
 	Folders
@@ -606,7 +607,7 @@ func (s *Service) newInstance(id game.InstanceID, su Setup, a ports.GameAdapter,
 	return game.Instance{
 		ID: id, Game: su.Game, Adapter: a.Name(), AdapterVersion: a.Version(), DisplayName: name,
 		Root: root, Staging: f.Staging, ArchiveStore: f.ArchiveStore, BackupStore: f.BackupStore,
-		Targets: targets, PreferredMethod: m, Store: store, Executable: strings.TrimSpace(su.Executable),
+		Targets: targets, PreferredMethod: m, Store: store,
 	}
 }
 

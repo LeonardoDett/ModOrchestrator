@@ -1346,3 +1346,17 @@ Motivo: as chaves `plugins.*` valiam para toda instância e moravam no núcleo (
 Alternativas rejeitadas: a UI listar as abas a partir do `tab` dos settings recebidos (Workarounds não tem setting e a posição de uma aba nova ficaria implícita); cada aba de módulo trazer a lista de chaves no DTO (o setting já traz `tab`); o catálogo global mutável com registro em `init()` (a ordem de inicialização decidiria o catálogo e os testes veriam o estado de outros testes); contribuição pelo adapter (essas chaves são do módulo de plugins do app, não de um jogo; contribuição de adapter fica para quando um adapter precisar, pela mesma estrutura).
 
 Consequências: vale para todo jogo; com só o `generic` e o Valheim gerenciados, a aba Plugins não aparece (teste do frontend). Teste de domínio para as recusas e a posição da aba, de serviço para chave antes e depois da contribuição, do bridge para a lista de abas com o bootstrap real e do frontend para aba de módulo desconhecida. `settings.NewValue` e `Lookup` passam a ser métodos do catálogo.
+
+## D136 — O executável de um jogo personalizado fica só na entrada
+Status: vigente (2026-10-20; fecha o ponto aberto 3 de `propostas/2026-10-13-registro-de-jogos.md`; detalha D117)
+
+1. **Uma fonte**: o executável informado no assistente vai para o manifesto da entrada (lançamento, processo e arquivo de versão), como já ia. A instância deixa de guardar uma cópia em `Instance.Executable`.
+2. **Dados antigos**: a migração 0012 limpa `executable` das instâncias de entradas do usuário (`user.*`); `MigrateLegacyCustom` limpa o campo ao mover uma instância do jogo modelo para a sua entrada.
+3. **Legado**: o campo e a coluna ficam só para a instância do jogo modelo anterior à D117 que não pôde ser migrada (target fora da raiz, ponto aberto 4). O lançamento e a detecção de processo dela continuam lendo o campo; quando esse caminho sair, o campo sai junto.
+4. **Bridge**: `ManagedGameDTO.executable` sai; a UI nunca o lia. `SetupDTO.executable` continua (é o campo do assistente).
+
+Motivo: com a D117 o lançamento vem do manifesto, e a cópia na instância podia divergir dele (entrada editada ou importada) sem que nada a lesse a não ser o caminho antigo.
+
+Alternativas rejeitadas: apagar a coluna agora (tiraria o lançamento da instância legada não migrada, sem confirmação de que ela não existe); manter a cópia sincronizada (duas fontes de verdade para o mesmo dado).
+
+Consequências: vale para todo jogo; nos jogos com adapter próprio nada muda (eles declaram o executável). Testes: migração 0012 (`entry_executable_test.go`), assistente sem cópia na instância e entrada com lançamento (`flow_test.go`), migração de instância antiga (`entries_test.go`).

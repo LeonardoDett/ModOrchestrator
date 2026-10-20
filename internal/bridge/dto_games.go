@@ -52,7 +52,6 @@ type ManagedGameDTO struct {
 	ArchiveStore string   `json:"archiveStore"`
 	BackupStore  string   `json:"backupStore"`
 	Method       string   `json:"method"`
-	Executable   string   `json:"executable,omitempty"`
 	Version      string   `json:"version,omitempty"`
 	Active       bool     `json:"active"`
 	Hidden       bool     `json:"hidden"`
@@ -195,7 +194,7 @@ func toManagedDTO(m games.Managed) ManagedGameDTO {
 		ID: string(i.ID), GameID: string(i.Game), GameName: m.Definition.Name, Custom: m.Definition.SupportLevel() == game.SupportCustom,
 		Name: i.DisplayName, Adapter: i.Adapter, Store: i.Store, Root: i.Root, Staging: i.Staging,
 		ArchiveStore: i.ArchiveStore, BackupStore: i.BackupStore, Method: string(i.PreferredMethod),
-		Executable: i.Executable, Version: m.Version, Active: m.Active, Hidden: i.Hidden,
+		Version: m.Version, Active: m.Active, Hidden: i.Hidden,
 		Unavailable: m.Unavailable, RootMissing: m.RootMissing, Deployed: m.Deployed,
 		Capabilities: []string{}, Targets: []TargetDTO{}, ModTypes: []ModTypeDTO{}, Foreign: []FindingDTO{},
 		Sections: games.Sections(m.Definition.Capabilities), Accent: m.Definition.Accent,

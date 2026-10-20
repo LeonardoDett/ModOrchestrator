@@ -225,7 +225,7 @@ func (s *Service) MigrateLegacyCustom(ctx context.Context) (int, error) {
 		if err != nil {
 			continue
 		}
-		inst.Game, inst.AdapterVersion = entry, a.Version()
+		inst.Game, inst.AdapterVersion, inst.Executable = entry, a.Version(), ""
 		if err := s.Instances.Save(ctx, inst); err != nil {
 			_ = s.removeEntry(context.WithoutCancel(ctx), entry)
 			return n, err

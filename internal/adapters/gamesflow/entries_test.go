@@ -206,7 +206,8 @@ func TestLegacyCustomInstancesAreMigrated(t *testing.T) {
 	}
 	want := legacy
 	want.Game, want.AdapterVersion = got.Game, got.AdapterVersion
-	if got.Root != want.Root || got.Staging != want.Staging || !slices.Equal(got.Targets, want.Targets) || got.Executable != want.Executable || got.Features[game.CapLaunch] {
+	// The executable moves to the entry (D136).
+	if got.Root != want.Root || got.Staging != want.Staging || !slices.Equal(got.Targets, want.Targets) || got.Executable != "" || got.Features[game.CapLaunch] {
 		t.Fatalf("migration changed more than the game: %+v", got)
 	}
 	def, _ := e.svc.Registry.Definition(got.Game)

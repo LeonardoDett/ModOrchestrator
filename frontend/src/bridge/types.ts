@@ -882,7 +882,6 @@ export interface ManagedGame {
   archiveStore: string;
   backupStore: string;
   method: string;
-  executable?: string;
   version?: string;
   active: boolean;
   hidden: boolean;

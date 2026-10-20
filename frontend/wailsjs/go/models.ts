@@ -233,7 +233,6 @@ export namespace bridge {
 	    archiveStore: string;
 	    backupStore: string;
 	    method: string;
-	    executable?: string;
 	    version?: string;
 	    active: boolean;
 	    hidden: boolean;
@@ -265,7 +264,6 @@ export namespace bridge {
 	        this.archiveStore = source["archiveStore"];
 	        this.backupStore = source["backupStore"];
 	        this.method = source["method"];
-	        this.executable = source["executable"];
 	        this.version = source["version"];
 	        this.active = source["active"];
 	        this.hidden = source["hidden"];

@@ -38,7 +38,7 @@ Nenhum push foi feito. Validação em cada fase: `go vet ./...`, `go test ./...`
 
 1. ~~Entradas criadas pelo assistente não marcam target como criável.~~ Decidido na D129: o assistente oferece a opção, desligada por padrão.
 2. **Nenhum jogo `declared` embutido existe.** Skyrim e Valheim têm adapter próprio. O nível existe e está testado pelo caminho do jogo importado; o primeiro jogo embutido só de dados fica para quando houver um candidato.
-3. **`Instance.Executable` ficou redundante** para entradas (o lançamento vem do manifesto). Remover exige mexer no DTO e na tela de detalhes; não entrou na RD14 e segue aberto.
+3. ~~`Instance.Executable` ficou redundante para entradas.~~ Decidido na D136 (2026-10-20): o executável fica só no manifesto; o campo fica para a instância legada do ponto 4.
 4. **Instância `generic` com target fora da raiz não é migrada** e segue pelo caminho antigo. Não há caso conhecido; o código do caminho antigo pode sair quando isso for confirmado.
 5. **Falha intermitente na suíte Go.** Duas execuções com a máquina carregada falharam (uma em `TestDeployPurgeDeploy`) e não se repetiram em quatro execuções seguidas. Não é desta frente, mas o plano deveria prever investigar antes de fechar a V1.
 

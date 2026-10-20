@@ -274,8 +274,12 @@ func TestGenericGameWithTwoTargets(t *testing.T) {
 		t.Fatal(err)
 	}
 	inst, _ := e.instances.Get(ctx, res.Instance)
-	if inst.Root != `C:\Games\Valheim` || len(inst.Targets) != 2 || inst.Targets[1].Path != `C:\Games\Valheim\BepInEx\plugins` || inst.Executable != "valheim.exe" {
+	if inst.Root != `C:\Games\Valheim` || len(inst.Targets) != 2 || inst.Targets[1].Path != `C:\Games\Valheim\BepInEx\plugins` || inst.Executable != "" {
 		t.Fatalf("instance = %+v", inst)
+	}
+	// The executable lives in the entry, not in the instance (D136).
+	if def, _ := e.svc.Registry.Definition(inst.Game); !def.Capabilities.Has(game.CapLaunch) {
+		t.Fatalf("entry without launch: %+v", def)
 	}
 	// Name is required and unique per game; bad targets and exe are refused.
 	e.fs.AddDir(`C:\Games\Valheim2`)
