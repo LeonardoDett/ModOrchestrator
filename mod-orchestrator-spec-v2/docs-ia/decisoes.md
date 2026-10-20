@@ -1360,3 +1360,12 @@ Motivo: com a D117 o lançamento vem do manifesto, e a cópia na instância podi
 Alternativas rejeitadas: apagar a coluna agora (tiraria o lançamento da instância legada não migrada, sem confirmação de que ela não existe); manter a cópia sincronizada (duas fontes de verdade para o mesmo dado).
 
 Consequências: vale para todo jogo; nos jogos com adapter próprio nada muda (eles declaram o executável). Testes: migração 0012 (`entry_executable_test.go`), assistente sem cópia na instância e entrada com lançamento (`flow_test.go`), migração de instância antiga (`entries_test.go`).
+
+## D137 — Percurso só com teclado: a armadilha de foco da lib vale para todo diálogo
+Status: vigente (2026-10-20; percurso de ponta a ponta só com teclado pedido no fechamento do redesign; aplica D-041 da dettmann-ui)
+
+1. **Achado**: em todo diálogo montado já aberto (detalhes do mod, Adicionar jogo e os demais que a tela renderiza só quando abertos) o Tab saía do diálogo para a página de trás. A causa estava em `useFocusTrap` da dettmann-ui (D-041); a correção vale para Modal, Drawer e Lightbox sem mudança no app.
+2. **Conferido e mantido**: navegação lateral, barra de título, menus (Enter abre e as setas andam), paleta (Ctrl+K, setas, Enter leva o foco ao conteúdo), notificações, selects, abas com setas, tabelas (setas, Home/End, Espaço liga e desliga, Enter abre detalhes, Shift+F10 abre o menu da linha, Esc devolve o foco à tabela), Alt+setas na Ordem de carga e na ordem de prioridade de Mods, Ctrl+Z na ordem de Mods, anel de foco visível em todo controle. Quando um botão fica desabilitado depois da própria ação, o próximo Tab segue dali (ponto de partida do navegador), sem perder o lugar.
+3. **Fica como está**: o controle dentro de uma célula (chave de ativo, link para o mod de origem) segue na ordem do Tab. Com a virtualização só as linhas visíveis entram, e tirar esses controles da ordem pediria um atalho para cada ação de célula.
+
+Consequências: vale para todo jogo. Testes na lib (`focus-trap.test.tsx`, `menu-keyboard-open.test.tsx`).

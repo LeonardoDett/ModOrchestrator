@@ -47,9 +47,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>(
 
   const getFocusableElements = useCallback((): HTMLElement[] => {
     if (!containerRef.current) return [];
-    return Array.from(
-      containerRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
-    ).filter((el) => el.offsetParent !== null);
+    return tabbables(containerRef.current);
   }, []);
 
   const focusFirst = useCallback(() => {
@@ -66,25 +64,29 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>(
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (!enabled || event.key !== "Tab") return;
+      if (!enabled || event.key !== "Tab" || event.defaultPrevented) return;
+      const container = containerRef.current;
+      const active = document.activeElement;
+      // Só a armadilha que contém o foco age: um overlay empilhado (ou um menu
+      // portado fora do painel) cuida do próprio Tab.
+      if (!container || !active || !container.contains(active)) return;
 
       const elements = getFocusableElements();
-      if (elements.length === 0) return;
-
-      const firstElement = elements[0]!;
-      const lastElement = elements[elements.length - 1]!;
-      const activeElement = document.activeElement;
-
-      if (event.shiftKey) {
-        if (activeElement === firstElement) {
-          event.preventDefault();
-          lastElement.focus();
-        }
-      } else {
-        if (activeElement === lastElement) {
-          event.preventDefault();
-          firstElement.focus();
-        }
+      if (elements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+      // Sai do painel quando não há destino na direção do Tab, inclusive a partir
+      // de um elemento fora da ordem (tabindex -1, como uma grade com
+      // aria-activedescendant ou o próprio painel).
+      const after = elements.filter((el) => el !== active && active.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING);
+      const before = elements.filter((el) => el !== active && active.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_PRECEDING);
+      if (event.shiftKey && before.length === 0) {
+        event.preventDefault();
+        elements[elements.length - 1]!.focus();
+      } else if (!event.shiftKey && after.length === 0) {
+        event.preventDefault();
+        elements[0]!.focus();
       }
     },
     [enabled, getFocusableElements]
@@ -99,18 +101,39 @@ export function useFocusTrap<T extends HTMLElement = HTMLDivElement>(
       focusFirst();
     }, 0);
 
-    const container = containerRef.current;
-    container?.addEventListener("keydown", handleKeyDown);
+    // No documento, não no painel: o painel de um overlay portado só existe depois
+    // deste efeito (o Portal monta num efeito próprio).
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
       clearTimeout(timeoutId);
-      container?.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
 
-      if (returnFocus && previouslyFocusedRef.current) {
-        previouslyFocusedRef.current.focus();
+      // Devolve o foco só se ele ainda está no overlay (ou se perdeu): quem fechou
+      // o overlay pode já ter levado o foco a outro lugar (navegação pela paleta).
+      const previous = previouslyFocusedRef.current;
+      const active = document.activeElement;
+      const container = containerRef.current;
+      const stillHere = !active || active === document.body || (container?.contains(active) ?? false);
+      if (returnFocus && previous?.isConnected && stillHere) {
+        previous.focus();
       }
     };
   }, [enabled, focusFirst, handleKeyDown, returnFocus]);
 
   return containerRef;
+}
+
+/**
+ * Elementos que o Tab alcança dentro de `container`, na ordem do documento: sem
+ * `tabindex` negativo, desabilitados, inertes ou invisíveis.
+ */
+export function tabbables(container: HTMLElement): HTMLElement[] {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)).filter(
+    (el) =>
+      el.tabIndex >= 0 &&
+      !el.hasAttribute("disabled") &&
+      !el.closest("[inert]") &&
+      (typeof el.checkVisibility !== "function" || el.checkVisibility()),
+  );
 }

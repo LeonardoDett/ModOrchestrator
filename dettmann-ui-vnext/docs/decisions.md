@@ -249,3 +249,15 @@ The approved boards are the specification of each screen. What a board needs and
 - Import boards: `Button size="tile"`/`"tile-lg"` with `description` (a choice with a line under its label, 56/64 px), `Radio.Item variant="card" media` (a mark between the radio and the copy, content centered), `Checkbox variant="band"`/`"band-sm"` with `media` (a full-width part of a list split by a line; 52 px rows in a framed group; the unchecked label is muted), `Progress track="strong"` (a bar on a sunken panel). Notifications board: `FeaturedIcon shape="tile"` (a 32 px tinted square marking a row), `FilterChip tone="neutral"` (pressed without the brand tint). Mods menus board: `Menu.Separator`, `Menu.Item icon` and `checked` (a `menuitemcheckbox` that keeps the menu open), `Menu.Sub` (a submenu at the side, in one floating tree so a click inside it is not outside its parent), `Tag size="lg"` (a 28 px filter in use). Tests: `src/__tests__/import-pieces.test.tsx`.
 
 Tests: `src/__tests__/fidelity-props.test.tsx`.
+
+## D-041 — Focus trap listens on the document and wraps on the real tab order
+
+Status: accepted (2026-10-20).
+
+`useFocusTrap` (Modal, Drawer, Lightbox through `useOverlay`) failed for every overlay mounted already open: the panel is portaled, and `Portal` only mounts in its own effect, so the trap's effect found no panel and never attached its `keydown` listener. Tab then left the dialog for the page behind it.
+
+- The listener is on the document. Only the trap whose panel holds the focus acts, so a stacked overlay or a menu portaled outside the panel handles its own Tab.
+- The trap wraps when no tabbable element follows (or precedes, with Shift) the focused one in document order. Tabbable means `tabIndex >= 0`, not disabled, not inert and visible (`checkVisibility` when the browser has it). A button with `tabindex="-1"` (roving tabs) is no longer taken as the last element, and the focus also wraps from an element outside the order (a grid with `aria-activedescendant`, the panel itself).
+- On close, the focus goes back to the element focused before only when it is still in the panel or on the body: whoever closed the overlay may already have moved it (navigation from a command palette).
+
+Tests: `src/__tests__/focus-trap.test.tsx`, `src/__tests__/menu-keyboard-open.test.tsx`.
