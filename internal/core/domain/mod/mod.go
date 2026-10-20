@@ -31,7 +31,12 @@ const (
 // providers (Nexus, Workshop...) add kinds later without changing the model.
 type SourceKind string
 
-const SourceManualFile SourceKind = "manual-file"
+const (
+	SourceManualFile SourceKind = "manual-file"
+	// SourceImport: brought from another mod manager (D128); Ref is the
+	// import operation, which proves the mod belongs to it on recovery.
+	SourceImport SourceKind = "import"
+)
 
 // Source is the origin of a mod. Ref is informative (e.g. the original
 // archive name), never identity.

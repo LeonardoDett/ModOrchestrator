@@ -112,6 +112,8 @@ Como ficou (F3): o assistente é `Verify` (somente leitura: raiz, nome único po
 
 Outras ações na tela Games: parar de gerenciar (exige purge; mantém ou apaga staging/archives, com escolha explícita; **até a F7, recusa a instância com algo implantado** com `instance_deployed`, e a apagar exige digitar o nome e só apaga pastas cujo marcador prova que são da instância), esconder/mostrar, alterar localização (revalida; se o jogo mudou de pasta, oferece purge na antiga se acessível), abrir pastas (jogo, staging, archives), ver detalhes (caminhos, versão, mod types, capabilities), múltiplas instâncias do mesmo jogo (nome distinto).
 
+Importar de outro gerenciador (D128, tela na RD16): depois de gerenciar o jogo, o app procura MO2 e Vortex que apontem para a mesma pasta e oferece trazer mods, ordem, regras e perfis. O adapter não declara nada novo: a lista de plugins de cada perfil é lida com `LoadOrderFile` e `Parse` quando o jogo tem `plugins`; sem a capability, a importação traz só o que vale para todo jogo.
+
 ## 5. Navegação por capability
 
 O workspace mostra: Overview, Mods, Conflicts, Profiles, Diagnostics sempre; Plugins se `plugins`; Load Order se `load_order`; Saves se `save_games` (V1.x). A lista é consulta do bridge (a UI não decide, anti-pattern 1).

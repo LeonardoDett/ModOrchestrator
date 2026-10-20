@@ -1248,6 +1248,23 @@ Motivo: as pranchas aprovadas.
 
 Consequências: `games.WorkspaceItems` sempre inclui `instance_settings`; o teste da navegação fixa o grupo Saúde com os dois itens.
 
+## D128 — Importar de Vortex e MO2
+Status: vigente (2026-10-20; executa a RD15; respostas 3 e 4 do plano do redesign; emenda D047, detalha D035 e D048)
+
+1. **O que se lê**: do MO2, a instância (`ModOrganizer.ini` com os caminhos e `%BASE_DIR%`, `mods/<mod>/` com `meta.ini`, `categories.dat`, `overwrite/`, e por perfil `modlist.txt` e `lockedorder.txt`); do Vortex, o banco de estado (`state.v2`, LevelDB com chaves `a###b###c` e valores JSON), a staging de cada jogo (`installPath`, padrão `{USERDATA}\{game}\mods`) e a pasta de cada perfil. O estudo confirmou que o estado do Vortex é legível com segurança: o banco é copiado para uma pasta temporária e aberto só para leitura, então o Vortex pode estar aberto. Nada é escrito nas pastas do outro gerenciador (teste compara a árvore antes e depois).
+2. **Onde fica cada fato**: formato e nome de arquivo de gerenciador ficam no leitor, em `internal/infrastructure/managers/{mo2,vortex}` (port `ManagerReader`); o domínio (`migration`) só tem dados com as chaves do gerenciador. A lista de plugins que cada perfil guarda é a do jogo: o nome vem de `LoadOrderSupport.LoadOrderFile` e quem lê é `Parse`, do adapter (D112). Achar a fonte é por caminho (o `gamePath` do MO2, o caminho descoberto pelo Vortex), sem tabela de ids de jogo; "Apontar a pasta" abre uma instância do MO2 ou uma pasta de dados do Vortex.
+3. **O que entra**: mods (copiados, nunca movidos: mover segue em aberto), ordem e separadores, regras (depois de, requer, recomenda, conflita), perfis com o estado de cada mod, plugins e ordem de carga só com `plugins` e `load_order` em vigor, categorias como opção desligada. O Vortex não tem ordem de mods: os mods partem da ordem de instalação e as regras ordenam. O `overwrite` do MO2 vira o mod "Overwrite", por último e ligado. Mods sem pasta, sem arquivo ou com caminho inseguro ficam de fora e aparecem na prévia; o `meta.ini` não é copiado. O tipo do mod é o que os arquivos indicam (`DetectModType`).
+4. **Perfis**: cada perfil escolhido (padrão: o ativo do outro gerenciador) vai para o perfil de mesmo nome se a biblioteca estava vazia, ou para um perfil novo; os demais perfis recebem os mods desligados no fim. Biblioteca vazia passa a usar o perfil que o outro gerenciador usava; biblioteca em uso mantém o perfil ativo.
+5. **Operação**: `import_manager` com os passos `read`, `copy` e `commit`, com a trava da instância. Os mods entram na biblioteca como `installing` (origem `import`, ref = a operação) antes de qualquer cópia; cada mod é copiado para `<id>.installing` e renomeado; tudo o mais vai numa transação no fim. Interrompida, a recuperação do início tira esses mods da biblioteca e a da biblioteca apaga as pastas, antes de qualquer comando.
+6. **Regra que fecharia ciclo** entra assim mesmo (via `Restore`): o ciclo vira o diagnóstico bloqueante de sempre (D028), não um erro da importação.
+7. **Implantação estrangeira** (D035): importar não libera o deploy; a instrução de limpar no outro gerenciador continua.
+
+Motivo: B1 do redesign e as respostas do Leonardo (copiar por padrão; perfis sim; categorias como opção desligada).
+
+Alternativas rejeitadas: abrir o LevelDB do Vortex no lugar (a trava do Vortex aberto impede, e abrir para escrita arriscaria o banco dele); escrever um leitor próprio de LevelDB (o `goleveldb`, em Go puro, é a dependência nova e menor); ler o `loadorder.txt` dos gerenciadores (a lista do jogo já traz ordem e estado, e o nome de arquivo do jogo fica no adapter); importar pela fila de instalação com instaladores (o conteúdo já está instalado; o FOMOD perguntaria de novo).
+
+Consequências: vale para todo jogo; no `generic` e no Valheim a prévia nem lista plugins e ordem de carga (teste com MO2 importado num jogo `generic`). As telas são a RD16.
+
 ## D129 — Assistente de jogo: reconhecimento de pasta, modelos e pasta criável
 Status: vigente (2026-10-15; executa a RD14b; respostas 7 e 8 do plano do redesign)
 

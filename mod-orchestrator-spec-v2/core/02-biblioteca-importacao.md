@@ -112,13 +112,17 @@ Desde a D123: categoria com cor da paleta e ícone, opcionais; tags definidas po
 
 Árvore por instância: criar, renomear, mover (arrastar), excluir (mods ficam sem categoria). Filtro e agrupamento por categoria na tela Mods; setting "Ocultar categoria de nível superior" exibe só o último nível (paridade Vortex). Categorias padrão iniciais: fornecidas pelo adapter (Skyrim: conjunto enxuto inspirado nas categorias do Nexus); nenhuma chamada de rede.
 
+## 10a. Importar de outro gerenciador (D128)
+
+Fonte: instância do MO2 ou jogo do Vortex que aponta para a pasta do jogo (`Sources`), ou pasta escolhida (`OpenFolder`). `Preview` conta por parte (mods, arquivos, tamanho e espaço livre, separadores, regras por tipo, perfis com mods ligados, plugins e ordem de carga só com as capabilities, categorias) e lista os mods que ficam de fora (`missing`, `empty`, `unsafe`). `Start` roda a operação `import_manager` (`read` → `copy` → `commit`) com as partes e os perfis escolhidos; padrão: tudo menos categorias, com o perfil ativo do outro gerenciador. Mods copiados para a staging com a instalação `imported`, sem archive; o arquivo de metadados do gerenciador não é copiado. Retomada: os mods da importação interrompida saem da biblioteca e as pastas são apagadas na abertura. Nada é escrito nas pastas do outro gerenciador.
+
 ## 11. Erros (códigos estáveis)
 
-`import_unsupported_format`, `archive_corrupt`, `archive_unsafe_path`, `archive_too_large`, `archive_suspicious_ratio`, `disk_full`, `staging_unavailable`, `instance_busy`, `installer_unsupported`, `installer_failed`, `no_installable_files`, `reinstall_archive_missing`, `mod_busy`, `operation_not_cancellable`, `decision_not_pending`, `category_invalid`, `mod_type_unknown`, `import_source_missing` (F4), `import_source_unreadable` (F14, D099: `reason` = `file_locked` ou `permission_denied`). `archive_corrupt` usa `reason`: `damaged`, `empty`, `encrypted` (D062). `archive_suspicious_ratio` não é erro: é a decisão `suspicious_ratio` (continuar/cancelar).
+`import_unsupported_format`, `archive_corrupt`, `archive_unsafe_path`, `archive_too_large`, `archive_suspicious_ratio`, `disk_full`, `staging_unavailable`, `instance_busy`, `installer_unsupported`, `installer_failed`, `no_installable_files`, `reinstall_archive_missing`, `mod_busy`, `operation_not_cancellable`, `decision_not_pending`, `category_invalid`, `mod_type_unknown`, `import_source_missing` (F4), `import_source_unreadable` (F14, D099: `reason` = `file_locked` ou `permission_denied`). Importação de outro gerenciador (D128): `import_manager_unknown`, `import_manager_unreadable`, `import_manager_empty`, `import_manager_profile_unknown`. `archive_corrupt` usa `reason`: `damaged`, `empty`, `encrypted` (D062). `archive_suspicious_ratio` não é erro: é a decisão `suspicious_ratio` (continuar/cancelar).
 
 ## 12. Eventos
 
-`mod.imported`, `mod.installed`, `mod.reinstalled`, `mod.install_aborted`, `mod.removed`, `mod.attributes_changed`, `mod.category_changed`, `mod.type_changed`, `archive.retained`, `archive.removed`, `category.changed`. Na F4 também: `import.decision_required` (sinal para a UI reler a fila; fato "o import espera decisão") e `profile.mods_enabled_changed` (toggle de status no profile ativo, D066). Payloads são mapas de texto (código + parâmetros, D044).
+`mod.imported`, `mod.installed`, `mod.reinstalled`, `mod.install_aborted`, `mod.removed`, `mod.attributes_changed`, `mod.category_changed`, `mod.type_changed`, `archive.retained`, `archive.removed`, `category.changed`, `import.manager_completed` (D128; cada mod importado também gera `mod.installed`). Na F4 também: `import.decision_required` (sinal para a UI reler a fila; fato "o import espera decisão") e `profile.mods_enabled_changed` (toggle de status no profile ativo, D066). Payloads são mapas de texto (código + parâmetros, D044).
 
 ## 13. Critérios de aceite
 

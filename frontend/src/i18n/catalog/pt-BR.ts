@@ -2714,4 +2714,13 @@ export const ptBR: Record<MessageKey, string> = {
   "addGame.recognizedBy": "{root} · achou {marker}",
   "addGame.notRecognized": "Nenhum jogo conhecido nesta pasta",
   "error.target_missing": "A pasta {path} ainda não existe.",
+  "error.import_manager_unknown": "Esta pasta não é do Vortex nem do Mod Organizer 2.",
+  "error.import_manager_unreadable": "Não foi possível ler o que o {manager} guarda em {folder}.",
+  "error.import_manager_empty": "Não há mod com arquivos para importar.",
+  "error.import_manager_profile_unknown": "O perfil {name} não existe mais no outro gerenciador.",
+  "operation.kind.import_manager": "Importar de outro gerenciador",
+  "operation.step.read": "Lendo",
+  "busy.holder.import_manager": "Importação de outro gerenciador",
+  "mods.installer.imported": "Importado de outro gerenciador",
+  "history.type.import.manager_completed": "Importou {mods} mods do {source}",
 };

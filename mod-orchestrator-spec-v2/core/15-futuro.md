@@ -40,12 +40,9 @@ Vortex: `gamebryo-savegame-management`.
 Vortex: `local-gamesettings`, `ini_prep`.
 - Preparado: capability `game_settings`; profile `features.localSettings`; aplicação no `post` do deploy (core/07 §7).
 
-## Importar de outros gerenciadores (V1.x)
+## Importar de outros gerenciadores
 
-Vortex: `mo-import`, `nmm-import-tool`.
-- MO2: ler instância (mods/, profiles/<p>/modlist.txt, plugins.txt, loadorder.txt), importar mods como pastas (D048), ModOrder e separadores, profiles, plugins.
-- Vortex: ler staging + `vortex.deployment.json` + estado (se acessível) para mods, habilitados e regras.
-- Preparado: import de pasta, separadores, OrderRules.
+Saiu do futuro: entrou no plano do redesign (RD15, D128; telas na RD16), com MO2 e Vortex. Fica para depois: mover em vez de copiar, NMM, r2modman e perfis da Thunderstore.
 
 ## Mergers de arquivos (V1.x/V2)
 

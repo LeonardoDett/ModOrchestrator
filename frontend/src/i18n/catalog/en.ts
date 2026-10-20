@@ -2718,6 +2718,15 @@ export const en = {
   "addGame.recognizedBy": "{root} · found {marker}",
   "addGame.notRecognized": "No known game in this folder",
   "error.target_missing": "The folder {path} does not exist yet.",
+  "error.import_manager_unknown": "This folder is not a Vortex or Mod Organizer 2 folder.",
+  "error.import_manager_unreadable": "Could not read what {manager} keeps in {folder}.",
+  "error.import_manager_empty": "There is no mod with files to import.",
+  "error.import_manager_profile_unknown": "The profile {name} no longer exists in the other manager.",
+  "operation.kind.import_manager": "Import from another manager",
+  "operation.step.read": "Reading",
+  "busy.holder.import_manager": "Importing from another manager",
+  "mods.installer.imported": "Imported from another manager",
+  "history.type.import.manager_completed": "Imported {mods} mods from {source}",
 } as const;
 
 export type MessageKey = keyof typeof en;

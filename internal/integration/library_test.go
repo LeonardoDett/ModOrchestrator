@@ -21,15 +21,16 @@ import (
 	"modorchestrator/internal/adapters/generic"
 	"modorchestrator/internal/adapters/skyrimse"
 	conflictsvc "modorchestrator/internal/core/application/conflicts"
-	diagsvc "modorchestrator/internal/core/application/diagnostics"
-	historysvc "modorchestrator/internal/core/application/history"
 	deploysvc "modorchestrator/internal/core/application/deployment"
+	diagsvc "modorchestrator/internal/core/application/diagnostics"
 	"modorchestrator/internal/core/application/games"
+	historysvc "modorchestrator/internal/core/application/history"
+	"modorchestrator/internal/core/application/imports"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
-	"modorchestrator/internal/core/application/ports"
 	pluginsvc "modorchestrator/internal/core/application/plugins"
+	"modorchestrator/internal/core/application/ports"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/event"
@@ -42,6 +43,8 @@ import (
 	"modorchestrator/internal/infrastructure/eventbus"
 	"modorchestrator/internal/infrastructure/filesystem"
 	"modorchestrator/internal/infrastructure/hashing"
+	"modorchestrator/internal/infrastructure/managers/mo2"
+	"modorchestrator/internal/infrastructure/managers/vortex"
 	"modorchestrator/internal/infrastructure/persistence/sqlite"
 	"modorchestrator/internal/infrastructure/plugincache"
 	"modorchestrator/internal/infrastructure/system"
@@ -68,6 +71,7 @@ type env struct {
 	diag     *diagsvc.Service
 	hist     *historysvc.Service
 	plug     *pluginsvc.Service
+	imp      *imports.Service
 	db       *sql.DB
 	bus      *eventbus.Bus
 	eventsMu sync.Mutex
@@ -150,6 +154,16 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
 		Ops:      e.ops, Locks: locks, IDs: ids, Clock: clock,
 	})
+	e.imp = imports.NewService(imports.Deps{
+		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db),
+		Readers: []ports.ManagerReader{
+			mo2.Reader{LocalAppData: filepath.Join(dir, "LocalAppData")},
+			vortex.Reader{AppData: filepath.Join(dir, "AppData"), Temp: t.TempDir()},
+		},
+		Mods: e.mods, UoW: sqlite.NewUnitOfWork(db), Publisher: bus, FS: fsys, Extractor: archive.New(),
+		Ops: e.ops, Locks: locks, IDs: ids, Clock: clock,
+	})
+	t.Cleanup(e.imp.Wait)
 
 	e.prof = profilesvc.NewService(profilesvc.Deps{
 		Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles, Rules: e.rules, Mods: e.mods,

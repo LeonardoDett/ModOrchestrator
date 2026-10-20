@@ -288,7 +288,9 @@ Concluída em 2026-10-14 (`5dcfa9b`), já pela regra da D127: tela comparada com
 - **Pronto quando:** aceite da regra 5; exportar um jogo personalizado, excluir e importar de volta; pasta do Skyrim escolhida à mão é reconhecida; demonstração: do app vazio até o espaço do jogo.
 - **Sem a capability:** a lista de suportados mostra `not_applicable` como ausência, nunca como "em breve" (anti-pattern 18). Os modelos são dados do adapter `generic`; nome de jogo ou de carregador só em `internal/adapters`. O Início não soma contagem de plugin para quem não tem.
 
-### RD15. Importação de Vortex e MO2: leitura e importação
+### RD15. Importação de Vortex e MO2: leitura e importação ✅
+
+Concluída em 2026-10-20: D128. O estudo confirmou que o banco do Vortex é legível com segurança (cópia aberta só para leitura, com o Vortex aberto ou não), então regras e perfis do Vortex entram e o risco 1 da seção 8 não se confirmou. Testes de integração em `internal/integration/imports_test.go`.
 
 - **Objetivo:** trazer mods, ordem, regras, perfis e plugins de outro gerenciador (B1).
 - **Entregáveis:**

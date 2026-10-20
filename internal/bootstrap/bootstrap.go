@@ -22,12 +22,14 @@ import (
 	"modorchestrator/internal/core/application/diagnostics"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/history"
+	"modorchestrator/internal/core/application/imports"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/launch"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/overview"
 	"modorchestrator/internal/core/application/plugins"
+	"modorchestrator/internal/core/application/ports"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/game"
@@ -39,6 +41,8 @@ import (
 	"modorchestrator/internal/infrastructure/filesystem"
 	"modorchestrator/internal/infrastructure/hashing"
 	"modorchestrator/internal/infrastructure/logging"
+	"modorchestrator/internal/infrastructure/managers/mo2"
+	"modorchestrator/internal/infrastructure/managers/vortex"
 	"modorchestrator/internal/infrastructure/persistence/sqlite"
 	"modorchestrator/internal/infrastructure/plugincache"
 	"modorchestrator/internal/infrastructure/stores"
@@ -56,6 +60,8 @@ type Container struct {
 	Games      *games.Service
 	Library    *library.Service
 	Profiles   *profilesvc.Service
+	// Imports brings mods and profiles from Vortex and MO2 (D128).
+	Imports    *imports.Service
 	Conflicts  *conflicts.Service
 	Deployment *deployment.Service
 	AutoDeploy *deployment.AutoDeployer
@@ -263,6 +269,26 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:         clock,
 	})
 
+	// Importing from Vortex and MO2 (D128): the readers only read their
+	// folders; Vortex's database is read from a copy in the cache.
+	importsSvc := imports.NewService(imports.Deps{
+		Registry:  registry,
+		Instances: instances,
+		Readers: []ports.ManagerReader{
+			mo2.Reader{LocalAppData: os.Getenv("LOCALAPPDATA")},
+			vortex.Reader{AppData: os.Getenv("APPDATA"), Temp: os.TempDir()},
+		},
+		Mods:      sqlite.NewModRepository(db),
+		UoW:       sqlite.NewUnitOfWork(db),
+		Publisher: bus,
+		FS:        fsys,
+		Extractor: archive.New(),
+		Ops:       ops,
+		Locks:     locks,
+		IDs:       ids,
+		Clock:     clock,
+	})
+
 	profilesSvc := profilesvc.NewService(profilesvc.Deps{
 		Instances: instances,
 		Profiles:  profiles,
@@ -419,6 +445,11 @@ func New(ctx context.Context) (c *Container, err error) {
 	// The library is brought back to committed state before any command
 	// (core/02 §3 "Retomada", D064). A failure is logged, not fatal: the
 	// leftovers stay where they are and nothing is lost.
+	// An interrupted import from another manager leaves the library first;
+	// the library recovery then deletes its folders.
+	if err := importsSvc.Recover(ctx); err != nil {
+		logger.Error("import recovery", logging.KeyError, err.Error())
+	}
 	if err := librarySvc.Recover(ctx); err != nil {
 		logger.Error("library recovery", logging.KeyError, err.Error())
 	}
@@ -481,6 +512,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Games:              gamesSvc,
 		Library:            librarySvc,
 		Profiles:           profilesSvc,
+		Imports:            importsSvc,
 		Conflicts:          conflictsSvc,
 		Deployment:         deploySvc,
 		AutoDeploy:         autoDeploy,
