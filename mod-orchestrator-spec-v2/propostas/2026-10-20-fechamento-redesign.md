@@ -49,6 +49,6 @@ Padrões que deveriam virar componente: nenhum novo além dos já criados na lib
 Decisão de 2026-10-20 (Leonardo): o teste com dados reais e o orçamento 60/30/10 ficam para o **refinamento final**, porque muita coisa ainda vai mudar. O plano do redesign está encerrado; os itens abaixo seguem como pendência desse refinamento.
 
 - Demonstrações manuais em jogo real das F10 a F12 nas telas novas e a importação de uma instalação real do Vortex e do MO2 (aceite da RD16).
-- Percurso completo dos fluxos de `ui/02` só com teclado numa sessão com o app: os testes cobrem as listas, menus e diálogos tocados aqui, mas o percurso de ponta a ponta não foi feito.
-- Revisão independente das ondas 2 a 4 da lib (pendência P3): pede outro revisor; esta auditoria cobriu o uso da lib nas telas, não a lib em si.
+- ~~Percurso completo dos fluxos de `ui/02` só com teclado~~: feito na thread "Pendências antes da v1" (2026-10-20).
+- ~~Revisão independente das ondas 2 a 4 da lib~~: feita em 2026-10-20, relatório em `dettmann-ui-vnext/docs/plans/2026-10-20-revisao-ondas-2-4.md`; os P1 foram corrigidos em seguida.
 - Decisão sobre o orçamento 60/30/10 (§1).
