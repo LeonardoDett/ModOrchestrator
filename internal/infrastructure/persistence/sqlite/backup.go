@@ -17,8 +17,9 @@ import (
 // build (core/14 §4 "validado (schema conhecido)").
 var ErrNotDatabase = errors.New("sqlite: not a restorable database")
 
-// Backups copies the database with the SQLite online backup API, which is
-// consistent while the app keeps using it (core/14 §3).
+// Backups copies the database consistently while the app keeps using it
+// (core/14 §3): new backups with VACUUM INTO, which leaves out the free
+// pages (D138); existing files with the online backup API.
 type Backups struct{ db *sql.DB }
 
 // NewBackups wires the backup adapter over the open database.
@@ -28,16 +29,22 @@ type backupConn interface {
 	NewBackup(dstURI string) (*sqlite.Backup, error)
 }
 
-// Create writes a consistent copy of the open database to dst. The copy is
+// Create writes a compact, consistent copy of the open database to dst
+// (VACUUM INTO: one read transaction, no free pages, D138). The copy is
 // written next to dst and renamed at the end, so dst is never a partial
 // file.
 func (b *Backups) Create(ctx context.Context, dst string) error {
-	conn, err := b.db.Conn(ctx)
-	if err != nil {
+	tmp := dst + ".partial"
+	_ = os.Remove(tmp)
+	if _, err := b.db.ExecContext(ctx, `VACUUM INTO ?`, tmp); err != nil {
+		_ = os.Remove(tmp)
+		return fmt.Errorf("sqlite: backup to %s: %w", dst, err)
+	}
+	if err := os.Rename(tmp, dst); err != nil {
+		_ = os.Remove(tmp)
 		return err
 	}
-	defer conn.Close()
-	return copyTo(conn, dst)
+	return nil
 }
 
 // Changes is the number of rows changed through the connection since it

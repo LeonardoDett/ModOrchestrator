@@ -1369,3 +1369,18 @@ Status: vigente (2026-10-20; percurso de ponta a ponta só com teclado pedido no
 3. **Fica como está**: o controle dentro de uma célula (chave de ativo, link para o mod de origem) segue na ordem do Tab. Com a virtualização só as linhas visíveis entram, e tirar esses controles da ordem pediria um atalho para cada ação de célula.
 
 Consequências: vale para todo jogo. Testes na lib (`focus-trap.test.tsx`, `menu-keyboard-open.test.tsx`).
+
+## D138 — Backups com `VACUUM INTO`
+Status: vigente (2026-10-20; item 2 de `propostas/2026-10-20-trabalho-futuro-f14.md`, escolhido pelo usuário; emenda core/14 §3)
+
+1. **Criar backup** (automático, pré-migration, manual, última inicialização) usa `VACUUM INTO` num arquivo `.partial` ao lado do destino, renomeado no fim. A cópia é consistente (uma transação de leitura) e não leva as páginas livres que o journal de um deploy grande deixa no banco.
+2. **Copiar um arquivo existente** (restauração pendente, recuperação) continua com a API de backup online: o arquivo de origem já é um backup compacto e pode ter WAL.
+3. Validação e restauração não mudam: o backup é um banco SQLite comum, com o mesmo schema.
+
+Medido na escala completa (2.000 mods, 492 mil entradas implantadas): banco de 535 MB, backup de 289 MB em 0,9 s; com a API de backup o arquivo era copiado inteiro. No pior caso da retenção (24 + 7 automáticos, 3 pré-migration, 1 de inicialização) os backups vão de ~18,7 GB para ~10 GB.
+
+Motivo: metade do arquivo eram páginas livres, e a API de backup copia página por página. `VACUUM INTO` resolve sem mexer no banco em uso.
+
+Alternativas rejeitadas por enquanto: `auto_vacuum` incremental no banco (exige um `VACUUM` completo único na migração e fragmenta o arquivo; fica para se o tamanho do próprio banco virar problema); compactar os backups (mais tempo de CPU a cada hora e restauração em duas etapas).
+
+Consequências: vale para todo jogo. O backup segura a única conexão do app enquanto roda, como a API fazia (0,9 s na escala completa). Testes: `backup_compact_test.go` (backup menor que o banco com páginas livres, pasta com `#` e `%`; `MO_BENCH_BACKUP` compara API e `VACUUM INTO`), `backupBytes`/`backupMs` em `TestScaleBenchmark`.

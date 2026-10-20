@@ -32,7 +32,7 @@ Referências: D018, D019, D035; INV-OPS-01/03. Vortex: `recovery` (backups horá
 | Manual | Settings › Workarounds › "Criar backup" | todos |
 | Última inicialização bem-sucedida | após abrir sem erro | 1 |
 
-Backup usa a API de backup online do SQLite (consistente mesmo com o app aberto). Falha de backup ⇒ diagnóstico `backup_failed`.
+Backup usa `VACUUM INTO` do SQLite (consistente mesmo com o app aberto e sem as páginas livres do banco, D138); copiar um arquivo já existente (restauração) usa a API de backup online. Falha de backup ⇒ diagnóstico `backup_failed`.
 
 ## 4. Restaurar
 

@@ -1,6 +1,6 @@
 # Proposta: trabalho futuro da F14
 
-Status: **proposta** (2026-10-20), aguardando escolha do usuário. Nada foi implementado.
+Status: **proposta** (2026-10-20). Item 2 escolhido e feito (D138); itens 1 e 3 aguardam.
 
 Referências: `docs-ia/07-relatorio-f14.md` §6, D100, D101, D102, core/04 §5 e §11, core/14 §3 e §5, `00-visao-e-escopo.md` (requisitos de desempenho).
 

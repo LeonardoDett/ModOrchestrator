@@ -172,6 +172,16 @@ func TestScaleBenchmark(t *testing.T) {
 			t.Fatal(err)
 		}
 	})
+	// Backups leave out the free pages (D138).
+	backup := filepath.Join(dir, "backup.db")
+	measure("backup", func() {
+		if err := sqlite.NewBackups(db).Create(ctx, backup); err != nil {
+			t.Fatal(err)
+		}
+	})
+	if info, err := os.Stat(backup); err == nil {
+		report["backupBytes"] = info.Size()
+	}
 	db.Close()
 	t.Setenv(appdata.EnvDataDir, dir)
 	var c *bootstrap.Container
