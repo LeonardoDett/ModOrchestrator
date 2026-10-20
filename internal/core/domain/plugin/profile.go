@@ -26,6 +26,10 @@ type ProfileState struct {
 	enabled   map[Name]bool
 	loadOrder []Name
 	locks     map[Name]int
+	// byKey finds the recorded name of a plugin case-insensitively without
+	// lowering every name of the map (F14: the load order asks for each of
+	// thousands of plugins).
+	byKey map[string]Name
 }
 
 // doc is the persisted form of the section.
@@ -37,7 +41,7 @@ type doc struct {
 
 // NewProfileState returns the state of a profile that never had plugins.
 func NewProfileState() *ProfileState {
-	return &ProfileState{enabled: map[Name]bool{}, locks: map[Name]int{}}
+	return &ProfileState{enabled: map[Name]bool{}, locks: map[Name]int{}, byKey: map[string]Name{}}
 }
 
 // RestoreProfileState rebuilds a state from its parts (a profile stored
@@ -52,7 +56,16 @@ func RestoreProfileState(enabled map[Name]bool, loadOrder []Name, locks map[Name
 		if strings.TrimSpace(string(n)) == "" {
 			return nil, fmt.Errorf("%w: empty plugin name", ErrInvalid)
 		}
+		if old, dup := st.byKey[n.Key()]; dup {
+			// Two spellings of one plugin (a document written by hand):
+			// keep one, the same one on every read.
+			if string(old) < string(n) {
+				continue
+			}
+			delete(st.enabled, old)
+		}
 		st.enabled[n] = on
+		st.byKey[n.Key()] = n
 	}
 	st.loadOrder = slices.Clone(loadOrder)
 	seen := map[int]Name{}
@@ -107,23 +120,21 @@ func (s *ProfileState) SetEnabled(n Name, enabled bool) error {
 	if strings.TrimSpace(string(n)) == "" {
 		return fmt.Errorf("%w: empty plugin name", ErrInvalid)
 	}
-	for k := range s.enabled {
-		if k.Key() == n.Key() {
-			delete(s.enabled, k)
-		}
+	if old, ok := s.byKey[n.Key()]; ok {
+		delete(s.enabled, old)
 	}
 	s.enabled[n] = enabled
+	s.byKey[n.Key()] = n
 	return nil
 }
 
 // Enabled returns the recorded state of a plugin and whether one exists.
 func (s *ProfileState) Enabled(n Name) (enabled, known bool) {
-	for k, v := range s.enabled {
-		if k.Key() == n.Key() {
-			return v, true
-		}
+	k, ok := s.byKey[n.Key()]
+	if !ok {
+		return false, false
 	}
-	return false, false
+	return s.enabled[k], true
 }
 
 // Active lists the plugins recorded as enabled, sorted by key.

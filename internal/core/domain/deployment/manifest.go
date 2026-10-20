@@ -114,7 +114,40 @@ func (e Entry) validate() error {
 	return nil
 }
 
-func (e Entry) key() string { return string(e.Kind) + "|" + e.Location.Key() }
+// EntryID identifies an entry: its kind and location, compared
+// case-insensitively. A struct, not a joined string, so finding an entry
+// builds nothing (F14: manifests of 500,000 entries).
+type EntryID struct {
+	Kind   EntryKind
+	Target game.TargetID
+	Path   string // relpath.Path.Key
+}
+
+// IDOf is the id of the entry of kind at loc.
+func IDOf(kind EntryKind, loc game.Location) EntryID {
+	return EntryID{Kind: kind, Target: loc.Target, Path: loc.Path.Key()}
+}
+
+// ID is the identity of the entry.
+func (e Entry) ID() EntryID { return IDOf(e.Kind, e.Location) }
+
+// Compare orders ids as a manifest orders its entries: by location, then
+// kind.
+func (a EntryID) Compare(b EntryID) int {
+	if c := game.CompareKeyParts(a.Target, a.Path, b.Target, b.Path); c != 0 {
+		return c
+	}
+	return strings.Compare(string(a.Kind), string(b.Kind))
+}
+
+// ByID returns the entry with the id.
+func (m *Manifest) ByID(id EntryID) (Entry, bool) {
+	i, ok := m.index[id]
+	if !ok {
+		return Entry{}, false
+	}
+	return m.entries[i], true
+}
 
 // Manifest is the applied state of a game instance: which profile and which
 // desired fingerprint were applied, by which operation, and every entry
@@ -128,7 +161,7 @@ type Manifest struct {
 	entries     []Entry
 	// index finds an entry by kind and location: Owns and Backup are asked
 	// once per location of a plan (F14: linear search was quadratic).
-	index map[string]int
+	index map[EntryID]int
 }
 
 // NewManifest records a verified deploy (INV-DEP-05: only verified entries
@@ -149,32 +182,31 @@ func build(instance game.InstanceID, prof ProfileID, fp Fingerprint, op operatio
 	if instance == "" || op == "" {
 		return nil, fmt.Errorf("%w: manifest needs instance and operation", ErrInvalid)
 	}
-	// Each key is built once: the sort compared freshly built strings,
-	// which dominated loading a manifest of 500,000 entries (F14).
+	// Ids are compared field by field and the sort moves small records,
+	// not entries: nothing is built per entry, which dominated loading and
+	// saving a manifest of 500,000 entries (F14). Entries that come already
+	// in order (a settled manifest) sort in about linear time.
 	type keyed struct {
-		order, key string
-		e          Entry
+		id EntryID
+		i  int
 	}
 	all := make([]keyed, len(entries))
-	seen := make(map[string]struct{}, len(entries))
 	for i, e := range entries {
 		if err := e.validate(); err != nil {
 			return nil, err
 		}
-		loc := e.Location.Key()
-		k := keyed{order: loc + "|" + string(e.Kind), key: string(e.Kind) + "|" + loc, e: e}
-		if _, dup := seen[k.key]; dup {
+		all[i] = keyed{id: e.ID(), i: i}
+	}
+	slices.SortFunc(all, func(a, b keyed) int { return a.id.Compare(b.id) })
+	sorted := make([]Entry, len(all))
+	index := make(map[EntryID]int, len(all))
+	for i, k := range all {
+		if i > 0 && all[i-1].id == k.id {
+			e := entries[k.i]
 			return nil, fmt.Errorf("%w: %s %s recorded twice", ErrInvalid, e.Kind, e.Location)
 		}
-		seen[k.key] = struct{}{}
-		all[i] = k
-	}
-	slices.SortFunc(all, func(a, b keyed) int { return strings.Compare(a.order, b.order) })
-	sorted := make([]Entry, len(all))
-	index := make(map[string]int, len(all))
-	for i, k := range all {
-		sorted[i] = k.e
-		index[k.key] = i
+		sorted[i] = entries[k.i]
+		index[k.id] = i
 	}
 	return &Manifest{Instance: instance, Profile: prof, Fingerprint: fp, Operation: op, AppliedAt: at, entries: sorted, index: index}, nil
 }
@@ -212,12 +244,12 @@ func (m *Manifest) Header() Header {
 
 // Links returns the link entries.
 func (m *Manifest) Links() []Entry {
-	return slices.DeleteFunc(m.Entries(), func(e Entry) bool { return e.Kind != KindLink })
+	return m.ofKind(KindLink)
 }
 
 // Backups returns the backup entries.
 func (m *Manifest) Backups() []Entry {
-	return slices.DeleteFunc(m.Entries(), func(e Entry) bool { return e.Kind != KindBackup })
+	return m.ofKind(KindBackup)
 }
 
 // Targets returns the targets that hold at least one entry.
@@ -235,6 +267,21 @@ func (m *Manifest) Targets() []game.TargetID {
 // Entries returns every entry ordered by location.
 func (m *Manifest) Entries() []Entry { return slices.Clone(m.entries) }
 
+// View returns the entries ordered by location without copying them, for
+// reading only: the manifest is immutable and a caller must not change the
+// slice (F14: a copy of 500,000 entries per read).
+func (m *Manifest) View() []Entry { return m.entries }
+
+func (m *Manifest) ofKind(k EntryKind) []Entry {
+	var out []Entry
+	for _, e := range m.entries {
+		if e.Kind == k {
+			out = append(out, e)
+		}
+	}
+	return out
+}
+
 // Owns returns the link entry at loc. A false result means the file at loc
 // is not the manager's and must be protected.
 func (m *Manifest) Owns(loc game.Location) (Entry, bool) { return m.find(KindLink, loc) }
@@ -244,11 +291,11 @@ func (m *Manifest) Backup(loc game.Location) (Entry, bool) { return m.find(KindB
 
 // Dirs returns the folders the manager created.
 func (m *Manifest) Dirs() []Entry {
-	return slices.DeleteFunc(m.Entries(), func(e Entry) bool { return e.Kind != KindDir })
+	return m.ofKind(KindDir)
 }
 
 func (m *Manifest) find(kind EntryKind, loc game.Location) (Entry, bool) {
-	i, ok := m.index[string(kind)+"|"+loc.Key()]
+	i, ok := m.index[IDOf(kind, loc)]
 	if !ok {
 		return Entry{}, false
 	}

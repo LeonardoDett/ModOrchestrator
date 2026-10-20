@@ -1,6 +1,8 @@
 package deployment
 
 import (
+	"slices"
+
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/relpath"
 )
@@ -36,12 +38,29 @@ type Outcome struct {
 // removal only if the file is gone. Skipped actions are ignored. Entries not
 // touched by the journal are kept as they were.
 func Settle(prev []Entry, j *Journal, after After) ([]Entry, []Outcome) {
-	cur := make(map[string]Entry, len(prev))
-	for _, e := range prev {
-		cur[e.key()] = e
+	// The entries keep the order of prev (new ones go last), so a manifest
+	// built from them is already almost sorted (F14).
+	list := slices.Clone(prev)
+	gone := make([]bool, len(list), len(list)+len(j.Actions))
+	at := make(map[EntryID]int, len(prev))
+	for i, e := range prev {
+		at[e.ID()] = i
 	}
-	put := func(e Entry) { cur[e.key()] = e }
-	drop := func(kind EntryKind, loc game.Location) { delete(cur, string(kind)+"|"+loc.Key()) }
+	put := func(e Entry) {
+		id := e.ID()
+		if i, ok := at[id]; ok {
+			list[i], gone[i] = e, false
+			return
+		}
+		at[id] = len(list)
+		list = append(list, e)
+		gone = append(gone, false)
+	}
+	drop := func(kind EntryKind, loc game.Location) {
+		if i, ok := at[IDOf(kind, loc)]; ok {
+			gone[i] = true
+		}
+	}
 	matches := func(e Entry, obs Observation) (Entry, bool) {
 		want, ok := after.Expected(e)
 		if !ok || !obs.Exists || obs.IsDir || !want.Matches(obs.Evidence, e.Method) {
@@ -128,9 +147,11 @@ func Settle(prev []Entry, j *Journal, after After) ([]Entry, []Outcome) {
 		}
 		outcomes = append(outcomes, Outcome{Index: i, Done: done})
 	}
-	out := make([]Entry, 0, len(cur))
-	for _, e := range cur {
-		out = append(out, e)
+	out := make([]Entry, 0, len(list))
+	for i, e := range list {
+		if !gone[i] {
+			out = append(out, e)
+		}
 	}
 	return out, outcomes
 }

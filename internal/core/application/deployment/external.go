@@ -191,7 +191,7 @@ func (s *Service) findUnexpected(ctx context.Context, inst game.Instance, def ga
 	for _, o := range def.ToolOutputs {
 		addFolder(folder{target: o.Target, rel: o.Path.String(), deep: true})
 	}
-	for _, e := range m.Entries() {
+	for _, e := range m.View() {
 		known[e.Location.Key()] = true
 		if e.Kind == deployment.KindLink {
 			addFolder(folder{target: e.Location.Target, rel: parentRel(e.Location.Path.String())})

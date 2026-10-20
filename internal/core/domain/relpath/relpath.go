@@ -16,7 +16,12 @@ var ErrInvalid = errors.New("relpath: invalid path")
 // Path is a relative, forward-slash separated path without "." or ".."
 // segments. The original casing is preserved for display; identity is
 // case-insensitive (see Key).
-type Path struct{ s string }
+type Path struct {
+	s string
+	// k is the Key, computed once: deploy and conflicts compare hundreds of
+	// thousands of paths (F14). It shares s when s has no upper case.
+	k string
+}
 
 // Parse normalizes raw and rejects anything that could escape its root or be
 // interpreted differently by the OS: absolute paths, drive letters, alternate
@@ -53,7 +58,8 @@ func Parse(raw string) (Path, error) {
 	if len(segs) == 0 {
 		return Path{}, fmt.Errorf("%w: empty", ErrInvalid)
 	}
-	return Path{s: strings.Join(segs, "/")}, nil
+	joined := strings.Join(segs, "/")
+	return Path{s: joined, k: strings.ToLower(joined)}, nil
 }
 
 // MustParse is Parse for trusted literals; it panics on invalid input.
@@ -70,7 +76,7 @@ func (p Path) String() string { return p.s }
 
 // Key is the identity used to compare paths: two paths with the same Key
 // address the same file on the deployment target.
-func (p Path) Key() string { return strings.ToLower(p.s) }
+func (p Path) Key() string { return p.k }
 
 // Equal reports whether both paths address the same file.
 func (p Path) Equal(o Path) bool { return p.Key() == o.Key() }

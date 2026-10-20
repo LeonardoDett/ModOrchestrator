@@ -2,6 +2,8 @@ package deployment
 
 import (
 	"context"
+	"slices"
+	"strings"
 	"sync"
 
 	"modorchestrator/internal/core/domain/deployment"
@@ -64,38 +66,49 @@ func (s *Service) scan(ctx context.Context, inst game.Instance, d deployplan.Des
 	}
 	locs := map[string]game.Location{}
 	dirs := map[string]game.Location{}
-	assumed := map[string]deployment.Observation{}
-	for _, f := range d.Files {
-		k := f.Location.Key()
-		if only != nil && !only[k] {
-			continue
+	if only == nil {
+		for _, f := range d.Files {
+			locs[f.Location.Key()] = f.Location
+			for _, a := range deployplan.Ancestors(f.Location) {
+				dirs[a.Key()] = a
+			}
 		}
-		locs[k] = f.Location
-		for _, a := range deployplan.Ancestors(f.Location) {
-			dirs[a.Key()] = a
-		}
-	}
-	if applied != nil {
-		for _, e := range applied.Entries() {
-			k := e.Location.Key()
-			switch {
-			case e.Kind == deployment.KindDir:
-				if only == nil {
-					dirs[k] = e.Location
+		if applied != nil {
+			for _, e := range applied.View() {
+				if e.Kind == deployment.KindDir {
+					dirs[e.Location.Key()] = e.Location
+				} else {
+					locs[e.Location.Key()] = e.Location
 				}
-			case only == nil || only[k]:
-				locs[k] = e.Location
-			case e.Kind == deployment.KindLink:
-				assumed[k] = assumedObservation(e)
+			}
+		}
+	} else {
+		// Incremental (D102, D139): only the touched locations are
+		// observed; the plan counts every other one as kept.
+		for k := range only {
+			if i, ok := slices.BinarySearchFunc(d.Files, k, func(f deployplan.DesiredFile, k string) int { return f.Location.CompareKey(k) }); ok {
+				loc := d.Files[i].Location
+				locs[k] = loc
+				for _, a := range deployplan.Ancestors(loc) {
+					dirs[a.Key()] = a
+				}
+				continue
+			}
+			if applied == nil {
+				continue
+			}
+			t, path, _ := strings.Cut(k, "|")
+			for _, kind := range []deployment.EntryKind{deployment.KindLink, deployment.KindBackup} {
+				if e, ok := applied.ByID(deployment.EntryID{Kind: kind, Target: game.TargetID(t), Path: path}); ok {
+					locs[k] = e.Location
+					break
+				}
 			}
 		}
 	}
 	files, err := s.observeAll(ctx, inst, locs, out.blocked)
 	if err != nil {
 		return out, err
-	}
-	for k, obs := range assumed {
-		files[k] = obs
 	}
 	out.files = files
 	if out.dirs, err = s.observeAll(ctx, inst, dirs, out.blocked); err != nil {
@@ -140,23 +153,33 @@ func (s *Service) touched(r *run) map[string]bool {
 	for k := range r.skip {
 		out[k] = true
 	}
-	want := make(map[string]bool, len(r.desired.Files))
+	// Desired files and manifest entries are both ordered by location: one
+	// walk finds the links no longer wanted, and keys are built only for
+	// what is touched (F14).
+	entries := r.applied.View()
+	j := 0
+	unwanted := func(e deployment.Entry) {
+		if e.Kind != deployment.KindDir {
+			out[e.Location.Key()] = true
+		}
+	}
 	for _, f := range r.desired.Files {
-		k := f.Location.Key()
-		want[k] = true
+		for ; j < len(entries) && entries[j].Location.CompareKeys(f.Location) < 0; j++ {
+			unwanted(entries[j])
+		}
+		for ; j < len(entries) && entries[j].Location.CompareKeys(f.Location) == 0; j++ {
+		}
 		link, ok := r.applied.Owns(f.Location)
 		if !ok || !deployplan.SameFile(f, link) {
-			out[k] = true
+			out[f.Location.Key()] = true
 			continue
 		}
 		if _, changed := externalchange.Classify(link, assumedObservation(link)); changed {
-			out[k] = true
+			out[f.Location.Key()] = true
 		}
 	}
-	for _, e := range r.applied.Entries() {
-		if k := e.Location.Key(); e.Kind != deployment.KindDir && !want[k] {
-			out[k] = true
-		}
+	for ; j < len(entries); j++ {
+		unwanted(entries[j])
 	}
 	return out
 }

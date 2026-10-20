@@ -106,12 +106,18 @@ func Calculate(in Input) Result {
 	for i, m := range in.Enabled {
 		priority[m] = i
 	}
-	type provided struct {
-		loc   game.Location
-		files map[mod.ID]mod.File
-		order []mod.ID
+	// One small record per location, keyed without building strings: the
+	// deploy calculates this for every file of every enabled mod (F14).
+	type provider struct {
+		mod  mod.ID
+		file mod.File
 	}
-	byLoc := map[string]*provided{}
+	type provided struct {
+		loc  game.Location
+		key  locKey
+		prov []provider // in priority order (Enabled is iterated that way)
+	}
+	byLoc := map[locKey]*provided{}
 	for _, m := range in.Enabled {
 		inst := in.Installations[m]
 		if inst == nil {
@@ -121,47 +127,61 @@ func Calculate(in Input) Result {
 			if in.Intent != nil && in.Intent.Excluded(m, f.Dest) {
 				continue
 			}
-			p := byLoc[f.Dest.Key()]
+			k := locKey{target: f.Dest.Target, path: f.Dest.Path.Key()}
+			p := byLoc[k]
 			if p == nil {
-				p = &provided{loc: f.Dest, files: map[mod.ID]mod.File{}}
-				byLoc[f.Dest.Key()] = p
+				p = &provided{loc: f.Dest, key: k}
+				byLoc[k] = p
 			}
-			p.files[m] = f
-			p.order = append(p.order, m) // Enabled is iterated in priority order
+			p.prov = append(p.prov, provider{mod: m, file: f})
 		}
+	}
+	// fileOf is the file mod m provides at p (the last one, as a map
+	// written in order would keep).
+	fileOf := func(p *provided, m mod.ID) (mod.File, bool) {
+		for i := len(p.prov) - 1; i >= 0; i-- {
+			if p.prov[i].mod == m {
+				return p.prov[i].file, true
+			}
+		}
+		return mod.File{}, false
 	}
 
 	var res Result
 	usedOverride := map[string]bool{}
 	reach := newReachability(in.RuleEdges)
-	keys := make([]string, 0, len(byLoc))
-	for k := range byLoc {
-		keys = append(keys, k)
+	all := make([]*provided, 0, len(byLoc))
+	for _, p := range byLoc {
+		all = append(all, p)
 	}
-	slices.Sort(keys)
-	for _, k := range keys {
-		p := byLoc[k]
-		winner := p.order[len(p.order)-1]
+	slices.SortFunc(all, func(a, b *provided) int { return a.key.compare(b.key) })
+	for _, p := range all {
+		winner := p.prov[len(p.prov)-1].mod
 		res2 := ResolutionOrder
 		if in.Intent != nil {
 			if o, ok := in.Intent.Override(p.loc); ok {
-				if _, provides := p.files[o.Winner]; provides {
+				if _, provides := fileOf(p, o.Winner); provides {
 					winner, res2 = o.Winner, ResolutionOverride
-					usedOverride[k] = true
+					usedOverride[p.loc.Key()] = true
 				}
 			}
 		}
-		res.Winners = append(res.Winners, Winner{Location: p.loc, Mod: winner, Installation: in.Installations[winner].ID, File: p.files[winner]})
-		if len(p.order) < 2 {
+		file, _ := fileOf(p, winner)
+		res.Winners = append(res.Winners, Winner{Location: p.loc, Mod: winner, Installation: in.Installations[winner].ID, File: file})
+		if len(p.prov) < 2 {
 			continue
 		}
+		order := make([]mod.ID, len(p.prov))
+		for i, pr := range p.prov {
+			order[i] = pr.mod
+		}
 		switch {
-		case redundant(p.files):
+		case redundant(p.prov, func(pr provider) mod.File { return pr.file }, func(pr provider) mod.ID { return pr.mod }):
 			res2 = ResolutionRedundant
-		case res2 == ResolutionOrder && reach.beatsAll(winner, p.order):
+		case res2 == ResolutionOrder && reach.beatsAll(winner, order):
 			res2 = ResolutionRule
 		}
-		res.Conflicts = append(res.Conflicts, FileConflict{Location: p.loc, Providers: slices.Clone(p.order), Winner: winner, Resolution: res2})
+		res.Conflicts = append(res.Conflicts, FileConflict{Location: p.loc, Providers: order, Winner: winner, Resolution: res2})
 	}
 
 	if in.Intent != nil {
@@ -179,10 +199,27 @@ func Calculate(in Input) Result {
 	return res
 }
 
-func redundant(files map[mod.ID]mod.File) bool {
+// locKey is a location compared case-insensitively.
+type locKey struct {
+	target game.TargetID
+	path   string // relpath.Path.Key
+}
+
+// compare orders keys as their joined form "target|path" would sort.
+func (a locKey) compare(b locKey) int {
+	return game.CompareKeyParts(a.target, a.path, b.target, b.path)
+}
+
+// redundant reports whether every provider (the last file of each mod)
+// has the same known content.
+func redundant[T any](prov []T, fileOf func(T) mod.File, modOf func(T) mod.ID) bool {
+	last := map[mod.ID]mod.File{}
+	for _, p := range prov {
+		last[modOf(p)] = fileOf(p)
+	}
 	var size int64 = -1
 	hash := ""
-	for _, f := range files {
+	for _, f := range last {
 		if f.Hash == "" {
 			return false
 		}

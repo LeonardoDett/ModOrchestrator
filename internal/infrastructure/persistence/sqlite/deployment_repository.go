@@ -98,7 +98,6 @@ func (r entryRecord) entry() (deployment.Entry, error) {
 	}, nil
 }
 
-func entryKey(e deployment.Entry) string { return string(e.Kind) + "|" + e.Location.Key() }
 
 func (r *ManifestRepository) OwnsLink(ctx context.Context, instance game.InstanceID, loc game.Location) (bool, error) {
 	var n int
@@ -170,7 +169,7 @@ func (r *ManifestRepository) Save(ctx context.Context, m, prev *deployment.Manif
 	if prev != nil && prev.Instance != m.Instance {
 		return fmt.Errorf("sqlite: previous manifest belongs to %s, not %s", prev.Instance, m.Instance)
 	}
-	entries := m.Entries()
+	entries := m.View()
 	if _, err := r.db.ExecContext(ctx, `
 		INSERT INTO deployment_manifests (instance_id, profile_id, fingerprint, operation_id, applied_at, entry_count)
 		VALUES (?, ?, ?, ?, ?, ?)
@@ -179,22 +178,45 @@ func (r *ManifestRepository) Save(ctx context.Context, m, prev *deployment.Manif
 		string(m.Instance), string(m.Profile), string(m.Fingerprint), string(m.Operation), formatTime(m.AppliedAt), len(entries)); err != nil {
 		return fmt.Errorf("sqlite: save manifest: %w", err)
 	}
-	old := map[string]deployment.Entry{}
+	// Both manifests list their entries in the same order: one merge walk
+	// finds what was added, changed and removed (F14: no map of 500,000
+	// entries per save).
+	var before []deployment.Entry
 	if prev != nil {
-		for _, e := range prev.Entries() {
-			old[entryKey(e)] = e
-		}
+		before = prev.View()
 	} else if _, err := r.db.ExecContext(ctx, `DELETE FROM deployment_entries WHERE instance_id = ?`, string(m.Instance)); err != nil {
 		return err
 	}
-	for _, e := range entries {
-		k := entryKey(e)
-		if before, ok := old[k]; ok {
-			delete(old, k)
-			if sameEntry(before, e) {
+	i, j := 0, 0
+	for i < len(before) || j < len(entries) {
+		var c int
+		switch {
+		case i == len(before):
+			c = 1
+		case j == len(entries):
+			c = -1
+		default:
+			c = before[i].ID().Compare(entries[j].ID())
+		}
+		switch {
+		case c < 0: // only in the previous manifest
+			e := before[i]
+			i++
+			if _, err := r.db.ExecContext(ctx, `DELETE FROM deployment_entries WHERE instance_id = ? AND kind = ? AND location_key = ?`,
+				string(m.Instance), string(e.Kind), e.Location.Key()); err != nil {
+				return err
+			}
+			continue
+		case c == 0:
+			same := sameEntry(before[i], entries[j])
+			i++
+			if same {
+				j++
 				continue
 			}
 		}
+		e := entries[j]
+		j++
 		rec := toEntryRecord(e)
 		ev, err := json.Marshal(rec.Evidence)
 		if err != nil {
@@ -208,12 +230,6 @@ func (r *ManifestRepository) Save(ctx context.Context, m, prev *deployment.Manif
 				method = excluded.method, backup_path = excluded.backup_path, evidence_json = excluded.evidence_json`,
 			string(m.Instance), rec.Kind, e.Location.Key(), rec.Target, rec.Path, rec.Mod, rec.Installation, rec.Source, rec.Method, rec.BackupPath, string(ev)); err != nil {
 			return fmt.Errorf("sqlite: save entry %s: %w", e.Location, err)
-		}
-	}
-	for _, e := range old {
-		if _, err := r.db.ExecContext(ctx, `DELETE FROM deployment_entries WHERE instance_id = ? AND kind = ? AND location_key = ?`,
-			string(m.Instance), string(e.Kind), e.Location.Key()); err != nil {
-			return err
 		}
 	}
 	return nil

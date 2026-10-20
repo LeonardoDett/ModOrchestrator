@@ -109,7 +109,7 @@ func TestDiffOnlyTouchesChangedLocations(t *testing.T) {
 	if s.Keep != 1 || s.Replace != 1 || s.Remove != 1 || s.RemoveDir != 1 || s.Create != 0 {
 		t.Fatalf("diff = %+v", s)
 	}
-	if p.Actions[0].Kind != deployment.ActionRemoveManaged || p.Actions[len(p.Actions)-1].Kind != deployment.ActionKeep {
+	if p.Actions[0].Kind != deployment.ActionRemoveManaged || slices.ContainsFunc(p.Actions, func(a deployment.Action) bool { return a.Kind == deployment.ActionKeep }) {
 		t.Fatalf("removals run first: %v", kinds(p))
 	}
 	if !p.Complete() {
@@ -233,7 +233,7 @@ func TestResolutions(t *testing.T) {
 	}
 	// Hardlink edit kept: the new evidence is the manager's, nothing moves.
 	edited := deployment.Observation{Exists: true, Evidence: deployment.Evidence{FileID: link.Evidence.FileID, Size: 9}}
-	if p := Build(in(edited, Resolution{Kind: ResolveAdopt})); p.NeedsDecision() || p.Summary.Keep != 1 || len(p.Actions) != 1 {
+	if p := Build(in(edited, Resolution{Kind: ResolveAdopt})); p.NeedsDecision() || p.Summary.Keep != 1 || len(p.Actions) != 0 {
 		t.Fatalf("keep change: %+v", p)
 	}
 	// Edited copy reverted: the staged file goes back over the edit.

@@ -134,6 +134,9 @@ type Summary struct {
 
 // Plan is the reconciliation of desired, applied and observed states.
 type Plan struct {
+	// Actions change something; a location that stays as it is gets no
+	// action, only a count in Summary.Keep (F14: an incremental deploy of a
+	// large game is mostly locations that stay).
 	Actions []deployment.Action
 	// Changes are external changes on locations the plan touches; those
 	// locations get no action until the user decides (INV-EXT-01).
@@ -190,6 +193,13 @@ type Input struct {
 	// run, by location key (core/09 §4). A location without one keeps
 	// waiting for a decision (or is skipped).
 	Resolve map[string]Resolution
+	// Only, when set (incremental deploy, D102), lists the location keys the
+	// plan looks at. Every other desired location is the link the manifest
+	// records and is counted as kept, with no action and no observation;
+	// locations of blocked targets and method fallbacks waiting for a
+	// decision are always planned (D139). Desired.Files must be sorted by
+	// Location.Key, as BuildDesired leaves them.
+	Only map[string]bool
 }
 
 // ResolutionKind is how a decided external change enters the plan.
@@ -222,12 +232,14 @@ type Resolution struct {
 // Build computes the plan.
 func Build(in Input) Plan {
 	var p Plan
-	want := make(map[string]DesiredFile, len(in.Desired.Files))
+	want := map[string]DesiredFile{}
 	keys := map[string]game.Location{}
 	fallbacks := map[string]*Fallback{}
-	for _, f := range in.Desired.Files {
-		k := f.Location.Key()
-		if f.FallbackFrom != "" && !in.AcceptedFallbacks[FallbackKey(f.Location.Target, f.FallbackFrom, f.Method)] && !in.Skip[k] {
+	pending := func(f DesiredFile) bool {
+		return f.FallbackFrom != "" && !in.AcceptedFallbacks[FallbackKey(f.Location.Target, f.FallbackFrom, f.Method)]
+	}
+	addWanted := func(k string, f DesiredFile) {
+		if pending(f) && !in.Skip[k] {
 			fk := FallbackKey(f.Location.Target, f.FallbackFrom, f.Method)
 			g := fallbacks[fk]
 			if g == nil {
@@ -239,12 +251,55 @@ func Build(in Input) Plan {
 		want[k] = f
 		keys[k] = f.Location
 	}
-	if in.Applied != nil {
-		for _, e := range in.Applied.Entries() {
-			if e.Kind != deployment.KindDir {
-				keys[e.Location.Key()] = e.Location
+	if in.Only == nil {
+		want = make(map[string]DesiredFile, len(in.Desired.Files))
+		for _, f := range in.Desired.Files {
+			addWanted(f.Location.Key(), f)
+		}
+		if in.Applied != nil {
+			for _, e := range in.Applied.View() {
+				if e.Kind != deployment.KindDir {
+					keys[e.Location.Key()] = e.Location
+				}
 			}
 		}
+	} else {
+		// Incremental (D139): only the touched locations, the blocked
+		// targets and the pending fallbacks; keys are built for those only.
+		files := in.Desired.Files
+		for _, f := range files {
+			if in.BlockedTargets[f.Location.Target] || pending(f) {
+				addWanted(f.Location.Key(), f)
+			}
+		}
+		for k := range in.Only {
+			if i, ok := slices.BinarySearchFunc(files, k, func(f DesiredFile, k string) int { return f.Location.CompareKey(k) }); ok {
+				addWanted(k, files[i])
+			}
+		}
+		if in.Applied != nil {
+			for _, e := range in.Applied.View() {
+				if e.Kind == deployment.KindDir {
+					continue
+				}
+				if in.BlockedTargets[e.Location.Target] {
+					keys[e.Location.Key()] = e.Location
+				}
+			}
+			for k := range in.Only {
+				if _, ok := keys[k]; ok {
+					continue
+				}
+				t, path, _ := strings.Cut(k, "|")
+				for _, kind := range []deployment.EntryKind{deployment.KindLink, deployment.KindBackup} {
+					if e, ok := in.Applied.ByID(deployment.EntryID{Kind: kind, Target: game.TargetID(t), Path: path}); ok {
+						keys[k] = e.Location
+						break
+					}
+				}
+			}
+		}
+		p.Summary.Keep = len(files) - len(want)
 	}
 	sorted := make([]string, 0, len(keys))
 	for k := range keys {
@@ -305,7 +360,7 @@ func Build(in Input) Plan {
 			}
 			switch {
 			case isWanted && sameFile(d, *link):
-				add(deployment.Action{Kind: deployment.ActionKeep, Location: loc, Current: link})
+				p.Summary.Keep++
 			case isWanted:
 				add(deployment.Action{Kind: deployment.ActionReplaceManaged, Location: loc, Desired: entryOf(d), Current: link})
 				creating[k] = d
@@ -356,7 +411,9 @@ func Build(in Input) Plan {
 		p.Fallbacks = append(p.Fallbacks, *fallbacks[k])
 	}
 	p.Actions = deployment.SortForApply(p.Actions)
-	p.Summary = summarize(p, want)
+	kept := p.Summary.Keep
+	p.Summary = summarize(p, creating)
+	p.Summary.Keep += kept
 	return p
 }
 
@@ -453,6 +510,10 @@ func (p *Plan) planDirs(in Input, want map[string]DesiredFile, creating map[stri
 			}
 		}
 	}
+	if in.Only != nil {
+		p.cleanTouchedDirs(in, made)
+		return
+	}
 	for k := range want {
 		need(k)
 	}
@@ -464,6 +525,40 @@ func (p *Plan) planDirs(in Input, want map[string]DesiredFile, creating map[stri
 			e := dir
 			p.Actions = append(p.Actions, deployment.Action{Kind: deployment.ActionRemoveDir, Location: dir.Location, Current: &e})
 		}
+	}
+}
+
+// cleanTouchedDirs is the folder cleanup of an incremental plan (D139):
+// only folders above a link the plan removes can stop being needed, and
+// they are checked against every desired file without building keys.
+func (p *Plan) cleanTouchedDirs(in Input, made map[string]bool) {
+	cand := map[string]deployment.Entry{}
+	for _, a := range p.Actions {
+		if a.Kind != deployment.ActionRemoveManaged {
+			continue
+		}
+		for _, dir := range ancestors(a.Location) {
+			if e, ok := in.Applied.ByID(deployment.IDOf(deployment.KindDir, dir)); ok && !made[dir.Key()] {
+				cand[dir.Key()] = e
+			}
+		}
+	}
+	if len(cand) == 0 {
+		return
+	}
+	under := func(loc game.Location, dir deployment.Entry) bool {
+		return loc.Target == dir.Location.Target && strings.HasPrefix(loc.Path.Key(), dir.Location.Path.Key()+"/")
+	}
+	for k, dir := range cand {
+		needed := slices.ContainsFunc(in.Desired.Files, func(f DesiredFile) bool { return under(f.Location, dir) }) ||
+			slices.ContainsFunc(p.Skipped, func(l game.Location) bool { return under(l, dir) })
+		if needed {
+			delete(cand, k)
+		}
+	}
+	for _, k := range sortedKeys(cand) {
+		e := cand[k]
+		p.Actions = append(p.Actions, deployment.Action{Kind: deployment.ActionRemoveDir, Location: e.Location, Current: &e})
 	}
 }
 
@@ -519,7 +614,9 @@ func sortedKeys[V any](m map[string]V) []string {
 	return out
 }
 
-func summarize(p Plan, want map[string]DesiredFile) Summary {
+// summarize counts the actions; creating holds the desired file of every
+// action that writes one.
+func summarize(p Plan, creating map[string]DesiredFile) Summary {
 	s := Summary{Decisions: len(p.Changes) + len(p.Blocked)}
 	for _, f := range p.Fallbacks {
 		s.Decisions += len(f.Locations)
@@ -544,7 +641,7 @@ func summarize(p Plan, want map[string]DesiredFile) Summary {
 			s.RemoveDir++
 		}
 		if a.Desired != nil && a.Desired.Method == game.MethodCopy {
-			s.ExtraBytes += want[a.Location.Key()].Size
+			s.ExtraBytes += creating[a.Location.Key()].Size
 		}
 	}
 	return s

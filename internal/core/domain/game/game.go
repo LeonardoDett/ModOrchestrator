@@ -395,5 +395,34 @@ func (l Location) Validate() error {
 // Key is the identity of the location (case-insensitive path).
 func (l Location) Key() string { return string(l.Target) + "|" + l.Path.Key() }
 
+// CompareKeys orders two locations as their Keys sort, without building
+// them (F14: plans and manifests of 500,000 locations).
+func (l Location) CompareKeys(o Location) int {
+	return CompareKeyParts(l.Target, l.Path.Key(), o.Target, o.Path.Key())
+}
+
+// CompareKeyParts orders "ta|pa" against "tb|pb" without joining them.
+func CompareKeyParts(ta TargetID, pa string, tb TargetID, pb string) int {
+	if ta == tb {
+		return strings.Compare(pa, pb)
+	}
+	at, bt := string(ta)+"|", string(tb)+"|"
+	n := min(len(at), len(bt))
+	if c := strings.Compare(at[:n], bt[:n]); c != 0 {
+		return c
+	}
+	// One target and its "|" is a prefix of the other: the rest decides.
+	if len(at) < len(bt) {
+		return strings.Compare(pa, bt[n:]+pb)
+	}
+	return strings.Compare(at[n:]+pa, pb)
+}
+
+// CompareKey orders a location against a Key without building its own.
+func (l Location) CompareKey(key string) int {
+	t, p, _ := strings.Cut(key, "|")
+	return CompareKeyParts(l.Target, l.Path.Key(), TargetID(t), p)
+}
+
 // String renders the location for evidence and logs.
 func (l Location) String() string { return string(l.Target) + ":" + l.Path.String() }

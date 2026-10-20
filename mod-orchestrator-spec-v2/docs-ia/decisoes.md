@@ -1384,3 +1384,19 @@ Motivo: metade do arquivo eram páginas livres, e a API de backup copia página 
 Alternativas rejeitadas por enquanto: `auto_vacuum` incremental no banco (exige um `VACUUM` completo único na migração e fragmenta o arquivo; fica para se o tamanho do próprio banco virar problema); compactar os backups (mais tempo de CPU a cada hora e restauração em duas etapas).
 
 Consequências: vale para todo jogo. O backup segura a única conexão do app enquanto roda, como a API fazia (0,9 s na escala completa). Testes: `backup_compact_test.go` (backup menor que o banco com páginas livres, pasta com `#` e `%`; `MO_BENCH_BACKUP` compara API e `VACUUM INTO`), `backupBytes`/`backupMs` em `TestScaleBenchmark`.
+
+## D139 — Deploy incremental planeja só o que tocou
+Status: vigente (2026-10-20; item 1 de `propostas/2026-10-20-trabalho-futuro-f14.md`, escolhido pelo usuário; completa D101 e D102)
+
+1. **Plano**: sobre um manifesto verificado (o caso de D102), `deployplan.Input.Only` leva as Locations que o deploy tocou e o plano só olha essas, as dos targets bloqueados e as de método alternativo esperando decisão. As outras são o link que o manifesto registra: entram em `Summary.Keep`, sem ação e sem observação. O scan deixa de montar uma observação presumida para cada link não tocado.
+2. **Pastas**: num plano incremental só podem deixar de ser necessárias as pastas acima de um link que o plano remove; cada uma é conferida contra todos os arquivos desejados. Ligar `deploy.cleanEmptyDirs` passa a valer para pastas antigas no próximo scan completo.
+3. **Ação "manter"**: o plano deixa de listar uma ação `keep` por Location que não muda; elas só contam no resumo (o journal já as descartava).
+4. **Custos sem mudar comportamento**: o inventário de plugins achava o estado de cada plugin com uma busca linear (quadrático com 3.000 plugins); `relpath.Path` guarda a chave em minúsculas; manifesto, conflitos e plano comparam e indexam Locations sem montar texto (`deployment.EntryID`, `game.CompareKeyParts`), na mesma ordem das chaves; o manifesto é gravado comparando as duas listas ordenadas, sem mapa; ler um manifesto não copia as entradas (`Manifest.View`).
+
+Medido na escala completa (2.000 mods, 492 mil entradas, mesma máquina e rodada): deploy desabilitando ou habilitando 1 mod de 5,6 s para 1,8 s; deploy sem mudanças de 3,3 s para 1,0 s. A meta de `00-visao-e-escopo.md` (incremental < 2 s) passa a valer com 500 mil arquivos, com pouca folga: o que resta é o cálculo de vencedores de todos os mods (~0,8 s), o manifesto novo (~0,5 s) e o inventário de plugins (~0,3 s).
+
+Motivo: o scan já observava só o que mudava (D102), mas plano, manifesto e inventário ainda percorriam o jogo inteiro, montando texto por Location.
+
+Alternativas rejeitadas: plano incremental completo, com estado desejado guardado entre deploys e recálculo só dos mods mudados (mais risco no invariante central, e a meta foi atingida sem ele); aceitar a meta só até 100 mil arquivos.
+
+Consequências: vale para todo jogo. Teste de equivalência (`TestIncrementalPlanMatchesFullPlan`: 200 cenários aleatórios, plano restrito igual ao completo em ações e resumo, inclusive limpeza de pastas e alvos com prefixo comum), comparação de ordem (`TestLocKeyCompareMatchesJoinedKey`) e o perfil de CPU do benchmark (`MO_BENCH_PROFILE`).

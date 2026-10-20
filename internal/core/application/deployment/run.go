@@ -319,7 +319,7 @@ func (s *Service) settleJournal(ctx context.Context, inst game.Instance, j *depl
 	var prevEntries []deployment.Entry
 	prof := j.Profile
 	if prev != nil {
-		prevEntries = prev.Entries()
+		prevEntries = prev.View()
 		if prof == "" {
 			prof = prev.Profile
 		}
@@ -523,6 +523,7 @@ func (s *Service) planInput(ctx context.Context, r *run) deployplan.Input {
 		CleanDirs:  s.boolSetting(ctx, r.inst.ID, "deploy.cleanEmptyDirs", true),
 		BackupPath: s.backupPathFor(ctx, r.inst),
 		Resolve:    r.resolve,
+		Only:       r.only,
 	}
 	if r.kind == KindPurge {
 		in = deployplan.PurgeInput(in)
@@ -651,7 +652,7 @@ func (s *Service) applyStep(ctx context.Context, r *run) error {
 func (s *Service) verify(ctx context.Context, r *run) []deployment.Entry {
 	var prev []deployment.Entry
 	if r.applied != nil {
-		prev = r.applied.Entries()
+		prev = r.applied.View()
 	}
 	if r.journal == nil {
 		return prev

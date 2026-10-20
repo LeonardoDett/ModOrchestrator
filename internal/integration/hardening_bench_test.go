@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime/pprof"
 	"strconv"
 	"strings"
 	"testing"
@@ -132,11 +133,25 @@ func TestScaleBenchmark(t *testing.T) {
 	if err := e.prof.SetModsEnabled(ctx, e.inst.ID, one, false); err != nil {
 		t.Fatal(err)
 	}
+	// MO_BENCH_PROFILE names a CPU profile of the two incremental deploys.
+	if out := os.Getenv("MO_BENCH_PROFILE"); out != "" {
+		f, err := os.Create(out)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := pprof.StartCPUProfile(f); err != nil {
+			t.Fatal(err)
+		}
+		defer func() { pprof.StopCPUProfile(); f.Close() }()
+	}
 	measure("deployDisableOne", func() { benchDeploy(t, e, deploysvc.KindDeploy) })
 	if err := e.prof.SetModsEnabled(ctx, e.inst.ID, one, true); err != nil {
 		t.Fatal(err)
 	}
 	measure("deployEnableOne", func() { benchDeploy(t, e, deploysvc.KindDeploy) })
+	if os.Getenv("MO_BENCH_PROFILE") != "" {
+		pprof.StopCPUProfile()
+	}
 	e.wantStatus(deploystate.InSync)
 	measure("verify", func() { e.verify() })
 

@@ -61,7 +61,7 @@ Achados: UTF-8 inválido aceito (dois nomes viravam um arquivo), checagem de vaz
 | Abertura < 3 s com 1.000 mods | 2,5 s com 2.000 mods (inicialização 65 ms + primeira leitura da tela Mods, que monta o índice de conflitos) | atende |
 | Recalcular conflitos após habilitar 1 mod < 500 ms com 200 mil Locations | 312–319 ms com ~455 mil Locations | atende |
 | Deploy inicial de 100 mil hardlinks < 60 s | 32 s medidos com 400 mods (98 mil entradas); 3.256 links/s na escala completa | atende |
-| Deploy incremental de 1 mod < 2 s | com D102: 0,6–0,8 s com 100 mil arquivos; 3,1–4,6 s com 500 mil | atende até 100 mil; **não atende** com 500 mil (ver §6) |
+| Deploy incremental de 1 mod < 2 s | com D102: 0,6–0,8 s com 100 mil arquivos; 3,1–4,6 s com 500 mil. Com D139 (2026-10-20): 1,8 s com 500 mil | atende |
 | 2.000 mods / 500 mil arquivos / 3.000 plugins sem degradação perceptível | lista de mods 71 ms; lista de plugins 81 ms (2 s na primeira leitura, com os cabeçalhos frios); prévia do sort 87 ms | atende, salvo o deploy incremental |
 
 Outros números da escala completa: import 476 s (1.049 arquivos/s, com o antivírus examinando cada arquivo criado), purge 83 s, "Verificar implantação" 9,3 s, `integrity_check` 1,2 s.
@@ -80,7 +80,7 @@ Com 15 mil arquivos (60 mods): deploy sem mudanças de 10,5 s para 0,2 s, purge 
 
 ## 6. Pendências
 
-1. **Deploy incremental com 500 mil arquivos**. Com D102 (o deploy observa só o que toca, escolhido pelo usuário), fica em 0,6–0,8 s com 100 mil arquivos e 3,1–4,6 s com 500 mil. O que resta é trabalho em memória proporcional ao tamanho do jogo: calcular o estado desejado a partir dos vencedores dos conflitos (1,2 s), montar o plano sobre todas as Locations (1,1 s), comparar o manifesto inteiro ao gravar (0,9 s) e o inventário de plugins depois do deploy (0,8–1,1 s). Ficar abaixo de 2 s nessa escala pede um plano incremental (só as Locations alteradas), o que é trabalho para uma fase própria.
+1. ~~**Deploy incremental com 500 mil arquivos**~~. Resolvido na D139 (2026-10-20): o plano olha só as Locations tocadas e manifesto, conflitos e inventário de plugins deixam de montar texto por Location. Na escala completa, 1 mod a mais ou a menos de 5,6 s para 1,8 s e deploy sem mudanças de 3,3 s para 1,0 s (mesma máquina e rodada; esta rodada mediu tudo mais lento que a de 2026-10-08, e o "antes" é o desta rodada).
 2. ~~**Tamanho dos backups**~~. Resolvido na D138 (2026-10-20): `VACUUM INTO` deixa de copiar as páginas livres; na escala completa o banco de 535 MB vira um backup de 289 MB em 0,9 s, e o pior caso da retenção cai de ~18,7 GB para ~10 GB.
 3. **Redescobrir mods e "Adotar"** depois de perder o banco (core/14 §5–6, core/04 §11): não existem (D100).
 4. **Volumes reais**: a máquina tem um único volume; "outro volume" e FAT32 foram simulados no adapter de filesystem (o Windows real recusa o hardlink com `ERROR_NOT_SAME_DEVICE`, reproduzido). Falta rodar uma vez com um segundo disco.
@@ -93,6 +93,6 @@ go test ./internal/integration/ -run 'Kill' -count=1
 MO_KILL_ALL=1 go test ./internal/integration/ -run 'Kill' -count=1
 go test ./internal/core/domain/relpath/ -run XXX -fuzz FuzzParse -fuzztime 90s
 go test ./internal/infrastructure/filesystem/ -run XXX -fuzz FuzzRelpathOnWindows -fuzztime 180s
-MO_BENCH=1 MO_BENCH_OUT=bench.json go test ./internal/integration/ -run TestScaleBenchmark -count=1 -v -timeout 120m
+MO_BENCH=1 MO_BENCH_OUT=bench.json MO_BENCH_PROFILE=deploy.pprof go test ./internal/integration/ -run TestScaleBenchmark -count=1 -v -timeout 120m
 MO_WRITE_MIGRATION_FIXTURE=1 go test ./internal/integration/ -run TestWriteMigrationFixture
 ```
