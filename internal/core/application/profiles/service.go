@@ -72,6 +72,8 @@ type Deps struct {
 	Profiles  ports.Profiles
 	Rules     ports.Rules
 	Mods      ports.Mods
+	// Manifests says which profile the game folder has (optional).
+	Manifests ports.Manifests
 	Events    ports.EventLog
 	UoW       ports.UnitOfWork
 	Publisher operations.Publisher

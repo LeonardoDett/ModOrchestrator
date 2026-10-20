@@ -295,6 +295,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Profiles:  profiles,
 		Rules:     sqlite.NewRuleRepository(db),
 		Mods:      sqlite.NewModRepository(db),
+		Manifests: sqlite.NewManifestRepository(db),
 		Events:    sqlite.NewEventLog(db),
 		UoW:       sqlite.NewUnitOfWork(db),
 		Publisher: bus,

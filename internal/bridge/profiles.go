@@ -25,6 +25,8 @@ type ProfileSummaryDTO struct {
 	CreatedAt       string `json:"createdAt"`
 	UpdatedAt       string `json:"updatedAt"`
 	LastActivatedAt string `json:"lastActivatedAt,omitempty"`
+	Plugins         int    `json:"plugins"`
+	Deployed        bool   `json:"deployed"`
 }
 
 type NamedModDTO struct {
@@ -169,7 +171,7 @@ func toProfileSummaryDTO(s profiles.Summary) ProfileSummaryDTO {
 	return ProfileSummaryDTO{
 		ID: string(s.ID), Name: s.Name, Notes: s.Notes, Active: s.Active, Enabled: s.Enabled, Mods: s.Mods,
 		Snapshots: s.Snapshots, CreatedAt: formatTime(s.CreatedAt), UpdatedAt: formatTime(s.UpdatedAt),
-		LastActivatedAt: optionalTime(s.LastActivatedAt),
+		LastActivatedAt: optionalTime(s.LastActivatedAt), Plugins: s.Plugins, Deployed: s.Deployed,
 	}
 }
 

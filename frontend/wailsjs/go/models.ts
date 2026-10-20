@@ -4578,6 +4578,8 @@ export namespace bridge {
 	    createdAt: string;
 	    updatedAt: string;
 	    lastActivatedAt?: string;
+	    plugins: number;
+	    deployed: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new ProfileSummaryDTO(source);
@@ -4595,6 +4597,8 @@ export namespace bridge {
 	        this.createdAt = source["createdAt"];
 	        this.updatedAt = source["updatedAt"];
 	        this.lastActivatedAt = source["lastActivatedAt"];
+	        this.plugins = source["plugins"];
+	        this.deployed = source["deployed"];
 	    }
 	}
 	export class ProfileComparisonDTO {

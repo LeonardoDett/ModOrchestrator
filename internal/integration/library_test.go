@@ -166,7 +166,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 	t.Cleanup(e.imp.Wait)
 
 	e.prof = profilesvc.NewService(profilesvc.Deps{
-		Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles, Rules: e.rules, Mods: e.mods,
+		Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles, Rules: e.rules, Mods: e.mods, Manifests: sqlite.NewManifestRepository(db),
 		Events: sqlite.NewEventLog(db), UoW: sqlite.NewUnitOfWork(db), Publisher: bus,
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
 		Locks:    locks, IDs: ids, Clock: clock,

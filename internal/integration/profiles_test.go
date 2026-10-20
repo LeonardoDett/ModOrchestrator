@@ -2,6 +2,8 @@ package integration_test
 
 import (
 	"errors"
+	deploysvc "modorchestrator/internal/core/application/deployment"
+	"modorchestrator/internal/core/domain/operation"
 	"slices"
 	"strconv"
 	"testing"
@@ -432,4 +434,27 @@ func (e *env) firstOther() profile.ID {
 	}
 	e.t.Fatal("no other profile")
 	return ""
+}
+
+// Board JogoPerfis: each card says whether the game folder has its profile
+// and how many plugins it keeps enabled.
+func TestProfileSummaryKnowsTheDeployedProfile(t *testing.T) {
+	e := newEnv(t)
+	e.installFiles(map[string][]string{"Alpha": {"textures/a.dds", "a"}}, "Alpha")
+	if op := e.deploy(deploysvc.KindDeploy); op.Status != operation.StatusSucceeded {
+		t.Fatalf("deploy: %+v", op.Error)
+	}
+	other, err := e.prof.Create(ctx, e.inst.ID, "Other", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	list, err := e.prof.List(ctx, e.inst.ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, s := range list {
+		if s.Deployed != (s.ID != other) {
+			t.Fatalf("%s deployed = %v", s.Name, s.Deployed)
+		}
+	}
 }

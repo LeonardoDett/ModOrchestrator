@@ -165,11 +165,12 @@ describe("Profiles (F5)", () => {
     const { state, backend } = world();
     render(<App backend={backend} />);
     await open(user, "Profiles");
-    const list = await screen.findByRole("list", { name: "Profiles" });
-    const cards = within(list).getAllByRole("listitem");
+    const list = await screen.findByRole("listbox", { name: "Profiles" });
+    const cards = within(list).getAllByRole("option");
     expect(cards).toHaveLength(2);
     expect(within(cards[0]!).getByText("Active")).toBeInTheDocument();
-    expect(within(cards[0]!).getByRole("button", { name: "Activate" })).toBeDisabled();
+    expect(within(cards[0]!).getByText("Not deployed")).toBeInTheDocument();
+    expect(within(cards[0]!).getByRole("button", { name: "In use" })).toBeDisabled();
 
     await user.click(within(cards[0]!).getByRole("button", { name: "More actions for Default" }));
     const del = await screen.findByRole("menuitem", { name: /^Delete…/ });
@@ -182,5 +183,17 @@ describe("Profiles (F5)", () => {
     await user.type(within(dialog).getByRole("textbox", { name: "Name" }), "Hardcore");
     await user.click(within(dialog).getByRole("button", { name: "Create" }));
     await waitFor(() => expect(state.calls).toContain("create:Hardcore:"));
+  });
+
+  it("warns when the active profile is not the deployed one, without plugin numbers in a game without plugins (board JogoPerfis)", async () => {
+    const user = userEvent.setup();
+    const { state, backend } = world();
+    state.profiles = state.profiles.map((p) => ({ ...p, plugins: 4, deployed: p.id === "p2" }));
+    render(<App backend={backend} />);
+    await open(user, "Profiles");
+    const list = await screen.findByRole("listbox", { name: "Profiles" });
+    expect(within(within(list).getAllByRole("option")[1]!).getByText("Deployed")).toBeInTheDocument();
+    expect(await screen.findByText("The active profile is Default, but the game folder still has Survival. Deploy so the game uses the active profile.")).toBeInTheDocument();
+    expect(within(list).queryByText("active plugins")).not.toBeInTheDocument();
   });
 });

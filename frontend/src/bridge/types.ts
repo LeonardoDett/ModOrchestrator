@@ -1369,6 +1369,10 @@ export interface ProfileSummary {
   createdAt: string;
   updatedAt: string;
   lastActivatedAt?: string;
+  /** Plugins the profile keeps enabled (0 without plugins). */
+  plugins: number;
+  /** The game folder has this profile (board JogoPerfis). */
+  deployed: boolean;
 }
 
 export interface NamedMod {

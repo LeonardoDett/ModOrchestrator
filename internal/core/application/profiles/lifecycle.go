@@ -27,6 +27,12 @@ type Summary struct {
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
 	LastActivatedAt time.Time
+	// Plugins counts the plugins the profile keeps enabled (0 for a game
+	// without plugins).
+	Plugins int
+	// Deployed: this profile is what the game folder has (board JogoPerfis,
+	// "Implantado"); false for all when nothing is deployed.
+	Deployed bool
 }
 
 // List returns the profiles of an instance, by name.
@@ -36,6 +42,12 @@ func (s *Service) List(ctx context.Context, instance game.InstanceID) ([]Summary
 		return nil, err
 	}
 	active, _ := s.Profiles.Active(ctx, instance)
+	var deployed profile.ID
+	if s.Manifests != nil {
+		if h, err := s.Manifests.Header(ctx, instance); err == nil && !h.Purged() {
+			deployed = profile.ID(h.Profile)
+		}
+	}
 	out := make([]Summary, 0, len(list))
 	for _, p := range list {
 		snaps, err := s.Profiles.Snapshots(ctx, p.ID())
@@ -43,7 +55,14 @@ func (s *Service) List(ctx context.Context, instance game.InstanceID) ([]Summary
 			return nil, err
 		}
 		d := p.Data()
+		plugins := 0
+		for _, on := range d.PluginsEnabled {
+			if on {
+				plugins++
+			}
+		}
 		out = append(out, Summary{
+			Plugins: plugins, Deployed: deployed != "" && p.ID() == deployed,
 			ID: p.ID(), Name: p.Name(), Notes: p.Notes(), Active: p.ID() == active,
 			Enabled: len(p.EnabledMods()), Mods: len(p.Mods()), Snapshots: len(snaps),
 			CreatedAt: d.CreatedAt, UpdatedAt: d.UpdatedAt, LastActivatedAt: d.LastActivatedAt,
