@@ -30,13 +30,15 @@ type App struct {
 	rec         *bootstrap.Recovery
 	unsubscribe func()
 	emit        func(ctx context.Context, name string, data ...any)
+	// front brings the window to the front (second launch, D141).
+	front func(ctx context.Context)
 }
 
 // NewApp creates the binding over a wired container.
 func NewApp(c *bootstrap.Container) *App {
 	// FOMOD conditions compare the manager version (core/03 §4).
 	c.Library.AppVersion = Version
-	return &App{c: c, emit: runtime.EventsEmit}
+	return &App{c: c, emit: runtime.EventsEmit, front: bringToFront}
 }
 
 // Startup is called by Wails when the window is ready.

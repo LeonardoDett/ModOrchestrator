@@ -13,7 +13,7 @@ import (
 // the recovery calls work; the UI shows the recovery screen and nothing
 // else (core/14 §5).
 func NewRecoveryApp(r *bootstrap.Recovery) *App {
-	return &App{rec: r, emit: runtime.EventsEmit}
+	return &App{rec: r, emit: runtime.EventsEmit, front: bringToFront}
 }
 
 // RecoveryDTO tells the UI whether to open the recovery screen and why.

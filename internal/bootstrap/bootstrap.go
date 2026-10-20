@@ -615,3 +615,8 @@ func WaitForRestart(args []string, timeout time.Duration) { system.WaitForPrevio
 // Restart starts a new process of the app that waits for this one; the
 // caller quits right after ("Reiniciar agora", core/13).
 func (c *Container) Restart() error { return system.Restart() }
+
+// InstanceRunning reports whether another process of the app holds the
+// single instance lock named mutex (D141). It is asked before New, so a
+// second launch never opens the database.
+func InstanceRunning(mutex string) bool { return system.InstanceRunning(mutex) }

@@ -21,6 +21,12 @@ import (
 var assets embed.FS
 
 func main() {
+	// One process per user (D141): a second launch hands over to the
+	// window that is open and exits before it opens the database.
+	if bridge.InstanceRunning() {
+		handOver()
+		return
+	}
 	// After "Reiniciar agora" the new process waits for the old one to
 	// release the database (a pending restore replaces it, core/14 §4).
 	bootstrap.WaitForRestart(os.Args[1:], 15*time.Second)
@@ -59,10 +65,11 @@ func main() {
 		// the webview never opens a dropped file itself.
 		DragAndDrop: &options.DragAndDrop{EnableFileDrop: true, DisableWebViewDrop: true},
 		// app.gpuAcceleration (core/13, restart required).
-		Windows: &windows.Options{WebviewGpuIsDisabled: !container.GPUAcceleration},
-		OnStartup:   app.Startup,
-		OnShutdown:  app.Shutdown,
-		Bind:        []any{app},
+		Windows:            &windows.Options{WebviewGpuIsDisabled: !container.GPUAcceleration},
+		SingleInstanceLock: bridge.SingleInstance(app),
+		OnStartup:          app.Startup,
+		OnShutdown:         app.Shutdown,
+		Bind:               []any{app},
 	})
 	if err != nil {
 		log.Fatalf("wails: %v", err)
@@ -73,17 +80,35 @@ func main() {
 // UI asks StartupRecovery first and shows only the recovery screen.
 func runRecovery(app *bridge.App) {
 	err := wails.Run(&options.App{
-		Title:            "Mod Orchestrator",
-		Width:            960,
-		Height:           680,
-		MinWidth:         720,
-		MinHeight:        520,
-		AssetServer:      &assetserver.Options{Assets: assets},
-		BackgroundColour: &options.RGBA{R: 13, G: 19, B: 17, A: 255},
-		OnStartup:        app.Startup,
-		Bind:             []any{app},
+		Title:              "Mod Orchestrator",
+		Width:              960,
+		Height:             680,
+		MinWidth:           720,
+		MinHeight:          520,
+		AssetServer:        &assetserver.Options{Assets: assets},
+		BackgroundColour:   &options.RGBA{R: 13, G: 19, B: 17, A: 255},
+		SingleInstanceLock: bridge.SingleInstance(app),
+		OnStartup:          app.Startup,
+		Bind:               []any{app},
 	})
 	if err != nil {
 		log.Fatalf("wails: %v", err)
+	}
+}
+
+// handOver runs the window toolkit only for its single instance lock: it
+// finds the window of the first process, sends it this launch and exits
+// the process. If the first window is not reachable yet (both launches in
+// the same instant), the window this opens closes itself at once.
+func handOver() {
+	err := wails.Run(&options.App{
+		Title:              "Mod Orchestrator",
+		StartHidden:        true,
+		AssetServer:        &assetserver.Options{Assets: assets},
+		SingleInstanceLock: bridge.SingleInstance(nil),
+		OnStartup:          bridge.QuitAtOnce,
+	})
+	if err != nil {
+		log.Printf("wails: %v", err)
 	}
 }
