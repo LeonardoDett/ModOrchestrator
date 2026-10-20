@@ -8,6 +8,7 @@ package migration
 import (
 	"slices"
 	"strings"
+	"time"
 
 	"modorchestrator/internal/core/domain/game"
 )
@@ -24,6 +25,9 @@ type Source struct {
 	GameRef string
 	// GamePath is the game folder the manager points at.
 	GamePath string
+	// Location is the folder the user knows the mods by (the MO2 instance,
+	// the Vortex staging of the game).
+	Location string
 }
 
 // Snapshot is what a manager knows about one game.
@@ -65,6 +69,8 @@ type Entry struct {
 type Profile struct {
 	Name   string
 	Active bool
+	// LastUsed is when the manager last used the profile (zero: unknown).
+	LastUsed time.Time
 	// Order is lowest priority first. Mods of the snapshot it does not
 	// list come after it, in the snapshot order.
 	Order   []Entry
@@ -139,7 +145,7 @@ func (s Snapshot) Parts(def game.Definition) []Part {
 	if def.Capabilities.Has(game.CapLoadOrder) && slices.ContainsFunc(s.Profiles, func(p Profile) bool { return p.LoadOrder != nil }) {
 		out = append(out, PartLoadOrder)
 	}
-	if len(s.Categories) > 0 {
+	if slices.ContainsFunc(s.Mods, func(m Mod) bool { return m.Category != "" }) {
 		out = append(out, PartCategories)
 	}
 	return out

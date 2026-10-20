@@ -39,6 +39,12 @@ const checkboxVariants = defineRecipe({
       "data-[state=indeterminate]:border-intent-fill",
       "data-[disabled]:bg-sunken",
     ].join(" "),
+    /**
+     * D-040: a full-width part of a list, split by a line ("Regras entre mods" over its
+     * count): `band` in a dialog's main column, `band-sm` a 52 px row inside a framed group.
+     */
+    band: "flex w-full items-center gap-3.5 border-b border-border-subtle py-4 pl-6 pr-5 text-left",
+    "band-sm": "flex min-h-13 w-full items-center gap-3.5 border-b border-border-subtle bg-sunken px-3.5 py-1.5 text-left last:border-b-0",
   },
   variants: {
     size: {
@@ -96,9 +102,11 @@ interface CheckboxProps
    * `card`: cartão com rótulo, descrição e ação (escolha entre partes, como o Radio em cartão).
    * `row`: linha de opção de 44 px com borda; `action` vira a ponta direita (selos).
    */
-  variant?: "default" | "card" | "row";
+  variant?: "default" | "card" | "row" | "band" | "band-sm";
   /** Texto de apoio do cartão. */
   description?: ReactNode;
+  /** Marca depois da caixa (`band`): o ícone da parte. */
+  media?: ReactNode;
   /** Ação à direita do cartão, fora do controle ("Escolher mods"). */
   action?: ReactNode;
 }
@@ -131,6 +139,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       variant = "default",
       description,
       action,
+      media,
       id: providedId,
       ...props
     },
@@ -145,7 +154,7 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       onChange: onCheckedChange,
     });
 
-    const { root, checkbox, label: labelClass, card, row } = checkboxVariants({ size, disabled });
+    const { root, checkbox, label: labelClass, card, row, band, "band-sm": bandSm } = checkboxVariants({ size, disabled });
 
     const state = indeterminate ? "indeterminate" : isChecked ? "checked" : "unchecked";
 
@@ -164,13 +173,15 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
       isChecked || indeterminate ? "scale-100" : "scale-0"
     );
 
-    if (variant === "card" || variant === "row") {
+    if (variant !== "default") {
       const labelId = `${id}-label`;
+      const banded = variant === "band" || variant === "band-sm";
+      const frame = { card, row, band, "band-sm": bandSm }[variant];
       return (
         <div
           data-state={state}
           data-disabled={disabled || undefined}
-          className={cn(variant === "row" ? row() : card(), className)}
+          className={cn(frame(), className)}
           {...intentData(intent ?? "brand")}
         >
           <button
@@ -192,9 +203,18 @@ export const Checkbox = forwardRef<HTMLButtonElement, CheckboxProps>(
               <CheckIcon size="xs" strokeWidth={3} trigger="none" playKey={draws.count} className={markClass} />
             )}
           </button>
-          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          {media ? <span className="flex shrink-0 items-center">{media}</span> : null}
+          <span className={cn("flex min-w-0 flex-1 flex-col", variant === "band" ? "gap-1" : "gap-0.5")}>
             {label ? (
-              <label id={labelId} htmlFor={id} className={cn(labelClass(), "font-medium")}>
+              <label
+                id={labelId}
+                htmlFor={id}
+                className={cn(
+                  labelClass(),
+                  variant === "band" ? "font-semibold" : "font-medium",
+                  banded && !marked && "text-fg-muted",
+                )}
+              >
                 {label}
               </label>
             ) : null}

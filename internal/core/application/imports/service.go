@@ -18,6 +18,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
@@ -78,10 +79,19 @@ type Deps struct {
 	Publisher operations.Publisher
 	FS        ports.FileSystem
 	Extractor ports.Extractor
-	Ops       *operations.Service
-	Locks     *instancelock.Locks
-	IDs       operations.IDGenerator
-	Clock     operations.Clock
+	// Foreign finds the other manager's files in the game (optional): the
+	// preview warns that deploying stays blocked until they are cleaned
+	// (D035).
+	Foreign Foreign
+	Ops     *operations.Service
+	Locks   *instancelock.Locks
+	IDs     operations.IDGenerator
+	Clock   operations.Clock
+}
+
+// Foreign reports deployments by other managers (games.Service).
+type Foreign interface {
+	CheckForeign(ctx context.Context, inst game.Instance) ([]games.Finding, error)
 }
 
 // Service implements the import use cases.
@@ -266,14 +276,23 @@ type Skipped struct {
 
 // ProfilePreview is one profile of the other manager.
 type ProfilePreview struct {
-	Name    string
-	Active  bool
-	Mods    int
-	Enabled int
-	// Plugins and LoadOrder are only counted when the instance has the
-	// capabilities (0 otherwise).
+	Name     string
+	Active   bool
+	LastUsed time.Time
+	Mods     int
+	Enabled  int
+	// Plugins (active ones) and LoadOrder are only counted when the
+	// instance has the capabilities (0 otherwise).
 	Plugins   int
 	LoadOrder int
+}
+
+// PreviewMod is a mod the import can bring ("Escolher mods").
+type PreviewMod struct {
+	Key   string
+	Name  string
+	Files int
+	Size  int64
 }
 
 // Preview is what an import would bring, per part (RD16 screens).
@@ -284,8 +303,17 @@ type Preview struct {
 	Parts    []migration.Part
 	Defaults []migration.Part
 	Mods     int
-	Files    int
-	Size     int64
+	// Active counts the mods enabled in the manager's active profile.
+	Active int
+	// Plugins counts the plugins the profiles list (with the capability).
+	Plugins int
+	Files   int
+	Size    int64
+	// ModList is every mod that can come, in the manager's order.
+	ModList []PreviewMod
+	// Deployed: the manager's files are still in the game, so deploying
+	// here stays blocked until they are cleaned there (D035).
+	Deployed bool
 	// FreeSpace of the staging volume (-1 when unknown).
 	FreeSpace         int64
 	Skipped           []Skipped
@@ -374,11 +402,18 @@ func (s *Service) Preview(ctx context.Context, instance game.InstanceID, src mig
 		pv.Skipped = []Skipped{}
 	}
 	pv.Defaults = migration.DefaultParts(pv.Parts)
+	pv.ModList = []PreviewMod{}
 	for _, it := range items {
 		keep[it.src.Key] = true
 		pv.Mods++
 		pv.Files += len(it.files)
 		pv.Size += it.size
+		pv.ModList = append(pv.ModList, PreviewMod{Key: it.src.Key, Name: it.src.Name, Files: len(it.files), Size: it.size})
+	}
+	if s.Foreign != nil {
+		if found, err := s.Foreign.CheckForeign(ctx, e.inst); err == nil {
+			pv.Deployed = slices.ContainsFunc(found, func(f games.Finding) bool { return f.Kind == src.Manager })
+		}
 	}
 	if free, err := s.FS.FreeSpace(ctx, e.inst.Staging); err == nil {
 		pv.FreeSpace = free
@@ -394,15 +429,25 @@ func (s *Service) Preview(ctx context.Context, instance game.InstanceID, src mig
 		}
 	}
 	plugins, loadOrder := slices.Contains(pv.Parts, migration.PartPlugins), slices.Contains(pv.Parts, migration.PartLoadOrder)
+	active, _ := snap.ActiveProfile()
+	names := map[string]bool{}
 	for _, p := range snap.Profiles {
-		pp := ProfilePreview{Name: p.Name, Active: p.Active, Mods: len(items)}
+		pp := ProfilePreview{Name: p.Name, Active: p.Active, LastUsed: p.LastUsed, Mods: len(items)}
 		for k, on := range p.Enabled {
 			if on && keep[k] {
 				pp.Enabled++
 			}
 		}
+		if p.Name == active.Name {
+			pv.Active = pp.Enabled
+		}
 		if plugins {
-			pp.Plugins = len(p.Plugins)
+			for _, ps := range p.Plugins {
+				names[strings.ToLower(ps.Name)] = true
+				if ps.Enabled {
+					pp.Plugins++
+				}
+			}
 		}
 		if loadOrder {
 			pp.LoadOrder = len(p.LoadOrder)
@@ -424,6 +469,7 @@ func (s *Service) Preview(ctx context.Context, instance game.InstanceID, src mig
 		}
 	}
 	pv.Categories = len(used)
+	pv.Plugins = len(names)
 	mods, err := s.Mods.ListByInstance(ctx, instance)
 	if err != nil {
 		return Preview{}, err
@@ -443,6 +489,8 @@ type Options struct {
 	// Profiles of the other manager to bring, by name; empty means its
 	// active profile.
 	Profiles []string
+	// Exclude lists mods (keys) left out ("Escolher mods").
+	Exclude []string
 }
 
 // Start begins the import and returns its operation; it runs in the

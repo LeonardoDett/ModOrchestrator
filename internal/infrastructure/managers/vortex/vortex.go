@@ -16,6 +16,7 @@ import (
 	"slices"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
@@ -64,24 +65,32 @@ func (r Reader) Find(ctx context.Context, root string) ([]migration.Source, erro
 // Open lists the games of a Vortex data folder (the one holding state.v2)
 // that have installed mods.
 func (r Reader) Open(ctx context.Context, folder string) ([]migration.Source, error) {
-	st, err := r.load(ctx, folder, []string{"settings" + sep + "gameMode" + sep + "discovered" + sep, "persistent" + sep + "mods" + sep})
+	st, err := r.load(ctx, folder, []string{
+		"settings" + sep + "gameMode" + sep + "discovered" + sep, "persistent" + sep + "mods" + sep,
+		"settings" + sep + "mods" + sep + "installPath" + sep,
+	})
 	if err != nil {
 		return nil, err
 	}
-	paths := map[string]string{}
+	paths, install := map[string]string{}, map[string]string{}
 	withMods := map[string]bool{}
 	for k, v := range st {
 		parts := strings.Split(k, sep)
 		switch {
 		case len(parts) == 5 && parts[1] == "gameMode" && parts[4] == "path":
 			paths[parts[3]] = str(v)
-		case len(parts) >= 5 && parts[1] == "mods" && parts[4] == "state" && str(v) == "installed":
+		case len(parts) == 4 && parts[0] == "settings" && parts[1] == "mods" && parts[2] == "installPath":
+			install[parts[3]] = str(v)
+		case len(parts) >= 5 && parts[0] == "persistent" && parts[1] == "mods" && parts[4] == "state" && str(v) == "installed":
 			withMods[parts[2]] = true
 		}
 	}
 	var out []migration.Source
 	for g := range withMods {
-		out = append(out, migration.Source{Manager: game.ForeignVortex, Path: folder, Name: SourceName, GameRef: g, GamePath: paths[g]})
+		out = append(out, migration.Source{
+			Manager: game.ForeignVortex, Path: folder, Name: SourceName, GameRef: g, GamePath: paths[g],
+			Location: stagingOf(install[g], folder, g),
+		})
 	}
 	slices.SortFunc(out, func(a, b migration.Source) int { return strings.Compare(a.GameRef, b.GameRef) })
 	return out, nil
@@ -121,6 +130,7 @@ func (r Reader) Read(ctx context.Context, src migration.Source) (migration.Snaps
 		enabled        map[string]bool
 	}
 	profiles := map[string]*vprofile{}
+	used := map[string]int64{}
 	cats := map[string]*migration.Category{}
 	staging, active := "", ""
 	for k, v := range st {
@@ -155,6 +165,10 @@ func (r Reader) Read(ctx context.Context, src migration.Source) (migration.Snaps
 				pr.name = str(v)
 			case len(p) == 4 && p[3] == "gameId":
 				pr.game = str(v)
+			case len(p) == 4 && p[3] == "lastActivated":
+				var ms int64
+				_ = json.Unmarshal(v, &ms)
+				used[p[2]] = ms
 			case len(p) == 6 && p[3] == "modState" && p[5] == "enabled":
 				var on bool
 				_ = json.Unmarshal(v, &on)
@@ -178,10 +192,7 @@ func (r Reader) Read(ctx context.Context, src migration.Source) (migration.Snaps
 			active = str(v)
 		}
 	}
-	if staging == "" {
-		staging = filepath.Join("{USERDATA}", "{game}", "mods")
-	}
-	staging = filepath.Clean(replaceFold(replaceFold(staging, "{USERDATA}", src.Path), "{game}", g))
+	staging = stagingOf(staging, src.Path, g)
 
 	snap := migration.Snapshot{Source: src}
 	var keys []string
@@ -272,6 +283,9 @@ func (r Reader) Read(ctx context.Context, src migration.Source) (migration.Snaps
 	for _, id := range pids {
 		p := profiles[id]
 		mp := migration.Profile{Name: p.name, Active: id == active, Enabled: map[string]bool{}}
+		if ms := used[id]; ms > 0 {
+			mp.LastUsed = time.UnixMilli(ms)
+		}
 		for k, on := range p.enabled {
 			if installed[k] {
 				mp.Enabled[k] = on
@@ -350,6 +364,15 @@ func copyFile(src, dst string) error {
 		return err
 	}
 	return out.Close()
+}
+
+// stagingOf resolves the staging folder of game g: the installPath setting
+// ("{USERDATA}" and "{game}" placeholders) or Vortex's default.
+func stagingOf(install, data, g string) string {
+	if install == "" {
+		install = filepath.Join("{USERDATA}", "{game}", "mods")
+	}
+	return filepath.Clean(replaceFold(replaceFold(install, "{USERDATA}", data), "{game}", g))
 }
 
 func attr(m *vmod, name string) string {

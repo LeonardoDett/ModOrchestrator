@@ -436,7 +436,7 @@ export function RulesDialog({
                         </span>
                       </Table.Cell>
                       <Table.Cell className="text-right">
-                        {r.source === "user" ? (
+                        {r.source === "user" || r.source === "import" ? (
                           <Button
                             size="sm"
                             emphasis="low"

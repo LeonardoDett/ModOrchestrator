@@ -301,7 +301,7 @@ func (s *Service) Revert(ctx context.Context, id string) error {
 		if !exists || disabled {
 			return fail(CodeStale, nil)
 		}
-		if src := p["source"]; src != "" && src != string(rules.SourceUser) {
+		if src := p["source"]; src != "" && !rules.Source(src).Removable() {
 			return s.Commands.SetRuleDisabled(ctx, instance, r, true)
 		}
 		return s.Commands.RemoveRule(ctx, instance, r)

@@ -281,7 +281,7 @@ func requirementSpec(r rules.DependencyRule, res dependency.Result, mods Mods) d
 	} else {
 		actions = append(actions, diagnostic.Action{ID: ActionImport, NavigateTo: NavigateImport, Params: diagnostic.Params{"mod": params["target"]}})
 	}
-	if r.Source == rules.SourceUser {
+	if r.Source.Removable() {
 		actions = append(actions, diagnostic.Action{ID: ActionRemoveRule, Target: &ruleRef})
 	} else {
 		actions = append(actions, diagnostic.Action{ID: ActionDisableRule, Target: &ruleRef})
@@ -339,7 +339,7 @@ func orphanSpec(set *rules.Set, id rules.ID, mods Mods) (diagnostic.Spec, bool) 
 	}
 	params["missing"] = joinComma(missing)
 	action := diagnostic.Action{ID: ActionRemoveRule, Target: &ruleRef}
-	if source != rules.SourceUser {
+	if !source.Removable() {
 		action.ID = ActionDisableRule
 	}
 	return diagnostic.Spec{

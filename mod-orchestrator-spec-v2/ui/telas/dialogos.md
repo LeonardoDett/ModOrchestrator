@@ -34,6 +34,7 @@ Catálogo único. Todo modal do produto está aqui; modal novo exige entrada. Pa
 | DLG-28 | Renomear instância | Games | formulário | — (rename do perfil do jogo) | 11 §4 |
 | DLG-29 | Alterar localização | Games | formulário com validação | PathSelection | 11 §4 |
 | DLG-30 | Atualizar o app | Settings › Aplicação › Atualizações | decisão com notas de versão e progresso | updater | `plano-de-publicacao.md` etapa 6, D104 |
+| DLG-31 | Importar de outro gerenciador | fim do Gerenciar jogo; Mods › Importar › De outro gerenciador… | decisão com escolha por parte | `mo-import` | 02 §10a, D128 |
 
 ## Detalhes dos principais
 
@@ -70,6 +71,10 @@ Grupos por tipo (Ausentes, Modificados, Substituídos, Novos, Load order). Linha
 
 ### DLG-07 Remover mod(s)
 Lista de mods; checkbox "Remover também os arquivos originais (archives)"; aviso se implantados e auto-deploy desligado; aviso de regras que ficarão órfãs (contagem). Primário destrutivo: "Remover".
+
+### DLG-31 Importar de Vortex ou MO2 (pranchas `ImportarOferta`, `ImportarEscolha`; D128)
+Oferta (1080×780, coluna da direita de 400 px): cabeçalho com o monograma e a pasta do jogo; "Este jogo já tem mods de outro gerenciador"; um cartão de rádio por fonte encontrada (monograma, nome, pasta dos mods e chips: mods e ativos, ordem com separadores, regras, perfis, plugins); faixa de aviso quando o outro gerenciador ainda tem arquivos implantados (D035); "Importar tudo do X" (tudo menos categorias, todos os perfis), "Escolher o que importar" e "Começar do zero" (no Gerenciar jogo) ou "Apontar a pasta" (em Mods). Coluna "O que vem do X" pelas partes que a fonte tem, e "O que não vem" (escolhas dos instaladores, downloads, saves).
+Escolha (coluna da direita de 360 px): partes como linhas com caixa e ícone (Mods com "Escolher mods", Ordem e separadores, Regras, Plugins e ordem de carga, Categorias desligada); perfis num grupo com "Ativo no X" e "usado há…"; resumo "Vai ser importado" (mods, regras, perfis, plugins), espaço em disco e o aviso de implantação; "Importar e abrir o jogo" e "Voltar". O progresso é a operação `import_manager` na gaveta de operações. Plugins e ordem de carga só aparecem quando o backend lista a parte (jogo com `plugins`).
 
 ### DLG-26 Pré-lançamento
 Variações: "Deploy necessário: implantar e jogar" (primário) / "Jogar sem implantar"; "Problemas encontrados" (lista de avisos com ações) + "Jogar mesmo assim"; "Bloqueado" (só ações para resolver).

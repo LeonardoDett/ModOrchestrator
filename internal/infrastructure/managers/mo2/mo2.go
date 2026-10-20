@@ -91,6 +91,7 @@ func source(dir string) (migration.Source, error) {
 		Name:     filepath.Base(dir),
 		GameRef:  ini.get("General", "gameName"),
 		GamePath: ini.get("General", "gamePath"),
+		Location: dir,
 	}, nil
 }
 
@@ -230,6 +231,9 @@ func readMod(dir, name string) migration.Mod {
 // is read by the core through the adapter (D112).
 func readProfile(dir, name string, mods map[string]migration.Mod) migration.Profile {
 	p := migration.Profile{Name: name, Folder: dir, Enabled: map[string]bool{}}
+	if info, err := os.Stat(filepath.Join(dir, "modlist.txt")); err == nil {
+		p.LastUsed = info.ModTime()
+	}
 	lines, _ := readLines(filepath.Join(dir, "modlist.txt"))
 	for i := len(lines) - 1; i >= 0; i-- {
 		line := lines[i]

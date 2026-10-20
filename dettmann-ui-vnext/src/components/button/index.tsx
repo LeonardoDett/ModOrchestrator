@@ -28,6 +28,12 @@ const buttonVariants = defineRecipe({
       "icon-lg": "size-control-lg justify-center p-0",
       /** D-040: a link inside text ("2 arquivos", "Alterar"): no box, the size of the text around it. */
       inline: "h-auto justify-start rounded-chip px-0.5 py-0 font-medium underline-offset-2 hover:underline",
+      /**
+       * D-040: a choice with a line under its label ("Importar tudo do Vortex" over what it
+       * brings), as a large tile. Use with `description`; `tile-lg` is the main choice.
+       */
+      tile: "h-14 justify-start px-4 text-left text-md",
+      "tile-lg": "h-16 justify-start gap-3.5 px-4.5 text-left text-md font-bold",
     },
     /** Full width */
     fullWidth: {
@@ -74,6 +80,8 @@ interface ButtonProps
   progress?: number;
   /** Dica no hover e no foco. Em botões só com ícone, use o mesmo texto do `aria-label`. */
   tooltip?: ReactNode;
+  /** Linha sob o rótulo (tamanhos `tile` e `tile-lg`): o que a escolha faz. */
+  description?: ReactNode;
 }
 
 const RING_SIZE = { icon: 30, "icon-sm": 24, "icon-lg": 38 } as const;
@@ -90,6 +98,7 @@ const warned = new Set<string>();
  * <Button startIcon={<Icon icon={Plus} size="sm" />}>Adicionar</Button>
  * <Button size="icon" aria-label="Fila de instalação, 3 itens" tooltip="Fila de instalação" badge={3}>…</Button>
  * <Button size="icon" aria-label="Implantando, 64%" tooltip="Implantando 64%" progress={64}>…</Button>
+ * <Button size="tile-lg" emphasis="high" description="318 mods e 3 perfis">Importar tudo</Button>
  * ```
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -110,6 +119,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       badgeIntent = "neutral",
       progress,
       tooltip,
+      description,
       disabled,
       type = "button",
       ...props
@@ -155,7 +165,21 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {!loading && startIcon ? (
           <span className="inline-flex shrink-0">{startIcon}</span>
         ) : null}
-        {loading && loadingText ? loadingText : children}
+        {loading && loadingText ? (
+          loadingText
+        ) : description !== undefined && description !== null ? (
+          <span className="flex min-w-0 grow flex-col gap-0.5">
+            <span className="truncate">{children}</span>
+            <span
+              data-slot="description"
+              className={cn("text-xs", resolved.emphasis === "high" ? "font-medium" : "font-normal text-fg-muted")}
+            >
+              {description}
+            </span>
+          </span>
+        ) : (
+          children
+        )}
         {!loading && endIcon ? (
           <span className="inline-flex shrink-0">{endIcon}</span>
         ) : null}

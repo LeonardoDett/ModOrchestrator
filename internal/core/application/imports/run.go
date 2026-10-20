@@ -111,6 +111,7 @@ func (r *run) copy(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	items = slices.DeleteFunc(items, func(it *item) bool { return slices.Contains(r.opts.Exclude, it.src.Key) })
 	if len(items) == 0 {
 		return fail(CodeNothing, nil, "manager", string(r.src.Manager))
 	}
@@ -334,7 +335,7 @@ func (r *run) addRules(set *rules.Set, keyID map[string]mod.ID, keep map[string]
 		var err error
 		switch ru.Kind {
 		case migration.RuleAfter:
-			or := rules.OrderRule{ID: id, Before: b, After: a, Source: rules.SourceUser, CreatedAt: t}
+			or := rules.OrderRule{ID: id, Before: b, After: a, Source: rules.SourceImport, CreatedAt: t}
 			if err = set.AddOrderRule(or); errors.Is(err, rules.ErrCycle) {
 				cyclic, err = append(cyclic, or), nil
 			}
@@ -343,9 +344,9 @@ func (r *run) addRules(set *rules.Set, keyID map[string]mod.ID, keep map[string]
 			if ru.Kind == migration.RuleRecommends {
 				kind = rules.Recommends
 			}
-			err = set.AddDependency(rules.DependencyRule{ID: id, Mod: a, Target: b, Kind: kind, Source: rules.SourceUser, CreatedAt: t})
+			err = set.AddDependency(rules.DependencyRule{ID: id, Mod: a, Target: b, Kind: kind, Source: rules.SourceImport, CreatedAt: t})
 		case migration.RuleConflicts:
-			err = set.AddIncompatibility(rules.IncompatibilityRule{ID: id, A: a, B: b, Source: rules.SourceUser, CreatedAt: t})
+			err = set.AddIncompatibility(rules.IncompatibilityRule{ID: id, A: a, B: b, Source: rules.SourceImport, CreatedAt: t})
 		default:
 			continue
 		}

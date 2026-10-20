@@ -165,7 +165,7 @@ func (s *Service) MoveMods(ctx context.Context, instance game.InstanceID, entrie
 				id := rules.ID(e.Ref)
 				r, _ := set.OrderRule(id)
 				t := EventRuleRemoved
-				if r.Source == rules.SourceUser {
+				if r.Source.Removable() {
 					err = set.Remove(id)
 				} else {
 					t, err = EventRuleDisabled, set.SetDisabled(id, true)

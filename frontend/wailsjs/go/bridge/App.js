@@ -258,8 +258,24 @@ export function ImportLoadOrder(arg1, arg2) {
   return window['go']['bridge']['App']['ImportLoadOrder'](arg1, arg2);
 }
 
+export function ImportOpenFolder(arg1) {
+  return window['go']['bridge']['App']['ImportOpenFolder'](arg1);
+}
+
+export function ImportPreview(arg1, arg2) {
+  return window['go']['bridge']['App']['ImportPreview'](arg1, arg2);
+}
+
 export function ImportQueue(arg1) {
   return window['go']['bridge']['App']['ImportQueue'](arg1);
+}
+
+export function ImportSources(arg1) {
+  return window['go']['bridge']['App']['ImportSources'](arg1);
+}
+
+export function ImportStart(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['ImportStart'](arg1, arg2, arg3);
 }
 
 export function InstallAll(arg1, arg2) {

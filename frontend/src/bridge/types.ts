@@ -136,6 +136,10 @@ export interface Backend {
   deleteGameEntry(gameId: string): Promise<void>;
   recognizeGameFolder(root: string): Promise<FolderRecognition[]>;
   gameTemplates(): Promise<GameTemplate[]>;
+  importSources(instance: string): Promise<ImportSource[]>;
+  importOpenFolder(folder: string): Promise<ImportSource[]>;
+  importPreview(instance: string, source: ImportSource): Promise<ImportPreview>;
+  importStart(instance: string, source: ImportSource, options: ImportOptions): Promise<string>;
   setInstanceFeature(id: string, feature: string, enabled: boolean): Promise<void>;
   workspace(): Promise<Workspace>;
   /** "quick" returns "" when done; "full" returns the operation id. */
@@ -1015,6 +1019,65 @@ export interface GameSupport {
   stores: string[];
   custom: boolean;
   features: GameFeature[];
+}
+
+/** Where Vortex or MO2 keeps the state of a game (D128). */
+export interface ImportSource {
+  manager: "vortex" | "mo2" | string;
+  path: string;
+  name: string;
+  gameRef: string;
+  gamePath: string;
+  location: string;
+}
+
+/** A part an import can bring (D128). */
+export type ImportPart = "mods" | "order" | "rules" | "plugins" | "load_order" | "categories";
+
+export interface ImportProfile {
+  name: string;
+  active: boolean;
+  lastUsed?: string;
+  mods: number;
+  enabled: number;
+  plugins: number;
+  loadOrder: number;
+}
+
+export interface ImportMod {
+  key: string;
+  name: string;
+  files: number;
+  size: number;
+}
+
+/** What importing a source would bring, per part. */
+export interface ImportPreview {
+  source: ImportSource;
+  parts: ImportPart[];
+  defaults: ImportPart[];
+  mods: number;
+  active: number;
+  plugins: number;
+  files: number;
+  size: number;
+  freeSpace: number;
+  modList: ImportMod[];
+  skipped: { name: string; reason: "missing" | "empty" | "unsafe" | string }[];
+  separators: number;
+  orderRules: number;
+  dependencies: number;
+  incompatibilities: number;
+  profiles: ImportProfile[];
+  categories: number;
+  existing: number;
+  deployed: boolean;
+}
+
+export interface ImportOptions {
+  parts: ImportPart[];
+  profiles: string[];
+  exclude: string[];
 }
 
 /** A game a chosen folder holds (R5d). */

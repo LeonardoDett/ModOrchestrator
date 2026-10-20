@@ -27,10 +27,17 @@ const (
 	SourceUser       Source = "user"
 	SourceMetadata   Source = "metadata"
 	SourceCollection Source = "collection"
+	// SourceImport: brought from another mod manager (D128). They were the
+	// user's rules there, so they can be deleted like the user's own.
+	SourceImport Source = "import"
 )
 
+// Removable reports whether rules of this source can be deleted; the
+// others can only be disabled.
+func (s Source) Removable() bool { return s == SourceUser || s == SourceImport }
+
 func (s Source) valid() bool {
-	return s == SourceUser || s == SourceMetadata || s == SourceCollection
+	return s == SourceUser || s == SourceMetadata || s == SourceCollection || s == SourceImport
 }
 
 // Errors returned by rule operations.
@@ -205,7 +212,7 @@ func (s *Set) SetOrderRuleDisabled(id ID, disabled bool) error {
 // be disabled, so their origin stays visible.
 func (s *Set) Remove(id ID) error {
 	check := func(src Source) error {
-		if src != SourceUser {
+		if !src.Removable() {
 			return fmt.Errorf("%w: rule %q comes from %s", ErrNotRemovable, id, src)
 		}
 		return nil

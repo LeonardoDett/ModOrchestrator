@@ -1263,7 +1263,7 @@ Motivo: B1 do redesign e as respostas do Leonardo (copiar por padrão; perfis si
 
 Alternativas rejeitadas: abrir o LevelDB do Vortex no lugar (a trava do Vortex aberto impede, e abrir para escrita arriscaria o banco dele); escrever um leitor próprio de LevelDB (o `goleveldb`, em Go puro, é a dependência nova e menor); ler o `loadorder.txt` dos gerenciadores (a lista do jogo já traz ordem e estado, e o nome de arquivo do jogo fica no adapter); importar pela fila de instalação com instaladores (o conteúdo já está instalado; o FOMOD perguntaria de novo).
 
-Consequências: vale para todo jogo; no `generic` e no Valheim a prévia nem lista plugins e ordem de carga (teste com MO2 importado num jogo `generic`). As telas são a RD16.
+Consequências: vale para todo jogo; no `generic` e no Valheim a prévia nem lista plugins e ordem de carga (teste com MO2 importado num jogo `generic`). As telas são a RD16 (DLG-31): a regra importada tem a origem `import` ("marcadas como importadas" na prancha), que se apaga como a do usuário (`Source.Removable`).
 
 ## D129 — Assistente de jogo: reconhecimento de pasta, modelos e pasta criável
 Status: vigente (2026-10-15; executa a RD14b; respostas 7 e 8 do plano do redesign)

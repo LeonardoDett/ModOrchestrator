@@ -130,7 +130,15 @@ export function ImportGameEntry(arg1:string):Promise<string>;
 
 export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResultDTO>;
 
+export function ImportOpenFolder(arg1:string):Promise<Array<bridge.ImportSourceDTO>>;
+
+export function ImportPreview(arg1:string,arg2:bridge.ImportSourceDTO):Promise<bridge.ImportPreviewDTO>;
+
 export function ImportQueue(arg1:string):Promise<Array<bridge.QueueItemDTO>>;
+
+export function ImportSources(arg1:string):Promise<Array<bridge.ImportSourceDTO>>;
+
+export function ImportStart(arg1:string,arg2:bridge.ImportSourceDTO,arg3:bridge.ImportOptionsDTO):Promise<string>;
 
 export function InstallAll(arg1:string,arg2:Array<string>):Promise<Array<string>>;
 

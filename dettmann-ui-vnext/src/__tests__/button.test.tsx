@@ -105,6 +105,22 @@ describe("Button visual language (D-033)", () => {
     expect(screen.getByRole("button", { name: "High" })).toHaveClass("border", "border-transparent");
   });
 
+  it("tile shows the description under the label, muted unless high (D-040)", () => {
+    render(
+      <>
+        <Button size="tile-lg" emphasis="high" description="318 mods">Import all</Button>
+        <Button size="tile" description="Some profiles">Choose</Button>
+      </>,
+    );
+    const main = screen.getByRole("button", { name: /Import all/ });
+    expect(main).toHaveClass("h-16", "text-left");
+    expect(main.querySelector('[data-slot="description"]')).toHaveTextContent("318 mods");
+    expect(main.querySelector('[data-slot="description"]')).not.toHaveClass("text-fg-muted");
+    const other = screen.getByRole("button", { name: /Choose/ });
+    expect(other).toHaveClass("h-14");
+    expect(other.querySelector('[data-slot="description"]')).toHaveClass("text-fg-muted");
+  });
+
   it("uses the shared focus ring", () => {
     render(<Button>Save</Button>);
     expect(screen.getByRole("button", { name: "Save" })).toHaveClass("focus-ring");

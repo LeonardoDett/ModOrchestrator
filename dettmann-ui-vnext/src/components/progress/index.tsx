@@ -6,7 +6,12 @@ import { CATEGORY_COLORS, type CategoryColor } from "../../theme/engine/categori
 import type { Intent } from "../../theme/engine";
 
 const linearVariants = defineRecipe({
-  base: "relative h-2 w-full overflow-hidden rounded-pill bg-sunken",
+  base: "relative h-2 w-full overflow-hidden rounded-pill",
+  variants: {
+    /** D-040: `strong` keeps the track visible on a sunken panel (a side summary). */
+    track: { default: "bg-sunken", strong: "bg-border" },
+  },
+  defaultVariants: { track: "default" },
 });
 
 const circleTrackVariants = defineRecipe({
@@ -23,6 +28,8 @@ interface ProgressRootProps extends ComponentPropsWithoutRef<"div"> {
   /** Maximum value */
   max?: number;
   intent?: Intent;
+  /** Track: `default` (sunken) or `strong`, for a bar on a sunken panel. */
+  track?: "default" | "strong";
 }
 
 function clampPercent(value: number, max: number) {
@@ -42,6 +49,7 @@ function ProgressRoot({
   value = 0,
   max = 100,
   intent,
+  track,
   className,
   ...props
 }: ProgressRootProps) {
@@ -53,7 +61,7 @@ function ProgressRoot({
       aria-valuemin={0}
       aria-valuemax={max}
       aria-valuenow={value}
-      className={cn(linearVariants(), className)}
+      className={cn(linearVariants({ track }), className)}
       {...intentData(intent ?? "brand")}
       {...props}
     >

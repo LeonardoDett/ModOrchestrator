@@ -171,7 +171,7 @@ func applyPairDecisions(set *rules.Set, decisions []PairDecision, names map[mod.
 			if r.Disabled {
 				continue
 			}
-			if r.Source == rules.SourceUser {
+			if r.Source.Removable() {
 				desc := ruleDescription(set, r.ID)
 				if err := set.Remove(r.ID); err != nil {
 					return nil, ruleError(err)

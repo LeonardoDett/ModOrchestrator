@@ -2529,6 +2529,169 @@ export namespace bridge {
 	        this.limit = source["limit"];
 	    }
 	}
+	export class ImportModDTO {
+	    key: string;
+	    name: string;
+	    files: number;
+	    size: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportModDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.key = source["key"];
+	        this.name = source["name"];
+	        this.files = source["files"];
+	        this.size = source["size"];
+	    }
+	}
+	export class ImportOptionsDTO {
+	    parts: string[];
+	    profiles: string[];
+	    exclude: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportOptionsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.parts = source["parts"];
+	        this.profiles = source["profiles"];
+	        this.exclude = source["exclude"];
+	    }
+	}
+	export class ImportProfileDTO {
+	    name: string;
+	    active: boolean;
+	    lastUsed?: string;
+	    mods: number;
+	    enabled: number;
+	    plugins: number;
+	    loadOrder: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportProfileDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.active = source["active"];
+	        this.lastUsed = source["lastUsed"];
+	        this.mods = source["mods"];
+	        this.enabled = source["enabled"];
+	        this.plugins = source["plugins"];
+	        this.loadOrder = source["loadOrder"];
+	    }
+	}
+	export class ImportSkippedDTO {
+	    name: string;
+	    reason: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportSkippedDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.reason = source["reason"];
+	    }
+	}
+	export class ImportSourceDTO {
+	    manager: string;
+	    path: string;
+	    name: string;
+	    gameRef: string;
+	    gamePath: string;
+	    location: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportSourceDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.manager = source["manager"];
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.gameRef = source["gameRef"];
+	        this.gamePath = source["gamePath"];
+	        this.location = source["location"];
+	    }
+	}
+	export class ImportPreviewDTO {
+	    source: ImportSourceDTO;
+	    parts: string[];
+	    defaults: string[];
+	    mods: number;
+	    active: number;
+	    plugins: number;
+	    files: number;
+	    size: number;
+	    freeSpace: number;
+	    modList: ImportModDTO[];
+	    skipped: ImportSkippedDTO[];
+	    separators: number;
+	    orderRules: number;
+	    dependencies: number;
+	    incompatibilities: number;
+	    profiles: ImportProfileDTO[];
+	    categories: number;
+	    existing: number;
+	    deployed: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportPreviewDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.source = this.convertValues(source["source"], ImportSourceDTO);
+	        this.parts = source["parts"];
+	        this.defaults = source["defaults"];
+	        this.mods = source["mods"];
+	        this.active = source["active"];
+	        this.plugins = source["plugins"];
+	        this.files = source["files"];
+	        this.size = source["size"];
+	        this.freeSpace = source["freeSpace"];
+	        this.modList = this.convertValues(source["modList"], ImportModDTO);
+	        this.skipped = this.convertValues(source["skipped"], ImportSkippedDTO);
+	        this.separators = source["separators"];
+	        this.orderRules = source["orderRules"];
+	        this.dependencies = source["dependencies"];
+	        this.incompatibilities = source["incompatibilities"];
+	        this.profiles = this.convertValues(source["profiles"], ImportProfileDTO);
+	        this.categories = source["categories"];
+	        this.existing = source["existing"];
+	        this.deployed = source["deployed"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	
+	
 	export class InstallationInfoDTO {
 	    id: string;
 	    installer: string;

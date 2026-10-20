@@ -303,7 +303,9 @@ Concluída em 2026-10-20: D128. O estudo confirmou que o banco do Vortex é leg�
 - **Pronto quando:** fixtures de uma instância MO2 e de um staging do Vortex importadas em teste de integração; kill no meio da importação reabre sem lixo; nada é escrito na pasta do outro gerenciador (teste compara a árvore antes e depois); regra importada que fecharia ciclo vira diagnóstico, não erro (D028).
 - **Sem a capability:** mods, ordem, regras e perfis valem para todo jogo. Plugins e ordem de carga só entram com `plugins` e `load_order` efetivas: no `generic` e no Valheim a prévia nem lista essas partes. Teste: importar uma instância MO2 para um jogo `generic`. Fato de gerenciador (nome de arquivo, formato) fica na infraestrutura do leitor, fora do domínio.
 
-### RD16. Importação de Vortex e MO2: telas
+### RD16. Importação de Vortex e MO2: telas ✅
+
+Concluída em 2026-10-20: DLG-31 em `ui/telas/dialogos.md`. A oferta aparece no fim do Gerenciar jogo quando há fonte e em Mods › Importar › "De outro gerenciador…". Regras importadas ganharam a origem `import` ("Importada", removível como as do usuário), como a prancha pede. Falta a demonstração com uma instalação real de cada gerenciador.
 
 - **Objetivo:** `ImportarOferta` e `ImportarEscolha`.
 - **Entregáveis:** oferta ao adicionar um jogo já gerenciado por outro ("Importar tudo", "Escolher o que importar", "Começar do zero"), com o que vem e o que não vem; escolha por parte, perfis, total e espaço em disco; progresso no drawer de operações; aviso de limpar a implantação no outro gerenciador.

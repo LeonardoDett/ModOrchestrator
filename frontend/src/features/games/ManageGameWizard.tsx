@@ -3,7 +3,8 @@ import { CircleCheckIcon, FolderOpenIcon } from "dettmann-ui/icons";
 import { Alert, Button, Checkbox, Input, Modal, Radio, Loader, Stack, Stepper, Typography } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { problemMessage, toUIError, type UIError } from "../../bridge/errors";
-import type { GameFolders, GameSetup, Problem, SetupVerification, TargetSpec } from "../../bridge/types";
+import type { GameFolders, GameSetup, ImportSource, Problem, SetupVerification, TargetSpec } from "../../bridge/types";
+import { ImportOfferDialog } from "../imports/ImportDialogs";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useNavigation } from "../../shell/navigation";
 import { useRefresh } from "../../bridge/use-backend-query";
@@ -64,6 +65,7 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<UIError | null>(null);
   const [done, setDone] = useState<{ instanceId: string } | null>(null);
+  const [offer, setOffer] = useState<ImportSource[] | null>(null);
   const requestSeq = useRef(0);
   const suggestedFor = useRef("");
 
@@ -166,6 +168,11 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
       const res = await backend.manageGame(setup(folders));
       refresh();
       setDone({ instanceId: res.instanceId });
+      // D128: a game another manager already manages gets the import offer.
+      backend.importSources(res.instanceId).then(
+        (found) => found.length > 0 && setOffer(found),
+        () => undefined,
+      );
     } catch (raw) {
       setError(toUIError(raw));
     } finally {
@@ -179,6 +186,24 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
   };
 
   const blocked = (verification?.problems.length ?? 0) > 0;
+
+  if (done && offer) {
+    const open = () => {
+      onClose();
+      navigate({ view: "overview" });
+    };
+    return (
+      <ImportOfferDialog
+        instance={done.instanceId}
+        gameName={start.gameName}
+        gameRoot={root}
+        context="add"
+        sources={offer}
+        onClose={open}
+        onStarted={open}
+      />
+    );
+  }
   const canFinish = verification !== null && !blocked && method !== "" && !busy;
 
   return (

@@ -552,7 +552,7 @@ func validateRule(rule Rule) error {
 		return fmt.Errorf("%w: %q cannot load after itself", ErrInvalid, rule.Plugin)
 	}
 	switch rule.Source {
-	case rules.SourceUser, rules.SourceMetadata, rules.SourceCollection:
+	case rules.SourceUser, rules.SourceMetadata, rules.SourceCollection, rules.SourceImport:
 	default:
 		return fmt.Errorf("%w: unknown rule source %q", ErrInvalid, rule.Source)
 	}

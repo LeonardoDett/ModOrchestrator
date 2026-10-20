@@ -3,7 +3,8 @@ import { Eraser, FolderInput, HardDrive, LayoutList, ListChecks, ListTree, Panel
 import { FolderPlusIcon, MoreHorizontalIcon, PackageIcon, PlusIcon, RocketIcon, SearchIcon, TrashIcon, UndoIcon } from "dettmann-ui/icons";
 import { ActionBar, Alert, Badge, Button, ContextMenu, EmptyState, FeaturedIcon, FileDropzone, Icon, Indicator, Input, Menu, Popover, ResourcePage, SegmentedControl, Stack, Typography, useToast, type ContextMenuItem } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useCategories, useConflictIndicators, useImportQueue, useInstanceSettings, useModList, useModOrder, useOperations, useRuleCycle, useTags } from "../bridge/queries";
+import { ImportOfferDialog } from "../features/imports/ImportDialogs";
+import { useCategories, useConflictIndicators, useImportQueue, useInstanceSettings, useModList, useModOrder, useOperations, useRuleCycle, useTags, useWorkspace } from "../bridge/queries";
 import type { ConflictIndicator, EntryRef, FileLocation, InstanceFolder, ModRow, QueueItem } from "../bridge/types";
 import { ConflictEditorDialog, CycleDialog, FileWinnersDialog } from "../features/conflicts/ConflictDialogs";
 import { useSettings } from "../app/settings-context";
@@ -69,6 +70,10 @@ export function ModsWorkspace({ instance }: { instance: string }) {
   const run = useAction();
   const { addToast } = useToast();
   const { navigate, route } = useNavigation();
+  // D128: Mods › Importar › "De outro gerenciador".
+  const [importingManager, setImportingManager] = useState(false);
+  const workspace = useWorkspace();
+  const gameName = workspace.status === "ready" ? (workspace.data.instances.find((i) => i.id === instance)?.gameName ?? "") : "";
   const { get } = useSettings();
   const mods = useModList(instance);
   const order = useModOrder(instance);
@@ -313,6 +318,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
         <Menu.Content>
           <Menu.Item onSelect={importFiles}>{t("mods.import.file")}</Menu.Item>
           <Menu.Item onSelect={importFolder}>{t("mods.import.folder")}</Menu.Item>
+          <Menu.Item onSelect={() => setImportingManager(true)}>{t("mods.import.manager")}</Menu.Item>
         </Menu.Content>
       </Menu.Root>
       <DeployMenu instance={instance} />
@@ -649,6 +655,15 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       <FileWinnersDialog instance={instance} pair={filesPair} onClose={() => setFilesPair(null)} />
       <CycleDialog instance={instance} open={cycleOpen} onClose={() => setCycleOpen(false)} />
       {refusalDialog}
+      {importingManager ? (
+        <ImportOfferDialog
+          instance={instance}
+          gameName={gameName}
+          context="mods"
+          onClose={() => setImportingManager(false)}
+          onStarted={() => setImportingManager(false)}
+        />
+      ) : null}
     </ResourcePage>
   );
 }

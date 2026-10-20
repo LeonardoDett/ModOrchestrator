@@ -59,7 +59,7 @@ const radioVariants = defineRecipe({
     ].join(" "),
     label: "text-sm text-fg select-none",
     card: [
-      "flex w-full items-start gap-3 rounded-card border border-border-strong bg-surface p-4 text-left",
+      "flex w-full rounded-card border border-border-strong bg-surface text-left",
       "motion-transition",
       "hover:border-fg-muted",
       "focus-ring",
@@ -181,6 +181,11 @@ interface RadioItemProps
   variant?: "default" | "card" | "row";
   /** End of a `row` (badges, an image mark). */
   action?: ReactNode;
+  /**
+   * D-040: a mark between the radio and the copy of a `card` (the 44 px monogram of a
+   * source); with it the card centers its content.
+   */
+  media?: ReactNode;
   children?: ReactNode;
   /** Sobrescreve o intent do grupo; sem ele, o item herda o do `Radio.Group` (padrão `brand`). */
   intent?: Intent;
@@ -200,6 +205,7 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
     disabled: itemDisabled,
     intent,
     action,
+    media,
     id: providedId,
     ...props
   },
@@ -255,11 +261,12 @@ const RadioItem = forwardRef<HTMLButtonElement, RadioItemProps>(function RadioIt
         data-state={state}
         disabled={disabled}
         onClick={handleClick}
-        className={cn(variant === "row" ? row() : card(), className)}
+        className={cn(variant === "row" ? row() : card(), variant === "card" && (media ? "items-center gap-3.5 px-4 py-3.5" : "items-start gap-3 p-4"), className)}
         {...intentData(intent)}
         {...props}
       >
         {glyph}
+        {media ? <span className="flex shrink-0 items-center">{media}</span> : null}
         {copy}
         {variant === "row" && action ? <span className="flex shrink-0 items-center gap-1.5">{action}</span> : null}
       </button>

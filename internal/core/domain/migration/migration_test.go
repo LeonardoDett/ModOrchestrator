@@ -26,7 +26,7 @@ func TestEntriesDropsEmptySeparatorsAndAppendsUnlisted(t *testing.T) {
 
 // Without the capabilities the plugin parts are never offered (D128).
 func TestPartsFollowCapabilities(t *testing.T) {
-	s := Snapshot{Profiles: []Profile{{Order: []Entry{{Mod: "a"}}, Plugins: []PluginState{}, LoadOrder: []string{}}}, Categories: []Category{{Key: "1", Name: "x"}}}
+	s := Snapshot{Mods: []Mod{{Key: "a", Category: "1"}}, Profiles: []Profile{{Order: []Entry{{Mod: "a"}}, Plugins: []PluginState{}, LoadOrder: []string{}}}, Categories: []Category{{Key: "1", Name: "x"}}}
 	generic := game.Definition{Capabilities: game.NewCapabilities()}
 	if got := s.Parts(generic); !slices.Equal(got, []Part{PartMods, PartOrder, PartCategories}) {
 		t.Fatalf("generic parts %v", got)

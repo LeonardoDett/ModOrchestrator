@@ -113,3 +113,13 @@ func TestOrphansAreReportedNotDeleted(t *testing.T) {
 		t.Fatalf("Involving = %v", got)
 	}
 }
+
+// D128: rules imported from another manager were the user's there, so they
+// are deleted like the user's own; metadata and collection rules are not.
+func TestImportedRulesAreRemovable(t *testing.T) {
+	for src, want := range map[Source]bool{SourceUser: true, SourceImport: true, SourceMetadata: false, SourceCollection: false} {
+		if got := src.Removable(); got != want {
+			t.Errorf("%s removable = %v, want %v", src, got, want)
+		}
+	}
+}
