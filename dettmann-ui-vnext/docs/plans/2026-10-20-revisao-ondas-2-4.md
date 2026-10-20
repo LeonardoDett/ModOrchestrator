@@ -17,3 +17,7 @@ Sem achados de cor crua, paleta solta, movimento manual, opacidade para desabili
 ## Padrões que deveriam virar componente
 
 Nenhum.
+
+## Estado
+
+Os dois P1 foram corrigidos em 2026-10-20: `Lightbox` ganhou `labels` (o FOMOD passa os nomes traduzidos) e `src/__tests__/media-diff-lightbox.test.tsx` cobre `MediaImage`, `DiffViewer` e os nomes do `Lightbox`. P2 e P3 ficam para o refinamento final.

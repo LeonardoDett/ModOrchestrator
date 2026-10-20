@@ -2893,4 +2893,6 @@ export const ptBR: Record<MessageKey, string> = {
   "settings.section.languageDisplay": "Idioma e exibição",
   "settings.appliesTo": "Vale para",
   "settings.instantNote": "As mudanças valem na hora, sem botão de salvar.",
+  "common.previous": "Anterior",
+  "mods.fomod.imagePreview": "Prévia da imagem",
 };

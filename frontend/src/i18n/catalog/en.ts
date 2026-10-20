@@ -2897,6 +2897,8 @@ export const en = {
   "settings.section.languageDisplay": "Language and display",
   "settings.appliesTo": "Applies to",
   "settings.instantNote": "Changes apply at once, with no save button.",
+  "common.previous": "Previous",
+  "mods.fomod.imagePreview": "Image preview",
 } as const;
 
 export type MessageKey = keyof typeof en;

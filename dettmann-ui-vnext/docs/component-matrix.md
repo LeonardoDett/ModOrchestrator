@@ -51,6 +51,8 @@ Wave 4 (D-037): `Card.Root` takes `emphasis` (`low` | `medium`), `interactive` a
 
 `Tree`, `FileList`, `FileBrowser`, `ReorderableList`, `MediaImage`, `Lightbox`, `MediaGallery`, `Gallery`, `Carousel`, `FileDropzone`
 
+`Lightbox` takes `labels` (`dialog`, `close`, `previous`, `next`) to localize its built-in accessible names (review of waves 2 to 4, 2026-10-20).
+
 ## Templates
 
 `Workspace`, `ResourcePage`, `MasterDetail`, `ConfirmDialog`, `AppShell`, `Sidebar`, `Navbar`, `Calendar`

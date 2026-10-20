@@ -17,6 +17,15 @@ export interface LightboxItem {
   description?: ReactNode;
 }
 
+/** Accessible names of the lightbox (localize them). */
+export interface LightboxLabels {
+  /** Name of the dialog when the item has no string title. */
+  dialog?: string;
+  close?: string;
+  previous?: string;
+  next?: string;
+}
+
 export interface LightboxProps {
   open: boolean;
   items: readonly LightboxItem[];
@@ -24,6 +33,7 @@ export interface LightboxProps {
   onIndexChange?: (index: number) => void;
   onClose: () => void;
   className?: string;
+  labels?: LightboxLabels;
 }
 
 export function Lightbox({
@@ -33,6 +43,7 @@ export function Lightbox({
   onIndexChange,
   onClose,
   className,
+  labels,
 }: LightboxProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const { containerRef, Portal } = useOverlay<HTMLDivElement>({
@@ -78,7 +89,7 @@ export function Lightbox({
           )}
           role="dialog"
           aria-modal="true"
-          aria-label={typeof item.title === "string" ? item.title : "Image preview"}
+          aria-label={typeof item.title === "string" ? item.title : (labels?.dialog ?? "Image preview")}
         >
           <div className="flex h-12 shrink-0 items-center gap-3 border-b border-border px-3">
             <div className="min-w-0 flex-1 truncate text-sm font-semibold text-fg">
@@ -91,7 +102,7 @@ export function Lightbox({
               ref={closeRef}
               emphasis="low"
               size="icon-sm"
-              aria-label="Close image preview"
+              aria-label={labels?.close ?? "Close image preview"}
               onClick={onClose}
             >
               <XIcon size="lg" />
@@ -107,7 +118,7 @@ export function Lightbox({
             {items.length > 1 ? (
               <>
                 <Button
-                  aria-label="Previous image"
+                  aria-label={labels?.previous ?? "Previous image"}
                   emphasis="medium"
                   size="icon"
                   className="absolute left-4 top-1/2 -translate-y-1/2"
@@ -118,7 +129,7 @@ export function Lightbox({
                   <ChevronLeftIcon size="lg" />
                 </Button>
                 <Button
-                  aria-label="Next image"
+                  aria-label={labels?.next ?? "Next image"}
                   emphasis="medium"
                   size="icon"
                   className="absolute right-4 top-1/2 -translate-y-1/2"

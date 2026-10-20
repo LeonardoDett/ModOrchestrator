@@ -333,7 +333,12 @@ export function FomodWizard({ instance, item, onClose }: { instance: string; ite
           {primary}
         </Modal.Footer>
       </Modal.Content>
-      <Lightbox open={lightbox !== null} items={lightbox ? [{ id: "image", src: lightbox, alt: decision.module }] : []} onClose={() => setLightbox(null)} />
+      <Lightbox
+        open={lightbox !== null}
+        items={lightbox ? [{ id: "image", src: lightbox, alt: decision.module }] : []}
+        onClose={() => setLightbox(null)}
+        labels={{ dialog: t("mods.fomod.imagePreview"), close: t("common.close"), previous: t("common.previous"), next: t("common.next") }}
+      />
     </Modal.Root>
   );
 }
