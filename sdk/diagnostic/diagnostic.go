@@ -12,6 +12,7 @@ type (
 	CodeSpec   = inner.CodeSpec
 	Diagnostic = inner.Diagnostic
 	Evidence   = inner.Evidence
+	Module     = inner.Module
 	Params     = inner.Params
 	Severity   = inner.Severity
 	Spec       = inner.Spec
@@ -19,6 +20,7 @@ type (
 
 const (
 	CodeFrameworkMissing = inner.CodeFrameworkMissing
+	ModulePlugins        = inner.ModulePlugins
 	SeverityInfo         = inner.SeverityInfo
 	SeverityWarning      = inner.SeverityWarning
 	SeverityError        = inner.SeverityError

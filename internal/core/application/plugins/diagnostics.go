@@ -3,9 +3,11 @@ package plugins
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 
 	"modorchestrator/internal/core/application/ports"
+	"modorchestrator/internal/core/domain/conflict"
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/plugin"
@@ -60,6 +62,10 @@ func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]
 		}
 		f.Archives = pa.OrphanArchives(st.inst.Game, files, names)
 	}
+	adapterDiags, err := s.archiveChecks(ctx, st, active)
+	if err != nil {
+		return nil, err
+	}
 	if st.lo != nil {
 		fs, err := s.fileState(ctx, st, a.order)
 		if err != nil {
@@ -86,5 +92,49 @@ func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]
 			f.ExternalViolations = plugin.Violations(uniq, st.hard)
 		}
 	}
-	return pluginhealth.PluginChecks(f)
+	out, err := pluginhealth.PluginChecks(f)
+	if err != nil {
+		return nil, err
+	}
+	return append(out, adapterDiags...), nil
+}
+
+// archiveChecks asks the adapter to check the archives the active plugins
+// load (D141). Each file is the one that wins its Location among the
+// enabled mods; files the manager does not deploy are not the adapter's
+// to judge here.
+func (s *Service) archiveChecks(ctx context.Context, st *state, active []plugin.Plugin) ([]diagnostic.Diagnostic, error) {
+	ac, ok := st.ps.(ports.ArchiveChecker)
+	if !ok || len(st.roots.Enabled) == 0 {
+		return nil, nil
+	}
+	res := conflict.Calculate(st.roots)
+	files := make([]ports.TargetFile, 0, len(res.Winners))
+	for _, w := range res.Winners {
+		files = append(files, ports.TargetFile{
+			Name: w.Location.Path.String(), Mod: w.Mod, ModName: st.modNames[w.Mod],
+			Source: game.JoinPath(game.JoinPath(st.inst.Staging, string(w.Mod)), w.File.Source.String()),
+		})
+	}
+	names := make([]plugin.Name, len(active))
+	for i, p := range active {
+		names[i] = p.Name
+	}
+	specs, err := ac.ArchiveChecks(ctx, s.FS, st.inst, files, names)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]diagnostic.Diagnostic, 0, len(specs))
+	for _, sp := range specs {
+		// A code outside the catalog would have no module and no text (D131).
+		if !s.Registry.Diagnostics().Has(sp.Code) {
+			return nil, fmt.Errorf("plugins: adapter %s emitted undeclared code %q", st.inst.Adapter, sp.Code)
+		}
+		d, err := diagnostic.New(sp)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, d)
+	}
+	return out, nil
 }

@@ -51,6 +51,10 @@ type state struct {
 	// rootFiles are the file names at the top of the plugin target, in
 	// the desired state of enabled mods and on disk (archive checks).
 	rootFiles []string
+	// roots are the top files of the plugin target of each enabled mod, in
+	// mod order, and the rules and intent that pick their winners (archive
+	// checks of the adapter, D141).
+	roots conflict.Input
 }
 
 // DisabledPlugin is a plugin a disabled (or losing) mod provides.
@@ -176,6 +180,13 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 			return err
 		}
 		reduced := &mod.Installation{ID: m.Installation, Mod: mid, Instance: st.inst.ID}
+		if st.profile.IsEnabled(mid) && len(roots) > 0 {
+			st.roots.Enabled = append(st.roots.Enabled, mid)
+			if st.roots.Installations == nil {
+				st.roots.Installations = map[mod.ID]*mod.Installation{}
+			}
+			st.roots.Installations[mid] = &mod.Installation{ID: m.Installation, Mod: mid, Instance: st.inst.ID, Files: roots}
+		}
 		for _, f := range roots {
 			if st.profile.IsEnabled(mid) {
 				st.rootFiles = append(st.rootFiles, f.Dest.Path.String())
@@ -211,7 +222,8 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 	if err != nil {
 		return err
 	}
-	res := conflict.Calculate(conflict.Input{Enabled: enabled, Installations: installs, Intent: intent, RuleEdges: modRules.OrderEdges()})
+	st.roots.Intent, st.roots.RuleEdges = intent, modRules.OrderEdges()
+	res := conflict.Calculate(conflict.Input{Enabled: enabled, Installations: installs, Intent: intent, RuleEdges: st.roots.RuleEdges})
 	won := map[string]conflict.Winner{}
 	for _, w := range res.Winners {
 		won[w.Location.Path.Key()] = w

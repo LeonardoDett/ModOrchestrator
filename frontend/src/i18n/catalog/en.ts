@@ -1370,6 +1370,7 @@ export const en = {
   "diag.action.games.details": "Open game",
   "diag.action.games.relocate": "Locate game",
   "diag.action.folder.open": "Open folder",
+  "diag.action.mod.folder.open": "Open mod folder",
   "diag.action.conflicts.clear_override": "Remove override",
   "diag.action.conflicts.show_file": "Show file",
   "diag.action.conflicts.choose_winner": "Choose again",

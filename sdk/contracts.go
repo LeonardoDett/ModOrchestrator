@@ -6,6 +6,7 @@ import (
 
 type (
 	AdapterCatalog      = inner.AdapterCatalog
+	ArchiveChecker      = inner.ArchiveChecker
 	CatalogProvider     = inner.CatalogProvider
 	CategoryProvider    = inner.CategoryProvider
 	DefaultCategory     = inner.DefaultCategory
@@ -29,6 +30,7 @@ type (
 	FileInfo            = inner.FileInfo
 	RegistryHint        = inner.RegistryHint
 	StoreInstall        = inner.StoreInstall
+	TargetFile          = inner.TargetFile
 )
 
 const (

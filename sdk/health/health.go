@@ -7,6 +7,8 @@ import (
 )
 
 const (
-	ActionImport   = inner.ActionImport
-	NavigateImport = inner.NavigateImport
+	ActionImport        = inner.ActionImport
+	NavigateImport      = inner.NavigateImport
+	ActionOpenModFolder = inner.ActionOpenModFolder
+	NavigateModFolder   = inner.NavigateModFolder
 )

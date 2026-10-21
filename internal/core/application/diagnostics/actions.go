@@ -277,7 +277,7 @@ func (s *Service) CommandActions() []string {
 // PlaceTargets lists the navigation targets of the actions.
 func (s *Service) PlaceTargets() []string {
 	out := []string{
-		health.NavigateImport, health.NavigateRules, NavigateDeployPlan, NavigateDeployChanges, NavigateDeployResult,
+		health.NavigateImport, health.NavigateRules, health.NavigateModFolder, NavigateDeployPlan, NavigateDeployChanges, NavigateDeployResult,
 		NavigateSettingsMods, NavigateWorkarounds, NavigateGame, NavigateStaging, NavigateGameFolder, "conflicts", "conflicts.mod",
 	}
 	for _, m := range s.Modules {

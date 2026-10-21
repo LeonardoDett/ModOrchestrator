@@ -217,6 +217,16 @@ describe("Diagnostics (F9)", () => {
     expect(calls).toContain("execute:mods_incompatible#1:mods.disable:0");
   });
 
+  it("\"Open mod folder\" opens the folder of the mod the action targets", async () => {
+    const opened: string[] = [];
+    const backend = { ...createOfflineBackend(), openModFolder: async (id: string) => void opened.push(id) };
+    const action = { id: "mod.folder.open", navigateTo: "folder.mod", target: { kind: "mod", id: "m7" } };
+    const d: Diagnostic = { ...requirement, code: "archive_wrong_game", actions: [action] };
+    const ctx = { d, action, backend, run: (fn: () => Promise<unknown>) => fn(), t: (k: string) => k, navigate: () => {}, deploy: {} };
+    await PLACES["folder.mod"](ctx as never);
+    expect(opened).toEqual(["m7"]);
+  });
+
   it("every navigation target of the backend has a place in the UI (INV-OPS-06)", () => {
     const internal = join(import.meta.dirname, "..", "..", "..", "internal");
     const sources = [

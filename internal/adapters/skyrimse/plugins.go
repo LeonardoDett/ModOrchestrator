@@ -330,29 +330,3 @@ func toCP1252(s string) ([]byte, error) {
 	}
 	return out, nil
 }
-
-// OrphanArchives: a BSA loads when an active plugin has the same base name
-// ("Mod.bsa", "Mod - Textures.bsa" for "Mod.esp", core/12 §5).
-func (Adapter) OrphanArchives(_ game.ID, files []string, active []plugin.Name) []string {
-	bases := map[string]bool{}
-	for _, p := range active {
-		n := strings.ToLower(string(p))
-		bases[n[:max(strings.LastIndex(n, "."), 0)]] = true
-	}
-	var out []string
-	for _, f := range files {
-		lower := strings.ToLower(f)
-		if !strings.HasSuffix(lower, ".bsa") {
-			continue
-		}
-		base := strings.TrimSuffix(lower, ".bsa")
-		if bases[base] {
-			continue
-		}
-		if i := strings.LastIndex(base, " - "); i > 0 && bases[base[:i]] {
-			continue
-		}
-		out = append(out, f)
-	}
-	return out
-}

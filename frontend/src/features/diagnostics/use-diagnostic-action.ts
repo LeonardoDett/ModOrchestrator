@@ -30,7 +30,7 @@ export function useDiagnosticAction() {
         return;
       }
       const place = PLACES[a.navigateTo as Place];
-      if (place) await place({ d, backend, run, t, navigate, deploy });
+      if (place) await place({ d, action: a, backend, run, t, navigate, deploy });
     },
     [backend, run, t, navigate, deploy],
   );
@@ -38,6 +38,7 @@ export function useDiagnosticAction() {
 
 interface PlaceContext {
   d: Diagnostic;
+  action: Diagnostic["actions"][number];
   backend: ReturnType<typeof useBackend>;
   run: ReturnType<typeof useAction>;
   t: ReturnType<typeof useI18n>["t"];
@@ -56,6 +57,7 @@ export type Place =
   | "games.instance"
   | "folder.staging"
   | "folder.game"
+  | "folder.mod"
   | "conflicts"
   | "conflicts.mod"
   | "plugins"
@@ -80,6 +82,10 @@ export const PLACES: Record<Place, (c: PlaceContext) => Promise<void> | void> = 
   },
   "folder.game": async ({ d, backend, run }) => {
     await run(() => backend.openInstanceFolder(d.instance, "game"));
+  },
+  "folder.mod": async ({ action, backend, run }) => {
+    const mod = action.target?.kind === "mod" ? action.target.id : undefined;
+    if (mod) await run(() => backend.openModFolder(mod));
   },
   conflicts: ({ navigate }) => navigate({ view: "conflicts" }),
   "conflicts.mod": ({ navigate }) => navigate({ view: "conflicts" }),

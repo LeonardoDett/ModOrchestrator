@@ -1367,6 +1367,7 @@ export const ptBR: Record<MessageKey, string> = {
   "diag.action.games.details": "Abrir jogo",
   "diag.action.games.relocate": "Localizar jogo",
   "diag.action.folder.open": "Abrir pasta",
+  "diag.action.mod.folder.open": "Abrir pasta do mod",
   "diag.action.conflicts.clear_override": "Remover override",
   "diag.action.conflicts.show_file": "Mostrar arquivo",
   "diag.action.conflicts.choose_winner": "Reescolher",

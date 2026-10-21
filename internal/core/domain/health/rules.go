@@ -23,14 +23,18 @@ import (
 // diagnostics service; navigations open the place where the problem is
 // solved (INV-OPS-06).
 const (
-	ActionEnableMod      = "mods.enable"
-	ActionDisableMod     = "mods.disable"
-	ActionRemoveRule     = "rules.remove"
-	ActionDisableRule    = "rules.disable"
-	ActionImport         = "mods.import"
-	ActionOpenCycle      = "rules.open_cycle"
-	NavigateImport       = "mods.import"
-	NavigateRules        = "mods.rules"
+	ActionEnableMod   = "mods.enable"
+	ActionDisableMod  = "mods.disable"
+	ActionRemoveRule  = "rules.remove"
+	ActionDisableRule = "rules.disable"
+	ActionImport      = "mods.import"
+	ActionOpenCycle   = "rules.open_cycle"
+	NavigateImport    = "mods.import"
+	NavigateRules     = "mods.rules"
+	// ActionOpenModFolder shows the staging folder of the mod the action
+	// targets, for a problem in its files (archive_wrong_game, D141).
+	ActionOpenModFolder  = "mod.folder.open"
+	NavigateModFolder    = "folder.mod"
 	OperationReorder     = operation.Kind("reorder")
 	OperationDeploy      = operation.Kind("deploy")
 	OperationPurge       = operation.Kind("purge")

@@ -387,6 +387,26 @@ type PluginArchives interface {
 	OrphanArchives(id game.ID, files []string, active []plugin.Name) []string
 }
 
+// TargetFile is a file at the top of the plugin target that an enabled mod
+// of the active profile deploys (it wins its Location), with the mod and
+// the absolute path of the file in the staging.
+type TargetFile struct {
+	Name    string
+	Mod     mod.ID
+	ModName string
+	Source  string
+}
+
+// ArchiveChecker is implemented by adapters that check the archives the
+// active plugins load against the game (D141: an archive built for another
+// game). Given the files of PluginArchives with their mods and the active
+// plugins, it reads what it needs (never writes) and returns diagnostics
+// with codes its catalog declares (D131). It runs only with the plugins
+// capability.
+type ArchiveChecker interface {
+	ArchiveChecks(ctx context.Context, fs FileReader, inst game.Instance, files []TargetFile, active []plugin.Name) ([]diagnostic.Spec, error)
+}
+
 // Known folders an adapter can place files in, resolved by the platform.
 const FolderLocalAppData = "local_app_data"
 
