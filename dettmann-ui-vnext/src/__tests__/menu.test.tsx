@@ -141,4 +141,35 @@ describe("Menu", () => {
     expect(onGame).toHaveBeenCalled();
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
+
+  it("an item with description, media and end grows to two lines (D-044)", async () => {
+    const user = userEvent.setup();
+    const onRun = vi.fn();
+    render(
+      <Menu.Root>
+        <Menu.Trigger>
+          <button type="button">Tools</button>
+        </Menu.Trigger>
+        <Menu.Content>
+          <Menu.Item label="SSEEdit" description="Em execução" media={<span data-testid="media" />} end={<span data-testid="dot" />} onSelect={onRun}>
+            SSEEdit
+          </Menu.Item>
+          <Menu.Item label="Nemesis" description="Bloqueada" disabled>
+            Nemesis
+          </Menu.Item>
+        </Menu.Content>
+      </Menu.Root>
+    );
+    await user.click(screen.getByRole("button", { name: "Tools" }));
+    const item = await screen.findByRole("menuitem", { name: /SSEEdit/ });
+    expect(item).toHaveTextContent("Em execução");
+    expect(item).toHaveClass("min-h-control-sm");
+    expect(item).not.toHaveClass("h-control-sm");
+    expect(item.querySelector('[data-slot="description"]')).toHaveTextContent("Em execução");
+    expect(screen.getByTestId("media")).toBeInTheDocument();
+    expect(screen.getByTestId("dot")).toBeInTheDocument();
+    expect(screen.getByRole("menuitem", { name: /Nemesis/ })).toBeDisabled();
+    await user.click(item);
+    expect(onRun).toHaveBeenCalled();
+  });
 });

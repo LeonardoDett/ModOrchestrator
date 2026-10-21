@@ -301,6 +301,15 @@ interface MenuItemProps extends Omit<
    * keeps the menu open ("Colunas da lista").
    */
   checked?: boolean;
+  /**
+   * D-044: a second line under the label ("Em execução", the value of a variable);
+   * the item grows to two lines.
+   */
+  description?: ReactNode;
+  /** D-044: a visual before the label in place of `icon` (an app's icon, an avatar). */
+  media?: ReactNode;
+  /** D-044: a mark after the label (a status dot); decorative unless it has its own name. */
+  end?: ReactNode;
 }
 
 function MenuItem({
@@ -311,6 +320,9 @@ function MenuItem({
   disabled = false,
   icon,
   checked,
+  description,
+  media,
+  end,
   onClick,
   ...props
 }: MenuItemProps) {
@@ -347,7 +359,7 @@ function MenuItem({
       tabIndex={isActive ? 0 : -1}
       disabled={disabled}
       className={cn(
-        rowRecipe({ active: isActive, disabled }),
+        rowRecipe({ active: isActive, disabled, multiline: description !== undefined && description !== null }),
         "w-full gap-2.5 rounded-chip text-left",
         className,
       )}
@@ -361,14 +373,24 @@ function MenuItem({
       })}
       {...props}
     >
-      {icon ? (
+      {media ? (
+        <span className="flex shrink-0 self-center">{media}</span>
+      ) : icon ? (
         <Icon icon={icon} size="sm" className="shrink-0 text-fg-muted" />
       ) : null}
-      {icon || checkable ? (
+      {description !== undefined && description !== null ? (
+        <span className="flex min-w-0 flex-1 flex-col gap-px">
+          <span className="truncate">{children}</span>
+          <span data-slot="description" className="truncate text-caption text-fg-muted">
+            {description}
+          </span>
+        </span>
+      ) : icon || media || checkable || end ? (
         <span className="min-w-0 flex-1 truncate">{children}</span>
       ) : (
         children
       )}
+      {end ? <span className="flex shrink-0 self-center">{end}</span> : null}
       {checkable ? (
         <CheckIcon
           size="sm"

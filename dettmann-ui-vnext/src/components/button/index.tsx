@@ -69,6 +69,7 @@ interface ButtonProps
   /**
    * Selo sobreposto no canto (contagem, por exemplo). Decorativo: o nome acessível do
    * botão precisa conter a mesma informação ("Fila de instalação, 3 itens").
+   * `true` desenha só um ponto, para "algo está rodando" (D-043).
    */
   badge?: ReactNode;
   /** Intent do selo. Padrão `neutral`. */
@@ -137,7 +138,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         console.warn("[dettmann-ui] Button só com ícone precisa de `aria-label` (ou `aria-labelledby`).");
       }
     }
-    const overlaid = badge !== undefined && badge !== null || progress !== undefined;
+    const overlaid = (badge !== undefined && badge !== null && badge !== false) || progress !== undefined;
 
     const button = (
       <button
@@ -193,7 +194,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             className="pointer-events-none absolute inset-0 m-auto"
           />
         ) : null}
-        {badge !== undefined && badge !== null ? (
+        {badge === true ? (
+          <span
+            aria-hidden="true"
+            data-slot="badge"
+            data-dot=""
+            className="pointer-events-none absolute right-1.5 top-1.5 size-1.75 rounded-pill border-2 border-structure bg-intent-fill box-content"
+            {...intentData(badgeIntent)}
+          />
+        ) : badge !== undefined && badge !== null && badge !== false ? (
           <span
             aria-hidden="true"
             data-slot="badge"

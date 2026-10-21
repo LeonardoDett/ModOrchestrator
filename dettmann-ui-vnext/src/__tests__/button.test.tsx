@@ -145,4 +145,24 @@ describe("Button visual language (D-033)", () => {
     expect(cls).toContain("rounded-r-control");
     expect(cls).not.toContain("rounded-l-lg");
   });
+
+  test("badge true is a dot with the badge intent, hidden from screen readers (D-043)", () => {
+    render(
+      <Button size="icon" aria-label="Ferramentas, uma em execução" badge badgeIntent="success">
+        x
+      </Button>
+    );
+    const b = screen.getByRole("button", { name: "Ferramentas, uma em execução" });
+    const dot = b.querySelector('[data-slot="badge"]');
+    expect(dot).toHaveAttribute("data-dot");
+    expect(dot).toHaveAttribute("aria-hidden", "true");
+    expect(dot).toHaveAttribute("data-intent", "success");
+    expect(dot).toBeEmptyDOMElement();
+    expect(b).toHaveClass("relative");
+  });
+
+  test("badge false draws nothing", () => {
+    render(<Button size="icon" aria-label="Ferramentas" badge={false}>x</Button>);
+    expect(screen.getByRole("button").querySelector('[data-slot="badge"]')).toBeNull();
+  });
 });

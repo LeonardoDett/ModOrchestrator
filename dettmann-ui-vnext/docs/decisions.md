@@ -267,3 +267,19 @@ Tests: `src/__tests__/focus-trap.test.tsx`, `src/__tests__/menu-keyboard-open.te
 Status: accepted (2026-10-20).
 
 `DEFAULT_PRESET` is `orchestrator`. `ThemeProvider` (`defaultTheme`), `getThemeScript` and the `:root` block of the generated CSS use it when nothing else is chosen. `forest` stays a selectable preset; only the fallback changed.
+
+## D-043 — Button badge as a dot
+
+Status: accepted (2026-10-21; Mod Orchestrator board JogoFerramentasMenu, D146 of the app).
+
+`Button` `badge={true}` draws a 7 px dot in the corner, in `badgeIntent`, with a 2 px ring of the structure color so it reads on the top bar. It says "something is running" without a number. Like the count badge it is decorative: the accessible name must say the same ("Ferramentas, uma em execução"). `badge={false}` draws nothing.
+
+Why: the board marks the tools button with a dot while a tool runs; the count badge is a 16 px pill with text and would read as a count.
+
+## D-044 — Menu item with a second line, media and an end mark
+
+Status: accepted (2026-10-21; Mod Orchestrator boards JogoFerramentasMenu and JogoFerramentasEditar, D146 of the app).
+
+`Menu.Item` gains `description` (a second line in caption size, muted; the item uses the multiline row, so it grows instead of clipping), `media` (a visual before the label in place of `icon`: an app's icon or an avatar) and `end` (a mark after the label, such as a status dot). The accessible name is the item's text, description included.
+
+Why: both boards list items of two lines (a tool and why it cannot start; a variable and its value), and the fixed-height row clipped them.
