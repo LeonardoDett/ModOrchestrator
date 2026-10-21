@@ -76,7 +76,7 @@ function world(over: Partial<LoadOrderView["state"]> = {}) {
     }),
     pluginList: async () => LIST,
     pluginDetails: async () => details,
-    pluginRules: async () => ({ rules: [], groups: [{ name: "default", after: [], plugins: [], default: true }], plugins: ROWS.map((r) => r.name) }),
+    pluginRules: async () => ({ rules: [], groups: [{ name: "default", after: [], plugins: [], default: true, source: "" }], plugins: ROWS.map((r) => r.name) }),
     loadOrderView: async () => ({
       ...LIST,
       canUndoSort: false,
@@ -174,5 +174,33 @@ describe("Load Order screen (F11)", () => {
     await chooseOption(user, within(dialog).getByRole("combobox", { name: "Action" }), "Import the external order into the profile");
     await user.click(within(dialog).getByRole("button", { name: "Apply decision" }));
     expect(calls).toContain("resolve:import_load_order");
+  });
+});
+
+describe("LOOT rules (D143)", () => {
+  beforeEach(() => localStorage.clear());
+
+  it("shows a LOOT rule with its origin; it is turned off, not removed", async () => {
+    const user = userEvent.setup();
+    const { backend, calls } = world();
+    backend.pluginRules = async () => ({
+      rules: [
+        { id: "r1", plugin: "Patch.esp", after: "Lib.esm", source: "user", disabled: false, orphan: false },
+        { id: "loot:patch.esp>lib.esm", plugin: "Lib.esm", after: "Skyrim.esm", source: "loot", disabled: false, orphan: false },
+      ],
+      groups: [{ name: "default", after: [], plugins: [], default: true, source: "" }],
+      plugins: ROWS.map((r) => r.name),
+    });
+    backend.setPluginRuleDisabled = async (_i, id, disabled) => {
+      calls.push(`off:${id}:${disabled}`);
+    };
+    render(<App backend={backend} />);
+    await open(user, "Plugins");
+    await user.click(await screen.findByRole("button", { name: "Rules" }));
+    const dialog = await screen.findByRole("dialog");
+    expect(within(dialog).getByText("LOOT")).toBeInTheDocument();
+    expect(within(dialog).getAllByRole("button", { name: "Remove rule" })).toHaveLength(1);
+    await user.click(within(dialog).getByRole("button", { name: "Turn off" }));
+    expect(calls).toContain("off:loot:patch.esp>lib.esm:true");
   });
 });

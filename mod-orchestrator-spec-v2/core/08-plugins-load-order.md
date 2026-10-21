@@ -36,8 +36,8 @@ Plugin novo (apareceu no inventário):
 | Master antes de dependente (cabeçalho) | adapter | sim |
 | Flag master antes de não-master | adapter | sim (Skyrim: sim) |
 | IndexLock | usuário | sim |
-| PluginRule "carrega depois de" | usuário (e V1.x LOOT) | sim para o sort |
-| Grupo A depois de grupo B | usuário (e V1.x LOOT) | sim para o sort |
+| PluginRule "carrega depois de" | usuário; provedor (LOOT, D143) | sim para o sort; a do provedor é leve (§13) |
+| Grupo A depois de grupo B | usuário; provedor (LOOT, D143) | sim para o sort; a do provedor é leve (§13) |
 
 Violação de restrição rígida do adapter na LoadOrder desejada é impossível por construção (INV-PLG-01): toda mudança passa pelo motor.
 
@@ -46,7 +46,7 @@ Violação de restrição rígida do adapter na LoadOrder desejada é impossíve
 - **Ordenar agora** ("Sort now"): motor com todas as restrições, partindo da ordem atual (movimento mínimo). Gera Snapshot se mover mais de N itens.
 - **Auto-sort** (setting, padrão ligado, paridade Vortex): roda o sort quando o inventário muda ou regras/grupos mudam.
 - **Arrastar manualmente**: permitido quando o adapter declara load order manual permitida. Movimento que viola restrição é recusado com alternativas (mesma UX de core/05 §4). Com auto-sort ligado, arrastar é permitido apenas se respeitar as restrições; a nova posição vira preferência (a ordem atual é a entrada do próximo sort, então ela se mantém).
-- Ciclo em regras/grupos: recusado na criação (D028); se vier de provedor, diagnóstico bloqueante do sort (a ordem atual se mantém).
+- Ciclo em regras/grupos: recusado na criação (D028). Ciclo que um dado de provedor fecharia não bloqueia: o item do provedor fica de fora (§13, D143).
 
 ## 6. Regras e grupos
 
@@ -63,7 +63,7 @@ Violação de restrição rígida do adapter na LoadOrder desejada é impossíve
 
 ## 8. Diagnósticos de plugins
 
-`plugin_missing_master` (error), `plugin_master_order` (error; só pode acontecer com ordem externa importada), `plugin_limit_exceeded` (error; com contagem por tipo), `plugin_disabled_master` (warning: master existe mas está inativo), `plugin_header_unreadable` (warning), `plugin_rule_orphan` (warning), `load_order_external_change` (blocking do deploy até triagem), `plugin_from_losing_file` (info: dois mods fornecem o mesmo plugin, mostra qual vence).
+`plugin_missing_master` (error), `plugin_master_order` (error; só pode acontecer com ordem externa importada), `plugin_limit_exceeded` (error; com contagem por tipo), `plugin_disabled_master` (warning: master existe mas está inativo), `plugin_header_unreadable` (warning), `plugin_rule_orphan` (warning), `load_order_external_change` (blocking do deploy até triagem), `plugin_from_losing_file` (info: dois mods fornecem o mesmo plugin, mostra qual vence). Do provedor (D143): `plugin_requirement_missing`, `plugin_incompatible`, `plugin_provider_message`, `plugin_dirty`, `plugin_provider_skipped`.
 
 ## 9. Consultas para a UI
 
@@ -87,3 +87,10 @@ Mecânica em D088; comportamentos não fixados aqui em D089 (proposta). Resumo: 
 - Editar `plugins.txt` fora do app: diagnóstico imediato; nenhum overwrite até triagem.
 - Sort em ordem já válida não muda nada.
 - Plugins, Load Order e ModOrder nunca aparecem misturados na mesma lista (INV-ORD-06).
+
+## 13. Dados de provedor (LOOT, D143)
+
+- Ponto de contribuição `plugins.Provider` (D133): a cada leitura, cada provedor recebe o inventário (nome, ativo, implícito, caminho, cabeçalho) e devolve regras, grupos, grupo por plugin e diagnósticos. Nada disso é gravado; o conjunto efetivo (usuário + provedores) alimenta o sort, as explicações, as telas e os diagnósticos.
+- O usuário vence: regra igual, grupo de mesmo nome e escolha de grupo do usuário não são substituídos. Regra do provedor não é removida, só desligada (`providerOff`, por id estável); a origem aparece no DLG-23 e no inspector.
+- Ciclo com dado do provedor: sai primeiro o grupo atribuído pelo provedor, depois a ligação entre grupos dele, por último a regra dele; regras que saíram viram `plugin_provider_skipped` (info).
+- Setting `plugins.lootProvider` (padrão ligado). Masterlist empacotada no adapter; "Atualizar masterlist" e "Importar regras do LOOT" (userlist → regras com origem `import`) em Configurações › Plugins.

@@ -417,3 +417,11 @@ export function VerifyGameSetup(arg1:bridge.SetupDTO):Promise<bridge.Verificatio
 export function Workarounds():Promise<bridge.WorkaroundsDTO>;
 
 export function Workspace():Promise<bridge.WorkspaceDTO>;
+
+export function ImportLootUserlist(arg1:string,arg2:string):Promise<bridge.ImportResultDTO>;
+
+export function LootStatus(arg1:string):Promise<bridge.LootStatusDTO>;
+
+export function SetPluginRuleDisabled(arg1:string,arg2:string,arg3:boolean):Promise<void>;
+
+export function UpdateLootMasterlist(arg1:string):Promise<bridge.LootStatusDTO>;

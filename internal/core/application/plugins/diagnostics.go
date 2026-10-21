@@ -96,7 +96,8 @@ func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]
 	if err != nil {
 		return nil, err
 	}
-	return append(out, adapterDiags...), nil
+	out = append(out, adapterDiags...)
+	return append(out, st.providerDiagnostics()...), nil
 }
 
 // archiveChecks asks the adapter to check the archives the active plugins

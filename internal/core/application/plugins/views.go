@@ -97,7 +97,7 @@ func (st *state) rows(a arrangement, probs map[string][]diagnostic.Diagnostic) (
 		locks[string(l.Item)] = true
 	}
 	ruleCount := map[string]int{}
-	for _, r := range st.rules.List() {
+	for _, r := range st.effective.List() {
 		ruleCount[r.Plugin.Key()]++
 		ruleCount[r.After.Key()]++
 	}
@@ -110,7 +110,7 @@ func (st *state) rows(a arrangement, probs map[string][]diagnostic.Diagnostic) (
 		r := Row{
 			Name: p.Name, Enabled: st.enabled(p), Implicit: p.Implicit, Locked: p.Implicit || locks[p.Name.Key()],
 			Position: i + 1, Origin: p.Origin, Mod: p.Mod, ModName: st.modNames[p.Mod], Flags: slices.Clone(p.Header.Flags),
-			Group: st.rules.GroupOf(p.Name), Masters: len(p.Header.Masters), Author: p.Header.Author,
+			Group: st.effective.GroupOf(p.Name), Masters: len(p.Header.Masters), Author: p.Header.Author,
 			Version: p.Header.Version, Description: p.Header.Description, Rules: ruleCount[p.Name.Key()],
 		}
 		if r.Enabled {
@@ -258,7 +258,7 @@ func (s *Service) Details(ctx context.Context, instance game.InstanceID, name pl
 		}
 	}
 	known := st.known()
-	for _, r := range st.rules.List() {
+	for _, r := range st.effective.List() {
 		if r.Plugin.Key() == p.Name.Key() || r.After.Key() == p.Name.Key() {
 			d.Rules = append(d.Rules, ruleView(r, known))
 		}
@@ -288,6 +288,9 @@ type GroupView struct {
 	After   []string
 	Plugins []plugin.Name
 	Default bool
+	// Source is the provider that created the group ("" for the user's);
+	// such a group cannot be edited, deleted or chosen (D143).
+	Source string
 }
 
 // RulesView is the plugin rules dialog (DLG-23) and the groups dialog
@@ -308,20 +311,20 @@ func (s *Service) RulesAndGroups(ctx context.Context, instance game.InstanceID) 
 	known := st.known()
 	v := RulesView{Plugins: st.names()}
 	slices.SortFunc(v.Plugins, func(a, b plugin.Name) int { return strings.Compare(a.Key(), b.Key()) })
-	for _, r := range st.rules.List() {
+	for _, r := range st.effective.List() {
 		v.Rules = append(v.Rules, ruleView(r, known))
 	}
 	members := map[string][]plugin.Name{}
-	for n, g := range st.rules.Assignments() {
+	for n, g := range st.effective.Assignments() {
 		if p, ok := st.plugin(n); ok {
 			n = p.Name
 		}
 		members[g] = append(members[g], n)
 	}
-	for _, g := range st.rules.Groups() {
+	for _, g := range st.effective.Groups() {
 		ps := members[g.Name]
 		slices.SortFunc(ps, func(a, b plugin.Name) int { return strings.Compare(a.Key(), b.Key()) })
-		v.Groups = append(v.Groups, GroupView{Name: g.Name, After: g.After, Plugins: ps, Default: g.Name == plugin.DefaultGroup})
+		v.Groups = append(v.Groups, GroupView{Name: g.Name, After: g.After, Plugins: ps, Default: g.Name == plugin.DefaultGroup, Source: string(st.effective.GroupProvidedBy(g.Name))})
 	}
 	return v, nil
 }
@@ -496,7 +499,7 @@ func (s *Service) Explain(ctx context.Context, instance game.InstanceID, name pl
 	}
 	a := st.arrange(st.settings.autoSort)
 	c := st.constraints(true)
-	ex := Explanation{Plugin: p.Name, Fixed: p.Implicit, Group: st.rules.GroupOf(p.Name)}
+	ex := Explanation{Plugin: p.Name, Fixed: p.Implicit, Group: st.effective.GroupOf(p.Name)}
 	_, ex.Locked = c.Locks[p.Name.Key()]
 	ex.Position = slices.IndexFunc(a.order, func(n plugin.Name) bool { return n.Key() == p.Name.Key() }) + 1
 	for _, r := range plugin.Explain(p.Name, a.order, c) {

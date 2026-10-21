@@ -408,6 +408,35 @@ type ArchiveChecker interface {
 	ArchiveChecks(ctx context.Context, fs FileReader, inst game.Instance, files []TargetFile, active []plugin.Name) ([]diagnostic.Spec, error)
 }
 
+// LootGame is what a game declares for the LOOT data provider (D143): the
+// name of its masterlist repository and of its LOOT data folder, and the
+// copy of the masterlist (with the prelude) shipped with the app.
+type LootGame struct {
+	// Repository is the masterlist repository under github.com/loot
+	// ("skyrimse"); the update downloads from it.
+	Repository string
+	// Folder is the game's folder under LOOT's data folder, where LOOT keeps
+	// its userlist ("Skyrim Special Edition").
+	Folder     string
+	Masterlist []byte
+	Prelude    []byte
+	// Date is when the shipped copy was published (its last commit).
+	Date time.Time
+}
+
+// LootSupport is implemented by adapters of games that LOOT knows. The
+// provider is part of the plugins capability: a game without it, or
+// without this interface, has no LOOT data.
+type LootSupport interface {
+	LootGame(id game.ID) (LootGame, bool)
+}
+
+// MasterlistFetcher downloads a file of a LOOT repository. It is only called
+// on an explicit user action (D143), like the app update (D104).
+type MasterlistFetcher interface {
+	Fetch(ctx context.Context, url string) ([]byte, error)
+}
+
 // Known folders an adapter can place files in, resolved by the platform.
 const (
 	FolderLocalAppData = "local_app_data"

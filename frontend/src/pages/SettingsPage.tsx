@@ -11,6 +11,7 @@ import { ErrorAlert } from "../features/feedback/ErrorAlert";
 import { useAction } from "../features/games/use-action";
 import { AppSettingRows, GameSettingsSelect, InstanceSettingRows, RestartBanner, SettingLine, SettingsSection, settingLabel } from "../features/settings/SettingControls";
 import { UpdateSection } from "../features/settings/UpdateSection";
+import { LootSection } from "../features/plugins/LootSection";
 import { WorkaroundsTab } from "../features/settings/WorkaroundsTab";
 import { useI18n, type MessageKey } from "../i18n/i18n";
 import { MAIN_ID, useNavigation } from "../shell/navigation";
@@ -161,6 +162,7 @@ function ModuleTab({ tab, games, instance, onInstance }: { tab: string; games: r
         </SettingsSection>
       ) : null}
       <InstanceSection id={tab} title={title} instance={chosen} tab={tab} />
+      {tab === "plugins" ? <LootSection instance={chosen} /> : null}
     </Stack>
   );
 }

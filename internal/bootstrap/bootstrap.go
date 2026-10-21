@@ -26,12 +26,13 @@ import (
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/launch"
 	"modorchestrator/internal/core/application/library"
+	"modorchestrator/internal/core/application/loot"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/overview"
 	"modorchestrator/internal/core/application/plugins"
-	"modorchestrator/internal/core/application/saves"
 	"modorchestrator/internal/core/application/ports"
 	profilesvc "modorchestrator/internal/core/application/profiles"
+	"modorchestrator/internal/core/application/saves"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/operation"
@@ -70,6 +71,8 @@ type Container struct {
 	Plugins *plugins.Service
 	// Saves owns the save folders of the profiles (save_games, D142).
 	Saves *saves.Service
+	// Loot is the LOOT data provider of the plugins module (D143).
+	Loot *loot.Service
 	// Diagnostics gathers health checks, suppressions and notifications;
 	// History is the projection of events with reversal (core/10).
 	Diagnostics *diagnostics.Service
@@ -329,6 +332,11 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:         clock,
 	})
 
+	// The LOOT data provider of the plugins module (D143).
+	lootSvc := loot.New(loot.Deps{
+		Registry: registry, Instances: instances, FS: fsys, Folders: system.Folders{}, Settings: settingsSvc,
+		Dir: filepath.Join(paths.Root, "loot"), Clock: clock,
+	})
 	pluginsSvc := plugins.NewService(plugins.Deps{
 		Registry:      registry,
 		Instances:     instances,
@@ -346,6 +354,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Hasher:        hashing.SHA256{},
 		Folders:       system.Folders{},
 		Cache:         plugincache.New(paths.Cache),
+		Providers:     []plugins.Provider{lootSvc},
 		Settings:      settingsSvc,
 		Ops:           ops,
 		Locks:         locks,
@@ -456,6 +465,7 @@ func New(ctx context.Context) (c *Container, err error) {
 	unsubDiag := bus.Subscribe(diagSvc.Handle)
 	prevUnsub2 := unsub
 	unsub = func() { unsubDiag(); prevUnsub2() }
+	lootSvc.Plugins = pluginsSvc
 	// The load order follows the inventory (core/08 §3) and the file is
 	// watched while the app is open (core/08 §7).
 	unsubPlugins := bus.Subscribe(pluginsSvc.Handle)
@@ -552,6 +562,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		AutoDeploy:         autoDeploy,
 		Plugins:            pluginsSvc,
 		Saves:              savesSvc,
+		Loot:               lootSvc,
 		Diagnostics:        diagSvc,
 		History:            historySvc,
 		Launch:             launchSvc,
@@ -581,6 +592,8 @@ func (c *Container) EnableUpdates(version, executable string) {
 	if c.Updates != nil {
 		return
 	}
+	// "Update masterlist" downloads only on the user's click (D143).
+	c.Loot.Fetcher = updates.NewMasterlistFetcher(version)
 	client := updates.NewClient(version)
 	c.Updates = appupdate.NewService(appupdate.Deps{
 		Settings: c.Settings, Source: client, Downloader: client, Signatures: updates.Signatures{},

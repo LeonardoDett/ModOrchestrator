@@ -11,6 +11,25 @@ import { useAction } from "../games/use-action";
 import { DialogError } from "../mods/OrderDialogs";
 import { reasonText } from "./plugin-labels";
 
+/** The label of a rule's origin: yours, imported, LOOT or another provider. */
+export function ruleSourceKey(source: string) {
+  switch (source) {
+    case "user":
+      return "plugins.rule.sourceUser" as const;
+    case "import":
+      return "plugins.rule.sourceImport" as const;
+    case "loot":
+      return "plugins.rule.sourceLoot" as const;
+    default:
+      return "plugins.rule.sourceOther" as const;
+  }
+}
+
+/** Rules of the user and imported ones can be deleted; the others only switched off. */
+export function removable(source: string) {
+  return source === "user" || source === "import";
+}
+
 /** DLG-23 Regras de plugins (paridade UserlistEditor): every rule of the instance. */
 export function PluginRulesDialog({ instance, open, onClose }: { instance: string; open: boolean; onClose: () => void }) {
   const { t } = useI18n();
@@ -82,20 +101,22 @@ export function PluginRulesDialog({ instance, open, onClose }: { instance: strin
                       <Table.Cell className="text-fg">{r.after}</Table.Cell>
                       <Table.Cell>
                         <span className="flex flex-wrap gap-1">
-                          <Tag size="sm">{t(r.source === "user" ? "plugins.rule.sourceUser" : "plugins.rule.sourceOther")}</Tag>
+                          <Tag size="sm">{t(ruleSourceKey(r.source))}</Tag>
                           {r.orphan ? <Tag size="sm">{t("plugins.rule.orphan")}</Tag> : null}
+                          {r.disabled ? <Tag size="sm">{t("plugins.rule.disabled")}</Tag> : null}
                         </span>
                       </Table.Cell>
                       <Table.Cell className="text-right">
-                        <Button
-                          size="icon-sm"
-                          emphasis="low"
-                          aria-label={t("plugins.rule.remove")}
-                          disabled={r.source !== "user"}
-                          onClick={() => void run(() => backend.removePluginRule(instance, r.id))}
-                        >
-                          <TrashIcon size="sm" />
-                        </Button>
+                        {removable(r.source) ? (
+                          <Button size="icon-sm" emphasis="low" aria-label={t("plugins.rule.remove")} onClick={() => void run(() => backend.removePluginRule(instance, r.id))}>
+                            <TrashIcon size="sm" />
+                          </Button>
+                        ) : (
+                          // A rule of a provider (LOOT) is only switched off, so its origin stays visible (D143).
+                          <Button size="sm" emphasis="low" onClick={() => void run(() => backend.setPluginRuleDisabled(instance, r.id, !r.disabled))}>
+                            {t(r.disabled ? "plugins.rule.enable" : "plugins.rule.disable")}
+                          </Button>
+                        )}
                       </Table.Cell>
                     </Table.Row>
                   ))}
@@ -123,7 +144,11 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
   const [name, setName] = useState("");
   const [error, setError] = useState<UIError | null>(null);
   if (!open) return null;
-  const groups = rules.status === "ready" ? rules.data.groups : [];
+  const all = rules.status === "ready" ? rules.data.groups : [];
+  // The user's groups are edited here; a provider's (LOOT) are listed read-only (D143).
+  const groups = all.filter((g) => !g.source);
+  const provided = all.filter((g) => g.source);
+  const mine = new Set(groups.map((g) => g.name));
   const create = async () => {
     const r = await run(() => backend.createPluginGroup(instance, name.trim(), ["default"]), { quiet: true });
     if (r.ok) {
@@ -132,7 +157,8 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
     } else setError(r.error);
   };
   const toggleAfter = async (g: PluginGroup, other: string, on: boolean) => {
-    const next = on ? [...g.after, other] : g.after.filter((a) => a !== other);
+    const own = g.after.filter((a) => mine.has(a));
+    const next = on ? [...own, other] : own.filter((a) => a !== other);
     const r = await run(() => backend.updatePluginGroup(instance, g.name, next), { quiet: true });
     setError(r.ok ? null : r.error);
   };
@@ -189,6 +215,11 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
                         ))}
                     </fieldset>
                   ) : null}
+                  {g.after.some((a) => !mine.has(a)) ? (
+                    <Typography variant="caption" color="muted-fg" className="mt-2 block">
+                      {t("plugins.groupsDialog.providerAfter", { groups: g.after.filter((a) => !mine.has(a)).join(", ") })}
+                    </Typography>
+                  ) : null}
                   {g.plugins.length > 0 ? (
                     <Typography variant="caption" color="muted-fg" className="mt-2 block">
                       {g.plugins.join(", ")}
@@ -197,6 +228,34 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
                 </li>
               ))}
             </ul>
+            {provided.length > 0 ? (
+              <section aria-label={t("plugins.groupsDialog.provided")} className="flex flex-col gap-2">
+                <Typography variant="heading-6">{t("plugins.groupsDialog.provided")}</Typography>
+                <Typography variant="body-sm" color="muted-fg">
+                  {t("plugins.groupsDialog.providedHelp")}
+                </Typography>
+                <ul className="flex flex-col divide-y divide-border rounded-control border border-border bg-surface">
+                  {provided.map((g) => (
+                    <li key={g.name} className="flex flex-col gap-0.5 px-3 py-2">
+                      <span className="flex items-center gap-2">
+                        <Typography variant="body-sm" color="fg" className="flex-1 font-medium">
+                          {g.name}
+                        </Typography>
+                        <Tag size="sm">{t(ruleSourceKey(g.source))}</Tag>
+                        <Typography variant="caption" color="muted-fg">
+                          {t("plugins.groupsDialog.members", { count: g.plugins.length })}
+                        </Typography>
+                      </span>
+                      {g.after.length > 0 ? (
+                        <Typography variant="caption" color="muted-fg">
+                          {t("plugins.groupsDialog.afterList", { groups: g.after.map(label).join(", ") })}
+                        </Typography>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>

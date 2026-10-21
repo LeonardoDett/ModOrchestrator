@@ -82,5 +82,5 @@ Plataforma: Windows 10/11 x64 (D039). Adapters: `generic` e `skyrimse` (D031). I
 | Confiabilidade | Nenhum arquivo não gerenciado perdido em qualquer interrupção (queda de energia, kill do processo) em qualquer etapa. Testado em F14. |
 | Segurança | Nada do archive é executado. Proteção contra zip-slip, links simbólicos em archives, nomes reservados, caminhos longos. Nenhuma elevação de privilégio exigida para hardlink/cópia. |
 | Acessibilidade | Todas as ações por teclado, foco visível, contraste AA no tema escuro, status nunca só por cor. |
-| Privacidade | Nenhuma telemetria na V1. Nenhuma chamada de rede na V1, exceto verificação de atualização do próprio app se habilitada. |
+| Privacidade | Nenhuma telemetria na V1. Nenhuma chamada de rede na V1, exceto verificação de atualização do próprio app se habilitada (D104) e "Atualizar masterlist" do LOOT, só no clique (D143). |
 | Observabilidade | Log técnico rotativo, pacote de diagnóstico exportável (logs + estado resumido, sem dados pessoais além de caminhos). |

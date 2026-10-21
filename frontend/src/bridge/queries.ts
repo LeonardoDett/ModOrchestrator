@@ -227,6 +227,10 @@ export function useRestartState() {
 }
 
 /** App update status; re-read on app_update.changed (D021). */
+export function useLootStatus(instance: string) {
+  return useBackendQuery((b) => b.lootStatus(instance), [instance], { onOperationEvents: true });
+}
+
 export function useUpdateStatus() {
   return useBackendQuery((b) => b.updateStatus(), [], { onOperationEvents: true });
 }

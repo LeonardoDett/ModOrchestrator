@@ -40,6 +40,8 @@ type pluginRulesDoc struct {
 	Rules       []pluginRuleRecord  `json:"rules"`
 	Groups      []pluginGroupRecord `json:"groups"`
 	Assignments map[string]string   `json:"assignments"`
+	// ProviderOff are the provider rules the user disabled (D143).
+	ProviderOff []string `json:"providerOff,omitempty"`
 }
 
 // Get returns a set with only the default group when the instance has none.
@@ -70,6 +72,9 @@ func (r *PluginRuleRepository) Get(ctx context.Context, instance game.InstanceID
 	for p, g := range doc.Assignments {
 		d.Assignments[plugin.Name(p)] = g
 	}
+	for _, id := range doc.ProviderOff {
+		d.ProviderOff = append(d.ProviderOff, plugin.RuleID(id))
+	}
 	return plugin.RestoreRules(d)
 }
 
@@ -88,6 +93,9 @@ func (r *PluginRuleRepository) Save(ctx context.Context, s *plugin.Rules) error 
 	}
 	for p, g := range d.Assignments {
 		doc.Assignments[string(p)] = g
+	}
+	for _, id := range d.ProviderOff {
+		doc.ProviderOff = append(doc.ProviderOff, string(id))
 	}
 	b, err := json.Marshal(doc)
 	if err != nil {

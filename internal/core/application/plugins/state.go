@@ -11,6 +11,7 @@ import (
 
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/conflict"
+	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
@@ -32,7 +33,20 @@ type state struct {
 	profile *profile.Profile
 	// section is the plugins section of the active profile (D133).
 	section *plugin.ProfileState
-	rules   *plugin.Rules
+	// rules are the user's plugin rules, groups and assignments (persisted);
+	// effective adds the providers' data (D143) and is what orders and
+	// shows. Commands change rules only.
+	rules     *plugin.Rules
+	effective *plugin.Rules
+	// provided are the diagnostics of the providers; providedData their
+	// ordering data.
+	provided     []diagnostic.Diagnostic
+	providedData []plugin.Provided
+	memo         *effectiveMemo
+	// dataDir is the plugin target folder; paths are the plugin files on
+	// disk by key (staging for plugins of mods).
+	dataDir string
+	paths   map[string]string
 	// inv is the inventory in its natural order: implicit first, then
 	// plugins of mods by priority, then unmanaged ones by name.
 	inv   []plugin.Plugin
@@ -135,7 +149,7 @@ func (s *Service) load(ctx context.Context, instance game.InstanceID) (*state, e
 	if err != nil {
 		return nil, err
 	}
-	st := &state{inst: inst, def: def, ps: ps, lo: lo, profile: p, section: section, rules: pr, disabled: map[string]pluginhealth.Provider{}, modNames: map[mod.ID]string{}}
+	st := &state{inst: inst, def: def, ps: ps, lo: lo, profile: p, section: section, rules: pr, effective: pr, disabled: map[string]pluginhealth.Provider{}, modNames: map[mod.ID]string{}, paths: map[string]string{}}
 	st.settings = prefs{
 		autoSort:          s.boolSetting(ctx, instance, "plugins.autoSort", true),
 		enableOnModEnable: s.boolSetting(ctx, instance, "plugins.enableOnModEnable", true),
@@ -144,6 +158,8 @@ func (s *Service) load(ctx context.Context, instance game.InstanceID) (*state, e
 	if err := s.inventory(ctx, st); err != nil {
 		return nil, err
 	}
+	st.memo = &s.memo
+	s.provide(ctx, st)
 	return st, nil
 }
 
@@ -253,7 +269,9 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 				continue
 			}
 			p := plugin.Plugin{Name: plugin.Name(f.Dest.Path.String()), Location: f.Dest, Origin: plugin.OriginMod, Mod: mid}
-			s.header(ctx, st, &p, game.JoinPath(game.JoinPath(st.inst.Staging, string(mid)), f.Source.String()))
+			path := game.JoinPath(game.JoinPath(st.inst.Staging, string(mid)), f.Source.String())
+			st.paths[p.Name.Key()] = path
+			s.header(ctx, st, &p, path)
 			modPlugins = append(modPlugins, p)
 		}
 	}
@@ -283,6 +301,7 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 			dir = t.Path
 		}
 	}
+	st.dataDir = dir
 	var unmanaged []plugin.Plugin
 	if info, err := s.FS.Stat(ctx, dir); dir != "" && err == nil && info.Exists && info.IsDir {
 		entries, err := s.FS.ReadDir(ctx, dir)
@@ -312,6 +331,7 @@ func (s *Service) inventory(ctx context.Context, st *state) error {
 				continue // deployed by us and no longer desired
 			}
 			p := plugin.Plugin{Name: plugin.Name(e.Name), Location: loc, Origin: plugin.OriginUnmanaged}
+			st.paths[p.Name.Key()] = game.JoinPath(dir, e.Name)
 			s.header(ctx, st, &p, game.JoinPath(dir, e.Name))
 			unmanaged = append(unmanaged, p)
 		}
@@ -429,7 +449,7 @@ func (st *state) enabled(p plugin.Plugin) bool {
 
 // constraints of the current inventory (core/08 §4).
 func (st *state) constraints(withLocks bool) plugin.Constraints {
-	c := plugin.Constraints{Hard: st.hard, Soft: st.rules.Edges(st.names()), Fixed: st.implicit, Locks: map[string]int{}}
+	c := plugin.Constraints{Hard: st.hard, Soft: st.effective.Edges(st.names()), Fixed: st.implicit, Locks: map[string]int{}}
 	if withLocks {
 		for _, l := range st.section.IndexLocks() {
 			c.Locks[string(l.Item)] = l.Index
@@ -458,7 +478,7 @@ type arrangement struct {
 func (st *state) arrange(sort bool) arrangement {
 	merged, added, removed := plugin.Merge(st.section.LoadOrder(), st.names())
 	a := arrangement{before: merged, order: merged, added: added, removed: removed}
-	if c, cyclic := st.rules.Cycle(st.names(), st.hard); cyclic {
+	if c, cyclic := st.effective.Cycle(st.names(), st.hard); cyclic {
 		a.cycle = &c
 		sort = false
 	}

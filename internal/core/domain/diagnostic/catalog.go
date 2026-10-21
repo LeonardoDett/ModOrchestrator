@@ -24,35 +24,41 @@ const (
 	CodeLoadOrderExternalChange Code = "load_order_external_change"
 	// CodeSavePathExternal: the key that points the game at the save folder
 	// of the profile changed outside the app (D142).
-	CodeSavePathExternal Code = "save_path_external"
-	CodeRuleCycle               Code = "rule_cycle"
-	CodeModsIncompatible        Code = "mods_incompatible"
-	CodeModRequirementMissing   Code = "mod_requirement_missing"
-	CodeModRecommendation       Code = "mod_recommendation_missing"
-	CodeRuleOrphan              Code = "rule_orphan"
-	CodeOverrideStale           Code = "override_stale"
-	CodeConflictsUnreviewed     Code = "conflicts_unreviewed"
-	CodeModFullyOverwritten     Code = "mod_fully_overwritten"
-	CodeStagingFileMissing      Code = "staging_file_missing"
-	CodeStagingFileModified     Code = "staging_file_modified"
-	CodeModArchiveMissing       Code = "mod_archive_missing"
-	CodeInstallerRequired       Code = "installer_required"
-	CodePluginMissingMaster     Code = "plugin_missing_master"
-	CodePluginLimitExceeded     Code = "plugin_limit_exceeded"
-	CodePluginDisabledMaster    Code = "plugin_disabled_master"
-	CodePluginHeaderUnreadable  Code = "plugin_header_unreadable"
-	CodePluginMasterOrder       Code = "plugin_master_order"
-	CodePluginRuleOrphan        Code = "plugin_rule_orphan"
-	CodePluginRuleCycle         Code = "plugin_rule_cycle"
-	CodePluginLockConflict      Code = "plugin_lock_conflict"
-	CodePluginFromLosingFile    Code = "plugin_from_losing_file"
-	CodeBSAWithoutPlugin        Code = "bsa_without_plugin"
-	CodeGameNotFound            Code = "game_not_found"
-	CodeGameVersionChanged      Code = "game_version_changed"
-	CodeGameRunning             Code = "game_running"
-	CodeFrameworkMissing        Code = "framework_missing"
-	CodeDiskSpaceLow            Code = "disk_space_low"
-	CodeBackupFailed            Code = "backup_failed"
+	CodeSavePathExternal       Code = "save_path_external"
+	CodeRuleCycle              Code = "rule_cycle"
+	CodeModsIncompatible       Code = "mods_incompatible"
+	CodeModRequirementMissing  Code = "mod_requirement_missing"
+	CodeModRecommendation      Code = "mod_recommendation_missing"
+	CodeRuleOrphan             Code = "rule_orphan"
+	CodeOverrideStale          Code = "override_stale"
+	CodeConflictsUnreviewed    Code = "conflicts_unreviewed"
+	CodeModFullyOverwritten    Code = "mod_fully_overwritten"
+	CodeStagingFileMissing     Code = "staging_file_missing"
+	CodeStagingFileModified    Code = "staging_file_modified"
+	CodeModArchiveMissing      Code = "mod_archive_missing"
+	CodeInstallerRequired      Code = "installer_required"
+	CodePluginMissingMaster    Code = "plugin_missing_master"
+	CodePluginLimitExceeded    Code = "plugin_limit_exceeded"
+	CodePluginDisabledMaster   Code = "plugin_disabled_master"
+	CodePluginHeaderUnreadable Code = "plugin_header_unreadable"
+	CodePluginMasterOrder      Code = "plugin_master_order"
+	CodePluginRuleOrphan       Code = "plugin_rule_orphan"
+	CodePluginRuleCycle        Code = "plugin_rule_cycle"
+	CodePluginLockConflict     Code = "plugin_lock_conflict"
+	CodePluginFromLosingFile   Code = "plugin_from_losing_file"
+	CodeBSAWithoutPlugin       Code = "bsa_without_plugin"
+	// Codes of the providers of plugin data (D143).
+	CodePluginProviderMessage    Code = "plugin_provider_message"
+	CodePluginDirty              Code = "plugin_dirty"
+	CodePluginRequirementMissing Code = "plugin_requirement_missing"
+	CodePluginIncompatible       Code = "plugin_incompatible"
+	CodePluginProviderSkipped    Code = "plugin_provider_skipped"
+	CodeGameNotFound             Code = "game_not_found"
+	CodeGameVersionChanged       Code = "game_version_changed"
+	CodeGameRunning              Code = "game_running"
+	CodeFrameworkMissing         Code = "framework_missing"
+	CodeDiskSpaceLow             Code = "disk_space_low"
+	CodeBackupFailed             Code = "backup_failed"
 )
 
 // Module groups codes for the filters of the Diagnostics screen and the
@@ -96,10 +102,11 @@ var coreModules = map[Code]Module{
 	CodePluginMissingMaster: ModulePlugins, CodePluginLimitExceeded: ModulePlugins, CodePluginDisabledMaster: ModulePlugins,
 	CodePluginHeaderUnreadable: ModulePlugins, CodePluginMasterOrder: ModulePlugins, CodePluginRuleOrphan: ModulePlugins,
 	CodePluginRuleCycle: ModulePlugins, CodePluginLockConflict: ModulePlugins, CodePluginFromLosingFile: ModulePlugins,
-	CodeBSAWithoutPlugin: ModulePlugins,
-	CodeGameNotFound:     ModuleGame, CodeGameVersionChanged: ModuleGame, CodeGameRunning: ModuleGame,
+	CodeBSAWithoutPlugin: ModulePlugins, CodePluginProviderMessage: ModulePlugins, CodePluginDirty: ModulePlugins,
+	CodePluginRequirementMissing: ModulePlugins, CodePluginIncompatible: ModulePlugins, CodePluginProviderSkipped: ModulePlugins,
+	CodeGameNotFound: ModuleGame, CodeGameVersionChanged: ModuleGame, CodeGameRunning: ModuleGame,
 	CodeFrameworkMissing: ModuleGame, CodeSavePathExternal: ModuleGame,
-	CodeDiskSpaceLow:     ModuleApp, CodeBackupFailed: ModuleApp,
+	CodeDiskSpaceLow: ModuleApp, CodeBackupFailed: ModuleApp,
 }
 
 var coreLaunchWarnings = map[Code]bool{

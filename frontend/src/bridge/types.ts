@@ -315,6 +315,11 @@ export interface Backend {
   setPluginGroup(instance: string, plugins: string[], group: string): Promise<void>;
   createPluginRule(instance: string, plugin: string, after: string): Promise<void>;
   removePluginRule(instance: string, id: string): Promise<void>;
+  setPluginRuleDisabled(instance: string, id: string, disabled: boolean): Promise<void>;
+  lootStatus(instance: string): Promise<LootStatus>;
+  /** Downloads the masterlist: only on the user's click (D143). */
+  updateLootMasterlist(instance: string): Promise<LootStatus>;
+  importLootUserlist(instance: string, path: string): Promise<ImportResult>;
   createPluginGroup(instance: string, name: string, after: string[]): Promise<void>;
   updatePluginGroup(instance: string, name: string, after: string[]): Promise<void>;
   deletePluginGroup(instance: string, name: string): Promise<void>;
@@ -1777,6 +1782,28 @@ export interface PluginGroup {
   after: string[];
   plugins: string[];
   default: boolean;
+  /** Provider that created the group ("" for the user's): read-only (D143). */
+  source: string;
+}
+
+/** LOOT data of an instance (Settings › Plugins, D143). */
+export interface LootStatus {
+  supported: boolean;
+  enabled: boolean;
+  /** "bundled" or "downloaded". */
+  source: string;
+  /** RFC 3339: publication of the shipped copy or time of the download. */
+  date: string;
+  canUpdate: boolean;
+  /** LOOT userlist found for the game, "" when none. */
+  userlist: string;
+}
+
+export interface ImportResult {
+  rules: number;
+  groups: number;
+  assignments: number;
+  skipped: number;
 }
 
 export interface PluginRules {
