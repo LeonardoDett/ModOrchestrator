@@ -38,6 +38,8 @@ export function CleanTempFiles():Promise<bridge.TempCleanupDTO>;
 
 export function ClearFileOverrides(arg1:string,arg2:Array<bridge.LocationDTO>):Promise<void>;
 
+export function CloneProfile(arg1:string,arg2:string,arg3:string,arg4:Array<string>):Promise<string>;
+
 export function CompareProfiles(arg1:string,arg2:string):Promise<bridge.ProfileComparisonDTO>;
 
 export function ConflictIndicators(arg1:string):Promise<Array<bridge.ConflictIndicatorDTO>>;
@@ -72,6 +74,8 @@ export function DeletePluginGroup(arg1:string,arg2:string):Promise<void>;
 
 export function DeleteProfile(arg1:string):Promise<void>;
 
+export function DeleteSaves(arg1:string,arg2:Array<string>):Promise<void>;
+
 export function DeleteSeparator(arg1:string,arg2:string):Promise<void>;
 
 export function DeleteTag(arg1:string,arg2:string):Promise<void>;
@@ -87,6 +91,8 @@ export function Diagnostics(arg1:string):Promise<bridge.ProblemsDTO>;
 export function DismissNotifications(arg1:Array<string>):Promise<void>;
 
 export function EnableImpact(arg1:string,arg2:Array<string>,arg3:boolean):Promise<bridge.EnableImpactDTO>;
+
+export function EnableSaveProviders(arg1:string,arg2:string):Promise<bridge.SaveEnableResultDTO>;
 
 export function ExecuteDiagnosticAction(arg1:string,arg2:string,arg3:string,arg4:number):Promise<bridge.DiagnosticActionResultDTO>;
 
@@ -230,6 +236,8 @@ export function OpenModArchive(arg1:string):Promise<void>;
 
 export function OpenModFolder(arg1:string):Promise<void>;
 
+export function OpenSavesFolder(arg1:string):Promise<void>;
+
 export function OrderHistory(arg1:string):Promise<Array<bridge.OrderChangeDTO>>;
 
 export function PendingDeployDecision(arg1:string):Promise<bridge.DeployPlanDTO>;
@@ -259,6 +267,10 @@ export function PreviewMoveStaging(arg1:string,arg2:string):Promise<bridge.Stagi
 export function PreviewOrderRule(arg1:string,arg2:string,arg3:string):Promise<bridge.RulePreviewDTO>;
 
 export function PreviewPairDecisions(arg1:string,arg2:Array<bridge.PairDecisionDTO>):Promise<bridge.RulePreviewDTO>;
+
+export function PreviewSaveTransfer(arg1:string,arg2:Array<string>,arg3:string):Promise<bridge.SaveTransferDTO>;
+
+export function ProfileCopyOptions(arg1:string):Promise<Array<bridge.CopyOptionDTO>>;
 
 export function ProfileList(arg1:string):Promise<Array<bridge.ProfileSummaryDTO>>;
 
@@ -334,7 +346,11 @@ export function SaveGameEntryFile(arg1:string,arg2:string,arg3:string):Promise<s
 
 export function SaveModListFile(arg1:string,arg2:string,arg3:string):Promise<string>;
 
+export function SaveScreenshot(arg1:string,arg2:string):Promise<string>;
+
 export function SaveTag(arg1:string,arg2:bridge.TagInputDTO):Promise<string>;
+
+export function Saves(arg1:string):Promise<bridge.SavesDTO>;
 
 export function ScanExternalChanges(arg1:string):Promise<void>;
 
@@ -357,6 +373,8 @@ export function SetIndexLock(arg1:string,arg2:Array<string>,arg3:boolean):Promis
 export function SetInstanceFeature(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
 export function SetInstanceSetting(arg1:string,arg2:string,arg3:string):Promise<void>;
+
+export function SetLocalSaves(arg1:string,arg2:boolean):Promise<void>;
 
 export function SetModAttributes(arg1:string,arg2:bridge.ModAttributesDTO):Promise<void>;
 
@@ -391,6 +409,8 @@ export function SuppressDiagnostic(arg1:string,arg2:string,arg3:boolean):Promise
 export function Suppressions():Promise<Array<bridge.SuppressionDTO>>;
 
 export function Tags(arg1:string):Promise<Array<bridge.TagDTO>>;
+
+export function TransferSaves(arg1:string,arg2:Array<string>,arg3:string,arg4:boolean):Promise<bridge.SaveTransferDTO>;
 
 export function TransferSelection(arg1:string,arg2:string,arg3:bridge.TransferOptionsDTO):Promise<void>;
 

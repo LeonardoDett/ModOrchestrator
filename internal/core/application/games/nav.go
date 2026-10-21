@@ -19,6 +19,8 @@ const (
 	ItemConflicts   WorkspaceItem = "conflicts"
 	ItemProfiles    WorkspaceItem = "profiles"
 	ItemDiagnostics WorkspaceItem = "diagnostics"
+	// ItemSaves is the Saves screen (save_games, D142, board JogoSaves).
+	ItemSaves WorkspaceItem = "saves"
 	// ItemInstanceSettings is "Ajustes da instância" (D127, board
 	// JogoAjustesRecursos): the features of the instance, for every game.
 	ItemInstanceSettings WorkspaceItem = "instance_settings"
@@ -32,7 +34,12 @@ var featureScreens = []struct {
 }{
 	{game.CapPlugins, ItemPlugins},
 	{game.CapLoadOrder, ItemLoadOrder},
+	{game.CapSaveGames, ItemSaves},
 }
+
+// setupScreens are the feature screens of the Setup group, placed after
+// Perfis (board JogoSaves).
+var setupScreens = map[WorkspaceItem]bool{ItemSaves: true}
 
 // FeatureScreen is the screen a feature brings to the game menu, empty when
 // it brings none. Ajustes da instância and Adicionar jogo read it instead of
@@ -53,12 +60,20 @@ func FeatureScreen(c game.Capability) WorkspaceItem {
 // the game menu. Saves arrive with the save_games capability (V1.x).
 func WorkspaceItems(caps game.Capabilities) []WorkspaceItem {
 	items := []WorkspaceItem{ItemOverview, ItemMods}
+	var setup []WorkspaceItem
 	for _, f := range featureScreens {
-		if caps.Has(f.Feature) {
+		if !caps.Has(f.Feature) {
+			continue
+		}
+		if setupScreens[f.Screen] {
+			setup = append(setup, f.Screen)
+		} else {
 			items = append(items, f.Screen)
 		}
 	}
-	return append(items, ItemConflicts, ItemProfiles, ItemDiagnostics, ItemInstanceSettings)
+	items = append(items, ItemConflicts, ItemProfiles)
+	items = append(items, setup...)
+	return append(items, ItemDiagnostics, ItemInstanceSettings)
 }
 
 // WorkspaceGroup is a titled group of the game menu (D120): entry,
@@ -88,6 +103,7 @@ func WorkspaceGroups(items []WorkspaceItem) []WorkspaceGroup {
 		ItemLoadOrder:        GroupContent,
 		ItemConflicts:        GroupContent,
 		ItemProfiles:         GroupSetup,
+		ItemSaves:            GroupSetup,
 		ItemDiagnostics:      GroupHealth,
 		ItemInstanceSettings: GroupHealth,
 	}

@@ -215,6 +215,19 @@ export interface Backend {
   // Profiles and mod order (ui/telas/profiles.md §4, ui/telas/mods.md §10)
   profileList(instance: string): Promise<ProfileSummary[]>;
   createProfile(instance: string, name: string, from: string): Promise<string>;
+  /** What a clone of the profile may also copy ("saves", D142). */
+  profileCopyOptions(from: string): Promise<CopyOption[]>;
+  /** Clone with the chosen copies. */
+  cloneProfile(instance: string, name: string, from: string, copies: string[]): Promise<string>;
+  // Saves (save_games, D142, board JogoSaves)
+  saves(instance: string): Promise<SavesView>;
+  saveScreenshot(instance: string, name: string): Promise<string>;
+  setLocalSaves(profile: string, on: boolean): Promise<void>;
+  previewSaveTransfer(instance: string, names: string[], to: string): Promise<SaveTransfer>;
+  transferSaves(instance: string, names: string[], to: string, move: boolean): Promise<SaveTransfer>;
+  deleteSaves(instance: string, names: string[]): Promise<void>;
+  enableSaveProviders(instance: string, name: string): Promise<SaveEnableResult>;
+  openSavesFolder(instance: string): Promise<void>;
   renameProfile(id: string, name: string): Promise<void>;
   setProfileNotes(id: string, notes: string): Promise<void>;
   deleteProfile(id: string): Promise<void>;
@@ -1008,7 +1021,7 @@ export interface MenuBadge {
 }
 
 /** Workspace screens the backend derives from capabilities (core/11 §5). */
-export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "diagnostics" | "instance_settings";
+export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "saves" | "diagnostics" | "instance_settings";
 
 /** One card of the Library (B14): the figures of a game read without entering it. */
 export interface LibraryGame {
@@ -1881,4 +1894,76 @@ export interface LoadOrderDiff {
   desired: LoadOrderLine[];
   applied: LoadOrderLine[];
   exists: boolean;
+}
+
+// --- Saves (D142). ---
+export interface CopyOption {
+  id: string;
+  files: number;
+  bytes: number;
+}
+
+export interface SaveMod {
+  id: string;
+  name: string;
+  enabled: boolean;
+}
+
+export interface MissingPlugin {
+  name: string;
+  /** The game folder will have it, inactive; false = absent. */
+  present: boolean;
+  mods: SaveMod[];
+}
+
+export type SaveKind = "manual" | "quick" | "auto";
+
+export interface SaveEntry {
+  name: string;
+  size: number;
+  modTime: string;
+  companions: string[];
+  readable: boolean;
+  readError?: string;
+  kind: SaveKind;
+  number: number;
+  character: string;
+  level: number;
+  location: string;
+  gameTime: string;
+  gameDay: number;
+  gameHour: number;
+  gameMinute: number;
+  race: string;
+  savedAt: string;
+  plugins: string[];
+  hasScreenshot: boolean;
+  missing: MissingPlugin[];
+}
+
+export interface SaveNamespace {
+  profile: string;
+  name: string;
+  local: boolean;
+  active: boolean;
+}
+
+export interface SavesView {
+  profile: string;
+  profileName: string;
+  local: boolean;
+  folder: string;
+  pluginsChecked: boolean;
+  saves: SaveEntry[];
+  profiles: SaveNamespace[];
+}
+
+export interface SaveTransfer {
+  renamed: Record<string, string>;
+}
+
+export interface SaveEnableResult {
+  mods: SaveMod[];
+  plugins: string[];
+  absent: string[];
 }

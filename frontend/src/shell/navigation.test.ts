@@ -37,12 +37,12 @@ describe("navigation (D120)", () => {
   });
 
   it("ignores ids it does not know and drops a group left empty", () => {
-    const groups = workspaceGroups([{ id: "content", items: ["mods", "saves" as never] }, { id: "obtain", items: ["downloads" as never] }], undefined);
+    const groups = workspaceGroups([{ id: "content", items: ["mods", "tools" as never] }, { id: "obtain", items: ["downloads" as never] }], undefined);
     expect(groups).toEqual([{ id: "content", items: ["mods"] }]);
   });
 
   it("an older backend without groups gets one group with its items", () => {
-    expect(workspaceGroups(undefined, ["overview", "mods", "saves"])).toEqual([{ id: "entry", items: ["overview", "mods"] }]);
+    expect(workspaceGroups(undefined, ["overview", "mods", "tools" as never])).toEqual([{ id: "entry", items: ["overview", "mods"] }]);
     expect(workspaceGroups(undefined, undefined)).toEqual([]);
   });
 

@@ -23,7 +23,7 @@ var assets embed.FS
 func main() {
 	// One process per user (D141): a second launch hands over to the
 	// window that is open and exits before it opens the database.
-	if bridge.InstanceRunning() {
+	if !generatingBindings && bridge.InstanceRunning() {
 		handOver()
 		return
 	}

@@ -659,6 +659,10 @@ func (c *Container) Restart() error { return system.Restart() }
 // second launch never opens the database.
 func InstanceRunning(mutex string) bool { return system.InstanceRunning(mutex) }
 
+// DataDirKey is a short key of the data folder chosen with
+// MODORCHESTRATOR_DATA_DIR, "" for the default folder.
+func DataDirKey() string { return appdata.DirKey() }
+
 // savesPlugins answers the saves module with the plugins module (D142):
 // the two modules do not import each other.
 type savesPlugins struct{ p *plugins.Service }

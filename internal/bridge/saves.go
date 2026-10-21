@@ -36,6 +36,9 @@ type SaveDTO struct {
 	Level         int                `json:"level"`
 	Location      string             `json:"location"`
 	GameTime      string             `json:"gameTime"`
+	GameDay       int                `json:"gameDay"`
+	GameHour      int                `json:"gameHour"`
+	GameMinute    int                `json:"gameMinute"`
 	Race          string             `json:"race"`
 	SavedAt       string             `json:"savedAt"`
 	Plugins       []string           `json:"plugins"`
@@ -96,6 +99,7 @@ func toSaveDTO(s saves.Save) SaveDTO {
 		d.Readable = true
 		d.Kind, d.Number, d.Character, d.Level = string(h.Kind), h.Number, h.Character, h.Level
 		d.Location, d.GameTime, d.Race, d.SavedAt = h.Location, h.GameTime, h.Race, stamp(h.SavedAt)
+		d.GameDay, d.GameHour, d.GameMinute = h.GameDay, h.GameHour, h.GameMinute
 		if h.Plugins != nil {
 			d.Plugins = h.Plugins
 		}

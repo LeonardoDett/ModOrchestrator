@@ -35,6 +35,7 @@ Catálogo único. Todo modal do produto está aqui; modal novo exige entrada. Pa
 | DLG-29 | Alterar localização | Games | formulário com validação | PathSelection | 11 §4 |
 | DLG-30 | Atualizar o app | Settings › Aplicação › Atualizações | decisão com notas de versão e progresso | updater | `plano-de-publicacao.md` etapa 6, D104 |
 | DLG-31 | Importar de outro gerenciador | fim do Gerenciar jogo; Mods › Importar › De outro gerenciador… | decisão com escolha por parte | `mo-import` | 02 §10a, D128 |
+| DLG-32 | Copiar ou mover saves | Saves | decisão (destino, copiar ou mover) | TransferSavesDialog (MO2) | 07 §7, D142, `ui/telas/saves.md` §5 |
 
 ## Detalhes dos principais
 

@@ -74,6 +74,10 @@ export function ClearFileOverrides(arg1, arg2) {
   return window['go']['bridge']['App']['ClearFileOverrides'](arg1, arg2);
 }
 
+export function CloneProfile(arg1, arg2, arg3, arg4) {
+  return window['go']['bridge']['App']['CloneProfile'](arg1, arg2, arg3, arg4);
+}
+
 export function CompareProfiles(arg1, arg2) {
   return window['go']['bridge']['App']['CompareProfiles'](arg1, arg2);
 }
@@ -142,6 +146,10 @@ export function DeleteProfile(arg1) {
   return window['go']['bridge']['App']['DeleteProfile'](arg1);
 }
 
+export function DeleteSaves(arg1, arg2) {
+  return window['go']['bridge']['App']['DeleteSaves'](arg1, arg2);
+}
+
 export function DeleteSeparator(arg1, arg2) {
   return window['go']['bridge']['App']['DeleteSeparator'](arg1, arg2);
 }
@@ -172,6 +180,10 @@ export function DismissNotifications(arg1) {
 
 export function EnableImpact(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['EnableImpact'](arg1, arg2, arg3);
+}
+
+export function EnableSaveProviders(arg1, arg2) {
+  return window['go']['bridge']['App']['EnableSaveProviders'](arg1, arg2);
 }
 
 export function ExecuteDiagnosticAction(arg1, arg2, arg3, arg4) {
@@ -458,6 +470,10 @@ export function OpenModFolder(arg1) {
   return window['go']['bridge']['App']['OpenModFolder'](arg1);
 }
 
+export function OpenSavesFolder(arg1) {
+  return window['go']['bridge']['App']['OpenSavesFolder'](arg1);
+}
+
 export function OrderHistory(arg1) {
   return window['go']['bridge']['App']['OrderHistory'](arg1);
 }
@@ -516,6 +532,14 @@ export function PreviewOrderRule(arg1, arg2, arg3) {
 
 export function PreviewPairDecisions(arg1, arg2) {
   return window['go']['bridge']['App']['PreviewPairDecisions'](arg1, arg2);
+}
+
+export function PreviewSaveTransfer(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['PreviewSaveTransfer'](arg1, arg2, arg3);
+}
+
+export function ProfileCopyOptions(arg1) {
+  return window['go']['bridge']['App']['ProfileCopyOptions'](arg1);
 }
 
 export function ProfileList(arg1) {
@@ -666,8 +690,16 @@ export function SaveModListFile(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SaveModListFile'](arg1, arg2, arg3);
 }
 
+export function SaveScreenshot(arg1, arg2) {
+  return window['go']['bridge']['App']['SaveScreenshot'](arg1, arg2);
+}
+
 export function SaveTag(arg1, arg2) {
   return window['go']['bridge']['App']['SaveTag'](arg1, arg2);
+}
+
+export function Saves(arg1) {
+  return window['go']['bridge']['App']['Saves'](arg1);
 }
 
 export function ScanExternalChanges(arg1) {
@@ -712,6 +744,10 @@ export function SetInstanceFeature(arg1, arg2, arg3) {
 
 export function SetInstanceSetting(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetInstanceSetting'](arg1, arg2, arg3);
+}
+
+export function SetLocalSaves(arg1, arg2) {
+  return window['go']['bridge']['App']['SetLocalSaves'](arg1, arg2);
 }
 
 export function SetModAttributes(arg1, arg2) {
@@ -780,6 +816,10 @@ export function Suppressions() {
 
 export function Tags(arg1) {
   return window['go']['bridge']['App']['Tags'](arg1);
+}
+
+export function TransferSaves(arg1, arg2, arg3, arg4) {
+  return window['go']['bridge']['App']['TransferSaves'](arg1, arg2, arg3, arg4);
 }
 
 export function TransferSelection(arg1, arg2, arg3) {

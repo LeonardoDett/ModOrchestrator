@@ -4,7 +4,8 @@ import { TrashIcon } from "dettmann-ui/icons";
 import { Alert, Button, Checkbox, DiffViewer, Input, Modal, Loader, Stack, Typography, type DiffLine, Icon } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
 import { errorMessage, toUIError, type UIError } from "../../bridge/errors";
-import type { ProfileComparison, ProfileSummary } from "../../bridge/types";
+import type { CopyOption, ProfileComparison, ProfileSummary } from "../../bridge/types";
+import { formatBytes } from "../deploy/deploy-labels";
 import { useI18n } from "../../i18n/i18n";
 import { useAction } from "../games/use-action";
 
@@ -35,24 +36,46 @@ export function NewProfileDialog({
   onClose: () => void;
 }) {
   const i18n = useI18n();
-  const { t } = i18n;
+  const { t, tp } = i18n;
   const backend = useBackend();
   const run = useAction();
   const [name, setName] = useState("");
   const [source, setSource] = useState("");
   const [error, setError] = useState<UIError | null>(null);
   const [busy, setBusy] = useState(false);
+  // Copies a clone may also get (the saves of a profile with its own, D142);
+  // never chosen by default (core/07 §3).
+  const [options, setOptions] = useState<CopyOption[]>([]);
+  const [copies, setCopies] = useState<ReadonlySet<string>>(new Set());
   useEffect(() => {
     setName("");
     setError(null);
     setSource(from ?? "");
   }, [from]);
+  useEffect(() => {
+    setOptions([]);
+    setCopies(new Set());
+    if (!source) return;
+    let live = true;
+    backend.profileCopyOptions(source).then(
+      (o) => live && setOptions(o),
+      () => live && setOptions([]),
+    );
+    return () => {
+      live = false;
+    };
+  }, [backend, source]);
   if (from === undefined) return null;
   const cloning = source !== "";
+  // Opened from "Clonar" of a card: the source is fixed (board JogoPerfisClonar).
+  const fixedSource = from !== "" ? profiles.find((p) => p.id === from) : undefined;
 
   const submit = async () => {
     setBusy(true);
-    const res = await run(() => backend.createProfile(instance, name, source), { quiet: true, success: "profiles.created" });
+    const res = await run(
+      () => (cloning ? backend.cloneProfile(instance, name, source, [...copies]) : backend.createProfile(instance, name, source)),
+      { quiet: true, success: "profiles.created" },
+    );
     setBusy(false);
     if (res.ok) onClose();
     else setError(res.error);
@@ -61,8 +84,13 @@ export function NewProfileDialog({
   return (
     <Modal.Root open onOpenChange={(open) => !open && !busy && onClose()}>
       <Modal.Content size="md" aria-describedby={undefined}>
-        <Modal.Header>
+        <Modal.Header layout={fixedSource ? "stacked" : undefined}>
           <Modal.Title>{t(cloning ? "profiles.clone.title" : "profiles.new.title")}</Modal.Title>
+          {fixedSource ? (
+            <Typography variant="body-sm" color="muted-fg">
+              {t("profiles.clone.from", { name: fixedSource.name })}
+            </Typography>
+          ) : null}
         </Modal.Header>
         <Modal.Body>
           <Stack gap="md">
@@ -72,18 +100,37 @@ export function NewProfileDialog({
                 <Input.Field autoFocus onKeyDown={(e) => e.key === "Enter" && name.trim() && void submit()} />
               </Input.Box>
             </Input.Root>
-            <Input.Root fullWidth value={source} onChange={setSource}>
-              <Input.Label>{t("profiles.field.startFrom")}</Input.Label>
-              <Input.Select
-                options={[
-                  { value: "", label: t("profiles.startFrom.empty") },
-                  ...profiles.map((p) => ({ value: p.id, label: t("profiles.startFrom.copy", { name: p.name }) })),
-                ]}
-              />
-            </Input.Root>
+            {fixedSource ? null : (
+              <Input.Root fullWidth value={source} onChange={setSource}>
+                <Input.Label>{t("profiles.field.startFrom")}</Input.Label>
+                <Input.Select
+                  options={[
+                    { value: "", label: t("profiles.startFrom.empty") },
+                    ...profiles.map((p) => ({ value: p.id, label: t("profiles.startFrom.copy", { name: p.name }) })),
+                  ]}
+                />
+              </Input.Root>
+            )}
             <Typography variant="body-sm" color="muted-fg">
               {t(cloning ? "profiles.clone.help" : "profiles.new.help")}
             </Typography>
+            {options.map((o) => (
+              <Checkbox
+                key={o.id}
+                variant="card"
+                checked={copies.has(o.id)}
+                onCheckedChange={(on) =>
+                  setCopies((cur) => {
+                    const next = new Set(cur);
+                    if (on) next.add(o.id);
+                    else next.delete(o.id);
+                    return next;
+                  })
+                }
+                label={t("profiles.clone.copySaves", { name: profiles.find((p) => p.id === source)?.name ?? "" })}
+                description={t("profiles.clone.copySavesHelp", { count: tp("saves.header.countN", o.files), size: formatBytes(o.bytes) })}
+              />
+            ))}
             <DialogError error={error} />
           </Stack>
         </Modal.Body>

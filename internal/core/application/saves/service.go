@@ -51,7 +51,6 @@ const (
 	EventCopied            event.Type = "saves.copied"
 	EventMoved             event.Type = "saves.moved"
 	EventDeleted           event.Type = "saves.deleted"
-	EventProvidersEnabled  event.Type = "saves.providers_enabled"
 )
 
 const (

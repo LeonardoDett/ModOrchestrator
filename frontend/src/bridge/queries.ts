@@ -198,6 +198,11 @@ export function useHistory(filter: HistoryFilter) {
 // load order file monitor arrive as signals with the operation events
 // (D021). ---
 
+// --- Saves (D142): the folder of the active profile, read again on events. ---
+export function useSaves(instance: string) {
+  return useBackendQuery((b) => b.saves(instance), [instance], { onOperationEvents: true });
+}
+
 export function usePluginList(instance: string) {
   return useBackendQuery((b) => b.pluginList(instance), [instance], { onOperationEvents: true });
 }

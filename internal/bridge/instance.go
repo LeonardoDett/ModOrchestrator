@@ -22,7 +22,7 @@ const InstanceMutex = "wails-app-" + InstanceID + "sim"
 // The arguments are ignored for now: nothing opens a file or a link yet.
 // A nil app (the process that only hands over) shows nothing.
 func SingleInstance(a *App) *options.SingleInstanceLock {
-	lock := &options.SingleInstanceLock{UniqueId: InstanceID}
+	lock := &options.SingleInstanceLock{UniqueId: lockID()}
 	if a != nil {
 		lock.OnSecondInstanceLaunch = a.secondInstance
 	}
@@ -31,7 +31,18 @@ func SingleInstance(a *App) *options.SingleInstanceLock {
 
 // InstanceRunning reports whether a process of the app already holds the
 // lock, asked before the database is opened.
-func InstanceRunning() bool { return bootstrap.InstanceRunning(InstanceMutex) }
+func InstanceRunning() bool { return bootstrap.InstanceRunning("wails-app-" + lockID() + "sim") }
+
+// lockID is InstanceID, plus a key of the data folder when it was moved
+// with MODORCHESTRATOR_DATA_DIR (development, portable use): two data
+// folders are two independent apps, and only the same folder must be
+// guarded. The default folder keeps the fixed id.
+func lockID() string {
+	if k := bootstrap.DataDirKey(); k != "" {
+		return InstanceID + "-" + k
+	}
+	return InstanceID
+}
 
 // QuitAtOnce closes a window that opened only to hand over and found no
 // first window to hand over to.

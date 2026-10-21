@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 
@@ -80,7 +81,9 @@ func (Adapter) ReadSave(_ game.ID, name string, r io.Reader) (savegame.Header, e
 	h.Level = int(br.u32())
 	h.Location = br.wstring()
 	h.GameTime = br.wstring()
-	h.Race = br.wstring()
+	h.GameDay, h.GameHour, h.GameMinute = gameClock(h.GameTime)
+	// The race is its editor id ("NordRace"); the name is what precedes Race.
+	h.Race = strings.TrimSuffix(br.wstring(), "Race")
 	_ = br.u16()    // sex
 	_ = br.bytes(8) // current and next level experience
 	ft := br.u64()  // FILETIME
@@ -141,6 +144,23 @@ func (Adapter) ReadSave(_ game.ID, name string, r io.Reader) (savegame.Header, e
 	plugins, err := savePlugins(body)
 	h.Plugins = plugins
 	return h, err
+}
+
+// gameClock reads "days.hours.minutes" (as "041.14.20"); 0 when unknown.
+func gameClock(s string) (day, hour, minute int) {
+	parts := strings.Split(strings.TrimSpace(s), ".")
+	if len(parts) != 3 {
+		return 0, 0, 0
+	}
+	var v [3]int
+	for i, p := range parts {
+		n, err := strconv.Atoi(p)
+		if err != nil || n < 0 {
+			return 0, 0, 0
+		}
+		v[i] = n
+	}
+	return v[0], v[1], v[2]
 }
 
 func saveKind(name string) savegame.Kind {

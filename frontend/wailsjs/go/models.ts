@@ -1241,6 +1241,22 @@ export namespace bridge {
 	
 	
 	
+	export class CopyOptionDTO {
+	    id: string;
+	    files: number;
+	    bytes: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new CopyOptionDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.files = source["files"];
+	        this.bytes = source["bytes"];
+	    }
+	}
 	
 	export class DashletDTO {
 	    id: string;
@@ -3277,6 +3293,56 @@ export namespace bridge {
 	        this.reason = source["reason"];
 	    }
 	}
+	export class SaveModDTO {
+	    id: string;
+	    name: string;
+	    enabled: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveModDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.enabled = source["enabled"];
+	    }
+	}
+	export class MissingPluginDTO {
+	    name: string;
+	    present: boolean;
+	    mods: SaveModDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new MissingPluginDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.present = source["present"];
+	        this.mods = this.convertValues(source["mods"], SaveModDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class ModAttributesDTO {
 	    name: string;
 	    version: string;
@@ -5022,6 +5088,181 @@ export namespace bridge {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.cycle = this.convertValues(source["cycle"], NamedModDTO);
 	        this.profiles = this.convertValues(source["profiles"], ProfileMovesDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class SaveDTO {
+	    name: string;
+	    size: number;
+	    modTime: string;
+	    companions: string[];
+	    readable: boolean;
+	    readError?: string;
+	    kind: string;
+	    number: number;
+	    character: string;
+	    level: number;
+	    location: string;
+	    gameTime: string;
+	    gameDay: number;
+	    gameHour: number;
+	    gameMinute: number;
+	    race: string;
+	    savedAt: string;
+	    plugins: string[];
+	    hasScreenshot: boolean;
+	    missing: MissingPluginDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.size = source["size"];
+	        this.modTime = source["modTime"];
+	        this.companions = source["companions"];
+	        this.readable = source["readable"];
+	        this.readError = source["readError"];
+	        this.kind = source["kind"];
+	        this.number = source["number"];
+	        this.character = source["character"];
+	        this.level = source["level"];
+	        this.location = source["location"];
+	        this.gameTime = source["gameTime"];
+	        this.gameDay = source["gameDay"];
+	        this.gameHour = source["gameHour"];
+	        this.gameMinute = source["gameMinute"];
+	        this.race = source["race"];
+	        this.savedAt = source["savedAt"];
+	        this.plugins = source["plugins"];
+	        this.hasScreenshot = source["hasScreenshot"];
+	        this.missing = this.convertValues(source["missing"], MissingPluginDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class SaveEnableResultDTO {
+	    mods: SaveModDTO[];
+	    plugins: string[];
+	    absent: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveEnableResultDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.mods = this.convertValues(source["mods"], SaveModDTO);
+	        this.plugins = source["plugins"];
+	        this.absent = source["absent"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	export class SaveNamespaceDTO {
+	    profile: string;
+	    name: string;
+	    local: boolean;
+	    active: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveNamespaceDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.profile = source["profile"];
+	        this.name = source["name"];
+	        this.local = source["local"];
+	        this.active = source["active"];
+	    }
+	}
+	export class SaveTransferDTO {
+	    renamed: Record<string, string>;
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveTransferDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.renamed = source["renamed"];
+	    }
+	}
+	export class SavesDTO {
+	    profile: string;
+	    profileName: string;
+	    local: boolean;
+	    folder: string;
+	    pluginsChecked: boolean;
+	    saves: SaveDTO[];
+	    profiles: SaveNamespaceDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new SavesDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.profile = source["profile"];
+	        this.profileName = source["profileName"];
+	        this.local = source["local"];
+	        this.folder = source["folder"];
+	        this.pluginsChecked = source["pluginsChecked"];
+	        this.saves = this.convertValues(source["saves"], SaveDTO);
+	        this.profiles = this.convertValues(source["profiles"], SaveNamespaceDTO);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

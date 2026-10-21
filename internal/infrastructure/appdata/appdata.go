@@ -2,9 +2,12 @@
 package appdata
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // EnvDataDir overrides the data directory (development, tests, portable use).
@@ -28,6 +31,21 @@ type Paths struct {
 	// Session exists while the app runs; found at startup, the previous
 	// run did not close normally (core/14 §2).
 	Session string
+}
+
+// DirKey is a short key of the data folder chosen with EnvDataDir (the
+// same folder, spelled with another case or separator, gives the same
+// key), or "" when the default folder is in use.
+func DirKey() string {
+	root := os.Getenv(EnvDataDir)
+	if root == "" {
+		return ""
+	}
+	if abs, err := filepath.Abs(root); err == nil {
+		root = abs
+	}
+	sum := sha256.Sum256([]byte(strings.ToLower(filepath.Clean(root))))
+	return hex.EncodeToString(sum[:6])
 }
 
 // Resolve returns the data paths, creating the root directory if needed.

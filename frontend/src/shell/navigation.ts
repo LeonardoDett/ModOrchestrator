@@ -2,7 +2,7 @@ import { type IconComponent } from "dettmann-ui";
 import { createContext, useContext } from "react";
 import { Activity, GitCompareArrows, Plug } from "lucide-react";
 import { HomeIcon, LayersIcon, ListOrderedIcon, PackageIcon, PuzzleIcon, SettingsIcon } from "dettmann-ui/icons";
-import { LayoutGrid, SlidersHorizontal } from "lucide-react";
+import { LayoutGrid, Save, SlidersHorizontal } from "lucide-react";
 import type { WorkspaceGroup, WorkspaceItemId } from "../bridge/types";
 import type { MessageKey } from "../i18n/i18n";
 
@@ -14,7 +14,7 @@ import type { MessageKey } from "../i18n/i18n";
  * the backend derives from the effective capabilities (core/11 §5, D115);
  * the UI only maps each id it receives to an icon and a label, and ignores
  * ids it does not know. Without an active game there is no game level
- * (D023). Reserved areas (Downloads, Tools, Collections, Saves) are absent
+ * (D023). Reserved areas (Downloads, Tools, Collections) are absent
  * (anti-pattern 18).
  */
 export type WorkspaceViewId = WorkspaceItemId;
@@ -65,6 +65,7 @@ export const VIEWS: Record<ViewId, NavEntry> = {
   load_order: { id: "load_order", label: "nav.loadOrder", icon: ListOrderedIcon },
   conflicts: { id: "conflicts", label: "nav.conflicts", icon: GitCompareArrows },
   profiles: { id: "profiles", label: "nav.profiles", icon: LayersIcon },
+  saves: { id: "saves", label: "nav.saves", icon: Save },
   diagnostics: { id: "diagnostics", label: "nav.diagnostics", icon: Activity },
   instance_settings: { id: "instance_settings", label: "nav.instanceSettings", icon: SlidersHorizontal },
 };
@@ -92,7 +93,7 @@ export function workspaceGroups(groups: readonly WorkspaceGroup[] | undefined, i
   return flat.length > 0 ? [{ id: "entry", items: flat }] : [];
 }
 
-const WORKSPACE_VIEWS: readonly string[] = ["overview", "mods", "plugins", "load_order", "conflicts", "profiles", "diagnostics", "instance_settings"];
+const WORKSPACE_VIEWS: readonly string[] = ["overview", "mods", "plugins", "load_order", "conflicts", "profiles", "saves", "diagnostics", "instance_settings"];
 
 export function isWorkspaceView(id: string): id is WorkspaceViewId {
   return WORKSPACE_VIEWS.includes(id);

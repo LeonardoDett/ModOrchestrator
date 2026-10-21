@@ -9,6 +9,7 @@ import { SettingsPage } from "../pages/SettingsPage";
 import { ModsPage } from "../pages/ModsPage";
 import { ProfilesPage } from "../pages/ProfilesPage";
 import { LoadOrderPage } from "../pages/LoadOrderPage";
+import { SavesPage } from "../pages/SavesPage";
 import { PluginsPage } from "../pages/PluginsPage";
 import { OverviewPage } from "../pages/WorkspacePages";
 import { InstanceSettingsPage } from "../pages/InstanceSettingsPage";
@@ -55,6 +56,8 @@ export function Routes() {
       return <PluginsPage />;
     case "load_order":
       return <LoadOrderPage />;
+    case "saves":
+      return <SavesPage />;
     case "instance_settings":
       return <InstanceSettingsPage />;
   }

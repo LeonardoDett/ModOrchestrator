@@ -1443,6 +1443,8 @@ Alternativas rejeitadas: pasta pelo nome do perfil (renomear moveria ou perderia
 
 Consequências: vale para todo jogo pela capability; no `generic` nada é escrito na pasta Documentos, comandos respondem `saves_unsupported`, sem diagnóstico e sem opção de cópia ao clonar (`integration/saves_test.go`). Testes: `gameini_test.go`, `skyrimse/saves_test.go` (`.ess` sintético em LZ4, zlib e sem compressão; formato 9; LZ4 com repetição), `integration/saves_test.go` (troca no deploy, ativação sem escrita, purge, alteração externa, listagem, plugins faltando, copiar/mover/excluir, clonar com cópia). Desligar o recurso (D115) deixa a chave como estava (INV-FEAT-03). Ficam para o LV8: INIs inteiros por perfil e INI tweaks.
 
+Complemento da tela (LV3, mesma decisão): item `saves` no grupo Setup, depois de Perfis (`games.ItemSaves`); "Copiar os saves" ao clonar começa desmarcado (core/07 §3), embora a prancha mostre o estado marcado. Dois ajustes de infraestrutura que a validação da tela pediu: o binário de geração de bindings do Wails (tag `bindings`) pula a checagem de instância única da D141, que sem isso gerava bindings vazios com outra janela do app aberta; e com `MODORCHESTRATOR_DATA_DIR` definido (desenvolvimento, uso portátil) o lock de instância única inclui uma chave da pasta de dados, porque duas pastas são dois apps independentes (a pasta padrão mantém o id fixo). `MODORCHESTRATOR_DOCUMENTS_DIR` substitui a pasta Documentos em desenvolvimento.
+
 ## D143 — Dados do LOOT como provedor de regras leves e mensagens
 Status: vigente (2026-10-21; fase LV2 de D140; detalha D041 e resolve o P4 de `06-revisao-2026-09-30.md`; emenda D028 para dados de provedor e o item de privacidade de `00-visao-e-escopo.md`)
 

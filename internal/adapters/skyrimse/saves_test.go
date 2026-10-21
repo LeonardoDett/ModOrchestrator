@@ -120,7 +120,7 @@ func TestReadSaveSE(t *testing.T) {
 		if err != nil {
 			t.Fatalf("compression %d: %v", c, err)
 		}
-		if h.Number != 142 || h.Character != "Ysolda Pedra-Fria" || h.Level != 34 || h.Location != "Ruínas de Bleak Falls" || h.Race != "NordRace" || h.Kind != savegame.KindManual {
+		if h.Number != 142 || h.Character != "Ysolda Pedra-Fria" || h.Level != 34 || h.Location != "Ruínas de Bleak Falls" || h.Race != "Nord" || h.GameDay != 41 || h.GameHour != 14 || h.GameMinute != 20 || h.Kind != savegame.KindManual {
 			t.Errorf("compression %d: header %+v", c, h)
 		}
 		if !h.SavedAt.Equal(at) {

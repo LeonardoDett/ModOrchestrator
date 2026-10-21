@@ -84,9 +84,14 @@ type Header struct {
 	Character string
 	Level     int
 	Location  string
-	// GameTime is the date inside the game, as the game writes it.
-	GameTime string
-	Race     string
+	// GameTime is the date inside the game, as the game writes it;
+	// GameDay, GameHour and GameMinute are it read by the adapter (GameDay 0
+	// when the adapter could not read it).
+	GameTime   string
+	GameDay    int
+	GameHour   int
+	GameMinute int
+	Race       string
 	// SavedAt is when the save was written, from the save itself (zero
 	// when it has none; the file time is used then).
 	SavedAt time.Time
