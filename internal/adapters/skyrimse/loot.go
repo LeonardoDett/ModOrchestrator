@@ -21,12 +21,12 @@ var (
 // lootDate is the date of the masterlist commit shipped (loot/SOURCE.md).
 var lootDate = time.Date(2026, 10, 20, 1, 16, 11, 0, time.UTC)
 
-var _ sdk.LootSupport = (*Adapter)(nil)
+var _ sdk.LootSupport = Adapter{}
 
 // LootGame declares the game to the LOOT provider: Skyrim SE uses the
 // "skyrimse" masterlist, and LOOT keeps its data in the
 // "Skyrim Special Edition" folder.
-func (a *Adapter) LootGame(id game.ID) (sdk.LootGame, bool) {
+func (a Adapter) LootGame(id game.ID) (sdk.LootGame, bool) {
 	if id != GameID {
 		return sdk.LootGame{}, false
 	}
