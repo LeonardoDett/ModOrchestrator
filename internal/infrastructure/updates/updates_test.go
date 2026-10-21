@@ -129,3 +129,9 @@ func TestSignatures(t *testing.T) {
 	}
 	t.Log("no embedded-signed executable found; only the unsigned case ran")
 }
+
+func TestMasterlistFetcherOnlyTalksToRawGitHub(t *testing.T) {
+	if _, err := NewMasterlistFetcher("test").Fetch(context.Background(), "https://example.com/masterlist.yaml"); err == nil {
+		t.Fatal("another host must be refused")
+	}
+}

@@ -155,16 +155,17 @@ func TestBridgeSettingsTabsIncludeModuleTabs(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	found := false
+	found, loot := false, false
 	for _, s := range all {
 		if s.Key == "plugins.autoSort" {
 			found = s.Tab == "plugins" && s.Value == "false"
 		}
 		if s.Key == "plugins.lootProvider" {
-			t.Fatal("a reserved module setting is not listed in V1")
+			// LOOT data entered before the v1 (D140, D141), on by default.
+			loot = s.Tab == "plugins" && s.Value == "true"
 		}
 	}
-	if !found {
-		t.Fatalf("plugins.autoSort missing or wrong: %+v", all)
+	if !found || !loot {
+		t.Fatalf("plugins.autoSort or plugins.lootProvider missing or wrong: %+v", all)
 	}
 }

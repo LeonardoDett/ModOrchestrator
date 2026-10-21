@@ -151,15 +151,18 @@ type Deps struct {
 	Settings      Settings
 	Ops           *operations.Service
 	Locks         *instancelock.Locks
-	IDs           operations.IDGenerator
-	Clock         operations.Clock
+	// Providers give ordering data and messages besides the user (D141).
+	Providers []Provider
+	IDs       operations.IDGenerator
+	Clock     operations.Clock
 }
 
 // Service implements the plugin and load order use cases.
 type Service struct {
 	Deps
 
-	mu sync.Mutex
+	mu   sync.Mutex
+	memo effectiveMemo
 	// installations caches immutable installations by id.
 	installations map[mod.InstallationID]*mod.Installation
 	// roots caches the files of an installation at the top of the plugin

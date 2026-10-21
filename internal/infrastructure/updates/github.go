@@ -223,3 +223,19 @@ func (Launcher) Start(path string) error {
 	}
 	return cmd.Process.Release()
 }
+
+// MasterlistFetcher downloads LOOT data files (ports.MasterlistFetcher,
+// D141): the same client, limited to the host of raw repository files.
+type MasterlistFetcher struct{ c *Client }
+
+// NewMasterlistFetcher returns the fetcher for version (User-Agent).
+func NewMasterlistFetcher(version string) MasterlistFetcher {
+	c := NewClient(version)
+	c.Hosts = []string{"raw.githubusercontent.com"}
+	return MasterlistFetcher{c: c}
+}
+
+// Fetch reads one file of at most 32 MB.
+func (f MasterlistFetcher) Fetch(ctx context.Context, raw string) ([]byte, error) {
+	return f.c.Fetch(ctx, raw, 32<<20)
+}

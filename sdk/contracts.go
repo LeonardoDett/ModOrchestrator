@@ -20,6 +20,8 @@ type (
 	LaunchOption        = inner.LaunchOption
 	LaunchSupport       = inner.LaunchSupport
 	LoadOrderSupport    = inner.LoadOrderSupport
+	LootGame            = inner.LootGame
+	LootSupport         = inner.LootSupport
 	ModContent          = inner.ModContent
 	PluginArchives      = inner.PluginArchives
 	PluginSupport       = inner.PluginSupport

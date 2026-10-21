@@ -31,6 +31,7 @@ func TestPluginRulesRoundTrip(t *testing.T) {
 	_ = set.AddRule(plugin.Rule{ID: "r1", Plugin: "B.esp", After: "A.esp", Source: rules.SourceUser, CreatedAt: now}, plugin.Check{})
 	_ = set.SetGroup(plugin.Group{Name: "Patches", After: []string{plugin.DefaultGroup}}, plugin.Check{})
 	_ = set.Assign("Patch.esp", "Patches", plugin.Check{})
+	set.SetProviderOff("loot:b.esp>a.esp", true)
 	if err := repo.Save(ctx, set); err != nil {
 		t.Fatal(err)
 	}

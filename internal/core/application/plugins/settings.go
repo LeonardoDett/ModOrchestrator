@@ -20,7 +20,7 @@ func SettingsContribution() domainsettings.Contribution {
 			{Key: "plugins.autoSort", Scope: domainsettings.ScopeInstance, Type: domainsettings.TypeBool, Tab: SettingsTab, Release: domainsettings.V1, Default: "true"},
 			{Key: "plugins.enableOnModEnable", Scope: domainsettings.ScopeInstance, Type: domainsettings.TypeBool, Tab: SettingsTab, Release: domainsettings.V1, Default: "true"},
 			{Key: "plugins.enableExternallyAdded", Scope: domainsettings.ScopeInstance, Type: domainsettings.TypeBool, Tab: SettingsTab, Release: domainsettings.V1, Default: "false"},
-			{Key: "plugins.lootProvider", Scope: domainsettings.ScopeInstance, Type: domainsettings.TypeBool, Tab: SettingsTab, Release: domainsettings.V1x, Default: "false"},
+			{Key: "plugins.lootProvider", Scope: domainsettings.ScopeInstance, Type: domainsettings.TypeBool, Tab: SettingsTab, Release: domainsettings.V1, Default: "true"},
 		},
 	}
 }

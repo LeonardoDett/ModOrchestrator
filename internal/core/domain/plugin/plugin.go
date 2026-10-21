@@ -142,6 +142,11 @@ type Rules struct {
 	groups   []Group
 	assigned map[string]string // plugin key -> group
 	spelling map[string]Name   // plugin key -> name as assigned
+	// off are the provider rules the user disabled (D141), persisted.
+	off map[RuleID]bool
+	// prov marks what a provider added to an effective set (WithProvided);
+	// nil in the persisted set.
+	prov *provenance
 }
 
 // Data is the plain form for persistence.
@@ -150,6 +155,8 @@ type Data struct {
 	Rules       []Rule
 	Groups      []Group
 	Assignments map[Name]string
+	// ProviderOff lists the provider rules the user disabled (D141).
+	ProviderOff []RuleID
 }
 
 // Check is what a change is checked against for cycles (D028): the plugins
@@ -171,7 +178,10 @@ func RestoreRules(d Data) (*Rules, error) {
 	if d.Instance == "" {
 		return nil, fmt.Errorf("%w: plugin rules need an instance", ErrInvalid)
 	}
-	r := &Rules{instance: d.Instance, assigned: map[string]string{}, spelling: map[string]Name{}}
+	r := &Rules{instance: d.Instance, assigned: map[string]string{}, spelling: map[string]Name{}, off: map[RuleID]bool{}}
+	for _, id := range d.ProviderOff {
+		r.off[id] = true
+	}
 	groups := d.Groups
 	if !slices.ContainsFunc(groups, func(g Group) bool { return g.Name == DefaultGroup }) {
 		groups = append([]Group{{Name: DefaultGroup}}, groups...)
@@ -217,6 +227,10 @@ func (r *Rules) Data() Data {
 	for p, g := range r.assigned {
 		d.Assignments[r.spelling[p]] = g
 	}
+	for id := range r.off {
+		d.ProviderOff = append(d.ProviderOff, id)
+	}
+	slices.Sort(d.ProviderOff)
 	return d
 }
 
@@ -496,7 +510,10 @@ func (r *Rules) check(chk Check) error {
 }
 
 func (r *Rules) clone() *Rules {
-	c := &Rules{instance: r.instance, rules: slices.Clone(r.rules), assigned: map[string]string{}, spelling: map[string]Name{}}
+	c := &Rules{instance: r.instance, rules: slices.Clone(r.rules), assigned: map[string]string{}, spelling: map[string]Name{}, off: map[RuleID]bool{}, prov: r.prov.clone()}
+	for k, v := range r.off {
+		c.off[k] = v
+	}
 	for _, g := range r.groups {
 		c.groups = append(c.groups, Group{Name: g.Name, After: slices.Clone(g.After)})
 	}

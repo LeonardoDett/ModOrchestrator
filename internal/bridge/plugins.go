@@ -1,7 +1,11 @@
 package bridge
 
 import (
+	"os"
+	"time"
+
 	"modorchestrator/internal/core/application/diagnostics"
+	"modorchestrator/internal/core/application/loot"
 	"modorchestrator/internal/core/application/plugins"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/plugin"
@@ -93,6 +97,8 @@ type PluginGroupDTO struct {
 	After   []string `json:"after"`
 	Plugins []string `json:"plugins"`
 	Default bool     `json:"default"`
+	// Source is the provider that created the group ("" for the user's).
+	Source string `json:"source"`
 }
 
 type PluginRulesDTO struct {
@@ -282,7 +288,7 @@ func (a *App) PluginRules(instance string) (PluginRulesDTO, error) {
 		if after == nil {
 			after = []string{}
 		}
-		out.Groups = append(out.Groups, PluginGroupDTO{Name: g.Name, After: after, Plugins: names(g.Plugins), Default: g.Default})
+		out.Groups = append(out.Groups, PluginGroupDTO{Name: g.Name, After: after, Plugins: names(g.Plugins), Default: g.Default, Source: g.Source})
 	}
 	return out, nil
 }
@@ -482,4 +488,79 @@ func (a *App) RebuildPluginHeaderCache() error {
 		return a.fail("rebuild header cache", err, nil)
 	}
 	return nil
+}
+
+// SetPluginRuleDisabled disables or enables a rule; a rule of a provider
+// (LOOT) can only be disabled, never removed (D141).
+func (a *App) SetPluginRuleDisabled(instance, id string, disabled bool) error {
+	if err := a.c.Plugins.SetPluginRuleDisabled(a.context(), game.InstanceID(instance), plugin.RuleID(id), disabled); err != nil {
+		return a.fail("set plugin rule disabled", err, nil)
+	}
+	return nil
+}
+
+// LootStatusDTO is the LOOT data of an instance (Settings › Plugins, D141).
+type LootStatusDTO struct {
+	Supported bool `json:"supported"`
+	Enabled   bool `json:"enabled"`
+	// Source is "bundled" or "downloaded"; Date when that copy was
+	// published (bundled) or fetched (downloaded), RFC 3339.
+	Source    string `json:"source"`
+	Date      string `json:"date"`
+	CanUpdate bool   `json:"canUpdate"`
+	// Userlist is the LOOT userlist found for the game ("" when none).
+	Userlist string `json:"userlist"`
+}
+
+func (a *App) lootStatus(instance string, s loot.Status) LootStatusDTO {
+	out := LootStatusDTO{Supported: s.Supported, Enabled: s.Enabled, Source: s.Source.Kind, CanUpdate: s.CanUpdate}
+	if !s.Source.Date.IsZero() {
+		out.Date = s.Source.Date.UTC().Format(time.RFC3339)
+	}
+	if s.Supported {
+		out.Userlist, _ = a.c.Loot.UserlistPath(a.context(), game.InstanceID(instance))
+	}
+	return out
+}
+
+// LootStatus reads the LOOT data of an instance (nothing goes to the
+// network).
+func (a *App) LootStatus(instance string) (LootStatusDTO, error) {
+	s, err := a.c.Loot.Status(a.context(), game.InstanceID(instance))
+	if err != nil {
+		return LootStatusDTO{}, a.fail("loot status", err, nil)
+	}
+	return a.lootStatus(instance, s), nil
+}
+
+// UpdateLootMasterlist downloads the current masterlist; only called by
+// the user's click on "Atualizar masterlist" (D141).
+func (a *App) UpdateLootMasterlist(instance string) (LootStatusDTO, error) {
+	if a.c.Loot.Fetcher == nil {
+		exe, _ := os.Executable()
+		a.c.EnableUpdates(Version, exe)
+	}
+	s, err := a.c.Loot.UpdateMasterlist(a.context(), game.InstanceID(instance))
+	if err != nil {
+		return LootStatusDTO{}, a.fail("update loot masterlist", err, nil)
+	}
+	return a.lootStatus(instance, s), nil
+}
+
+// ImportResultDTO counts what a rules import added and left out.
+type ImportResultDTO struct {
+	Rules       int `json:"rules"`
+	Groups      int `json:"groups"`
+	Assignments int `json:"assignments"`
+	Skipped     int `json:"skipped"`
+}
+
+// ImportLootUserlist brings the rules of a LOOT userlist; an empty path
+// uses the one LOOT keeps for the game.
+func (a *App) ImportLootUserlist(instance, path string) (ImportResultDTO, error) {
+	r, err := a.c.Loot.ImportUserlist(a.context(), game.InstanceID(instance), path)
+	if err != nil {
+		return ImportResultDTO{}, a.fail("import loot userlist", err, nil)
+	}
+	return ImportResultDTO{Rules: r.Rules, Groups: r.Groups, Assignments: r.Assignments, Skipped: r.Skipped}, nil
 }

@@ -38,6 +38,9 @@ type mutation struct {
 // load order never lags behind it.
 func (s *Service) persist(ctx context.Context, m mutation) (changed bool, err error) {
 	st := m.st
+	if m.rules {
+		st.refreshEffective()
+	}
 	a := st.arrange(st.settings.autoSort)
 	if m.order == nil {
 		m.order = a.order
