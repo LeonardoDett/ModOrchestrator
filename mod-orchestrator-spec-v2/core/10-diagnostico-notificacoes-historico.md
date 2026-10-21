@@ -54,6 +54,7 @@ Esta tabela é o catálogo **do core**. Um check que só um jogo tem declara o s
 | `plugin_lock_conflict` | warning | — | plugins | Abrir Load Order |
 | `plugin_from_losing_file` | info | — | plugins | Abrir Conflicts |
 | `bsa_without_plugin` (adapter) | info | — | plugins | Abrir Plugins |
+| `archive_wrong_game` (adapter `skyrimse`, D141) | error | launch (aviso) | plugins | Abrir pasta do mod |
 | `game_not_found` | blocking | tudo da instância | games | Localizar jogo |
 | `game_version_changed` | warning | — | games/adapter | Detalhes |
 | `game_running` | blocking | deploy, purge | games | Aguardar |

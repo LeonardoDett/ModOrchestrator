@@ -51,6 +51,7 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | `new-file-monitor` | ADOPT | ✓ | `deployment/scan.go`, `external.go` (arquivos novos, captura) · `integration/external_test.go` | F8 |
 | `script-extender-installer` | ADOPT (`skse-runtime`) | ✓ | `skyrimse/installers.go` | F4 |
 | `script-extender-error-check` | ADOPT (`framework_missing`) | ✓ | `skyrimse/health.go` | F9 |
+| `gamebryo-archive-check` | ADOPT (`archive_wrong_game`, D141) | ✓ | `skyrimse/archives.go`, `plugins/diagnostics.go` · `integration/archives_test.go` | LV1 |
 | `test-gameversion` | ADOPT (`game_version_changed`) | ✓ | `games/health.go` | F9 |
 | `test-setup` | ADAPT | ✓ | health checks de setup (staging, métodos, marcadores) | F9 |
 | `titlebar-launcher` | ADOPT (D045) | ✓ | `shell/TitleBar.tsx`, `application/launch` · `integration/launch_test.go` | F12 |
@@ -141,6 +142,7 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | Localizar manualmente | ✓ |
 | Parar de gerenciar | ✓ (com purge) |
 | Múltiplas instâncias, jogo genérico (ADAPT) | ✓ |
+| Um processo do app; a segunda abertura traz a janela à frente (D141) | ✓ |
 
 ### Settings
 | Item | Estado |

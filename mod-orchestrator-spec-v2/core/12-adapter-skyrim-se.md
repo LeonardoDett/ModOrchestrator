@@ -55,7 +55,7 @@ Dicas de root (core/02 §4): pastas `meshes`, `textures`, `scripts`, `interface`
 - Limites: até 254 plugins completos ativos (índices `00`–`FD`), até 4096 light (`FE:000`–`FE:FFF`). Índice exibido: `0A` para completos, `FE:003` para light.
 - Arquivo de load order: `%LOCALAPPDATA%\Skyrim Special Edition\plugins.txt` (variante GOG em `%LOCALAPPDATA%\Skyrim Special Edition GOG\plugins.txt`, **confirmado**; variante Epic em `%LOCALAPPDATA%\Skyrim Special Edition EPIC\plugins.txt`, **confirmado na F15**: libloadorder, a biblioteca de load order do LOOT, usa esse nome quando a raiz do jogo tem `EOSSDK-Win64-Shipping.dll` (`src/game_settings.rs`, `skyrim_se_appdata_folder_name`), e o SKSE64 usa o mesmo nome como pasta de saves do runtime Epic (`skse64_common/skse_version.h`, `SAVE_FOLDER_NAME`). A variante Microsoft Store (`Skyrim Special Edition MS`) não é suportada na V1). A variante é escolhida pela loja em que a instalação foi descoberta; uma instalação GOG ou Epic localizada manualmente ou achada só pelo registro usa a pasta da Steam (lacuna registrada na D106). Formato: uma linha por plugin, na ordem; ativos com prefixo `*`; implícitos não são escritos; codificação Windows-1252; linhas `#` são comentários. Ordem manual permitida.
 - `loadorder.txt`: não é escrito na V1 (o jogo não o usa; ferramentas modernas leem `plugins.txt`). Se existir, é ignorado. **Confirmado na F15**: libloadorder (LOOT, e por ele as ferramentas que o usam) trata o Skyrim SE pelo método "asterisk" (ordem e ativação só no `plugins.txt`) e só lê/escreve `loadorder.txt` para o Skyrim original (`GameId::Skyrim`, `src/game_settings.rs`).
-- BSA: carregado pelo jogo se houver plugin ativo com o mesmo nome base (`Mod.bsa`, `Mod - Textures.bsa`). Diagnóstico info `bsa_without_plugin` quando não houver. Conflitos dentro de BSA: V1.x.
+- BSA: carregado pelo jogo se houver plugin ativo com o mesmo nome base (`Mod.bsa`, `Mod - Textures.bsa`). Diagnóstico info `bsa_without_plugin` quando não houver. Todo BSA que um plugin ativo carrega tem o cabeçalho lido: versão diferente de 105 (104 = Skyrim LE) é erro `archive_wrong_game` (D141). Conflitos dentro de BSA: LV5 (D140).
 
 ## 6. Instaladores do adapter
 
@@ -69,6 +69,7 @@ Dicas de root (core/02 §4): pastas `meshes`, `textures`, `scripts`, `interface`
 | `framework_missing` (SKSE) | algum mod habilitado com `skse_plugin` e nenhum mod `skse` habilitado nem `skse64_loader.exe` não gerenciado na raiz | error |
 | `game_version_changed` | versão do `SkyrimSE.exe` mudou desde a última execução | warning ("plugins SKSE podem precisar de atualização") |
 | `bsa_without_plugin` | BSA sem plugin correspondente ativo | info |
+| `archive_wrong_game` | BSA carregado por plugin ativo com versão de cabeçalho ≠ 105 (D141; contrato `ArchiveChecker`) | error |
 | `skse_plugin_version_mismatch` | V1.x | — |
 
 ## 8. Launch

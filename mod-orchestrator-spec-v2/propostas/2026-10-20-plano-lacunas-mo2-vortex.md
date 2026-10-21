@@ -25,6 +25,7 @@ As três fases de alta prioridade podem rodar em paralelo (tocam áreas diferent
 - **A1 (núcleo)**: `options.SingleInstanceLock` do Wails em `main.go` (também na janela de recuperação); a segunda abertura traz a primeira janela à frente e sai. Teste do callback e demonstração manual.
 - **A2 (adapter `skyrimse`)**: ler a versão do cabeçalho de cada BSA carregado por plugin ativo (Vortex `archiveCheck.ts`: SE = 105, LE = 104); diagnóstico novo `archive_wrong_game` (erro) com o mod de origem e "Abrir pasta do mod". Código e textos vêm com o adapter (D131). Teste com BSA sintético de cada versão e com o `generic` (nenhum diagnóstico).
 - Tamanho: pequeno.
+- **Feita** (2026-10-20, D141): A1 em `d34a91e`, A2 em `f545a01`; demonstração das duas aberturas feita (a segunda sai em ~30 ms e a primeira janela, minimizada, volta à frente).
 
 ### LV2 — LOOT como provedor de restrições e mensagens (A3)
 - Emenda D041 (D140): entra antes da v1, ainda como **provedor de dados**, não como algoritmo; o sort continua o motor nativo (D029).
