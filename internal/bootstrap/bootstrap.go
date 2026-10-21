@@ -71,7 +71,7 @@ type Container struct {
 	Plugins *plugins.Service
 	// Saves owns the save folders of the profiles (save_games, D142).
 	Saves *saves.Service
-	// Loot is the LOOT data provider of the plugins module (D141).
+	// Loot is the LOOT data provider of the plugins module (D143).
 	Loot *loot.Service
 	// Diagnostics gathers health checks, suppressions and notifications;
 	// History is the projection of events with reversal (core/10).
@@ -332,7 +332,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:         clock,
 	})
 
-	// The LOOT data provider of the plugins module (D141).
+	// The LOOT data provider of the plugins module (D143).
 	lootSvc := loot.New(loot.Deps{
 		Registry: registry, Instances: instances, FS: fsys, Folders: system.Folders{}, Settings: settingsSvc,
 		Dir: filepath.Join(paths.Root, "loot"), Clock: clock,
@@ -592,7 +592,7 @@ func (c *Container) EnableUpdates(version, executable string) {
 	if c.Updates != nil {
 		return
 	}
-	// "Update masterlist" downloads only on the user's click (D141).
+	// "Update masterlist" downloads only on the user's click (D143).
 	c.Loot.Fetcher = updates.NewMasterlistFetcher(version)
 	client := updates.NewClient(version)
 	c.Updates = appupdate.NewService(appupdate.Deps{

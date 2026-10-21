@@ -87,7 +87,7 @@ func TestLayerDependencies(t *testing.T) {
 var (
 	pluginModule = []string{
 		"core/domain/plugin", "core/domain/pluginhealth", "core/domain/loadorder", "core/application/plugins",
-		// The LOOT provider is a provider of the plugins module (D141).
+		// The LOOT provider is a provider of the plugins module (D143).
 		"core/application/loot",
 	}
 	pluginClients = []string{"core/application/ports", "core/application/imports"}

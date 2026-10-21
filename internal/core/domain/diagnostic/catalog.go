@@ -47,7 +47,7 @@ const (
 	CodePluginLockConflict     Code = "plugin_lock_conflict"
 	CodePluginFromLosingFile   Code = "plugin_from_losing_file"
 	CodeBSAWithoutPlugin       Code = "bsa_without_plugin"
-	// Codes of the providers of plugin data (D141).
+	// Codes of the providers of plugin data (D143).
 	CodePluginProviderMessage    Code = "plugin_provider_message"
 	CodePluginDirty              Code = "plugin_dirty"
 	CodePluginRequirementMissing Code = "plugin_requirement_missing"

@@ -1,5 +1,5 @@
 // Package loot is the provider of LOOT data for the plugins module (D041,
-// D140, D141): it reads a LOOT masterlist (and a userlist), evaluates its
+// D140, D143): it reads a LOOT masterlist (and a userlist), evaluates its
 // conditions against the plugins of an instance and gives the plugins
 // module soft rules, groups and messages. It is not a sorter: the native
 // engine (D029) keeps the order.

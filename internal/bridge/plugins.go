@@ -491,7 +491,7 @@ func (a *App) RebuildPluginHeaderCache() error {
 }
 
 // SetPluginRuleDisabled disables or enables a rule; a rule of a provider
-// (LOOT) can only be disabled, never removed (D141).
+// (LOOT) can only be disabled, never removed (D143).
 func (a *App) SetPluginRuleDisabled(instance, id string, disabled bool) error {
 	if err := a.c.Plugins.SetPluginRuleDisabled(a.context(), game.InstanceID(instance), plugin.RuleID(id), disabled); err != nil {
 		return a.fail("set plugin rule disabled", err, nil)
@@ -499,7 +499,7 @@ func (a *App) SetPluginRuleDisabled(instance, id string, disabled bool) error {
 	return nil
 }
 
-// LootStatusDTO is the LOOT data of an instance (Settings › Plugins, D141).
+// LootStatusDTO is the LOOT data of an instance (Settings › Plugins, D143).
 type LootStatusDTO struct {
 	Supported bool `json:"supported"`
 	Enabled   bool `json:"enabled"`
@@ -534,7 +534,7 @@ func (a *App) LootStatus(instance string) (LootStatusDTO, error) {
 }
 
 // UpdateLootMasterlist downloads the current masterlist; only called by
-// the user's click on "Atualizar masterlist" (D141).
+// the user's click on "Atualizar masterlist" (D143).
 func (a *App) UpdateLootMasterlist(instance string) (LootStatusDTO, error) {
 	if a.c.Loot.Fetcher == nil {
 		exe, _ := os.Executable()

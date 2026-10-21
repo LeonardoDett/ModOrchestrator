@@ -19,7 +19,7 @@ import (
 )
 
 // Provider is a contribution point (D133): a source of ordering data and
-// messages other than the user, such as the LOOT data (D041, D140, D141).
+// messages other than the user, such as the LOOT data (D041, D140, D143).
 // The module lists providers and never names one. What a provider gives is
 // calculated on every read: soft rules, groups and assignments that the
 // user's data overrides, and diagnostics about plugins.
@@ -171,7 +171,7 @@ func sortedAssignments(m map[plugin.Name]string) []string {
 
 // providerDiagnostics are the diagnostics of the providers plus one about
 // the provided rules left out because they closed a cycle with the user's
-// data or the masters (D141). A provided group left out is not reported:
+// data or the masters (D143). A provided group left out is not reported:
 // groups give way by design, as in LOOT.
 func (st *state) providerDiagnostics() []diagnostic.Diagnostic {
 	out := append([]diagnostic.Diagnostic{}, st.provided...)

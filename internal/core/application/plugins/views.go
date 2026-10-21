@@ -289,7 +289,7 @@ type GroupView struct {
 	Plugins []plugin.Name
 	Default bool
 	// Source is the provider that created the group ("" for the user's);
-	// such a group cannot be edited, deleted or chosen (D141).
+	// such a group cannot be edited, deleted or chosen (D143).
 	Source string
 }
 

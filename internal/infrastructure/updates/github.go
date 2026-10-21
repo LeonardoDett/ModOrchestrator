@@ -225,7 +225,7 @@ func (Launcher) Start(path string) error {
 }
 
 // MasterlistFetcher downloads LOOT data files (ports.MasterlistFetcher,
-// D141): the same client, limited to the host of raw repository files.
+// D143): the same client, limited to the host of raw repository files.
 type MasterlistFetcher struct{ c *Client }
 
 // NewMasterlistFetcher returns the fetcher for version (User-Agent).

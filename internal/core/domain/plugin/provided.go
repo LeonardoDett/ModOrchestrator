@@ -9,7 +9,7 @@ import (
 )
 
 // Provided is ordering data from a provider other than the user (D041,
-// D140, D141): rules, groups and group assignments. It is calculated on
+// D140, D143): rules, groups and group assignments. It is calculated on
 // every read from the provider's data and never persisted; only the rules
 // the user disabled are (ProviderOff).
 //

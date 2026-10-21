@@ -40,7 +40,7 @@ type pluginRulesDoc struct {
 	Rules       []pluginRuleRecord  `json:"rules"`
 	Groups      []pluginGroupRecord `json:"groups"`
 	Assignments map[string]string   `json:"assignments"`
-	// ProviderOff are the provider rules the user disabled (D141).
+	// ProviderOff are the provider rules the user disabled (D143).
 	ProviderOff []string `json:"providerOff,omitempty"`
 }
 

@@ -106,7 +106,7 @@ function PluginsWorkspace({ instance }: { instance: string }) {
   }, [all, query, quick, flag, origin]);
 
   const setEnabled = (names: string[], enabled: boolean) => void run(() => backend.setPluginsEnabled(instance, names, enabled));
-  // Only the user's groups can be chosen; a provider's (LOOT) are read-only (D141).
+  // Only the user's groups can be chosen; a provider's (LOOT) are read-only (D143).
   const groups = rules.status === "ready" ? rules.data.groups.filter((g) => !g.source) : [];
   const withProblems = all.filter((r) => r.problems > 0).length;
 

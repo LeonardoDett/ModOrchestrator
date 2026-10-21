@@ -8,7 +8,7 @@ import (
 )
 
 // The masterlist shipped with the app parses and its conditions are all in
-// the syntax the provider reads (D141).
+// the syntax the provider reads (D143).
 func TestShippedLootMasterlist(t *testing.T) {
 	lg, ok := (&Adapter{}).LootGame(GameID)
 	if !ok || lg.Repository != "skyrimse" || lg.Folder == "" || lg.Date.IsZero() {

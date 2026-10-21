@@ -161,7 +161,7 @@ func TestBridgeSettingsTabsIncludeModuleTabs(t *testing.T) {
 			found = s.Tab == "plugins" && s.Value == "false"
 		}
 		if s.Key == "plugins.lootProvider" {
-			// LOOT data entered before the v1 (D140, D141), on by default.
+			// LOOT data entered before the v1 (D140, D143), on by default.
 			loot = s.Tab == "plugins" && s.Value == "true"
 		}
 	}

@@ -8,7 +8,7 @@ import (
 	"modorchestrator/sdk/game"
 )
 
-// The LOOT masterlist and prelude shipped with the app (D141). Both are
+// The LOOT masterlist and prelude shipped with the app (D143). Both are
 // CC0 (github.com/loot/skyrimse and github.com/loot/prelude, branch v0.29);
 // loot/SOURCE.md says which commits and how to refresh them.
 var (

@@ -269,7 +269,7 @@ func preludeURL() string {
 }
 
 // UpdateMasterlist downloads the current masterlist and prelude of the
-// instance's game (only on the user's click, D141). The files are checked
+// instance's game (only on the user's click, D143). The files are checked
 // by parsing before they replace the previous download.
 func (s *Service) UpdateMasterlist(ctx context.Context, instance game.InstanceID) (Status, error) {
 	_, lg, ok := s.game(ctx, instance)

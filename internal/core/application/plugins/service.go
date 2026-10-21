@@ -151,7 +151,7 @@ type Deps struct {
 	Settings      Settings
 	Ops           *operations.Service
 	Locks         *instancelock.Locks
-	// Providers give ordering data and messages besides the user (D141).
+	// Providers give ordering data and messages besides the user (D143).
 	Providers []Provider
 	IDs       operations.IDGenerator
 	Clock     operations.Clock

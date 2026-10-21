@@ -142,7 +142,7 @@ type Rules struct {
 	groups   []Group
 	assigned map[string]string // plugin key -> group
 	spelling map[string]Name   // plugin key -> name as assigned
-	// off are the provider rules the user disabled (D141), persisted.
+	// off are the provider rules the user disabled (D143), persisted.
 	off map[RuleID]bool
 	// prov marks what a provider added to an effective set (WithProvided);
 	// nil in the persisted set.
@@ -155,7 +155,7 @@ type Data struct {
 	Rules       []Rule
 	Groups      []Group
 	Assignments map[Name]string
-	// ProviderOff lists the provider rules the user disabled (D141).
+	// ProviderOff lists the provider rules the user disabled (D143).
 	ProviderOff []RuleID
 }
 

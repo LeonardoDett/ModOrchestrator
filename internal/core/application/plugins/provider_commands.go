@@ -19,7 +19,7 @@ const EventRuleUpdated event.Type = "plugin_rule.updated"
 const EventRulesImported event.Type = "plugin_rule.imported"
 
 // SetPluginRuleDisabled disables (or enables again) a rule. A provided
-// rule (D141) can only be disabled, never removed: the mark is kept by id.
+// rule (D143) can only be disabled, never removed: the mark is kept by id.
 // Enabling a user rule refuses a cycle (D028).
 func (s *Service) SetPluginRuleDisabled(ctx context.Context, instance game.InstanceID, id plugin.RuleID, disabled bool) error {
 	return s.command(ctx, instance, func(st *state) error {
@@ -149,7 +149,7 @@ func contains(xs []string, x string) bool {
 }
 
 // EventProviderUpdated: the data of a provider changed (a new masterlist,
-// D141); screens and diagnostics read again.
+// D143); screens and diagnostics read again.
 const EventProviderUpdated event.Type = "plugin_rule.provider_updated"
 
 // ProviderChanged arranges the load order again with the new provider data

@@ -7,7 +7,7 @@ import { useAction } from "../games/use-action";
 import { SettingLine, SettingsSection } from "../settings/SettingControls";
 
 /**
- * Settings › Plugins › Dados do LOOT (D141), in the pattern of the
+ * Settings › Plugins › Dados do LOOT (D143), in the pattern of the
  * Atualizações section: which copy of the masterlist is in use,
  * "Atualizar masterlist" (the only download, on the user's click) and
  * "Importar regras do LOOT" from the userlist LOOT keeps for the game.

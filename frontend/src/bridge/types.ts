@@ -317,7 +317,7 @@ export interface Backend {
   removePluginRule(instance: string, id: string): Promise<void>;
   setPluginRuleDisabled(instance: string, id: string, disabled: boolean): Promise<void>;
   lootStatus(instance: string): Promise<LootStatus>;
-  /** Downloads the masterlist: only on the user's click (D141). */
+  /** Downloads the masterlist: only on the user's click (D143). */
   updateLootMasterlist(instance: string): Promise<LootStatus>;
   importLootUserlist(instance: string, path: string): Promise<ImportResult>;
   createPluginGroup(instance: string, name: string, after: string[]): Promise<void>;
@@ -1782,11 +1782,11 @@ export interface PluginGroup {
   after: string[];
   plugins: string[];
   default: boolean;
-  /** Provider that created the group ("" for the user's): read-only (D141). */
+  /** Provider that created the group ("" for the user's): read-only (D143). */
   source: string;
 }
 
-/** LOOT data of an instance (Settings › Plugins, D141). */
+/** LOOT data of an instance (Settings › Plugins, D143). */
 export interface LootStatus {
   supported: boolean;
   enabled: boolean;

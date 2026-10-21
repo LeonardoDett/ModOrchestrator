@@ -19,7 +19,7 @@ Mudanças são aplicadas ao alterar (sem botão Salvar), exceto caminhos e méto
 
 Aplicação › **Atualizações** (F15, D104): switch `app.updateCheck` (desligado por padrão, é a única chamada de rede), select `app.updateChannel`, linha com a versão instalada, o estado da última verificação e "Verificar agora" (desabilitado com o switch desligado) e, havendo versão nova, a linha "Versão X disponível" com "Ver novidades", que abre o DLG-30 (notas de todas as versões novas, tamanho, aviso de que o app fecha, progresso do download e o motivo de uma recusa).
 
-Plugins › **Dados do LOOT** (LV2, D141), no padrão da seção Atualizações e só para jogo que o LOOT conhece: linha "Masterlist" com a cópia em uso (empacotada ou baixada, com a data; ou "desligados" pelo switch `plugins.lootProvider`) e "Atualizar masterlist" (única rede, só no clique; desabilitado sem o download no build); linha "Regras do usuário no LOOT" com o caminho do `userlist.yaml` encontrado e "Importar regras do LOOT" (toast com a contagem).
+Plugins › **Dados do LOOT** (LV2, D143), no padrão da seção Atualizações e só para jogo que o LOOT conhece: linha "Masterlist" com a cópia em uso (empacotada ou baixada, com a data; ou "desligados" pelo switch `plugins.lootProvider`) e "Atualizar masterlist" (única rede, só no clique; desabilitado sem o download no build); linha "Regras do usuário no LOOT" com o caminho do `userlist.yaml` encontrado e "Importar regras do LOOT" (toast com a contagem).
 
 ### Critérios de aceite
 - Todo setting V1 de core/13 aparece na aba e seção indicadas.

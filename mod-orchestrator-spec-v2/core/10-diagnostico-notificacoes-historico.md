@@ -56,11 +56,11 @@ Esta tabela é o catálogo **do core**. Um check que só um jogo tem declara o s
 | `plugin_from_losing_file` | info | — | plugins | Abrir Conflicts |
 | `bsa_without_plugin` (adapter) | info | — | plugins | Abrir Plugins |
 | `archive_wrong_game` (adapter `skyrimse`, D141) | error | launch (aviso) | plugins | Abrir pasta do mod |
-| `plugin_requirement_missing` (provedor, D141) | error | — | plugins | Desativar |
-| `plugin_incompatible` (provedor, D141) | error | — | plugins | Desativar |
-| `plugin_provider_message` (provedor, D141) | info/warning/error | — | plugins | Mostrar plugin / Desativar (error) |
-| `plugin_dirty` (provedor, D141) | warning | — | plugins | Mostrar plugin |
-| `plugin_provider_skipped` (D141) | info | — | plugins | Abrir regras |
+| `plugin_requirement_missing` (provedor, D143) | error | — | plugins | Desativar |
+| `plugin_incompatible` (provedor, D143) | error | — | plugins | Desativar |
+| `plugin_provider_message` (provedor, D143) | info/warning/error | — | plugins | Mostrar plugin / Desativar (error) |
+| `plugin_dirty` (provedor, D143) | warning | — | plugins | Mostrar plugin |
+| `plugin_provider_skipped` (D143) | info | — | plugins | Abrir regras |
 | `game_not_found` | blocking | tudo da instância | games | Localizar jogo |
 | `game_version_changed` | warning | — | games/adapter | Detalhes |
 | `game_running` | blocking | deploy, purge | games | Aguardar |

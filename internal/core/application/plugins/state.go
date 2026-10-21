@@ -34,7 +34,7 @@ type state struct {
 	// section is the plugins section of the active profile (D133).
 	section *plugin.ProfileState
 	// rules are the user's plugin rules, groups and assignments (persisted);
-	// effective adds the providers' data (D141) and is what orders and
+	// effective adds the providers' data (D143) and is what orders and
 	// shows. Commands change rules only.
 	rules     *plugin.Rules
 	effective *plugin.Rules

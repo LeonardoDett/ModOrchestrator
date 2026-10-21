@@ -408,7 +408,7 @@ type ArchiveChecker interface {
 	ArchiveChecks(ctx context.Context, fs FileReader, inst game.Instance, files []TargetFile, active []plugin.Name) ([]diagnostic.Spec, error)
 }
 
-// LootGame is what a game declares for the LOOT data provider (D141): the
+// LootGame is what a game declares for the LOOT data provider (D143): the
 // name of its masterlist repository and of its LOOT data folder, and the
 // copy of the masterlist (with the prelude) shipped with the app.
 type LootGame struct {
@@ -432,7 +432,7 @@ type LootSupport interface {
 }
 
 // MasterlistFetcher downloads a file of a LOOT repository. It is only called
-// on an explicit user action (D141), like the app update (D104).
+// on an explicit user action (D143), like the app update (D104).
 type MasterlistFetcher interface {
 	Fetch(ctx context.Context, url string) ([]byte, error)
 }

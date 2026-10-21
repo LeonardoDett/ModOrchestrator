@@ -112,7 +112,7 @@ export function PluginRulesDialog({ instance, open, onClose }: { instance: strin
                             <TrashIcon size="sm" />
                           </Button>
                         ) : (
-                          // A rule of a provider (LOOT) is only switched off, so its origin stays visible (D141).
+                          // A rule of a provider (LOOT) is only switched off, so its origin stays visible (D143).
                           <Button size="sm" emphasis="low" onClick={() => void run(() => backend.setPluginRuleDisabled(instance, r.id, !r.disabled))}>
                             {t(r.disabled ? "plugins.rule.enable" : "plugins.rule.disable")}
                           </Button>
@@ -145,7 +145,7 @@ export function PluginGroupsDialog({ instance, open, onClose }: { instance: stri
   const [error, setError] = useState<UIError | null>(null);
   if (!open) return null;
   const all = rules.status === "ready" ? rules.data.groups : [];
-  // The user's groups are edited here; a provider's (LOOT) are listed read-only (D141).
+  // The user's groups are edited here; a provider's (LOOT) are listed read-only (D143).
   const groups = all.filter((g) => !g.source);
   const provided = all.filter((g) => g.source);
   const mine = new Set(groups.map((g) => g.name));

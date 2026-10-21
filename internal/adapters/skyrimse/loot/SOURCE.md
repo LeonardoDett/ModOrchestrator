@@ -1,6 +1,6 @@
 # Dados do LOOT empacotados
 
-Cópia dos dados do LOOT que vai com o app (D141). Licença: CC0 1.0 (domínio público).
+Cópia dos dados do LOOT que vai com o app (D143). Licença: CC0 1.0 (domínio público).
 
 | Arquivo | Repositório | Branch | Commit | Data do commit |
 |---|---|---|---|---|

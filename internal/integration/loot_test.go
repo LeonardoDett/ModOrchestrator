@@ -48,7 +48,7 @@ type registryOf struct{ a ports.GameAdapter }
 
 func (r registryOf) ByName(string) (ports.GameAdapter, bool) { return r.a, true }
 
-// D141: with the LOOT data of the shipped masterlist, SkyUI (group "Fixes &
+// D143: with the LOOT data of the shipped masterlist, SkyUI (group "Fixes &
 // Resources") loads before RaceMenu (after SkyUI), RaceMenu without SKSE
 // gets the requirement error, and turning the provider off removes both.
 func TestLootDataOrdersAndDiagnoses(t *testing.T) {

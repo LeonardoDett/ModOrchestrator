@@ -177,7 +177,7 @@ describe("Load Order screen (F11)", () => {
   });
 });
 
-describe("LOOT rules (D141)", () => {
+describe("LOOT rules (D143)", () => {
   beforeEach(() => localStorage.clear());
 
   it("shows a LOOT rule with its origin; it is turned off, not removed", async () => {
