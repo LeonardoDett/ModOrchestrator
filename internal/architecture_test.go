@@ -67,13 +67,13 @@ var (
 		"core/domain/game", "core/domain/mod", "core/domain/profile", "core/domain/rules",
 		"core/domain/override", "core/domain/plugin", "core/domain/settings",
 	}
-	appliedState    = []string{"core/domain/deployment", "core/domain/loadorder"}
+	appliedState    = []string{"core/domain/deployment", "core/domain/loadorder", "core/domain/gamesettings"}
 	calculatedState = []string{
 		"core/domain/conflict", "core/domain/deployplan", "core/domain/deploystate",
 		"core/domain/externalchange", "core/domain/diagnostic", "core/domain/dependency",
-		"core/domain/installer", "core/domain/health", "core/domain/pluginhealth",
+		"core/domain/installer", "core/domain/health", "core/domain/pluginhealth", "core/domain/savegame",
 	}
-	pureAlgorithms = []string{"core/domain/ordering", "core/domain/relpath"}
+	pureAlgorithms = []string{"core/domain/ordering", "core/domain/relpath", "core/domain/gameini"}
 )
 
 func TestLayerDependencies(t *testing.T) {
@@ -150,6 +150,27 @@ func TestCoreDoesNotImportThePluginsModule(t *testing.T) {
 	if len(rules) < 20 {
 		t.Fatalf("expected the core packages, got %d", len(rules))
 	}
+	checkImports(t, rules)
+}
+
+// D142: the saves module enters like the plugins module; no other core
+// package imports it, and it does not import the plugins module (the
+// bootstrap bridges the two).
+func TestCoreDoesNotImportTheSavesModule(t *testing.T) {
+	banned := []string{module + "internal/core/application/saves"}
+	rules := map[string][]string{}
+	for _, layer := range []string{"core/domain", "core/application"} {
+		entries, err := os.ReadDir(layer)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, e := range entries {
+			if pkg := layer + "/" + e.Name(); e.IsDir() && pkg != "core/application/saves" {
+				rules[pkg] = banned
+			}
+		}
+	}
+	rules["core/application/saves"] = []string{module + "internal/core/application/plugins"}
 	checkImports(t, rules)
 }
 

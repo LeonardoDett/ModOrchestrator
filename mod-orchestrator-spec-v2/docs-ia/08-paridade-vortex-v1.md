@@ -130,7 +130,8 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | Transferir | ✓ |
 | Comparar e pontos de restauração (ADAPT) | ✓ |
 | Toggle para habilitar profiles | — REJECT (D037) |
-| Saves/INIs locais | — DEFER |
+| Saves locais (por perfil, D142) | ✓ (`save_games`; tela Saves com plugins faltando, copiar/mover, excluir, clonar com saves) |
+| INIs locais | — DEFER (LV8) |
 
 ### Games
 | Item | Estado |

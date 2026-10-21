@@ -25,6 +25,7 @@ type (
 	PluginSupport       = inner.PluginSupport
 	ProcessDeclarer     = inner.ProcessDeclarer
 	RootHints           = inner.RootHints
+	SaveGamesSupport    = inner.SaveGamesSupport
 	TemplateProvider    = inner.TemplateProvider
 	DirEntry            = inner.DirEntry
 	FileInfo            = inner.FileInfo
@@ -35,6 +36,7 @@ type (
 
 const (
 	FolderLocalAppData = inner.FolderLocalAppData
+	FolderDocuments    = inner.FolderDocuments
 )
 
 var (

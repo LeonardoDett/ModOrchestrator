@@ -2,7 +2,7 @@
 // docs-ia/09-proposta-multi-jogo-e-extensoes.md): the optional interfaces
 // an adapter implements, one per capability (D112), and, in its
 // subpackages, the vocabulary they use (game, mod, plugin, installer,
-// diagnostic, event, health, ordering, relpath).
+// diagnostic, event, health, ordering, relpath, savegame).
 //
 // It lives outside internal/ so a module of another repository can import
 // it. The built-in adapters are its first clients and import nothing else
@@ -15,4 +15,4 @@ package sdk
 // changes when a name leaves the SDK or a type it names changes in a way an
 // adapter notices (a method of an interface, a field it fills); the minor
 // when a name is added.
-const APIVersion = "1.1"
+const APIVersion = "1.2"

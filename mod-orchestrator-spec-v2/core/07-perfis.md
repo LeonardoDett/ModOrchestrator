@@ -29,7 +29,7 @@ Não existe setting para "ligar" profiles (D037).
 | ModOrder e separadores | copia | |
 | PluginStates, LoadOrder, IndexLocks | copia | ficam na seção `plugins` do perfil (D133); toda seção de módulo é copiada |
 | Configurações locais do jogo (V1.x) | copia | arquivos copiados |
-| Saves locais (V1.x) | **não** copia por padrão; opção "copiar saves" | saves podem ser grandes |
+| Saves próprios (D142) | **não** copia por padrão; opção "Copiar os saves" (só se a origem tem saves próprios); o clone mantém saves próprios e, sem a cópia, começa vazio | saves podem ser grandes |
 | Snapshots | não copia | |
 | Mods, archives, instalações | compartilhado | pertence à instância |
 | OrderRules, Dependency/Incompatibility, Overrides, Exclusions, PluginRules, Groups | compartilhado | D026 |
@@ -42,7 +42,7 @@ Não existe setting para "ligar" profiles (D037).
 3. Status vira `pending` se desejado(B) ≠ aplicado.
 4. Com auto-deploy: deploy por diff (só as diferenças entre A e B). Sem auto-deploy: topbar mostra "Deploy pendente".
 5. Load order: `plugins.txt` é reescrito a partir da LoadOrder de B no `post` do deploy (core/08).
-6. V1.x: configurações locais e namespace de saves são trocados no `post` do deploy (nunca em momento diferente, para o jogo não ver um estado misto).
+6. A pasta de saves do perfil é trocada no `post` do deploy (D142), e as configurações locais também serão (LV8): nunca em momento diferente, para o jogo não ver um estado misto. Exceção: ligar ou desligar "Saves próprios" no perfil que já está na pasta do jogo aplica na hora (os mods não mudam).
 
 Enquanto o deploy não acontece, o jogo reflete o profile anterior; a topbar deixa isso explícito ("Implantado: A · Ativo: B").
 
@@ -60,7 +60,7 @@ Consulta que retorna: mods só habilitados em A, só em B, em ambos com priorida
 ## 7. Recursos por capability (V1.x)
 
 - `game_settings`: o adapter declara quais arquivos (ex.: `Skyrim.ini`, `SkyrimPrefs.ini`, `SkyrimCustom.ini`) podem ser locais. Profile com "configurações locais" guarda cópia própria; o `post` do deploy aplica a cópia do profile ativo e guarda a anterior de volta no profile que estava aplicado. Edições feitas pelo jogo são capturadas de volta ao trocar (evidência por hash; divergência inesperada é external change).
-- `save_games`: o adapter declara como redirecionar saves (Skyrim: `SLocalSavePath` no INI). Namespace por profile.
+- `save_games` (D142): o adapter declara como redirecionar saves (`SaveRedirect`: arquivo, seção e chave; Skyrim: `SLocalSavePath` em `SkyrimCustom.ini`), quais arquivos são saves, os que vão junto e como ler o cabeçalho. "Saves próprios" (`features.localSaves`, desligado por padrão) faz o perfil salvar em `Saves\<id do perfil>\`; sem ele, o perfil usa a pasta compartilhada (o valor que a chave tinha antes do app). O app muda só a linha da chave, grava antes o valor pendente, guarda o arquivo original no BackupStore e devolve o original no purge. Chave alterada fora do app não é sobrescrita: diagnóstico `save_path_external` com "Usar a pasta do perfil". Ligar não move os saves compartilhados; desligar não apaga os do perfil.
 
 ## 8. Erros
 

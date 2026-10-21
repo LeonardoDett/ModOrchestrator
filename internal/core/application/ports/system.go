@@ -12,6 +12,7 @@ import (
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
 	"modorchestrator/internal/core/domain/plugin"
+	"modorchestrator/internal/core/domain/savegame"
 )
 
 // FileInfo is what the filesystem reports about a path. FileID (volume
@@ -408,7 +409,12 @@ type ArchiveChecker interface {
 }
 
 // Known folders an adapter can place files in, resolved by the platform.
-const FolderLocalAppData = "local_app_data"
+const (
+	FolderLocalAppData = "local_app_data"
+	// FolderDocuments is the Documents folder of the user (where games keep
+	// their settings and saves, D142).
+	FolderDocuments = "documents"
+)
 
 // FileLocation is a file below a known folder of the user.
 type FileLocation struct {
@@ -474,4 +480,22 @@ type GameTemplate struct {
 // TemplateProvider is implemented by the adapter that serves custom games.
 type TemplateProvider interface {
 	Templates() []GameTemplate
+}
+
+// SaveGamesSupport is implemented by adapters with the `save_games`
+// capability (core/07 §7, D142): where the game keeps its saves, how it is
+// pointed at another save folder and how a save file is read. The adapter
+// only declares and reads; the core writes the settings key with evidence
+// and moves the files (anti-pattern 24).
+type SaveGamesSupport interface {
+	// SaveRedirect is the settings key that points the game at a save
+	// folder, for this installation (store variants of the user folders).
+	SaveRedirect(inst game.Instance) savegame.Redirect
+	// IsSave reports whether a file name (no folder) is a save.
+	IsSave(id game.ID, name string) bool
+	// SaveCompanions are the names of the files that belong with a save
+	// and move with it (a co-save of a script extender), present or not.
+	SaveCompanions(id game.ID, name string) []string
+	// ReadSave reads the header of a save. It reads only what it needs.
+	ReadSave(id game.ID, name string, r io.Reader) (savegame.Header, error)
 }

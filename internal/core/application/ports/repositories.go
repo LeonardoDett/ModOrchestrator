@@ -19,6 +19,7 @@ import (
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/event"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/gamesettings"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/notification"
 	"modorchestrator/internal/core/domain/override"
@@ -190,6 +191,14 @@ type Settings interface {
 	Reset(ctx context.Context, scope settings.Scope, scopeID, key string) error
 }
 
+// GameSettings persists what the app last wrote into the settings files of
+// a game (D142), by instance and feature module. Key returns ErrNotFound
+// when the module never wrote.
+type GameSettings interface {
+	Key(ctx context.Context, instance game.InstanceID, owner string) (*gamesettings.KeyRecord, error)
+	SaveKey(ctx context.Context, k *gamesettings.KeyRecord) error
+}
+
 // Tx is the set of repositories bound to one transaction, plus the events
 // recorded with it (INV-OPS-01, D064).
 type Tx interface {
@@ -207,6 +216,7 @@ type Tx interface {
 	ExternalDecisions() ExternalDecisions
 	Notifications() Notifications
 	Presence() Presence
+	GameSettings() GameSettings
 	// Emit records events stored in the same transaction. Their IDs must be
 	// set; the store assigns sequences.
 	Emit(events ...event.Event)

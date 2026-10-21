@@ -21,14 +21,18 @@ import (
 	"modorchestrator/internal/core/domain/plugin"
 )
 
-// testFolders resolves %LOCALAPPDATA% to a folder of the test.
+// testFolders resolves %LOCALAPPDATA% to a folder of the test, and the
+// Documents folder to a "Documents" folder next to it.
 type testFolders struct{ root string }
 
 func (f testFolders) Folder(name string) (string, error) {
-	if name != ports.FolderLocalAppData {
-		return "", fmt.Errorf("unknown folder %s", name)
+	switch name {
+	case ports.FolderLocalAppData:
+		return f.root, nil
+	case ports.FolderDocuments:
+		return filepath.Join(filepath.Dir(f.root), "Documents"), nil
 	}
-	return f.root, nil
+	return "", fmt.Errorf("unknown folder %s", name)
 }
 
 // tes4 builds a plugin file: a TES4 record with flags and masters.

@@ -29,11 +29,9 @@ Vortex: `starter_dashlet`, `titlebar-launcher`, `tool_variables_base`.
 - Após a ferramenta fechar: scan de external changes nas saídas conhecidas (core/09), oferecendo captura.
 - Preparado: `ProcessLauncher`, barra de título com área do lançador, `toolOutputs()` do adapter, D045.
 
-## Saves (V1.x)
+## Saves
 
-Vortex: `gamebryo-savegame-management`.
-- Lista de saves por profile (namespace), cabeçalho (personagem, nível, local, data, screenshot), plugins faltando, transferir/copiar entre profiles, excluir, restaurar.
-- Preparado: capability `save_games`; profile `features.localSaves`.
+Saiu do futuro: entrou antes da v1 (D140, LV3, D142; core/07 §7, tela `ui/telas/saves.md`). Fica para depois: restaurar save apagado (a exclusão é definitiva e confirmada) e ler saves de outros jogos além do Skyrim SE.
 
 ## Configurações do jogo por profile (V1.x)
 

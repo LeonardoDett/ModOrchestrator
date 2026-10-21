@@ -29,6 +29,7 @@ import (
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/overview"
 	"modorchestrator/internal/core/application/plugins"
+	"modorchestrator/internal/core/application/saves"
 	"modorchestrator/internal/core/application/ports"
 	profilesvc "modorchestrator/internal/core/application/profiles"
 	appsettings "modorchestrator/internal/core/application/settings"
@@ -67,6 +68,8 @@ type Container struct {
 	AutoDeploy *deployment.AutoDeployer
 	// Plugins owns the plugin inventory and the load order (core/08).
 	Plugins *plugins.Service
+	// Saves owns the save folders of the profiles (save_games, D142).
+	Saves *saves.Service
 	// Diagnostics gathers health checks, suppressions and notifications;
 	// History is the projection of events with reversal (core/10).
 	Diagnostics *diagnostics.Service
@@ -350,6 +353,26 @@ func New(ctx context.Context) (c *Container, err error) {
 		Clock:         clock,
 	})
 
+	// The saves module (save_games, D142) enters like the plugins module:
+	// by contribution points, plus what it asks the plugins module.
+	savesSvc := saves.NewService(saves.Deps{
+		Registry:     registry,
+		Instances:    instances,
+		Profiles:     profiles,
+		Mods:         sqlite.NewModRepository(db),
+		Manifests:    sqlite.NewManifestRepository(db),
+		GameSettings: sqlite.NewGameSettingsRepository(db),
+		UoW:          sqlite.NewUnitOfWork(db),
+		Publisher:    bus,
+		FS:           fsys,
+		Folders:      system.Folders{},
+		Plugins:      savesPlugins{pluginsSvc},
+		ModSwitch:    profilesSvc,
+		Locks:        locks,
+		IDs:          ids,
+		Clock:        clock,
+	})
+
 	deploySvc := deployment.NewService(deployment.Deps{
 		Registry:      registry,
 		Instances:     instances,
@@ -371,7 +394,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Hasher:        hashing.SHA256{},
 		Library:       librarySvc,
 		Exclusions:    conflictsSvc,
-		PostDeploy:    []deployment.PostDeploy{pluginsSvc},
+		PostDeploy:    []deployment.PostDeploy{pluginsSvc, savesSvc},
 		Ops:           ops,
 		Locks:         locks,
 		IDs:           ids,
@@ -380,6 +403,7 @@ func New(ctx context.Context) (c *Container, err error) {
 	// The plugins module enters the core through its contribution points
 	// (D133); the services that are built before it get it here.
 	profilesSvc.Sections = []profilesvc.Section{pluginsSvc}
+	profilesSvc.Copiers = []profilesvc.Copier{savesSvc}
 	librarySvc.FileStates = pluginsSvc
 	// Auto-deploy follows committed changes of the desired state (D036).
 	autoDeploy := deployment.NewAutoDeployer(deploySvc)
@@ -406,7 +430,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Games:        gamesSvc,
 		Library:      librarySvc,
 		Commands:     profilesSvc,
-		Modules:      []diagnostics.Module{pluginsSvc},
+		Modules:      []diagnostics.Module{pluginsSvc, savesSvc},
 		IDs:          ids,
 		Clock:        clock,
 	})
@@ -527,6 +551,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Deployment:         deploySvc,
 		AutoDeploy:         autoDeploy,
 		Plugins:            pluginsSvc,
+		Saves:              savesSvc,
 		Diagnostics:        diagSvc,
 		History:            historySvc,
 		Launch:             launchSvc,
@@ -620,3 +645,23 @@ func (c *Container) Restart() error { return system.Restart() }
 // single instance lock named mutex (D141). It is asked before New, so a
 // second launch never opens the database.
 func InstanceRunning(mutex string) bool { return system.InstanceRunning(mutex) }
+
+// savesPlugins answers the saves module with the plugins module (D142):
+// the two modules do not import each other.
+type savesPlugins struct{ p *plugins.Service }
+
+func (a savesPlugins) Presence(ctx context.Context, instance game.InstanceID, names []string) (map[string]saves.PluginPresence, error) {
+	pres, ok, err := a.p.PresenceOf(ctx, instance, names)
+	if err != nil || !ok {
+		return nil, err
+	}
+	out := make(map[string]saves.PluginPresence, len(pres))
+	for k, v := range pres {
+		out[k] = saves.PluginPresence{Present: v.Present, Active: v.Active, Mods: v.Mods}
+	}
+	return out, nil
+}
+
+func (a savesPlugins) Enable(ctx context.Context, instance game.InstanceID, names []string) error {
+	return a.p.EnableNames(ctx, instance, names)
+}

@@ -32,6 +32,7 @@ var contracts = []Contract{
 	{game.CapHealthChecks, "ports.HealthCheckProvider", implements[ports.HealthCheckProvider]},
 	{game.CapDefaultCategories, "ports.CategoryProvider", implements[ports.CategoryProvider]},
 	{game.CapRunningDetection, "ports.ProcessDeclarer", implements[ports.ProcessDeclarer]},
+	{game.CapSaveGames, "ports.SaveGamesSupport", implements[ports.SaveGamesSupport]},
 }
 
 // Contracts lists the capabilities served by an optional adapter interface.

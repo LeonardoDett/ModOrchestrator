@@ -71,8 +71,9 @@ Cada capability servida por código do adapter tem **uma** interface opcional, e
 | `health_checks` | `HealthCheckProvider` |
 | `default_categories` | `CategoryProvider` |
 | `running_detection` | `ProcessDeclarer` |
+| `save_games` | `SaveGamesSupport` (D142) |
 
-As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`save_games`, `game_settings`, `tools`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
+As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`game_settings`, `tools`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
 
 `Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Desde a D113 a mesma consulta traz o nível de suporte, as lojas onde o jogo é procurado e, por recurso, classe, dependências e padrão; o bridge a expõe em `GamesSupport()`.
 
@@ -125,7 +126,7 @@ Importar de outro gerenciador (D128, tela na RD16): depois de gerenciar o jogo, 
 
 ## 5. Navegação por capability
 
-O workspace mostra: Overview, Mods, Conflicts, Profiles, Diagnostics sempre; Plugins se `plugins`; Load Order se `load_order`; Saves se `save_games` (V1.x). A lista é consulta do bridge (a UI não decide, anti-pattern 1).
+O workspace mostra: Overview, Mods, Conflicts, Profiles, Diagnostics sempre; Plugins se `plugins`; Load Order se `load_order`; Saves se `save_games` (D142, grupo Setup, depois de Perfis). A lista é consulta do bridge (a UI não decide, anti-pattern 1).
 
 Como ficou (RD4, D120): o mesmo `Workspace()` devolve também `groups`, os itens arrumados como o menu do jogo (`entry`: Visão geral; `content`: Mods, Plugins, Ordem de carga, Conflitos; `setup`: Perfis; `health`: Diagnóstico) por `games.WorkspaceGroups`; grupo vazio não vem. `MenuBadges(instância)` (serviço `overview`) devolve contagem e atenção por item: Diagnóstico com `blocking` + `error` (atenção quando algo bloqueia) e Conflitos com os pares não revisados quando `diagnostics.showUnreviewedConflicts` está ligada (atenção enquanto houver). Fonte que não pôde ser lida não dá selo, nunca zero. A instância ativa traz `accent`, a cor do jogo (D122), declarada pela definição (`Definition.Accent`; Skyrim e Valheim declaram; jogo personalizado fica com a cor do app). Partes de telas compartilhadas que dependem de capability vêm como `sections` no jogo gerenciado e no `Workspace()` da instância ativa (`games.Sections`: aba Plugins de Configurações, cache de cabeçalhos de plugin, número de plugins da Visão geral e do cartão do perfil); a UI renderiza as que recebe e não testa capability. O `Workspace()` traz também `areas`, as áreas de Diagnóstico › Problemas da instância (`games.DiagnosticAreas`), e cada recurso de `InstanceFeatures`/`GamesSupport` diz a tela que traz ao menu (`screen`, `games.FeatureScreen`), na ordem da prancha (D132).
 

@@ -22,7 +22,7 @@ Referências: D031, D040, D041. Vortex: `games/game-skyrimse`, `gamebryo_plugin_
 
 ## 2. Capabilities
 
-`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112). V1.x: `game_settings`, `save_games`.
+`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112), `save_games` (D142). Depois: `game_settings` (LV8).
 
 ## 3. Targets e ModTypes
 
@@ -85,7 +85,7 @@ Dicas de root (core/02 §4): pastas `meshes`, `textures`, `scripts`, `interface`
 ## 10. V1.x (previsto)
 
 - `game_settings`: `Skyrim.ini`, `SkyrimPrefs.ini`, `SkyrimCustom.ini` em `Documents\My Games\Skyrim Special Edition`.
-- `save_games`: `SLocalSavePath=Saves\<profile>\` em `SkyrimCustom.ini` › `[General]`; tela Saves com leitura do cabeçalho `.ess` (personagem, nível, local, data, plugins usados, screenshot) e checagem de plugins faltando.
+- `save_games` (**feito**, D142): `SLocalSavePath=Saves\<id do perfil>\` em `[General]` do `SkyrimCustom.ini` em `Documents\My Games\Skyrim Special Edition` (variantes ` GOG` e ` EPIC` como o `plugins.txt`); sem a chave o jogo usa `Saves\`. Saves `.ess`, co-save do SKSE `.skse` (mesmo nome). Cabeçalho: formato 12 (SE; corpo em LZ4 de bloco ou zlib) e 9 (LE): número, personagem, nível, local, data no jogo, raça, FILETIME, captura (RGBA no 12, RGB no 9) e plugins (completos e, desde a versão de formulário 78, os light). Tipo pelo nome do arquivo: `Quicksave*` rápido, `Autosave*` automático. Formato conferido na UESP ("Skyrim Mod:Save File Format") **(verificar com um save real do SE 1.6)**.
 - Provedor LOOT (D041).
 - Conflitos dentro de BSA.
 

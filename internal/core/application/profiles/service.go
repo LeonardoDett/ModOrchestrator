@@ -81,7 +81,10 @@ type Deps struct {
 	// Sections are the feature modules that keep a document in the
 	// profiles (D133); the service reads them only through this contract.
 	Sections []Section
-	Locks    *instancelock.Locks
+	// Copiers are the feature modules with files of their own to copy into
+	// a clone (the saves, D142); the service names none of them.
+	Copiers []Copier
+	Locks   *instancelock.Locks
 	IDs      operations.IDGenerator
 	Clock    operations.Clock
 }
@@ -96,6 +99,19 @@ type Section interface {
 	Count(p *profile.Profile) int
 	// Compare is what differs in its document between two profiles.
 	Compare(a, b *profile.Profile) SectionDiff
+}
+
+// Copier is a feature module that keeps files of each profile outside the
+// database (the saves of a profile, core/07 §3) and can copy them into a
+// clone. Copying is an option of the clone, never the default.
+type Copier interface {
+	// CopyID names the option ("saves").
+	CopyID() string
+	// CopySize is what the profile has to copy: files and bytes; ok is
+	// false when the option does not apply to it.
+	CopySize(ctx context.Context, p *profile.Profile) (files int, bytes int64, ok bool)
+	// CopyFiles copies the files of from into to, a clone just created.
+	CopyFiles(ctx context.Context, from, to *profile.Profile) error
 }
 
 // SectionDiff is what differs in the document of a module (core/07 §5).

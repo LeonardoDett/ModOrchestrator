@@ -129,6 +129,59 @@ func (s *Service) Create(ctx context.Context, instance game.InstanceID, name str
 	return id, nil
 }
 
+// CopyOption is a copy a clone of the profile may also get (the saves).
+type CopyOption struct {
+	ID    string
+	Files int
+	Bytes int64
+}
+
+// CopyOptions lists what a clone of the profile may copy besides the
+// profile itself (DLG-19, "Copiar os saves de <perfil>").
+func (s *Service) CopyOptions(ctx context.Context, from profile.ID) ([]CopyOption, error) {
+	p, err := getProfile(ctx, s.Profiles, from)
+	if err != nil {
+		return nil, err
+	}
+	out := []CopyOption{}
+	for _, c := range s.Copiers {
+		if n, b, ok := c.CopySize(ctx, p); ok {
+			out = append(out, CopyOption{ID: c.CopyID(), Files: n, Bytes: b})
+		}
+	}
+	return out, nil
+}
+
+// Clone creates a clone of a profile (core/07 §3) and copies into it what
+// the options name (CopyOptions). The clone exists even when a copy fails;
+// the error says which one.
+func (s *Service) Clone(ctx context.Context, instance game.InstanceID, name string, from profile.ID, copies []string) (profile.ID, error) {
+	id, err := s.Create(ctx, instance, name, from)
+	if err != nil || len(copies) == 0 {
+		return id, err
+	}
+	src, err := getProfile(ctx, s.Profiles, from)
+	if err != nil {
+		return id, err
+	}
+	dst, err := getProfile(ctx, s.Profiles, id)
+	if err != nil {
+		return id, err
+	}
+	for _, c := range s.Copiers {
+		if !slices.Contains(copies, c.CopyID()) {
+			continue
+		}
+		if _, _, ok := c.CopySize(ctx, src); !ok {
+			continue
+		}
+		if err := c.CopyFiles(ctx, src, dst); err != nil {
+			return id, err
+		}
+	}
+	return id, nil
+}
+
 // Rename changes the name of a profile.
 func (s *Service) Rename(ctx context.Context, id profile.ID, name string) error {
 	return s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {

@@ -109,6 +109,13 @@ type PostDeploy interface {
 	AfterDeploy(ctx context.Context, instance game.InstanceID, op operation.ID) error
 }
 
+// PostPurge is a PostDeploy module that also acts after a complete purge:
+// a setting it changed in the game's files goes back to what it was (the
+// save folder, D142).
+type PostPurge interface {
+	AfterPurge(ctx context.Context, instance game.InstanceID, op operation.ID) error
+}
+
 // Deps are the ports the engine needs.
 type Deps struct {
 	Registry      *games.Registry

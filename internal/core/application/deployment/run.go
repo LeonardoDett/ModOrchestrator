@@ -818,6 +818,17 @@ func (s *Service) post(ctx context.Context, r *run) error {
 	// The modules follow the deployed files (the load order, core/08 §7);
 	// a purge leaves their files as they are (the game ignores missing
 	// plugins).
+	if r.kind == KindPurge && !r.cancelled && len(real) == 0 {
+		// A module that changed a game setting gives it back (the save
+		// folder, D142); the plugin files stay as they are.
+		for _, m := range s.PostDeploy {
+			if pp, ok := m.(PostPurge); ok {
+				if err := pp.AfterPurge(ctx, r.inst.ID, r.t.ID()); err != nil {
+					return fileError(err)
+				}
+			}
+		}
+	}
 	if r.kind == KindDeploy && !r.cancelled {
 		for _, m := range s.PostDeploy {
 			if err := m.AfterDeploy(ctx, r.inst.ID, r.t.ID()); err != nil {

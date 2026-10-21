@@ -33,6 +33,7 @@ Esta tabela é o catálogo **do core**. Um check que só um jogo tem declara o s
 | `method_unavailable` | error | deploy | deployment | Settings › Mods |
 | `external_changes_pending` | warning | deploy dos caminhos afetados | external | Revisar |
 | `load_order_external_change` | warning | apply da load order | plugins | Revisar |
+| `save_path_external` | warning | — | game | Usar a pasta do perfil (D142) |
 | `rule_cycle` | blocking | reorder, deploy | rules | Resolver ciclo |
 | `mods_incompatible` | error | deploy | rules | Desabilitar A / B |
 | `mod_requirement_missing` | error | — | rules | Habilitar / Importar |

@@ -22,6 +22,9 @@ const (
 	CodeMethodUnavailable       Code = "method_unavailable"
 	CodeExternalChangesPending  Code = "external_changes_pending"
 	CodeLoadOrderExternalChange Code = "load_order_external_change"
+	// CodeSavePathExternal: the key that points the game at the save folder
+	// of the profile changed outside the app (D142).
+	CodeSavePathExternal Code = "save_path_external"
 	CodeRuleCycle               Code = "rule_cycle"
 	CodeModsIncompatible        Code = "mods_incompatible"
 	CodeModRequirementMissing   Code = "mod_requirement_missing"
@@ -95,7 +98,7 @@ var coreModules = map[Code]Module{
 	CodePluginRuleCycle: ModulePlugins, CodePluginLockConflict: ModulePlugins, CodePluginFromLosingFile: ModulePlugins,
 	CodeBSAWithoutPlugin: ModulePlugins,
 	CodeGameNotFound:     ModuleGame, CodeGameVersionChanged: ModuleGame, CodeGameRunning: ModuleGame,
-	CodeFrameworkMissing: ModuleGame,
+	CodeFrameworkMissing: ModuleGame, CodeSavePathExternal: ModuleGame,
 	CodeDiskSpaceLow:     ModuleApp, CodeBackupFailed: ModuleApp,
 }
 

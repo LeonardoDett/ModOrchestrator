@@ -35,6 +35,9 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | Plugins (inventário) | plugins | **cálculo** | não (cache de cabeçalho em `<dataDir>/cache/`, chave caminho + tamanho + data, descartável, D088) | vencedores do desejado + base + não gerenciados | mudança de mods/profile, deploy, scan |
 | PluginState, LoadOrder desejada, IndexLock | plugins | `state.db`, seção `plugins` do perfil (D133) | sim | — | usuário, sort |
 | PluginRule, PluginGroup | plugins | `state.db` | sim | — | usuário, provedores |
+| Saves próprios do perfil | saves | `state.db`, `Profile.Features.LocalSaves` | sim | — | usuário (D142) |
+| Chave de settings do jogo gravada pelo app (pasta de saves) | saves | arquivo do jogo (`SkyrimCustom.ini` no Skyrim); evidência (original, escrito, pendente) em `applied_game_settings` | no jogo | — | deploy, purge, "Saves próprios", ferramentas externas (D142) |
+| Saves e cabeçalhos | saves | **observação** da pasta de saves do perfil (cache em memória por caminho + tamanho + data) | não | arquivos `.ess` | qualquer gravação do jogo (D142) |
 | LoadOrder aplicada | plugins | arquivo do jogo (`plugins.txt`); evidência (hash, hash pendente, ordem anterior) em `applied_load_orders` | no jogo | — | deploy, `apply_load_order`, ferramentas externas (D088) |
 | Diagnostic | diagnostics | **cálculo** (health checks) | não; supressões sim | fatos atuais | qualquer fato |
 | Supressão de diagnóstico | diagnostics | `state.db` (`diagnostic_suppressions`) | sim | — | usuário |
