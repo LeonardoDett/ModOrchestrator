@@ -274,6 +274,10 @@ export function ImportLoadOrder(arg1, arg2) {
   return window['go']['bridge']['App']['ImportLoadOrder'](arg1, arg2);
 }
 
+export function ImportLootUserlist(arg1, arg2) {
+  return window['go']['bridge']['App']['ImportLootUserlist'](arg1, arg2);
+}
+
 export function ImportOpenFolder(arg1) {
   return window['go']['bridge']['App']['ImportOpenFolder'](arg1);
 }
@@ -352,6 +356,10 @@ export function LoadOrderView(arg1) {
 
 export function LogTail(arg1) {
   return window['go']['bridge']['App']['LogTail'](arg1);
+}
+
+export function LootStatus(arg1) {
+  return window['go']['bridge']['App']['LootStatus'](arg1);
 }
 
 export function ManageGame(arg1) {
@@ -770,6 +778,10 @@ export function SetPluginGroup(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetPluginGroup'](arg1, arg2, arg3);
 }
 
+export function SetPluginRuleDisabled(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetPluginRuleDisabled'](arg1, arg2, arg3);
+}
+
 export function SetPluginsEnabled(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetPluginsEnabled'](arg1, arg2, arg3);
 }
@@ -846,6 +858,10 @@ export function UpdateInstanceLocation(arg1, arg2) {
   return window['go']['bridge']['App']['UpdateInstanceLocation'](arg1, arg2);
 }
 
+export function UpdateLootMasterlist(arg1) {
+  return window['go']['bridge']['App']['UpdateLootMasterlist'](arg1);
+}
+
 export function UpdatePluginGroup(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['UpdatePluginGroup'](arg1, arg2, arg3);
 }
@@ -872,20 +888,4 @@ export function Workarounds() {
 
 export function Workspace() {
   return window['go']['bridge']['App']['Workspace']();
-}
-
-export function ImportLootUserlist(arg1, arg2) {
-  return window['go']['bridge']['App']['ImportLootUserlist'](arg1, arg2);
-}
-
-export function LootStatus(arg1) {
-  return window['go']['bridge']['App']['LootStatus'](arg1);
-}
-
-export function SetPluginRuleDisabled(arg1, arg2, arg3) {
-  return window['go']['bridge']['App']['SetPluginRuleDisabled'](arg1, arg2, arg3);
-}
-
-export function UpdateLootMasterlist(arg1) {
-  return window['go']['bridge']['App']['UpdateLootMasterlist'](arg1);
 }

@@ -138,6 +138,8 @@ export function ImportGameEntry(arg1:string):Promise<string>;
 
 export function ImportLoadOrder(arg1:string,arg2:string):Promise<bridge.SortResultDTO>;
 
+export function ImportLootUserlist(arg1:string,arg2:string):Promise<bridge.ImportResultDTO>;
+
 export function ImportOpenFolder(arg1:string):Promise<Array<bridge.ImportSourceDTO>>;
 
 export function ImportPreview(arg1:string,arg2:bridge.ImportSourceDTO):Promise<bridge.ImportPreviewDTO>;
@@ -177,6 +179,8 @@ export function LoadOrderExplain(arg1:string,arg2:string):Promise<bridge.PluginE
 export function LoadOrderView(arg1:string):Promise<bridge.LoadOrderViewDTO>;
 
 export function LogTail(arg1:bridge.LogFilterDTO):Promise<Array<bridge.LogEntryDTO>>;
+
+export function LootStatus(arg1:string):Promise<bridge.LootStatusDTO>;
 
 export function ManageGame(arg1:bridge.SetupDTO):Promise<bridge.ManageResultDTO>;
 
@@ -386,6 +390,8 @@ export function SetModsEnabled(arg1:string,arg2:Array<string>,arg3:boolean):Prom
 
 export function SetPluginGroup(arg1:string,arg2:Array<string>,arg3:string):Promise<void>;
 
+export function SetPluginRuleDisabled(arg1:string,arg2:string,arg3:boolean):Promise<void>;
+
 export function SetPluginsEnabled(arg1:string,arg2:Array<string>,arg3:boolean):Promise<void>;
 
 export function SetProfileNotes(arg1:string,arg2:string):Promise<void>;
@@ -424,6 +430,8 @@ export function UnsuppressDiagnostic(arg1:string,arg2:string):Promise<void>;
 
 export function UpdateInstanceLocation(arg1:string,arg2:string):Promise<void>;
 
+export function UpdateLootMasterlist(arg1:string):Promise<bridge.LootStatusDTO>;
+
 export function UpdatePluginGroup(arg1:string,arg2:string,arg3:Array<string>):Promise<void>;
 
 export function UpdateSeparator(arg1:string,arg2:bridge.SeparatorDTO):Promise<void>;
@@ -437,11 +445,3 @@ export function VerifyGameSetup(arg1:bridge.SetupDTO):Promise<bridge.Verificatio
 export function Workarounds():Promise<bridge.WorkaroundsDTO>;
 
 export function Workspace():Promise<bridge.WorkspaceDTO>;
-
-export function ImportLootUserlist(arg1:string,arg2:string):Promise<bridge.ImportResultDTO>;
-
-export function LootStatus(arg1:string):Promise<bridge.LootStatusDTO>;
-
-export function SetPluginRuleDisabled(arg1:string,arg2:string,arg3:boolean):Promise<void>;
-
-export function UpdateLootMasterlist(arg1:string):Promise<bridge.LootStatusDTO>;
