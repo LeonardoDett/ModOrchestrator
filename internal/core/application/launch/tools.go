@@ -21,12 +21,12 @@ import (
 // (elevation, missing executable). Unlike Play, a blocking problem does not
 // stop a tool: the tool is often what fixes it (xEdit cleaning a plugin).
 const (
-	KindTool                  = operation.Kind("launch_tool")
-	EventToolLaunched         event.Type = "tool.launched"
-	EventToolExited           event.Type = "tool.exited"
-	CodeToolRunning                      = "tool_running"
-	CodeToolStartFailed                  = "tool_start_failed"
-	CodeToolDeployFailed                 = "tool_deploy_failed"
+	KindTool                        = operation.Kind("launch_tool")
+	EventToolLaunched    event.Type = "tool.launched"
+	EventToolExited      event.Type = "tool.exited"
+	CodeToolRunning                 = "tool_running"
+	CodeToolStartFailed             = "tool_start_failed"
+	CodeToolDeployFailed            = "tool_deploy_failed"
 	// HolderTool is the holder of the instance lock while an exclusive
 	// tool runs (instance_busy names it).
 	HolderTool = "tool"
@@ -188,7 +188,7 @@ func (s *Service) follow(instance game.InstanceID, rt *runningTool, proc ports.R
 		}
 		payload := map[string]string{
 			"instance": string(instance), "tool": rt.Tool, "name": rt.Name,
-			"code": strconv.Itoa(exit.Code), "duration": s.Clock.Now().Sub(rt.Started).Round(time.Second).String(),
+			"code": strconv.Itoa(exit.Code), "started": rt.Started.UTC().Format(time.RFC3339), "duration": s.Clock.Now().Sub(rt.Started).Round(time.Second).String(),
 		}
 		if err != nil {
 			payload["error"] = err.Error()

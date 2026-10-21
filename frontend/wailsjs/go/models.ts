@@ -5613,6 +5613,7 @@ export namespace bridge {
 	    deployBefore: boolean;
 	    position: number;
 	    running: boolean;
+	    startedAt: string;
 	    resolvedExe: string;
 	    problem: string;
 	
@@ -5634,6 +5635,7 @@ export namespace bridge {
 	        this.deployBefore = source["deployBefore"];
 	        this.position = source["position"];
 	        this.running = source["running"];
+	        this.startedAt = source["startedAt"];
 	        this.resolvedExe = source["resolvedExe"];
 	        this.problem = source["problem"];
 	    }
@@ -5721,6 +5723,7 @@ export namespace bridge {
 	}
 	export class ToolsDTO {
 	    instance: string;
+	    blocker: string;
 	    tools: ToolDTO[];
 	    suggestions: KnownToolDTO[];
 	    variables: ToolVariableDTO[];
@@ -5732,6 +5735,7 @@ export namespace bridge {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.instance = source["instance"];
+	        this.blocker = source["blocker"];
 	        this.tools = this.convertValues(source["tools"], ToolDTO);
 	        this.suggestions = this.convertValues(source["suggestions"], KnownToolDTO);
 	        this.variables = this.convertValues(source["variables"], ToolVariableDTO);

@@ -6,6 +6,7 @@ import { useI18n } from "../i18n/i18n";
 import { GameSwitcher } from "../features/games/GameSwitcher";
 import { ProfileSelect } from "../features/profiles/ProfileSelect";
 import { NotificationBell } from "../features/diagnostics/NotificationBell";
+import { ToolsMenu } from "../features/tools/ToolsMenu";
 import { PALETTE_KEYS } from "./shortcuts";
 import { AppLogo, WindowControls, dragRegion, noDrag } from "./TitleBar";
 
@@ -60,6 +61,7 @@ export function TopBar({ level, onBackToLibrary, onOpenOperations, onOpenDialog,
               {t("app.offline")}
             </Badge>
           ) : null}
+          {level === "game" ? <ToolsMenu /> : null}
           <span data-slot="notifications">
             <NotificationBell onOpenOperations={onOpenOperations} />
           </span>

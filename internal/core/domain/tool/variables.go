@@ -96,7 +96,7 @@ func Expand(s string, vars map[string]string) (string, error) {
 				v, ok = vars[name]
 			}
 			if !ok {
-				return "", invalid(ReasonVariable, name)
+				return "", invalid(ReasonVariable, "{"+name+"}")
 			}
 			b.WriteString(v)
 			i += end + 1

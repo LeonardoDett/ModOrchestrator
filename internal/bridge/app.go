@@ -75,7 +75,7 @@ func (a *App) Startup(ctx context.Context) {
 // notification created...) and of the plugins module (background sync,
 // load order file monitor) that happen outside operations.
 func isSignal(t event.Type) bool {
-	for _, p := range []string{"diagnostics.", "notification.", "plugins.", "plugin.", "loadorder.", "plugin_rule.", "plugin_group.", "game.", "app_update.", "deployment.external_changes_detected"} {
+	for _, p := range []string{"diagnostics.", "notification.", "plugins.", "plugin.", "loadorder.", "plugin_rule.", "plugin_group.", "game.", "tool.", "app_update.", "deployment.external_changes_detected"} {
 		if strings.HasPrefix(string(t), p) {
 			return true
 		}

@@ -18,6 +18,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"time"
 
 	"modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/games"
@@ -171,6 +172,8 @@ func (s *Service) Supported(ctx context.Context, instance game.InstanceID) bool 
 type Entry struct {
 	Tool    tool.Tool
 	Running bool
+	// Started is when the running tool started (zero when it does not run).
+	Started time.Time
 	// Exe is the executable with the variables expanded ("" when they do
 	// not expand any more, e.g. a target was removed).
 	Exe string
@@ -196,7 +199,10 @@ type Variable struct {
 
 // View is the Tools screen of an instance.
 type View struct {
-	Instance    game.InstanceID
+	Instance game.InstanceID
+	// Blocker is the name of the exclusive tool that runs now: while it
+	// runs, the others cannot start (the instance is busy).
+	Blocker     string
 	Tools       []Entry
 	Suggestions []Suggestion
 	Variables   []Variable
@@ -214,14 +220,18 @@ func (s *Service) List(ctx context.Context, instance game.InstanceID) (View, err
 		return View{}, err
 	}
 	tool.Sort(list)
-	running := map[string]bool{}
-	for _, r := range s.Launch.RunningTools(instance) {
-		running[r.Tool] = true
-	}
+	running := map[string]launch.RunningTool{}
 	v := View{Instance: instance}
+	for _, r := range s.Launch.RunningTools(instance) {
+		running[r.Tool] = r
+		if r.Exclusive && v.Blocker == "" {
+			v.Blocker = r.Name
+		}
+	}
 	registered := map[string]bool{}
 	for _, t := range list {
-		e := Entry{Tool: t, Running: running[string(t.ID)]}
+		r, on := running[string(t.ID)]
+		e := Entry{Tool: t, Running: on, Started: r.Started}
 		if t.Known != "" {
 			registered[t.Known] = true
 		}

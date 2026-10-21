@@ -34,7 +34,8 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | `about_dialog` | ADOPT | ✓ | `shell/HelpDialogs.tsx` (versão, pasta de dados, versão do schema) | F2, F13 |
 | `test_runner` | ADAPT (HealthChecks) | ✓ | idem `health_check` | F9 |
 | `symlink_activator_elevate`, `move_activator`, `installer_dotnet`, `sticky_mods`, `analytics` | REJECT | — | | |
-| `installer_nested_fomod`, `file_preview`, `ini_prep`, `extension_manager`, `download_management`, `collections`, `instructions_overlay`, `tool_variables_base` | DEFER | — | | |
+| `installer_nested_fomod`, `file_preview`, `ini_prep`, `extension_manager`, `download_management`, `collections`, `instructions_overlay` | DEFER | — | | |
+| `starter_dashlet`, `tool_variables_base` | ADAPT (tela Ferramentas + menu da barra superior, D146) | ✓ | `application/tools`, `launch/tools.go`, `ToolsPage.tsx`, `features/tools` · `integration/tools_test.go`, `Tools.test.tsx` | LV4 |
 | `nexus_integration`, `browse_nexus`, `browser`, `settings_metaserver`, `design_system_dev` | N/A | — | | |
 
 ## 2. Extensões empacotadas

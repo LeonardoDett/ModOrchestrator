@@ -21,6 +21,8 @@ const (
 	ItemDiagnostics WorkspaceItem = "diagnostics"
 	// ItemSaves is the Saves screen (save_games, D142, board JogoSaves).
 	ItemSaves WorkspaceItem = "saves"
+	// ItemTools is the Tools screen (tools, D146, board JogoFerramentas).
+	ItemTools WorkspaceItem = "tools"
 	// ItemInstanceSettings is "Ajustes da instância" (D127, board
 	// JogoAjustesRecursos): the features of the instance, for every game.
 	ItemInstanceSettings WorkspaceItem = "instance_settings"
@@ -35,11 +37,12 @@ var featureScreens = []struct {
 	{game.CapPlugins, ItemPlugins},
 	{game.CapLoadOrder, ItemLoadOrder},
 	{game.CapSaveGames, ItemSaves},
+	{game.CapTools, ItemTools},
 }
 
 // setupScreens are the feature screens of the Setup group, placed after
-// Perfis (board JogoSaves).
-var setupScreens = map[WorkspaceItem]bool{ItemSaves: true}
+// Perfis (boards JogoSaves and JogoFerramentas).
+var setupScreens = map[WorkspaceItem]bool{ItemSaves: true, ItemTools: true}
 
 // FeatureScreen is the screen a feature brings to the game menu, empty when
 // it brings none. Ajustes da instância and Adicionar jogo read it instead of
@@ -104,6 +107,7 @@ func WorkspaceGroups(items []WorkspaceItem) []WorkspaceGroup {
 		ItemConflicts:        GroupContent,
 		ItemProfiles:         GroupSetup,
 		ItemSaves:            GroupSetup,
+		ItemTools:            GroupSetup,
 		ItemDiagnostics:      GroupHealth,
 		ItemInstanceSettings: GroupHealth,
 	}
@@ -208,6 +212,9 @@ const (
 	SectionOverviewPlugins = "overview.plugins"
 	// SectionProfilesPlugins is the plugins figure of a profile card.
 	SectionProfilesPlugins = "profiles.plugins"
+	// SectionTopbarTools is the tools menu of the top bar (D146, board
+	// JogoFerramentasMenu).
+	SectionTopbarTools = "topbar.tools"
 )
 
 // Sections lists the capability-bound sections an instance offers, from
@@ -217,6 +224,9 @@ func Sections(caps game.Capabilities) []string {
 	out := []string{}
 	if caps.Has(game.CapPlugins) {
 		out = append(out, SectionSettingsPlugins, SectionPluginCache, SectionOverviewPlugins, SectionProfilesPlugins)
+	}
+	if caps.Has(game.CapTools) {
+		out = append(out, SectionTopbarTools)
 	}
 	return out
 }

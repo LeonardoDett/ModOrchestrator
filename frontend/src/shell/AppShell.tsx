@@ -19,7 +19,7 @@ import { useAction } from "../features/games/use-action";
 const SIDEBAR_KEY = "mo.sidebar.collapsed";
 
 /** Screens whose title sits on their own header line, next to their numbers and actions (boards). */
-const OWN_HEADER: ReadonlySet<string> = new Set(["mods", "conflicts", "plugins", "load_order", "overview", "instance_settings", "games", "dashboard", "profiles", "saves", "diagnostics", "settings"]);
+const OWN_HEADER: ReadonlySet<string> = new Set(["mods", "conflicts", "plugins", "load_order", "overview", "instance_settings", "games", "dashboard", "profiles", "saves", "tools", "diagnostics", "settings"]);
 
 
 

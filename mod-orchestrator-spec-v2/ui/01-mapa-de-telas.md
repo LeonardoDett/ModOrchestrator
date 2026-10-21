@@ -52,7 +52,7 @@ Como o `frontend/` está hoje. A coluna "Base no Vortex" é histórica (D042, su
 | Global | Downloads | — | V2 (reservada) | — | — | Downloads |
 | Jogo | Collections | — | V2 (reservada) | — | — | Collections |
 | Jogo | Saves | telas/saves.md | V1 (D142) | `save_games` | LV3 | Saves (gamebryo) |
-| Barra de título | Tools hotbar | — | V1.x (reservada) | `tools` | — | Starter / titlebar launcher |
+| Jogo | Ferramentas (e menu da barra superior) | telas/ferramentas.md | V1 (D146) | `tools` | LV4 | Starter / titlebar launcher |
 
 ## Formato de cada documento de tela
 

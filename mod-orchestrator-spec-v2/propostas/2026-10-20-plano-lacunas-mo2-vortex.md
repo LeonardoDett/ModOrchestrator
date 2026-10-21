@@ -45,7 +45,7 @@ As três fases de alta prioridade podem rodar em paralelo (tocam áreas diferent
 
 ### LV4 — Ferramentas externas (M1)
 Capability `tools` (core/15 "Ferramentas"): registro (executável, argumentos com variáveis, pasta de trabalho, ambiente, ícone, exclusivo, deploy antes), ferramentas conhecidas declaradas pelo adapter (xEdit, Wrye Bash, Nemesis/Pandora, BodySlide, DynDOLOD, Creation Kit), lançamento pela barra de título (D045) e scan de saídas ao fechar com oferta de captura (core/09). Prancha necessária.
-- **Backend feito** (2026-10-21, D146): capability `tools`, registro, sugestões do `skyrimse`, lançamento pelo serviço de lançamento, exclusiva/implantar antes e scan ao fechar. Falta a tela Ferramentas e o menu da barra de título, que esperam a prancha aprovada.
+- **Feita** (2026-10-21, D146): capability `tools`, registro, sugestões do `skyrimse`, lançamento pelo serviço de lançamento, exclusiva/implantar antes e scan ao fechar; tela Ferramentas, menu da barra superior e diálogo de fim sobre as pranchas aprovadas (sem coluna de estado, pedido do usuário).
 
 ### LV5 — Conflitos dentro de BSA/BA2 (M2)
 Leitura do índice dos archives (adapter), conflitos archive × archive e archive × solto com a regra "solto vence archive" explicada; enquanto não houver cálculo, o texto da regra no detalhe do mod. Afeta conflitos e deploy só como informação. Conferir prancha de Conflitos.

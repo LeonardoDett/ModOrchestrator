@@ -92,7 +92,7 @@ export function WorkspaceGate({ children }: { children: (instance: string) => Re
   return <Fragment key={ws.data.active.id}>{children(ws.data.active.id)}</Fragment>;
 }
 
-const HOLDERS = ["deploy", "purge", "move_staging", "move_archives", "change_method", "remove", "apply_load_order"] as const;
+const HOLDERS = ["deploy", "purge", "move_staging", "move_archives", "change_method", "remove", "apply_load_order", "tool"] as const;
 
 /**
  * "Ocupado" state (ui/00 §4): which operation holds the active game. The

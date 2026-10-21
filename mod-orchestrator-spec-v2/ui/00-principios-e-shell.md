@@ -85,7 +85,7 @@ Reservado, não renderizado: Downloads (V2).
   | Setup | Perfis | sempre |
   | Saúde | Diagnóstico | sempre |
 
-  Saves (`save_games`) aparece no grupo Setup desde a D142. Reservados, não renderizados: Configurações do jogo (`game_settings`), Ferramentas (`tools`), Descobrir mods, Downloads do jogo, Coleções, Inspetor de assets e itens de extensões.
+  Saves (`save_games`) aparece no grupo Setup desde a D142, e Ferramentas (`tools`) depois dele desde a D146 (com o menu de ferramentas na barra superior, pela seção `topbar.tools`). Reservados, não renderizados: Configurações do jogo (`game_settings`), Descobrir mods, Downloads do jogo, Coleções, Inspetor de assets e itens de extensões.
 - **Selos**: contagem por item, enviada pelo backend (Plugins: erros de plugin; Conflitos: pares a decidir; Diagnóstico: `blocking` + `error`; Mods: em instalação).
 - **Item em atenção**: Conflitos fica em âmbar com selo preenchido quando há pendência. O nível de atenção vem com o item; a UI não o deduz da contagem.
 - **Rodapé**: cartão **"Implantando"** com progresso enquanto há deploy em curso, preso acima do botão **Jogar**. O botão segue core/11 §6 (habilitado; "deploy necessário antes", quando ele mesmo implanta; bloqueado com o diagnóstico na dica) e só existe com `launch` efetiva. O cartão de implantação não depende de `launch`.

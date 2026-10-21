@@ -71,10 +71,10 @@ func TestDiagnosticAreasFollowCapabilities(t *testing.T) {
 // D132: a feature names the screen it brings, so the UI keeps no list of
 // its own; the menu and the features agree.
 func TestFeatureScreensMatchTheMenu(t *testing.T) {
-	if FeatureScreen(game.CapPlugins) != ItemPlugins || FeatureScreen(game.CapLoadOrder) != ItemLoadOrder || FeatureScreen(game.CapSaveGames) != ItemSaves {
+	if FeatureScreen(game.CapPlugins) != ItemPlugins || FeatureScreen(game.CapLoadOrder) != ItemLoadOrder || FeatureScreen(game.CapSaveGames) != ItemSaves || FeatureScreen(game.CapTools) != ItemTools {
 		t.Fatal("plugins and load order bring their screens")
 	}
-	for _, c := range []game.Capability{game.CapLaunch, game.CapInstaller, game.CapTools} {
+	for _, c := range []game.Capability{game.CapLaunch, game.CapInstaller} {
 		if s := FeatureScreen(c); s != "" {
 			t.Fatalf("%s brings no screen, got %q", c, s)
 		}
@@ -90,10 +90,10 @@ func TestFeatureScreensMatchTheMenu(t *testing.T) {
 			t.Fatalf("menu item %s has no feature", it)
 		}
 	}
-	// D142: Saves sits in Setup, after Perfis.
+	// D142, D146: Saves and Tools sit in Setup, after Perfis.
 	groups := WorkspaceGroups(WorkspaceItems(all))
 	for _, g := range groups {
-		if g.ID == GroupSetup && (len(g.Items) != 2 || g.Items[0] != ItemProfiles || g.Items[1] != ItemSaves) {
+		if g.ID == GroupSetup && (len(g.Items) != 3 || g.Items[0] != ItemProfiles || g.Items[1] != ItemSaves || g.Items[2] != ItemTools) {
 			t.Fatalf("setup group: %v", g.Items)
 		}
 	}

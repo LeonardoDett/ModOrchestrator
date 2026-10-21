@@ -34,6 +34,7 @@ type ToolDTO struct {
 	Position     int          `json:"position"`
 	// Running, ResolvedExe and Problem are read-only facts of the entry.
 	Running     bool   `json:"running"`
+	StartedAt   string `json:"startedAt"`
 	ResolvedExe string `json:"resolvedExe"`
 	Problem     string `json:"problem"`
 }
@@ -55,6 +56,7 @@ type ToolVariableDTO struct {
 
 type ToolsDTO struct {
 	Instance    string            `json:"instance"`
+	Blocker     string            `json:"blocker"`
 	Tools       []ToolDTO         `json:"tools"`
 	Suggestions []KnownToolDTO    `json:"suggestions"`
 	Variables   []ToolVariableDTO `json:"variables"`
@@ -81,6 +83,9 @@ func toToolDTO(e tools.Entry) ToolDTO {
 		Icon: t.Icon, Exclusive: t.Exclusive, DeployBefore: t.DeployBefore, Position: t.Position,
 		Running: e.Running, ResolvedExe: e.Exe, Problem: e.Problem,
 	}
+	if e.Running {
+		out.StartedAt = formatTime(e.Started)
+	}
 	for _, v := range t.Env {
 		out.Env = append(out.Env, ToolEnvDTO{Name: v.Name, Value: v.Value})
 	}
@@ -94,7 +99,7 @@ func (a *App) Tools(instance string) (ToolsDTO, error) {
 	if err != nil {
 		return ToolsDTO{}, a.fail("tools", err, map[string]string{"instance": instance})
 	}
-	out := ToolsDTO{Instance: instance, Tools: []ToolDTO{}, Suggestions: []KnownToolDTO{}, Variables: []ToolVariableDTO{}}
+	out := ToolsDTO{Instance: instance, Blocker: v.Blocker, Tools: []ToolDTO{}, Suggestions: []KnownToolDTO{}, Variables: []ToolVariableDTO{}}
 	for _, e := range v.Tools {
 		out.Tools = append(out.Tools, toToolDTO(e))
 	}

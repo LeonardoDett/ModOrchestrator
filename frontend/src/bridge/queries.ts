@@ -203,6 +203,11 @@ export function useSaves(instance: string) {
   return useBackendQuery((b) => b.saves(instance), [instance], { onOperationEvents: true });
 }
 
+// --- Tools (D146): the registry and what runs, read again on tool.* signals. ---
+export function useTools(instance: string) {
+  return useBackendQuery((b) => b.tools(instance), [instance], { onOperationEvents: true });
+}
+
 export function usePluginList(instance: string) {
   return useBackendQuery((b) => b.pluginList(instance), [instance], { onOperationEvents: true });
 }

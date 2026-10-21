@@ -24,7 +24,7 @@ Vortex: `collections`.
 
 ## Ferramentas externas / hotbar
 
-Saiu do futuro: entrou antes da v1 (D140, LV4, D146; core/11 §6). Backend feito: capability `tools` (`ports.ToolSupport`), registro por instância (executável, argumentos com variáveis `{game}`, `{staging}`, `{archives}`, `{profile}`, `{profile_id}`, `{target:<id>}`, pasta de trabalho, ambiente, ícone, exclusivo, implantar antes), ferramentas conhecidas do adapter como sugestão, lançamento pelo serviço de lançamento e scan ao fechar com oferta de captura (core/09). A tela Ferramentas e o menu da barra de título esperam a prancha aprovada (D127). Fica para depois: "fechar/ocultar o app ao iniciar" (MO2), saídas próprias por ferramenta, `.bat`/`.cmd` e lançamento elevado (LV6).
+Saiu do futuro: entrou antes da v1 (D140, LV4, D146; core/11 §6). Backend feito: capability `tools` (`ports.ToolSupport`), registro por instância (executável, argumentos com variáveis `{game}`, `{staging}`, `{archives}`, `{profile}`, `{profile_id}`, `{target:<id>}`, pasta de trabalho, ambiente, ícone, exclusivo, implantar antes), ferramentas conhecidas do adapter como sugestão, lançamento pelo serviço de lançamento e scan ao fechar com oferta de captura (core/09). Tela Ferramentas e menu da barra superior feitos sobre as pranchas aprovadas (`ui/telas/ferramentas.md`). Fica para depois: "fechar/ocultar o app ao iniciar" (MO2), saídas próprias por ferramenta, `.bat`/`.cmd` e lançamento elevado (LV6).
 
 ## Saves
 

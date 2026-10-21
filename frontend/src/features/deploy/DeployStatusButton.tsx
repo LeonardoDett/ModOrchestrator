@@ -1,7 +1,7 @@
 import { Wrench } from "lucide-react";
-import { EyeIcon, FileSearchIcon, RefreshIcon, RocketIcon } from "dettmann-ui/icons";
+import { ClockIcon, EyeIcon, FileSearchIcon, RefreshIcon, RocketIcon } from "dettmann-ui/icons";
 import { Badge, Button, Popover, Progress, Stack, Typography, Icon, Loader } from "dettmann-ui";
-import { useOperations } from "../../bridge/queries";
+import { useOperations, useTools } from "../../bridge/queries";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { useDeploy } from "./DeployContext";
 import { statusLook } from "./deploy-labels";
@@ -52,7 +52,9 @@ export function DeployCard({ collapsed = false }: { collapsed?: boolean }) {
   const { t } = i18n;
   const { status, instance } = useDeploy();
   const running = useRunningDeploy(instance);
+  const toolBusy = status?.busy === "tool";
   if (!status) return null;
+  if (toolBusy) return <ToolInUseCard instance={instance} collapsed={collapsed} />;
   const look = statusLook(status);
   const busy = Boolean(status.busy);
   if (!busy && status.kind === "in_sync" && status.newFiles === 0 && status.externalChanges === 0) return null;
@@ -114,6 +116,30 @@ export function DeployCard({ collapsed = false }: { collapsed?: boolean }) {
       </Popover.Trigger>
       <DeployStatusPanel />
     </Popover.Root>
+  );
+}
+
+/**
+ * An exclusive tool holds the game (D146, board JogoFerramentas): the card
+ * says which one and that changes wait until it closes.
+ */
+function ToolInUseCard({ instance, collapsed }: { instance: string; collapsed: boolean }) {
+  const { t } = useI18n();
+  const tools = useTools(instance);
+  const name = tools.status === "ready" ? tools.data.blocker : "";
+  const text = name ? t("tools.inUse", { name }) : t("busy.band", { operation: t("busy.holder.tool") });
+  if (collapsed) {
+    return (
+      <span role="status" aria-label={text} title={text} data-intent="warning" className="flex size-9 items-center justify-center rounded-control bg-intent-subtle text-intent-text">
+        <ClockIcon size="sm" />
+      </span>
+    );
+  }
+  return (
+    <div role="status" data-intent="warning" className="flex items-start gap-2 rounded-control border border-intent-border bg-intent-subtle p-2.5 text-xs leading-snug text-intent-text">
+      <ClockIcon size="xs" className="mt-px shrink-0" />
+      <span>{text}</span>
+    </div>
   );
 }
 

@@ -228,6 +228,20 @@ export interface Backend {
   deleteSaves(instance: string, names: string[]): Promise<void>;
   enableSaveProviders(instance: string, name: string): Promise<SaveEnableResult>;
   openSavesFolder(instance: string): Promise<void>;
+
+  // Tools (tools, D146, board JogoFerramentas)
+  tools(instance: string): Promise<ToolsView>;
+  saveTool(instance: string, input: ToolInput): Promise<string>;
+  addKnownTool(instance: string, known: string, exe: string): Promise<string>;
+  deleteTool(instance: string, id: string): Promise<void>;
+  moveTool(instance: string, id: string, position: number): Promise<void>;
+  /** Starts a tool; resolves with the launch_tool operation id. */
+  runTool(instance: string, id: string): Promise<string>;
+  /** The icon of a tool as a PNG data URL; "" when it has none. */
+  toolIcon(instance: string, id: string): Promise<string>;
+  /** The executable of a tool; "" when the user cancels. */
+  pickToolExecutable(title: string): Promise<string>;
+  pickToolIcon(title: string): Promise<string>;
   renameProfile(id: string, name: string): Promise<void>;
   setProfileNotes(id: string, notes: string): Promise<void>;
   deleteProfile(id: string): Promise<void>;
@@ -1021,7 +1035,7 @@ export interface MenuBadge {
 }
 
 /** Workspace screens the backend derives from capabilities (core/11 §5). */
-export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "saves" | "diagnostics" | "instance_settings";
+export type WorkspaceItemId = "overview" | "mods" | "plugins" | "load_order" | "conflicts" | "profiles" | "saves" | "tools" | "diagnostics" | "instance_settings";
 
 /** One card of the Library (B14): the figures of a game read without entering it. */
 export interface LibraryGame {
@@ -1966,4 +1980,71 @@ export interface SaveEnableResult {
   mods: SaveMod[];
   plugins: string[];
   absent: string[];
+}
+
+// --- Tools (D146). Running state, problems and the variables come from the
+// backend; the screen rereads on tool.* signals. ---
+
+export interface ToolEnv {
+  name: string;
+  value: string;
+}
+
+export interface ToolEntry {
+  id: string;
+  name: string;
+  /** The adapter's known tool it came from ("" = added by the user). */
+  known: string;
+  exe: string;
+  args: string;
+  workDir: string;
+  env: ToolEnv[];
+  icon: string;
+  exclusive: boolean;
+  deployBefore: boolean;
+  position: number;
+  running: boolean;
+  /** When the running tool started (RFC 3339); "" when it does not run. */
+  startedAt: string;
+  /** The executable with the variables expanded. */
+  resolvedExe: string;
+  /** Why it cannot start now: "", "tool_executable_missing", "tool_invalid". */
+  problem: string;
+}
+
+export interface KnownTool {
+  id: string;
+  name: string;
+  executables: string[];
+  exclusive: boolean;
+  deployBefore: boolean;
+  /** The executable found in the game folder; "" when the user locates it. */
+  found: string;
+}
+
+export interface ToolVariable {
+  name: string;
+  value: string;
+}
+
+export interface ToolsView {
+  instance: string;
+  /** Name of the exclusive tool that runs now (the others cannot start). */
+  blocker: string;
+  tools: ToolEntry[];
+  suggestions: KnownTool[];
+  variables: ToolVariable[];
+}
+
+export interface ToolInput {
+  id: string;
+  name: string;
+  known: string;
+  exe: string;
+  args: string;
+  workDir: string;
+  env: ToolEnv[];
+  icon: string;
+  exclusive: boolean;
+  deployBefore: boolean;
 }
