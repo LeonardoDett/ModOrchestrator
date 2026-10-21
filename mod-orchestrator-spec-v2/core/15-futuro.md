@@ -22,12 +22,9 @@ Vortex: `collections`.
 - Instalar coleção = fila de downloads + imports com opções pré-definidas + regras com `source=collection`.
 - Preparado: `OrderRule.source`, `options` serializável, ModReference fuzzy.
 
-## Ferramentas externas / hotbar (V1.x)
+## Ferramentas externas / hotbar
 
-Vortex: `starter_dashlet`, `titlebar-launcher`, `tool_variables_base`.
-- Registro: nome, executável, argumentos (com variáveis: pasta do jogo, Data, staging, profile), pasta de trabalho, ambiente, ícone, "exclusivo" (bloqueia outras ações enquanto roda), "deploy antes de rodar".
-- Após a ferramenta fechar: scan de external changes nas saídas conhecidas (core/09), oferecendo captura.
-- Preparado: `ProcessLauncher`, barra de título com área do lançador, `toolOutputs()` do adapter, D045.
+Saiu do futuro: entrou antes da v1 (D140, LV4, D146; core/11 §6). Backend feito: capability `tools` (`ports.ToolSupport`), registro por instância (executável, argumentos com variáveis `{game}`, `{staging}`, `{archives}`, `{profile}`, `{profile_id}`, `{target:<id>}`, pasta de trabalho, ambiente, ícone, exclusivo, implantar antes), ferramentas conhecidas do adapter como sugestão, lançamento pelo serviço de lançamento e scan ao fechar com oferta de captura (core/09). A tela Ferramentas e o menu da barra de título esperam a prancha aprovada (D127). Fica para depois: "fechar/ocultar o app ao iniciar" (MO2), saídas próprias por ferramenta, `.bat`/`.cmd` e lançamento elevado (LV6).
 
 ## Saves
 

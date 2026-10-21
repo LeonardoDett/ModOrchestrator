@@ -27,6 +27,7 @@ import (
 	"modorchestrator/internal/core/domain/profile"
 	"modorchestrator/internal/core/domain/rules"
 	"modorchestrator/internal/core/domain/settings"
+	"modorchestrator/internal/core/domain/tool"
 )
 
 // ErrNotFound is returned when the requested entity does not exist.
@@ -199,6 +200,15 @@ type GameSettings interface {
 	SaveKey(ctx context.Context, k *gamesettings.KeyRecord) error
 }
 
+// Tools persists the external tools of an instance (D146), in their order.
+type Tools interface {
+	List(ctx context.Context, instance game.InstanceID) ([]tool.Tool, error)
+	// Save inserts or replaces a tool.
+	Save(ctx context.Context, t tool.Tool) error
+	// Delete removes a tool; ErrNotFound when it does not exist.
+	Delete(ctx context.Context, instance game.InstanceID, id tool.ID) error
+}
+
 // Tx is the set of repositories bound to one transaction, plus the events
 // recorded with it (INV-OPS-01, D064).
 type Tx interface {
@@ -217,6 +227,7 @@ type Tx interface {
 	Notifications() Notifications
 	Presence() Presence
 	GameSettings() GameSettings
+	Tools() Tools
 	// Emit records events stored in the same transaction. Their IDs must be
 	// set; the store assigns sequences.
 	Emit(events ...event.Event)

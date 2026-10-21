@@ -29,6 +29,7 @@ type (
 	RootHints           = inner.RootHints
 	SaveGamesSupport    = inner.SaveGamesSupport
 	TemplateProvider    = inner.TemplateProvider
+	ToolSupport         = inner.ToolSupport
 	DirEntry            = inner.DirEntry
 	FileInfo            = inner.FileInfo
 	RegistryHint        = inner.RegistryHint

@@ -28,6 +28,7 @@ Nota sobre hardlink `modified`: como staging e jogo são o mesmo arquivo, a edi�
 - Sob demanda: "Verificar implantação".
 - `unexpected` só é procurado em pastas que contêm arquivos gerenciados ou pastas declaradas pelo adapter como "saídas conhecidas de ferramentas" (evita varrer o jogo inteiro).
 - Monitor de arquivo de load order enquanto o app está aberto (core/08).
+- Ao fechar uma ferramenta iniciada pelo app (D146): varredura completa, como "Verificar implantação", salvo se uma operação segura a instância (o deploy dela já varre). O resultado vai em `tool.exited` (`changes`, `newFiles`), e a UI oferece a revisão com captura.
 
 ## 4. Decisões por tipo
 

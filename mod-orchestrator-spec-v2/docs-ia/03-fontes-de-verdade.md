@@ -39,6 +39,9 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | Chave de settings do jogo gravada pelo app (pasta de saves) | saves | arquivo do jogo (`SkyrimCustom.ini` no Skyrim); evidência (original, escrito, pendente) em `applied_game_settings` | no jogo | — | deploy, purge, "Saves próprios", ferramentas externas (D142) |
 | Saves e cabeçalhos | saves | **observação** da pasta de saves do perfil (cache em memória por caminho + tamanho + data) | não | arquivos `.ess` | qualquer gravação do jogo (D142) |
 | LoadOrder aplicada | plugins | arquivo do jogo (`plugins.txt`); evidência (hash, hash pendente, ordem anterior) em `applied_load_orders` | no jogo | — | deploy, `apply_load_order`, ferramentas externas (D088) |
+| Ferramentas externas (registro) | tools | `state.db` (`tools`) | sim | — | usuário (D146) |
+| Ferramentas conhecidas (sugestões) | adapters | código do adapter (`KnownTools`) + **cálculo** da detecção na pasta do jogo | não | adapter + filesystem | versão do app, arquivos do jogo |
+| Ferramentas em execução | launch | memória do processo do app | não | processos iniciados pelo app | início/fim da ferramenta; perdido ao fechar o app (D146) |
 | Diagnostic | diagnostics | **cálculo** (health checks) | não; supressões sim | fatos atuais | qualquer fato |
 | Supressão de diagnóstico | diagnostics | `state.db` (`diagnostic_suppressions`) | sim | — | usuário |
 | Presença de diagnóstico (desde quando existe) | diagnostics | `state.db` (`diagnostic_presence`) | sim (estado de entrega, não o diagnóstico) | diagnósticos da última avaliação | cada avaliação (D082) |

@@ -17,13 +17,10 @@ func TestDefinitionIsValidAndDeclaresCapabilities(t *testing.T) {
 	if err := def.Validate(); err != nil {
 		t.Fatal(err)
 	}
-	for _, c := range []game.Capability{game.CapPlugins, game.CapLoadOrder, game.CapInstaller, game.CapLaunch, game.CapSaveGames} {
+	for _, c := range []game.Capability{game.CapPlugins, game.CapLoadOrder, game.CapInstaller, game.CapLaunch, game.CapSaveGames, game.CapTools} {
 		if !def.Capabilities.Has(c) {
 			t.Errorf("missing capability %s", c)
 		}
-	}
-	if def.Capabilities.Has(game.CapTools) {
-		t.Error("tools is not offered yet (LV4)")
 	}
 	// Methods: the root-like types exclude symlink (core/12 §3).
 	root, _ := def.ModType(ModTypeRoot)

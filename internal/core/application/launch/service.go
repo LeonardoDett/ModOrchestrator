@@ -22,6 +22,7 @@ import (
 	"modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/diagnostics"
 	"modorchestrator/internal/core/application/games"
+	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
 	appsettings "modorchestrator/internal/core/application/settings"
@@ -162,6 +163,12 @@ type Deps struct {
 	Instances   ports.GameInstances
 	FS          ports.FileReader
 	Launcher    ports.ProcessLauncher
+	// Runner starts external tools and follows them to their end; Locks
+	// holds the instance while an exclusive tool runs; Outputs scans the
+	// game after a tool ends (D146).
+	Runner  ports.ProcessRunner
+	Locks   *instancelock.Locks
+	Outputs ToolOutputs
 	Deploy      Deploy
 	Diagnostics Diagnostics
 	Games       Games
@@ -184,6 +191,12 @@ type Service struct {
 	stop    chan struct{}
 	done    chan struct{}
 	wg      sync.WaitGroup
+
+	tools       []*runningTool
+	toolWG      sync.WaitGroup
+	toolsOnce   sync.Once
+	toolsCtx    context.Context
+	toolsCancel context.CancelFunc
 }
 
 // NewService wires the service.
@@ -532,7 +545,8 @@ func (s *Service) StartMonitor(interval time.Duration) {
 	}()
 }
 
-// Close stops the monitor and waits for launches in flight.
+// Close stops the monitor, waits for launches in flight and stops
+// following the tools that run (they keep running).
 func (s *Service) Close() {
 	if s.stop != nil {
 		close(s.stop)
@@ -540,6 +554,7 @@ func (s *Service) Close() {
 		s.stop = nil
 	}
 	s.wg.Wait()
+	s.stopTools()
 }
 
 // Wait waits for launches in flight (tests).

@@ -25,6 +25,7 @@ import (
 	"modorchestrator/internal/core/application/imports"
 	"modorchestrator/internal/core/application/instancelock"
 	"modorchestrator/internal/core/application/launch"
+	"modorchestrator/internal/core/application/tools"
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/loot"
 	"modorchestrator/internal/core/application/operations"
@@ -71,6 +72,8 @@ type Container struct {
 	Plugins *plugins.Service
 	// Saves owns the save folders of the profiles (save_games, D142).
 	Saves *saves.Service
+	// Tools owns the external tools of an instance (tools, D146).
+	Tools *tools.Service
 	// Loot is the LOOT data provider of the plugins module (D143).
 	Loot *loot.Service
 	// Diagnostics gathers health checks, suppressions and notifications;
@@ -447,9 +450,18 @@ func New(ctx context.Context) (c *Container, err error) {
 	backupSvc.OnFailure = func() { _ = diagSvc.RefreshAll(context.Background()) }
 	launchSvc := launch.NewService(launch.Deps{
 		Registry: registry, Instances: instances, FS: fsys, Launcher: system.Launcher{},
+		Runner: system.Runner{}, Locks: locks,
 		Deploy: deploySvc, Diagnostics: diagSvc, Games: gamesSvc, Settings: settingsSvc,
 		Ops: ops, UoW: sqlite.NewUnitOfWork(db), Publisher: bus, IDs: ids, Clock: clock,
 	})
+	// The tools module (tools, D146) starts tools through the launch
+	// service, which scans the game through it when a tool ends.
+	toolsSvc := tools.NewService(tools.Deps{
+		Registry: registry, Instances: instances, Profiles: profiles, Tools: sqlite.NewToolRepository(db),
+		UoW: sqlite.NewUnitOfWork(db), Publisher: bus, FS: fsys, Icons: system.Icons{},
+		Launch: launchSvc, Scanner: deploySvc, Locks: locks, IDs: ids, Clock: clock,
+	})
+	launchSvc.Outputs = toolsSvc
 	historySvc := history.NewService(history.Deps{
 		History:   sqlite.NewHistoryRepository(db),
 		Mods:      sqlite.NewModRepository(db),
@@ -562,6 +574,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		AutoDeploy:         autoDeploy,
 		Plugins:            pluginsSvc,
 		Saves:              savesSvc,
+		Tools:              toolsSvc,
 		Loot:               lootSvc,
 		Diagnostics:        diagSvc,
 		History:            historySvc,

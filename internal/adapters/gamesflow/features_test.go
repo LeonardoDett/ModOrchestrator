@@ -60,7 +60,7 @@ func TestFeaturesOfAnInstanceAreTurnedOnAndOff(t *testing.T) {
 	if f := featureOf(t, list, game.CapExternalChanges); f.Class != game.ClassBase || !f.Enabled || !f.Effective {
 		t.Errorf("external changes = %+v", f)
 	}
-	if f := featureOf(t, list, game.CapTools); f.Status != games.FeatureNotApplicable || f.Enabled || f.Effective {
+	if f := featureOf(t, list, game.CapTools); f.Status != games.FeatureAvailable || !f.Enabled || !f.Effective {
 		t.Errorf("tools = %+v", f)
 	}
 	m, err := e.svc.Details(ctx, id)
@@ -70,7 +70,7 @@ func TestFeaturesOfAnInstanceAreTurnedOnAndOff(t *testing.T) {
 
 	for want, change := range map[string]func() error{
 		games.CodeFeatureLocked:      func() error { return e.svc.SetFeature(ctx, id, game.CapExternalChanges, false) },
-		games.CodeFeatureUnavailable: func() error { return e.svc.SetFeature(ctx, id, game.CapTools, true) },
+		games.CodeFeatureUnavailable: func() error { return e.svc.SetFeature(ctx, id, game.Capability("not_offered"), true) },
 		games.CodeFeatureRequires:    func() error { return e.svc.SetFeature(ctx, id, game.CapLoadOrder, true) },
 	} {
 		if got := code(t, change()); got != want {

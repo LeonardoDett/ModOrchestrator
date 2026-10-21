@@ -2904,6 +2904,28 @@ export namespace bridge {
 	        this.accent = source["accent"];
 	    }
 	}
+	export class KnownToolDTO {
+	    id: string;
+	    name: string;
+	    executables: string[];
+	    exclusive: boolean;
+	    deployBefore: boolean;
+	    found: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new KnownToolDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.executables = source["executables"];
+	        this.exclusive = source["exclusive"];
+	        this.deployBefore = source["deployBefore"];
+	        this.found = source["found"];
+	    }
+	}
 	export class LaunchOptionDTO {
 	    id: string;
 	    exe: string;
@@ -5563,6 +5585,175 @@ export namespace bridge {
 	        this.removed = source["removed"];
 	        this.skipped = source["skipped"];
 	    }
+	}
+	export class ToolEnvDTO {
+	    name: string;
+	    value: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ToolEnvDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.value = source["value"];
+	    }
+	}
+	export class ToolDTO {
+	    id: string;
+	    name: string;
+	    known: string;
+	    exe: string;
+	    args: string;
+	    workDir: string;
+	    env: ToolEnvDTO[];
+	    icon: string;
+	    exclusive: boolean;
+	    deployBefore: boolean;
+	    position: number;
+	    running: boolean;
+	    resolvedExe: string;
+	    problem: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ToolDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.known = source["known"];
+	        this.exe = source["exe"];
+	        this.args = source["args"];
+	        this.workDir = source["workDir"];
+	        this.env = this.convertValues(source["env"], ToolEnvDTO);
+	        this.icon = source["icon"];
+	        this.exclusive = source["exclusive"];
+	        this.deployBefore = source["deployBefore"];
+	        this.position = source["position"];
+	        this.running = source["running"];
+	        this.resolvedExe = source["resolvedExe"];
+	        this.problem = source["problem"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
+	export class ToolInputDTO {
+	    id: string;
+	    name: string;
+	    known: string;
+	    exe: string;
+	    args: string;
+	    workDir: string;
+	    env: ToolEnvDTO[];
+	    icon: string;
+	    exclusive: boolean;
+	    deployBefore: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ToolInputDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.known = source["known"];
+	        this.exe = source["exe"];
+	        this.args = source["args"];
+	        this.workDir = source["workDir"];
+	        this.env = this.convertValues(source["env"], ToolEnvDTO);
+	        this.icon = source["icon"];
+	        this.exclusive = source["exclusive"];
+	        this.deployBefore = source["deployBefore"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ToolVariableDTO {
+	    name: string;
+	    value: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ToolVariableDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.value = source["value"];
+	    }
+	}
+	export class ToolsDTO {
+	    instance: string;
+	    tools: ToolDTO[];
+	    suggestions: KnownToolDTO[];
+	    variables: ToolVariableDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ToolsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.instance = source["instance"];
+	        this.tools = this.convertValues(source["tools"], ToolDTO);
+	        this.suggestions = this.convertValues(source["suggestions"], KnownToolDTO);
+	        this.variables = this.convertValues(source["variables"], ToolVariableDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class TransferOptionsDTO {
 	    order: boolean;

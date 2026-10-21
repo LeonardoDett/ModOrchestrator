@@ -43,6 +43,7 @@ func (t *txRepos) ExternalDecisions() ports.ExternalDecisions {
 func (t *txRepos) Notifications() ports.Notifications { return &NotificationRepository{db: t.q} }
 func (t *txRepos) Presence() ports.Presence           { return &PresenceRepository{db: t.q} }
 func (t *txRepos) GameSettings() ports.GameSettings   { return &GameSettingsRepository{db: t.q} }
+func (t *txRepos) Tools() ports.Tools                 { return &ToolRepository{db: t.q} }
 func (t *txRepos) Emit(events ...event.Event)         { t.events = append(t.events, events...) }
 
 // Do runs fn in a transaction and appends the emitted events to it.

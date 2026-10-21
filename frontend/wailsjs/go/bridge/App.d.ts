@@ -12,6 +12,8 @@ export function AddDependencyRule(arg1:string,arg2:string,arg3:string,arg4:strin
 
 export function AddIncompatibilityRule(arg1:string,arg2:string,arg3:string):Promise<string>;
 
+export function AddKnownTool(arg1:string,arg2:string,arg3:string):Promise<string>;
+
 export function ApplyLoadOrder(arg1:string):Promise<string>;
 
 export function AttentionDiagnostics():Promise<Array<bridge.ProblemsDTO>>;
@@ -79,6 +81,8 @@ export function DeleteSaves(arg1:string,arg2:Array<string>):Promise<void>;
 export function DeleteSeparator(arg1:string,arg2:string):Promise<void>;
 
 export function DeleteTag(arg1:string,arg2:string):Promise<void>;
+
+export function DeleteTool(arg1:string,arg2:string):Promise<void>;
 
 export function Deploy(arg1:string):Promise<string>;
 
@@ -222,6 +226,8 @@ export function MovePlugins(arg1:string,arg2:Array<string>,arg3:number):Promise<
 
 export function MoveStaging(arg1:string,arg2:string):Promise<string>;
 
+export function MoveTool(arg1:string,arg2:string,arg3:number):Promise<void>;
+
 export function Notifications(arg1:number):Promise<Array<bridge.NotificationDTO>>;
 
 export function OpenBackupsFolder():Promise<void>;
@@ -253,6 +259,10 @@ export function PickFolder(arg1:string):Promise<string>;
 export function PickImportFiles(arg1:string,arg2:string):Promise<Array<string>>;
 
 export function PickImportFolder(arg1:string,arg2:string):Promise<Array<string>>;
+
+export function PickToolExecutable(arg1:string):Promise<string>;
+
+export function PickToolIcon(arg1:string):Promise<string>;
 
 export function PluginDetails(arg1:string,arg2:string):Promise<bridge.PluginDetailsDTO>;
 
@@ -344,6 +354,8 @@ export function RuleCycle(arg1:string):Promise<bridge.RuleCycleDTO>;
 
 export function RunHealthChecks(arg1:string):Promise<void>;
 
+export function RunTool(arg1:string,arg2:string):Promise<string>;
+
 export function SaveCategory(arg1:string,arg2:bridge.CategoryDTO):Promise<string>;
 
 export function SaveGameEntryFile(arg1:string,arg2:string,arg3:string):Promise<string>;
@@ -353,6 +365,8 @@ export function SaveModListFile(arg1:string,arg2:string,arg3:string):Promise<str
 export function SaveScreenshot(arg1:string,arg2:string):Promise<string>;
 
 export function SaveTag(arg1:string,arg2:bridge.TagInputDTO):Promise<string>;
+
+export function SaveTool(arg1:string,arg2:bridge.ToolInputDTO):Promise<string>;
 
 export function Saves(arg1:string):Promise<bridge.SavesDTO>;
 
@@ -415,6 +429,10 @@ export function SuppressDiagnostic(arg1:string,arg2:string,arg3:boolean):Promise
 export function Suppressions():Promise<Array<bridge.SuppressionDTO>>;
 
 export function Tags(arg1:string):Promise<Array<bridge.TagDTO>>;
+
+export function ToolIcon(arg1:string,arg2:string):Promise<string>;
+
+export function Tools(arg1:string):Promise<bridge.ToolsDTO>;
 
 export function TransferSaves(arg1:string,arg2:Array<string>,arg3:string,arg4:boolean):Promise<bridge.SaveTransferDTO>;
 

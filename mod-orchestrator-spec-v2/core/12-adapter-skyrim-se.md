@@ -22,7 +22,7 @@ Referências: D031, D040, D041. Vortex: `games/game-skyrimse`, `gamebryo_plugin_
 
 ## 2. Capabilities
 
-`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112), `save_games` (D142). Depois: `game_settings` (LV8).
+`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112), `save_games` (D142), `tools` (D146). Depois: `game_settings` (LV8).
 
 ## 3. Targets e ModTypes
 
@@ -81,6 +81,19 @@ Dicas de root (core/02 §4): pastas `meshes`, `textures`, `scripts`, `interface`
 ## 9. Saídas conhecidas de ferramentas (core/09)
 
 `Data/meshes/actors/character/behaviors`, `Data/meshes/actors/character/animations`, `Data/tools/GenerateFNIS_for_Users`, `Data/Nemesis_Engine`, `Data/CalienteTools/BodySlide/ShapeData` (saídas de build em `Data/meshes`), `Data/TexGen_Output`, `Data/DynDOLOD_Output`, `Data/SKSE/Plugins/*.ini` modificados por MCMs. Arquivos `*.log` na raiz do Data são `unexpected` sugeridos como "Deixar não gerenciado".
+
+Ferramentas conhecidas (`tools`, D146; `KnownTools`), oferecidas como sugestão na tela Ferramentas, todas exclusivas e com "implantar antes" por padrão:
+
+| id | Nome | Executáveis (argumentos) | Onde é procurada (abaixo da raiz) |
+|---|---|---|---|
+| `xedit` | SSEEdit (xEdit) | `SSEEdit64.exe`, `SSEEdit.exe`, `xEdit64.exe` (`-SSE`), `xEdit.exe` (`-SSE`) | — (localizar) |
+| `wrye_bash` | Wrye Bash | `Wrye Bash.exe` | `Mopy` |
+| `nemesis` | Nemesis | `Nemesis Unlimited Behavior Engine.exe` | `Data/Nemesis_Engine` |
+| `pandora` | Pandora Behaviour Engine | `Pandora Behaviour Engine+.exe` | — |
+| `bodyslide` | BodySlide | `BodySlide x64.exe`, `BodySlide.exe` | `Data/CalienteTools/BodySlide` |
+| `texgen` | TexGen | `TexGenx64.exe`, `TexGen.exe` (`-sse`) | — |
+| `dyndolod` | DynDOLOD | `DynDOLODx64.exe`, `DynDOLOD.exe` (`-sse`) | — |
+| `creation_kit` | Creation Kit | `CreationKit.exe` | raiz |
 
 ## 10. V1.x (previsto)
 

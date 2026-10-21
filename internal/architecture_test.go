@@ -65,7 +65,7 @@ var forbidden = map[string][]string{
 var (
 	desiredState = []string{
 		"core/domain/game", "core/domain/mod", "core/domain/profile", "core/domain/rules",
-		"core/domain/override", "core/domain/plugin", "core/domain/settings",
+		"core/domain/override", "core/domain/plugin", "core/domain/settings", "core/domain/tool",
 	}
 	appliedState    = []string{"core/domain/deployment", "core/domain/loadorder", "core/domain/gamesettings"}
 	calculatedState = []string{
@@ -176,6 +176,25 @@ func TestCoreDoesNotImportTheSavesModule(t *testing.T) {
 	checkImports(t, rules)
 }
 
+// D146: the tools module enters through its own service; no other core
+// package imports it (the bootstrap gives the launch service its scan).
+func TestCoreDoesNotImportTheToolsModule(t *testing.T) {
+	banned := []string{module + "internal/core/application/tools"}
+	rules := map[string][]string{}
+	for _, layer := range []string{"core/domain", "core/application"} {
+		entries, err := os.ReadDir(layer)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, e := range entries {
+			if pkg := layer + "/" + e.Name(); e.IsDir() && pkg != "core/application/tools" {
+				rules[pkg] = banned
+			}
+		}
+	}
+	checkImports(t, rules)
+}
+
 func TestStateCategories(t *testing.T) {
 	pkgs := func(groups ...[]string) []string {
 		var out []string
@@ -257,6 +276,8 @@ var gameNames = []string{
 	// File names and extensions of one game family are game facts too
 	// (D112): the adapter declares them.
 	"plugins.txt", "loadorder.txt", ".esp", ".esm", ".esl", ".bsa",
+	// The tools of a game are its facts too (D146).
+	"xedit", "sseedit", "wrye", "nemesis", "pandora", "bodyslide", "dyndolod", "texgen", "creationkit", "creation kit",
 }
 
 func TestNoGameSpecificLiteralsOutsideAdapters(t *testing.T) {

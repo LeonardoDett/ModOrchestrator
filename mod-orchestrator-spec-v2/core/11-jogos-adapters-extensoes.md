@@ -72,8 +72,9 @@ Cada capability servida por código do adapter tem **uma** interface opcional, e
 | `default_categories` | `CategoryProvider` |
 | `running_detection` | `ProcessDeclarer` |
 | `save_games` | `SaveGamesSupport` (D142) |
+| `tools` | `ToolSupport` (D146) |
 
-As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`game_settings`, `tools`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
+As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`game_settings`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
 
 `Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Desde a D113 a mesma consulta traz o nível de suporte, as lojas onde o jogo é procurado e, por recurso, classe, dependências e padrão; o bridge a expõe em `GamesSupport()`.
 
@@ -135,6 +136,8 @@ Como ficou (F3): `Workspace()` devolve a instância ativa, as instâncias para t
 ## 6. Launch (D045)
 
 Botão Play no rodapé do menu do jogo desde a D120 (antes, na barra de título): executa `launch()` do adapter pelo `ProcessLauncher`, após a checagem pré-lançamento (core/04 §9). Enquanto o jogo roda (detecção por processo), deploy/purge ficam bloqueados (`game_running`). Ferramentas adicionais (hotbar) V1.x.
+
+Ferramentas externas (LV4, D146): com a capability `tools`, o serviço de lançamento também inicia as ferramentas que o usuário registrou (`launch_tool`: `check`, `deploy`, `start`), pela porta `ProcessRunner`, que segue a ferramenta e os processos que ela abre (job object no Windows) até o fim. Uma ferramenta com "implantar antes" implanta o que está pendente; diagnóstico bloqueante não impede ferramenta (ela costuma ser a correção). Ferramenta exclusiva segura o lock da instância enquanto roda (`instance_busy`, holder `tool`). Ao fechar, o app roda "Verificar implantação" (core/09 §3) e grava `tool.exited` com o número de alterações e de arquivos novos, que a UI usa para oferecer a captura.
 
 Como ficou (F12, D090): interface opcional `ports.LaunchSupport` (opções de lançamento; Skyrim: SKSE se o loader está na raiz, senão o executável); jogo genérico usa o executável declarado; sem opção, Play fica indisponível com o motivo. Operação `launch` (`check`, `deploy`, `start`) e monitor de processo (`game.running_changed`).
 

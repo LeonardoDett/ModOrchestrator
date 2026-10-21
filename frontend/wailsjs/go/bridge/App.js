@@ -22,6 +22,10 @@ export function AddIncompatibilityRule(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['AddIncompatibilityRule'](arg1, arg2, arg3);
 }
 
+export function AddKnownTool(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['AddKnownTool'](arg1, arg2, arg3);
+}
+
 export function ApplyLoadOrder(arg1) {
   return window['go']['bridge']['App']['ApplyLoadOrder'](arg1);
 }
@@ -156,6 +160,10 @@ export function DeleteSeparator(arg1, arg2) {
 
 export function DeleteTag(arg1, arg2) {
   return window['go']['bridge']['App']['DeleteTag'](arg1, arg2);
+}
+
+export function DeleteTool(arg1, arg2) {
+  return window['go']['bridge']['App']['DeleteTool'](arg1, arg2);
 }
 
 export function Deploy(arg1) {
@@ -442,6 +450,10 @@ export function MoveStaging(arg1, arg2) {
   return window['go']['bridge']['App']['MoveStaging'](arg1, arg2);
 }
 
+export function MoveTool(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['MoveTool'](arg1, arg2, arg3);
+}
+
 export function Notifications(arg1) {
   return window['go']['bridge']['App']['Notifications'](arg1);
 }
@@ -504,6 +516,14 @@ export function PickImportFiles(arg1, arg2) {
 
 export function PickImportFolder(arg1, arg2) {
   return window['go']['bridge']['App']['PickImportFolder'](arg1, arg2);
+}
+
+export function PickToolExecutable(arg1) {
+  return window['go']['bridge']['App']['PickToolExecutable'](arg1);
+}
+
+export function PickToolIcon(arg1) {
+  return window['go']['bridge']['App']['PickToolIcon'](arg1);
 }
 
 export function PluginDetails(arg1, arg2) {
@@ -686,6 +706,10 @@ export function RunHealthChecks(arg1) {
   return window['go']['bridge']['App']['RunHealthChecks'](arg1);
 }
 
+export function RunTool(arg1, arg2) {
+  return window['go']['bridge']['App']['RunTool'](arg1, arg2);
+}
+
 export function SaveCategory(arg1, arg2) {
   return window['go']['bridge']['App']['SaveCategory'](arg1, arg2);
 }
@@ -704,6 +728,10 @@ export function SaveScreenshot(arg1, arg2) {
 
 export function SaveTag(arg1, arg2) {
   return window['go']['bridge']['App']['SaveTag'](arg1, arg2);
+}
+
+export function SaveTool(arg1, arg2) {
+  return window['go']['bridge']['App']['SaveTool'](arg1, arg2);
 }
 
 export function Saves(arg1) {
@@ -828,6 +856,14 @@ export function Suppressions() {
 
 export function Tags(arg1) {
   return window['go']['bridge']['App']['Tags'](arg1);
+}
+
+export function ToolIcon(arg1, arg2) {
+  return window['go']['bridge']['App']['ToolIcon'](arg1, arg2);
+}
+
+export function Tools(arg1) {
+  return window['go']['bridge']['App']['Tools'](arg1);
 }
 
 export function TransferSaves(arg1, arg2, arg3, arg4) {

@@ -8,6 +8,7 @@ import (
 
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/tool"
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
@@ -193,6 +194,51 @@ type LaunchOption struct {
 	Args    []string
 	WorkDir string
 	Default bool
+}
+
+// ProcessSpec is an external tool to start (D146): the executable, the rest
+// of its command line exactly as the user typed it (quotes included), the
+// folder it starts in and the variables added to the app's environment
+// ("NAME=value").
+type ProcessSpec struct {
+	Exe     string
+	Args    string
+	WorkDir string
+	Env     []string
+}
+
+// ProcessExit is how a started tool ended.
+type ProcessExit struct {
+	Code int
+}
+
+// RunningProcess is a started tool. Wait returns when the tool and every
+// process it started have ended, or when ctx ends (then with ctx's error,
+// leaving the tool running).
+type RunningProcess interface {
+	PID() int
+	Wait(ctx context.Context) (ProcessExit, error)
+}
+
+// ProcessRunner starts an external tool and lets the caller follow it to
+// its end (core/15 "Ferramentas externas"). Only executables the user
+// registered are started, never a file of an archive (INV-LIB-04).
+type ProcessRunner interface {
+	Run(ctx context.Context, spec ProcessSpec) (RunningProcess, error)
+}
+
+// ExecutableIcons reads the icon of an executable or icon file as PNG, at
+// about size pixels. ErrNotFound when the file has none.
+type ExecutableIcons interface {
+	Icon(ctx context.Context, path string, size int) ([]byte, error)
+}
+
+// ToolSupport is implemented by adapters with the `tools` capability
+// (D146): the tools the adapter knows for a game, offered as suggestions.
+// The registry of the user's tools is the core's; the adapter only
+// declares.
+type ToolSupport interface {
+	KnownTools(id game.ID) []tool.Known
 }
 
 // LaunchSupport is implemented by adapters with the `launch` capability.
