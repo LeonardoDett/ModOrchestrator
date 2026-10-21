@@ -116,7 +116,8 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | Item | Estado |
 |---|---|
 | Lista, ativar, flags, masters, filtros | ✓* |
-| Sort nativo (LOOT V1.x, D041) | ✓ |
+| Sort nativo (D041) | ✓ |
+| Dados do LOOT: grupos, load-after, mensagens, plugins sujos, userlist (D141) | ✓ |
 | Grupos, regras, lock | ✓ |
 | Sync com `plugins.txt` por triagem (D040) | ✓ |
 | Ativar plugins externos automaticamente | ✓ (`plugins.enableExternallyAdded`) |

@@ -26,7 +26,7 @@ Ativar · Desativar · Definir grupo… · Travar posição / Destravar.
 
 ## 6. Diálogos
 
-- **Regras de plugins** (paridade UserlistEditor): todas as regras da instância, por plugin, com origem.
+- **Regras de plugins** (paridade UserlistEditor): todas as regras da instância, por plugin, com origem (Você, Importada, LOOT). Regra do LOOT tem "Desligar"/"Ligar" em vez de remover (D141). Em Grupos, os grupos do LOOT aparecem numa seção só leitura e as ligações do LOOT como "Também pelo LOOT".
 - **Grupos** (paridade GroupEditor, em lista na V1): grupos, "depois de", plugins atribuídos; recusa de ciclo mostrada inline.
 
 ## 7. Estados

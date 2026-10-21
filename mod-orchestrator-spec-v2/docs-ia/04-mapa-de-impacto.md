@@ -26,7 +26,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Profile (conteúdo, clone, troca) | core/07, core/04, core/08, ui/telas/profiles | INV-ORD-01/02 | Profiles, topbar |
 | Deploy (plano, métodos, journal, manifesto) | core/04, core/09, core/10, core/14, D078/D079 | INV-DEP-*, INV-EXT-01 | topbar, Mods, Overview, Settings › Mods, DLG-14/16/17/18 |
 | External changes / arquivos gerados | core/09, core/04, core/10, core/12 §9 (saídas conhecidas), D080/D081 | INV-EXT-*, INV-DEP-01 | DLG-14/15, topbar, Overview, Diagnostics |
-| Plugins / LoadOrder / sorter | core/08, core/12, core/09 (load_order change) | INV-PLG-*, INV-ORD-05/06 | Plugins, Load Order |
+| Plugins / LoadOrder / sorter / provedor LOOT (D141) | core/08, core/12, core/09 (load_order change) | INV-PLG-*, INV-ORD-05/06 | Plugins, Load Order |
 | HealthCheck / Diagnostic | core/10 e o core do módulo que emite; ação nova = comando em `diagnostics.Commands()` ou lugar em `diagnostics.Places()` + `PLACES` da UI; texto `diag.*` no catálogo i18n; código de um só jogo vai no catálogo do adapter (`ports.CatalogProvider`, D131); D082/D083 | INV-OPS-06 | Diagnostics, Dashboard, Overview, Mods (faixas), topbar, sidebar, sino |
 | Notification (geração, agregação, desktop) | core/10 §2, `ui.desktopNotifications`, D082/D083 | INV-OPS-01 | sino, desktop do Windows |
 | Operation / Event | core/00, core/10, bridge; evento reversível precisa carregar o inverso no payload (D082) | INV-OPS-01/03 | operation center, histórico |

@@ -77,7 +77,7 @@ Aba e chaves do módulo de plugins (`plugins.SettingsContribution`, D135), depoi
 | `plugins.autoSort` | instance | bool | true | V1 |
 | `plugins.enableOnModEnable` | instance | bool | true | V1 |
 | `plugins.enableExternallyAdded` | instance | bool | false | V1 |
-| `plugins.lootProvider` | instance | bool | false | V1.x |
+| `plugins.lootProvider` | instance | bool | true | V1 (D141) |
 
 ## Download (reservada)
 

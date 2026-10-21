@@ -33,6 +33,7 @@ As três fases de alta prioridade podem rodar em paralelo (tocam áreas diferent
 - Escopo: módulo provedor por ponto de contribuição (D133), ligado pela capability `plugins` e pelo setting `plugins.lootProvider` (core/13); o adapter `skyrimse` declara o id do jogo no LOOT. Usa: grupos e `after`/`req`/`inc` como restrições suaves com `source=loot`, mensagens e plugins sujos (ITM/UDR) como diagnósticos, `userlist.yaml` como importação de regras.
 - Tela: Plugins/Load Order já mostram regras e diagnósticos; conferir na prancha se origem "LOOT" e mensagens cabem sem tela nova.
 - Tamanho: grande.
+- **Feito** (2026-10-21, D141): masterlist empacotada + "Atualizar masterlist" no clique; sem tela nova (origem nas regras e seção Dados do LOOT em Configurações › Plugins).
 
 ### LV3 — Saves por perfil (A4)
 - Capability `save_games` (core/07 §6, core/12 §10, core/15 "Saves"): namespace por perfil via `SLocalSavePath=Saves\<perfil>\` no `SkyrimCustom.ini`, trocado no `post` do deploy (core/07 §6); opção "copiar saves" ao clonar perfil.
