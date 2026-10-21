@@ -190,7 +190,8 @@ describe("F13: keyboard and page states", () => {
   });
 
   it("pt-BR uses the glossary term Perfil, never profile (docs-ia/01)", () => {
-    const offenders = Object.entries(ptBR).filter(([, text]) => /\bprofiles?\b/i.test(text));
+    // Placeholders ({profile}) are parameter names shared with en, not text.
+    const offenders = Object.entries(ptBR).filter(([, text]) => /\bprofiles?\b/i.test(text.replace(/\{[^}]*\}/g, "")));
     expect(offenders).toEqual([]);
   });
 });
