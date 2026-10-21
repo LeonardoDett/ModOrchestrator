@@ -833,3 +833,19 @@ export function Workarounds() {
 export function Workspace() {
   return window['go']['bridge']['App']['Workspace']();
 }
+
+export function ImportLootUserlist(arg1, arg2) {
+  return window['go']['bridge']['App']['ImportLootUserlist'](arg1, arg2);
+}
+
+export function LootStatus(arg1) {
+  return window['go']['bridge']['App']['LootStatus'](arg1);
+}
+
+export function SetPluginRuleDisabled(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetPluginRuleDisabled'](arg1, arg2, arg3);
+}
+
+export function UpdateLootMasterlist(arg1) {
+  return window['go']['bridge']['App']['UpdateLootMasterlist'](arg1);
+}

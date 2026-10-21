@@ -11,6 +11,7 @@ import { useDiagnosticAction } from "../diagnostics/use-diagnostic-action";
 import { ErrorAlert } from "../feedback/ErrorAlert";
 import { useAction } from "../games/use-action";
 import { originLabel } from "./plugin-labels";
+import { removable } from "./PluginDialogs";
 
 interface PluginPanelProps {
   instance: string;
@@ -182,8 +183,8 @@ function Body({ instance, p }: { instance: string; p: PluginDetails }) {
         {p.ruleList.map((r) => (
           <div key={r.id} className="flex items-center gap-2">
             <span className="min-w-0 flex-1 truncate font-mono text-xs text-fg">{r.after}</span>
-            <span className="text-xs text-fg-muted">{t(r.orphan ? "plugins.rule.orphan" : r.source === "user" ? "plugins.panel.ruleYours" : "plugins.panel.ruleProvider")}</span>
-            {r.source === "user" ? (
+            <span className="text-xs text-fg-muted">{t(r.orphan ? "plugins.rule.orphan" : r.source === "user" ? "plugins.panel.ruleYours" : r.source === "loot" ? "plugins.panel.ruleLoot" : "plugins.panel.ruleProvider")}</span>
+            {removable(r.source) ? (
               <Button size="icon-sm" emphasis="low" aria-label={t("plugins.rule.remove")} title={t("plugins.rule.remove")} onClick={() => void run(() => backend.removePluginRule(instance, r.id))}>
                 <TrashIcon size="sm" />
               </Button>

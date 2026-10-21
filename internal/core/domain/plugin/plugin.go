@@ -287,14 +287,14 @@ func (r *Rules) AddRule(rule Rule, chk Check) error {
 	return nil
 }
 
-// RemoveRule deletes a user rule; rules from other sources can only be
-// disabled.
+// RemoveRule deletes a rule of the user (or imported, D128); rules from
+// other sources can only be disabled.
 func (r *Rules) RemoveRule(id RuleID) error {
 	i := slices.IndexFunc(r.rules, func(o Rule) bool { return o.ID == id })
 	if i < 0 {
 		return fmt.Errorf("%w: rule %q", ErrNotFound, id)
 	}
-	if r.rules[i].Source != rules.SourceUser {
+	if !r.rules[i].Source.Removable() {
 		return fmt.Errorf("%w: rule %q can only be disabled", ErrInvalid, id)
 	}
 	r.rules = slices.Delete(r.rules, i, i+1)

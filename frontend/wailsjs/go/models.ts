@@ -4326,6 +4326,7 @@ export namespace bridge {
 	    after: string[];
 	    plugins: string[];
 	    default: boolean;
+	    source: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new PluginGroupDTO(source);
@@ -4337,9 +4338,50 @@ export namespace bridge {
 	        this.after = source["after"];
 	        this.plugins = source["plugins"];
 	        this.default = source["default"];
+	        this.source = source["source"];
 	    }
 	}
 	
+	export class LootStatusDTO {
+	    supported: boolean;
+	    enabled: boolean;
+	    source: string;
+	    date: string;
+	    canUpdate: boolean;
+	    userlist: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new LootStatusDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.supported = source["supported"];
+	        this.enabled = source["enabled"];
+	        this.source = source["source"];
+	        this.date = source["date"];
+	        this.canUpdate = source["canUpdate"];
+	        this.userlist = source["userlist"];
+	    }
+	}
+	export class ImportResultDTO {
+	    rules: number;
+	    groups: number;
+	    assignments: number;
+	    skipped: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ImportResultDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.rules = source["rules"];
+	        this.groups = source["groups"];
+	        this.assignments = source["assignments"];
+	        this.skipped = source["skipped"];
+	    }
+	}
 	export class PluginListDTO {
 	    rows: PluginRowDTO[];
 	    limits: PluginLimitDTO[];
