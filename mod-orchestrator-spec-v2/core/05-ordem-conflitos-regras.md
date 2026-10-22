@@ -65,7 +65,7 @@ Toda mudança de ordem gera Snapshot automático se mover mais de 20 itens (sett
 ### 5.1 Cálculo (INV-CON-04, derivado)
 Para o profile em questão:
 1. Providers de cada Location = mods **habilitados** cuja Installation fornece a Location, menos FileExclusions.
-2. Conflito = Location com ≥ 2 providers.
+2. Conflito = Location com ≥ 2 providers. Mods de um ModType com pasta por mod (D144) têm Locations sob a própria pasta e não disputam entre si.
 3. Vencedor (INV-CON-01): FileOverride válido (mod habilitado e provider) › maior prioridade.
 4. Resolução: `override` se veio de override; senão `rule` se existe OrderRule direta ou transitiva entre o vencedor e cada perdedor; senão `order`.
 5. Redundante: todos os providers com mesmo tamanho **e** mesmo hash (hash sob demanda, com cache por arquivo da staging). Conflito redundante é mostrado apagado e não conta como "não revisado".

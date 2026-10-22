@@ -14,7 +14,7 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 | `Capability` | — | Algo que o adapter declara suportar (`plugins`, `load_order`, `save_games`...). O core decide comportamento por capability, nunca por identidade de jogo. |
 | `DeploymentTarget` (`Target`) | Pasta de destino | Pasta da instância onde arquivos são implantados, identificada por `TargetID` (`data`, `root`...). |
 | `Location` | Caminho | `Target` + caminho relativo normalizado (sem diferenciar maiúsculas). Unidade de footprint, conflito, manifesto e external change. |
-| `ModType` | Tipo de mod | Categoria técnica que define para qual target e com qual método os arquivos de um mod vão (ex.: `default`→`data`, `root`→raiz do jogo). Declarado pelo adapter. |
+| `ModType` | Tipo de mod | Categoria técnica que define para qual target e com qual método os arquivos de um mod vão (ex.: `default`→`data`, `root`→raiz do jogo). Declarado pelo adapter. O layout do tipo diz se os mods se mesclam no target ou cada um vai para uma pasta própria (`<target>/<id do mod>/`, D144). |
 | `Staging` | Pasta de staging | Pasta da instância onde cada mod instalado vive isolado. Nunca é a pasta do jogo. |
 | `ArchiveStore` | Pasta de arquivos | Pasta da instância onde os archives importados são retidos (D032). |
 | `BackupStore` | — | Pasta da instância (mesmo volume do target) onde arquivos originais substituídos pelo deploy ficam guardados (D034). |

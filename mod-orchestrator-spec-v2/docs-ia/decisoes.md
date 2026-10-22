@@ -1463,6 +1463,22 @@ Alternativas rejeitadas: baixar ao abrir o app ou periodicamente (rede sem pedid
 
 Consequências: core/08 §4, §5, §8 e §13; core/10 §1.1; core/12 §10; core/13; `00-visao-e-escopo.md` (privacidade); `08-paridade-vortex-v1.md`; `ui/telas/settings-extensions.md` e `plugins.md`. Testes: `domain/plugin` (provided), `application/loot` (masterlist, condições, provedor, download, userlist), `adapters/skyrimse` (a cópia empacotada é lida inteira), `integration` (`TestLootDataOrdersAndDiagnoses`), UI em `Plugins.test.tsx`.
 
+## D144 — Pasta por mod no destino: layout por ModType, pasta pelo id do mod
+Status: vigente (2026-10-21; fase LV10 de D140; item M10 do levantamento MO2/Vortex)
+
+1. **Contrato**: `game.ModType` ganha `Layout` (`ModLayout`): `merge` (padrão; o valor vazio também é `merge`) põe os arquivos de todos os mods direto no target, como sempre; `mod_folder` põe os de cada mod em `<target>/<pasta do mod>/...`. `Definition.Validate` recusa layout desconhecido. Não é capability nova: é um campo do ModType, que já é contrato do adapter (core/11 §2); quem não declara fica igual a antes. Nomes no SDK (`ModLayout`, `LayoutMerge`, `LayoutModFolder`), `APIVersion` 1.6. O manifesto de jogo descrito por dados (D116) não ganha o campo nesta fase.
+2. **Nome da pasta**: o id do mod (`mod.Folder`), o mesmo que nomeia a pasta na staging (INV-ID-03). É estável entre reinstalações e renomeações e nunca colide entre mods. Escolha conservadora: o nome exibido muda com o usuário e pode repetir; um nome legível guardado à parte pediria coluna nova e regra de colisão sem um jogo real que exija nome específico (quando um jogo exigir, o archive já traz a pasta, ou entra decisão nova).
+3. **Onde entra**: a Location é calculada **ao gravar a Installation** (`mod.Place`): instalar, reinstalar, importar de outro gerenciador. Trocar o ModType reposiciona os arquivos (`mod.Relocate`: tira a pasta do mod se o caminho começa por ela e aplica o layout do tipo novo). Deploy, purge, deploy incremental (D139) e conflitos não mudam: já trabalham sobre as Locations da Installation; mods em pastas próprias não disputam Locations e não aparecem em pares de conflito. As pastas `<target>/<id>/` são criadas pelo plano e removidas vazias no purge como qualquer pasta do deploy.
+4. **Detecção de conteúdo**: o adapter recebe em `ContentFlags` as Locations sem a pasta do mod (`Installation.ContentFootprint`), isto é, relativas à raiz do mod, qualquer que seja o layout.
+5. **Captura de arquivos gerados** (D046): os arquivos capturados mantêm a Location onde foram achados, com ou sem layout; só a troca de tipo posterior os reposiciona.
+6. **Importação do Vortex**: o mod importado recebe o layout do ModType detectado. O leitor do Vortex não traz o `mergeMods` de cada jogo (é código da extensão do jogo no Vortex, não estado), então não há mapeamento a respeitar: a pasta do mod passa a ser o id do mod novo, não o `installationPath` do Vortex. A implantação do Vortex continua tratada como estrangeira (D035) até o purge dele.
+
+Motivo: jogos como Mount & Blade II, Cyberpunk 2077 ou Subnautica pedem cada mod numa subpasta própria; sem o campo, um adapter só conseguia isso se o archive já trouxesse a pasta. Gravar a Location final na Installation mantém uma só fonte de verdade para deploy, conflitos e manifesto.
+
+Alternativas rejeitadas: aplicar a pasta só no deploy (cada leitor de Location — conflitos, mudanças externas, manifesto, visão de arquivos — teria de repetir a conversão); nome da pasta pelo nome exibido (muda com renomear e pode repetir); capability nova (redundante com o campo do ModType e sem efeito em jogo que não declara).
+
+Consequências: core/11 §2, core/02 §9, core/05 §5.1, core/04 §4; glossário (`ModType`); `04-mapa-de-impacto.md` (ModType). Testes: `domain/game` (layout inválido), `domain/mod` (Place, Unplace, Relocate, ContentFootprint), `integration/mod_folder_test.go` (adapter de teste com `mod_folder`: deploy em pastas próprias sem conflito, reinstalação e renomeação mantêm a pasta, purge devolve o jogo, troca de tipo nos dois sentidos, importação do Vortex; adapter `generic`: mods continuam mesclados e em conflito).
+
 ## D146 — Ferramentas externas: registro por instância, sugestões do adapter, lançamento com scan ao fechar
 Status: vigente no backend (2026-10-21; fase LV4 de D140, item M1 do levantamento; detalha D045, D046 e D112; a tela espera a prancha, D127)
 

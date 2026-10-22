@@ -105,7 +105,7 @@ func (s *Service) RegisterCapture(ctx context.Context, instance game.InstanceID,
 				return err
 			}
 		}
-		m.Content = e.adapter.ContentFlags(e.inst.Game, inst.Footprint())
+		m.Content = e.adapter.ContentFlags(e.inst.Game, inst.ContentFootprint())
 		if err := m.BeginInstall(now); err != nil {
 			return err
 		}

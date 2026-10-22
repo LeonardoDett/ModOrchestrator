@@ -104,7 +104,7 @@ Detectados (sobrescrevíveis pelo usuário, que tem precedência):
 - autor, descrição, site: `info.xml`.
 - ContentFlags: calculado pelo adapter a partir do footprint.
 
-Editáveis: nome, versão, autor, categoria, notas (texto longo), destaque (cor da paleta semântica + ícone, como `mod-highlight`), tags, mod type (Avançado; troca exige confirmação porque muda destinos e pode criar/desfazer conflitos).
+Editáveis: nome, versão, autor, categoria, notas (texto longo), destaque (cor da paleta semântica + ícone, como `mod-highlight`), tags, mod type (Avançado; troca exige confirmação porque muda destinos e pode criar/desfazer conflitos; entre tipos de layout diferente os arquivos entram ou saem da pasta do mod, D144).
 
 ## 10. Categorias e tags
 

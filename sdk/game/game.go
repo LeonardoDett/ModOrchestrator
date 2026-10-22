@@ -19,6 +19,7 @@ type (
 	Instance         = inner.Instance
 	Location         = inner.Location
 	Manifest         = inner.Manifest
+	ModLayout        = inner.ModLayout
 	ModType          = inner.ModType
 	ModTypeID        = inner.ModTypeID
 	RegistryHint     = inner.RegistryHint
@@ -47,6 +48,8 @@ const (
 	CapDefaultCategories = inner.CapDefaultCategories
 	CapRunningDetection  = inner.CapRunningDetection
 	DefaultModType       = inner.DefaultModType
+	LayoutMerge          = inner.LayoutMerge
+	LayoutModFolder      = inner.LayoutModFolder
 	MethodHardlink       = inner.MethodHardlink
 	MethodSymlink        = inner.MethodSymlink
 	MethodCopy           = inner.MethodCopy

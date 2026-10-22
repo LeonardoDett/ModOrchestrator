@@ -224,11 +224,15 @@ func (r *run) commit(ctx context.Context) error {
 			if c := cats[it.src.Category]; c != "" {
 				m.Category = c
 			}
-			in, err := mod.NewInstallation(mod.InstallationID(r.s.IDs.NewID()), m.ID, inst.ID, Installer, nil, filesOf(it, mt.Target), now)
+			files, err := filesOf(it, mt)
 			if err != nil {
 				return err
 			}
-			m.Content = r.env.adapter.ContentFlags(inst.Game, in.Footprint())
+			in, err := mod.NewInstallation(mod.InstallationID(r.s.IDs.NewID()), m.ID, inst.ID, Installer, nil, files, now)
+			if err != nil {
+				return err
+			}
+			m.Content = r.env.adapter.ContentFlags(inst.Game, in.ContentFootprint())
 			if err := m.CompleteInstall(in, now); err != nil {
 				return err
 			}

@@ -91,3 +91,63 @@ func (i *Installation) FileAt(loc game.Location) (File, bool) {
 	}
 	return File{}, false
 }
+
+// ContentFootprint is Footprint with the mod's own folder taken off the
+// paths that start with it (D144): what the mod holds relative to its root,
+// as content detection must see it whatever the layout of its type.
+func (i *Installation) ContentFootprint() []game.Location {
+	out := i.Footprint()
+	for n := range out {
+		out[n].Path = Unplace(i.Mod, out[n].Path)
+	}
+	return out
+}
+
+// Folder is the name of a mod's folder inside the target of a mod type
+// with a folder per mod (D144): its id, like its staging folder
+// (INV-ID-03), so neither a rename nor a reinstall moves it.
+func Folder(id ID) string { return string(id) }
+
+// Place returns where a file at p, relative to the root of mod id, is
+// deployed with mod type t: straight into the target when the type merges,
+// under the mod's folder when each mod has its own (D144).
+func Place(t game.ModType, id ID, p relpath.Path) (game.Location, error) {
+	if !t.PerMod() {
+		return game.Location{Target: t.Target, Path: p}, nil
+	}
+	q, err := relpath.Parse(Folder(id) + "/" + p.String())
+	if err != nil {
+		return game.Location{}, fmt.Errorf("%w: folder of mod %q: %v", ErrInvalid, id, err)
+	}
+	return game.Location{Target: t.Target, Path: q}, nil
+}
+
+// Unplace is the inverse of Place for one path: p without the folder of
+// mod id when it starts with it, p itself otherwise.
+func Unplace(id ID, p relpath.Path) relpath.Path {
+	prefix, s := Folder(id)+"/", p.String()
+	if id == "" || len(s) <= len(prefix) || !strings.EqualFold(s[:len(prefix)], prefix) {
+		return p
+	}
+	q, err := relpath.Parse(s[len(prefix):])
+	if err != nil {
+		return p
+	}
+	return q
+}
+
+// Relocate moves the files of mod id to the locations of mod type t: each
+// keeps its path relative to the mod's root and gets the target and the
+// layout of t (a change of mod type, core/02 §9).
+func Relocate(t game.ModType, id ID, files []File) ([]File, error) {
+	out := make([]File, len(files))
+	for i, f := range files {
+		loc, err := Place(t, id, Unplace(id, f.Dest.Path))
+		if err != nil {
+			return nil, err
+		}
+		f.Dest = loc
+		out[i] = f
+	}
+	return out, nil
+}

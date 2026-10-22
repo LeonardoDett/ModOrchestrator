@@ -340,8 +340,9 @@ func (s *Service) editMod(ctx context.Context, id mod.ID, fn func(*mod.Mod) (map
 }
 
 // SetModType changes the mod type (Advanced). Files do not move in the
-// staging; the installation is recorded again with the new target, so the
-// desired state sees new content (core/02 §9).
+// staging; the installation is recorded again with the new target and the
+// layout of the new type (D144), so the desired state sees new content
+// (core/02 §9).
 func (s *Service) SetModType(ctx context.Context, id mod.ID, typ game.ModTypeID) error {
 	m, err := s.Mods.Get(ctx, id)
 	if err != nil {
@@ -378,17 +379,16 @@ func (s *Service) SetModType(ctx context.Context, id mod.ID, typ game.ModTypeID)
 			if err != nil {
 				return err
 			}
-			files := make([]mod.File, len(prev.Files))
-			for i, f := range prev.Files {
-				f.Dest.Target = mt.Target
-				files[i] = f
+			files, err := mod.Relocate(mt, m.ID, prev.Files)
+			if err != nil {
+				return err
 			}
 			next, err := mod.NewInstallation(mod.InstallationID(s.IDs.NewID()), m.ID, m.Instance, prev.Installer, prev.Options, files, now)
 			if err != nil {
 				return err
 			}
 			m.Installation = next.ID
-			m.Content = e.adapter.ContentFlags(e.inst.Game, next.Footprint())
+			m.Content = e.adapter.ContentFlags(e.inst.Game, next.ContentFootprint())
 			if err := tx.Installations().Save(ctx, next); err != nil {
 				return err
 			}

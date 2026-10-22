@@ -732,7 +732,11 @@ func (p *pipeline) commit(ctx context.Context) error {
 	}
 	files := make([]mod.File, len(p.plan.Files))
 	for i, f := range p.plan.Files {
-		files[i] = mod.File{Source: f.Dest, Dest: game.Location{Target: mt.Target, Path: f.Dest}, Size: f.Size}
+		dest, err := mod.Place(mt, p.m.ID, f.Dest)
+		if err != nil {
+			return fail(CodeInstallerFailed, err, "name", p.originalName)
+		}
+		files[i] = mod.File{Source: f.Dest, Dest: dest, Size: f.Size}
 	}
 	inst, err := mod.NewInstallation(mod.InstallationID(p.s.IDs.NewID()), p.m.ID, p.env.inst.ID, p.plan.Installer, p.plan.Options, files, now)
 	if err != nil {
@@ -770,7 +774,7 @@ func (p *pipeline) commit(ctx context.Context) error {
 			}
 			m.Attributes.Tags = mergeTags(m.Attributes.Tags, p.organize.Tags)
 		}
-		m.Content = p.env.adapter.ContentFlags(p.env.inst.Game, inst.Footprint())
+		m.Content = p.env.adapter.ContentFlags(p.env.inst.Game, inst.ContentFootprint())
 		m.Package = p.plan.Package
 		if err := m.CompleteInstall(inst, now); err != nil {
 			return err

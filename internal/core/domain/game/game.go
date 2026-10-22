@@ -109,7 +109,32 @@ type ModType struct {
 	// highest wins. Detect is empty for types chosen only by the user.
 	Priority int
 	Detect   []DetectRule
+	// Layout says where the files of a mod of this type go inside Target
+	// (D144): merged with every other mod (the default) or each mod in a
+	// folder of its own.
+	Layout ModLayout
 }
+
+// ModLayout is how the mods of one type share their target (D144).
+type ModLayout string
+
+const (
+	// LayoutMerge puts the files of every mod straight into the target, so
+	// mods dispute the same locations. The zero value means merge.
+	LayoutMerge ModLayout = "merge"
+	// LayoutModFolder puts the files of each mod under a folder of its own
+	// (<target>/<mod folder>/...), named after the mod's id: stable across
+	// reinstalls and renames, like the staging folder (INV-ID-03).
+	LayoutModFolder ModLayout = "mod_folder"
+)
+
+// Valid reports whether l is a known layout ("" is merge).
+func (l ModLayout) Valid() bool {
+	return l == "" || l == LayoutMerge || l == LayoutModFolder
+}
+
+// PerMod reports whether each mod of the type has a folder of its own.
+func (t ModType) PerMod() bool { return t.Layout == LayoutModFolder }
 
 // Allows reports whether files of this type may be deployed with m.
 func (t ModType) Allows(m DeploymentMethod) bool {
@@ -206,6 +231,9 @@ func (d Definition) Validate() error {
 	for _, t := range d.ModTypes {
 		if t.ID == "" || !slices.Contains(d.Targets, t.Target) {
 			return fmt.Errorf("%w: mod type %q needs an id and a declared target", ErrInvalid, t.ID)
+		}
+		if !t.Layout.Valid() {
+			return fmt.Errorf("%w: mod type %q has unknown layout %q", ErrInvalid, t.ID, t.Layout)
 		}
 		for _, m := range t.Methods {
 			if !m.Valid() {

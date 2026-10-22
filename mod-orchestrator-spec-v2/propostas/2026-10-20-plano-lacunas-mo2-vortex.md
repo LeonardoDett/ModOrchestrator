@@ -68,6 +68,7 @@ Fecha a pendência D100 / item 3 do trabalho futuro da F14. Passo 0: apresentar 
 
 ### LV10 — Pasta por mod no destino (M10)
 Contrato do adapter: layout por ModType ("mesclar" ou "pasta por mod", com o nome da pasta derivado do mod e estável entre reinstalações). Deploy, conflitos (mods em pastas próprias não disputam) e importação do Vortex. Teste com um adapter de teste; nenhum jogo atual usa.
+- **Feita** (2026-10-21, D144): `ModType.Layout` (`merge`/`mod_folder`), pasta pelo id do mod, Location gravada na Installation; SDK 1.6; sem tela nova.
 
 ## Baixa prioridade
 

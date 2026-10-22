@@ -108,3 +108,24 @@ func TestDefinitionModTypes(t *testing.T) {
 		})
 	}
 }
+
+// D144: the layout of a mod type is merge (also when empty) or mod_folder.
+func TestModTypeLayout(t *testing.T) {
+	d := Definition{ID: "g", Name: "G", Targets: []TargetID{"mods"}, ModTypes: []ModType{
+		{ID: DefaultModType, Target: "mods", Layout: LayoutModFolder},
+		{ID: "loose", Target: "mods"},
+	}}
+	if err := d.Validate(); err != nil {
+		t.Fatal(err)
+	}
+	if mt, _ := d.ModType(DefaultModType); !mt.PerMod() {
+		t.Fatal("mod_folder has a folder per mod")
+	}
+	if mt, _ := d.ModType("loose"); mt.PerMod() {
+		t.Fatal("an empty layout merges")
+	}
+	d.ModTypes[1].Layout = "nested"
+	if err := d.Validate(); !errors.Is(err, ErrInvalid) {
+		t.Fatalf("unknown layout must be refused: %v", err)
+	}
+}

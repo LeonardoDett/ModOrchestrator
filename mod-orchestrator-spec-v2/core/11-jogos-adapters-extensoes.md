@@ -98,6 +98,7 @@ O contrato do adapter é público em `modorchestrator/sdk` (fora de `internal/`,
 - Cada mod tem um ModType (padrão do adapter). Tipo define target e métodos permitidos.
 - Detecção automática no install por regra do adapter (ex.: ENB, SKSE → `root`). O usuário pode trocar em "Avançado" (paridade `ModTypeWidget`).
 - Location = target do tipo + caminho relativo do arquivo no mod.
+- Layout por tipo (D144): `ModType.Layout` é `merge` (padrão: todos os mods no mesmo target, disputando Locations) ou `mod_folder` (cada mod em `<target>/<id do mod>/...`; a pasta é o id, como na staging, e não muda com renomear ou reinstalar). A Location final é gravada na Installation ao instalar, reinstalar ou importar e é refeita ao trocar o tipo; deploy, purge e conflitos não conhecem o layout. `ContentFlags` recebe os caminhos relativos à raiz do mod. Nenhum jogo embutido usa `mod_folder` ainda.
 
 ## 3. Descoberta de jogos
 

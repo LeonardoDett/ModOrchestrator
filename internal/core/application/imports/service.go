@@ -635,12 +635,18 @@ func (s *Service) discard(ctx context.Context, inst game.Instance, ids []mod.ID)
 	return nil
 }
 
-func filesOf(it *item, target game.TargetID) []mod.File {
+// filesOf places the files of an imported mod with the layout of its mod
+// type (D144): under the mod's own folder when the type has one per mod.
+func filesOf(it *item, mt game.ModType) ([]mod.File, error) {
 	out := make([]mod.File, len(it.files))
 	for i, f := range it.files {
-		out[i] = mod.File{Source: f.Path, Dest: game.Location{Target: target, Path: f.Path}, Size: f.Size}
+		dest, err := mod.Place(mt, it.id, f.Path)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = mod.File{Source: f.Path, Dest: dest, Size: f.Size}
 	}
-	return out
+	return out, nil
 }
 
 func paths(it *item) []string {
