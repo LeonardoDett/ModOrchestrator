@@ -172,6 +172,8 @@ type Service struct {
 	// seen is the last observation of each load order file (monitor).
 	seen map[game.InstanceID]fileSeen
 	bg   *background
+	// archives caches the indexes of game archives (D147).
+	archives archiveIndexes
 }
 
 // NewService wires the service.

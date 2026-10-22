@@ -68,6 +68,8 @@ type Deps struct {
 	OrderRules    Rules
 	IDs           operations.IDGenerator
 	Clock         operations.Clock
+	// Archives are the modules that know the game's archives (D147).
+	Archives []ArchiveSource
 }
 
 // Service implements the conflict use cases.

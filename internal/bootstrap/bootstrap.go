@@ -364,6 +364,8 @@ func New(ctx context.Context) (c *Container, err error) {
 		IDs:           ids,
 		Clock:         clock,
 	})
+	// The plugins module knows the archives the game loads (D147).
+	conflictsSvc.Archives = []conflicts.ArchiveSource{pluginsSvc}
 
 	// The saves module (save_games, D142) enters like the plugins module:
 	// by contribution points, plus what it asks the plugins module.

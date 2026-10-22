@@ -89,6 +89,13 @@ Conflitos entre mods desabilitados não são mostrados por padrão, mas a consul
 - "Marcar como revisado" é uma ação explícita por par (ou em lote); também acontece automaticamente quando o usuário cria regra/override naquele par.
 - Diagnóstico `conflicts_unreviewed` (info) com contagem de pares, desligável por setting.
 
+### 5.5 Dentro de archives do jogo (D147)
+- Só com o sub-contrato `ArchiveIndex` da capability `plugins` (core/11 §1). O adapter diz quais archives (BSA, BA2) carregam com os plugins ativos, na ordem em que o jogo os lê, e lê o índice de cada um.
+- Regra fixa do contrato: arquivo solto vence o mesmo caminho dentro de qualquer archive, qualquer que seja a ordem dos mods; entre archives vence o lido depois (o do plugin que carrega depois).
+- Calculado (`domain/gamearchive`, INV-CON-04) a partir dos archives da ordem de carga desejada do perfil ativo e do vencedor solto de cada Location (INV-CON-01). Por mod: archives, não lidos, oponentes (lado deste mod, lado do outro, motivo `loose`/`load_order`, número de caminhos) e totais.
+- Só informa: não cria regra nem override (D004), não entra nos pares a decidir, no indicador do mod, em `mod_fully_overwritten` nem no deploy.
+- Archive cujo índice o adapter não lê fica como "não lido": a tela mostra a regra sem o cálculo.
+
 ## 6. Ciclos
 
 Só podem existir por regras de metadados (D028). Quando existem:

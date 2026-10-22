@@ -21,6 +21,7 @@ Antes de alterar qualquer estado, localize-o nesta tabela. Se um dado **derivado
 | OrderRule, Dependency/IncompatibilityRule | rules | `state.db` | sim | — | ações do usuário, metadados |
 | FileOverride, FileExclusion | conflicts | `state.db` | sim | — | ações do usuário |
 | FileConflict | conflicts | **cálculo** | não (cache opcional, descartável) | Installations + profile + overrides | qualquer mudança nos insumos |
+| Disputas dentro de archives do jogo | conflicts (archives do módulo de plugins) | **cálculo** | não (índice de cada archive em cache por instalação, descartável) | archives da ordem de carga desejada + índices + vencedores soltos | mudança de mods, profile ou ordem de carga (D147) |
 | ConflictReview | conflicts | `state.db` | sim | — | usuário revisa; invalida quando o conjunto de Locations em disputa muda |
 | DesiredState | deployment | **cálculo** | não | profile ativo + conflitos + mod types | qualquer insumo |
 | DeploymentManifest | deployment | `state.db` + marcador no target | sim | — | deploy/purge verificados |

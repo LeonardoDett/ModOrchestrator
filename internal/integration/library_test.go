@@ -198,6 +198,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 	// The plugins module enters through its contribution points (D133).
 	e.prof.Sections = []profilesvc.Section{e.plug}
 	e.lib.FileStates = e.plug
+	e.conf.Archives = []conflictsvc.ArchiveSource{e.plug}
 	// The saves module (D142), wired as the bootstrap wires it.
 	e.saves = savesvc.NewService(savesvc.Deps{
 		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles, Mods: e.mods,

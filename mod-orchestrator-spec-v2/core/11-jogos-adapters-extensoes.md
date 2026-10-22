@@ -64,7 +64,7 @@ Cada capability servida por código do adapter tem **uma** interface opcional, e
 
 | Capability | Interface (`ports`) |
 |---|---|
-| `plugins` | `PluginSupport` (sub-contrato opcional: `PluginArchives`) |
+| `plugins` | `PluginSupport` (sub-contratos opcionais: `PluginArchives`, `ArchiveChecker`, `ArchiveIndex` — índice dos archives e ordem em que carregam, D147) |
 | `load_order` | `LoadOrderSupport` |
 | `launch` | `LaunchSupport` |
 | `adapter_installers` | `InstallerProvider` |

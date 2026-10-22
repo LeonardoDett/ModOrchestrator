@@ -55,6 +55,7 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 
 | Termo | UI | Definição |
 |---|---|---|
+| `GameArchive` | Archive do jogo | Pacote que o jogo lê como pasta (BSA, BA2), fornecido por um mod e carregado por um plugin ativo. Não confundir com `Archive` (o arquivo importado). Disputas dentro dele são só informação (D147). |
 | `FileConflict` | Conflito | Resultado **calculado**: uma Location fornecida por dois ou mais mods habilitados. |
 | `Provider` | Fornecedor | Mod que fornece uma Location. |
 | `Winner` | Vencedor | Provider cujo arquivo é implantado na Location. |

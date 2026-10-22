@@ -315,3 +315,41 @@ func redundantAmong(cand []provided, hashOf func(provided) (string, bool)) (bool
 	}
 	return len(need) == 0, need
 }
+
+// WinnerOf returns a lookup of the mod that deploys a location with the
+// enabled mods of in.Order (INV-CON-01: a valid override, otherwise the
+// enabled provider with the highest priority, exclusions applied). The
+// lookup reads the index: call it while nothing changes the index.
+func (x *Index) WinnerOf(in EvalInput) func(game.Location) (mod.ID, bool) {
+	priority := make(map[mod.ID]int, len(in.Order))
+	for i, s := range in.Order {
+		if s.Enabled {
+			priority[s.Mod] = i
+		}
+	}
+	return func(loc game.Location) (mod.ID, bool) {
+		s := x.byLoc[loc.Key()]
+		if s == nil {
+			return "", false
+		}
+		var best mod.ID
+		found := false
+		for _, p := range s.providers {
+			pr, on := priority[p.mod]
+			if !on || (in.Intent != nil && in.Intent.Excluded(p.mod, loc)) {
+				continue
+			}
+			if !found || pr > priority[best] {
+				best, found = p.mod, true
+			}
+		}
+		if found && in.Intent != nil {
+			if o, ok := in.Intent.Override(loc); ok {
+				if _, on := priority[o.Winner]; on && provides(s, o.Winner) && !in.Intent.Excluded(o.Winner, loc) {
+					best = o.Winner
+				}
+			}
+		}
+		return best, found
+	}
+}
