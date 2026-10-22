@@ -20,6 +20,7 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 | `BackupStore` | — | Pasta da instância (mesmo volume do target) onde arquivos originais substituídos pelo deploy ficam guardados (D034). |
 | `Candidate` | Descoberto | Instalação de um jogo suportado encontrada pela busca (loja, registro ou unidades) e ainda não gerenciada. Calculada, nunca persistida; gerenciar é sempre ação do usuário (D057). |
 | `Marker` | — | Arquivo `.modorchestrator-*` com o `instanceId` dono, que prova a posse de uma pasta do gerenciador (staging, arquivos, backups, deploy). O banco é primário; o marcador é evidência (D058). |
+| `ModMetadataFile` | Metadado do mod | `.modorchestrator-mod.json` na pasta de cada mod na staging: o que define o mod fora do perfil, para reconstruir a biblioteca sem o banco. Evidência, não fonte de verdade (D145). |
 | `Tool` | Ferramenta | Programa externo que o usuário registrou na instância para iniciar pelo app (editor, limpador, gerador), com linha de comando, pasta, ambiente, "exclusiva" e "implantar antes". As que o adapter conhece aparecem como sugestão (D146). |
 | `ForeignDeployment` | Outro gerenciador | Sinal de que outro gerenciador (Vortex, MO2) ou outra instância deste app implantou no jogo. Calculado a cada leitura (D059). |
 

@@ -106,6 +106,10 @@ Detectados (sobrescrevíveis pelo usuário, que tem precedência):
 
 Editáveis: nome, versão, autor, categoria, notas (texto longo), destaque (cor da paleta semântica + ícone, como `mod-highlight`), tags, mod type (Avançado; troca exige confirmação porque muda destinos e pode criar/desfazer conflitos; entre tipos de layout diferente os arquivos entram ou saem da pasta do mod, D144).
 
+## 9a. Metadados junto da staging (D145)
+
+Cada mod instalado tem `<staging>/<ModID>/.modorchestrator-mod.json` com o que o define fora do perfil: nome detectado, atributos, categoria (id, nome, caminho), tipo, origem, archive de origem (id, nome, formato, tamanho, hash, caminho no ArchiveStore), variante, Package, Content e datas, mais `formatVersion`, `modId` e `instanceId`. Ordem, habilitado e regras não entram. O arquivo é regravado (atômico) depois de todo commit que muda um desses dados, inclusive renomear ou mover a categoria; falha ao gravar não desfaz a operação e vira `mod_metadata_stale` com "Regravar metadados". O banco continua a fonte de verdade: o arquivo só é lido para reconstruir a biblioteca a partir da staging (core/14 §5). Nada que lê a Installation (deploy, conflitos, arquivos do mod) o vê; um arquivo de mesmo nome na raiz de um archive é descartado ao instalar.
+
 ## 10. Categorias e tags
 
 Desde a D123: categoria com cor da paleta e ícone, opcionais; tags definidas por instância com cor, renomeadas e excluídas em lote em todos os mods; visão da lista (`mods.view`); arquivos por extensão; resumo numérico do mod. "Instalar todos" e categoria/tags na instalação: D124.

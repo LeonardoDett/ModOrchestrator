@@ -49,13 +49,15 @@ Como ficou (F12, D090): arquivos `state-<UTC>-<tipo>.db` (`auto`, `manual`, `pre
 | Operação interrompida | status `pending/running` na inicialização | vira `interrupted` (D019); dono do tipo aplica sua retomada (core/02 §3, core/04 §5) |
 | Deploy/purge interrompido | journal presente | `deploy_interrupted` bloqueante + Reconciliar |
 | Pastas temporárias órfãs | `.tmp/*`, `*.installing` na staging | removidas na inicialização (pertencem ao gerenciador pelo marcador da staging) |
-| Mod na staging sem registro no banco | pasta com nome de ModID desconhecido | diagnóstico "pasta órfã na staging" com ações: reimportar como mod, apagar, ignorar |
+| Mod na staging sem registro no banco | pasta com nome de ModID desconhecido | diagnóstico `staging_orphan_folders` com ações: recuperar como mods (redescoberta, D145), abrir a staging, ocultar |
 | Mod no banco sem pasta na staging | Installation sem pasta | `staging_file_missing` para o mod inteiro; reinstalar se archive retido |
 | Archive no ArchiveStore sem registro | arquivo desconhecido | listado em "Arquivos não importados" com ação importar/apagar (paridade `reconcileOrphanedArchive`) |
-| Banco corrompido | integrity_check falha | tela de recuperação: restaurar último backup bom; última opção: "começar do zero preservando staging" (mods são redescobertos pelas pastas + marcadores, sem regras/ordem) |
+| Banco corrompido | integrity_check falha | tela de recuperação: restaurar último backup bom; última opção: "começar do zero preservando staging" (ao gerenciar o jogo de novo com a mesma staging, os mods são redescobertos pelas pastas e pelo metadado de cada uma, sem regras/ordem, D145) |
 | Banco perdido com jogo implantado | marcador do target existe, manifesto não | `foreign_deployment` com ação "Adotar" (core/04 §11) |
 
-Como ficou (F14, D100): fechamento anormal detectado pelo marcador `<dataDir>/state.session`; banco danificado, mais novo ou com migration que falhou abre só a tela de recuperação (restaurar backup validado, começar do zero com o banco guardado como `damaged`, abrir pastas, fechar). Redescobrir mods pela staging e "Adotar" uma implantação após banco perdido ainda não existem: hoje o marcador do target gera `foreign_deployment` (bloqueante, nada é apagado).
+Como ficou (F14, D100): fechamento anormal detectado pelo marcador `<dataDir>/state.session`; banco danificado, mais novo ou com migration que falhou abre só a tela de recuperação (restaurar backup validado, começar do zero com o banco guardado como `damaged`, abrir pastas, fechar). "Adotar" uma implantação após banco perdido ainda não existe: o marcador do target gera `foreign_deployment` (bloqueante, nada é apagado).
+
+Redescoberta (D145): cada pasta de mod tem o metadado `.modorchestrator-mod.json` (core/02 §9a). Uma pasta da staging que não é de um mod do banco aparece em `staging_orphan_folders`; "Recuperar mods" cria o mod de novo com o ModID da pasta, o metadado quando ele é válido (senão o ModID como nome e o tipo detectado), a Installation recalculada da pasta, o Content detectado pelo adapter e o archive de volta quando ele ainda está no ArchiveStore. Mods recuperados entram desabilitados no fim da ModOrder de todos os perfis. Depois de "começar do zero", gerenciar o jogo de novo apontando para a staging (e o ArchiveStore) antigos é aceito com a caixa "Usar estas pastas e recuperar os mods delas" (marcador de uma instância que não existe mais, D058 emendada); o BackupStore antigo continua recusado.
 
 ## 6. Critérios de aceite
 

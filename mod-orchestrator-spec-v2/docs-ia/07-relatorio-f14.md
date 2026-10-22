@@ -82,7 +82,7 @@ Com 15 mil arquivos (60 mods): deploy sem mudanças de 10,5 s para 0,2 s, purge 
 
 1. ~~**Deploy incremental com 500 mil arquivos**~~. Resolvido na D139 (2026-10-20): o plano olha só as Locations tocadas e manifesto, conflitos e inventário de plugins deixam de montar texto por Location. Na escala completa, 1 mod a mais ou a menos de 5,6 s para 1,8 s e deploy sem mudanças de 3,3 s para 1,0 s (mesma máquina e rodada; esta rodada mediu tudo mais lento que a de 2026-10-08, e o "antes" é o desta rodada).
 2. ~~**Tamanho dos backups**~~. Resolvido na D138 (2026-10-20): `VACUUM INTO` deixa de copiar as páginas livres; na escala completa o banco de 535 MB vira um backup de 289 MB em 0,9 s, e o pior caso da retenção cai de ~18,7 GB para ~10 GB.
-3. **Redescobrir mods e "Adotar"** depois de perder o banco (core/14 §5–6, core/04 §11): não existem (D100).
+3. **Redescobrir mods e "Adotar"** depois de perder o banco (core/14 §5–6, core/04 §11): a redescoberta foi feita na D145 (2026-10-21: metadado por mod e recuperação das pastas órfãs da staging); "Adotar" a implantação continua pendente (D100).
 4. **Volumes reais**: a máquina tem um único volume; "outro volume" e FAT32 foram simulados no adapter de filesystem (o Windows real recusa o hardlink com `ERROR_NOT_SAME_DEVICE`, reproduzido). Falta rodar uma vez com um segundo disco.
 5. **Import** a 1.049 arquivos/s é dominado pelo antivírus; não há requisito, mas um mod de 50 mil arquivos leva ~50 s.
 

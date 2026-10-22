@@ -18,6 +18,7 @@ Use antes de alterar uma regra, contrato ou entidade. Encontre a linha, leia tod
 | Saves por perfil / chave de settings do jogo | core/07 §3, §4, §7, core/12 §10, D142, `ports.SaveGamesSupport`, `sdk/savegame`, módulo `saves`, `domain/gameini`, `domain/gamesettings` (tabela `applied_game_settings`), diagnóstico `save_path_external`, ui/telas/saves.md | INV-ID-03, INV-OPS-01, INV-FEAT-03 | Saves, Perfis (clonar), Diagnóstico |
 | ModType (inclui layout `merge`/`mod_folder`, D144) | core/11 §2, core/12, core/03, core/04, core/05 §5.1, `mod.Place`/`mod.Relocate` (instalar, reinstalar, importar, trocar tipo), SDK `game.ModLayout` | INV-CON-01, INV-ID-03 | Mods (coluna/inspector) |
 | Modelo de Mod / atributos | core/01, core/02, ui/telas/mods | INV-LIB-01, INV-LIB-05 | Mods |
+| Metadado do mod na staging (`.modorchestrator-mod.json`) / redescoberta | core/02 §9a, core/14 §5, core/10 §1.1, D145, `mod.Metadata` (campos novos do Mod entram no arquivo) | INV-ID-03, INV-LIB-01 | Diagnostics, assistente (DLG-01) |
 | Installation / installers | core/02, core/03, core/15 (downloads) | INV-LIB-02, INV-LIB-04 | Mods, diálogo FOMOD (DLG-06), fixtures `integration/testdata/fomod` |
 | Archive store / retenção | core/02, core/13, core/14 | — | Settings › Mods, Mods |
 | ModOrder / motor de ordenação | core/05, core/07, core/08 (motor compartilhado), core/04 | INV-ORD-* | Mods, Conflicts, Profiles |

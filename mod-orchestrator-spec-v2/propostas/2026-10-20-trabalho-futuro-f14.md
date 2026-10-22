@@ -1,6 +1,6 @@
 # Proposta: trabalho futuro da F14
 
-Status: **proposta** (2026-10-20). Itens 2 (D138) e 1 (D139) feitos; o item 3 aguarda.
+Status: **proposta** (2026-10-20). Itens 2 (D138) e 1 (D139) feitos; o item 3 foi feito como opção B (D145: metadado por mod e redescoberta, sem "Adotar").
 
 Referências: `docs-ia/07-relatorio-f14.md` §6, D100, D101, D102, core/04 §5 e §11, core/14 §3 e §5, `00-visao-e-escopo.md` (requisitos de desempenho).
 

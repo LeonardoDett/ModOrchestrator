@@ -44,6 +44,8 @@ Esta tabela é o catálogo **do core**. Um check que só um jogo tem declara o s
 | `mod_fully_overwritten` | info | — | conflicts | Ver conflitos do mod |
 | `staging_file_missing` / `staging_file_modified` | warning | — | library | Reinstalar / Aceitar |
 | `mod_archive_missing` | info | — | library | Reimportar |
+| `staging_orphan_folders` | warning | — | library | Recuperar mods / Abrir staging (D145) |
+| `mod_metadata_stale` | info | — | library | Regravar metadados (D145) |
 | `installer_required` | warning | — | library | Continuar instalação |
 | `plugin_missing_master` | error | launch (aviso) | plugins | Mostrar fornecedor / Desativar |
 | `plugin_limit_exceeded` | error | launch (aviso) | plugins | Abrir Plugins |

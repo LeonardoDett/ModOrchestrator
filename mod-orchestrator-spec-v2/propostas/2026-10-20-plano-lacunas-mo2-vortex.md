@@ -65,6 +65,7 @@ Capability `game_settings` (core/07 §6, core/12 §10): INIs por perfil trocados
 
 ### LV9 — Metadados por mod junto da staging (M9)
 Fecha a pendência D100 / item 3 do trabalho futuro da F14. Passo 0: apresentar ao usuário o formato (referência: `meta.ini` do MO2) e pedir a decisão; depois gravar o arquivo em toda mudança de metadado e permitir reconstruir a biblioteca a partir da staging.
+- **Feita** (2026-10-21, D145): JSON oculto `.modorchestrator-mod.json` na pasta do mod (escolha do usuário), diagnósticos `staging_orphan_folders` e `mod_metadata_stale`, staging órfã aceita no assistente com a caixa de recuperação; sem "Adotar" e sem tela nova.
 
 ### LV10 — Pasta por mod no destino (M10)
 Contrato do adapter: layout por ModType ("mesclar" ou "pasta por mod", com o nome da pasta derivado do mod e estável entre reinstalações). Deploy, conflitos (mods em pastas próprias não disputam) e importação do Vortex. Teste com um adapter de teste; nenhum jogo atual usa.
