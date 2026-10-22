@@ -1,13 +1,15 @@
 #!/usr/bin/env node
-// Instala as skills da lib (skills/<nome>/) num projeto consumidor, para Claude Code e Cursor.
-// Uso: npm run skills:install -- <caminho-do-projeto>
+// Instala as skills da lib (skills/<nome>/) num projeto consumidor, para Claude Code
+// (.claude/skills) e, com --cursor, também para o Cursor (.cursor/skills).
+// Uso: npm run skills:install -- <caminho-do-projeto> [--cursor]
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const SOURCE = path.join(ROOT, "skills");
-const HOSTS = [".claude", ".cursor"];
+const args = process.argv.slice(2);
+const HOSTS = args.includes("--cursor") ? [".claude", ".cursor"] : [".claude"];
 /** Pastas de versões anteriores da lib, removidas na instalação (só elas). */
 const LEGACY = [path.join(".cursor", "skills", "dettmann-ui")];
 
@@ -16,8 +18,8 @@ function fail(message) {
   process.exit(1);
 }
 
-const arg = process.argv[2];
-if (!arg) fail("informe o projeto de destino: npm run skills:install -- <caminho-do-projeto>");
+const arg = args.find((a) => !a.startsWith("--"));
+if (!arg) fail("informe o projeto de destino: npm run skills:install -- <caminho-do-projeto> [--cursor]");
 const target = path.resolve(arg);
 if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) fail(`destino não existe ou não é pasta: ${target}`);
 

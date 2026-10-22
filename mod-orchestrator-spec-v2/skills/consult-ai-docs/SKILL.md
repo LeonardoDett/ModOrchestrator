@@ -27,6 +27,5 @@ Reduzir o custo de planejamento e impedir decisões contraditórias, lendo **o n
 
 ## Não fazer
 
-- Não ler `_historico/` como autoridade.
 - Não tratar implementação existente como superior aos documentos.
 - Não ler todos os documentos "por garantia": o custo de contexto é real; siga os passos.

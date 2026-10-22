@@ -1,28 +1,28 @@
-# Contribuindo
+# Contributing
 
-Obrigado pelo interesse. O Mod Orchestrator é open source sob a [GPL-3.0-or-later](LICENSE).
+Thanks for your interest. Mod Orchestrator is open source under the [GPL-3.0-or-later](LICENSE).
 
-## Licença das contribuições
+## License of contributions
 
-Ao abrir um PR, você concorda que a contribuição é licenciada sob a mesma licença do projeto (GPL-3.0-or-later). Não há CLA. Só envie código que você escreveu ou que tenha licença compatível com GPL-3.0, com a atribuição original preservada.
+By opening a pull request you agree that your contribution is licensed under the same license as the project (GPL-3.0-or-later). There is no CLA. Only submit code you wrote, or code under a GPL-3.0-compatible license with its original attribution kept.
 
-**Exceção: a `dettmann-ui`.** O que você contribuir nas pastas `dettmann-ui-v1/` e `dettmann-ui-vnext/` é licenciado sob a GPL-3.0-or-later **e também** sob a [licença MIT](https://opensource.org/license/mit), com você como titular do copyright. A `dettmann-ui` é uma biblioteca de UI que o autor do projeto também usa fora do Mod Orchestrator, e a licença MIT nas contribuições permite isso. O Mod Orchestrator continua inteiro sob a GPL-3.0-or-later. Se não quiser licenciar sob MIT, não altere essas pastas no seu PR.
+**Exception: `dettmann-ui`.** What you contribute to the `dettmann-ui-vnext/` folder is licensed under the GPL-3.0-or-later **and also** under the [MIT license](https://opensource.org/license/mit), with you as the copyright holder. `dettmann-ui` is a UI library the project author also uses outside Mod Orchestrator, and the MIT license on contributions allows that. Mod Orchestrator as a whole stays under the GPL-3.0-or-later. If you do not want to license under MIT, do not change that folder in your pull request.
 
-## Compilar e testar
+## Build and test
 
-Pré-requisitos e passo a passo em [README.md › Desenvolvimento](README.md#desenvolvimento). Tudo o que é necessário está no repositório, incluindo a `dettmann-ui` (`dettmann-ui-vnext/`).
+Prerequisites and steps in [README.md › Development](README.md#development). Everything needed is in the repository, including `dettmann-ui` (`dettmann-ui-vnext/`).
 
-Para testar o PR de outra pessoa:
+To test someone else's pull request:
 
 ```bash
-gh pr checkout <número>
+gh pr checkout <number>
 ```
 
-Depois compile a `dettmann-ui` e rode `wails dev` (ou `wails build`), como no README. Um executável compilado na sua máquina não dispara o aviso do SmartScreen; os artefatos baixados do CI de um PR não são assinados e disparam.
+Then build `dettmann-ui` and run `wails dev` (or `wails build`), as in the README. An executable built on your machine does not trigger the SmartScreen warning; artifacts downloaded from a pull request's CI are unsigned and do.
 
-Para não misturar com os seus dados reais, defina `MODORCHESTRATOR_DATA_DIR` para uma pasta de teste antes de rodar.
+To keep your real data apart, set `MODORCHESTRATOR_DATA_DIR` to a test folder before running.
 
-## Antes de abrir o PR
+## Before opening the pull request
 
 ```bash
 go vet ./... && go test ./...
@@ -36,17 +36,18 @@ npm --prefix frontend run typecheck && npm --prefix frontend test
 wails build
 ```
 
-O CI roda as mesmas verificações (exceto `wails build`) em todo PR.
+CI runs the same checks (except `wails build`) on every pull request.
 
-## Regras do projeto
+## Project rules
 
-- A especificação em `mod-orchestrator-spec-v2/` é a autoridade. Comece pelo [protocolo](mod-orchestrator-spec-v2/prompts/00-protocolo.md) e pelo [AGENTS.md](AGENTS.md); valem para pessoas e agentes.
-- Camadas: `internal/core/domain` <- `internal/core/application` <- `internal/infrastructure` / `internal/adapters`. `go test ./internal` falha se a regra for violada.
-- Nenhuma regra de negócio em componentes React; toda UI usa a `dettmann-ui`; todo texto de UI vem do i18n (en e pt-BR).
-- Mudou contrato, regra ou comportamento não previsto na spec: registre a decisão em `mod-orchestrator-spec-v2/docs-ia/decisoes.md` no mesmo PR.
-- Dependência nova precisa ter licença compatível com GPL-3.0 (D076).
-- Workflows do GitHub: não use `pull_request_target` nem dê segredos a jobs que rodam código de PR (D077).
+- The specification in `mod-orchestrator-spec-v2/` is the authority. Start with the [protocol](mod-orchestrator-spec-v2/prompts/00-protocolo.md) and [AGENTS.md](AGENTS.md); they apply to people and agents alike (both are still in Portuguese).
+- Layers: `internal/core/domain` <- `internal/core/application` <- `internal/infrastructure` / `internal/adapters`. `go test ./internal` fails if the rule is broken.
+- Anything that does not hold for every game comes in through an adapter capability, with a test using the `generic` adapter (without the capability). Game facts (names, files, extensions) live only in `internal/adapters` (D112).
+- No business rules in React components; all UI uses `dettmann-ui`; all UI text comes from i18n (en and pt-BR).
+- If you change a contract, rule or behavior the spec does not cover, record the decision in `mod-orchestrator-spec-v2/docs-ia/decisoes.md` in the same pull request.
+- New dependencies need a GPL-3.0-compatible license (D076).
+- GitHub workflows: do not use `pull_request_target` and do not give secrets to jobs that run pull request code (D077).
 
-## Segurança
+## Security
 
-Não abra issue pública para vulnerabilidades. Use o reporte privado de vulnerabilidades do GitHub (aba Security do repositório).
+Do not open a public issue for vulnerabilities. Use GitHub's private vulnerability reporting (the repository's Security tab).

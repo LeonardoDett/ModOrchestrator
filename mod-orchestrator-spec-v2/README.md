@@ -29,7 +29,6 @@ Gerenciador de mods para PC (Windows, Go + Wails + React/dettmann-ui) que entreg
 | `plano-de-publicacao.md` | licença, contribuição, empacotamento, assinatura, canais e atualização (D076, D077) |
 | `prompts/` | protocolo universal e prompt por fase |
 | `skills/` | `consult-ai-docs` (ler/considerar) e `maintain-ai-docs` (criar/manter) |
-| `_historico/` | cópia da v2.0; somente consulta, **não é autoridade** |
 
 ## Índice
 

@@ -17,7 +17,7 @@ invente props nem valores: os tipos são a fonte.
 ## Ênfase (`emphasis`) — tabela de decisão
 
 | Elemento | `emphasis` | Observação |
-| --- | --- | --- |
+|---|---|---|
 | A ação principal da região (Salvar, Criar, Implantar) | `high` | **Uma por região.** Sem `intent` vira `brand`. |
 | Ação secundária, padrão de controles | `medium` (padrão) | Omitir a prop = `medium`. |
 | Terciária, cancelar, ícone de toolbar, ação destrutiva fora do foco | `low` | Ex.: `emphasis="low" intent="danger"` para Excluir. |
@@ -98,7 +98,7 @@ const roxo: ThemeConfig = { id: "roxo", label: "Roxo", brand: "#7c3aed" };
 createTheme(roxo).warnings; // [] esperado; verifique num teste ou no console
 
 <ThemeProvider theme={roxo}>…</ThemeProvider>
-// ou registro selecionável: <ThemeProvider themes={{ roxo }} defaultTheme="orchestrator">
+// ou registro selecionável: <ThemeProvider themes={{ roxo }} defaultTheme="roxo">
 ```
 
 - `brand` é a única semente obrigatória; o motor gera light **e** dark com contraste
@@ -192,7 +192,7 @@ tela já tem ou deixe a prop vazia.
 - Componente genérico paralelo no projeto; props ou valores que os tipos não têm.
 
 | Racionalização | Realidade |
-| --- | --- |
+|---|---|
 | "É só um componente pequeno no projeto" | Duas fontes de verdade; vai para a lib. |
 | "`primary`/`destructive` é o padrão de toda lib" | Aqui é `emphasis` × `intent`. |
 | "Precisa de vida, então `expressive`" | Vida = estados e `responsive`; `expressive` é do 10%. |

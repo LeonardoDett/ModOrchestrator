@@ -128,7 +128,7 @@ Edit every knob, compare light and dark, inspect ramps and contrast, try the mot
 npm run skills:install -- <target-folder>
 ```
 
-which copies them to `<target>/.claude/skills` and `<target>/.cursor/skills`.
+which copies them to `<target>/.claude/skills` (add `--cursor` to also copy them to `<target>/.cursor/skills`).
 
 ## Scripts
 

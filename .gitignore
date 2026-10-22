@@ -14,10 +14,6 @@ dettmann-ui-vnext/node_modules/
 dettmann-ui-vnext/dist/
 dettmann-ui-vnext/coverage/
 dettmann-ui-vnext/*.tsbuildinfo
-dettmann-ui-v1/node_modules/
-dettmann-ui-v1/dist/
-dettmann-ui-v1/coverage/
-dettmann-ui-v1/*.tsbuildinfo
 
 # Local tooling
 .claude/*

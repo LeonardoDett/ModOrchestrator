@@ -69,4 +69,4 @@ The library knows nothing about mods, conflicts, deployment plans, plugins or lo
 
 ## Playground and skills
 
-`npm run playground` is the local Vite app for tuning themes (see README). The three skills in `skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`) are the AI-facing contract; `npm run skills:install -- <target>` copies them to `.claude/skills` and `.cursor/skills` of a project.
+`npm run playground` is the local Vite app for tuning themes (see README). The three skills in `skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`) are the AI-facing contract; `npm run skills:install -- <target>` copies them to `.claude/skills` of a project (and to `.cursor/skills` with `--cursor`).

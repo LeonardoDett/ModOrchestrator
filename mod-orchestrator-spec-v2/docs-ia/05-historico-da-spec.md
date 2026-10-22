@@ -36,4 +36,4 @@ Ver `06-revisao-2026-09-30.md` para os gaps encontrados. Resumo:
 - D120 e D121: dois níveis (app e espaço do jogo) e detalhe do mod em modal.
 - `ui/00` reescrito; `ui/01` ganhou o mapa do design v1; os `ui/telas/*.md` são reescritos fase a fase pelo plano `propostas/2026-10-14-plano-implementacao-redesign.md` (RD0 a RD18).
 
-Cópia integral da v2.0: `_historico/v2.0-original/` (somente consulta; não é autoridade).
+A cópia integral da v2.0 (`_historico/v2.0-original/`) foi removida em 2026-10-22; está no histórico do git.

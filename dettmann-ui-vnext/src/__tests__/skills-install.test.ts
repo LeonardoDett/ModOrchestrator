@@ -50,22 +50,29 @@ afterEach(() => {
 });
 
 describe("skills:install", () => {
-  test("installs skills into .claude and .cursor and removes legacy folder only", () => {
+  test("installs skills into .claude only by default and removes legacy folder only", () => {
     const dir = tempTarget();
     fs.mkdirSync(path.join(dir, ".cursor/skills/dettmann-ui"), { recursive: true });
     fs.mkdirSync(path.join(dir, ".claude/skills/other"), { recursive: true });
-    fs.mkdirSync(path.join(dir, ".cursor/skills/other"), { recursive: true });
     execFileSync("node", [SCRIPT, dir], { cwd: ROOT, stdio: "pipe" });
     expect(fs.existsSync(path.join(dir, ".claude/skills/dettmann-ui-use/SKILL.md"))).toBe(true);
-    expect(fs.existsSync(path.join(dir, ".cursor/skills/dettmann-ui-use/SKILL.md"))).toBe(true);
+    expect(fs.existsSync(path.join(dir, ".cursor/skills/dettmann-ui-use"))).toBe(false);
     expect(fs.existsSync(path.join(dir, ".cursor/skills/dettmann-ui"))).toBe(false);
     expect(fs.existsSync(path.join(dir, ".claude/skills/other"))).toBe(true);
+  });
+
+  test("--cursor also installs into .cursor and keeps other skills there", () => {
+    const dir = tempTarget();
+    fs.mkdirSync(path.join(dir, ".cursor/skills/other"), { recursive: true });
+    execFileSync("node", [SCRIPT, dir, "--cursor"], { cwd: ROOT, stdio: "pipe" });
+    expect(fs.existsSync(path.join(dir, ".claude/skills/dettmann-ui-use/SKILL.md"))).toBe(true);
+    expect(fs.existsSync(path.join(dir, ".cursor/skills/dettmann-ui-use/SKILL.md"))).toBe(true);
     expect(fs.existsSync(path.join(dir, ".cursor/skills/other"))).toBe(true);
   });
 
   test("copies every skill folder with identical content", () => {
     const dir = tempTarget();
-    execFileSync("node", [SCRIPT, dir], { cwd: ROOT, stdio: "pipe" });
+    execFileSync("node", [SCRIPT, dir, "--cursor"], { cwd: ROOT, stdio: "pipe" });
     const names = fs.readdirSync(SKILLS).filter((n) => fs.statSync(path.join(SKILLS, n)).isDirectory());
     expect(names).toContain("dettmann-ui-use");
     for (const name of names) {

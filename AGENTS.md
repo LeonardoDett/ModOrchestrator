@@ -14,7 +14,6 @@ UI (`frontend/` e `dettmann-ui-vnext/`, dettmann-ui v2; D095, D107):
 - `.claude/skills/dettmann-ui-author/SKILL.md` — criar ou alterar componentes e a própria lib.
 - `.claude/skills/dettmann-ui-improve/SKILL.md` — auditoria somente leitura, antes de concluir uma tela.
 
-`dettmann-ui-v1/` não é mais consumida pelo app; fica só como referência.
 
 ## Regras de código
 
