@@ -1,6 +1,6 @@
 # Componentes e padrões (dettmann-ui)
 
-Referências: D016, D022, D043, D119, D121; skills da lib v2 em `.claude/skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`; D095, D107); `dettmann-ui-vnext/docs/component-matrix.md`.
+Referências: D016, D022, D043, D119, D121; skills da lib v2 em `.claude/skills/` (`dettmann-ui-use`, `dettmann-ui-author`, `dettmann-ui-improve`; D095, D107); `dettmann-ui/docs/component-matrix.md`.
 
 ## 1. Regra
 

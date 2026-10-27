@@ -14,7 +14,7 @@ Como o Mod Orchestrator chega ao usuário: licença, contribuição, build, assi
 
 ## Etapa 0 — Base do repositório (feito em 2026-10-01)
 
-- [x] `LICENSE` GPL-3.0 na raiz; `license: GPL-3.0-or-later` em `frontend/` e `dettmann-ui-vnext/` (D076).
+- [x] `LICENSE` GPL-3.0 na raiz; `license: GPL-3.0-or-later` em `frontend/` e `dettmann-ui/` (D076).
 - [x] CI com core **e** frontend (build da `dettmann-ui` + typecheck + testes), `permissions: contents: read`, só `pull_request`.
 - [x] `CONTRIBUTING.md` (licença das contribuições, build, validação, regras da spec).
 - [x] Decisões D076 e D077.

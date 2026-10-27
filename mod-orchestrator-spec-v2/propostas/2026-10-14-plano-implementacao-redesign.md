@@ -11,7 +11,7 @@ Data: 2026-10-14. Convenção: um commit por fase no master, push só a pedido.
 | Redesign das telas | `propostas/redesign-telas-v1-fechamento.md` (telas, B1 a B16, C1 a C18, em aberto); canvas https://claude.ai/artifact/H2LwUCQTWSq7ev4ALRTZrP | `ea603a0`, `fb06cc2`, `6c26fba` |
 | Desacoplamento por jogo e SDK | `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, seção 0 (D112, D114, D118) | `fc358fb` |
 | Lista de jogos com suporte | `propostas/2026-10-13-registro-de-jogos.md`, seção 0 (D113, D115 a D117; R5 e R6 pendentes) | `fa25df2` |
-| Subprojeto de componentes | `dettmann-ui-vnext/docs/plans/2026-10-13-catalog-growth.md` (estado da lib, P1 a P6, como um componente entra) | `9a5b20f` |
+| Subprojeto de componentes | `dettmann-ui/docs/plans/2026-10-13-catalog-growth.md` (removido por D148; está no histórico do git) (estado da lib, P1 a P6, como um componente entra) | `9a5b20f` |
 
 Estado das telas: todas as **desenhadas** estão aprovadas (as quatro primeiras antes, as demais em 2026-10-14 com "pode fazer todas as telas", registrado em `fb06cc2`). Continuam fora as três **reservadas** (Downloads, Inspetor de assets, Extensões de usuários). Cinco pranchas foram desenhadas depois dessa liberação (`6c26fba`) e **aguardam a revisão do Leonardo**: Perfis, Diagnóstico (aba Problemas), painel de Notificações, Mods com os menus Filtros e Mais ações, e Configurações do app (aba Interface). Elas entram na RD17 e não bloqueiam as outras fases. Sem desenho ficam só abas e diálogos secundários (lista na RD17).
 
@@ -20,7 +20,7 @@ Estado das telas: todas as **desenhadas** estão aprovadas (as quatro primeiras 
 1. **Protocolo** (`prompts/00-protocolo.md`): resumo antes de codar (estados e fontes de verdade, invariantes, decisões, fora de escopo, **escopo de jogo**), uma camada por vez, e o fechamento com `go vet ./... && go test ./...`, `npm --prefix frontend run typecheck`, `npm --prefix frontend test` e `wails build` quando tocar UI.
 2. **Escopo de jogo (D112).** Cada fase abaixo traz a linha "Sem a capability": o que acontece no `generic` (nenhum recurso opcional), no Valheim (sem `plugins` nem `load_order`) e numa instância com o recurso desligado (D115). Toda fase tem pelo menos um teste nesse caminho.
 3. **Spec antes da tela.** A fase reescreve o `ui/telas/<tela>.md` a partir do artboard (formato de `ui/01-mapa-de-telas.md`) antes de mexer no `frontend/`. O canvas é a referência visual; o documento da tela é o contrato.
-4. **Lib de baixo para cima.** Componente genérico nasce na `dettmann-ui-vnext` com ficha, testes e playground (`catalog-growth.md` §3). Nenhuma tela começa com componente pela metade. Peça com termo de domínio é composição em `frontend/src/features/`.
+4. **Lib de baixo para cima.** Componente genérico nasce na `dettmann-ui` com ficha, testes e playground (`catalog-growth.md` §3). Nenhuma tela começa com componente pela metade. Peça com termo de domínio é composição em `frontend/src/features/`.
 5. **Aceite de toda tela:** auditoria `dettmann-ui-improve` sem achado P1; orçamento 60/30/10 medido com jogo gerenciado (pendência P1 da lib); passada de micro-interações (pendência P2 da lib); textos em `en` e `pt-BR`; estados de página de `ui/00` §4.
 6. **A UI não decide.** Nenhum `capabilities.includes(...)` novo; o que existe hoje sai na RD4.
 7. **Backend sem tela nova** (RD5 a RD7, RD15) é demonstrado por teste de integração, como foram as fases R1 a R4.
@@ -62,7 +62,7 @@ Registrada em `docs-ia/decisoes.md` com ajustes de redação; vale o texto de l�
 
 ## 4. Componentes da lib que o design pede
 
-**Confirmada e corrigida pela RD1** em `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-components.md`, que vale no lugar desta tabela: C10, C11 e C17 já existem, C6 vira `Indicator variant="chip"`, e entram `StatTile`, `FilterChip`, `SettingRow`, `SwatchPicker`, a paleta categórica e o monograma no `Avatar`. A tabela abaixo fica como registro da classificação inicial. "Seção 1.3" são os componentes da lib que ainda não passaram pelo redesenho e precisam passar antes de uma tela nova usá-los.
+**Confirmada e corrigida pela RD1** em `dettmann-ui/docs/plans/2026-10-14-redesign-components.md` (removido por D148; está no histórico do git), que vale no lugar desta tabela: C10, C11 e C17 já existem, C6 vira `Indicator variant="chip"`, e entram `StatTile`, `FilterChip`, `SettingRow`, `SwatchPicker`, a paleta categórica e o monograma no `Avatar`. A tabela abaixo fica como registro da classificação inicial. "Seção 1.3" são os componentes da lib que ainda não passaram pelo redesenho e precisam passar antes de uma tela nova usá-los.
 
 | # | Componente ou padrão | Hipótese | Lote |
 |---|---|---|---|
@@ -134,10 +134,10 @@ Concluída em 2026-10-14. Além dos entregáveis abaixo, foram atualizados as re
 
 ### RD1. Inventário de componentes por tela e fichas ✅
 
-Concluída em 2026-10-14: `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-components.md`. Achados que valem para as fases seguintes estão na seção 1 dele (categorias com hierarquia no desenho; diferenças do menu do jogo entre pranchas, para a RD4; menu lateral próprio do nível do app).
+Concluída em 2026-10-14: `dettmann-ui/docs/plans/2026-10-14-redesign-components.md` (removido por D148; está no histórico do git). Achados que valem para as fases seguintes estão na seção 1 dele (categorias com hierarquia no desenho; diferenças do menu do jogo entre pranchas, para a RD4; menu lateral próprio do nível do app).
 
 - **Objetivo:** fechar a lista real de componentes antes de escrever qualquer um (passos 1 a 3 de `catalog-growth.md` §4).
-- **Entregáveis:** `dettmann-ui-vnext/docs/plans/2026-10-14-redesign-components.md` com: tabela tela × componente lida do canvas (26 artboards), classificação de cada um (existe; existe e pede prop ou slot; sai da seção 1.3; novo; composição do app), ficha de meia página por componente novo, e os lotes RD2 e RD3 ordenados por nível atômico.
+- **Entregáveis:** `dettmann-ui/docs/plans/2026-10-14-redesign-components.md` (removido por D148; está no histórico do git) com: tabela tela × componente lida do canvas (26 artboards), classificação de cada um (existe; existe e pede prop ou slot; sai da seção 1.3; novo; composição do app), ficha de meia página por componente novo, e os lotes RD2 e RD3 ordenados por nível atômico.
 - **Dependências:** RD0.
 - **Pronto quando:** todo artboard aprovado tem seus componentes classificados; a tabela da seção 4 deste plano está confirmada ou corrigida; cada novo passa nos quatro critérios (genérico, recorrente, sem equivalente, tem nível).
 - **Sem a capability:** componente não conhece capability. A ficha de qualquer um que mostre lista ou contagem inclui o estado vazio, que é o que o `generic` exibe.

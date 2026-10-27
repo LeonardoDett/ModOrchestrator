@@ -6,13 +6,13 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
-    // dettmann-ui is linked from ../dettmann-ui-vnext and has its own
+    // dettmann-ui is linked from ../dettmann-ui and has its own
     // node_modules; force a single copy of React and the icon set.
     dedupe: ["react", "react-dom", "lucide-react"],
   },
   // The linked library's fonts (dettmann-ui/theme.css -> src/styles/fonts)
   // live outside this folder; the dev server only serves allowed roots.
-  server: { fs: { allow: [".", "../dettmann-ui-vnext"] } },
+  server: { fs: { allow: [".", "../dettmann-ui"] } },
   test: {
     environment: "jsdom",
     globals: true,

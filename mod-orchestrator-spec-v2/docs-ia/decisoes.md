@@ -129,7 +129,7 @@ DTOs com tags JSON vivem em `internal/bridge`; o domínio não conhece serializa
 ## D022 — Integração da dettmann-ui
 Status: emendada por D052 (tema final definido por D043)
 
-O frontend depende de `dettmann-ui` via `file:../dettmann-ui-vnext` (pacote local, versionado fora deste repositório). JS e tipos vêm do `dist/` da biblioteca; estilos via `@import "dettmann-ui/theme.css"` processado pelo Tailwind v4 do app (a lib continua dona dos tokens). O Vite deduplica `react`, `react-dom` e `lucide-react` porque o pacote linkado tem `node_modules` próprio. Até a fase de fundação de UI (F2, ver D024) definir o tema do produto, usa-se o tema registrado `forest` em modo dark. Consequência: o frontend não roda em CI enquanto a biblioteca não for publicada/versionada; CI cobre o core Go.
+O frontend depende de `dettmann-ui` via `file:../dettmann-ui-vnext` (hoje `file:../dettmann-ui`, D148; pacote local, versionado fora deste repositório). JS e tipos vêm do `dist/` da biblioteca; estilos via `@import "dettmann-ui/theme.css"` processado pelo Tailwind v4 do app (a lib continua dona dos tokens). O Vite deduplica `react`, `react-dom` e `lucide-react` porque o pacote linkado tem `node_modules` próprio. Até a fase de fundação de UI (F2, ver D024) definir o tema do produto, usa-se o tema registrado `forest` em modo dark. Consequência: o frontend não roda em CI enquanto a biblioteca não for publicada/versionada; CI cobre o core Go.
 
 Pendência conhecida (não é decisão de produto): na versão atual da biblioteca o typecheck falha (tipagem do recipe engine para recipes sem `variants`), o que impede o `tsup` de gerar `.d.ts`. Os tipos são gerados à parte com `tsc --emitDeclarationOnly` (ver README do app). A correção pertence à biblioteca.
 
@@ -341,7 +341,7 @@ Status: vigente
 ## D052 — Spec e dettmann-ui versionadas no repositório do app
 Status: vigente (emenda D022)
 
-A pedido do usuário (pendência P8 da revisão), `mod-orchestrator-spec-v2/` e `dettmann-ui-vnext/` deixaram de ser ignoradas e passam a ser versionadas junto com o app. A saída de build da lib (`node_modules/`, `dist/`, `coverage/`, `*.tsbuildinfo`) continua fora do git: um clone novo precisa rodar `npm install && npm run build` em `dettmann-ui-vnext/` antes do frontend (README do app).
+A pedido do usuário (pendência P8 da revisão), `mod-orchestrator-spec-v2/` e `dettmann-ui/` deixaram de ser ignoradas e passam a ser versionadas junto com o app. A saída de build da lib (`node_modules/`, `dist/`, `coverage/`, `*.tsbuildinfo`) continua fora do git: um clone novo precisa rodar `npm install && npm run build` em `dettmann-ui/` antes do frontend (README do app).
 
 Consequências: a spec ganha histórico de versões; o CI pode compilar a lib e depois o frontend, o que remove a limitação "frontend fora do CI" da D022. `_historico/` da spec também fica versionado, apenas para consulta. A lib continua sendo a mesma do projeto Cayshin: mudanças feitas aqui precisam ser levadas de volta para lá (ou a lib passa a ter um único lugar de origem, decisão futura).
 
@@ -550,7 +550,7 @@ Status: vigente (confirmada pelo usuário em 2026-10-08)
 ## D076 — Licença GPL-3.0-or-later e modelo de contribuição
 Status: vigente (emendada por D096: contribuições à `dettmann-ui`)
 
-Escolhido pelo usuário em 2026-10-01. O projeto é open source sob **GPL-3.0-or-later** (`LICENSE` na raiz), incluindo a `dettmann-ui` (`dettmann-ui-vnext/`), que continua versionada no mesmo repositório (D052). Contribuições entram por PR sob a mesma licença (inbound = outbound, termos do GitHub); não há CLA. O app é gratuito; não existe sistema de chave/ativação.
+Escolhido pelo usuário em 2026-10-01. O projeto é open source sob **GPL-3.0-or-later** (`LICENSE` na raiz), incluindo a `dettmann-ui` (`dettmann-ui/`), que continua versionada no mesmo repositório (D052). Contribuições entram por PR sob a mesma licença (inbound = outbound, termos do GitHub); não há CLA. O app é gratuito; não existe sistema de chave/ativação.
 
 Consequências:
 - Toda dependência nova precisa ser compatível com GPL-3.0 (permissivas e MPL-2.0 são; ver D062). Código copiado de terceiros só com licença compatível e atribuição.
@@ -794,16 +794,16 @@ Status: vigente (confirmada pelo usuário em 2026-10-08)
 ## D095 — Adoção da dettmann-ui v2 (fundação)
 Status: emendada por D107 (itens 2 e 4: o app migrou para a v2)
 
-1. **v2 com ruptura**: sem camada de aliases para tokens, `data-tone` ou `variant`/`tone` do Button. A fundação (motor de tema por sementes, contrato `emphasis × intent`, movimento, orçamento 60/30/10, playground) vive em `dettmann-ui-vnext/`; decisões detalhadas em `dettmann-ui-vnext/docs/decisions.md` (D-011 em diante).
-2. **App congelado em `dettmann-ui-v1`** até o subprojeto 4 (migração do `frontend/`). Até lá, nenhuma tela usa a v2; as tabelas de substituição estão em `dettmann-ui-vnext/docs/migration.md`.
+1. **v2 com ruptura**: sem camada de aliases para tokens, `data-tone` ou `variant`/`tone` do Button. A fundação (motor de tema por sementes, contrato `emphasis × intent`, movimento, orçamento 60/30/10, playground) vive em `dettmann-ui/`; decisões detalhadas em `dettmann-ui/docs/decisions.md` (D-011 em diante).
+2. **App congelado em `dettmann-ui-v1`** até o subprojeto 4 (migração do `frontend/`). Até lá, nenhuma tela usa a v2; as tabelas de substituição estão em `dettmann-ui/docs/migration.md`.
 3. **Quatro subprojetos**: (1) fundação (motor de temas, contrato de ênfase, primitivas; concluída), (2) ícones animados, (3) revisão dos componentes com personalidade e micro-interações, (4) integração no Mod Orchestrator (migração do `frontend/`).
-4. **Skills novas** `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (instaladas em `.claude/skills` e `.cursor/skills` por `npm run skills:install`) valem para o trabalho em `dettmann-ui-vnext/`. O `frontend/` continua com as skills v1 (`theme-first`, `composition`, `component-authoring`, `ui-review`, em `dettmann-ui-v1/.cursor/skills/dettmann-ui/`) até o subprojeto 4, quando as novas as substituem (inclusive os caminhos citados na D016); o `AGENTS.md` roteia por pasta.
+4. **Skills novas** `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (instaladas em `.claude/skills` e `.cursor/skills` por `npm run skills:install`) valem para o trabalho em `dettmann-ui/`. O `frontend/` continua com as skills v1 (`theme-first`, `composition`, `component-authoring`, `ui-review`, em `dettmann-ui-v1/.cursor/skills/dettmann-ui/`) até o subprojeto 4, quando as novas as substituem (inclusive os caminhos citados na D016); o `AGENTS.md` roteia por pasta.
 5. **Escolhas de design do usuário**: forma `balanced` (controle 8, card 12, painel 16 px); movimento `expressive` com intensidade por ênfase (menu responsivo, CTA expressivo); tipografia Plus Jakarta Sans + JetBrains Mono; tema por sementes + botões de personalidade (com `overrides` por papel como válvula de escape); família `secondary` removida (a estrutura vem de neutros tingidos pela marca).
 
 ## D096 — Contribuições à dettmann-ui licenciadas também sob MIT
 Status: vigente (emenda D076)
 
-Escolhido pelo usuário em 2026-10-08. O projeto continua inteiro sob **GPL-3.0-or-later** (D076), mas contribuições de terceiros nas pastas `dettmann-ui-v1/` e `dettmann-ui-vnext/` entram sob GPL-3.0-or-later **e** MIT (cláusula em `CONTRIBUTING.md`). Motivo: o autor quer reutilizar a `dettmann-ui` como base de projetos comerciais separados, possivelmente fechados. O código que ele mesmo escreveu já pode ser usado assim por ser o titular; o código de outras pessoas recebido só sob GPL impediria esse uso.
+Escolhido pelo usuário em 2026-10-08. O projeto continua inteiro sob **GPL-3.0-or-later** (D076), mas contribuições de terceiros nas pastas `dettmann-ui-v1/` e `dettmann-ui/` entram sob GPL-3.0-or-later **e** MIT (cláusula em `CONTRIBUTING.md`). Motivo: o autor quer reutilizar a `dettmann-ui` como base de projetos comerciais separados, possivelmente fechados. O código que ele mesmo escreveu já pode ser usado assim por ser o titular; o código de outras pessoas recebido só sob GPL impediria esse uso.
 
 Consequências:
 - Não há CLA; a cláusula vale ao abrir o PR (inbound declarado no `CONTRIBUTING.md`). Quem não aceitar MIT não altera essas pastas.
@@ -919,7 +919,7 @@ Status: vigente (executa D077 itens 1, 2, 4 e 5 e o `plano-de-publicacao.md` eta
 2. **Versão única**: tag `vX.Y.Z[-pre]` = `wails.json` › `info.productVersion` (sem a parte de prerelease, que o recurso de versão do Windows não tem) = seção `## [X.Y.Z...]` do `CHANGELOG.md`. `go run ./tools/release version <tag>` falha o build se divergirem.
 3. **Notas de versão**: `CHANGELOG.md` no formato Keep a Changelog, em inglês, escrito para o jogador. A seção da versão é o corpo da GitHub Release e, por isso, o "o que há de novo" do atualizador (D104).
 4. **Avisos de terceiros** sem ferramenta externa: `tools/release notices` lista os módulos Go linkados no executável do Windows (`go list -deps`) e os pacotes npm de produção do frontend, com o texto da licença, e **falha** com licença fora da lista compatível com GPL-3.0 (D076) ou não reconhecida.
-5. **CI**: o job de frontend passa a compilar a `dettmann-ui-v1`, que é a que o `frontend/` consome (D095); antes compilava a `dettmann-ui-vnext`. (Revertido por D107: CI e release voltam a compilar a `dettmann-ui-vnext`.)
+5. **CI**: o job de frontend passa a compilar a `dettmann-ui-v1`, que é a que o `frontend/` consome (D095); antes compilava a v2 (então `dettmann-ui-vnext`, hoje `dettmann-ui`, D148). (Revertido por D107: CI e release voltam a compilar a `dettmann-ui`.)
 
 ## D106 — Itens "(verificar)" do adapter Skyrim SE na F15
 Status: proposta (registro de lacuna; aguarda confirmação do usuário sobre a correção)
@@ -931,21 +931,21 @@ Lacuna encontrada: o adapter escolhe a pasta do `plugins.txt` pela loja em que a
 ## D107 — App migrado para a dettmann-ui v2 (subprojeto 4 da D095)
 Status: vigente (emenda D095 itens 2 e 4 e D105 item 5)
 
-1. **Dependência**: `frontend/package.json` aponta para `file:../dettmann-ui-vnext`. CI e `release.yml` compilam a `dettmann-ui-vnext`; o README também. A `dettmann-ui-v1/` fica só como referência, sem consumidor.
-2. **Substituições mecânicas** pelas tabelas de `dettmann-ui-vnext/docs/migration.md`: `variant`/`tone` → `emphasis`/`intent`; tokens neutros (`bg-page` → `bg-canvas`, `ring-ring` → `ring-focus`, `hover:bg-hover` → `hover:bg-state-hover`, `shadow-lg` → `shadow-overlay`); raios pelo tamanho em px da forma `balanced` (`rounded-xl` → `rounded-card`, `rounded-lg`/`rounded-md` → `rounded-control`, `rounded` → `rounded-chip`).
+1. **Dependência**: `frontend/package.json` aponta para `file:../dettmann-ui`. CI e `release.yml` compilam a `dettmann-ui`; o README também. A `dettmann-ui-v1/` fica só como referência, sem consumidor.
+2. **Substituições mecânicas** pelas tabelas de `dettmann-ui/docs/migration.md`: `variant`/`tone` → `emphasis`/`intent`; tokens neutros (`bg-page` → `bg-canvas`, `ring-ring` → `ring-focus`, `hover:bg-hover` → `hover:bg-state-hover`, `shadow-lg` → `shadow-overlay`); raios pelo tamanho em px da forma `balanced` (`rounded-xl` → `rounded-card`, `rounded-lg`/`rounded-md` → `rounded-control`, `rounded` → `rounded-chip`).
 3. **Ícones**: glifo com equivalente no catálogo vira o ícone animado de `dettmann-ui/icons` (inclui `RotateCcw`/`Undo2` → `UndoIcon`, `RefreshCw` → `RefreshIcon`, `UploadCloud` → `UploadIcon`); os demais passam por `<Icon icon={X} />`, nunca lucide solto. O tamanho vai pela prop `size` (o `cn` da v2 não resolve conflito de classes, então `h-4 w-4` não sobrepõe o tamanho padrão); ícone em `startIcon`/`endIcon` usa `size="sm"`. Tipos públicos `LucideIcon` viram `IconComponent`.
 4. **Estados contínuos**: `Loader2` com `animate-spin` vira `<Loader decorative>` quando o texto ao lado já anuncia o estado, ou `<Loader label>` quando é o único indicador (passo de operação em execução).
 5. **Redução de movimento**: o app só escreve `:root[data-reduce-motion]` (core/13); a regra CSS própria que zerava animações saiu do `app.css`, porque a lib transforma o movimento em fade curto a partir do mesmo atributo.
 6. **Testes**: o `Input.Select` deixou de ser `<select>` nativo; os testes escolhem a opção pelo rótulo com `chooseOption` (`frontend/src/test/select.ts`) e verificam o valor exibido com `toHaveTextContent`. `testTimeout` do Vitest subiu para 15 s, porque renderizar o app inteiro passa de 5 s com todos os arquivos em paralelo.
-7. **Dev**: `<BudgetInspector />` montado na raiz só no servidor de desenvolvimento (fora de testes e builds); `server.fs.allow` do Vite inclui `../dettmann-ui-vnext` para servir as fontes da lib.
+7. **Dev**: `<BudgetInspector />` montado na raiz só no servidor de desenvolvimento (fora de testes e builds); `server.fs.allow` do Vite inclui `../dettmann-ui` para servir as fontes da lib.
 8. **Skills**: o `frontend/` passa a seguir `dettmann-ui-use`, `dettmann-ui-author` e `dettmann-ui-improve` (AGENTS.md, protocolo, consult-ai-docs e ui/03 atualizados); `theme-first`, `composition`, `component-authoring` e `ui-review` da v1 deixam de valer para o app.
 
 Fora de escopo (subprojeto 3 e polimento): redesenho das telas, micro-interações (`playKey`, `Presence`, `useFlip`) e ajuste do orçamento 60/30/10. Medição inicial no Dashboard sem jogo, tema escuro: low 80%, medium 20%, high 0% (meta 60/30/10 ± 8 p.p.).
 
 ## D108 — Redesenho dos componentes da dettmann-ui (subprojeto 3 da D095), onda 1
-Status: vigente (executa D095 item 3; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-032 a D-034)
+Status: vigente (executa D095 item 3; detalhes em `dettmann-ui/docs/decisions.md` D-032 a D-034)
 
-Escolhas do usuário em 2026-10-09: redesenho completo de tudo o que o `frontend/` importa da lib, com a personalidade "ferramenta profissional densa" (superfícies calmas, destaque só na ação principal, micro-interações curtas), em quatro ondas que seguem o Design Atômico (controles e entradas; feedback e overlays; dados; estrutura e telas). Spec: `dettmann-ui-vnext/docs/specs/2026-10-09-v2-components-design.md`.
+Escolhas do usuário em 2026-10-09: redesenho completo de tudo o que o `frontend/` importa da lib, com a personalidade "ferramenta profissional densa" (superfícies calmas, destaque só na ação principal, micro-interações curtas), em quatro ondas que seguem o Design Atômico (controles e entradas; feedback e overlays; dados; estrutura e telas). Spec: `dettmann-ui/docs/specs/2026-10-09-v2-components-design.md`.
 
 Onda 1 (controles e entradas), efeitos no app:
 1. Nenhuma mudança de API nem de código no `frontend/`: `Button`, `Input.*`, `Checkbox`, `Radio`, `Switch`, `SegmentedControl`, `StatusToggle`, `Badge`, `Tag`, `Indicator` e `Kbd` mudam só de aparência (sem sombra, borda de 1 px, anel de foco único, desabilitado por tokens, opções de menu com 32 px).
@@ -955,7 +955,7 @@ Onda 1 (controles e entradas), efeitos no app:
 A pasta `IconesAnimados/` (vídeos de referência dos ícones, fora do git) foi apagada a pedido do usuário. O plano de crescimento do catálogo da lib é entrega separada, depois da onda 4.
 
 ## D109 — Redesenho dos componentes da dettmann-ui, onda 2 (feedback e overlays)
-Status: vigente (continua D108; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-035)
+Status: vigente (continua D108; detalhes em `dettmann-ui/docs/decisions.md` D-035)
 
 Efeitos no app, sem mudança de código no `frontend/`:
 1. `Alert` e toasts mostram o ícone do intent (status nunca só por cor); os papéis ARIA não mudaram.
@@ -964,7 +964,7 @@ Efeitos no app, sem mudança de código no `frontend/`:
 4. `Skeleton` e `Progress` usam a camada de movimento da lib (respeitam `ui.reduceMotion`, core/13).
 
 ## D110 — Redesenho dos componentes da dettmann-ui, onda 3 (dados)
-Status: vigente (continua D109; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-036)
+Status: vigente (continua D109; detalhes em `dettmann-ui/docs/decisions.md` D-036)
 
 Efeitos no app:
 1. Todas as tabelas (`DataTable`) passam a ter linhas de 32 px na densidade confortável e 28 px na compacta (eram 40 e 30). A preferência de densidade do usuário continua valendo; o app não fixa `rowHeight`.
@@ -973,7 +973,7 @@ Efeitos no app:
 4. Única mudança de código no `frontend/`: a lista de dashlets do Dashboard passa os rótulos de arrastar e mover pelo i18n (`dashboard.customizeDrag`, `dashboard.customizeMoveUp`, `dashboard.customizeMoveDown`), que antes vinham em inglês fixo da lib.
 
 ## D111 — Redesenho dos componentes da dettmann-ui, onda 4 (estrutura e telas)
-Status: vigente; continua D110; detalhes em `dettmann-ui-vnext/docs/decisions.md` D-037
+Status: vigente; continua D110; detalhes em `dettmann-ui/docs/decisions.md` D-037
 
 1. **Logo da barra de título**: o PNG é branco e sumia no tema claro. A `TitleBar` passa a pintá-lo como máscara CSS sobre `bg-fg` (`role="img"`, nome do app pelo i18n), então ele segue o tema sem arquivo novo.
 2. **Camadas do shell**: a barra de título declara `data-layer="medium"` (já usava `bg-structure`, mas não contava no orçamento). A `Sidebar` passa à variante padrão (`bg-structure`); o item atual é `bg-selected` com a barra da marca.
@@ -987,7 +987,7 @@ Status: vigente; continua D110; detalhes em `dettmann-ui-vnext/docs/decisions.md
    | Extensões | 72,7% | 27,3% | 0% |
    | Configurações | 72,2% | 27,8% | 0% |
 
-   Antes (D107): Dashboard low 80%, medium 20%. O medium entrou na faixa (22% a 38%) nas quatro telas. O low ficou de 4 a 7 pontos acima do teto de 68%, porque nessas telas quase não há elemento `high`. **Aceito pelo usuário em 2026-10-13** para o estado sem jogo: forçar o número em telas vazias pintaria cartões só para a conta fechar. As telas com jogo (Mods, Plugins, Conflitos, Perfis, Diagnóstico) não foram medidas, porque o ambiente de desenvolvimento não tem jogo gerenciado; a medição passa a ser critério de aceite de cada tela do redesign (pendência P1 em `dettmann-ui-vnext/docs/plans/2026-10-13-catalog-growth.md`, que também lista as demais pendências da lib e o plano de crescimento do catálogo).
+   Antes (D107): Dashboard low 80%, medium 20%. O medium entrou na faixa (22% a 38%) nas quatro telas. O low ficou de 4 a 7 pontos acima do teto de 68%, porque nessas telas quase não há elemento `high`. **Aceito pelo usuário em 2026-10-13** para o estado sem jogo: forçar o número em telas vazias pintaria cartões só para a conta fechar. As telas com jogo (Mods, Plugins, Conflitos, Perfis, Diagnóstico) não foram medidas, porque o ambiente de desenvolvimento não tem jogo gerenciado; a medição passa a ser critério de aceite de cada tela do redesign (pendência P1 em `dettmann-ui/docs/plans/2026-10-13-catalog-growth.md`, que também lista as demais pendências da lib e o plano de crescimento do catálogo).
 
 ## D112 — Escopo de jogo: capability e contrato 1:1, e checagem em toda fase
 Status: vigente (detalha D011; análise em `docs-ia/09-proposta-multi-jogo-e-extensoes.md`, fase A)
@@ -1157,7 +1157,7 @@ Alternativa rejeitada: página de detalhe com rota própria (perderia a posiçã
 Consequências: o Inspector de Mods é removido na fase RD9 do plano; `ui/telas/mods.md` §6 é reescrito nela.
 
 ## D122 — Cor de destaque por jogo e paleta de categorias no tema
-Status: vigente (detalha D043 e D120 item 6; executa a RD2 do plano do redesign; detalhes da lib em `dettmann-ui-vnext/docs/decisions.md` D-038)
+Status: vigente (detalha D043 e D120 item 6; executa a RD2 do plano do redesign; detalhes da lib em `dettmann-ui/docs/decisions.md` D-038)
 
 1. **Cor do jogo.** O espaço do jogo usa o tema `orchestrator` com outra semente de marca: `withSeed(PRESETS.orchestrator, corDoJogo, id)` passado a um `ThemeScope` que envolve o espaço do jogo. Forma, densidade, movimento e neutros continuam os do app; o motor recalcula os papéis e garante as mesmas metas de contraste para qualquer semente (teste de propriedade). Semente ausente ou inválida volta ao tema do app. O nível do app continua com a cor da marca.
 2. **De onde vem a cor.** É dado da definição do jogo, servido pelo backend com padrão do app para quem não declara (jogo personalizado). O campo entra na RD4, junto com a casca; a UI nunca escolhe a cor por id de jogo.
@@ -1529,3 +1529,12 @@ Motivo: M2 do levantamento; o MO2 mostra conflitos dentro de BSA, e sem isso um 
 Alternativas rejeitadas: capability própria `archives` (seria um item a mais em Ajustes › Recursos sem processo próprio: carrega com os plugins e segue a ordem de carga); regra declarada pelo adapter (as regras conhecidas são iguais nos jogos Bethesda; regra diferente mudaria a tela e o contrato juntos); deixar a ordem dos mods ou overrides decidirem archives (o jogo não obedece; seria uma promessa falsa); ler os archives do `Skyrim.ini` (não são de mods e exigiriam ler o INI do jogo); ler BSA 104 no Skyrim SE (o jogo não lê; o erro já existe).
 
 Consequências: vale pelo contrato; no `generic` (sem `plugins`) e com o recurso de plugins desligado a consulta responde `supported=false` e nada é lido (`integration/archive_conflicts_test.go`). Testes: `adapters/gamebryo` (BSA 103/104/105, BA2 com e sem seek, formatos recusados), `adapters/skyrimse/archive_index_test.go` (ordem pela ordem de carga, só versão 105), `domain/gamearchive` (solto vence, archive posterior vence, mesmo mod, não lidos, determinismo), `domain/conflict/winner_test.go` (WinnerOf igual ao cálculo completo), `integration/archive_conflicts_test.go`. core/05 §5.5, core/11 §1, core/12 §5 e §10, glossário. Pendente: a tela (seção no detalhe do mod e faixa na página de Conflitos), que espera a prancha.
+
+## D148 — Lib renomeada para `dettmann-ui` e limpa do que não é a lib
+Status: vigente (2026-10-27; pedido do usuário; continua D107 e a T2 de `propostas/2026-10-22-contexto-e-traducao.md` na parte da lib)
+
+1. **Pasta**: `dettmann-ui-vnext/` passa a ser `dettmann-ui/`, o mesmo nome do pacote. `frontend/package.json` aponta para `file:../dettmann-ui`; Vite (`server.fs.allow`), CI, `release.yml`, `.gitignore`, README, CONTRIBUTING, AGENTS.md, skills e documentos da spec seguem o nome novo. Citações antigas a `dettmann-ui-vnext/` nos documentos foram trocadas pelo caminho novo.
+2. **Fora da lib**: apagados `prompts/` (prompts de migração já executados), `docs/plans/` e `docs/specs/` (planos e specs das ondas 1 a 4, todas fechadas) e `REFACTOR_REPORT.md`. O git guarda o histórico; as propostas da spec que os citavam dizem que foram removidos.
+3. **Fica na lib**: código, testes, playground, `scripts/`, `skills/` (fonte única das skills, D095 item 4), `examples/` e os documentos de uso e arquitetura (`architecture.md`, `theme-system.md`, `composition.md`, `component-matrix.md`, `migration.md`, `anti-patterns.md`, `ai-contract.md`, `fluent-reference.md`, `orchestrator-primitives.md`). `docs/decisions.md` continua na lib: são decisões da própria biblioteca, e as citações do app (D-032 a D-038) seguem válidas no caminho novo.
+
+Alternativas rejeitadas: mover `docs/decisions.md` para a spec do app (são decisões da lib, que deve poder viver sozinha); arquivar planos numa pasta `arquivo/` (o git já é o arquivo, e a pasta voltaria a pesar no contexto).

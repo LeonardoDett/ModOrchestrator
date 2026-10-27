@@ -4,8 +4,9 @@ Data: 2026-10-22. Aprovada pelo usuário em 2026-10-22 ("sim para todas").
 
 ## Andamento
 
-- **T0 feito (2026-10-22):** apagados `.cursor/skills`, `dettmann-ui-v1/` e `_historico/`; `dettmann-ui-vnext/skills/` é a fonte única das skills (o instalador grava só em `.claude/skills`; `--cursor` para o Cursor); worktree `ModOrchestrator-lv2` e branch removidos.
-- **Arquivamento adiado para T2:** propostas fechadas, `docs-ia/05`, `06`, `09` e `dettmann-ui-vnext/docs/plans|specs|prompts` são citados em `decisoes.md`, que LV5–LV10 estão editando; mover agora quebraria links. Mover junto com a divisão de `decisoes.md`, na mesma janela.
+- **T0 feito (2026-10-22):** apagados `.cursor/skills`, `dettmann-ui-v1/` e `_historico/`; `dettmann-ui/skills/` é a fonte única das skills (o instalador grava só em `.claude/skills`; `--cursor` para o Cursor); worktree `ModOrchestrator-lv2` e branch removidos.
+- **Arquivamento adiado para T2:** propostas fechadas, `docs-ia/05`, `06`, `09` e `dettmann-ui/docs/plans|specs|prompts` são citados em `decisoes.md`, que LV5–LV10 estão editando; mover agora quebraria links. Mover junto com a divisão de `decisoes.md`, na mesma janela.
+- **Lib feita (2026-10-27, D148):** `dettmann-ui-vnext/` virou `dettmann-ui/`; `docs/plans`, `docs/specs`, `prompts/` e `REFACTOR_REPORT.md` da lib apagados (citações dizem que estão no histórico do git). O resto da T2 continua pendente.
 - **T1 feito (2026-10-22):** README e CONTRIBUTING em inglês.
 - **Próximo:** T2 e T3 quando LV5–LV10 estiverem integradas e nenhuma fase estiver rodando.
 
@@ -40,11 +41,11 @@ Outros pontos que pesam:
 | `_historico/` | 60 KB, 41 arquivos | já marcado como "não é autoridade" | **Arquivar fora do repositório** (o git guarda a história) ou manter, mas fora da tradução. |
 | `propostas/` | 133 KB, 8 arquivos | 6 já viraram decisões ou fases fechadas | **Arquivar** as fechadas em `propostas/arquivo/`. As duas que LV5–LV10 estão editando agora (`plano-lacunas-mo2-vortex`, `trabalho-futuro-f14`) ficam onde estão. |
 | `docs-ia/05` a `09` (histórico, revisão, relatório F14, paridade Vortex, proposta multi-jogo) | 65 KB | relatórios de momento, não regras | **Arquivar** 05, 06 e 09; manter 07 e 08 enquanto LV usar. |
-| `dettmann-ui-vnext/docs/plans/` e `specs/` | 250 KB dos 323 KB | planos das ondas 1–4, todas fechadas | **Arquivar**. Ficam `decisions.md`, `architecture.md`, `theme-system.md`, `component-matrix.md`, `migration.md`. |
+| `dettmann-ui/docs/plans/` e `specs/` | 250 KB dos 323 KB | planos das ondas 1–4, todas fechadas | **Arquivar**. Ficam `decisions.md`, `architecture.md`, `theme-system.md`, `component-matrix.md`, `migration.md`. |
 | `.cursor/skills/` | 39 KB | cópia velha das skills (dettmann-ui-use desatualizada) | **Apagar**, ou trocar por um aviso apontando para `.claude/skills/`. |
-| `dettmann-ui-vnext/skills/` | 41 KB | `dettmann-ui-use` difere de `.claude/skills/` (14.953 × 15.372 bytes) | **Escolher uma fonte** (`.claude/skills/`) e gerar a outra por script, ou apagar a cópia. |
+| `dettmann-ui/skills/` | 41 KB | `dettmann-ui-use` difere de `.claude/skills/` (14.953 × 15.372 bytes) | **Escolher uma fonte** (`.claude/skills/`) e gerar a outra por script, ou apagar a cópia. |
 | `dettmann-ui-v1/` | 950 KB, 858 arquivos | app não consome mais (AGENTS.md) | **Apagar antes da publicação**; o git guarda. |
-| `dettmann-ui-vnext/prompts/` | 5 KB | prompts de migração já feitos | **Arquivar**. |
+| `dettmann-ui/prompts/` | 5 KB | prompts de migração já feitos | **Arquivar**. |
 | `IconesAnimados/` | — | já apagada (registro em decisoes.md, linha 955); sobra só `specs/referencia-icones-animados.md` | nada a fazer além de arquivar o spec junto com os demais. |
 | Worktree `../ModOrchestrator-lv2` | branch `claude/project-thread-s5kb6p` | LV2 já entrou no master por squash (c37acd8) | **Remover o worktree e a branch**. O worktree `lv10wt` no scratchpad é de uma fase ativa: não mexer. |
 | `../ModOrchestrator-lv2-captura*.png` | 2 imagens | capturas soltas fora do repositório | **Apagar**. |
@@ -74,7 +75,7 @@ Proposta: apagar as cópias com timestamp e as que estão no git; manter só as 
 ## 4. Plano de tradução para inglês
 
 Estado atual:
-- Código: ~93% dos comentários Go já em inglês (619 de 8.373 linhas em pt), TS do app 93 de 838, `dettmann-ui-vnext/src` 319 linhas em pt. Mensagens de erro já em inglês.
+- Código: ~93% dos comentários Go já em inglês (619 de 8.373 linhas em pt), TS do app 93 de 838, `dettmann-ui/src` 319 linhas em pt. Mensagens de erro já em inglês.
 - UI: i18n com `en.ts` e `pt-BR.ts`.
 - Público: CHANGELOG e `docs/getting-started.md` já em inglês (com `primeiros-passos.md`); README e CONTRIBUTING em pt.
 - Lib: docs em inglês, skills em pt.

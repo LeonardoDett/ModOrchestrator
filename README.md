@@ -1,7 +1,7 @@
 # Mod Orchestrator
 
 Desktop mod manager (Go + Wails v2 + React). The specification lives in
-`mod-orchestrator-spec-v2/` and the design system in `dettmann-ui-vnext/`, both versioned in this
+`mod-orchestrator-spec-v2/` and the design system in `dettmann-ui/`, both versioned in this
 repository (the library build, `node_modules/` and `dist/`, is not versioned; see D052).
 
 Status: **V1.0 in preparation** (spec phases F0–F15 implemented; the first public release depends on steps 4–7 of `plano-de-publicacao.md`). Changes per version: [CHANGELOG.md](CHANGELOG.md).
@@ -49,7 +49,7 @@ Prerequisites: Go 1.27+, Node 24+, Wails CLI v2, WebView2 (Windows).
 1. Build the dettmann-ui used by `frontend/` (v2, D095/D107; once, and after every change to it):
 
    ```bash
-   cd dettmann-ui-vnext && npm install && npm run build
+   cd dettmann-ui && npm install && npm run build
    ```
 
    The build emits JS, CSS and `.d.ts` (the types step runs with an 8 GB heap). `npm run theme`

@@ -9,11 +9,11 @@ frontend/package.json.md5
 frontend/node_modules/.tmp/
 
 # dettmann-ui (local copy): sources are versioned, build output is not.
-# Rebuild with `npm install && npm run build` inside dettmann-ui-vnext (see README).
-dettmann-ui-vnext/node_modules/
-dettmann-ui-vnext/dist/
-dettmann-ui-vnext/coverage/
-dettmann-ui-vnext/*.tsbuildinfo
+# Rebuild with `npm install && npm run build` inside dettmann-ui (see README).
+dettmann-ui/node_modules/
+dettmann-ui/dist/
+dettmann-ui/coverage/
+dettmann-ui/*.tsbuildinfo
 
 # Local tooling
 .claude/*

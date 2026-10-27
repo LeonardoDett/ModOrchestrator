@@ -1,6 +1,6 @@
 ---
 name: dettmann-ui-author
-description: Use when changing code inside the dettmann-ui library itself (dettmann-ui-vnext) — adding or editing a component, template or primitive, changing theme colors, presets, the theme engine, tokens.css, motion or animations. Também quando pedirem para criar/alterar componente da lib, "deixar o warning mais amarelo", mudar cor/preset/tema da lib, adicionar animação ou estado a um componente da dettmann-ui.
+description: Use when changing code inside the dettmann-ui library itself (dettmann-ui) — adding or editing a component, template or primitive, changing theme colors, presets, the theme engine, tokens.css, motion or animations. Também quando pedirem para criar/alterar componente da lib, "deixar o warning mais amarelo", mudar cor/preset/tema da lib, adicionar animação ou estado a um componente da dettmann-ui.
 ---
 
 # dettmann-ui — alterar a própria lib
@@ -79,7 +79,7 @@ Glifo novo = um arquivo `src/icons/glyphs/<nome>.tsx` com `defineIcon`; nada de 
 
 Nunca afrouxe um teste de propriedade para a mudança passar: corrija o algoritmo.
 
-## Validação (dentro de `dettmann-ui-vnext/`)
+## Validação (dentro de `dettmann-ui/`)
 
 ```bash
 npm run theme:build     # sempre que tocar engine/presets/tokens: regenera themes.generated.css

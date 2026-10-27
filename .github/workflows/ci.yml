@@ -33,7 +33,7 @@ jobs:
       # The frontend consumes the local dettmann-ui v2 build (file:
       # dependency, D095/D107).
       - name: dettmann-ui build
-        working-directory: dettmann-ui-vnext
+        working-directory: dettmann-ui
         run: |
           npm ci
           npm run build

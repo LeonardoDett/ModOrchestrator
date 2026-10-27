@@ -1,4 +1,4 @@
-# Dettmann UI vNext
+# Dettmann UI
 
 A long-lived React UI foundation built around **theme-first**, **composition-first** and **logic/UI separation**.
 

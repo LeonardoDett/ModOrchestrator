@@ -6,11 +6,11 @@ Thanks for your interest. Mod Orchestrator is open source under the [GPL-3.0-or-
 
 By opening a pull request you agree that your contribution is licensed under the same license as the project (GPL-3.0-or-later). There is no CLA. Only submit code you wrote, or code under a GPL-3.0-compatible license with its original attribution kept.
 
-**Exception: `dettmann-ui`.** What you contribute to the `dettmann-ui-vnext/` folder is licensed under the GPL-3.0-or-later **and also** under the [MIT license](https://opensource.org/license/mit), with you as the copyright holder. `dettmann-ui` is a UI library the project author also uses outside Mod Orchestrator, and the MIT license on contributions allows that. Mod Orchestrator as a whole stays under the GPL-3.0-or-later. If you do not want to license under MIT, do not change that folder in your pull request.
+**Exception: `dettmann-ui`.** What you contribute to the `dettmann-ui/` folder is licensed under the GPL-3.0-or-later **and also** under the [MIT license](https://opensource.org/license/mit), with you as the copyright holder. `dettmann-ui` is a UI library the project author also uses outside Mod Orchestrator, and the MIT license on contributions allows that. Mod Orchestrator as a whole stays under the GPL-3.0-or-later. If you do not want to license under MIT, do not change that folder in your pull request.
 
 ## Build and test
 
-Prerequisites and steps in [README.md › Development](README.md#development). Everything needed is in the repository, including `dettmann-ui` (`dettmann-ui-vnext/`).
+Prerequisites and steps in [README.md › Development](README.md#development). Everything needed is in the repository, including `dettmann-ui` (`dettmann-ui/`).
 
 To test someone else's pull request:
 
