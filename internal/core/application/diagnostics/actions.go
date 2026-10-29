@@ -106,6 +106,10 @@ func (s *Service) Execute(ctx context.Context, instance game.InstanceID, key dia
 		res.Operations, err = s.Library.ReinstallMods(ctx, instance, []mod.ID{mod.ID(target())})
 	case ActionAcceptStaging:
 		err = s.Library.AcceptStaging(ctx, instance, mod.ID(target()))
+	case ActionRecoverOrphans:
+		_, err = s.Library.RecoverOrphanFolders(ctx, instance)
+	case ActionRewriteMetadata:
+		_, err = s.Library.RewriteMetadata(ctx, instance)
 	case ActionAckVersion:
 		err = s.Games.AcknowledgeVersion(ctx, instance)
 	case clearOverride:
@@ -266,6 +270,7 @@ func (s *Service) CommandActions() []string {
 	out := []string{
 		health.ActionEnableMod, health.ActionDisableMod, health.ActionRemoveRule, health.ActionDisableRule,
 		ActionDeploy, ActionReconcile, ActionRecheck, ActionInstall, ActionReinstall, ActionAcceptStaging,
+		ActionRecoverOrphans, ActionRewriteMetadata,
 		ActionAckVersion, clearOverride,
 	}
 	for _, m := range s.Modules {

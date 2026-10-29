@@ -31,6 +31,10 @@ const (
 	ActionInstall         = "library.install"
 	ActionReinstall       = "library.reinstall"
 	ActionAcceptStaging   = "library.accept_staging"
+	// ActionRecoverOrphans and ActionRewriteMetadata act on the metadata
+	// kept next to each mod in the staging (D145).
+	ActionRecoverOrphans  = "library.recover_orphans"
+	ActionRewriteMetadata = "library.rewrite_metadata"
 	ActionAckVersion      = "games.ack_version"
 	ActionReviewPlan      = "deploy.review_plan"
 	ActionReviewChanges   = "deploy.review_changes"
@@ -305,6 +309,11 @@ func (s *Service) libraryChecks(ctx context.Context, inst game.Instance) ([]diag
 			Related:  []event.EntityRef{ref},
 		})
 	}
+	orphans, err := s.metadataSpecs(ctx, inst)
+	if err != nil {
+		return nil, err
+	}
+	specs = append(specs, orphans...)
 	checks, err := s.Library.CheckStaging(ctx, inst.ID, false)
 	if err != nil {
 		return nil, err
@@ -329,6 +338,62 @@ func (s *Service) libraryChecks(ctx context.Context, inst game.Instance) ([]diag
 		specs = append(specs, stagingSpecs(c, retained[c.Mod])...)
 	}
 	return build(specs...)
+}
+
+// metadataSpecs: staging_orphan_folders (folders of the staging that are no
+// mod of the library) and mod_metadata_stale (D145).
+func (s *Service) metadataSpecs(ctx context.Context, inst game.Instance) ([]diagnostic.Spec, error) {
+	var specs []diagnostic.Spec
+	ref := instanceRef(inst)
+	orphans, err := s.Library.OrphanFolders(ctx, inst.ID)
+	if err != nil {
+		return nil, err
+	}
+	if len(orphans) > 0 {
+		withMeta := 0
+		ev := make([]diagnostic.Evidence, 0, min(len(orphans), 20))
+		for i, o := range orphans {
+			if o.Metadata {
+				withMeta++
+			}
+			if i < 20 {
+				ev = append(ev, diagnostic.Evidence{Kind: "staging_folder", Ref: &ref,
+					Params: diagnostic.Params{"folder": o.Name, "metadata": strconv.FormatBool(o.Metadata)}})
+			}
+		}
+		p := diagnostic.Params{"count": strconv.Itoa(len(orphans)), "metadata": strconv.Itoa(withMeta)}
+		specs = append(specs, diagnostic.Spec{
+			Code: diagnostic.CodeStagingOrphanFolders, Severity: diagnostic.SeverityWarning, Params: p,
+			Evidence: ev,
+			Actions: []diagnostic.Action{
+				{ID: ActionRecoverOrphans, Target: &ref, Params: p},
+				{ID: ActionOpenFolder, Target: &ref, NavigateTo: NavigateStaging},
+			},
+			Related: []event.EntityRef{ref},
+		})
+	}
+	stale, err := s.Library.MetadataStale(ctx, inst.ID)
+	if err != nil {
+		return nil, err
+	}
+	if len(stale) > 0 {
+		p := diagnostic.Params{"count": strconv.Itoa(len(stale))}
+		ev := make([]diagnostic.Evidence, 0, min(len(stale), 20))
+		for i, id := range stale {
+			if i == 20 {
+				break
+			}
+			mref := event.EntityRef{Kind: "mod", ID: string(id)}
+			ev = append(ev, diagnostic.Evidence{Kind: "mod_metadata", Ref: &mref})
+		}
+		specs = append(specs, diagnostic.Spec{
+			Code: diagnostic.CodeModMetadataStale, Severity: diagnostic.SeverityInfo, Params: p,
+			Evidence: ev,
+			Actions:  []diagnostic.Action{{ID: ActionRewriteMetadata, Target: &ref, Params: p}},
+			Related:  []event.EntityRef{ref},
+		})
+	}
+	return specs, nil
 }
 
 func stagingSpecs(c library.StagingCheck, reinstall bool) []diagnostic.Spec {

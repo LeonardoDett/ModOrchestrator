@@ -133,6 +133,10 @@ type Service struct {
 	writeMu sync.Mutex
 	// workers tracks running queue workers so tests can wait for them.
 	workers sync.WaitGroup
+	// metaFailed holds the mods whose metadata file could not be written
+	// (mod_metadata_stale, D145).
+	metaMu     sync.Mutex
+	metaFailed map[mod.ID]bool
 }
 
 // NewService wires the service.
@@ -222,16 +226,32 @@ func (s *Service) newEvent(t event.Type, kind, id string, op operation.ID, paylo
 // commit runs fn in a unit of work and publishes its events after the
 // commit (INV-OPS-01, anti-pattern 21).
 func (s *Service) commit(ctx context.Context, fn func(ctx context.Context, tx ports.Tx) error) error {
-	s.writeMu.Lock()
-	defer s.writeMu.Unlock()
-	stored, err := s.UoW.Do(ctx, fn)
+	saved, err := s.commitLocked(ctx, fn)
 	if err != nil {
 		return err
+	}
+	// The metadata file of every mod the transaction saved follows the
+	// database; a failure is recorded, it never undoes the commit (D145).
+	s.WriteMetadata(ctx, saved...)
+	return nil
+}
+
+func (s *Service) commitLocked(ctx context.Context, fn func(ctx context.Context, tx ports.Tx) error) ([]mod.ID, error) {
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	var rec *SavedMods
+	stored, err := s.UoW.Do(ctx, func(ctx context.Context, tx ports.Tx) error {
+		var rtx ports.Tx
+		rtx, rec = RecordSaves(tx)
+		return fn(ctx, rtx)
+	})
+	if err != nil {
+		return nil, err
 	}
 	if len(stored) > 0 {
 		s.Publisher.Publish(stored...)
 	}
-	return nil
+	return rec.IDs(), nil
 }
 
 // boolSetting reads a boolean setting, falling back to def when unreadable.

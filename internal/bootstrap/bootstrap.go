@@ -305,6 +305,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Locks:     locks,
 		IDs:       ids,
 		Clock:     clock,
+		Metadata:  librarySvc,
 	})
 
 	profilesSvc := profilesvc.NewService(profilesvc.Deps{

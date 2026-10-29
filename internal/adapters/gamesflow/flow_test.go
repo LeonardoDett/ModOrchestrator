@@ -158,8 +158,10 @@ func TestStagingMarkerRules(t *testing.T) {
 	}
 	e.fs.AddFile(`D:\stage2\.modorchestrator-staging`, string(game.NewFolderMarker("staging", "someone-else")))
 	_, err = e.svc.Manage(ctx, games.Setup{Game: "skyrimse", Root: root, Folders: games.Folders{Staging: `D:\stage2`}})
-	if c, p, _ := games.CodeOf(err); c != games.CodeStagingForeign || p["reason"] != "other_instance" {
-		t.Fatalf("staging of another instance: %v", err)
+	// The marker names an instance that does not exist: adopted only with
+	// the user's consent (D145).
+	if c, p, _ := games.CodeOf(err); c != games.CodeStagingForeign || p["reason"] != "orphan" {
+		t.Fatalf("staging of a gone instance: %v", err)
 	}
 	// An existing empty folder is accepted and marked.
 	e.fs.AddDir(`C:\stage3`)
@@ -169,6 +171,25 @@ func TestStagingMarkerRules(t *testing.T) {
 	}
 	if _, ok := e.fs.Content(`C:\stage3\.modorchestrator-staging`); !ok || res.Instance == "" {
 		t.Fatal("empty folder must be claimed with a marker")
+	}
+	// A marker of an instance that exists is never adopted.
+	e.fs.AddFile(`D:\stage4\.modorchestrator-staging`, string(game.NewFolderMarker("staging", res.Instance)))
+	v, err := e.svc.Verify(ctx, games.Setup{Game: "skyrimse", Root: e.skyrim(`C:\Games\Other`), AdoptFolders: true, Folders: games.Folders{Staging: `D:\stage4`}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !slices.ContainsFunc(v.Problems, func(p games.Problem) bool {
+		return p.Code == games.CodeStagingForeign && p.Params["reason"] == "other_instance"
+	}) {
+		t.Fatalf("staging of another instance: %+v", v.Problems)
+	}
+	// With consent the gone instance's staging is taken and marked again.
+	res2, err := e.svc.Manage(ctx, games.Setup{Game: "skyrimse", Name: "Again", Root: e.skyrim(`C:\Games\Third`), AdoptFolders: true, Method: game.MethodCopy, Folders: games.Folders{Staging: `D:\stage2`}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if data, _ := e.fs.Content(`D:\stage2\.modorchestrator-staging`); !strings.Contains(data, string(res2.Instance)) {
+		t.Fatalf("adopted marker = %s", data)
 	}
 }
 

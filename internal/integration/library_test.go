@@ -165,7 +165,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 			vortex.Reader{AppData: filepath.Join(dir, "AppData"), Temp: t.TempDir()},
 		},
 		Mods: e.mods, UoW: sqlite.NewUnitOfWork(db), Publisher: bus, FS: fsys, Extractor: archive.New(),
-		Ops: e.ops, Locks: locks, IDs: ids, Clock: clock,
+		Ops: e.ops, Locks: locks, IDs: ids, Clock: clock, Metadata: e.lib,
 	})
 	t.Cleanup(e.imp.Wait)
 
@@ -425,7 +425,7 @@ func TestImportWrapperArchive(t *testing.T) {
 		t.Fatalf("content = %v", m.Content)
 	}
 	// INV-ID-03: the staging folder is the mod id.
-	if got := tree(t, e.inst.Staging); !slices.Equal(got, []string{".modorchestrator-staging", string(m.ID), string(m.ID) + "/CoolMod.esp", string(m.ID) + "/textures", string(m.ID) + "/textures/a.dds"}) {
+	if got := tree(t, e.inst.Staging); !slices.Equal(got, []string{".modorchestrator-staging", string(m.ID), string(m.ID) + "/" + game.ModMetadataFile, string(m.ID) + "/CoolMod.esp", string(m.ID) + "/textures", string(m.ID) + "/textures/a.dds"}) {
 		t.Fatalf("staging = %v", got)
 	}
 	arch := tree(t, e.inst.ArchiveStore)
@@ -726,7 +726,7 @@ func TestRecoveryAfterInterruptedWork(t *testing.T) {
 	if err := e.lib.Recover(ctx); err != nil {
 		t.Fatal(err)
 	}
-	if got := tree(t, e.inst.Staging); !slices.Equal(got, []string{".modorchestrator-staging", string(m.ID), string(m.ID) + "/textures", string(m.ID) + "/textures/old.dds"}) {
+	if got := tree(t, e.inst.Staging); !slices.Equal(got, []string{".modorchestrator-staging", string(m.ID), string(m.ID) + "/" + game.ModMetadataFile, string(m.ID) + "/textures", string(m.ID) + "/textures/old.dds"}) {
 		t.Fatalf("staging after recovery = %v", got)
 	}
 	if got := e.only(); got.State != mod.StateInstalled {

@@ -35,6 +35,10 @@ type Setup struct {
 	// CreateTargets lets the app create target folders that do not exist
 	// yet (D129: "o app pode criar esta pasta", off by default).
 	CreateTargets bool
+	// AdoptFolders lets the app take a staging or ArchiveStore whose
+	// marker names an instance that no longer exists, so its mods can be
+	// recovered (D145; off by default).
+	AdoptFolders bool
 }
 
 // Folders are the three folders the manager owns for an instance.
@@ -206,16 +210,30 @@ func (s *Service) Verify(ctx context.Context, su Setup) (Verification, error) {
 			v.Problems = append(v.Problems, problem(CodeFoldersInvalid, "detail", "folders are in use by "+o.DisplayName))
 		}
 	}
+	known := make(map[game.InstanceID]bool, len(all))
+	for _, o := range all {
+		known[o.ID] = true
+	}
 	for _, f := range []struct {
 		path, marker, code, label string
+		// adoptable: a marker of an instance that no longer exists is
+		// accepted with AdoptFolders (D145). The BackupStore is not: its
+		// old backups have no manifest and a new one could overwrite them.
+		adoptable bool
 	}{
-		{v.Folders.Staging, game.StagingMarker, CodeStagingForeign, FolderStaging},
-		{v.Folders.ArchiveStore, game.ArchivesMarker, CodeFolderForeign, FolderArchives},
-		{v.Folders.BackupStore, game.BackupsMarker, CodeFolderForeign, FolderBackups},
+		{v.Folders.Staging, game.StagingMarker, CodeStagingForeign, FolderStaging, true},
+		{v.Folders.ArchiveStore, game.ArchivesMarker, CodeFolderForeign, FolderArchives, true},
+		{v.Folders.BackupStore, game.BackupsMarker, CodeFolderForeign, FolderBackups, false},
 	} {
 		p, err := s.checkFolder(ctx, f.path, f.marker, f.code, f.label)
 		if err != nil {
 			return v, err
+		}
+		if p != nil && f.adoptable && p.Params["reason"] == "other_instance" {
+			if owner, ok := s.markerOwner(ctx, f.path, f.marker); ok && !known[owner] {
+				v.Warnings = append(v.Warnings, problem(CodeFolderOrphan, "folder", f.label, "path", f.path))
+				continue
+			}
 		}
 		if p != nil {
 			v.Problems = append(v.Problems, *p)
@@ -267,6 +285,16 @@ func (s *Service) Manage(ctx context.Context, su Setup) (Result, error) {
 			}
 			if len(v.Problems) > 0 {
 				return v.Problems[0].asError()
+			}
+			for _, w := range v.Warnings {
+				if w.Code == CodeFolderOrphan && !su.AdoptFolders {
+					// The folder is taken only with the user's consent (D145).
+					code := CodeFolderForeign
+					if w.Params["folder"] == FolderStaging {
+						code = CodeStagingForeign
+					}
+					return problem(code, "folder", w.Params["folder"], "reason", "orphan").asError()
+				}
 			}
 			method, err := chooseMethod(su.Method, v.Methods)
 			if err != nil {
@@ -361,6 +389,9 @@ func (s *Service) register(ctx context.Context, inst game.Instance) (err error) 
 type prepared struct {
 	markers []string
 	dirs    []string
+	// replaced keeps the old content of the markers of adopted folders
+	// (D145), put back if managing fails.
+	replaced map[string][]byte
 }
 
 func (s *Service) prepareFolders(ctx context.Context, inst game.Instance) (prepared, error) {
@@ -381,8 +412,16 @@ func (s *Service) prepareFolders(ctx context.Context, inst game.Instance) (prepa
 			p.dirs = append(p.dirs, f.path)
 		}
 		marker := game.JoinPath(f.path, f.marker)
+		old, hadMarker := s.readMarker(ctx, marker)
 		if err := s.FS.WriteFile(ctx, marker, game.NewFolderMarker(f.kind, inst.ID)); err != nil {
 			return p, err
+		}
+		if hadMarker {
+			if p.replaced == nil {
+				p.replaced = map[string][]byte{}
+			}
+			p.replaced[marker] = old
+			continue
 		}
 		p.markers = append(p.markers, marker)
 	}
@@ -414,6 +453,9 @@ func (s *Service) undo(ctx context.Context, p prepared) {
 	ctx = context.WithoutCancel(ctx)
 	for _, m := range p.markers {
 		_ = s.FS.Remove(ctx, m)
+	}
+	for m, data := range p.replaced {
+		_ = s.FS.WriteFile(ctx, m, data)
 	}
 	for _, d := range slices.Backward(p.dirs) {
 		_ = s.FS.RemoveEmptyDir(ctx, d)
@@ -670,6 +712,17 @@ func (s *Service) checkFolder(ctx context.Context, path, marker, code, label str
 		return &p, nil
 	}
 	return nil, nil
+}
+
+// readMarker reads a marker file; false when there is none.
+func (s *Service) readMarker(ctx context.Context, path string) ([]byte, bool) {
+	r, err := s.FS.Open(ctx, path)
+	if err != nil {
+		return nil, false
+	}
+	defer r.Close()
+	data, err := io.ReadAll(io.LimitReader(r, markerReadLimit))
+	return data, err == nil
 }
 
 // markerOwner reads the owner of a marker file in path.

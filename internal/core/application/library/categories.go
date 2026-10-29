@@ -103,10 +103,19 @@ func (s *Service) SaveCategory(ctx context.Context, instance game.InstanceID, in
 	if err != nil {
 		return "", fail(CodeCategoryInvalid, err, "category", string(id))
 	}
-	return id, s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
+	err = s.commit(ctx, func(ctx context.Context, tx ports.Tx) error {
 		tx.Emit(s.newEvent(EventCategoryChanged, "category", string(id), "", map[string]string{"name": strings.TrimSpace(in.Name)}))
 		return tx.Categories().Replace(ctx, instance, next.Categories())
 	})
+	if err != nil {
+		return "", err
+	}
+	if in.ID != "" {
+		// Renaming or moving changes the name and path the metadata of the
+		// mods records (D145).
+		s.writeCategoryMetadata(ctx, instance)
+	}
+	return id, nil
 }
 
 // DeleteCategory removes a category and its descendants; their mods become

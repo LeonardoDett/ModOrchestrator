@@ -24,18 +24,21 @@ const (
 	CodeLoadOrderExternalChange Code = "load_order_external_change"
 	// CodeSavePathExternal: the key that points the game at the save folder
 	// of the profile changed outside the app (D142).
-	CodeSavePathExternal       Code = "save_path_external"
-	CodeRuleCycle              Code = "rule_cycle"
-	CodeModsIncompatible       Code = "mods_incompatible"
-	CodeModRequirementMissing  Code = "mod_requirement_missing"
-	CodeModRecommendation      Code = "mod_recommendation_missing"
-	CodeRuleOrphan             Code = "rule_orphan"
-	CodeOverrideStale          Code = "override_stale"
-	CodeConflictsUnreviewed    Code = "conflicts_unreviewed"
-	CodeModFullyOverwritten    Code = "mod_fully_overwritten"
-	CodeStagingFileMissing     Code = "staging_file_missing"
-	CodeStagingFileModified    Code = "staging_file_modified"
-	CodeModArchiveMissing      Code = "mod_archive_missing"
+	CodeSavePathExternal      Code = "save_path_external"
+	CodeRuleCycle             Code = "rule_cycle"
+	CodeModsIncompatible      Code = "mods_incompatible"
+	CodeModRequirementMissing Code = "mod_requirement_missing"
+	CodeModRecommendation     Code = "mod_recommendation_missing"
+	CodeRuleOrphan            Code = "rule_orphan"
+	CodeOverrideStale         Code = "override_stale"
+	CodeConflictsUnreviewed   Code = "conflicts_unreviewed"
+	CodeModFullyOverwritten   Code = "mod_fully_overwritten"
+	CodeStagingFileMissing    Code = "staging_file_missing"
+	CodeStagingFileModified   Code = "staging_file_modified"
+	CodeModArchiveMissing     Code = "mod_archive_missing"
+	// Codes of the metadata kept next to each mod in the staging (D145).
+	CodeStagingOrphanFolders   Code = "staging_orphan_folders"
+	CodeModMetadataStale       Code = "mod_metadata_stale"
 	CodeInstallerRequired      Code = "installer_required"
 	CodePluginMissingMaster    Code = "plugin_missing_master"
 	CodePluginLimitExceeded    Code = "plugin_limit_exceeded"
@@ -108,7 +111,7 @@ var coreModules = map[Code]Module{
 	CodeModRecommendation: ModuleRules, CodeRuleOrphan: ModuleRules,
 	CodeOverrideStale: ModuleConflicts, CodeConflictsUnreviewed: ModuleConflicts, CodeModFullyOverwritten: ModuleConflicts,
 	CodeStagingFileMissing: ModuleLibrary, CodeStagingFileModified: ModuleLibrary, CodeModArchiveMissing: ModuleLibrary,
-	CodeInstallerRequired:   ModuleLibrary,
+	CodeInstallerRequired: ModuleLibrary, CodeStagingOrphanFolders: ModuleLibrary, CodeModMetadataStale: ModuleLibrary,
 	CodePluginMissingMaster: ModulePlugins, CodePluginLimitExceeded: ModulePlugins, CodePluginDisabledMaster: ModulePlugins,
 	CodePluginHeaderUnreadable: ModulePlugins, CodePluginMasterOrder: ModulePlugins, CodePluginRuleOrphan: ModulePlugins,
 	CodePluginRuleCycle: ModulePlugins, CodePluginLockConflict: ModulePlugins, CodePluginFromLosingFile: ModulePlugins,

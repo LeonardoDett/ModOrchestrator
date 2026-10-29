@@ -571,6 +571,14 @@ func (p *pipeline) planInstall(ctx context.Context) error {
 	}
 	// What the installer itself read (a package manifest) comes first.
 	p.meta = p.plan.Metadata.Merge(p.meta)
+	// A file named like the metadata of the mod at the root of the archive
+	// would overwrite it: it is not installed (D145).
+	p.plan.Files = slices.DeleteFunc(p.plan.Files, func(f installer.File) bool {
+		return game.IsModMetadataFile(f.Dest.String())
+	})
+	if len(p.plan.Files) == 0 {
+		return fail(CodeNoInstallable, nil, "name", p.originalName)
+	}
 	return nil
 }
 

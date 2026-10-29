@@ -27,7 +27,10 @@ func (s *Service) Recover(ctx context.Context) error {
 	for _, inst := range instances {
 		if err := s.recoverInstance(ctx, inst); err != nil {
 			errs = append(errs, err)
+			continue
 		}
+		// Mods installed before D145 get their metadata file.
+		s.backfillMetadata(ctx, inst.ID)
 	}
 	return errors.Join(errs...)
 }

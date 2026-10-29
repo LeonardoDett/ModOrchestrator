@@ -42,11 +42,14 @@ const (
 	CodeFoldersInvalid = "folders_invalid"
 	CodeStagingForeign = "staging_foreign"
 	CodeFolderForeign  = "folder_foreign"
-	CodeMethodUnavail  = "method_unavailable"
-	CodeExecutableBad  = "executable_invalid"
-	CodeConfirmName    = "confirm_name_mismatch"
-	CodeFolderUnknown  = "folder_unknown"
-	CodeFolderMissing  = "folder_missing"
+	// CodeFolderOrphan warns that a staging or ArchiveStore belongs to an
+	// instance that no longer exists and can be adopted (D145).
+	CodeFolderOrphan  = "folder_orphan"
+	CodeMethodUnavail = "method_unavailable"
+	CodeExecutableBad = "executable_invalid"
+	CodeConfirmName   = "confirm_name_mismatch"
+	CodeFolderUnknown = "folder_unknown"
+	CodeFolderMissing = "folder_missing"
 	// Features of an instance (D115).
 	CodeFeatureUnavailable = "feature_unavailable"
 	CodeFeatureLocked      = "feature_locked"

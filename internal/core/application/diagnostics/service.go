@@ -70,6 +70,10 @@ type Games interface {
 type Library interface {
 	CheckStaging(ctx context.Context, instance game.InstanceID, deep bool) ([]library.StagingCheck, error)
 	AcceptStaging(ctx context.Context, instance game.InstanceID, id mod.ID) error
+	OrphanFolders(ctx context.Context, instance game.InstanceID) ([]library.OrphanFolder, error)
+	RecoverOrphanFolders(ctx context.Context, instance game.InstanceID) (library.RecoverResult, error)
+	MetadataStale(ctx context.Context, instance game.InstanceID) ([]mod.ID, error)
+	RewriteMetadata(ctx context.Context, instance game.InstanceID) (int, error)
 	ArchiveMissing(ctx context.Context, instance game.InstanceID) ([]*mod.Mod, error)
 	InstallMods(ctx context.Context, instance game.InstanceID, ids []mod.ID) ([]operation.ID, error)
 	ReinstallMods(ctx context.Context, instance game.InstanceID, ids []mod.ID) ([]operation.ID, error)

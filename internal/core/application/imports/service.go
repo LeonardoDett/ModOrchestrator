@@ -22,6 +22,7 @@ import (
 
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/instancelock"
+	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
 	"modorchestrator/internal/core/application/ports"
 	"modorchestrator/internal/core/domain/event"
@@ -87,6 +88,14 @@ type Deps struct {
 	Locks   *instancelock.Locks
 	IDs     operations.IDGenerator
 	Clock   operations.Clock
+	// Metadata writes the metadata file of the imported mods (optional;
+	// the library, D145).
+	Metadata MetadataWriter
+}
+
+// MetadataWriter writes the metadata file of mods (library.Service).
+type MetadataWriter interface {
+	WriteMetadata(ctx context.Context, ids ...mod.ID)
 }
 
 // Foreign reports deployments by other managers (games.Service).
@@ -542,12 +551,21 @@ func (s *Service) newEvent(t event.Type, kind, id string, op operation.ID, paylo
 }
 
 func (s *Service) commit(ctx context.Context, fn func(ctx context.Context, tx ports.Tx) error) error {
-	stored, err := s.UoW.Do(ctx, fn)
+	var rec *library.SavedMods
+	stored, err := s.UoW.Do(ctx, func(ctx context.Context, tx ports.Tx) error {
+		var rtx ports.Tx
+		rtx, rec = library.RecordSaves(tx)
+		return fn(ctx, rtx)
+	})
 	if err != nil {
 		return err
 	}
 	if len(stored) > 0 {
 		s.Publisher.Publish(stored...)
+	}
+	if s.Metadata != nil {
+		// The imported mods get their metadata file in the staging (D145).
+		s.Metadata.WriteMetadata(ctx, rec.IDs()...)
 	}
 	return nil
 }

@@ -13,7 +13,15 @@ const (
 	ArchivesMarker   = ".modorchestrator-archives"
 	BackupsMarker    = ".modorchestrator-backups"
 	DeploymentMarker = ".modorchestrator-deployment.json"
+	// ModMetadataFile is written in the staging folder of each mod: what
+	// defines the mod outside the profile, to rebuild the library from the
+	// staging when the database is lost (D145). Evidence, never the source
+	// of truth; nothing that reads an installation sees it.
+	ModMetadataFile = ".modorchestrator-mod.json"
 )
+
+// IsModMetadataFile reports whether name is the metadata file of a mod.
+func IsModMetadataFile(name string) bool { return strings.EqualFold(name, ModMetadataFile) }
 
 // ForeignKind says who else deployed to a game folder.
 type ForeignKind string
