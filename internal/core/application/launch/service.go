@@ -55,6 +55,15 @@ const (
 	CodeDeployFailed  = "launch_deploy_failed"
 	CodeOptionUnknown = "launch_option_unknown"
 	CodeStartFailed   = "launch_start_failed"
+	// D150: the game asks for administrator rights (Windows error 740);
+	// the executable or the working folder is not there; the store client
+	// the option needs is closed.
+	CodeNeedsElevation = "launch_needs_elevation"
+	CodeExeMissing     = "launch_exe_missing"
+	CodeWorkDirMissing = "launch_workdir_missing"
+	CodeClientClosed   = "launch_store_client_closed"
+	// The user said no to the administrator prompt (D150).
+	CodeElevationCancelled = "launch_elevation_cancelled"
 )
 
 // Error is a failure with a stable code and parameters (D053).
@@ -104,11 +113,19 @@ const (
 	StateUnavailable State = "unavailable"
 )
 
-// Option is a launch option shown in the Play menu.
+// Option is a launch option shown in the Play menu. Args, WorkDir,
+// StoreURI and RequiresClient are the adapter's (ports.LaunchOption).
+// NeedsElevation: the system refused this option without administrator
+// rights since the app started (D150), so the UI offers to play elevated.
 type Option struct {
-	ID      string
-	Exe     string
-	Default bool
+	ID             string
+	Exe            string
+	Default        bool
+	Args           []string
+	WorkDir        string
+	StoreURI       string
+	RequiresClient string
+	NeedsElevation bool
 }
 
 // Check is the pre-launch check of an instance (core/04 §9, DLG-26).
@@ -159,16 +176,19 @@ type Settings interface {
 
 // Deps are the ports of the service.
 type Deps struct {
-	Registry    *games.Registry
-	Instances   ports.GameInstances
-	FS          ports.FileReader
-	Launcher    ports.ProcessLauncher
+	Registry  *games.Registry
+	Instances ports.GameInstances
+	FS        ports.FileReader
+	Launcher  ports.ProcessLauncher
+	// Clients answers whether a store client runs (D150); nil skips the
+	// check of LaunchOption.RequiresClient.
+	Clients ports.StoreClients
 	// Runner starts external tools and follows them to their end; Locks
 	// holds the instance while an exclusive tool runs; Outputs scans the
 	// game after a tool ends (D146).
-	Runner  ports.ProcessRunner
-	Locks   *instancelock.Locks
-	Outputs ToolOutputs
+	Runner      ports.ProcessRunner
+	Locks       *instancelock.Locks
+	Outputs     ToolOutputs
 	Deploy      Deploy
 	Diagnostics Diagnostics
 	Games       Games
@@ -188,9 +208,12 @@ type Service struct {
 	Deps
 	mu      sync.Mutex
 	running map[game.InstanceID]string
-	stop    chan struct{}
-	done    chan struct{}
-	wg      sync.WaitGroup
+	// elevated holds the options the system refused without administrator
+	// rights (instance, option), for this run of the app (D150).
+	elevated map[elevationKey]bool
+	stop     chan struct{}
+	done     chan struct{}
+	wg       sync.WaitGroup
 
 	tools       []*runningTool
 	toolWG      sync.WaitGroup
@@ -204,7 +227,24 @@ func NewService(d Deps) *Service {
 	if d.Poll == 0 {
 		d.Poll = 200 * time.Millisecond
 	}
-	return &Service{Deps: d, running: map[game.InstanceID]string{}}
+	return &Service{Deps: d, running: map[game.InstanceID]string{}, elevated: map[elevationKey]bool{}}
+}
+
+type elevationKey struct {
+	instance game.InstanceID
+	option   string
+}
+
+func (s *Service) needsElevation(instance game.InstanceID, option string) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.elevated[elevationKey{instance, option}]
+}
+
+func (s *Service) markElevation(instance game.InstanceID, option string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.elevated[elevationKey{instance, option}] = true
 }
 
 // options returns the launch options of an instance: the adapter's when it
@@ -241,7 +281,10 @@ func (s *Service) Check(ctx context.Context, instance game.InstanceID) (Check, e
 		return Check{}, err
 	}
 	for _, o := range opts {
-		c.Options = append(c.Options, Option{ID: o.ID, Exe: o.Exe, Default: o.Default})
+		c.Options = append(c.Options, Option{
+			ID: o.ID, Exe: o.Exe, Default: o.Default, Args: o.Args, WorkDir: o.WorkDir,
+			StoreURI: o.StoreURI, RequiresClient: o.RequiresClient, NeedsElevation: s.needsElevation(instance, o.ID),
+		})
 	}
 	c.Unavailable = why
 	st, err := s.Deploy.Status(ctx, instance)
@@ -299,6 +342,9 @@ type Request struct {
 	// Confirmed accepts the warnings ("Jogar mesmo assim") or skipping a
 	// pending deploy ("Jogar sem implantar").
 	Confirmed bool
+	// Elevated starts the game with administrator rights ("Jogar como
+	// administrador", D150). A store launch ignores it.
+	Elevated bool
 }
 
 // Launch starts the launch operation: check, deploy when asked (the deploy
@@ -317,6 +363,23 @@ func (s *Service) Launch(ctx context.Context, instance game.InstanceID, req Requ
 		return "", err
 	}
 	deployFirst := c.DeployNeeded && (req.Deploy || (c.AutoDeploy && !req.Confirmed))
+	// Without a deploy first, a missing executable or a closed store client
+	// is refused at once (D150); after a deploy it is checked again at the
+	// start step, since the deploy may bring the executable. A closed
+	// store client is refused before a deploy too.
+	if deployFirst {
+		if err := s.checkClient(ctx, opt); err != nil {
+			return "", err
+		}
+	} else {
+		inst, err := s.Instances.Get(ctx, instance)
+		if err != nil {
+			return "", err
+		}
+		if _, _, err := s.prepare(ctx, inst, opt); err != nil {
+			return "", err
+		}
+	}
 	t, err := s.Ops.Enqueue(ctx, operations.Spec{Kind: KindLaunch, Subject: event.EntityRef{Kind: subjectInstance, ID: string(instance)}, Steps: []string{StepCheck, StepDeploy, StepStart}})
 	if err != nil {
 		return "", err
@@ -326,7 +389,7 @@ func (s *Service) Launch(ctx context.Context, instance game.InstanceID, req Requ
 		defer s.wg.Done()
 		bg := context.WithoutCancel(ctx)
 		_ = s.Ops.Execute(bg, t, func(ctx context.Context, t *operations.Tracker) error {
-			return opError(s.run(ctx, t, instance, opt, deployFirst, req.Confirmed))
+			return opError(s.run(ctx, t, instance, opt, deployFirst, req))
 		})
 	}()
 	return t.ID(), nil
@@ -373,7 +436,78 @@ func pick(c Check, id string) (Option, error) {
 	return Option{}, fail(CodeOptionUnknown, nil, "option", id)
 }
 
-func (s *Service) run(ctx context.Context, t *operations.Tracker, instance game.InstanceID, opt Option, deployFirst, confirmed bool) error {
+// prepare resolves the executable and working folder of an option and
+// checks what the start needs (D150): the store client the option requires
+// is open; for a direct start, the executable is a file and the working
+// folder a folder.
+func (s *Service) prepare(ctx context.Context, inst game.Instance, opt Option) (exe, work string, err error) {
+	if err := s.checkClient(ctx, opt); err != nil {
+		return "", "", err
+	}
+	exe = game.JoinPath(inst.Root, strings.ReplaceAll(opt.Exe, "/", `\`))
+	work = inst.Root
+	if opt.WorkDir != "" {
+		work = game.JoinPath(inst.Root, strings.ReplaceAll(opt.WorkDir, "/", `\`))
+	}
+	if opt.StoreURI != "" {
+		return exe, work, nil
+	}
+	if fi, err := s.FS.Stat(ctx, exe); err != nil {
+		return "", "", err
+	} else if !fi.Exists || fi.IsDir {
+		return "", "", fail(CodeExeMissing, nil, "exe", opt.Exe, "path", exe)
+	}
+	if fi, err := s.FS.Stat(ctx, work); err != nil {
+		return "", "", err
+	} else if !fi.Exists || !fi.IsDir {
+		return "", "", fail(CodeWorkDirMissing, nil, "exe", opt.Exe, "path", work)
+	}
+	return exe, work, nil
+}
+
+// checkClient refuses an option whose store client is closed (D150).
+func (s *Service) checkClient(ctx context.Context, opt Option) error {
+	if opt.RequiresClient == "" || s.Clients == nil {
+		return nil
+	}
+	running, err := s.Clients.ClientRunning(ctx, opt.RequiresClient)
+	if err != nil {
+		return err
+	}
+	if !running {
+		return fail(CodeClientClosed, nil, "store", opt.RequiresClient, "reason", opt.RequiresClient)
+	}
+	return nil
+}
+
+// start starts the game the way the option and the user ask: through the
+// store, elevated, or directly. A refusal for lack of administrator rights
+// is remembered, so the next check offers to play elevated (D150).
+func (s *Service) start(ctx context.Context, instance game.InstanceID, opt Option, exe, work string, elevated bool) error {
+	var err error
+	switch {
+	case opt.StoreURI != "":
+		err = s.Launcher.OpenURI(ctx, opt.StoreURI)
+	case elevated:
+		err = s.Launcher.StartElevated(ctx, exe, opt.Args, work)
+	default:
+		err = s.Launcher.Start(ctx, exe, opt.Args, work)
+	}
+	switch {
+	case err == nil:
+		return nil
+	case errors.Is(err, ports.ErrElevationRequired):
+		s.markElevation(instance, opt.ID)
+		return fail(CodeNeedsElevation, err, "exe", opt.Exe, "option", opt.ID)
+	case errors.Is(err, ports.ErrElevationCancelled):
+		return fail(CodeElevationCancelled, err, "exe", opt.Exe)
+	default:
+		return fail(CodeStartFailed, err, "exe", opt.Exe)
+	}
+}
+
+func (s *Service) run(ctx context.Context, t *operations.Tracker, instance game.InstanceID, opt Option, deployFirst bool, req Request) error {
+	confirmed := req.Confirmed
 	if err := t.BeginStep(ctx, StepCheck); err != nil {
 		return err
 	}
@@ -416,25 +550,12 @@ func (s *Service) run(ctx context.Context, t *operations.Tracker, instance game.
 	if err != nil {
 		return err
 	}
-	exe := game.JoinPath(inst.Root, strings.ReplaceAll(opt.Exe, "/", `\`))
-	var args []string
-	work := inst.Root
-	if a, ok := s.Registry.ByName(inst.Adapter); ok {
-		if ls, ok := a.(ports.LaunchSupport); ok {
-			if opts, err := ls.LaunchOptions(ctx, s.FS, inst); err == nil {
-				for _, o := range opts {
-					if o.ID == opt.ID {
-						args = o.Args
-						if o.WorkDir != "" {
-							work = game.JoinPath(inst.Root, o.WorkDir)
-						}
-					}
-				}
-			}
-		}
+	exe, work, err := s.prepare(ctx, inst, opt)
+	if err != nil {
+		return err
 	}
-	if err := s.Launcher.Start(ctx, exe, args, work); err != nil {
-		return fail(CodeStartFailed, err, "exe", opt.Exe)
+	if err := s.start(ctx, instance, opt, exe, work, req.Elevated); err != nil {
+		return err
 	}
 	// The version seen at launch is the one game_version_changed compares
 	// with (D084 item 5); the instance becomes the most recently used.

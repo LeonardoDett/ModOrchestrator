@@ -3038,6 +3038,7 @@ export namespace bridge {
 	    id: string;
 	    exe: string;
 	    default: boolean;
+	    needsElevation: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new LaunchOptionDTO(source);
@@ -3048,6 +3049,7 @@ export namespace bridge {
 	        this.id = source["id"];
 	        this.exe = source["exe"];
 	        this.default = source["default"];
+	        this.needsElevation = source["needsElevation"];
 	    }
 	}
 	export class LaunchCheckDTO {
@@ -3109,6 +3111,7 @@ export namespace bridge {
 	    option: string;
 	    deploy: boolean;
 	    confirmed: boolean;
+	    elevated: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new LaunchRequestDTO(source);
@@ -3119,6 +3122,7 @@ export namespace bridge {
 	        this.option = source["option"];
 	        this.deploy = source["deploy"];
 	        this.confirmed = source["confirmed"];
+	        this.elevated = source["elevated"];
 	    }
 	}
 	export class LibraryGameDTO {

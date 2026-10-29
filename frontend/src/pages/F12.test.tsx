@@ -42,7 +42,7 @@ const blocking: Diagnostic = {
 };
 
 const CHECK: LaunchCheck = {
-  instance: "i1", state: "ready", options: [{ id: "skse", exe: "skse64_loader.exe", default: true }, { id: "game", exe: "SkyrimSE.exe", default: false }],
+  instance: "i1", state: "ready", options: [{ id: "skse", exe: "skse64_loader.exe", default: true, needsElevation: false }, { id: "game", exe: "SkyrimSE.exe", default: false, needsElevation: false }],
   deployKind: "in_sync", deployReason: "up_to_date", deployNeeded: false, autoDeploy: true, deployProblem: false, running: [], blocking: [], warnings: [],
 };
 

@@ -182,19 +182,51 @@ type StoreScanner interface {
 // and returns; it never waits for it to exit. Whether the game runs is
 // ProcessProbe's question.
 type ProcessLauncher interface {
+	// Start starts exe directly. When the system refuses to start it
+	// without administrator rights (Windows error 740) the error wraps
+	// ErrElevationRequired (D150).
 	Start(ctx context.Context, exe string, args []string, workDir string) error
+	// StartElevated starts exe asking the system for administrator rights
+	// (the UAC prompt, ShellExecute "runas"). Only on the user's choice.
+	StartElevated(ctx context.Context, exe string, args []string, workDir string) error
+	// OpenURI hands a store URI (steam://rungameid/…) to the program the
+	// system registered for it; the store client starts the game (D150).
+	OpenURI(ctx context.Context, uri string) error
+}
+
+// ErrElevationRequired: the executable only starts with administrator
+// rights (Windows ERROR_ELEVATION_REQUIRED, 740).
+var ErrElevationRequired = errors.New("the executable requires elevation")
+
+// ErrElevationCancelled: the user said no to the administrator prompt of
+// ProcessLauncher.StartElevated (Windows ERROR_CANCELLED, 1223).
+var ErrElevationCancelled = errors.New("the elevation was cancelled")
+
+// StoreClients tells whether the client of a store (game.StoreSteam,
+// game.StoreEpic, game.StoreGOG) is running (D150).
+type StoreClients interface {
+	ClientRunning(ctx context.Context, store string) (bool, error)
 }
 
 // LaunchOption is one way to start a game (core/11 §1 `launch()`): the
 // executable and working folder relative to the game root ("" = root).
 // Exactly one option of a list is the default (Play); the others are in
 // the Play menu (e.g. "Lançar sem SKSE", core/12 §8).
+//
+// StoreURI and RequiresClient are optional (D150). With StoreURI the core
+// opens the URI and the store starts the game; Exe stays the executable
+// the game runs as. RequiresClient is the store whose client must be open
+// before the game starts (game.StoreSteam, StoreEpic or StoreGOG); the core
+// refuses the launch with a message while it is closed. Without them the
+// core starts Exe directly, as for the generic adapter.
 type LaunchOption struct {
-	ID      string
-	Exe     string
-	Args    []string
-	WorkDir string
-	Default bool
+	ID             string
+	Exe            string
+	Args           []string
+	WorkDir        string
+	Default        bool
+	StoreURI       string
+	RequiresClient string
 }
 
 // ProcessSpec is an external tool to start (D146): the executable, the rest

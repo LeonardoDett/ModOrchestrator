@@ -476,6 +476,7 @@ func New(ctx context.Context) (c *Container, err error) {
 	backupSvc.OnFailure = func() { _ = diagSvc.RefreshAll(context.Background()) }
 	launchSvc := launch.NewService(launch.Deps{
 		Registry: registry, Instances: instances, FS: fsys, Launcher: system.Launcher{},
+		Clients: system.StoreClients{Probe: system.Processes{}},
 		Runner: system.Runner{}, Locks: locks,
 		Deploy: deploySvc, Diagnostics: diagSvc, Games: gamesSvc, Settings: settingsSvc,
 		Ops: ops, UoW: sqlite.NewUnitOfWork(db), Publisher: bus, IDs: ids, Clock: clock,

@@ -18,6 +18,8 @@ type LaunchOptionDTO struct {
 	ID      string `json:"id"`
 	Exe     string `json:"exe"`
 	Default bool   `json:"default"`
+	// NeedsElevation: the system refused it without administrator rights.
+	NeedsElevation bool `json:"needsElevation"`
 }
 
 // LaunchCheckDTO is the pre-launch check (DLG-26 and the Play button).
@@ -41,6 +43,7 @@ type LaunchRequestDTO struct {
 	Option    string `json:"option"`
 	Deploy    bool   `json:"deploy"`
 	Confirmed bool   `json:"confirmed"`
+	Elevated  bool   `json:"elevated"`
 }
 
 // module is the module of a code in the catalog in effect (D131).
@@ -57,7 +60,7 @@ func (a *App) toLaunchCheckDTO(c launchsvc.Check) LaunchCheckDTO {
 	}
 	dto.Running = append(dto.Running, c.Running...)
 	for _, o := range c.Options {
-		dto.Options = append(dto.Options, LaunchOptionDTO{ID: o.ID, Exe: o.Exe, Default: o.Default})
+		dto.Options = append(dto.Options, LaunchOptionDTO{ID: o.ID, Exe: o.Exe, Default: o.Default, NeedsElevation: o.NeedsElevation})
 	}
 	for _, d := range c.Blocking {
 		dto.Blocking = append(dto.Blocking, toDiagnosticDTO(diagnostics.Item{Diagnostic: d, Instance: c.Instance, Module: a.module(d.Code)}))
@@ -79,7 +82,7 @@ func (a *App) LaunchCheck(instance string) (LaunchCheckDTO, error) {
 
 // Launch starts the launch operation with the user's choice in DLG-26.
 func (a *App) Launch(instance string, req LaunchRequestDTO) (string, error) {
-	id, err := a.c.Launch.Launch(a.context(), game.InstanceID(instance), launchsvc.Request{Option: req.Option, Deploy: req.Deploy, Confirmed: req.Confirmed})
+	id, err := a.c.Launch.Launch(a.context(), game.InstanceID(instance), launchsvc.Request{Option: req.Option, Deploy: req.Deploy, Confirmed: req.Confirmed, Elevated: req.Elevated})
 	if err != nil {
 		return "", a.fail("launch", err, map[string]string{"instance": instance})
 	}

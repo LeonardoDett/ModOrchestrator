@@ -528,6 +528,8 @@ export interface LaunchOption {
   id: string;
   exe: string;
   default: boolean;
+  /** The system refused this option without administrator rights (D150). */
+  needsElevation: boolean;
 }
 
 export interface LaunchCheck {
@@ -550,6 +552,8 @@ export interface LaunchRequest {
   option: string;
   deploy: boolean;
   confirmed: boolean;
+  /** "Jogar como administrador" (D150). */
+  elevated?: boolean;
 }
 
 export interface AttentionGroup {
