@@ -1,5 +1,7 @@
 # Mod Orchestrator: especificação v2.1
 
+> **Cópia de consulta.** Desde 2026-10-29 esta pasta é atualizada pelo mantenedor de tempos em tempos, por exemplo ao fechar um conjunto de fases, e pode estar atrás do estado atual do código. Agentes não a leem por padrão (ver `AGENTS.md`).
+
 Gerenciador de mods para PC (Windows, Go + Wails + React/dettmann-ui) que entrega o que o **Vortex** entrega para arquivos locais, com a clareza de prioridade e o isolamento do **MO2**, e corrige os pontos fracos de ambos. Visão, releases e requisitos: [`00-visao-e-escopo.md`](00-visao-e-escopo.md).
 
 > A especificação documenta comportamentos, contratos e decisões; não contém código. Quando código e documento divergem, o documento vale (ver manifesto).

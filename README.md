@@ -1,7 +1,8 @@
 # Mod Orchestrator
 
-Desktop mod manager (Go + Wails v2 + React). The specification lives in
-`mod-orchestrator-spec-v2/` and the design system in `dettmann-ui/`, both versioned in this
+Desktop mod manager (Go + Wails v2 + React). A snapshot of the specification is published in
+`mod-orchestrator-spec-v2/` (refreshed from the maintainer's planning workspace from time to time)
+and the design system lives in `dettmann-ui/`, both versioned in this
 repository (the library build, `node_modules/` and `dist/`, is not versioned; see D052).
 
 Status: **V1.0 in preparation** (spec phases F0–F15 implemented; the first public release depends on steps 4–7 of `plano-de-publicacao.md`). Changes per version: [CHANGELOG.md](CHANGELOG.md).

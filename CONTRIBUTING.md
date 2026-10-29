@@ -40,11 +40,11 @@ CI runs the same checks (except `wails build`) on every pull request.
 
 ## Project rules
 
-- The specification in `mod-orchestrator-spec-v2/` is the authority. Start with the [protocol](mod-orchestrator-spec-v2/prompts/00-protocolo.md) and [AGENTS.md](AGENTS.md); they apply to people and agents alike (both are still in Portuguese).
+- The specification in `mod-orchestrator-spec-v2/` is a published snapshot of the maintainer's planning workspace, refreshed from time to time; it may lag behind `master`. Read [AGENTS.md](AGENTS.md) for the working rules (still in Portuguese).
 - Layers: `internal/core/domain` <- `internal/core/application` <- `internal/infrastructure` / `internal/adapters`. `go test ./internal` fails if the rule is broken.
 - Anything that does not hold for every game comes in through an adapter capability, with a test using the `generic` adapter (without the capability). Game facts (names, files, extensions) live only in `internal/adapters` (D112).
 - No business rules in React components; all UI uses `dettmann-ui`; all UI text comes from i18n (en and pt-BR).
-- If you change a contract, rule or behavior the spec does not cover, record the decision in `mod-orchestrator-spec-v2/docs-ia/decisoes.md` in the same pull request.
+- If you change a contract, rule or behavior the spec does not cover, describe the decision (context, choice, alternatives) in the pull request; the maintainer records it and it reaches the spec in the next snapshot.
 - New dependencies need a GPL-3.0-compatible license (D076).
 - GitHub workflows: do not use `pull_request_target` and do not give secrets to jobs that run pull request code (D077).
 
