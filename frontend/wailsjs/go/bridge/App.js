@@ -234,6 +234,10 @@ export function GameInstanceDetails(arg1) {
   return window['go']['bridge']['App']['GameInstanceDetails'](arg1);
 }
 
+export function GameSettingsInfo(arg1) {
+  return window['go']['bridge']['App']['GameSettingsInfo'](arg1);
+}
+
 export function GameTemplates() {
   return window['go']['bridge']['App']['GameTemplates']();
 }
@@ -416,6 +420,10 @@ export function ModFlags(arg1) {
 
 export function ModHistory(arg1) {
   return window['go']['bridge']['App']['ModHistory'](arg1);
+}
+
+export function ModIniTweaks(arg1) {
+  return window['go']['bridge']['App']['ModIniTweaks'](arg1);
 }
 
 export function ModList(arg1) {
@@ -774,6 +782,10 @@ export function SetIndexLock(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetIndexLock'](arg1, arg2, arg3);
 }
 
+export function SetIniTweak(arg1, arg2, arg3) {
+  return window['go']['bridge']['App']['SetIniTweak'](arg1, arg2, arg3);
+}
+
 export function SetInstanceFeature(arg1, arg2, arg3) {
   return window['go']['bridge']['App']['SetInstanceFeature'](arg1, arg2, arg3);
 }
@@ -784,6 +796,10 @@ export function SetInstanceSetting(arg1, arg2, arg3) {
 
 export function SetLocalSaves(arg1, arg2) {
   return window['go']['bridge']['App']['SetLocalSaves'](arg1, arg2);
+}
+
+export function SetLocalSettings(arg1, arg2) {
+  return window['go']['bridge']['App']['SetLocalSettings'](arg1, arg2);
 }
 
 export function SetModAttributes(arg1, arg2) {

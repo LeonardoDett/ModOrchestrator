@@ -118,6 +118,8 @@ export function GameEntries():Promise<Array<bridge.GameEntryDTO>>;
 
 export function GameInstanceDetails(arg1:string):Promise<bridge.ManagedGameDTO>;
 
+export function GameSettingsInfo(arg1:string):Promise<bridge.GameSettingsInfoDTO>;
+
 export function GameTemplates():Promise<Array<bridge.GameTemplateDTO>>;
 
 export function GamesSupport():Promise<Array<bridge.GameSupportDTO>>;
@@ -209,6 +211,8 @@ export function ModFiles(arg1:string,arg2:string,arg3:number,arg4:number):Promis
 export function ModFlags(arg1:string):Promise<Array<bridge.ModFlagsDTO>>;
 
 export function ModHistory(arg1:string):Promise<Array<bridge.ModHistoryDTO>>;
+
+export function ModIniTweaks(arg1:string):Promise<bridge.ModIniTweaksDTO>;
 
 export function ModList(arg1:string):Promise<Array<bridge.ModRowDTO>>;
 
@@ -388,11 +392,15 @@ export function SetFileOverrides(arg1:string,arg2:string,arg3:Array<bridge.Locat
 
 export function SetIndexLock(arg1:string,arg2:Array<string>,arg3:boolean):Promise<void>;
 
+export function SetIniTweak(arg1:string,arg2:string,arg3:boolean):Promise<void>;
+
 export function SetInstanceFeature(arg1:string,arg2:string,arg3:boolean):Promise<void>;
 
 export function SetInstanceSetting(arg1:string,arg2:string,arg3:string):Promise<void>;
 
 export function SetLocalSaves(arg1:string,arg2:boolean):Promise<void>;
+
+export function SetLocalSettings(arg1:string,arg2:boolean):Promise<void>;
 
 export function SetModAttributes(arg1:string,arg2:bridge.ModAttributesDTO):Promise<void>;
 

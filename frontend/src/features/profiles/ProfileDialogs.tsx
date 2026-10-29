@@ -127,8 +127,14 @@ export function NewProfileDialog({
                     return next;
                   })
                 }
-                label={t("profiles.clone.copySaves", { name: profiles.find((p) => p.id === source)?.name ?? "" })}
-                description={t("profiles.clone.copySavesHelp", { count: tp("saves.header.countN", o.files), size: formatBytes(o.bytes) })}
+                label={t(o.id === "game_settings" ? "profiles.clone.copySettings" : "profiles.clone.copySaves", {
+                  name: profiles.find((p) => p.id === source)?.name ?? "",
+                })}
+                description={
+                  o.id === "game_settings"
+                    ? t("profiles.clone.copySettingsHelp", { size: formatBytes(o.bytes) })
+                    : t("profiles.clone.copySavesHelp", { count: tp("saves.header.countN", o.files), size: formatBytes(o.bytes) })
+                }
               />
             ))}
             <DialogError error={error} />

@@ -367,3 +367,36 @@ func (s *Service) applyNow(ctx context.Context, sp *support, id profile.ID) erro
 	}
 	return s.apply(ctx, sp, d, "", false, false)
 }
+
+// Info is what the profile screen shows of the feature: the settings files
+// and the profiles that keep their own.
+type Info struct {
+	Files []string
+	Local []profile.ID
+}
+
+// Info describes the feature for an instance; ok is false when the game
+// has no game_settings in effect.
+func (s *Service) Info(ctx context.Context, instance game.InstanceID) (Info, bool, error) {
+	sp, err := s.support(ctx, instance)
+	if unsupported(err) {
+		return Info{}, false, nil
+	}
+	if err != nil {
+		return Info{}, false, err
+	}
+	var out Info
+	for _, f := range sp.files {
+		out.Files = append(out.Files, f.Name())
+	}
+	list, err := s.Profiles.ListByInstance(ctx, instance)
+	if err != nil {
+		return Info{}, false, err
+	}
+	for _, p := range list {
+		if p.Features().LocalSettings {
+			out.Local = append(out.Local, p.ID())
+		}
+	}
+	return out, true, nil
+}

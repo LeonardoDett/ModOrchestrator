@@ -16,6 +16,77 @@ export namespace bridge {
 	        this.overrides = source["overrides"];
 	    }
 	}
+	export class GameSettingsInfoDTO {
+	    supported: boolean;
+	    files: string[];
+	    local: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new GameSettingsInfoDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.supported = source["supported"];
+	        this.files = source["files"];
+	        this.local = source["local"];
+	    }
+	}
+	
+	export class IniTweakDTO {
+	    path: string;
+	    name: string;
+	    file: string;
+	    enabled: boolean;
+	    keys: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new IniTweakDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.file = source["file"];
+	        this.enabled = source["enabled"];
+	        this.keys = source["keys"];
+	    }
+	}
+	
+	export class ModIniTweaksDTO {
+	    supported: boolean;
+	    tweaks: IniTweakDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ModIniTweaksDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.supported = source["supported"];
+	        this.tweaks = this.convertValues(source["tweaks"], IniTweakDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
 	export class ModsSummaryDTO {
 	    enabled: number;
 	    total: number;

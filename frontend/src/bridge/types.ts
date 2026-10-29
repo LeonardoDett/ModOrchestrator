@@ -223,6 +223,11 @@ export interface Backend {
   saves(instance: string): Promise<SavesView>;
   saveScreenshot(instance: string, name: string): Promise<string>;
   setLocalSaves(profile: string, on: boolean): Promise<void>;
+  /** game_settings (LV8): settings files per profile and INI tweaks. */
+  gameSettingsInfo(instance: string): Promise<GameSettingsInfo>;
+  setLocalSettings(profile: string, on: boolean): Promise<void>;
+  modIniTweaks(mod: string): Promise<ModIniTweaks>;
+  setIniTweak(mod: string, path: string, on: boolean): Promise<void>;
   previewSaveTransfer(instance: string, names: string[], to: string): Promise<SaveTransfer>;
   transferSaves(instance: string, names: string[], to: string, move: boolean): Promise<SaveTransfer>;
   deleteSaves(instance: string, names: string[]): Promise<void>;
@@ -1911,6 +1916,28 @@ export interface LoadOrderDiff {
 }
 
 // --- Saves (D142). ---
+export interface GameSettingsInfo {
+  supported: boolean;
+  /** The settings files a profile may keep its own copy of. */
+  files: string[];
+  /** The profiles that keep their own. */
+  local: string[];
+}
+
+export interface IniTweak {
+  path: string;
+  name: string;
+  /** The settings file it applies to. */
+  file: string;
+  enabled: boolean;
+  keys: number;
+}
+
+export interface ModIniTweaks {
+  supported: boolean;
+  tweaks: IniTweak[];
+}
+
 export interface CopyOption {
   id: string;
   files: number;
