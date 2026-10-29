@@ -78,7 +78,7 @@ func (Adapter) Definitions() []game.Definition {
 			game.CapFilesystemTarget, game.CapModTypes, game.CapInstaller,
 			game.CapPlugins, game.CapLoadOrder, game.CapLaunch, game.CapExternalChanges,
 			game.CapAdapterInstallers, game.CapHealthChecks, game.CapDefaultCategories, game.CapRunningDetection,
-			game.CapSaveGames, game.CapTools,
+			game.CapSaveGames, game.CapTools, game.CapGameSettings,
 		),
 		Support: game.SupportFull,
 		Discovery: game.Discovery{
@@ -162,7 +162,7 @@ func (Adapter) RootHints(game.ID) sdk.RootHints {
 		Dirs: []string{
 			"meshes", "textures", "scripts", "interface", "sound", "music", "seq", "strings",
 			"skse", "shadersfx", "lodsettings", "grass", "video", "calientetools",
-			"netscriptframework", "source",
+			"netscriptframework", "source", tweakFolder,
 		},
 		Extensions: []string{".esp", ".esm", ".esl", ".bsa", ".ini"},
 	}

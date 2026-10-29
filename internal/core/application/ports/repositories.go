@@ -198,6 +198,20 @@ type Settings interface {
 type GameSettings interface {
 	Key(ctx context.Context, instance game.InstanceID, owner string) (*gamesettings.KeyRecord, error)
 	SaveKey(ctx context.Context, k *gamesettings.KeyRecord) error
+	// Keys lists every key record of an instance, of every owner.
+	Keys(ctx context.Context, instance game.InstanceID) ([]*gamesettings.KeyRecord, error)
+	DeleteKey(ctx context.Context, instance game.InstanceID, owner string) error
+	// File returns the record of a whole settings file (game_settings,
+	// LV8); ErrNotFound when the app never swapped it.
+	File(ctx context.Context, instance game.InstanceID, path string) (*gamesettings.FileRecord, error)
+	SaveFile(ctx context.Context, f *gamesettings.FileRecord) error
+	// Copies lists the copies of the settings files a profile keeps.
+	Copies(ctx context.Context, p profile.ID) ([]gamesettings.Copy, error)
+	SaveCopy(ctx context.Context, c gamesettings.Copy) error
+	// Tweaks lists the INI tweaks the user turned on, by mod (paths in the
+	// mod, as the installation lists them).
+	Tweaks(ctx context.Context, instance game.InstanceID) (map[mod.ID][]string, error)
+	SetTweak(ctx context.Context, instance game.InstanceID, m mod.ID, path string, on bool) error
 }
 
 // Tools persists the external tools of an instance (D146), in their order.

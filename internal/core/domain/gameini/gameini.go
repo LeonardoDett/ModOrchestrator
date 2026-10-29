@@ -169,3 +169,31 @@ func Remove(data []byte, section, key string) []byte {
 	b.Write(data[last:])
 	return b.Bytes()
 }
+
+// Pair is one "key=value" line of a section.
+type Pair struct {
+	Section, Key, Value string
+}
+
+// Pairs lists the keys of the file in the order they appear, with the
+// section each belongs to. Lines before the first section and comments are
+// skipped. A key that repeats appears each time; the last one is the one
+// the game reads.
+func Pairs(data []byte) []Pair {
+	var out []Pair
+	section := ""
+	for _, l := range lines(data) {
+		text := string(data[l.start:l.end])
+		if name, ok := header(text); ok {
+			section = name
+			continue
+		}
+		if section == "" {
+			continue
+		}
+		if k, v, ok := pair(text); ok && k != "" {
+			out = append(out, Pair{Section: section, Key: k, Value: v})
+		}
+	}
+	return out
+}

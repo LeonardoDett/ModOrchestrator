@@ -30,6 +30,7 @@ import (
 	"modorchestrator/internal/core/application/library"
 	"modorchestrator/internal/core/application/operations"
 	pluginsvc "modorchestrator/internal/core/application/plugins"
+	"modorchestrator/internal/core/application/gameconfig"
 	savesvc "modorchestrator/internal/core/application/saves"
 	"modorchestrator/internal/core/application/ports"
 	profilesvc "modorchestrator/internal/core/application/profiles"
@@ -73,6 +74,7 @@ type env struct {
 	hist     *historysvc.Service
 	plug     *pluginsvc.Service
 	saves    *savesvc.Service
+	gcfg     *gameconfig.Service
 	imp      *imports.Service
 	db       *sql.DB
 	bus      *eventbus.Bus
@@ -206,7 +208,14 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		UoW: sqlite.NewUnitOfWork(db), Publisher: bus, FS: fsys, Folders: testFolders{root: filepath.Join(dir, "LocalAppData")},
 		Plugins: savesPlugins{e.plug}, ModSwitch: e.prof, Locks: locks, IDs: ids, Clock: clock,
 	})
-	e.prof.Copiers = []profilesvc.Copier{e.saves}
+	// The game_settings module (LV8), before saves as in the bootstrap.
+	e.gcfg = gameconfig.NewService(gameconfig.Deps{
+		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Profiles: profiles, Mods: e.mods,
+		Installations: sqlite.NewInstallationRepository(db), Manifests: sqlite.NewManifestRepository(db),
+		GameSettings: sqlite.NewGameSettingsRepository(db), UoW: sqlite.NewUnitOfWork(db), Publisher: bus, FS: fsys,
+		Folders: testFolders{root: filepath.Join(dir, "LocalAppData")}, Locks: locks, IDs: ids, Clock: clock,
+	})
+	e.prof.Copiers = []profilesvc.Copier{e.saves, e.gcfg}
 	e.dep = deploysvc.NewService(deploysvc.Deps{
 		Registry: registry, Instances: sqlite.NewGameInstanceRepository(db), Mods: e.mods,
 		Installations: sqlite.NewInstallationRepository(db), Profiles: profiles, Rules: e.rules,
@@ -215,7 +224,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Publisher: bus, FS: fsys, Foreign: e.games,
 		Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
 		Archives: sqlite.NewArchiveRepository(db), Decisions: sqlite.NewExternalDecisionRepository(db),
-		Hasher: hashing.SHA256{}, Library: e.lib, Exclusions: e.conf, PostDeploy: []deploysvc.PostDeploy{e.plug, e.saves},
+		Hasher: hashing.SHA256{}, Library: e.lib, Exclusions: e.conf, PostDeploy: []deploysvc.PostDeploy{e.plug, e.gcfg, e.saves},
 		Ops: e.ops, Locks: locks, IDs: ids, Clock: clock,
 	})
 	e.auto = deploysvc.NewAutoDeployer(e.dep)
@@ -225,7 +234,7 @@ func newEnvWith(t *testing.T, o envOptions) *env {
 		Suppressions: sqlite.NewSuppressionRepository(db), Presence: sqlite.NewPresenceRepository(db),
 		Notifs: sqlite.NewNotificationRepository(db), State: sqlite.NewAppState(db), UoW: sqlite.NewUnitOfWork(db),
 		Publisher: bus, FS: fsys, Settings: appsettings.NewService(sqlite.NewSettingsRepository(db), system.Locale{}, settings.V1),
-		Conflicts: e.conf, Deploy: e.dep, Games: e.games, Library: e.lib, Commands: e.prof, Modules: []diagsvc.Module{e.plug, e.saves}, IDs: ids, Clock: clock,
+		Conflicts: e.conf, Deploy: e.dep, Games: e.games, Library: e.lib, Commands: e.prof, Modules: []diagsvc.Module{e.plug, e.saves, e.gcfg}, IDs: ids, Clock: clock,
 	})
 	t.Cleanup(e.diag.Close)
 	e.hist = historysvc.NewService(historysvc.Deps{

@@ -78,3 +78,17 @@ func TestRemove(t *testing.T) {
 		t.Fatal("set + remove is not the original")
 	}
 }
+
+func TestPairsListsKeysBySection(t *testing.T) {
+	data := []byte("orphan=1\r\n; c\r\n[Display]\r\nfGamma = 1.2\r\n#x=1\r\n[General]\r\nk=a\r\nk=b\r\nnot a pair\r\n")
+	got := Pairs(data)
+	want := []Pair{{"Display", "fGamma", "1.2"}, {"General", "k", "a"}, {"General", "k", "b"}}
+	if len(got) != len(want) {
+		t.Fatalf("got %v", got)
+	}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Fatalf("got %v", got)
+		}
+	}
+}

@@ -61,6 +61,16 @@ const (
 	CodeBackupFailed             Code = "backup_failed"
 )
 
+// Codes of the game_settings feature (LV8).
+const (
+	// CodeGameSettingRequired: a key the game needs for mods to work is
+	// missing or has another value.
+	CodeGameSettingRequired Code = "game_setting_required"
+	// CodeIniTweakExternal: a key an INI tweak of a mod wrote changed
+	// outside the app.
+	CodeIniTweakExternal Code = "ini_tweak_external"
+)
+
 // Module groups codes for the filters of the Diagnostics screen and the
 // problem bands of each screen (ui/telas/diagnostics.md §2). The set is
 // closed: modules are places of the app, and a code of an adapter joins one
@@ -106,6 +116,7 @@ var coreModules = map[Code]Module{
 	CodePluginRequirementMissing: ModulePlugins, CodePluginIncompatible: ModulePlugins, CodePluginProviderSkipped: ModulePlugins,
 	CodeGameNotFound: ModuleGame, CodeGameVersionChanged: ModuleGame, CodeGameRunning: ModuleGame,
 	CodeFrameworkMissing: ModuleGame, CodeSavePathExternal: ModuleGame,
+	CodeGameSettingRequired: ModuleGame, CodeIniTweakExternal: ModuleGame,
 	CodeDiskSpaceLow: ModuleApp, CodeBackupFailed: ModuleApp,
 }
 

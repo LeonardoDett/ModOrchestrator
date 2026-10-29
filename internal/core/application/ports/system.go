@@ -8,6 +8,7 @@ import (
 
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/gamesettings"
 	"modorchestrator/internal/core/domain/tool"
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
@@ -573,4 +574,21 @@ type SaveGamesSupport interface {
 	SaveCompanions(id game.ID, name string) []string
 	// ReadSave reads the header of a save. It reads only what it needs.
 	ReadSave(id game.ID, name string, r io.Reader) (savegame.Header, error)
+}
+
+// GameSettingsSupport is implemented by adapters with the `game_settings`
+// capability (core/07 §7, LV8): the settings files a profile may keep a
+// copy of, the keys the game needs for mods to work and which files of a
+// mod are INI tweaks. The adapter only declares; the core swaps the files
+// and writes the keys with evidence (anti-pattern 24).
+type GameSettingsSupport interface {
+	// SettingsFiles are the files a profile may keep its own copy of, for
+	// this installation (store variants of the user folders).
+	SettingsFiles(inst game.Instance) []gamesettings.File
+	// RequiredSettings are the keys the game needs for loose mod files to
+	// work, each in one of SettingsFiles. Empty when the game needs none.
+	RequiredSettings(inst game.Instance) []gamesettings.Required
+	// IniTweak reports whether a file a mod installs is an INI tweak and
+	// which of SettingsFiles (its Path) it applies to.
+	IniTweak(inst game.Instance, file game.Location) (target string, ok bool)
 }

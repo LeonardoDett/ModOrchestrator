@@ -33,6 +33,7 @@ var contracts = []Contract{
 	{game.CapDefaultCategories, "ports.CategoryProvider", implements[ports.CategoryProvider]},
 	{game.CapRunningDetection, "ports.ProcessDeclarer", implements[ports.ProcessDeclarer]},
 	{game.CapSaveGames, "ports.SaveGamesSupport", implements[ports.SaveGamesSupport]},
+	{game.CapGameSettings, "ports.GameSettingsSupport", implements[ports.GameSettingsSupport]},
 	{game.CapTools, "ports.ToolSupport", implements[ports.ToolSupport]},
 }
 

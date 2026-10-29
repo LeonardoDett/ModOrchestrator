@@ -14,6 +14,7 @@ type (
 	FileLocation        = inner.FileLocation
 	FileReader          = inner.FileReader
 	GameAdapter         = inner.GameAdapter
+	GameSettingsSupport = inner.GameSettingsSupport
 	GameTemplate        = inner.GameTemplate
 	HealthCheckProvider = inner.HealthCheckProvider
 	InstallerProvider   = inner.InstallerProvider

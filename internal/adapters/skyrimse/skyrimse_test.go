@@ -17,7 +17,7 @@ func TestDefinitionIsValidAndDeclaresCapabilities(t *testing.T) {
 	if err := def.Validate(); err != nil {
 		t.Fatal(err)
 	}
-	for _, c := range []game.Capability{game.CapPlugins, game.CapLoadOrder, game.CapInstaller, game.CapLaunch, game.CapSaveGames, game.CapTools} {
+	for _, c := range []game.Capability{game.CapPlugins, game.CapLoadOrder, game.CapInstaller, game.CapLaunch, game.CapSaveGames, game.CapTools, game.CapGameSettings} {
 		if !def.Capabilities.Has(c) {
 			t.Errorf("missing capability %s", c)
 		}

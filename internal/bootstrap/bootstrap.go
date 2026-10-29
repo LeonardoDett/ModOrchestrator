@@ -33,6 +33,7 @@ import (
 	"modorchestrator/internal/core/application/plugins"
 	"modorchestrator/internal/core/application/ports"
 	profilesvc "modorchestrator/internal/core/application/profiles"
+	"modorchestrator/internal/core/application/gameconfig"
 	"modorchestrator/internal/core/application/saves"
 	appsettings "modorchestrator/internal/core/application/settings"
 	"modorchestrator/internal/core/domain/game"
@@ -72,6 +73,9 @@ type Container struct {
 	Plugins *plugins.Service
 	// Saves owns the save folders of the profiles (save_games, D142).
 	Saves *saves.Service
+	// GameConfig owns the settings files of the profiles and the INI
+	// tweaks (game_settings, LV8).
+	GameConfig *gameconfig.Service
 	// Tools owns the external tools of an instance (tools, D146).
 	Tools *tools.Service
 	// Loot is the LOOT data provider of the plugins module (D143).
@@ -369,6 +373,25 @@ func New(ctx context.Context) (c *Container, err error) {
 
 	// The saves module (save_games, D142) enters like the plugins module:
 	// by contribution points, plus what it asks the plugins module.
+	// The game_settings module (LV8) enters the same way; its post step runs
+	// before the saves module, whose key it carries over a swap.
+	gameConfigSvc := gameconfig.NewService(gameconfig.Deps{
+		Registry:      registry,
+		Instances:     instances,
+		Profiles:      profiles,
+		Mods:          sqlite.NewModRepository(db),
+		Installations: sqlite.NewInstallationRepository(db),
+		Manifests:     sqlite.NewManifestRepository(db),
+		GameSettings:  sqlite.NewGameSettingsRepository(db),
+		UoW:           sqlite.NewUnitOfWork(db),
+		Publisher:     bus,
+		FS:            fsys,
+		Folders:       system.Folders{},
+		Locks:         locks,
+		IDs:           ids,
+		Clock:         clock,
+	})
+
 	savesSvc := saves.NewService(saves.Deps{
 		Registry:     registry,
 		Instances:    instances,
@@ -408,7 +431,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Hasher:        hashing.SHA256{},
 		Library:       librarySvc,
 		Exclusions:    conflictsSvc,
-		PostDeploy:    []deployment.PostDeploy{pluginsSvc, savesSvc},
+		PostDeploy:    []deployment.PostDeploy{pluginsSvc, gameConfigSvc, savesSvc},
 		Ops:           ops,
 		Locks:         locks,
 		IDs:           ids,
@@ -417,7 +440,7 @@ func New(ctx context.Context) (c *Container, err error) {
 	// The plugins module enters the core through its contribution points
 	// (D133); the services that are built before it get it here.
 	profilesSvc.Sections = []profilesvc.Section{pluginsSvc}
-	profilesSvc.Copiers = []profilesvc.Copier{savesSvc}
+	profilesSvc.Copiers = []profilesvc.Copier{savesSvc, gameConfigSvc}
 	librarySvc.FileStates = pluginsSvc
 	// Auto-deploy follows committed changes of the desired state (D036).
 	autoDeploy := deployment.NewAutoDeployer(deploySvc)
@@ -444,7 +467,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Games:        gamesSvc,
 		Library:      librarySvc,
 		Commands:     profilesSvc,
-		Modules:      []diagnostics.Module{pluginsSvc, savesSvc},
+		Modules:      []diagnostics.Module{pluginsSvc, savesSvc, gameConfigSvc},
 		IDs:          ids,
 		Clock:        clock,
 	})
@@ -576,6 +599,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		AutoDeploy:         autoDeploy,
 		Plugins:            pluginsSvc,
 		Saves:              savesSvc,
+		GameConfig:         gameConfigSvc,
 		Tools:              toolsSvc,
 		Loot:               lootSvc,
 		Diagnostics:        diagSvc,
