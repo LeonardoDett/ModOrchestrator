@@ -27,7 +27,7 @@ Menu ⋯: Renomear, Editar notas, Transferir seleção para…, Comparar com…,
 
 Features (saves/config local) aparecem como switches no card **só** com capability (V1.x); na V1 não aparecem para Skyrim ainda.
 
-"Configurações próprias" (`game_settings`, D149): backend e bridge prontos (`GameSettingsInfo`, `SetLocalSettings`); o switch no cartão **espera prancha** (proposta na D149, Consequências). O diálogo Clonar já oferece "Copiar as configurações do jogo de X" quando a origem tem configurações próprias.
+"Configurações próprias" (`game_settings`, D149; aprovado pelo usuário em 2026-10-29): linha com switch no corpo do cartão, depois do uso, com a ajuda "Guarda a própria cópia de <arquivos do jogo>." Só aparece quando o jogo tem a capability; no perfil implantado aplica na hora. O diálogo Clonar oferece "Copiar as configurações do jogo de X" quando a origem tem configurações próprias.
 
 ## 3. Diálogos
 

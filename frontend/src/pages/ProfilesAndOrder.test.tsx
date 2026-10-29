@@ -197,3 +197,40 @@ describe("Profiles (F5)", () => {
     expect(within(list).queryByText("active plugins")).not.toBeInTheDocument();
   });
 });
+
+describe("Profiles screen: own game settings (D149)", () => {
+  beforeEach(() => localStorage.clear());
+
+  it("shows the switch on each card with the game's files and asks the backend", async () => {
+    const user = userEvent.setup();
+    const { state, backend } = world();
+    const local = new Set(["p2"]);
+    backend.gameSettingsInfo = async () => ({ supported: true, files: ["Skyrim.ini", "SkyrimPrefs.ini"], local: [...local] });
+    backend.setLocalSettings = async (id, on) => {
+      state.calls.push(`local:${id}:${on}`);
+      if (on) local.add(id);
+      else local.delete(id);
+    };
+    render(<App backend={backend} />);
+    await open(user, "Profiles");
+    const list = await screen.findByRole("list", { name: "Profiles" });
+    const [first, second] = within(list).getAllByRole("listitem");
+    expect(await within(first!).findByText("Keeps its own copy of Skyrim.ini, SkyrimPrefs.ini.")).toBeInTheDocument();
+    const firstSwitch = within(first!).getByRole("switch", { name: "Own game settings" });
+    expect(firstSwitch).not.toBeChecked();
+    expect(within(second!).getByRole("switch", { name: "Own game settings" })).toBeChecked();
+    await user.click(firstSwitch);
+    await waitFor(() => expect(state.calls).toContain("local:p1:true"));
+  });
+
+  it("has no switch in a game without game_settings", async () => {
+    const user = userEvent.setup();
+    const { backend } = world();
+    backend.gameSettingsInfo = async () => ({ supported: false, files: [], local: [] });
+    render(<App backend={backend} />);
+    await open(user, "Profiles");
+    const list = await screen.findByRole("list", { name: "Profiles" });
+    await within(list).findAllByRole("listitem");
+    expect(within(list).queryByRole("switch", { name: "Own game settings" })).not.toBeInTheDocument();
+  });
+});

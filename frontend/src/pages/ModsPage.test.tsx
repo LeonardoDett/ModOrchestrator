@@ -499,3 +499,43 @@ describe("Mods screen (F4)", () => {
     expect(await within(next).findByText("Installed straight from the archive")).toBeInTheDocument();
   });
 });
+
+describe("Mod detail: INI tweaks (D149)", () => {
+  beforeEach(() => localStorage.clear());
+
+  async function openDetail(backend: Backend) {
+    const user = userEvent.setup();
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    screen.getByRole("grid").focus();
+    await user.keyboard("{Enter}");
+    return { user, detail: await screen.findByRole("dialog", { name: "SkyUI" }) };
+  }
+
+  it("lists each tweak with its file and keys, and turns it on through the backend", async () => {
+    const { backend } = world();
+    const calls: string[] = [];
+    backend.modIniTweaks = async () => ({
+      supported: true,
+      tweaks: [{ path: "INI Tweaks/Shadows [SkyrimPrefs].ini", name: "Shadows [SkyrimPrefs]", file: "SkyrimPrefs.ini", enabled: false, keys: 2 }],
+    });
+    backend.setIniTweak = async (mod, path, on) => {
+      calls.push(`${mod}:${path}:${on}`);
+    };
+    const { user, detail } = await openDetail(backend);
+    const section = await within(detail).findByRole("region", { name: "INI tweaks" });
+    expect(within(section).getByText("In SkyrimPrefs.ini · 2 keys")).toBeInTheDocument();
+    await user.click(within(section).getByRole("switch", { name: "Turn on the tweak Shadows [SkyrimPrefs]" }));
+    await waitFor(() => expect(calls).toHaveLength(1));
+    expect(calls[0]).toMatch(/:INI Tweaks\/Shadows \[SkyrimPrefs\]\.ini:true$/);
+  });
+
+  it("has no section without tweaks or without game_settings", async () => {
+    const { backend } = world();
+    backend.modIniTweaks = async () => ({ supported: false, tweaks: [] });
+    const { detail } = await openDetail(backend);
+    expect(await within(detail).findByText("1/2")).toBeInTheDocument();
+    expect(within(detail).queryByRole("region", { name: "INI tweaks" })).not.toBeInTheDocument();
+  });
+});

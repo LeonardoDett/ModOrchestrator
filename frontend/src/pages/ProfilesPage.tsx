@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { CheckIcon, HistoryIcon, LayersIcon, MinusIcon, MoreHorizontalIcon, PlusIcon } from "dettmann-ui/icons";
-import { Alert, Button, EmptyState, FeaturedIcon, Indicator, Menu, ResourcePage, StatTile, Table, Tag, useToast } from "dettmann-ui";
+import { Alert, Button, EmptyState, FeaturedIcon, Indicator, Menu, ResourcePage, SettingRow, StatTile, Switch, Table, Tag, useToast } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useProfiles, useSnapshots, useWorkspace } from "../bridge/queries";
+import { useGameSettingsInfo, useProfiles, useSnapshots, useWorkspace } from "../bridge/queries";
 import type { ProfileSummary } from "../bridge/types";
 import { useDeploy } from "../features/deploy/DeployContext";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
@@ -33,6 +33,9 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
   const workspace = useWorkspace();
   // The plugins figure exists only where the backend lists its section (D132).
   const withPlugins = workspace.status === "ready" && (workspace.data.sections ?? []).includes("profiles.plugins");
+  // "Configurações próprias" only where the game has game_settings (D149).
+  const gameSettings = useGameSettingsInfo(instance);
+  const settings = gameSettings.status === "ready" && gameSettings.data.supported ? gameSettings.data : null;
   const list = profiles.status === "ready" ? profiles.data : [];
   const active = list.find((p) => p.active);
   const deployed = list.find((p) => p.deployed);
@@ -152,6 +155,23 @@ function ProfilesWorkspace({ instance }: { instance: string }) {
                   </StatTile.Grid>
                   <span className={`line-clamp-2 h-9.5 text-sm leading-snug ${p.notes ? "text-fg" : "text-fg-muted"}`}>{p.notes || t("profiles.card.noNotes")}</span>
                   <span className="text-xs text-fg-muted">{usage(p)}</span>
+                  {settings ? (
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <SettingRow
+                        label={t("profiles.card.localSettings")}
+                        description={t("profiles.card.localSettingsHelp", { files: settings.files.join(", ") })}
+                        controlId={`local-settings-${p.id}`}
+                        control={
+                          <Switch
+                            id={`local-settings-${p.id}`}
+                            size="xs"
+                            checked={settings.local.includes(p.id)}
+                            onCheckedChange={(on) => void run(() => backend.setLocalSettings(p.id, on)).then(gameSettings.reload)}
+                          />
+                        }
+                      />
+                    </div>
+                  ) : null}
                 </div>
                 <div
                   data-layer="medium"

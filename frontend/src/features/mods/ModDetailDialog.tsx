@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon, CheckIcon, ChevronLeftIcon, ChevronRightIcon, FolderIcon, GitCompareIcon, PackageIcon, RefreshIcon, TrashIcon, XIcon } from "dettmann-ui/icons";
-import { Button, Icon, Input, Loader, Modal, StatTile, Switch, Tabs, Tag, TagAdd } from "dettmann-ui";
+import { Button, Icon, Input, Loader, Modal, SettingRow, StatTile, Switch, Tabs, Tag, TagAdd } from "dettmann-ui";
 import { useBackend } from "../../bridge/backend-context";
-import { useModConflicts, useModDetails, useModSummary, useTags } from "../../bridge/queries";
+import { useModConflicts, useModDetails, useModIniTweaks, useModSummary, useTags } from "../../bridge/queries";
 import type { FileLocation, ModDetails } from "../../bridge/types";
 import { useI18n, type MessageKey } from "../../i18n/i18n";
 import { ErrorAlert } from "../feedback/ErrorAlert";
@@ -415,6 +415,8 @@ function Summary({
         </dl>
       </section>
 
+      <IniTweaks mod={mod} />
+
       <div className="grid min-h-0 flex-1 grid-cols-2 gap-4">
         <section aria-labelledby="mod-description" className="flex min-h-28 flex-col gap-1.5">
           <SectionTitle id="mod-description">{t("mods.detail.description")}</SectionTitle>
@@ -425,6 +427,42 @@ function Summary({
         <Notes mod={mod} />
       </div>
     </div>
+  );
+}
+
+/**
+ * "Ajustes de INI" (D149): one line per INI tweak the mod brings, with the
+ * settings file it applies to, its keys and a switch. Only when the mod has
+ * tweaks and the game has game_settings.
+ */
+function IniTweaks({ mod }: { mod: ModDetails }) {
+  const { t, tp } = useI18n();
+  const backend = useBackend();
+  const run = useAction();
+  const tweaks = useModIniTweaks(mod.id);
+  const list = tweaks.status === "ready" && tweaks.data.supported ? tweaks.data.tweaks : [];
+  if (list.length === 0) return null;
+  return (
+    <section aria-labelledby="mod-ini-tweaks" className="flex flex-col gap-2.5">
+      <SectionTitle id="mod-ini-tweaks">{t("mods.detail.iniTweaks")}</SectionTitle>
+      <div className="flex flex-col divide-y divide-border-subtle rounded-card border border-border px-4">
+        {list.map((tw) => (
+          <SettingRow
+            key={tw.path}
+            label={tw.name}
+            description={t("mods.detail.iniTweakTarget", { file: tw.file, keys: tp("mods.detail.iniTweakKeysN", tw.keys) })}
+            control={
+              <Switch
+                size="xs"
+                aria-label={t("mods.detail.iniTweakSwitch", { name: tw.name })}
+                checked={tw.enabled}
+                onCheckedChange={(on) => void run(() => backend.setIniTweak(mod.id, tw.path, on)).then(tweaks.reload)}
+              />
+            }
+          />
+        ))}
+      </div>
+    </section>
   );
 }
 

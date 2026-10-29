@@ -62,7 +62,7 @@ Núcleo: erro 740 → mensagem e opção de lançar elevado (ShellExecute `runas
 
 ### LV8 — Configurações do jogo por perfil e INI tweaks (M8, M11)
 Capability `game_settings` (core/07 §6, core/12 §10): INIs por perfil trocados no `post` do deploy, INI tweaks trazidos pelos mods (escolha por mod, aplicados sobre o INI do perfil), e no contrato a lista "chaves exigidas" com health check e correção (necessária para Fallout 4/Oblivion; no Skyrim SE a lista é vazia). Depende: LV3.
-- **Feita no backend** (2026-10-29, D149): `e6e30e9` (módulo, contrato, SDK 1.7) e `4d5245f` (bridge, textos, clonar). UI do switch de perfil e dos tweaks no detalhe do mod espera prancha.
+- **Feita no backend** (2026-10-29, D149): `e6e30e9` (módulo, contrato, SDK 1.7) e `4d5245f` (bridge, textos, clonar). UI do switch de perfil e dos tweaks no detalhe do mod aprovada em 2026-10-29 e implementada.
 
 ### LV9 — Metadados por mod junto da staging (M9)
 Fecha a pendência D100 / item 3 do trabalho futuro da F14. Passo 0: apresentar ao usuário o formato (referência: `meta.ini` do MO2) e pedir a decisão; depois gravar o arquivo em toda mudança de metadado e permitir reconstruir a biblioteca a partir da staging.

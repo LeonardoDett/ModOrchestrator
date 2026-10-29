@@ -97,6 +97,16 @@ export function useProfiles(instance: string) {
   return useBackendQuery(async (b) => (await b.profileList(instance)) ?? [], [instance], { onOperationEvents: true });
 }
 
+/** game_settings (LV8, D149): the files a profile may keep and who keeps them. */
+export function useGameSettingsInfo(instance: string) {
+  return useBackendQuery((b) => b.gameSettingsInfo(instance), [instance], { onOperationEvents: true });
+}
+
+/** The INI tweaks a mod brings (D149). */
+export function useModIniTweaks(mod: string) {
+  return useBackendQuery((b) => b.modIniTweaks(mod), [mod], { onOperationEvents: true });
+}
+
 export function useSnapshots(profile: string) {
   return useBackendQuery(async (b) => (profile ? ((await b.profileSnapshots(profile)) ?? []) : []), [profile]);
 }
