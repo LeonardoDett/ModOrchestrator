@@ -72,9 +72,10 @@ Cada capability servida por código do adapter tem **uma** interface opcional, e
 | `default_categories` | `CategoryProvider` |
 | `running_detection` | `ProcessDeclarer` |
 | `save_games` | `SaveGamesSupport` (D142) |
+| `game_settings` | `GameSettingsSupport` (D149) |
 | `tools` | `ToolSupport` (D146) |
 
-As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`) ou estão reservadas (`game_settings`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
+As demais são respondidas pela própria definição (`filesystem_mod_target`, `multiple_mod_types`, `installer`, `external_change_strategy`). O registro valida o que o adapter **oferece**; o que vale para uma instância continua vindo de `InstanceDefinition`.
 
 `Registry.Support()` devolve a matriz de suporte: para cada jogo, cada capability do catálogo como `available` ou `not_applicable`. `not_applicable` é "este jogo não tem esse processo", o caso normal, nunca um erro. Desde a D113 a mesma consulta traz o nível de suporte, as lojas onde o jogo é procurado e, por recurso, classe, dependências e padrão; o bridge a expõe em `GamesSupport()`.
 

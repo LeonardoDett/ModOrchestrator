@@ -34,6 +34,8 @@ Esta tabela é o catálogo **do core**. Um check que só um jogo tem declara o s
 | `external_changes_pending` | warning | deploy dos caminhos afetados | external | Revisar |
 | `load_order_external_change` | warning | apply da load order | plugins | Revisar |
 | `save_path_external` | warning | — | game | Usar a pasta do perfil (D142) |
+| `game_setting_required` | warning | — | game | Corrigir a configuração (D149) |
+| `ini_tweak_external` | warning | — | game | Aplicar os ajustes de novo (D149) |
 | `rule_cycle` | blocking | reorder, deploy | rules | Resolver ciclo |
 | `mods_incompatible` | error | deploy | rules | Desabilitar A / B |
 | `mod_requirement_missing` | error | — | rules | Habilitar / Importar |

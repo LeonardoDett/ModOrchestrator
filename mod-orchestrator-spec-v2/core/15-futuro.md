@@ -30,10 +30,9 @@ Saiu do futuro: entrou antes da v1 (D140, LV4, D146; core/11 §6). Backend feito
 
 Saiu do futuro: entrou antes da v1 (D140, LV3, D142; core/07 §7, tela `ui/telas/saves.md`). Fica para depois: restaurar save apagado (a exclusão é definitiva e confirmada) e ler saves de outros jogos além do Skyrim SE.
 
-## Configurações do jogo por profile (V1.x)
+## Configurações do jogo por perfil
 
-Vortex: `local-gamesettings`, `ini_prep`.
-- Preparado: capability `game_settings`; profile `features.localSettings`; aplicação no `post` do deploy (core/07 §7).
+Saiu do futuro: entrou antes da v1 (D140, LV8, D149; core/07 §7). Fica para depois: editor de INI e comparação de INIs entre perfis.
 
 ## Importar de outros gerenciadores
 

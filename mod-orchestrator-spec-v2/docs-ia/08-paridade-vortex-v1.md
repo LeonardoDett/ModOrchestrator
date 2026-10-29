@@ -133,7 +133,7 @@ Legenda: ✓ presente · ✓* presente, com demonstração manual ainda pendente
 | Comparar e pontos de restauração (ADAPT) | ✓ |
 | Toggle para habilitar profiles | — REJECT (D037) |
 | Saves locais (por perfil, D142) | ✓ (`save_games`; tela Saves com plugins faltando, copiar/mover, excluir, clonar com saves) |
-| INIs locais | — DEFER (LV8) |
+| INIs locais | ADAPT (D149): cópia por perfil trocada no `post`; INI tweaks por mod escritos chave a chave, sem `.base` |
 
 ### Games
 | Item | Estado |

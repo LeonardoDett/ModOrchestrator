@@ -42,7 +42,7 @@ Não existe setting para "ligar" profiles (D037).
 3. Status vira `pending` se desejado(B) ≠ aplicado.
 4. Com auto-deploy: deploy por diff (só as diferenças entre A e B). Sem auto-deploy: topbar mostra "Deploy pendente".
 5. Load order: `plugins.txt` é reescrito a partir da LoadOrder de B no `post` do deploy (core/08).
-6. A pasta de saves do perfil é trocada no `post` do deploy (D142), e as configurações locais também serão (LV8): nunca em momento diferente, para o jogo não ver um estado misto. Exceção: ligar ou desligar "Saves próprios" no perfil que já está na pasta do jogo aplica na hora (os mods não mudam).
+6. A pasta de saves do perfil é trocada no `post` do deploy (D142), e as configurações próprias e os INI tweaks também (D149): nunca em momento diferente, para o jogo não ver um estado misto. Exceção: ligar ou desligar "Saves próprios" no perfil que já está na pasta do jogo aplica na hora (os mods não mudam).
 
 Enquanto o deploy não acontece, o jogo reflete o profile anterior; a topbar deixa isso explícito ("Implantado: A · Ativo: B").
 
@@ -59,7 +59,7 @@ Consulta que retorna: mods só habilitados em A, só em B, em ambos com priorida
 
 ## 7. Recursos por capability (V1.x)
 
-- `game_settings`: o adapter declara quais arquivos (ex.: `Skyrim.ini`, `SkyrimPrefs.ini`, `SkyrimCustom.ini`) podem ser locais. Profile com "configurações locais" guarda cópia própria; o `post` do deploy aplica a cópia do profile ativo e guarda a anterior de volta no profile que estava aplicado. Edições feitas pelo jogo são capturadas de volta ao trocar (evidência por hash; divergência inesperada é external change).
+- `game_settings` (D149): o adapter declara os arquivos que um perfil pode ter próprios (Skyrim: `Skyrim.ini`, `SkyrimPrefs.ini`, `SkyrimCustom.ini`), as chaves exigidas e quais arquivos de um mod são INI tweaks. Perfil com "configurações próprias" (`features.localSettings`, desligado por padrão) guarda uma cópia de cada arquivo; o `post` do deploy põe no jogo a cópia do perfil implantado e devolve o que estava lá ao perfil dono (as edições do jogo ficam com ele); sem o recurso, os arquivos compartilhados. Chaves de outros módulos (pasta de saves) e dos tweaks são levadas de um arquivo ao outro. INI tweaks: desligados por padrão, ligados por mod, escritos chave a chave sobre o arquivo em uso (mod posterior vence); chave alterada fora do app vira `ini_tweak_external`. Chave exigida ausente vira `game_setting_required` com correção. O clone oferece copiar as configurações.
 - `save_games` (D142): o adapter declara como redirecionar saves (`SaveRedirect`: arquivo, seção e chave; Skyrim: `SLocalSavePath` em `SkyrimCustom.ini`), quais arquivos são saves, os que vão junto e como ler o cabeçalho. "Saves próprios" (`features.localSaves`, desligado por padrão) faz o perfil salvar em `Saves\<id do perfil>\`; sem ele, o perfil usa a pasta compartilhada (o valor que a chave tinha antes do app). O app muda só a linha da chave, grava antes o valor pendente, guarda o arquivo original no BackupStore e devolve o original no purge. Chave alterada fora do app não é sobrescrita: diagnóstico `save_path_external` com "Usar a pasta do perfil". Ligar não move os saves compartilhados; desligar não apaga os do perfil.
 
 ## 8. Erros

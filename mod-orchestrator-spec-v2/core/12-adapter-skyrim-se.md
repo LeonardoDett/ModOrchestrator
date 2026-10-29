@@ -22,7 +22,7 @@ Referências: D031, D040, D041. Vortex: `games/game-skyrimse`, `gamebryo_plugin_
 
 ## 2. Capabilities
 
-`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112), `save_games` (D142), `tools` (D146). Depois: `game_settings` (LV8).
+`filesystem_mod_target`, `multiple_mod_types`, `installer`, `plugins`, `load_order`, `launch`, `external_change_strategy`, `adapter_installers`, `health_checks`, `default_categories`, `running_detection` (D112), `save_games` (D142), `tools` (D146), `game_settings` (D149).
 
 ## 3. Targets e ModTypes
 
@@ -97,7 +97,7 @@ Ferramentas conhecidas (`tools`, D146; `KnownTools`), oferecidas como sugestão 
 
 ## 10. V1.x (previsto)
 
-- `game_settings`: `Skyrim.ini`, `SkyrimPrefs.ini`, `SkyrimCustom.ini` em `Documents\My Games\Skyrim Special Edition`.
+- `game_settings` (**feito**, D149): `Skyrim.ini`, `SkyrimPrefs.ini`, `SkyrimCustom.ini` em `Documents\My Games\Skyrim Special Edition` (variantes ` GOG` e ` EPIC`); nenhuma chave exigida (o SE carrega arquivos soltos sobre os archives sem invalidação); INI tweaks em `INI Tweaks\<nome>.ini` no topo de Data, para o `Skyrim.ini` salvo `<nome> [SkyrimPrefs].ini` ou `[SkyrimCustom]` **(convenção do app; verificar com mods reais)**.
 - `save_games` (**feito**, D142): `SLocalSavePath=Saves\<id do perfil>\` em `[General]` do `SkyrimCustom.ini` em `Documents\My Games\Skyrim Special Edition` (variantes ` GOG` e ` EPIC` como o `plugins.txt`); sem a chave o jogo usa `Saves\`. Saves `.ess`, co-save do SKSE `.skse` (mesmo nome). Cabeçalho: formato 12 (SE; corpo em LZ4 de bloco ou zlib) e 9 (LE): número, personagem, nível, local, data no jogo, raça, FILETIME, captura (RGBA no 12, RGB no 9) e plugins (completos e, desde a versão de formulário 78, os light). Tipo pelo nome do arquivo: `Quicksave*` rápido, `Autosave*` automático. Formato conferido na UESP ("Skyrim Mod:Save File Format") **(verificar com um save real do SE 1.6)**.
 - ~~Provedor LOOT (D041).~~ Entregue na LV2 (D143): `LootGame` declara o repositório `skyrimse` e a pasta `Skyrim Special Edition` do LOOT; a cópia empacotada fica em `internal/adapters/skyrimse/loot/` (`SOURCE.md`).
 - ~~Conflitos dentro de BSA.~~ Entregue na LV5 (D147): §5 e core/05 §5.5.

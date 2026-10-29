@@ -11,6 +11,8 @@ Um termo por conceito. Se um documento, prompt ou código usar sinônimo, corrij
 | `Adapter` | — | Implementação que fornece GameDefinitions e capabilities. V1: `generic`, `skyrimse` (D031) e `valheim` (D114). |
 | `GameManifest` | Manifesto de jogo | Forma serializada de um jogo descrito só por dados (D116). Não declara capabilities: elas são derivadas. |
 | `GameEntry` | Jogo personalizado | Manifesto que o usuário criou ou importou, com id `user.<nome>`, guardado no banco e servido pelo adapter `generic` (D117). |
+| `Configurações próprias` | `localSettings` | Recurso de um perfil (`game_settings`, D149): ele guarda a própria cópia dos arquivos de configuração do jogo, posta no jogo no `post` do deploy. |
+| `INI tweak` | ajuste de INI | Arquivo INI pequeno que um mod traz para mudar chaves de um arquivo de configuração do jogo; desligado até o usuário ligar, por mod (D149). |
 | `Capability` | — | Algo que o adapter declara suportar (`plugins`, `load_order`, `save_games`...). O core decide comportamento por capability, nunca por identidade de jogo. |
 | `DeploymentTarget` (`Target`) | Pasta de destino | Pasta da instância onde arquivos são implantados, identificada por `TargetID` (`data`, `root`...). |
 | `Location` | Caminho | `Target` + caminho relativo normalizado (sem diferenciar maiúsculas). Unidade de footprint, conflito, manifesto e external change. |
