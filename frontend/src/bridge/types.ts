@@ -974,6 +974,8 @@ export interface GameSetup {
   method: string;
   /** Lets the app create target folders that do not exist yet (D129). */
   createTargets?: boolean;
+  /** Lets the app take folders of an instance that no longer exists and recover their mods (D145). */
+  adoptFolders?: boolean;
 }
 
 export interface GameFolders {

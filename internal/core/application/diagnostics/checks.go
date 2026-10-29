@@ -357,7 +357,7 @@ func (s *Service) metadataSpecs(ctx context.Context, inst game.Instance) ([]diag
 				withMeta++
 			}
 			if i < 20 {
-				ev = append(ev, diagnostic.Evidence{Kind: "staging_folder", Ref: &ref,
+				ev = append(ev, diagnostic.Evidence{Kind: "orphan_folder", Ref: &ref,
 					Params: diagnostic.Params{"folder": o.Name, "metadata": strconv.FormatBool(o.Metadata)}})
 			}
 		}
@@ -383,8 +383,12 @@ func (s *Service) metadataSpecs(ctx context.Context, inst game.Instance) ([]diag
 			if i == 20 {
 				break
 			}
+			name := string(id)
+			if m, err := s.Mods.Get(ctx, id); err == nil {
+				name = m.DisplayName()
+			}
 			mref := event.EntityRef{Kind: "mod", ID: string(id)}
-			ev = append(ev, diagnostic.Evidence{Kind: "mod_metadata", Ref: &mref})
+			ev = append(ev, diagnostic.Evidence{Kind: "mod_metadata", Ref: &mref, Params: diagnostic.Params{"mod": name}})
 		}
 		specs = append(specs, diagnostic.Spec{
 			Code: diagnostic.CodeModMetadataStale, Severity: diagnostic.SeverityInfo, Params: p,

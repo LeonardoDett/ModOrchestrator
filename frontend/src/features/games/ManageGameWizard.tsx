@@ -62,6 +62,8 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
   const [method, setMethod] = useState("");
   // D129: create missing target folders only when the user allows it.
   const [createTargets, setCreateTargets] = useState(false);
+  // D145: adopt folders of a gone instance only with consent.
+  const [adoptFolders, setAdoptFolders] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<UIError | null>(null);
   const [done, setDone] = useState<{ instanceId: string } | null>(null);
@@ -82,8 +84,9 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
       backupStore: f?.backupStore ?? "",
       method,
       createTargets,
+      adoptFolders,
     }),
-    [start.gameId, start.store, name, root, generic, method, createTargets],
+    [start.gameId, start.store, name, root, generic, method, createTargets, adoptFolders],
   );
 
   const pick = async (): Promise<string> => {
@@ -204,7 +207,8 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
       />
     );
   }
-  const canFinish = verification !== null && !blocked && method !== "" && !busy;
+  const canFinish = verification !== null && !blocked && method !== "" && !busy
+    && (!verification?.warnings.some((p) => p.code === "folder_orphan") || adoptFolders);
 
   return (
     <Modal.Root open onOpenChange={(open) => !open && !busy && onClose()} closeOnEscape={!busy} closeOnBackdropClick={false}>
@@ -312,7 +316,7 @@ function WizardBody({ start, onClose }: { start: WizardStart; onClose: () => voi
             {step === 2 ? (
               <Stack gap="md">
                 {busy && !verification ? <Loader label={t("wizard.verifying")} /> : null}
-                {verification ? <VerificationView v={verification} method={method} onMethod={setMethod} createTargets={createTargets} onCreateTargets={setCreateTargets} /> : null}
+                {verification ? <VerificationView v={verification} method={method} onMethod={setMethod} createTargets={createTargets} onCreateTargets={setCreateTargets} adoptFolders={adoptFolders} onAdoptFolders={setAdoptFolders} /> : null}
               </Stack>
             ) : null}
 
@@ -393,12 +397,16 @@ function VerificationView({
   onMethod,
   createTargets,
   onCreateTargets,
+  adoptFolders,
+  onAdoptFolders,
 }: {
   v: SetupVerification;
   method: string;
   onMethod: (m: string) => void;
   createTargets: boolean;
   onCreateTargets: (on: boolean) => void;
+  adoptFolders: boolean;
+  onAdoptFolders: (on: boolean) => void;
 }) {
   const i18n = useI18n();
   const { t } = i18n;
@@ -416,6 +424,9 @@ function VerificationView({
       ))}
       {v.warnings.some((p) => p.code === "target_missing") ? (
         <Checkbox checked={createTargets} onCheckedChange={onCreateTargets} label={t("wizard.verification.createTargets")} />
+      ) : null}
+      {v.warnings.some((p) => p.code === "folder_orphan") ? (
+        <Checkbox checked={adoptFolders} onCheckedChange={onAdoptFolders} label={t("wizard.verification.adoptFolders")} />
       ) : null}
       <ForeignAlert findings={v.foreign} />
       {v.problems.length === 0 ? (
