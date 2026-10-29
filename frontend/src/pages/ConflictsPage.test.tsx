@@ -105,6 +105,30 @@ describe("Conflicts screen (F6, RD11)", () => {
     expect(calls.some((c) => c.startsWith("rule"))).toBe(false);
   });
 
+  it("says the mod also disputes files inside archives, which is not chosen here (D147, board JogoConflitosArchives)", async () => {
+    const user = userEvent.setup();
+    const { backend } = world();
+    backend.modArchiveConflicts = async (_i, id) => ({
+      supported: true,
+      archives: [],
+      unread: [],
+      opponents:
+        id === "a"
+          ? [{ own: { mod: A, archive: "" }, opponent: { mod: B, archive: "B.bsa" }, wins: true, reason: "loose", files: 7 }]
+          : [],
+      filesWon: 7,
+      filesLost: 0,
+    });
+    render(<App backend={backend} />);
+    await openConflicts(user);
+    const section = await screen.findByRole("region", { name: "Conflicts of Texture A" });
+    const strip = await within(section).findByRole("note", { name: "Inside archives" });
+    expect(within(strip).getByText("Also disputes 7 files inside archives, with 1 mod")).toBeInTheDocument();
+    expect(within(strip).getByText(/This is not chosen here/)).toBeInTheDocument();
+    await user.click(within(strip).getByRole("button", { name: "See in the mod details" }));
+    expect(screen.queryByRole("region", { name: "Conflicts of Texture A" })).not.toBeInTheDocument();
+  });
+
   it("stages a winner and saves it after showing what moves in the order", async () => {
     const user = userEvent.setup();
     const { backend, decisions } = world();

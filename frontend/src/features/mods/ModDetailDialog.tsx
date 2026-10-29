@@ -32,6 +32,8 @@ interface ModDetailDialogProps {
   onChooseWinner: (pair: { a: string; b: string; focus: FileLocation }) => void;
   /** "Abrir na página de Conflitos". */
   onOpenConflictsPage: () => void;
+  /** The tab shown when the dialog opens (Resumo by default). */
+  initialTab?: ModDetailTab;
 }
 
 /**
@@ -66,14 +68,14 @@ function ModTile({ mod, large }: { mod: ModDetails | null; large: boolean }) {
   );
 }
 
-function DetailBody({ instance, id, order, priority, onNavigate, onClose, onRemove, onReorder, onChooseWinner, onOpenConflictsPage }: ModDetailDialogProps & { id: string }) {
+function DetailBody({ instance, id, order, priority, onNavigate, onClose, onRemove, onReorder, onChooseWinner, onOpenConflictsPage, initialTab }: ModDetailDialogProps & { id: string }) {
   const i18n = useI18n();
   const { t } = i18n;
   const backend = useBackend();
   const run = useAction();
   const details = useModDetails(id);
   const conflicts = useModConflicts(instance, id);
-  const [tab, setTab] = useState<ModDetailTab>("summary");
+  const [tab, setTab] = useState<ModDetailTab>(initialTab ?? "summary");
   const mod = details.status === "ready" ? details.data : null;
   const index = order.indexOf(id);
   const opponents = conflicts.status === "ready" ? conflicts.data.opponents.length : 0;

@@ -139,6 +139,11 @@ export function useModConflicts(instance: string, mod: string) {
   return useBackendQuery((b) => b.modConflicts(instance, mod), [instance, mod], { onOperationEvents: true });
 }
 
+/** Disputes inside the game's archives of a mod (D147). */
+export function useModArchiveConflicts(instance: string, mod: string) {
+  return useBackendQuery((b) => b.modArchiveConflicts(instance, mod), [instance, mod], { onOperationEvents: true });
+}
+
 export function useModConflictFiles(instance: string, mod: string, filter: string) {
   return useBackendQuery((b) => b.modConflictFiles(instance, mod, filter, 0, 2000), [instance, mod, filter], { onOperationEvents: true });
 }

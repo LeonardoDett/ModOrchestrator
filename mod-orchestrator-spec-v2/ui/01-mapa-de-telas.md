@@ -19,9 +19,9 @@ Referências: D119, D120. "Artboard" é a prancha do design v1 (`propostas/redes
 | Jogo | Organização (categorias e tags) | telas/mods.md | `JogoOrganizacao`, `JogoOrganizacaoTags` | aprovado | — | RD8 |
 | Jogo | Fila de instalação | telas/dialogos.md | `JogoFilaInstalacao` | aprovado | — | RD8 |
 | Jogo | Menus Filtros e Mais ações de Mods | telas/mods.md | `JogoModsMenus` | aguardando revisão | filtro "contém" só com classificação do adapter | RD17b |
-| Jogo | Detalhe do mod (5 abas) | telas/mods.md | `JogoModDetalhe`, `JogoModConflitos`, `JogoModArquivos`, `JogoModHistorico`, `JogoModInstalacao` | aprovado | — | RD9 |
+| Jogo | Detalhe do mod (5 abas) | telas/mods.md | `JogoModDetalhe`, `JogoModConflitos` (+ `JogoModConflitosArchives`, D147), `JogoModArquivos`, `JogoModHistorico`, `JogoModInstalacao` | aprovado | — | RD9 |
 | Jogo | Instalador FOMOD | telas/dialogos.md (DLG-06) | `JogoFomod`, `JogoFomodResumo` | aprovado | — | RD10 |
-| Jogo | Conflitos | telas/conflicts.md | `JogoConflitos` | aprovado | — | RD11 |
+| Jogo | Conflitos | telas/conflicts.md | `JogoConflitos` (+ `JogoConflitosArchives`, D147) | aprovado | — | RD11 |
 | Jogo | Plugins | telas/plugins.md | `JogoPlugins` | aprovado | `plugins` | RD12 |
 | Jogo | Ordem de carga | telas/load-order.md | `JogoOrdemDeCarga` | aprovado | `load_order` | RD12 |
 | Jogo | Perfis | telas/profiles.md | `JogoPerfis` | aguardando revisão | — | RD17c |

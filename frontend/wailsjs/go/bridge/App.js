@@ -394,6 +394,10 @@ export function MenuBadges(arg1) {
   return window['go']['bridge']['App']['MenuBadges'](arg1);
 }
 
+export function ModArchiveConflicts(arg1, arg2) {
+  return window['go']['bridge']['App']['ModArchiveConflicts'](arg1, arg2);
+}
+
 export function ModConflictFiles(arg1, arg2, arg3, arg4, arg5) {
   return window['go']['bridge']['App']['ModConflictFiles'](arg1, arg2, arg3, arg4, arg5);
 }

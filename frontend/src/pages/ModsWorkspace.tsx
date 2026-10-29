@@ -632,6 +632,7 @@ export function ModsWorkspace({ instance }: { instance: string }) {
       <ModDetailDialog
         instance={instance}
         id={inspectedRow ? inspectedRow.id : null}
+        initialTab={inspected && inspected === focusMod ? route.modTab : undefined}
         order={visible.flatMap((r) => (r.kind === "mod" ? [r.mod.id] : []))}
         priority={inspectedPriority}
         onNavigate={setInspected}

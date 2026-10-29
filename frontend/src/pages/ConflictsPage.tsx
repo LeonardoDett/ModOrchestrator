@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, GitCompareArrows, Lightbulb, Swords } from "lucide-react";
-import { CheckIcon, InfoIcon, LockIcon, TrashIcon } from "dettmann-ui/icons";
+import { Archive, CheckCircle2, GitCompareArrows, Lightbulb, Swords } from "lucide-react";
+import { CheckIcon, ChevronRightIcon, InfoIcon, LockIcon, TrashIcon } from "dettmann-ui/icons";
 import { Alert, Button, ConfirmDialog, Icon, Indicator, Input, List, Loader, Radio, ResourcePage, Switch, Tag } from "dettmann-ui";
 import { useBackend } from "../bridge/backend-context";
-import { useConflictPairs, useModConflicts } from "../bridge/queries";
+import { useConflictPairs, useModArchiveConflicts, useModConflicts } from "../bridge/queries";
+import { archiveSummary } from "../features/conflicts/archive-summary";
 import { errorMessage, toUIError, type UIError } from "../bridge/errors";
 import type { ConflictMod, ConflictOpponent, ConflictPair, PairDecision, RulePreview, StaleIntent } from "../bridge/types";
 import { ErrorAlert } from "../features/feedback/ErrorAlert";
@@ -335,8 +336,36 @@ function ModDisputes({
   return (
     <section aria-label={t("conflicts.disputesOf", { name: mod.name })} className="flex min-h-0 min-w-0 flex-col">
       {content}
+      <ArchivesStrip instance={instance} mod={mod} />
       {children}
     </section>
+  );
+}
+
+/**
+ * The mod also disputes files inside the game's archives (D147; board
+ * JogoConflitosArchives). Nothing of it is chosen here: the strip says why
+ * and opens the mod detail on its Conflicts tab.
+ */
+function ArchivesStrip({ instance, mod }: { instance: string; mod: ConflictMod }) {
+  const { t, tp } = useI18n();
+  const { navigate } = useNavigation();
+  const data = useModArchiveConflicts(instance, mod.id);
+  if (data.status !== "ready" || !data.data.supported || data.data.opponents.length === 0) return null;
+  const { files, mods } = archiveSummary(data.data);
+  return (
+    <div role="note" aria-label={t("mods.detail.archives.titleBare")} data-layer="medium" className="flex shrink-0 items-center gap-3 border-t border-border bg-sunken px-6 py-3">
+      <span data-intent="info" className="flex size-8 shrink-0 items-center justify-center rounded-control bg-intent-subtle text-intent-text">
+        <Icon icon={Archive} size="sm" />
+      </span>
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className="text-[0.8125rem] font-semibold text-fg">{t("conflicts.archives.title", { files: tp("mods.detail.fileCount", files), mods: tp("mods.detail.archives.modCount", mods) })}</span>
+        <span className="text-xs text-fg-muted">{t("conflicts.archives.help")}</span>
+      </div>
+      <Button size="sm" endIcon={<ChevronRightIcon size="sm" />} onClick={() => navigate({ view: "mods", focusMod: mod.id, modTab: "conflicts" })}>
+        {t("conflicts.archives.open")}
+      </Button>
+    </div>
   );
 }
 

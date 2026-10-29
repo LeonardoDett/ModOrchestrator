@@ -498,6 +498,47 @@ describe("Mods screen (F4)", () => {
     // Without a wizard there are no recorded choices (generic installer).
     expect(await within(next).findByText("Installed straight from the archive")).toBeInTheDocument();
   });
+
+  it("explains the disputes inside archives in the Conflicts tab, with the rule (D147, board JogoModConflitosArchives)", async () => {
+    const user = userEvent.setup();
+    const { backend } = world();
+    const other = (id: string, name: string) => ({ id, name, priority: 2, enabled: true });
+    backend.modArchiveConflicts = async (_i, id) =>
+      id === "m1"
+        ? {
+            supported: true,
+            archives: ["SkyUI.bsa", "SkyUI - Old.bsa"],
+            unread: ["SkyUI - Old.bsa"],
+            opponents: [
+              { own: { mod: other("m1", "SkyUI"), archive: "SkyUI.bsa" }, opponent: { mod: other("x", "Loose Pack"), archive: "" }, wins: false, reason: "loose", files: 12 },
+              { own: { mod: other("m1", "SkyUI"), archive: "SkyUI.bsa" }, opponent: { mod: other("y", "Trees"), archive: "Trees.bsa" }, wins: true, reason: "load_order", files: 3 },
+            ],
+            filesWon: 3,
+            filesLost: 12,
+          }
+        : { supported: false, archives: [], unread: [], opponents: [], filesWon: 0, filesLost: 0 };
+    render(<App backend={backend} />);
+    await openMods(user);
+    await screen.findByText("SkyUI");
+    screen.getByRole("grid").focus();
+    await user.keyboard("{Enter}");
+    const detail = await screen.findByRole("dialog", { name: "SkyUI" });
+    await user.click(within(detail).getByRole("tab", { name: /Conflicts/ }));
+    const section = await within(detail).findByRole("region", { name: "Inside archives" });
+    expect(within(section).getByText("Inside archives · 15 files with 2 mods")).toBeInTheDocument();
+    expect(within(section).getByText(/A loose file always beats the same file inside an archive/)).toBeInTheDocument();
+    const table = within(section).getByRole("table");
+    expect(within(table).getByText("Loose files of Loose Pack")).toBeInTheDocument();
+    expect(within(table).getByText("a loose file beats an archive")).toBeInTheDocument();
+    expect(within(table).getByText("Trees.bsa, from Trees")).toBeInTheDocument();
+    expect(within(table).getByText("this mod's plugin loads later")).toBeInTheDocument();
+    expect(within(section).getByRole("note")).toHaveTextContent("Couldn't read the contents of SkyUI - Old.bsa; the rule above applies to it too.");
+
+    // A game whose adapter reads no archive (generic) shows nothing.
+    await user.click(within(detail).getByRole("button", { name: "Next" }));
+    const next = await screen.findByRole("dialog", { name: "Textures" });
+    expect(within(next).queryByRole("region", { name: "Inside archives" })).not.toBeInTheDocument();
+  });
 });
 
 describe("Mod detail: INI tweaks (D149)", () => {

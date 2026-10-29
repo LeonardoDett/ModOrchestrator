@@ -49,7 +49,8 @@ Capability `tools` (core/15 "Ferramentas"): registro (executável, argumentos co
 
 ### LV5 — Conflitos dentro de BSA/BA2 (M2)
 Leitura do índice dos archives (adapter), conflitos archive × archive e archive × solto com a regra "solto vence archive" explicada; enquanto não houver cálculo, o texto da regra no detalhe do mod. Afeta conflitos e deploy só como informação. Conferir prancha de Conflitos.
-- **Backend feito** (2026-10-22, D147): `ArchiveIndex` (sub-contrato de `plugins`), leitura BSA/BA2 em `adapters/gamebryo`, cálculo em `domain/gamearchive`, consulta `ModArchiveConflicts`. A prancha de Conflitos não tinha lugar para archives: variantes `JogoModConflitosArchives` e `JogoConflitosArchives` aguardam aprovação.
+- **Backend feito** (2026-10-22, D147): `ArchiveIndex` (sub-contrato de `plugins`), leitura BSA/BA2 em `adapters/gamebryo`, cálculo em `domain/gamearchive`, consulta `ModArchiveConflicts`. A prancha de Conflitos não tinha lugar para archives: variantes `JogoModConflitosArchives` e `JogoConflitosArchives` aprovadas pelo usuário (2026-10-22).
+- **Feita** (2026-10-29, D147): seção "Dentro de archives" no detalhe do mod e faixa na página de Conflitos, comparadas por captura 1440×900 com as pranchas.
 
 ### LV6 — Lançamento robusto (M3)
 Núcleo: erro 740 → mensagem e opção de lançar elevado (ShellExecute `runas`); executável ou pasta de trabalho inexistente com mensagem própria. Contrato do adapter: campo opcional "lançar pela loja" (Steam/Epic/GOG) e "exige cliente da loja aberto", com o caminho sem o campo testado no `generic`. Depende: LV4 (mesmo serviço de lançamento).

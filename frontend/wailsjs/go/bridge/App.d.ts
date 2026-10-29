@@ -198,6 +198,8 @@ export function MarkNotificationsRead(arg1:Array<string>):Promise<void>;
 
 export function MenuBadges(arg1:string):Promise<Array<bridge.MenuBadgeDTO>>;
 
+export function ModArchiveConflicts(arg1:string,arg2:string):Promise<bridge.ModArchiveConflictsDTO>;
+
 export function ModConflictFiles(arg1:string,arg2:string,arg3:string,arg4:number,arg5:number):Promise<bridge.ModConflictFilesDTO>;
 
 export function ModConflicts(arg1:string,arg2:string):Promise<bridge.ModConflictsDTO>;

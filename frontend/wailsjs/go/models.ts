@@ -16,77 +16,6 @@ export namespace bridge {
 	        this.overrides = source["overrides"];
 	    }
 	}
-	export class GameSettingsInfoDTO {
-	    supported: boolean;
-	    files: string[];
-	    local: string[];
-	
-	    static createFrom(source: any = {}) {
-	        return new GameSettingsInfoDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.supported = source["supported"];
-	        this.files = source["files"];
-	        this.local = source["local"];
-	    }
-	}
-	
-	export class IniTweakDTO {
-	    path: string;
-	    name: string;
-	    file: string;
-	    enabled: boolean;
-	    keys: number;
-	
-	    static createFrom(source: any = {}) {
-	        return new IniTweakDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.path = source["path"];
-	        this.name = source["name"];
-	        this.file = source["file"];
-	        this.enabled = source["enabled"];
-	        this.keys = source["keys"];
-	    }
-	}
-	
-	export class ModIniTweaksDTO {
-	    supported: boolean;
-	    tweaks: IniTweakDTO[];
-	
-	    static createFrom(source: any = {}) {
-	        return new ModIniTweaksDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.supported = source["supported"];
-	        this.tweaks = this.convertValues(source["tweaks"], IniTweakDTO);
-	    }
-	
-		convertValues(a: any, classs: any, asMap: boolean = false): any {
-		    if (!a) {
-		        return a;
-		    }
-		    if (a.slice && a.map) {
-		        return (a as any[]).map(elem => this.convertValues(elem, classs));
-		    } else if ("object" === typeof a) {
-		        if (asMap) {
-		            for (const key of Object.keys(a)) {
-		                a[key] = new classs(a[key]);
-		            }
-		            return a;
-		        }
-		        return new classs(a);
-		    }
-		    return a;
-		}
-	}
-	
 	export class ModsSummaryDTO {
 	    enabled: number;
 	    total: number;
@@ -555,6 +484,95 @@ export namespace bridge {
 	        this.retained = source["retained"];
 	    }
 	}
+	export class ConflictModDTO {
+	    id: string;
+	    name: string;
+	    priority: number;
+	    enabled: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ConflictModDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.priority = source["priority"];
+	        this.enabled = source["enabled"];
+	    }
+	}
+	export class ArchiveSideDTO {
+	    mod: ConflictModDTO;
+	    archive: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ArchiveSideDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.mod = this.convertValues(source["mod"], ConflictModDTO);
+	        this.archive = source["archive"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ArchiveOpponentDTO {
+	    own: ArchiveSideDTO;
+	    opponent: ArchiveSideDTO;
+	    wins: boolean;
+	    reason: string;
+	    files: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ArchiveOpponentDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.own = this.convertValues(source["own"], ArchiveSideDTO);
+	        this.opponent = this.convertValues(source["opponent"], ArchiveSideDTO);
+	        this.wins = source["wins"];
+	        this.reason = source["reason"];
+	        this.files = source["files"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
 	export class ArchivesPreviewDTO {
 	    from: string;
 	    to: string;
@@ -937,24 +955,7 @@ export namespace bridge {
 	        this.losesTo = source["losesTo"];
 	    }
 	}
-	export class ConflictModDTO {
-	    id: string;
-	    name: string;
-	    priority: number;
-	    enabled: boolean;
 	
-	    static createFrom(source: any = {}) {
-	        return new ConflictModDTO(source);
-	    }
-	
-	    constructor(source: any = {}) {
-	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.id = source["id"];
-	        this.name = source["name"];
-	        this.priority = source["priority"];
-	        this.enabled = source["enabled"];
-	    }
-	}
 	export class NamedModDTO {
 	    id: string;
 	    name: string;
@@ -2390,6 +2391,22 @@ export namespace bridge {
 	        this.instances = source["instances"];
 	    }
 	}
+	export class GameSettingsInfoDTO {
+	    supported: boolean;
+	    files: string[];
+	    local: string[];
+	
+	    static createFrom(source: any = {}) {
+	        return new GameSettingsInfoDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.supported = source["supported"];
+	        this.files = source["files"];
+	        this.local = source["local"];
+	    }
+	}
 	export class GameSupportDTO {
 	    gameId: string;
 	    gameName: string;
@@ -2797,6 +2814,26 @@ export namespace bridge {
 	}
 	
 	
+	export class IniTweakDTO {
+	    path: string;
+	    name: string;
+	    file: string;
+	    enabled: boolean;
+	    keys: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new IniTweakDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.path = source["path"];
+	        this.name = source["name"];
+	        this.file = source["file"];
+	        this.enabled = source["enabled"];
+	        this.keys = source["keys"];
+	    }
+	}
 	export class InstallationInfoDTO {
 	    id: string;
 	    installer: string;
@@ -3476,6 +3513,46 @@ export namespace bridge {
 		    return a;
 		}
 	}
+	export class ModArchiveConflictsDTO {
+	    supported: boolean;
+	    archives: string[];
+	    unread: string[];
+	    opponents: ArchiveOpponentDTO[];
+	    filesWon: number;
+	    filesLost: number;
+	
+	    static createFrom(source: any = {}) {
+	        return new ModArchiveConflictsDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.supported = source["supported"];
+	        this.archives = source["archives"];
+	        this.unread = source["unread"];
+	        this.opponents = this.convertValues(source["opponents"], ArchiveOpponentDTO);
+	        this.filesWon = source["filesWon"];
+	        this.filesLost = source["filesLost"];
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class ModAttributesDTO {
 	    name: string;
 	    version: string;
@@ -3799,6 +3876,38 @@ export namespace bridge {
 	        this.operationId = source["operationId"];
 	        this.params = source["params"];
 	    }
+	}
+	export class ModIniTweaksDTO {
+	    supported: boolean;
+	    tweaks: IniTweakDTO[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ModIniTweaksDTO(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.supported = source["supported"];
+	        this.tweaks = this.convertValues(source["tweaks"], IniTweakDTO);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class ModMoveDTO {
 	    id: string;
@@ -5435,6 +5544,7 @@ export namespace bridge {
 	    backupStore: string;
 	    method: string;
 	    createTargets: boolean;
+	    adoptFolders: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new SetupDTO(source);
@@ -5453,6 +5563,7 @@ export namespace bridge {
 	        this.backupStore = source["backupStore"];
 	        this.method = source["method"];
 	        this.createTargets = source["createTargets"];
+	        this.adoptFolders = source["adoptFolders"];
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

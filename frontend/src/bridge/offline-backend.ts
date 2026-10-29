@@ -136,6 +136,7 @@ export function createOfflineBackend(): Backend {
     conflictPairs: unavailable,
     conflictPairDetail: unavailable,
     modConflicts: unavailable,
+    modArchiveConflicts: unavailable,
     modConflictFiles: unavailable,
     conflictIndicators: unavailable,
     modFlags: unavailable,

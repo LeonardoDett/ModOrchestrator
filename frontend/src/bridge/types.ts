@@ -276,6 +276,8 @@ export interface Backend {
   conflictPairs(instance: string, includeDisabled: boolean, search: string): Promise<ConflictPairs>;
   conflictPairDetail(instance: string, a: string, b: string, includeDisabled: boolean): Promise<ConflictPairDetail>;
   modConflicts(instance: string, mod: string): Promise<ModConflicts>;
+  /** Disputes inside the game's archives of a mod (D147); only informs. */
+  modArchiveConflicts(instance: string, mod: string): Promise<ModArchiveConflicts>;
   modConflictFiles(instance: string, mod: string, filter: string, offset: number, limit: number): Promise<ModConflictFiles>;
   conflictIndicators(instance: string): Promise<ConflictIndicator[]>;
   /** What the visible problems say about each mod (Mods › Filtros, "Situação"). */
@@ -1678,6 +1680,35 @@ export interface ModConflicts {
   mod: ConflictMod;
   indicator: ConflictIndicatorKind;
   opponents: ConflictOpponent[];
+}
+
+/** A mod's archive, or its loose files when `archive` is empty (D147). */
+export interface ArchiveSide {
+  mod: ConflictMod;
+  archive: string;
+}
+
+/** Why the winner wins: a loose file beats every archive; among archives the later plugin's wins. */
+export type ArchiveReason = "loose" | "load_order";
+
+export interface ArchiveOpponent {
+  own: ArchiveSide;
+  opponent: ArchiveSide;
+  /** This mod's side wins `files` paths. */
+  wins: boolean;
+  reason: ArchiveReason;
+  files: number;
+}
+
+export interface ModArchiveConflicts {
+  /** False when the game's adapter does not read archives (generic). */
+  supported: boolean;
+  archives: string[];
+  /** Archives whose index was not read: show the rule instead. */
+  unread: string[];
+  opponents: ArchiveOpponent[];
+  filesWon: number;
+  filesLost: number;
 }
 
 export type ConflictFileState = "none" | "wins" | "loses" | "redundant" | "hidden";

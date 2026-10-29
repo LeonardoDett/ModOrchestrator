@@ -46,6 +46,8 @@ export interface Route {
   review?: boolean;
   /** Mods: the mod to select (from "Mod de origem" of a plugin). */
   focusMod?: string;
+  /** Mods: the tab of the mod detail to open with focusMod (D147: "Ver no detalhe do mod"). */
+  modTab?: "conflicts";
   /** Tools: the tool to select; with missingPath, its executable was not found when started from the top bar. */
   tool?: string;
   missingPath?: string;
