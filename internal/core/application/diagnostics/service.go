@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"modorchestrator/internal/core/application/backups"
+	"modorchestrator/internal/core/application/conflicts"
 	"modorchestrator/internal/core/application/deployment"
 	"modorchestrator/internal/core/application/games"
 	"modorchestrator/internal/core/application/library"
@@ -47,6 +48,9 @@ type Settings interface {
 type Conflicts interface {
 	Diagnostics(ctx context.Context, instance game.InstanceID) ([]diagnostic.Diagnostic, error)
 	ClearFileOverrides(ctx context.Context, instance game.InstanceID, locs []game.Location) error
+	// Owner is the enabled mod that deploys a location (adapter checks
+	// that point from a file of the game to its mod, D151).
+	Owner(ctx context.Context, instance game.InstanceID, loc game.Location) (conflicts.Provider, bool, error)
 }
 
 // Deploy is the deploy engine as the checks and actions see it.
@@ -75,6 +79,7 @@ type Library interface {
 	MetadataStale(ctx context.Context, instance game.InstanceID) ([]mod.ID, error)
 	RewriteMetadata(ctx context.Context, instance game.InstanceID) (int, error)
 	ArchiveMissing(ctx context.Context, instance game.InstanceID) ([]*mod.Mod, error)
+	UnrecognizedContent(ctx context.Context, instance game.InstanceID) ([]library.UnrecognizedMod, error)
 	InstallMods(ctx context.Context, instance game.InstanceID, ids []mod.ID) ([]operation.ID, error)
 	ReinstallMods(ctx context.Context, instance game.InstanceID, ids []mod.ID) ([]operation.ID, error)
 }
@@ -131,6 +136,10 @@ type Deps struct {
 	Modules []Module
 	// Backups is optional (nil: backup_failed never appears).
 	Backups Backups
+	// Folders resolves the known folders of the user: where an adapter's
+	// run log is and the folders checked by folder_location_risky (D151).
+	// Optional (nil: neither check runs, except WindowsApps).
+	Folders ports.KnownFolders
 	IDs     operations.IDGenerator
 	Clock   operations.Clock
 }

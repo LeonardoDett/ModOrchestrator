@@ -143,6 +143,7 @@ type StagingPreviewDTO struct {
 	HardlinkAfter bool   `json:"hardlinkAfter"`
 	Problem       string `json:"problem,omitempty"`
 	Reason        string `json:"reason,omitempty"`
+	Place         string `json:"place,omitempty"`
 }
 
 func toFactsDTO(f *deployment.FileFacts) *FileFactsDTO {
@@ -376,7 +377,7 @@ func (a *App) PreviewMoveStaging(instance, path string) (StagingPreviewDTO, erro
 		return StagingPreviewDTO{}, a.fail("preview staging move", err, map[string]string{"instance": instance})
 	}
 	return StagingPreviewDTO{From: p.From, To: p.To, Bytes: p.Bytes, Free: p.Free, Deployed: p.Deployed, SameVolume: p.SameVolume,
-		HardlinkAfter: p.HardlinkAfter, Problem: p.Problem, Reason: p.Reason}, nil
+		HardlinkAfter: p.HardlinkAfter, Problem: p.Problem, Reason: p.Reason, Place: p.Place}, nil
 }
 
 // MoveStaging moves the staging folder (purge, copy, save, deploy).

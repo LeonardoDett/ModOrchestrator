@@ -139,6 +139,10 @@ type Deps struct {
 	Hasher     ports.Hasher
 	Library    Library
 	Exclusions Exclusions
+	// Folders resolves the folders of the user the move of the staging or
+	// of the archives warns about (D151). Optional (nil: only WindowsApps
+	// is refused).
+	Folders    ports.KnownFolders
 	Ops        *operations.Service
 	PostDeploy []PostDeploy
 	Locks      *instancelock.Locks

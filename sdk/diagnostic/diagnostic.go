@@ -20,6 +20,7 @@ type (
 
 const (
 	CodeFrameworkMissing = inner.CodeFrameworkMissing
+	ModuleGame           = inner.ModuleGame
 	ModulePlugins        = inner.ModulePlugins
 	SeverityInfo         = inner.SeverityInfo
 	SeverityWarning      = inner.SeverityWarning

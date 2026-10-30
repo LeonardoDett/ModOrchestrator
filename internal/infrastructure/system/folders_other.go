@@ -5,3 +5,5 @@ package system
 import "errors"
 
 func documentsFolder() (string, error) { return "", errors.New("system: no shell folders") }
+
+func shellFolder(string) (string, error) { return "", errors.New("system: no shell folders") }

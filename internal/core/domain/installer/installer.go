@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 	"maps"
+	"path"
 	"slices"
 	"strings"
 
@@ -158,6 +159,27 @@ type RootHints struct {
 
 // Empty reports whether the adapter declared nothing to recognise.
 func (h RootHints) Empty() bool { return len(h.Dirs) == 0 && len(h.Extensions) == 0 }
+
+// Recognizes reports whether files at paths (relative to the root of the
+// default target) look like content of the game: a hinted folder at the top,
+// or a file at the top with a hinted extension. It is the rule of the basic
+// installer applied to what a mod holds (D151, mod_content_unrecognized).
+func (h RootHints) Recognizes(paths []relpath.Path) bool {
+	for _, p := range paths {
+		top, _, nested := strings.Cut(p.String(), "/")
+		if nested {
+			if slices.ContainsFunc(h.Dirs, func(d string) bool { return strings.EqualFold(d, top) }) {
+				return true
+			}
+			continue
+		}
+		ext := strings.ToLower(path.Ext(top))
+		if ext != "" && slices.ContainsFunc(h.Extensions, func(e string) bool { return strings.EqualFold(e, ext) }) {
+			return true
+		}
+	}
+	return false
+}
 
 // Context is what an installer knows about the game (core/03 §2).
 type Context struct {

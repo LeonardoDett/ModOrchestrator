@@ -45,6 +45,10 @@ const (
 	// CodeFolderOrphan warns that a staging or ArchiveStore belongs to an
 	// instance that no longer exists and can be adopted (D145).
 	CodeFolderOrphan  = "folder_orphan"
+	// CodeFolderRisky warns about a folder of the assistant in a place that
+	// breaks or slows the manager (D151, as the health check
+	// folder_location_risky).
+	CodeFolderRisky = "folder_location_risky"
 	CodeMethodUnavail = "method_unavailable"
 	CodeExecutableBad = "executable_invalid"
 	CodeConfirmName   = "confirm_name_mismatch"

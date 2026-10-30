@@ -4,6 +4,7 @@ package plugin
 
 import (
 	inner "modorchestrator/internal/core/domain/plugin"
+	"modorchestrator/internal/core/domain/pluginhealth"
 )
 
 type (
@@ -17,4 +18,7 @@ type (
 
 const (
 	RefAdapterPrefix = inner.RefAdapterPrefix
+	// ActionDisable deactivates the plugin of its target ({Kind: "plugin",
+	// ID: Name.Key()}) in the active profile.
+	ActionDisable = pluginhealth.ActionDisablePlugin
 )

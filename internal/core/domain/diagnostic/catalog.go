@@ -39,6 +39,9 @@ const (
 	// Codes of the metadata kept next to each mod in the staging (D145).
 	CodeStagingOrphanFolders   Code = "staging_orphan_folders"
 	CodeModMetadataStale       Code = "mod_metadata_stale"
+	// CodeModContentUnrecognized: an installed mod holds nothing the game
+	// would use where it looks (D151).
+	CodeModContentUnrecognized Code = "mod_content_unrecognized"
 	CodeInstallerRequired      Code = "installer_required"
 	CodePluginMissingMaster    Code = "plugin_missing_master"
 	CodePluginLimitExceeded    Code = "plugin_limit_exceeded"
@@ -62,6 +65,10 @@ const (
 	CodeFrameworkMissing         Code = "framework_missing"
 	CodeDiskSpaceLow             Code = "disk_space_low"
 	CodeBackupFailed             Code = "backup_failed"
+	// CodeFolderLocationRisky: the game, the staging or the archives are in
+	// a folder that breaks or slows the manager (OneDrive, Desktop,
+	// Documents, Downloads, Program Files, WindowsApps; D151).
+	CodeFolderLocationRisky Code = "folder_location_risky"
 )
 
 // Codes of the game_settings feature (LV8).
@@ -112,6 +119,7 @@ var coreModules = map[Code]Module{
 	CodeOverrideStale: ModuleConflicts, CodeConflictsUnreviewed: ModuleConflicts, CodeModFullyOverwritten: ModuleConflicts,
 	CodeStagingFileMissing: ModuleLibrary, CodeStagingFileModified: ModuleLibrary, CodeModArchiveMissing: ModuleLibrary,
 	CodeInstallerRequired: ModuleLibrary, CodeStagingOrphanFolders: ModuleLibrary, CodeModMetadataStale: ModuleLibrary,
+	CodeModContentUnrecognized: ModuleLibrary,
 	CodePluginMissingMaster: ModulePlugins, CodePluginLimitExceeded: ModulePlugins, CodePluginDisabledMaster: ModulePlugins,
 	CodePluginHeaderUnreadable: ModulePlugins, CodePluginMasterOrder: ModulePlugins, CodePluginRuleOrphan: ModulePlugins,
 	CodePluginRuleCycle: ModulePlugins, CodePluginLockConflict: ModulePlugins, CodePluginFromLosingFile: ModulePlugins,
@@ -120,7 +128,7 @@ var coreModules = map[Code]Module{
 	CodeGameNotFound: ModuleGame, CodeGameVersionChanged: ModuleGame, CodeGameRunning: ModuleGame,
 	CodeFrameworkMissing: ModuleGame, CodeSavePathExternal: ModuleGame,
 	CodeGameSettingRequired: ModuleGame, CodeIniTweakExternal: ModuleGame,
-	CodeDiskSpaceLow: ModuleApp, CodeBackupFailed: ModuleApp,
+	CodeDiskSpaceLow: ModuleApp, CodeBackupFailed: ModuleApp, CodeFolderLocationRisky: ModuleApp,
 }
 
 var coreLaunchWarnings = map[Code]bool{

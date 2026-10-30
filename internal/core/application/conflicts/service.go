@@ -314,3 +314,29 @@ func intentOf(ctx context.Context, repo ports.Overrides, instance game.InstanceI
 	}
 	return set, err
 }
+
+// Provider is the enabled mod whose file a location of the active profile
+// deploys, with the absolute path of that file in the staging.
+type Provider struct {
+	Mod    mod.ID
+	Name   string
+	Source string
+}
+
+// Owner answers which enabled mod deploys loc in the active profile (the
+// winner of INV-CON-01), for checks that point from a file of the game to
+// its mod (D151). ok is false when no enabled mod provides it.
+func (s *Service) Owner(ctx context.Context, instance game.InstanceID, loc game.Location) (Provider, bool, error) {
+	st, err := s.load(ctx, instance, false)
+	if err != nil {
+		return Provider{}, false, err
+	}
+	s.mu.Lock()
+	m, f, ok := st.index.Winner(loc, conflict.EvalInput{Order: st.order, Intent: st.intent})
+	s.mu.Unlock()
+	if !ok {
+		return Provider{}, false, nil
+	}
+	src := game.JoinPath(game.JoinPath(st.inst.Staging, string(m)), f.Source.String())
+	return Provider{Mod: m, Name: st.names[m], Source: src}, true, nil
+}

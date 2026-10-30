@@ -58,6 +58,7 @@ type ArchivesPreviewDTO struct {
 	SameVolume bool   `json:"sameVolume"`
 	Problem    string `json:"problem,omitempty"`
 	Reason     string `json:"reason,omitempty"`
+	Place      string `json:"place,omitempty"`
 }
 
 // ExtensionDTO is a built-in adapter on the Extensions screen.
@@ -220,7 +221,7 @@ func (a *App) PreviewMoveArchives(instance, to string) (ArchivesPreviewDTO, erro
 	if err != nil {
 		return ArchivesPreviewDTO{}, a.fail("preview move archives", err, map[string]string{"instance": instance})
 	}
-	return ArchivesPreviewDTO{From: p.From, To: p.To, Bytes: p.Bytes, Free: p.Free, SameVolume: p.SameVolume, Problem: p.Problem, Reason: p.Reason}, nil
+	return ArchivesPreviewDTO{From: p.From, To: p.To, Bytes: p.Bytes, Free: p.Free, SameVolume: p.SameVolume, Problem: p.Problem, Reason: p.Reason, Place: p.Place}, nil
 }
 
 // MoveArchiveStore starts the move of the ArchiveStore.

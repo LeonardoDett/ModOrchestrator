@@ -12,6 +12,7 @@ type (
 	DefaultCategory     = inner.DefaultCategory
 	EntryHost           = inner.EntryHost
 	FileLocation        = inner.FileLocation
+	FileOwners          = inner.FileOwners
 	FileReader          = inner.FileReader
 	GameAdapter         = inner.GameAdapter
 	GameSettingsSupport = inner.GameSettingsSupport
@@ -25,9 +26,13 @@ type (
 	LootSupport         = inner.LootSupport
 	ModContent          = inner.ModContent
 	PluginArchives      = inner.PluginArchives
+	PluginChecker       = inner.PluginChecker
+	PluginFile          = inner.PluginFile
 	PluginSupport       = inner.PluginSupport
 	ProcessDeclarer     = inner.ProcessDeclarer
 	RootHints           = inner.RootHints
+	RunLog              = inner.RunLog
+	RunLogChecker       = inner.RunLogChecker
 	SaveGamesSupport    = inner.SaveGamesSupport
 	TemplateProvider    = inner.TemplateProvider
 	ToolSupport         = inner.ToolSupport

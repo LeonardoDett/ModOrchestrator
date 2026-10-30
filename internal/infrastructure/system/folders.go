@@ -42,6 +42,19 @@ func (Folders) Folder(name string) (string, error) {
 			return "", err
 		}
 		return filepath.Join(home, "Documents"), nil
+	case ports.FolderOneDrive, ports.FolderOneDriveCommercial:
+		// The OneDrive client sets these for the signed-in accounts; without
+		// it there is no synced folder.
+		env := "OneDrive"
+		if name == ports.FolderOneDriveCommercial {
+			env = "OneDriveCommercial"
+		}
+		if v := os.Getenv(env); v != "" {
+			return v, nil
+		}
+		return "", fmt.Errorf("system: no %s folder", name)
+	case ports.FolderDesktop, ports.FolderDownloads, ports.FolderProgramFiles, ports.FolderProgramFilesX86:
+		return shellFolder(name)
 	}
 	return "", fmt.Errorf("system: unknown folder %q", name)
 }

@@ -6,7 +6,32 @@ import (
 	"testing"
 
 	"modorchestrator/internal/core/domain/game"
+	"modorchestrator/internal/core/domain/relpath"
 )
+
+func TestRootHintsRecognizes(t *testing.T) {
+	for _, tt := range []struct {
+		name, path string
+		hints      RootHints
+		want       bool
+	}{
+		{"top directory ignores case", "Meshes/a.nif", RootHints{Dirs: []string{"meshes"}}, true},
+		{"top extension ignores case", "Mod.ESP", RootHints{Extensions: []string{".esp"}}, true},
+		{"nested extension", "Sub/Mod.esp", RootHints{Extensions: []string{".esp"}}, false},
+		{"wrapper directory", "MyMod/meshes/a.nif", RootHints{Dirs: []string{"meshes"}}, false},
+		{"empty hints", "meshes/a.nif", RootHints{}, false},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			p, err := relpath.Parse(tt.path)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got := tt.hints.Recognizes([]relpath.Path{p}); got != tt.want {
+				t.Fatalf("Recognizes(%q) = %v, want %v", tt.path, got, tt.want)
+			}
+		})
+	}
+}
 
 // bethesdaLike mimics what an adapter such as skyrimse declares.
 func bethesdaLike() Context {

@@ -239,6 +239,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Versions:    system.FileVersions{},
 		Stores:      &stores.Scanner{FS: fsys, Reg: stores.NewRegistry(), Env: os.Getenv},
 		Processes:   system.Processes{},
+		Folders:     system.Folders{},
 		Settings:    settingsSvc,
 		Ops:         ops,
 		IDs:         ids,
@@ -432,6 +433,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Hasher:        hashing.SHA256{},
 		Library:       librarySvc,
 		Exclusions:    conflictsSvc,
+		Folders:       system.Folders{},
 		PostDeploy:    []deployment.PostDeploy{pluginsSvc, gameConfigSvc, savesSvc},
 		Ops:           ops,
 		Locks:         locks,
@@ -469,6 +471,7 @@ func New(ctx context.Context) (c *Container, err error) {
 		Library:      librarySvc,
 		Commands:     profilesSvc,
 		Modules:      []diagnostics.Module{pluginsSvc, savesSvc, gameConfigSvc},
+		Folders:      system.Folders{},
 		IDs:          ids,
 		Clock:        clock,
 	})

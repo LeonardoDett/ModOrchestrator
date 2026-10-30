@@ -45,6 +45,9 @@ type StagingPreview struct {
 	// Problem is the code that refuses the move ("" when none).
 	Problem string
 	Reason  string
+	// Place is the risky kind of folder the destination is in (OneDrive,
+	// Desktop...; "" when none): a warning, not a refusal (D151).
+	Place string
 }
 
 // PreviewMoveStaging validates a new staging folder and estimates the move.
@@ -79,7 +82,18 @@ func (s *Service) PreviewMoveStaging(ctx context.Context, instance game.Instance
 	if p.Problem == "" && !p.SameVolume && p.Free < p.Bytes {
 		p.Problem, p.Reason = CodeDiskFull, ""
 	}
+	p.Place = s.riskyPlace(p.To)
 	return p, nil
+}
+
+// riskyPlace is the kind of risky folder a destination is in ("" when
+// none, or when it is WindowsApps, which checkNewFolder refuses).
+func (s *Service) riskyPlace(to string) string {
+	kind, ok := game.PlaceOf(to, ports.RiskyPlaces(s.Folders))
+	if !ok || kind.Refused() {
+		return ""
+	}
+	return string(kind)
 }
 
 func cleanFolder(p string) string {
@@ -119,6 +133,9 @@ func folderOf(rec moveRecord) managedFolder {
 func (s *Service) checkNewFolder(ctx context.Context, inst game.Instance, f managedFolder, to string) (code, reason string) {
 	if game.Volume(to) == "" {
 		return CodeFolderInvalid, "not_absolute"
+	}
+	if kind, _ := game.PlaceOf(to, nil); kind.Refused() {
+		return CodeFolderInvalid, reasonWindowsApps
 	}
 	if game.SamePath(to, f.get(inst)) {
 		return f.same, ""
@@ -509,6 +526,9 @@ func (s *Service) Recover(ctx context.Context) error {
 	return nil
 }
 
+// reasonWindowsApps refuses a folder inside WindowsApps (D151).
+const reasonWindowsApps = "windows_apps"
+
 // ArchivesPreview is what the move of the ArchiveStore shows first.
 type ArchivesPreview struct {
 	From, To   string
@@ -517,6 +537,8 @@ type ArchivesPreview struct {
 	SameVolume bool
 	Problem    string
 	Reason     string
+	// Place: as StagingPreview.Place.
+	Place string
 }
 
 // PreviewMoveArchives validates a new ArchiveStore and estimates the move
@@ -539,6 +561,7 @@ func (s *Service) PreviewMoveArchives(ctx context.Context, instance game.Instanc
 	if p.Problem == "" && !p.SameVolume && p.Free < p.Bytes {
 		p.Problem = CodeDiskFull
 	}
+	p.Place = s.riskyPlace(p.To)
 	return p, nil
 }
 

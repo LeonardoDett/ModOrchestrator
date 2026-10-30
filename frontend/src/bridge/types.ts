@@ -502,6 +502,8 @@ export interface ArchivesPreview {
   sameVolume: boolean;
   problem?: string;
   reason?: string;
+  /** Risky kind of folder of the destination (OneDrive, Desktop...; D151). */
+  place?: string;
 }
 
 export interface ExtensionGame {
@@ -876,6 +878,8 @@ export interface StagingPreview {
   hardlinkAfter: boolean;
   problem?: string;
   reason?: string;
+  /** Risky kind of folder of the destination (OneDrive, Desktop...; D151). */
+  place?: string;
 }
 
 // --- Games (internal/bridge/dto_games.go) ---

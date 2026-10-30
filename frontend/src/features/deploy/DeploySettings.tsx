@@ -124,6 +124,16 @@ function problemKey(i18n: ReturnType<typeof useI18n>, problem?: string, reason?:
   return i18n.has(`error.${problem}.${reason}`) ? `error.${problem}.${reason}` : `error.${problem}`;
 }
 
+/** The destination is in a folder that breaks or slows the manager (D151): a warning, the move is allowed. */
+function PlaceWarning({ place }: { place: string }) {
+  const { t } = useI18n();
+  return (
+    <Alert.Root intent="warning">
+      <Alert.Description>{t(`settings.mods.movePlace.${place}` as MessageKey)}</Alert.Description>
+    </Alert.Root>
+  );
+}
+
 /** DLG-18 Mover staging: preview of space, purge and deploy. */
 function MoveStagingDialog({ instance, game, onClose }: { instance: string; game: ManagedGame; onClose: () => void }) {
   const i18n = useI18n();
@@ -180,6 +190,7 @@ function MoveStagingDialog({ instance, game, onClose }: { instance: string; game
                     <Alert.Description>{t("settings.mods.moveNoHardlink")}</Alert.Description>
                   </Alert.Root>
                 ) : null}
+                {preview.place ? <PlaceWarning place={preview.place} /> : null}
               </Stack>
             ) : null}
             {problem ? (
@@ -257,6 +268,7 @@ function MoveArchivesDialog({ instance, game, onClose }: { instance: string; gam
                 <Typography variant="body-sm" color="muted-fg">
                   {t(preview.sameVolume ? "settings.mods.moveSameVolume" : "settings.mods.moveCopy")}
                 </Typography>
+                {preview.place ? <PlaceWarning place={preview.place} /> : null}
               </Stack>
             ) : null}
             {problem ? (

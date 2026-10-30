@@ -86,6 +86,17 @@ func TestEvaluateAgreesWithCalculate(t *testing.T) {
 		}) {
 			t.Fatalf("round %d: conflicts differ\nfull %+v\nindex %+v", round, full.Conflicts, ev.Conflicts)
 		}
+		// Winner of one location (D151) agrees with the full calculation.
+		won := map[string]mod.ID{}
+		for _, w := range full.Winners {
+			won[w.Location.Key()] = w.Mod
+		}
+		for _, p := range append(slices.Clone(paths), "nobody.txt") {
+			got, _, ok := x.Winner(loc(p), EvalInput{Order: slots(enabledSet, order...), Intent: intent})
+			if want, has := won[loc(p).Key()]; ok != has || got != want {
+				t.Fatalf("round %d: winner of %s = %q (%v), want %q (%v)", round, p, got, ok, want, has)
+			}
+		}
 		staleKeys := func(list []StaleOverride) []string {
 			var out []string
 			for _, s := range list {

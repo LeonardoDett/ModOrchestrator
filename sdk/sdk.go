@@ -15,4 +15,4 @@ package sdk
 // changes when a name leaves the SDK or a type it names changes in a way an
 // adapter notices (a method of an interface, a field it fills); the minor
 // when a name is added.
-const APIVersion = "1.8"
+const APIVersion = "1.9"

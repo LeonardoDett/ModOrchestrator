@@ -148,6 +148,10 @@ func (s *Service) Verify(ctx context.Context, su Setup) (Verification, error) {
 		v.Problems = append(v.Problems, problem(CodeRootInvalid, "reason", string(game.RootNotAbsolute)))
 		return v, nil
 	}
+	if inWindowsApps(root) {
+		v.Problems = append(v.Problems, problem(CodeRootInvalid, "reason", ReasonWindowsApps))
+		return v, nil
+	}
 	if err := adapter.ValidateRoot(ctx, s.FS, su.Game, root); err != nil {
 		code, params, _ := CodeOf(err)
 		if code == "" {
@@ -210,6 +214,7 @@ func (s *Service) Verify(ctx context.Context, su Setup) (Verification, error) {
 			v.Problems = append(v.Problems, problem(CodeFoldersInvalid, "detail", "folders are in use by "+o.DisplayName))
 		}
 	}
+	v.Problems, v.Warnings = s.checkPlaces(root, v.Folders, v.Problems, v.Warnings)
 	known := make(map[game.InstanceID]bool, len(all))
 	for _, o := range all {
 		known[o.ID] = true
@@ -568,6 +573,9 @@ func (s *Service) Relocate(ctx context.Context, id game.InstanceID, newRoot stri
 	if game.Volume(root) == "" {
 		return fail(CodeRootInvalid, nil, "reason", string(game.RootNotAbsolute))
 	}
+	if inWindowsApps(root) {
+		return fail(CodeRootInvalid, nil, "reason", ReasonWindowsApps)
+	}
 	_, err = s.run(ctx, operations.Spec{Kind: KindRelocate, Subject: subject(id), Steps: []string{stepValidate, stepSave}},
 		func(ctx context.Context, t *operations.Tracker) error {
 			if err := t.BeginStep(ctx, stepValidate); err != nil {
@@ -667,6 +675,38 @@ func (s *Service) run(ctx context.Context, spec operations.Spec, fn func(context
 		return id, inner
 	}
 	return id, err
+}
+
+// ReasonWindowsApps refuses a folder inside WindowsApps, where Microsoft
+// Store and Game Pass games live: nothing can be written there (D151).
+const ReasonWindowsApps = "windows_apps"
+
+func inWindowsApps(folder string) bool {
+	kind, _ := game.PlaceOf(folder, nil)
+	return kind == game.PlaceWindowsApps
+}
+
+// checkPlaces applies folder_location_risky to the assistant (D151): a
+// staging or ArchiveStore inside WindowsApps stops it; the game folder, the
+// staging or the ArchiveStore in OneDrive, Desktop, Documents, Downloads or
+// Program Files only warn. A game folder in Program Files is not warned
+// about here: Steam installs there by default.
+func (s *Service) checkPlaces(root string, f Folders, problems, warnings []Problem) ([]Problem, []Problem) {
+	places := ports.RiskyPlaces(s.Folders)
+	for _, c := range []struct{ label, path string }{
+		{FolderGame, root}, {FolderStaging, f.Staging}, {FolderArchives, f.ArchiveStore},
+	} {
+		kind, ok := game.PlaceOf(c.path, places)
+		switch {
+		case !ok:
+		case kind == game.PlaceWindowsApps:
+			problems = append(problems, problem(CodeFoldersInvalid, "reason", ReasonWindowsApps, "folder", c.label, "path", c.path))
+		case c.label == FolderGame && kind == game.PlaceProgramFiles:
+		default:
+			warnings = append(warnings, problem(CodeFolderRisky, "folder", c.label, "reason", string(kind), "path", c.path))
+		}
+	}
+	return problems, warnings
 }
 
 func (s *Service) checkExecutable(ctx context.Context, root, exe string) *Problem {

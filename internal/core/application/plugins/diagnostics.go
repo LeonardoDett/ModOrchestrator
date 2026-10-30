@@ -66,6 +66,11 @@ func (s *Service) diagnostics(ctx context.Context, st *state, a arrangement) ([]
 	if err != nil {
 		return nil, err
 	}
+	headerDiags, err := s.pluginChecks(st, active)
+	if err != nil {
+		return nil, err
+	}
+	adapterDiags = append(adapterDiags, headerDiags...)
 	if st.lo != nil {
 		fs, err := s.fileState(ctx, st, a.order)
 		if err != nil {
@@ -125,9 +130,32 @@ func (s *Service) archiveChecks(ctx context.Context, st *state, active []plugin.
 	if err != nil {
 		return nil, err
 	}
+	return s.adapterSpecs(st, specs)
+}
+
+// pluginChecks asks the adapter to judge the headers of the active plugins
+// (D151). A plugin whose header could not be read is left out: it already
+// has plugin_header_unreadable.
+func (s *Service) pluginChecks(st *state, active []plugin.Plugin) ([]diagnostic.Diagnostic, error) {
+	pc, ok := st.ps.(ports.PluginChecker)
+	if !ok {
+		return nil, nil
+	}
+	files := make([]ports.PluginFile, 0, len(active))
+	for _, p := range active {
+		if p.HeaderError != "" {
+			continue
+		}
+		files = append(files, ports.PluginFile{Name: p.Name, Header: p.Header, Mod: p.Mod, ModName: st.modNames[p.Mod]})
+	}
+	return s.adapterSpecs(st, pc.PluginChecks(st.inst.Game, files))
+}
+
+// adapterSpecs turns the specs of an adapter check into diagnostics; a code
+// outside the catalog would have no module and no text (D131).
+func (s *Service) adapterSpecs(st *state, specs []diagnostic.Spec) ([]diagnostic.Diagnostic, error) {
 	out := make([]diagnostic.Diagnostic, 0, len(specs))
 	for _, sp := range specs {
-		// A code outside the catalog would have no module and no text (D131).
 		if !s.Registry.Diagnostics().Has(sp.Code) {
 			return nil, fmt.Errorf("plugins: adapter %s emitted undeclared code %q", st.inst.Adapter, sp.Code)
 		}

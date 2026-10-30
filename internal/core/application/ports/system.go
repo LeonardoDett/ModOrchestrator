@@ -9,12 +9,12 @@ import (
 	"modorchestrator/internal/core/domain/diagnostic"
 	"modorchestrator/internal/core/domain/game"
 	"modorchestrator/internal/core/domain/gamesettings"
-	"modorchestrator/internal/core/domain/tool"
 	"modorchestrator/internal/core/domain/installer"
 	"modorchestrator/internal/core/domain/mod"
 	"modorchestrator/internal/core/domain/ordering"
 	"modorchestrator/internal/core/domain/plugin"
 	"modorchestrator/internal/core/domain/savegame"
+	"modorchestrator/internal/core/domain/tool"
 )
 
 // FileInfo is what the filesystem reports about a path. FileID (volume
@@ -487,6 +487,50 @@ type ArchiveChecker interface {
 	ArchiveChecks(ctx context.Context, fs FileReader, inst game.Instance, files []TargetFile, active []plugin.Name) ([]diagnostic.Spec, error)
 }
 
+// PluginFile is an active plugin as a header check sees it: its name, the
+// header read from it and the mod that deploys it (Mod is empty for a
+// plugin the manager does not own).
+type PluginFile struct {
+	Name    plugin.Name
+	Header  plugin.Header
+	Mod     mod.ID
+	ModName string
+}
+
+// PluginChecker is implemented by adapters that judge the headers of the
+// active plugins against the game (D151: a plugin made for another edition
+// of the game). The header was already read by the plugins module; the
+// adapter only decides, with codes its catalog declares (D131). It runs
+// only with the plugins capability.
+type PluginChecker interface {
+	PluginChecks(id game.ID, active []PluginFile) []diagnostic.Spec
+}
+
+// FileOwners answers which enabled mod of the active profile deploys a file
+// of the game: the one whose file wins the Location (INV-CON-01). ok is
+// false when no enabled mod provides it (the file is not the manager's).
+type FileOwners interface {
+	Owner(ctx context.Context, loc game.Location) (TargetFile, bool, error)
+}
+
+// RunLog is a log the game, or something it loads, writes on every run.
+type RunLog struct {
+	Content []byte
+	ModTime time.Time
+}
+
+// RunLogChecker is implemented by adapters that read what the game logged
+// on its last run (D151: the script extender log lists the plugins that did
+// not load). The core reads the file RunLogFile names whenever the checks
+// run, which includes right after the game closes (game.running_changed);
+// a missing file gives no check. The adapter only parses and decides, with
+// codes its catalog declares (D131), and points to the mods through owners.
+// It runs only with the health_checks capability.
+type RunLogChecker interface {
+	RunLogFile(inst game.Instance) (FileLocation, bool)
+	RunLogChecks(ctx context.Context, fs FileReader, inst game.Instance, log RunLog, owners FileOwners) ([]diagnostic.Spec, error)
+}
+
 // LootGame is what a game declares for the LOOT data provider (D143): the
 // name of its masterlist repository and of its LOOT data folder, and the
 // copy of the masterlist (with the prelude) shipped with the app.
@@ -522,7 +566,43 @@ const (
 	// FolderDocuments is the Documents folder of the user (where games keep
 	// their settings and saves, D142).
 	FolderDocuments = "documents"
+	// Folders where the game, the staging or the archives should not be
+	// (D151): the Desktop, Downloads, Program Files (both) and the OneDrive
+	// folders (personal and work or school).
+	FolderDesktop            = "desktop"
+	FolderDownloads          = "downloads"
+	FolderProgramFiles       = "program_files"
+	FolderProgramFilesX86    = "program_files_x86"
+	FolderOneDrive           = "onedrive"
+	FolderOneDriveCommercial = "onedrive_commercial"
 )
+
+// riskyFolders maps the known folders to the kind of place they are.
+var riskyFolders = []struct {
+	name string
+	kind game.PlaceKind
+}{
+	{FolderOneDrive, game.PlaceOneDrive}, {FolderOneDriveCommercial, game.PlaceOneDrive},
+	{FolderDesktop, game.PlaceDesktop}, {FolderDocuments, game.PlaceDocuments}, {FolderDownloads, game.PlaceDownloads},
+	{FolderProgramFiles, game.PlaceProgramFiles}, {FolderProgramFilesX86, game.PlaceProgramFiles},
+}
+
+// RiskyPlaces resolves the folders where the game, the staging or the
+// archives should not be (D151). A folder the platform does not have (no
+// OneDrive) is left out; a nil resolver gives none (WindowsApps is found
+// in the path itself, game.PlaceOf).
+func RiskyPlaces(kf KnownFolders) []game.Place {
+	if kf == nil {
+		return nil
+	}
+	var out []game.Place
+	for _, f := range riskyFolders {
+		if p, err := kf.Folder(f.name); err == nil && p != "" {
+			out = append(out, game.Place{Kind: f.kind, Path: p})
+		}
+	}
+	return out
+}
 
 // FileLocation is a file below a known folder of the user.
 type FileLocation struct {

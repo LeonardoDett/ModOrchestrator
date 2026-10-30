@@ -42,6 +42,10 @@ type Deps struct {
 	Stores      ports.StoreScanner
 	// Processes tells whether the game runs (nil: never running).
 	Processes ports.ProcessProbe
+	// Folders resolves the folders of the user the assistant warns about
+	// (D151, folder_location_risky). Optional (nil: only WindowsApps is
+	// refused).
+	Folders ports.KnownFolders
 	// Settings is optional (nil: catalog defaults).
 	Settings interface {
 		AppValue(ctx context.Context, key string) (appsettings.Effective, error)

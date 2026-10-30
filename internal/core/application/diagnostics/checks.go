@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
+	"strings"
 	"time"
 
 	"modorchestrator/internal/core/application/library"
@@ -314,6 +316,11 @@ func (s *Service) libraryChecks(ctx context.Context, inst game.Instance) ([]diag
 		return nil, err
 	}
 	specs = append(specs, orphans...)
+	unknown, err := s.Library.UnrecognizedContent(ctx, inst.ID)
+	if err != nil {
+		return nil, err
+	}
+	specs = append(specs, contentSpecs(unknown)...)
 	checks, err := s.Library.CheckStaging(ctx, inst.ID, false)
 	if err != nil {
 		return nil, err
@@ -338,6 +345,26 @@ func (s *Service) libraryChecks(ctx context.Context, inst game.Instance) ([]diag
 		specs = append(specs, stagingSpecs(c, retained[c.Mod])...)
 	}
 	return build(specs...)
+}
+
+// contentSpecs: mod_content_unrecognized (D151). The key names the mod, so
+// "Ignorar este" ignores the check for that mod only.
+func contentSpecs(list []library.UnrecognizedMod) []diagnostic.Spec {
+	specs := make([]diagnostic.Spec, 0, len(list))
+	for _, u := range list {
+		ref := event.EntityRef{Kind: "mod", ID: string(u.Mod)}
+		p := diagnostic.Params{"mod": u.Name, "top": strings.Join(u.Top, ", ")}
+		specs = append(specs, diagnostic.Spec{
+			Code: diagnostic.CodeModContentUnrecognized, Severity: diagnostic.SeverityWarning, Params: p,
+			Evidence: []diagnostic.Evidence{{Kind: "mod_content", Ref: &ref, Params: p}},
+			Actions: []diagnostic.Action{
+				{ID: health.ActionOpenModFolder, Target: &ref, NavigateTo: health.NavigateModFolder},
+				{ID: ActionReinstall, Target: &ref, Params: diagnostic.Params{"mod": u.Name}},
+			},
+			Related: []event.EntityRef{ref},
+		})
+	}
+	return specs
 }
 
 // metadataSpecs: staging_orphan_folders (folders of the staging that are no
@@ -469,6 +496,7 @@ func (s *Service) appChecks(ctx context.Context, inst game.Instance) ([]diagnost
 			Related:  []event.EntityRef{ref, {Kind: "volume", ID: f.which}},
 		})
 	}
+	specs = append(specs, s.folderSpecs(inst)...)
 	// backup_failed is an app fact shown in every game (diagnostics are
 	// evaluated per instance); its key is the same everywhere.
 	if s.Backups != nil {
@@ -486,12 +514,128 @@ func (s *Service) appChecks(ctx context.Context, inst game.Instance) ([]diagnost
 	return build(specs...)
 }
 
-// adapterChecks runs the checks the adapter declares (framework_missing...).
+// folderSpecs: folder_location_risky for the game folder, the staging and
+// the archives (D151). It applies to every game: the places are folders of
+// the user, not of a game. A game folder in Program Files is only informed:
+// Steam installs there by default and opens its library to the user.
+func (s *Service) folderSpecs(inst game.Instance) []diagnostic.Spec {
+	places := ports.RiskyPlaces(s.Folders)
+	ref := instanceRef(inst)
+	var specs []diagnostic.Spec
+	for _, f := range []struct{ which, path, action, nav string }{
+		{"game", inst.Root, ActionRelocateGame, NavigateGame},
+		{"staging", inst.Staging, ActionDeploySettings, NavigateSettingsMods},
+		{"archives", inst.ArchiveStore, ActionDeploySettings, NavigateSettingsMods},
+	} {
+		kind, ok := game.PlaceOf(f.path, places)
+		if !ok {
+			continue
+		}
+		severity := diagnostic.SeverityWarning
+		if f.which == "game" && kind == game.PlaceProgramFiles {
+			severity = diagnostic.SeverityInfo
+		}
+		p := diagnostic.Params{"folder": f.which, "kind": string(kind), "path": f.path}
+		specs = append(specs, diagnostic.Spec{
+			Code: diagnostic.CodeFolderLocationRisky, Severity: severity, Params: p,
+			Evidence: []diagnostic.Evidence{{Kind: "folder_place", Ref: &ref, Params: p}},
+			Actions:  []diagnostic.Action{{ID: f.action, Target: &ref, NavigateTo: f.nav}},
+			Related:  []event.EntityRef{ref, {Kind: "folder", ID: f.which}},
+		})
+	}
+	return specs
+}
+
+// adapterChecks runs the checks the adapter declares (framework_missing...)
+// and the checks of its run log (D151).
 func (s *Service) adapterChecks(ctx context.Context, inst game.Instance) ([]diagnostic.Diagnostic, error) {
 	a, ok := s.Registry.ByName(inst.Adapter)
 	if !ok {
 		return nil, nil
 	}
+	out, err := s.healthChecks(ctx, inst, a)
+	if err != nil {
+		return nil, err
+	}
+	logged, err := s.runLogChecks(ctx, inst, a)
+	if err != nil {
+		return nil, err
+	}
+	return append(out, logged...), nil
+}
+
+// maxRunLog bounds what is read of a run log; a script extender log is a
+// few kilobytes.
+const maxRunLog = 4 << 20
+
+// runLogChecks reads the run log the adapter names and lets it decide
+// (D151). Only with the health_checks capability; a log that does not
+// exist or cannot be read gives no check (the game never ran with it).
+func (s *Service) runLogChecks(ctx context.Context, inst game.Instance, a ports.GameAdapter) ([]diagnostic.Diagnostic, error) {
+	rc, ok := a.(ports.RunLogChecker)
+	if !ok || s.Folders == nil {
+		return nil, nil
+	}
+	def, err := ports.InstanceDefinition(a, inst)
+	if err != nil || !def.Capabilities.Has(game.CapHealthChecks) {
+		return nil, nil
+	}
+	where, ok := rc.RunLogFile(inst)
+	if !ok {
+		return nil, nil
+	}
+	base, err := s.Folders.Folder(where.Folder)
+	if err != nil {
+		return nil, nil
+	}
+	path := game.JoinPath(base, where.Path)
+	info, err := s.FS.Stat(ctx, path)
+	if err != nil || !info.Exists || info.IsDir {
+		return nil, nil
+	}
+	r, err := s.FS.Open(ctx, path)
+	if err != nil {
+		return nil, nil
+	}
+	content, err := io.ReadAll(io.LimitReader(r, maxRunLog))
+	r.Close()
+	if err != nil {
+		return nil, nil
+	}
+	specs, err := rc.RunLogChecks(ctx, s.FS, inst, ports.RunLog{Content: content, ModTime: info.ModTime}, owners{s, inst.ID})
+	if err != nil {
+		return nil, err
+	}
+	return s.declared(inst, specs)
+}
+
+// owners answers ports.FileOwners for one instance.
+type owners struct {
+	s        *Service
+	instance game.InstanceID
+}
+
+func (o owners) Owner(ctx context.Context, loc game.Location) (ports.TargetFile, bool, error) {
+	p, ok, err := o.s.Conflicts.Owner(ctx, o.instance, loc)
+	if err != nil || !ok {
+		return ports.TargetFile{}, false, err
+	}
+	return ports.TargetFile{Name: loc.Path.String(), Mod: p.Mod, ModName: p.Name, Source: p.Source}, true, nil
+}
+
+// declared builds the diagnostics of adapter specs; a code outside the
+// catalog would have no module and no text (D131).
+func (s *Service) declared(inst game.Instance, specs []diagnostic.Spec) ([]diagnostic.Diagnostic, error) {
+	for _, sp := range specs {
+		if !s.Registry.Diagnostics().Has(sp.Code) {
+			return nil, fmt.Errorf("diagnostics: adapter %s emitted undeclared code %q", inst.Adapter, sp.Code)
+		}
+	}
+	return build(specs...)
+}
+
+// healthChecks runs the HealthCheckProvider of the adapter.
+func (s *Service) healthChecks(ctx context.Context, inst game.Instance, a ports.GameAdapter) ([]diagnostic.Diagnostic, error) {
 	hc, ok := a.(ports.HealthCheckProvider)
 	if !ok {
 		return nil, nil
@@ -519,13 +663,7 @@ func (s *Service) adapterChecks(ctx context.Context, inst game.Instance) ([]diag
 	if err != nil {
 		return nil, err
 	}
-	// A code outside the catalog would have no module and no text (D131).
-	for _, sp := range specs {
-		if !s.Registry.Diagnostics().Has(sp.Code) {
-			return nil, fmt.Errorf("diagnostics: adapter %s emitted undeclared code %q", inst.Adapter, sp.Code)
-		}
-	}
-	return build(specs...)
+	return s.declared(inst, specs)
 }
 
 // Requirements counts the requirements of a mod (DependencyRule "requires")

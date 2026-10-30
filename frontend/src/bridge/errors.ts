@@ -52,6 +52,10 @@ export function errorMessage(i18n: Translator, error: UIError): string {
 /** A backend problem (code + params) as text: errors use error.*, advisories warning.*. */
 export function problemMessage(i18n: Translator, problem: { code: string; params?: Record<string, string> }, severity: "error" | "warning"): string {
   if (severity === "error") return errorMessage(i18n, { code: problem.code, params: problem.params ?? {} });
+  // As for errors, a `reason` parameter picks warning.<code>.<reason> when the catalog has it.
+  const reason = problem.params?.reason;
+  const specific = reason ? `warning.${problem.code}.${reason}` : "";
+  if (specific && i18n.has(specific)) return i18n.t(specific, problem.params);
   const key = `warning.${problem.code}`;
   return i18n.has(key) ? i18n.t(key, problem.params) : i18n.t("error.unknown", { code: problem.code });
 }

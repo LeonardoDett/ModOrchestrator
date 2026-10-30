@@ -581,6 +581,7 @@ export namespace bridge {
 	    sameVolume: boolean;
 	    problem?: string;
 	    reason?: string;
+	    place?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new ArchivesPreviewDTO(source);
@@ -595,6 +596,7 @@ export namespace bridge {
 	        this.sameVolume = source["sameVolume"];
 	        this.problem = source["problem"];
 	        this.reason = source["reason"];
+	        this.place = source["place"];
 	    }
 	}
 	export class DiagnosticActionDTO {
@@ -5684,6 +5686,7 @@ export namespace bridge {
 	    hardlinkAfter: boolean;
 	    problem?: string;
 	    reason?: string;
+	    place?: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new StagingPreviewDTO(source);
@@ -5700,6 +5703,7 @@ export namespace bridge {
 	        this.hardlinkAfter = source["hardlinkAfter"];
 	        this.problem = source["problem"];
 	        this.reason = source["reason"];
+	        this.place = source["place"];
 	    }
 	}
 	

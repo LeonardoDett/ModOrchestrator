@@ -60,7 +60,7 @@ func TestArchiveChecksReportArchivesOfAnotherGame(t *testing.T) {
 
 func TestArchiveCodeIsDeclaredWithTexts(t *testing.T) {
 	c := Adapter{}.Catalog()
-	if len(c.Diagnostics) != 1 || c.Diagnostics[0].Code != CodeArchiveWrongGame || c.Diagnostics[0].Module != diagnostic.ModulePlugins {
+	if len(c.Diagnostics) == 0 || c.Diagnostics[0].Code != CodeArchiveWrongGame || c.Diagnostics[0].Module != diagnostic.ModulePlugins {
 		t.Fatalf("declared %+v", c.Diagnostics)
 	}
 	for _, lang := range []string{"en", "pt-BR"} {

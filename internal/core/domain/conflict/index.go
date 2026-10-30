@@ -266,6 +266,43 @@ func (x *Index) Evaluate(in EvalInput) Evaluation {
 	return out
 }
 
+// Winner returns the enabled mod whose file is deployed at loc, with the
+// same rule as Evaluate (INV-CON-01): a valid override, else the highest
+// priority among the enabled providers that do not exclude the location.
+// ok is false when no enabled mod provides it.
+func (x *Index) Winner(loc game.Location, in EvalInput) (mod.ID, mod.File, bool) {
+	s := x.byLoc[loc.Key()]
+	if s == nil {
+		return "", mod.File{}, false
+	}
+	priority := make(map[mod.ID]int, len(in.Order))
+	for i, sl := range in.Order {
+		if sl.Enabled {
+			priority[sl.Mod] = i
+		}
+	}
+	var best *provided
+	for i := range s.providers {
+		p := &s.providers[i]
+		pr, on := priority[p.mod]
+		if !on || (in.Intent != nil && in.Intent.Excluded(p.mod, s.loc)) {
+			continue
+		}
+		if in.Intent != nil {
+			if o, ok := in.Intent.Override(s.loc); ok && o.Winner == p.mod {
+				return p.mod, p.file, true
+			}
+		}
+		if best == nil || pr > priority[best.mod] {
+			best = p
+		}
+	}
+	if best == nil {
+		return "", mod.File{}, false
+	}
+	return best.mod, best.file, true
+}
+
 // overrideStale applies INV-CON-03: an override is valid only while its
 // winner is enabled and still provides the location (after exclusions).
 func (x *Index) overrideStale(o override.FileOverride, priority map[mod.ID]int, enabled map[mod.ID]bool, excluded func(mod.ID, game.Location) bool) (StaleReason, bool) {
