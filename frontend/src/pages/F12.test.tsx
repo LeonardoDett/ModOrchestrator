@@ -230,6 +230,18 @@ describe("F12: Settings, Extensions, Play, Overview, Dashboard", () => {
     expect(calls).toContain('launch:i1:{"option":"game","deploy":false,"confirmed":false}');
   });
 
+  it("Play asks to play as administrator after Windows refused the option (D150)", async () => {
+    const user = userEvent.setup();
+    const { backend, calls } = world({}, { options: [{ id: "skse", exe: "skse64_loader.exe", default: true, needsElevation: true }] });
+    render(<App backend={backend} />);
+    await openScreen(user, "Overview");
+    await user.click(await screen.findByRole("button", { name: /^Play\./ }));
+    const dialog = await screen.findByRole("dialog", { name: "Play as administrator?" });
+    expect(within(dialog).getByText("skse64_loader.exe")).toBeTruthy();
+    await user.click(within(dialog).getByRole("button", { name: "Play as administrator" }));
+    expect(calls).toContain('launch:i1:{"option":"","deploy":false,"confirmed":true,"elevated":true}');
+  });
+
   it("DLG-26 asks before a pending deploy when auto-deploy is off", async () => {
     const user = userEvent.setup();
     const { backend, calls } = world({}, { state: "deploy", deployNeeded: true, autoDeploy: false, deployKind: "pending", deployReason: "desired_changed" });

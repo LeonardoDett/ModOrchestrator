@@ -52,15 +52,19 @@ export function PlayButton({ layout = "inline" }: { layout?: "inline" | "block" 
   const ws = useWorkspace();
   const instance = ws.status === "ready" ? (ws.data.active?.id ?? "") : "";
   const check = useLaunchCheck(instance);
-  const [dialog, setDialog] = useState<{ option: string } | null>(null);
+  const [dialog, setDialog] = useState<{ option: string; elevation: boolean } | null>(null);
 
   if (!instance || check.status !== "ready" || !check.data) return null;
   const c = check.data;
 
   const launch = (request: LaunchRequest) => run(() => backend.launch(instance, request));
   const play = (option: string) => {
-    if (c.state === "ready" || (c.state === "deploy" && c.autoDeploy)) void launch({ option, deploy: false, confirmed: false });
-    else setDialog({ option });
+    // D150: an option Windows refused without administrator rights asks
+    // first whether to play elevated.
+    const chosen = c.options.find((o) => (option ? o.id === option : o.default));
+    if (chosen?.needsElevation && c.state !== "blocked") setDialog({ option, elevation: true });
+    else if (c.state === "ready" || (c.state === "deploy" && c.autoDeploy)) void launch({ option, deploy: false, confirmed: false });
+    else setDialog({ option, elevation: false });
   };
 
   const disabled = c.state === "running" || c.state === "busy" || c.state === "unavailable";
@@ -84,7 +88,7 @@ export function PlayButton({ layout = "inline" }: { layout?: "inline" | "block" 
   const label = `${t(c.state === "running" ? "launch.running" : "launch.play")}. ${hint}`;
   const intent = c.state === "blocked" ? "danger" : c.state === "warnings" ? "warning" : "brand";
   const emphasis = c.state === "running" ? "medium" : "high";
-  const dialogNode = dialog ? <PrelaunchDialog check={c} option={dialog.option} onLaunch={launch} onClose={() => setDialog(null)} /> : null;
+  const dialogNode = dialog ? <PrelaunchDialog check={c} option={dialog.option} elevation={dialog.elevation} onLaunch={launch} onClose={() => setDialog(null)} /> : null;
 
   // Rail of the collapsed menu (D120): the main action only, named by its state.
   if (layout === "icon") {

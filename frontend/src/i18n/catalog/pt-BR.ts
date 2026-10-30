@@ -2304,6 +2304,11 @@ export const ptBR: Record<MessageKey, string> = {
   "launch.dialog.deployAndPlayAnyway": "Implantar e jogar mesmo assim",
   "launch.dialog.playWithoutDeploy": "Jogar sem implantar",
   "launch.dialog.playAnyway": "Jogar mesmo assim",
+  "launch.dialog.elevationTitle": "Jogar como administrador?",
+  "launch.dialog.elevationNeeded": "O Windows só inicia este jogo como administrador",
+  "launch.dialog.elevationRefused": "Na última tentativa, {exe} foi recusado por falta de privilégios.",
+  "launch.dialog.elevationHint": "O Windows vai pedir sua confirmação. Um jogo aberto como administrador pode impedir que ferramentas e o próprio Mod Orchestrator leiam o que ele grava, então use só se o jogo não abrir de outro jeito.",
+  "launch.dialog.playElevated": "Jogar como administrador",
 
   "wizard.folders.choose": "Escolha uma pasta",
   "wizard.folders.suggest": "Usar a sugerida",

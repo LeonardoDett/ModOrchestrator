@@ -2307,6 +2307,11 @@ export const en = {
   "launch.dialog.deployAndPlayAnyway": "Deploy and play anyway",
   "launch.dialog.playWithoutDeploy": "Play without deploying",
   "launch.dialog.playAnyway": "Play anyway",
+  "launch.dialog.elevationTitle": "Play as administrator?",
+  "launch.dialog.elevationNeeded": "Windows only starts this game as administrator",
+  "launch.dialog.elevationRefused": "On the last try, {exe} was refused for lack of rights.",
+  "launch.dialog.elevationHint": "Windows will ask you to confirm. A game running as administrator can keep tools and Mod Orchestrator itself from reading what it writes, so use this only if the game does not start any other way.",
+  "launch.dialog.playElevated": "Play as administrator",
 
   "wizard.folders.choose": "Choose a folder",
   "wizard.folders.suggest": "Use suggested",
